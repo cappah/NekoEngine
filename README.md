@@ -27,7 +27,7 @@ Building
 
 Install the folowing libraries & their development files using your system's package manager, or compile them from source.
 
-       sqlite3, X11, libpng, libvorbisfile, zlib
+       sqlite3, X11, libpng, libvorbisfile, zlib, glm
 
 You will also need the OpenGL headers and CMake.
 
@@ -80,10 +80,11 @@ Mac OS X
   
   * libpng
   * libvorbisfile
+  * glm
 
   The dependencies can be installed using homebrew:
   
-        brew install libpng libvorbis
+        brew install libpng libvorbis glm
 
   Alternatively, you can compile them with the prefix set to /usr/local.
 
