@@ -1,4 +1,3 @@
-# NekoEngine
 NekoEngine
 ============
 
