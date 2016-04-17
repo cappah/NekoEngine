@@ -5,7 +5,7 @@ Cross-platform 3D Game Engine
 
 **Requirements:**
 
-       A PC with modern graphics card capable of OpenGL 4.5  (for Windows & *nix)
+       A PC with a modern graphics card capable of OpenGL 4.5  (for Windows & *nix)
        - or -
        A Mac with OpenGL 4.1 support (anything from 2011 onwards should work; only for Mac OS)
 
@@ -78,9 +78,7 @@ Mac OS X
 
   Dependencies that don't ship with Xcode:
   
-  * libpng
-  * libvorbisfile
-  * glm
+       libpng, libvorbis, glm
 
   The dependencies can be installed using homebrew:
   
