@@ -1,0 +1,6 @@
+NMTL1 
+type=skyreflect
+texture=tex_blank,linear,linear,repeat,repeat
+texture=tex_blank,linear,linear,repeat,repeat
+texture=tex_blank,linear,linear,repeat,repeat
+texture=tex_sky,linear,linear,repeat,repeat

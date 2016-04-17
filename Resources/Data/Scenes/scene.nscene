@@ -1,0 +1,62 @@
+NSCENE1 
+SceneInfo
+name=Scene 2
+#bgmusic=0
+#bgmusicvol=0.1
+gamemodule=TestGame
+ambcolor=0.5, 0.0, 0.8
+ambintensity=0.7
+EndSceneInfo
+
+# Camera
+Camera
+id=0
+default
+fov=45.0
+near=0.2
+far=20000.0
+projection=perspective
+position=-50.0, 55.0, -50.0
+#fog_color=0.64, 0.67, 0.72
+fog_color=0.235, 0.266, 0.333
+view_distance=1200
+fog_distance=3000
+EndCamera
+
+# Terrain
+Object=Terrain
+id=0
+cellsize=80
+numcells=80
+material=mat_terrain
+position=0.0, -200.0, 0.0
+height_params=15.0, 0.0, 7.0
+EndObject
+
+# Skybox
+Object=Skybox
+id=1
+mesh=stm_skysphere
+material=mat_skysphere
+position=0.0, 5000.0, 0.0
+scale=10000.0, 10000.0, 10000.0
+rotation=180.0, 0.0, 0.0
+EndObject
+
+# Kat
+Object
+id=2
+mesh=stm_kat
+material=mat_kat_eye
+material=mat_kat_body
+material=mat_kat_hair
+material=mat_kat_cloth
+material=mat_kat_cloth
+material=mat_kat_cloth
+material=mat_kat_caruncles
+material=mat_kat_body
+material=mat_kat_face
+position=-117.5, -30.0, -145.0
+rotation=0.0, 0.0, 0.0
+scale=15.5, 15.5, 15.5
+EndObject

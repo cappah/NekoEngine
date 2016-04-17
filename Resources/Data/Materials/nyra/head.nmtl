@@ -1,0 +1,8 @@
+NMTL1 
+type=normalandspecular
+texture=tex_nyra_head_d,linear,linear,repeat,repeat
+texture=tex_nyra_head_n,linear,linear,repeat,repeat
+texture=tex_nyra_head_s,linear,linear,repeat,repeat
+kdiffuse=1.0
+kspecular=0.1
+shininess=4.0

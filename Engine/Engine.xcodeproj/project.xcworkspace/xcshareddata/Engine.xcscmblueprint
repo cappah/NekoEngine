@@ -1,0 +1,25 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "caf5486d-bf93-e511-a5e1-000c2944f95b++505",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+    "caf5486d-bf93-e511-a5e1-000c2944f95b++505" : {
+
+    }
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "caf5486d-bf93-e511-a5e1-000c2944f95b++505" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "4CA56EB6-A47B-4C1D-84B6-C71000A218E7",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "caf5486d-bf93-e511-a5e1-000c2944f95b++505" : "NekoEngine\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "Engine",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "Engine\/Engine.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "svn:\/\/nalexandru.xyz\/NekoEngine",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Subversion",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "caf5486d-bf93-e511-a5e1-000c2944f95b++505"
+    }
+  ]
+}

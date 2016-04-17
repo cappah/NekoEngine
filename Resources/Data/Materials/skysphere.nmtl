@@ -1,0 +1,3 @@
+NMTL1 
+type=skybox
+texture=tex_sky,linear,linear,clamp,clamp

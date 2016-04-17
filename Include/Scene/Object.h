@@ -1,0 +1,133 @@
+/* Neko Engine
+ *
+ * Object.h
+ * Author: Alexandru Naiman
+ *
+ * Object class definition 
+ *
+ * ----------------------------------------------------------------------------------
+ *
+ * Copyright (c) 2015-2016, Alexandru Naiman <alexandru dot naiman at icloud dot com>
+ *
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice, this list
+ * of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or other
+ * materials provided with the distribution.
+ *
+ * 3. Neither the name of the copyright holder nor the names of its contributors may be
+ * used to endorse or promote products derived from this software without specific prior
+ * written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ALEXANDRU NAIMAN "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+ * AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL ALEXANDRU NAIMAN
+ * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ */
+
+#pragma once
+
+#include <vector>
+
+#include <glm/glm.hpp>
+
+#include <Engine/Engine.h>
+#include <Engine/Mesh.h>
+#include <Engine/Shader.h>
+#include <Engine/Texture.h>
+#include <Engine/Material.h>
+#include <Scene/ObjectComponent.h>
+
+enum class ForwardDirection : unsigned short
+{
+	PositiveZ = 0,
+	NegativeZ = 1,
+	PositiveX = 2,
+	NegativeX = 3
+};
+
+typedef struct OBJECT_MATRIX_BLOCK
+{
+	glm::mat4 ModelViewProjection;
+	glm::mat4 Model;
+	glm::mat4 View;
+} ObjectMatrixBlock;
+
+typedef struct OBJECT_BLOCK
+{
+	glm::vec3 CameraPosition;
+	float padding;
+	glm::vec3 ObjectColor;
+	float padding1;
+} ObjectBlock;
+
+#define OBJ_NO_MATERIAL	-1
+
+class Object
+{
+public:
+	ENGINE_API Object() noexcept;
+	 
+	ENGINE_API int GetId() noexcept { return _id; }
+	ENGINE_API Mesh* GetMesh() noexcept { return _mesh; }
+
+	ENGINE_API void SetId(int id) noexcept { _id = id; }
+	ENGINE_API void SetPosition(glm::vec3& position) noexcept;
+	ENGINE_API void SetRotation(glm::vec3& rotation) noexcept;
+	ENGINE_API void SetScale(glm::vec3& scale) noexcept;
+	ENGINE_API void SetModelId(int id) noexcept { _modelId = id; }
+	ENGINE_API void SetColor(glm::vec3& color) noexcept { _objectBlock.ObjectColor = color; }
+	ENGINE_API void SetForwardDirection(ForwardDirection dir) noexcept;
+	ENGINE_API void AddMaterialId(int id) noexcept { _materialIds.push_back(id); }
+
+	ENGINE_API void LookAt(glm::vec3& point) noexcept;
+	ENGINE_API void MoveForward(float distance) noexcept;
+	ENGINE_API void MoveRight(float distance) noexcept;
+
+	ENGINE_API size_t GetVertexCount() noexcept { if (_mesh) return _mesh->GetVertexCount(); return 0; }
+	ENGINE_API size_t GetTriangleCount() noexcept { if (_mesh) return _mesh->GetTriangleCount(); return 0; }
+	ENGINE_API glm::vec3& GetPosition() noexcept { return _position; }
+	ENGINE_API bool GetBlend() noexcept { return _blend; }
+	ENGINE_API glm::mat4& GetModelMatrix() noexcept { return _matrixBlock.Model; }
+
+	ENGINE_API virtual int Load();
+	ENGINE_API virtual void PreDraw(RShader* shader, size_t i) noexcept;
+	ENGINE_API virtual void Draw(RShader* shader) noexcept;
+	ENGINE_API virtual void PostDraw(size_t group) noexcept;
+	ENGINE_API virtual void Update(float deltaTime) noexcept;
+	ENGINE_API void Unload() noexcept;
+
+	ENGINE_API void AddComponent(std::string& name, ObjectComponent* component) { _components.insert({ name, component }); }
+
+	ENGINE_API virtual ~Object() noexcept;
+
+protected:
+	Mesh* _mesh;
+	std::vector<int> _materialIds;
+	std::vector<Material*> _materials;
+	int _id, _modelId;
+	glm::vec3 _position, _rotation, _scale, _center, _forward, _right;
+	glm::mat4 _translationMatrix, _scaleMatrix, _rotationMatrix;
+	bool _blend;
+	ForwardDirection _objectForward;
+	bool _loaded;
+	Renderer* _renderer;
+	std::map<std::string, ObjectComponent*> _components;
+	RBuffer *_objectUbo, *_matrixUbo;
+	ObjectMatrixBlock _matrixBlock;
+	ObjectBlock _objectBlock;
+
+	void _UpdateModelMatrix() noexcept { _matrixBlock.Model = (_translationMatrix * _rotationMatrix) * _scaleMatrix; }
+};
+

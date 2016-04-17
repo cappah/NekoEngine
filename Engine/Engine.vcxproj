@@ -1,0 +1,339 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{FC024EC8-32F4-4657-A2CB-14D2B3A931F8}</ProjectGuid>
+    <RootNamespace>NewTrainingFramework</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectName>Engine</ProjectName>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(SolutionDir)\Bin64\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+    <UseMultiToolTask>true</UseMultiToolTask>
+    <IncludePath>$(SolutionDir)include;$(SDK)\Include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <LibraryPath>$(SDK)\Lib;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
+    <ExecutablePath>$(SDK)\Bin;$(VC_ExecutablePath_x64);$(WindowsSDK_ExecutablePath);$(VS_ExecutablePath);$(MSBuild_ExecutablePath);$(FxCopDir);$(PATH);</ExecutablePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)\Bin64\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+    <UseMultiToolTask>true</UseMultiToolTask>
+    <IncludePath>$(SolutionDir)include;$(SDK)\Include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <LibraryPath>$(SDK)\Lib;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
+    <ExecutablePath>$(SDK)\Bin;$(VC_ExecutablePath_x64);$(WindowsSDK_ExecutablePath);$(VS_ExecutablePath);$(MSBuild_ExecutablePath);$(FxCopDir);$(PATH);</ExecutablePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;NOMINMAX;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeaderFile />
+      <CppLanguageStandard>c++11</CppLanguageStandard>
+      <CLanguageStandard>c11</CLanguageStandard>
+      <OmitFramePointers>false</OmitFramePointers>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <DataLevelLinking>false</DataLevelLinking>
+      <UseShortEnums>true</UseShortEnums>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <OpenMPSupport>true</OpenMPSupport>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <DisableSpecificWarnings>4251</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>libvorbisfile.lib;libpng16d.lib;sqlited.lib;zlibstatic.lib;OpenAL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <IgnoreSpecificDefaultLibraries>MSVCRT</IgnoreSpecificDefaultLibraries>
+      <FullProgramDatabaseFile>true</FullProgramDatabaseFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <Optimization>Full</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;NOMINMAX;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>None</DebugInformationFormat>
+      <StringPooling>true</StringPooling>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <StructMemberAlignment>8Bytes</StructMemberAlignment>
+      <ControlFlowGuard>false</ControlFlowGuard>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <CLanguageStandard>c11</CLanguageStandard>
+      <CppLanguageStandard>c++11</CppLanguageStandard>
+      <PrecompiledHeaderFile />
+      <MSExtensions>true</MSExtensions>
+      <DataLevelLinking>true</DataLevelLinking>
+      <UseShortEnums>true</UseShortEnums>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <DisableSpecificWarnings>4251</DisableSpecificWarnings>
+      <OpenMPSupport>true</OpenMPSupport>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>libvorbisfile.lib;libpng16.lib;sqlite.lib;zlibstatic.lib;OpenAL32.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>No</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\include\Audio\AudioClip.h" />
+    <ClInclude Include="..\include\Audio\AudioSource.h" />
+    <ClInclude Include="..\Include\Engine\DeferredBuffer.h" />
+    <ClInclude Include="..\include\Engine\Engine.h" />
+    <ClInclude Include="..\include\Engine\EngineClassFactory.h" />
+    <ClInclude Include="..\include\Engine\EngineUtils.h" />
+    <ClInclude Include="..\include\Engine\GameModule.h" />
+    <ClInclude Include="..\include\Engine\LoadingScreen.h" />
+    <ClInclude Include="..\include\Engine\Material.h" />
+    <ClInclude Include="..\include\Engine\Mesh.h" />
+    <ClInclude Include="..\include\Engine\PostProcessor.h" />
+    <ClInclude Include="..\include\Engine\ResourceDatabase.h" />
+    <ClInclude Include="..\include\Engine\ResourceManager.h" />
+    <ClInclude Include="..\include\Engine\SceneManager.h" />
+    <ClInclude Include="..\include\Engine\Shader.h" />
+    <ClInclude Include="..\Include\Engine\ShadowMap.h" />
+    <ClInclude Include="..\include\Engine\SoundManager.h" />
+    <ClInclude Include="..\Include\Engine\SSAO.h" />
+    <ClInclude Include="..\include\Engine\Texture.h" />
+    <ClInclude Include="..\include\Engine\TextureFont.h" />
+    <ClInclude Include="..\include\Engine\Version.h" />
+    <ClInclude Include="..\include\Engine\Vertex.h" />
+    <ClInclude Include="..\include\Platform\Platform.h" />
+    <ClInclude Include="..\Include\PostEffects\Bloom.h" />
+    <ClInclude Include="..\include\PostEffects\Effect.h" />
+    <ClInclude Include="..\Include\PostEffects\FXAA.h" />
+    <ClInclude Include="..\include\PostEffects\SMAA.h" />
+    <ClInclude Include="..\include\PostEffects\SMAA\AreaTex.h" />
+    <ClInclude Include="..\include\PostEffects\SMAA\SearchTex.h" />
+    <ClInclude Include="..\Include\Renderer\RArrayBuffer.h" />
+    <ClInclude Include="..\Include\Renderer\RBuffer.h" />
+    <ClInclude Include="..\Include\Renderer\Renderer.h" />
+    <ClInclude Include="..\Include\Renderer\RFramebuffer.h" />
+    <ClInclude Include="..\Include\Renderer\RShader.h" />
+    <ClInclude Include="..\Include\Renderer\RTexture.h" />
+    <ClInclude Include="..\include\Resource\AudioClipResource.h" />
+    <ClInclude Include="..\include\Resource\MaterialResource.h" />
+    <ClInclude Include="..\Include\Resource\MeshResource.h" />
+    <ClInclude Include="..\include\Resource\Resource.h" />
+    <ClInclude Include="..\include\Resource\ResourceInfo.h" />
+    <ClInclude Include="..\include\Resource\ShaderResource.h" />
+    <ClInclude Include="..\include\Resource\TextureFontResource.h" />
+    <ClInclude Include="..\include\Resource\TextureResource.h" />
+    <ClInclude Include="..\include\Scene\Camera.h" />
+    <ClInclude Include="..\include\Scene\Light.h" />
+    <ClInclude Include="..\include\Scene\Object.h" />
+    <ClInclude Include="..\Include\Scene\ObjectComponent.h" />
+    <ClInclude Include="..\include\Scene\Scene.h" />
+    <ClInclude Include="..\include\Scene\Skybox.h" />
+    <ClInclude Include="..\include\Scene\Terrain.h" />
+    <ClInclude Include="..\include\System\AssetLoader\AssetLoader.h" />
+    <ClInclude Include="..\include\System\AssetLoader\ogg_callbacks.h" />
+    <ClInclude Include="..\include\System\Logger.h" />
+    <ClInclude Include="..\Include\System\Memory.h" />
+    <ClInclude Include="..\include\System\VFS\VFS.h" />
+    <ClInclude Include="..\include\System\VFS\VFSArchive.h" />
+    <ClInclude Include="..\include\System\VFS\VFSFile.h" />
+    <ClInclude Include="..\Resources\Data\Shaders\include\conditionals.h" />
+    <ClInclude Include="..\Resources\Data\Shaders\include\Fxaa3_11.h" />
+    <ClInclude Include="..\Resources\Data\Shaders\include\SMAA.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Resources\Data\Materials\bila.nmtl" />
+    <None Include="..\Resources\Data\Materials\car.nmtl" />
+    <None Include="..\Resources\Data\Materials\car_glass.nmtl" />
+    <None Include="..\Resources\Data\Materials\cat.nmtl" />
+    <None Include="..\Resources\Data\Materials\dancer1.nmtl" />
+    <None Include="..\Resources\Data\Materials\dancer2.nmtl" />
+    <None Include="..\Resources\Data\Materials\dancer_eye.nmtl" />
+    <None Include="..\Resources\Data\Materials\ellie\ellie_backpack.nmtl" />
+    <None Include="..\Resources\Data\Materials\ellie\ellie_eye.nmtl" />
+    <None Include="..\Resources\Data\Materials\ellie\ellie_eyelashes.nmtl" />
+    <None Include="..\Resources\Data\Materials\ellie\ellie_hair.nmtl" />
+    <None Include="..\Resources\Data\Materials\ellie\ellie_hands_mouth.nmtl" />
+    <None Include="..\Resources\Data\Materials\ellie\ellie_head.nmtl" />
+    <None Include="..\Resources\Data\Materials\ellie\ellie_jeans.nmtl" />
+    <None Include="..\Resources\Data\Materials\ellie\ellie_lacrimal.nmtl" />
+    <None Include="..\Resources\Data\Materials\ellie\ellie_shirt.nmtl" />
+    <None Include="..\Resources\Data\Materials\ellie\ellie_shoes.nmtl" />
+    <None Include="..\Resources\Data\Materials\farmhouse.nmtl" />
+    <None Include="..\Resources\Data\Materials\fire.nmtl" />
+    <None Include="..\Resources\Data\Materials\isis\isis_clothes.nmtl" />
+    <None Include="..\Resources\Data\Materials\isis\isis_eye.nmtl" />
+    <None Include="..\Resources\Data\Materials\isis\isis_eyelashes.nmtl" />
+    <None Include="..\Resources\Data\Materials\isis\isis_eye_reflection.nmtl" />
+    <None Include="..\Resources\Data\Materials\isis\isis_hair.nmtl" />
+    <None Include="..\Resources\Data\Materials\isis\isis_head.nmtl" />
+    <None Include="..\Resources\Data\Materials\isis\isis_skin.nmtl" />
+    <None Include="..\Resources\Data\Materials\isis\isis_teeth.nmtl" />
+    <None Include="..\Resources\Data\Materials\juliet\juliet_cloth.nmtl" />
+    <None Include="..\Resources\Data\Materials\juliet\juliet_hair.nmtl" />
+    <None Include="..\Resources\Data\Materials\juliet\juliet_skin.nmtl" />
+    <None Include="..\Resources\Data\Materials\kat\kat_body.nmtl" />
+    <None Include="..\Resources\Data\Materials\kat\kat_caruncles.nmtl" />
+    <None Include="..\Resources\Data\Materials\kat\kat_cloth.nmtl" />
+    <None Include="..\Resources\Data\Materials\kat\kat_eye.nmtl" />
+    <None Include="..\Resources\Data\Materials\kat\kat_face.nmtl" />
+    <None Include="..\Resources\Data\Materials\kat\kat_hair.nmtl" />
+    <None Include="..\Resources\Data\Materials\lara\lara_boots.nmtl" />
+    <None Include="..\Resources\Data\Materials\lara\lara_eye.nmtl" />
+    <None Include="..\Resources\Data\Materials\lara\lara_eyebrows.nmtl" />
+    <None Include="..\Resources\Data\Materials\lara\lara_eyelash.nmtl" />
+    <None Include="..\Resources\Data\Materials\lara\lara_hair.nmtl" />
+    <None Include="..\Resources\Data\Materials\lara\lara_hands.nmtl" />
+    <None Include="..\Resources\Data\Materials\lara\lara_head.nmtl" />
+    <None Include="..\Resources\Data\Materials\lara\lara_legs.nmtl" />
+    <None Include="..\Resources\Data\Materials\lara\lara_mouth.nmtl" />
+    <None Include="..\Resources\Data\Materials\lara\lara_ponytail.nmtl" />
+    <None Include="..\Resources\Data\Materials\lara\lara_torso.nmtl" />
+    <None Include="..\Resources\Data\Materials\m_house.nmtl" />
+    <None Include="..\Resources\Data\Materials\skyreflect.nmtl" />
+    <None Include="..\Resources\Data\Materials\skysphere.nmtl" />
+    <None Include="..\Resources\Data\Materials\t-90\body.nmtl" />
+    <None Include="..\Resources\Data\Materials\t-90\body2.nmtl" />
+    <None Include="..\Resources\Data\Materials\t-90\gun.nmtl" />
+    <None Include="..\Resources\Data\Materials\t-90\turret.nmtl" />
+    <None Include="..\Resources\Data\Materials\terrain.nmtl" />
+    <None Include="..\Resources\Data\Materials\truck\mat1.nmtl" />
+    <None Include="..\Resources\Data\Materials\truck\mat2.nmtl" />
+    <None Include="..\Resources\Data\Materials\w_girl.nmtl" />
+    <None Include="..\Resources\Data\scenes.cfg" />
+    <None Include="..\Resources\Data\Scenes\main.nscene" />
+    <None Include="..\Resources\Data\Scenes\reflect.nscene" />
+    <None Include="..\Resources\Data\Scenes\scene.nscene" />
+    <None Include="..\Resources\Data\Shaders\depthmap.frag" />
+    <None Include="..\Resources\Data\Shaders\depthmap.vert" />
+    <None Include="..\Resources\Data\Shaders\font.frag" />
+    <None Include="..\Resources\Data\Shaders\font.vert" />
+    <None Include="..\Resources\Data\Shaders\forward\skybox.frag" />
+    <None Include="..\Resources\Data\Shaders\forward\skybox.vert" />
+    <None Include="..\Resources\Data\Shaders\geometry.frag" />
+    <None Include="..\Resources\Data\Shaders\geometry.vert" />
+    <None Include="..\Resources\Data\Shaders\lighting.frag" />
+    <None Include="..\Resources\Data\Shaders\lighting.vert" />
+    <None Include="..\Resources\Data\Shaders\loadscreen.frag" />
+    <None Include="..\Resources\Data\Shaders\loadscreen.vert" />
+    <None Include="..\Resources\Data\Shaders\postproc.frag" />
+    <None Include="..\Resources\Data\Shaders\postproc.vert" />
+    <None Include="..\Resources\Data\Shaders\postproc\bloom.frag" />
+    <None Include="..\Resources\Data\Shaders\postproc\bloom_prepass.frag" />
+    <None Include="..\Resources\Data\Shaders\postproc\blur.frag" />
+    <None Include="..\Resources\Data\Shaders\postproc\blur_dof.frag" />
+    <None Include="..\Resources\Data\Shaders\postproc\bw.frag" />
+    <None Include="..\Resources\Data\Shaders\postproc\dof.frag" />
+    <None Include="..\Resources\Data\Shaders\postproc\fxaa.frag" />
+    <None Include="..\Resources\Data\Shaders\postproc\fxaa.vert" />
+    <None Include="..\Resources\Data\Shaders\postproc\gauss_h.frag" />
+    <None Include="..\Resources\Data\Shaders\postproc\gauss_v.frag" />
+    <None Include="..\Resources\Data\Shaders\postproc\smaa.frag" />
+    <None Include="..\Resources\Data\Shaders\postproc\smaa.vert" />
+    <None Include="..\Resources\Data\Shaders\ssao.frag" />
+    <None Include="..\Resources\Data\Shaders\ssao_blur.frag" />
+    <None Include="..\Resources\Engine.ini" />
+    <None Include="..\Resources\Engine_Low.ini" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Engine.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Audio\AudioClip.cpp" />
+    <ClCompile Include="Audio\AudioSource.cpp" />
+    <ClCompile Include="Engine\DeferredBuffer.cpp" />
+    <ClCompile Include="Engine\Engine.cpp" />
+    <ClCompile Include="Engine\LoadingScreen.cpp" />
+    <ClCompile Include="Engine\Material.cpp" />
+    <ClCompile Include="Engine\Mesh.cpp" />
+    <ClCompile Include="Engine\PostProcessor.cpp" />
+    <ClCompile Include="Engine\ResourceDatabase.cpp" />
+    <ClCompile Include="Engine\ResourceManager.cpp" />
+    <ClCompile Include="Engine\SceneManager.cpp" />
+    <ClCompile Include="Engine\Shader.cpp" />
+    <ClCompile Include="Engine\ShadowMap.cpp" />
+    <ClCompile Include="Engine\SoundManager.cpp" />
+    <ClCompile Include="Engine\SSAO.cpp" />
+    <ClCompile Include="Engine\Texture.cpp" />
+    <ClCompile Include="Engine\TextureFont.cpp" />
+    <ClCompile Include="Platform\shared.cpp" />
+    <ClCompile Include="Platform\Windows\Windows.cpp" />
+    <ClCompile Include="PostEffects\Effect.cpp" />
+    <ClCompile Include="PostEffects\SMAA.cpp" />
+    <ClCompile Include="Scene\Camera.cpp" />
+    <ClCompile Include="Scene\Light.cpp" />
+    <ClCompile Include="Scene\Object.cpp" />
+    <ClCompile Include="Scene\ObjectComponent.cpp" />
+    <ClCompile Include="Scene\Scene.cpp" />
+    <ClCompile Include="Scene\Skybox.cpp" />
+    <ClCompile Include="Scene\Terrain.cpp" />
+    <ClCompile Include="System\AssetLoader\AssetLoader.cpp" />
+    <ClCompile Include="System\AssetLoader\ogg_callbacks.cpp" />
+    <ClCompile Include="System\Logger.cpp" />
+    <ClCompile Include="System\Memory.cpp" />
+    <ClCompile Include="System\VFS\VFS.cpp" />
+    <ClCompile Include="System\VFS\VFSArchive.cpp" />
+    <ClCompile Include="System\VFS\VFSFile.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
