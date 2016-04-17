@@ -29,7 +29,7 @@ Install the folowing libraries & their development files using your system's pac
 
        sqlite3, X11, libpng, libvorbisfile, zlib
 
-You will also need the OpenGL headers.
+You will also need the OpenGL headers and CMake.
 
 **Build the engine**
 
