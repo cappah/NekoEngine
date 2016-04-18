@@ -250,20 +250,6 @@ PlatformWindowType Platform::CreateWindow(int width, int height, bool fullscreen
 	if (fullscreen)
 		EnterFullscreen(width, height);
 
-#ifdef _DEBUG
-	if (IsDebuggerPresent())
-		return hWnd;
-
-	FreeConsole();
-	AllocConsole();
-	AttachConsole(GetCurrentProcessId());
-
-	freopen("CON", "w", stdout);
-	freopen("CON", "w", stderr);
-
-	system("title NekoEngine Debug Console");
-#endif
-
 	return hWnd;
 }
 
@@ -429,11 +415,6 @@ int Platform::MainLoop()
 
 void Platform::CleanUp()
 {
-#ifdef _DEBUG
-	if (!IsDebuggerPresent())
-		FreeConsole();
-#endif
-
 	DestroyWindow(_activeWindow);
 	UnregisterClass(WindowClassName, hEngineInstance);
 }
