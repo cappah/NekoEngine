@@ -1,5 +1,11 @@
 Source for assets
 
+Icon
+
+Author: GiL-Free
+Link: http://gil-free.deviantart.com/art/OBS-logo-black-light-blue-gradient-icon-571563523
+License: http://creativecommons.org/licenses/by/3.0/
+
 ----------------------------------------------------------------------------
 
 Models from Mixamo:
