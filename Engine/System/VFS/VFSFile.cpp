@@ -54,6 +54,7 @@ VFSFile::VFSFile(FileType type)
 	_references = 0;
 	_fp = nullptr;
 	_gzfp = nullptr;
+	_offset = 0;
 }
 
 int VFSFile::Open()
@@ -109,7 +110,20 @@ uint64_t VFSFile::Read(void *buffer, uint64_t size, uint64_t count)
 	if (_type == FileType::Loose)
 	{
 		if (_fp)
-			return fread(buffer, size, count, _fp);
+		{
+			size_t ret = fread(buffer, size, count, _fp);
+
+			if (ret != count)
+			{
+				if (feof(_fp))
+					return ret;
+
+				Logger::Log(VFS_FILE_MODULE, LOG_CRITICAL, "Failed to read file %s", _header.name);
+				return 0;
+			}
+
+			return ret;
+		}
 		else if(_gzfp)
 			return gzread(_gzfp, buffer, (unsigned int)(size * count));
 		else	

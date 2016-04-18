@@ -44,9 +44,15 @@
 
 struct ShaderResource : public ResourceInfo
 {
-	ShaderResource() { type = ResourceType::RES_SHADER; }
 	std::string vsFilePath;
 	std::string fsFilePath;
 	std::string gsFilePath;
 	int numTextures;
+
+	ShaderResource() :
+		vsFilePath(""),
+		fsFilePath(""),
+		gsFilePath(""),
+		numTextures(0)
+	{ type = ResourceType::RES_SHADER; }
 };

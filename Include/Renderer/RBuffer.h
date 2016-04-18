@@ -86,7 +86,10 @@ public:
 	 */
 	RBuffer(BufferType type) :
 		_type(type),
-		_data(nullptr)
+		_data(nullptr),
+		_size(0),
+		_persistent(false),
+		_dynamic(false)
 	{ };
 
 	virtual void Bind(int location) = 0;

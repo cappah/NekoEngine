@@ -53,7 +53,9 @@
 class ENGINE_API AudioClip : public Resource
 {
 public:
-	AudioClip(AudioClipResource *res) noexcept { _resourceInfo = res; };
+	AudioClip(AudioClipResource *res) noexcept :
+		_buffer(0)
+	{ _resourceInfo = res; };
 
 	AudioClipResource *GetResourceInfo() noexcept  { return (AudioClipResource *)_resourceInfo; }
 	ALuint GetBufferID() noexcept { return _buffer; }

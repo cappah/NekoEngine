@@ -69,7 +69,10 @@ public:
 		_drawLights(false),
 		_loadingScreenTexture(LS_DEFAULT_TEXTURE),
 		_skybox(nullptr),
-		_terrain(nullptr)
+		_terrain(nullptr),
+		_sceneVertexBuffer(nullptr),
+		_sceneIndexBuffer(nullptr),
+		_sceneArrayBuffer(nullptr)
 		{ };
 
 	ENGINE_API Scene(int id, std::string file, const char* ls_texture) noexcept :
@@ -85,7 +88,10 @@ public:
 		_drawLights(false),
 		_loadingScreenTexture(ls_texture),
 		_skybox(nullptr),
-		_terrain(nullptr)
+		_terrain(nullptr),
+		_sceneVertexBuffer(nullptr),
+		_sceneIndexBuffer(nullptr),
+		_sceneArrayBuffer(nullptr)
 		{ };
 
 	ENGINE_API int GetId() noexcept { return _id; }

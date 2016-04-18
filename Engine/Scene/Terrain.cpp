@@ -51,9 +51,10 @@ ENGINE_REGISTER_OBJECT_CLASS(Terrain)
 
 Terrain::Terrain() noexcept
 	: Object(),
-	  _cellSize(20),
-	  _numCells(4),
-	  _uvStep(.05f)
+	_cellSize(20),
+	_numCells(4),
+	_uvStep(.05f),
+	_heightmapParams{TextureFilter::Trilinear, TextureFilter::Linear, TextureWrap::ClampToEdge, TextureWrap::ClampToEdge}
 {
 }
 

@@ -66,10 +66,29 @@ enum class ProjectionType : unsigned short
 class ENGINE_API Camera
 {
 public:
-	Camera() noexcept : _position(glm::vec3(0, 0, 0)), _front(glm::vec3(0, 0, 1)), _up(glm::vec3(0, 1, 0)), _right(glm::vec3(0, 0, 0)), _worldUp(glm::vec3(0, 1, 0)),
-		_translateSpeed(DEFAULT_TRANS), _fastTranslateSpeed(DEFAULT_TRANS_F), _rotateSpeed(DEFAULT_ROTS), _verticalSensivity(DEFAULT_VSENS), _horizontalSensivity(DEFAULT_HSENS), _xDelta(0.f), _yDelta(0.f), _fps(false) {
-		_UpdateView();
-	}
+	Camera() noexcept :
+		_position(glm::vec3(0, 0, 0)),
+		_front(glm::vec3(0, 0, 1)),
+		_up(glm::vec3(0, 1, 0)),
+		_right(glm::vec3(0, 0, 0)),
+		_worldUp(glm::vec3(0, 1, 0)),
+		_translateSpeed(DEFAULT_TRANS),
+		_fastTranslateSpeed(DEFAULT_TRANS_F),
+		_rotateSpeed(DEFAULT_ROTS),
+		_verticalSensivity(DEFAULT_VSENS), 
+		_horizontalSensivity(DEFAULT_HSENS), 
+		_xDelta(0.f),
+		_yDelta(0.f),
+		_fps(false),
+		_zoom(0.f),
+		_near(.2f),
+		_far(1000.f),
+		_fov(45.f),
+		_viewDistance(1000.f),
+		_fogDistance(1200.f),
+		_projection(ProjectionType::Perspective),
+		_id(0)
+	{ _UpdateView(); }
 
 	int GetId() noexcept { return _id; }
 	glm::vec3& GetPosition() noexcept { return _position; }

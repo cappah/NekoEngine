@@ -44,7 +44,11 @@
 
 struct TextureFontResource : public ResourceInfo
 {
-	TextureFontResource() { type = ResourceType::RES_FONT; }
 	int textureId;
 	int shaderId;
+
+	TextureFontResource() :
+		textureId(0),
+		shaderId(0)
+	{ type = ResourceType::RES_FONT; }
 };

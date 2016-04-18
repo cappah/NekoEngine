@@ -50,7 +50,10 @@ public:
 	* Create a buffer object.
 	* You must call SetStorage to initialize the buffer's data store before use.
 	*/
-	RArrayBuffer() { };
+	RArrayBuffer() :
+		_vertexBuffer(nullptr),
+		_indexBuffer(nullptr)
+	{ };
 
 	virtual void Bind() = 0;
 	virtual void Unbind() = 0;

@@ -46,7 +46,8 @@ class Skybox :
 {
 public:
 	ENGINE_API Skybox() noexcept : Object(),
-		_shaderId(-1)
+		_shaderId(-1),
+		_skyboxShader(nullptr)
 	{ };
 
 	ENGINE_API virtual int Load() override;

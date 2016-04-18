@@ -57,4 +57,5 @@ struct ResourceInfo
 	std::string name;
 	std::string comment;
 	ResourceType type;
+	virtual ~ResourceInfo() { }
 };

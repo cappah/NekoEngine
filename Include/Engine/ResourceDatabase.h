@@ -46,7 +46,7 @@
 class ResourceDatabase
 {
 public:
-	ResourceDatabase() noexcept {};
+	ResourceDatabase() noexcept : _db(nullptr) {};
 
 	bool Open(const char* file) noexcept;
 

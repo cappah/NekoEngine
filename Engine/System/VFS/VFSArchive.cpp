@@ -48,6 +48,7 @@ using namespace std;
 VFSArchive::VFSArchive(string &path)
 {
 	_path = path;
+	memset(&_header, 0x0, sizeof(VFSArchiveHeader));
 }
 
 int VFSArchive::Load()

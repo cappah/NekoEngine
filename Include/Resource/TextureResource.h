@@ -50,7 +50,10 @@ enum class TextureResourceType : unsigned
 
 struct TextureResource : public ResourceInfo
 {
-	TextureResource() { type = ResourceType::RES_TEXTURE; }
 	std::string filePath;
 	TextureResourceType textureType;
+	TextureResource() :
+		filePath(""),
+		textureType(TextureResourceType::TEXTURE_2D)
+	{ type = ResourceType::RES_TEXTURE; }
 };

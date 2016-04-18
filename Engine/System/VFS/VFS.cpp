@@ -89,7 +89,12 @@ int VFS::Initialize()
 					path.append("/");
 					path.append(ent->d_name);
 					
-					stat(path.c_str(), &st);
+					if (stat(path.c_str(), &st) < 0)
+					{
+						Logger::Log(VFS_MODULE, LOG_CRITICAL, "File %s does not exist", path.c_str());
+						closedir(dir);
+						return ENGINE_FAIL;
+					}
 
 					if(S_ISDIR(st.st_mode))
 					{
@@ -106,6 +111,7 @@ int VFS::Initialize()
 					{
 						if (snprintf(f.GetHeader().name, VFS_MAX_FILE_NAME, "%s/%s", info.prefix.c_str(), ent->d_name) >= VFS_MAX_FILE_NAME)
 						{
+							Logger::Log(VFS_MODULE, LOG_CRITICAL, "snprintf() call failed");
 							closedir(dir);
 							return ENGINE_FAIL;
 						}
