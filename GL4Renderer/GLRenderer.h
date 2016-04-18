@@ -71,17 +71,26 @@ typedef Display* 	RHI_DC;
 */
 
 #ifdef _DEBUG
-#ifdef _WIN32 
+	#ifdef _WIN32 
 	#define GL_CHECK(x)																														\
 		x;																																			\
 		if(GLenum err = glGetError())																												\
 		{						\
-			char buff[1024];	\
-			if(snprintf(buff, 1024, "%s call from %s, line %d returned 0x%x. Shutting down.\n", #x, __FILE__, __LINE__, err) >= 1024) \
-				OutputDebugStringA("OpenGL call failed. Shutting down.\n"); \
+			if(IsDebuggerPresent()) \
+			{ \
+				char buff[1024];	\
+				if(snprintf(buff, 1024, "%s call from %s, line %d returned 0x%x. Shutting down.\n", #x, __FILE__, __LINE__, err) >= 1024) \
+					OutputDebugStringA("OpenGL call failed. Shutting down.\n"); \
+				else \
+					OutputDebugStringA(buff); \
+				exit(-1); \
+			} \
 			else \
-				OutputDebugStringA(buff); \
-			exit(-1);																																\
+			{ \
+				fprintf(stderr, "%s call from %s, line %d returned 0x%x. Shutting down.", #x, __FILE__, __LINE__, err);				\
+				getchar(); \
+				exit(-1); \
+			} \
 		}
 	#else
 		#define GL_CHECK(x)																														\
@@ -93,16 +102,27 @@ typedef Display* 	RHI_DC;
 		}
 	#endif
 
+	
+
 #else
 	#define GL_CHECK(x) x;
 #endif
 
 #ifdef _WIN32
 #define DIE(x) \
-		OutputDebugStringA("FATAL ERROR: "); \
-		OutputDebugStringA(x); \
-		OutputDebugStringA("\n"); \
-		exit(-1);
+		if(IsDebuggerPresent()) \
+		{ \
+			OutputDebugStringA("FATAL ERROR: "); \
+			OutputDebugStringA(x); \
+			OutputDebugStringA("\n"); \
+			exit(-1); \
+		} \
+		else \
+		{ \
+			fprintf(stderr, "FATAL ERROR: %s\n", #x); \
+			getchar(); \
+			exit(-1); \
+		} 
 #else
 #define DIE(x) \
 		fprintf(stderr, "FATAL ERROR: %s\n", #x); \

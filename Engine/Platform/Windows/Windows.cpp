@@ -250,6 +250,20 @@ PlatformWindowType Platform::CreateWindow(int width, int height, bool fullscreen
 	if (fullscreen)
 		EnterFullscreen(width, height);
 
+#ifdef _DEBUG
+	if (IsDebuggerPresent())
+		return hWnd;
+
+	FreeConsole();
+	AllocConsole();
+	AttachConsole(GetCurrentProcessId());
+
+	freopen("CON", "w", stdout);
+	freopen("CON", "w", stderr);
+
+	system("title NekoEngine Debug Console");
+#endif
+
 	return hWnd;
 }
 
@@ -365,6 +379,12 @@ MessageBoxResult Platform::MessageBox(const char* title, const char* message, Me
 
 void Platform::LogDebugMessage(const char* message)
 {
+	if (!IsDebuggerPresent())
+	{
+		fprintf(stdout, "%s%c", message, (message[strlen(message) - 1] == '\n') ? '\0' : '\n');
+		return;
+	}
+
 	OutputDebugStringA(message);
 
 	if (message[strlen(message) - 1] != '\n')
@@ -409,6 +429,11 @@ int Platform::MainLoop()
 
 void Platform::CleanUp()
 {
+#ifdef _DEBUG
+	if (!IsDebuggerPresent())
+		FreeConsole();
+#endif
+
 	DestroyWindow(_activeWindow);
 	UnregisterClass(WindowClassName, hEngineInstance);
 }
