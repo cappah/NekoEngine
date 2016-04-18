@@ -117,7 +117,7 @@ ObjectClassMapType *EngineClassFactory::_objectClassMap = nullptr;
 void Engine::_ParseArgs(string cmdLine)
 {
 	vector<char*> args = EngineUtils::SplitString(cmdLine.c_str(), ' ');
-
+	
 	for(char* arg : args)
 	{
 		char *ptr = NULL;
@@ -147,6 +147,8 @@ void Engine::_ParseArgs(string cmdLine)
 			if (snprintf(_gameModuleFile, PATH_SIZE, "%s", ptr+7) >= PATH_SIZE)
 			{ DIE("Invalid renderer argument !"); }
 		}
+
+		free(arg);
 	}
 }
 
@@ -596,7 +598,6 @@ void Engine::Draw() noexcept
 		_nFrames = 0;
 	}
 
-	_printStats = true;
 	if (_printStats)
 	{
 		// Uncomment to show time per frame

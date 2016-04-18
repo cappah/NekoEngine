@@ -71,7 +71,13 @@ public:
 		std::vector<char*> vec;
 
 		if (!ptr)
+		{
+			// Separator not found; return orignal string
+			char *ptr = (char*)calloc(strlen(str) + 1, sizeof(char));
+			memmove(ptr, str, strlen(str));
+			vec.push_back(ptr);
 			return vec;
+		}
 
 		while (ptr)
 		{
