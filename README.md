@@ -27,7 +27,7 @@ Building
 
 Install the folowing libraries & their development files using your system's package manager, or compile them from source.
 
-       sqlite3, X11, libpng, libvorbisfile, zlib, glm
+       sqlite3, X11, libpng, libvorbis, zlib, glm
 
 You will also need the OpenGL headers and CMake.
 
@@ -64,8 +64,12 @@ Windows
 **Build the engine**
 
   Note: The project file has only Win64 build configurations. If you want a 32-bit build you will need to create the build configurations & compile the dependencies.
+  
+  1) Get the source
+  
+       git clone https://github.com/nalexandru/NekoEngine.git
 
-  The solution file is located in the root directory. All necessary dependencies are in the 3rdparty directory.
+  2) The solution file is located in the source root directory. All necessary dependencies are in the 3rdparty directory.
 
 Mac OS X
 --------------------------
@@ -88,7 +92,11 @@ Mac OS X
 
 **Build the engine**
 
-  The Xcode workspace file is located in the root directory.
+ 1) Get the source
+ 
+       git clone https://github.com/nalexandru/NekoEngine.git
+ 
+ 2) The Xcode workspace file is located in the source root directory.
 
 Running
 ===============================
@@ -115,11 +123,13 @@ Windows
 
 Go to the source directory with a file manager and:
 
-1) Copy 3rd-party DLL's from 3rdparty/bin to Bin64
+1) Install OpenAL runtime using oalinst.exe located in 3rdparty
 
-2) Copy or symlink Resources/Data & Resources/Engine.ini to Bin64
+2) Copy 3rd-party DLL's from 3rdparty/bin to Bin64
 
-3) Start Launcher.exe, located in Bin64
+3) Copy or symlink Resources/Data & Resources/Engine.ini to Bin64
+
+4) Start Launcher.exe, located in Bin64
 
 
 Mac OS X
