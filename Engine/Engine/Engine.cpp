@@ -454,9 +454,6 @@ int Engine::Initialize(string cmdLine, bool editor)
 		return ENGINE_FAIL;
 	}
 
-	// clear AL error
-	alGetError();
-
 	AL_CHECK_FATAL(const char *alVersionStr = (const char *)alGetString(AL_VERSION));
 	Logger::Log("OpenAL", LOG_INFORMATION, "Vendor: %s", alGetString(AL_VENDOR));
 	Logger::Log("OpenAL", LOG_INFORMATION, "Renderer: %s", alGetString(AL_RENDERER));

@@ -63,8 +63,6 @@ int SoundManager::Initialize()
 
 	Logger::Log(SNDMGR_MODULE, LOG_INFORMATION, "Initializing OpenAL...");
 
-	alGetError();
-
 	if ((_device = alcOpenDevice(NULL)) == nullptr)
 		return ENGINE_FAIL;
 

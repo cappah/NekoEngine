@@ -45,6 +45,7 @@
 #include <System/VFS/VFSFile.h>
 
 #define BUFF_SIZE	2048
+#define VFS_FILE_MODULE	"VFS_File"
 
 VFSFile::VFSFile(FileType type)
 {
@@ -174,7 +175,17 @@ uint64_t VFSFile::Tell()
 	if (_type == FileType::Loose)
 	{
 		if (_fp)
-			return ftell(_fp);
+		{
+			long size = ftell(_fp);
+
+			if (size < 0)
+			{
+				Logger::Log(VFS_FILE_MODULE, LOG_WARNING, "Failed to get file size for: %s", _header.name);
+				return 0;
+			}
+
+			return size;
+		}
 		else if (_gzfp)
 			return gztell(_gzfp);
 		else

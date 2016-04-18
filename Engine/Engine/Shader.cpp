@@ -312,6 +312,7 @@ bool Shader::_AppendSourceString(char **dst, char *src, size_t *size)
 		if (newptr == nullptr)
 		{
 			free(*dst);
+			*dst = nullptr;
 			return false;
 		}
 

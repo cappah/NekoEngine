@@ -46,7 +46,11 @@
 
 using namespace glm;
 
-ShadowMap::ShadowMap(int size)
+ShadowMap::ShadowMap(int size) :
+	_fboWidth(size),
+	_fboHeight(size),
+	_colorFbo(nullptr),
+	_shader(nullptr)
 {
 	_texture = Engine::GetRenderer()->CreateTexture(TextureType::Tex2D);
 	_texture->SetStorage2D(1, TextureSizedFormat::DEPTH_32F, size, size);
@@ -59,7 +63,6 @@ ShadowMap::ShadowMap(int size)
 	_fbo->AttachDepthTexture(_texture);
 	if(_fbo->CheckStatus() != FramebufferStatus::Complete)
 	{ DIE("Failed to create shadow framebuffer"); }
-
 
 	_size = size;
 }
