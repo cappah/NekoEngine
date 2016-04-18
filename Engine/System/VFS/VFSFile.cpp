@@ -63,7 +63,7 @@ int VFSFile::Open()
 	{
 		char buff[BUFF_SIZE];
 		memset(buff, 0x0, BUFF_SIZE);
-		if (snprintf(buff, BUFF_SIZE, "%s/%s", Engine::GetConfiguration().Engine.DataDirectory.c_str(), _header.name) >= BUFF_SIZE)
+		if (snprintf(buff, BUFF_SIZE, "%s/%s", Engine::GetConfiguration().Engine.DataDirectory, _header.name) >= BUFF_SIZE)
 			return ENGINE_FAIL;
 
 		// Try to open normal file

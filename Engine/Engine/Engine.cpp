@@ -131,9 +131,17 @@ void Engine::_ParseArgs(string cmdLine)
 		}
 
 		if ((ptr = strstr(arg, "--data")))
-			_config.Engine.DataDirectory = ptr+7;
+		{
+			memset(_config.Engine.DataDirectory, 0x0, PATH_SIZE);
+			if (snprintf(_config.Engine.DataDirectory, PATH_SIZE, "%s", ptr+7) >= PATH_SIZE)
+			{ DIE("Invalid data directory argument !"); }
+		}
 		else if((ptr = strstr(arg, "--log")))
-			_config.Engine.LogFile = ptr+6;
+		{
+			memset(_config.Engine.LogFile, 0x0, PATH_SIZE);
+			if (snprintf(_config.Engine.LogFile, PATH_SIZE, "%s", ptr+6) >= PATH_SIZE)
+			{ DIE("Invalid renderer argument !"); }
+		}
 		else if ((ptr = strstr(arg, "--ini")))
 			_ReadINIFile(ptr+6);
 		else if ((ptr = strstr(arg, "--renderer")))
@@ -158,13 +166,23 @@ void Engine::_ReadINIFile(const char *file)
 	char buff[INI_BUFF_SZ];
 	memset(buff, 0x0, INI_BUFF_SZ);
 
-	Platform::GetConfigString("Engine", "sDataDirectory", "Data", buff, INI_BUFF_SZ, file);
-	_config.Engine.DataDirectory = string(buff);
-	memset(buff, 0x0, INI_BUFF_SZ);
-
-	Platform::GetConfigString("Engine", "sLogFile", "Engine.log", buff, INI_BUFF_SZ, file);
-	_config.Engine.LogFile = string(buff);
-	memset(buff, 0x0, INI_BUFF_SZ);
+	if(_config.Engine.DataDirectory[0] == 0x0)
+	{
+		Platform::GetConfigString("Engine", "sDataDirectory", "Data", buff, INI_BUFF_SZ, file);
+		memset(_config.Engine.DataDirectory, 0x0, PATH_SIZE);
+		if (snprintf(_config.Engine.DataDirectory, PATH_SIZE, "%s", buff) >= PATH_SIZE)
+		{ DIE("Failed to load configuration"); }
+		memset(buff, 0x0, INI_BUFF_SZ);
+	}
+	
+	if(_config.Engine.LogFile[0] == 0x0)
+	{
+		Platform::GetConfigString("Engine", "sLogFile", "Engine.log", buff, INI_BUFF_SZ, file);
+		memset(_config.Engine.LogFile, 0x0, PATH_SIZE);
+		if (snprintf(_config.Engine.LogFile, PATH_SIZE, "%s", buff) >= PATH_SIZE)
+		{ DIE("Failed to load configuration"); }
+		memset(buff, 0x0, INI_BUFF_SZ);
+	}
 
 	if(_gameModuleFile[0] == 0x0)
 	{

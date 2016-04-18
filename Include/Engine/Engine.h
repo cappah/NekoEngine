@@ -186,8 +186,8 @@ struct EngineConfig
 	int ScreenWidth;
 	bool Fullscreen;
 	bool LoadLooseFiles;
-	std::string DataDirectory;
-	std::string LogFile;
+	char DataDirectory[PATH_SIZE];
+	char LogFile[PATH_SIZE];
 };
 
 /**
