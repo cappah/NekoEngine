@@ -337,6 +337,8 @@ int Platform::MainLoop()
 		Engine::Frame();
 
 	XFlush(x_display);
+	
+	return 0;
 }
 
 void Platform::CleanUp()

@@ -197,6 +197,13 @@ char *_loadTGA(string path, int *width, int *height, int *bpp)
 	}
 
 	size_t bufferSize = fileLen - sizeof(header) - header.identsize;
+	
+	if(bufferSize == 0)
+	{
+		fclose(fp);
+		return NULL;
+	}
+	
 	char *pBuffer = (char *)calloc(sizeof(char), bufferSize);
 
 	if (!pBuffer)
@@ -217,7 +224,7 @@ char *_loadTGA(string path, int *width, int *height, int *bpp)
 	*height = header.height;
 	*bpp = header.bits;
 
-	unsigned long imgSize = header.width * header.height;
+	unsigned long imgSize = (unsigned long)header.width * (unsigned long)header.height;
 
 	if (imgSize < header.width || imgSize < header.height)
 	{
@@ -273,7 +280,7 @@ char* _loadTGAFromMemory(const uint8_t *mem, size_t memSize, int* width, int* he
 	*height = header.height;
 	*bpp = header.bits;
 
-	unsigned long imgSize = header.width * header.height;
+	unsigned long imgSize = (unsigned long)header.width * (unsigned long)header.height;
 
 	if (imgSize < header.width || imgSize < header.height)
 	{

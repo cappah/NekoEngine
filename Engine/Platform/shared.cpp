@@ -183,7 +183,10 @@ size_t Platform::GetConfigSection(const char *section, char *out, size_t size, c
 		return -1;
 
 	if(snprintf(sectionBuff, INI_LINE_BUFF, "[%s]", section) >= INI_LINE_BUFF)
+	{
+		fclose(fp);
 		return -1;
+	}
 	size_t len = strlen(sectionBuff);
 
 	while (fgets(lineBuff, INI_LINE_BUFF, fp))
