@@ -127,7 +127,7 @@ GLRenderer::GLRenderer()
 {
 	_ctx = nullptr;
 	_dc = nullptr;
-	_hWnd = nullptr;
+	_hWnd = (PlatformWindowType)0;
 }
 
 void GLRenderer::SetDebugLogFunction(RendererDebugLogProc debugLog)

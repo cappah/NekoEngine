@@ -43,8 +43,13 @@
 #include <dlfcn.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <string.h>
 #include <sys/utsname.h>
 #include <Platform/Platform.h>
+
+#include <string>
+
+using namespace std;
 
 static struct utsname uname_data;
 
@@ -69,29 +74,29 @@ const char* Platform::GetVersion()
 PlatformModuleType Platform::LoadModule(const char* module)
 {
 	char path[1024];
-	char *prefix = "", *suffix = "";
+	string prefix, suffix;
 
 	if (eaccess(module, R_OK) < 0)
 	{
 		// Module file does not exits; attempt to add "lib" and the shared library extension.
 
 		if (strncmp(module, "lib", 3))
-			prefix = lib;
+			prefix = "lib";
 
 		size_t len = strlen(module);
 
 #ifdef __APPLE__
-		if (len > 6)
+		if (len > 7)
 		{
-			if(strncmp(module - 6, ".dylib", 6))
+			if(strncmp(module - 7, ".dylib", 6))
 				suffix = ".dylib";
 		}
 		else
 			suffix = ".dylib";
 #else
-		if (len > 3)
+		if (len > 4)
 		{
-			if(strncmp(module - 3, ".so", 3))
+			if(strncmp(module - 4, ".so", 3))
 				suffix = ".so";
 		}
 		else
@@ -99,7 +104,7 @@ PlatformModuleType Platform::LoadModule(const char* module)
 #endif
 	}
 
-	snprintf(path, 1024, "%s%s%s", prefix, module, suffix);
+	snprintf(path, 1024, "%s%s%s", prefix.c_str(), module, suffix.c_str());
 
 	void *handle = dlopen(path, RTLD_NOW);
 
