@@ -878,7 +878,6 @@ bool CDDSImage::upload_texture2D(unsigned int imageIndex, GLenum target)
 {
 	assert(m_valid);
 	assert(!m_images.empty());
-	assert(imageIndex >= 0);
 	assert(imageIndex < m_images.size());
 	assert(m_images[imageIndex]);
 

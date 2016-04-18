@@ -125,6 +125,9 @@ std::vector<ShaderDefine> GLRenderer::_shaderDefines;
 
 GLRenderer::GLRenderer()
 {
+	_ctx = nullptr;
+	_dc = nullptr;
+	_hWnd = nullptr;
 }
 
 void GLRenderer::SetDebugLogFunction(RendererDebugLogProc debugLog)

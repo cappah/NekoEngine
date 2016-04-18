@@ -164,12 +164,25 @@ char *_loadTGA(string path, int *width, int *height, int *bpp)
 		return NULL;
 
 	TGA_HEADER header;
-	if(fread(&header, sizeof(header), 1, fp) != 1)
+	if (fread(&header, sizeof(header), 1, fp) != 1)
+	{
+		fclose(fp);
 		return NULL;
+	}
 
-	fseek(fp, 0, SEEK_END);
+	if (fseek(fp, 0, SEEK_END) != 0)
+	{
+		fclose(fp);
+		return NULL;
+	}
+
 	size_t fileLen = ftell(fp);
-	fseek(fp, sizeof(header) + header.identsize, SEEK_SET);
+
+	if(fseek(fp, sizeof(header) + header.identsize, SEEK_SET) != 0)
+	{
+		fclose(fp);
+		return NULL;
+	}
 
 	if (header.imagetype != IT_COMPRESSED && header.imagetype != IT_UNCOMPRESSED)
 	{

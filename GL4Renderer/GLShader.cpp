@@ -72,6 +72,9 @@ GLShader::GLShader()
 		_fsBuffers[i].index = -1;
 
 	_nextBinding = 0;
+	_program = 0;
+	_vsNumBuffers = 0;
+	_fsNumBuffers = 0;
 }
 
 void GLShader::BindUniformBuffers()
@@ -178,8 +181,22 @@ bool GLShader::LoadFromSource(ShaderType type, int count, const char **source, i
 	char defines[8192] { 0 };
 	
 	for (ShaderDefine &define : GLRenderer::GetShaderDefines())
-		if (snprintf(defines + strlen(defines), 8192, "#define %s %s\n", define.name.c_str(), define.value.c_str()) >= 8192)
+	{
+		int len = strlen(defines);
+
+		if (len >= 8191)
+		{
+			free(src);
 			return false;
+		}
+
+		if (snprintf(defines + strlen(defines), 8192, "#define %s %s\n", define.name.c_str(), define.value.c_str()) >= 8192)
+		{
+			free(src);
+			return false;
+		}
+	}
+
 	defines[strlen(defines)] = 0x0;
 	
 	src[1] = defines;
@@ -243,7 +260,7 @@ bool GLShader::Link()
 	for (int i = 0; i < 6; i++)
 	{
 		if (_shaders[i] != -1)
-			GL_CHECK(glAttachShader(_program, _shaders[i]));
+		{ GL_CHECK(glAttachShader(_program, _shaders[i])); }
 	}
 
 	GL_CHECK(glLinkProgram(_program));
@@ -252,7 +269,7 @@ bool GLShader::Link()
 	for (int i = 0; i < 6; i++)
 	{
 		if (_shaders[i] != -1)
-			GL_CHECK(glDeleteShader(_shaders[i]));
+		{ GL_CHECK(glDeleteShader(_shaders[i])); }
 		_shaders[i] = -1;
 	}
 
@@ -291,7 +308,7 @@ GLShader::~GLShader()
 	for (int i = 0; i < 6; i++)
 	{
 		if (_shaders[i] != -1)
-			GL_CHECK(glDeleteShader(_shaders[i]));
+		{ GL_CHECK(glDeleteShader(_shaders[i])); }
 		_shaders[i] = -1;
 	}
 

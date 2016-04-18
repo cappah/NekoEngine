@@ -68,6 +68,7 @@ extern GLenum GL_TexFilter[];
 GLFramebuffer::GLFramebuffer(int width, int height)
 	: RFramebuffer(width, height)
 {
+	_lastTarget = GL_DRAW_FRAMEBUFFER;
 	GL_CHECK(glCreateFramebuffers(1, &_id));
 	memset(_rbos, 0x0, sizeof(GLuint) * 3);
 }

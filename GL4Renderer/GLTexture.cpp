@@ -140,8 +140,12 @@ GLenum GL_CubeFace[6] =
 GLTexture::GLTexture(TextureType type)
 	: RTexture(type)
 {
-	GL_CHECK(glCreateTextures(GL_TexTarget[(int)type], 1, &_id));
 	_resident = false;
+	_handle = 0;
+	_fixedLocations = false;
+	_sizedFormat = TextureSizedFormat::RGBA_8U;
+
+	GL_CHECK(glCreateTextures(GL_TexTarget[(int)type], 1, &_id));
 }
 
 void GLTexture::MakeResident()

@@ -70,6 +70,9 @@ GLBuffer::GLBuffer(BufferType type, bool dynamic, bool persistent)
 	_numBuffers = 3;
 	_syncRanges = nullptr;
 	_target = GL_BufferTargets[(int)type];
+	_size = 0;
+	_totalSize = 0;
+	_currentBuffer = 0;
 
 	GL_CHECK(glCreateBuffers(1, &_id));
 }
