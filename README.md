@@ -7,7 +7,7 @@ Cross-platform 3D Game Engine
 
        A PC with a modern graphics card capable of OpenGL 4.5  (for Windows & *nix)
        - or -
-       A Mac with OpenGL 4.1 support (anything from 2011 onwards should work; only for Mac OS)
+       A Mac with OpenGL 4.1 support (anything from 2011 onwards should work; only if Mac OS, otherwise see above)
 
 **The engine has been tested on the following operating systems:**
 
@@ -110,7 +110,7 @@ Run the following command in the build directory:
 
 Alternatively, you can copy the Engine.ini file from Resources/Engine.ini to the build directory and modify the following:
 
-        sDataDirectory=../Resources/Data
+        sDataDirectory=Data -> sDataDirectory=../Resources/Data
         sRenderer=GL4Renderer -> sRenderer=libGL4Renderer.so
         sGameModule=TestGame -> sGameModule=libTestGame.so
 
