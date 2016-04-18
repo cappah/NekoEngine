@@ -129,10 +129,10 @@ int Shader::_CompileShader(ShaderType type, string &file)
 		else
 		{
 			str = str + 10;
-			str[strlen(str) - 2] = 0x0;
-			string path_str(str);
+			char *pEnd = strchr(str, '"');
+			*pEnd = 0x0;
 
-			if (!_IncludeFile(path_str, &source, &sourceSize))
+			if (!_IncludeFile(str, &source, &sourceSize))
 			{
 				f->Close();
 				free(source);
@@ -260,7 +260,7 @@ void Shader::SetDefines(Renderer *r)
 #endif
 }
 
-bool Shader::_IncludeFile(string &file, char **source, size_t *sourceSize)
+bool Shader::_IncludeFile(char* file, char** source, size_t* sourceSize)
 {
 	VFSFile *f;
 	char lineBuff[SHADER_LINE_BUFF];

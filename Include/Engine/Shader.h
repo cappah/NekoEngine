@@ -136,7 +136,7 @@ private:
 
 	int _CompileShader(ShaderType type, std::string& file);
 
-	bool _IncludeFile(std::string& file, char** source, size_t* sourceSize);
+	bool _IncludeFile(char* file, char** source, size_t* sourceSize);
 
 	inline bool _AppendSourceString(char** dst, char* src, size_t* size);
 };
