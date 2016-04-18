@@ -102,4 +102,6 @@ Effect::~Effect()
 {
 	for (int id : _shaderIds)
 		ResourceManager::UnloadResource(id, ResourceType::RES_SHADER);
+	
+	delete _effectUbo;
 }

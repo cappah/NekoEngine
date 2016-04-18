@@ -273,4 +273,6 @@ void PostProcessor::Release() noexcept
 		ResourceManager::UnloadResource(_shader->GetResourceInfo()->id, ResourceType::RES_SHADER);
 		_shader = nullptr;
 	}
+	
+	delete _ppUbo;
 }

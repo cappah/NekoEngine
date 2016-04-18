@@ -125,14 +125,15 @@ void Engine::_ParseArgs(string cmdLine)
 		if (!strchr(arg, '='))
 		{
 			if (strstr(arg, "--gfxdbg"))
-				_graphicsDebug = true;	
+				_graphicsDebug = true;
+			free(arg);
 			continue;
 		}
 
 		if ((ptr = strstr(arg, "--data")))
 			_config.Engine.DataDirectory = ptr+7;
-        else if((ptr = strstr(arg, "--log")))
-            _config.Engine.LogFile = ptr+6;
+		else if((ptr = strstr(arg, "--log")))
+			_config.Engine.LogFile = ptr+6;
 		else if ((ptr = strstr(arg, "--ini")))
 			_ReadINIFile(ptr+6);
 		else if ((ptr = strstr(arg, "--renderer")))

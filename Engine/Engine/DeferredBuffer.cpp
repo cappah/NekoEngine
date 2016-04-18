@@ -461,6 +461,7 @@ void DeferredBuffer::_DeleteTextures() noexcept
 	delete _gbTextures[GB_TEX_DEPTH_STENCIL];
 	delete _gbTextures[GB_TEX_LIGHT_ACCUM];
 	delete _gbTextures[GB_TEX_BRIGHT];
+	delete _gbTextures[GB_TEX_LIGHT];
 }
 
 void DeferredBuffer::CopyLight(RFramebuffer* destFbo) noexcept
@@ -505,4 +506,8 @@ void DeferredBuffer::Release() noexcept
 		_lightSphere->Unload();
 		delete _lightSphere;
 	}
+	
+	delete _lightMatrixUbo;
+	delete _sceneLightUbo;
+	delete _lightUbo;
 }

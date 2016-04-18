@@ -56,6 +56,8 @@ void Material::_LoadTexture(const char* name, int *id, TextureFilter* minFilter,
 	{
 		Logger::Log(MAT_MODULE, LOG_CRITICAL, "Malformed texture specification in material \"%s\"" ,_resourceInfo->name.c_str());
 		*id = -1;
+		for(char* p : texInfo)
+			free(p);
 		return;
 	}
 
@@ -64,6 +66,8 @@ void Material::_LoadTexture(const char* name, int *id, TextureFilter* minFilter,
 	if (*id == ENGINE_NOT_FOUND)
 	{
 		Logger::Log(MAT_MODULE, LOG_CRITICAL, "Texture \"%s\" not found; required by material \"%s\"", texInfo[0], _resourceInfo->name.c_str());
+		for(char* p : texInfo)
+			free(p);
 		return;
 	}
 
@@ -100,6 +104,9 @@ void Material::_LoadTexture(const char* name, int *id, TextureFilter* minFilter,
 		*wrapT = TextureWrap::Repeat;
 	else if (!strncmp(texInfo[4], "mirror", 6))
 		*wrapT = TextureWrap::MirroredRepeat;
+	
+	for(char* p : texInfo)
+		free(p);
 }
 
 int Material::Load()
@@ -210,6 +217,9 @@ int Material::Load()
 				wrapT
 			});
 		}
+		
+		for(char* p : split)
+			free(p);
 	}
 
 	f->Close();
@@ -277,6 +287,8 @@ void Material::Unload()
 	_textures.clear();
 	_textureParams.clear();
 	_textureIds.clear();
+	
+	delete _materialUbo;
 }
 
 Material::~Material()

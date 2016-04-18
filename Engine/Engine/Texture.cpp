@@ -104,25 +104,44 @@ int Texture::Load()
 		}
 	}
 
-	file->Seek(0, SEEK_END);
+	if(file->Seek(0, SEEK_END) == ENGINE_FAIL)
+	{
+		file->Close();
+		return ENGINE_FAIL;
+	}
+	
 	uint64_t size = file->Tell();
-	file->Seek(0, SEEK_SET);
+	
+	if(file->Seek(0, SEEK_SET) == ENGINE_FAIL)
+	{
+		file->Close();
+		return ENGINE_FAIL;
+	}
 	
 	uint8_t *mem = (uint8_t*)calloc(size, sizeof(uint8_t));
-	file->Read(mem, sizeof(uint8_t), size);
+	if(file->Read(mem, sizeof(uint8_t), size) == ENGINE_FAIL)
+	{
+		file->Close();
+		free(mem);
+		return ENGINE_FAIL;
+	}
 
 	_texture = Engine::GetRenderer()->CreateTexture(type);
 	if (!_texture)
 	{
 		file->Close();
+		free(mem);
 		return ENGINE_FAIL;
 	}
 
 	if (!_texture->LoadFromMemory(format, mem, size))
 	{
 		file->Close();
+		free(mem);
 		return ENGINE_FAIL;
 	}
+	
+	free(mem);
 
 	if (Engine::GetConfiguration().Renderer.Mipmaps)
 		_texture->GenerateMipmaps();

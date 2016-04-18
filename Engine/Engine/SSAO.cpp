@@ -248,4 +248,7 @@ SSAO::~SSAO()
 	_DeleteTextures(true);
 	delete _fbos[SSAO_FBO_0];
 	delete _fbos[SSAO_FBO_1];
+	delete _matrixUbo;
+	delete _dataUbo;
+	delete _blurUbo;
 }

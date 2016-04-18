@@ -261,7 +261,11 @@ Camera *Scene::_LoadCamera(VFSFile *f)
 		vector<char*> split = EngineUtils::SplitString(lineBuff, '=');
 
 		if (split.size() != 2)
+		{
+			for (char* c : split)
+				free(c);
 			continue;
+		}
 		
 		size_t len = strlen(split[0]);
 
@@ -679,6 +683,15 @@ void Scene::Unload() noexcept
 		SoundManager::SetBackgroundMusic(BG_MUSIC_NONE);
 	}
 
+	delete _sceneVertexBuffer;
+	_sceneVertexBuffer = nullptr;
+	
+	delete _sceneIndexBuffer;
+	_sceneIndexBuffer = nullptr;
+	
+	delete _sceneArrayBuffer;
+	_sceneArrayBuffer = nullptr;
+	
 	_loaded = false;
 }
 

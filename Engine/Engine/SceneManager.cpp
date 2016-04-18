@@ -109,7 +109,13 @@ int SceneManager::_ReadConfigFile(string file)
 				_scenes.push_back(new Scene(atoi(scnSplit[0]), scnSplit[1], scnSplit[2]));
 			else
 				_scenes.push_back(new Scene(atoi(scnSplit[0]), scnSplit[1]));
+			
+			for(char* p :scnSplit)
+				free(p);
 		}
+		
+		for(char* p : split)
+			free(p);
 	}
 
 	f->Close();

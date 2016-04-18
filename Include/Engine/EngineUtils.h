@@ -85,8 +85,12 @@ public:
 			char* sub = (char*)calloc(len + 1, sizeof(char));
 			memmove(sub, start, len);
 			vec.push_back(sub);
-			start = ++ptr;
-			ptr = strchr(++ptr, delim);
+			
+			if(ptr)
+				start = ++ptr;
+			
+			if(ptr)
+				ptr = strchr(++ptr, delim);
 		}
 
 		size_t len = strlen(start);

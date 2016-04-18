@@ -332,6 +332,9 @@ void Object::Unload() noexcept
 		_mesh = nullptr;
 	}
 
+	delete _objectUbo;
+	delete _matrixUbo;
+	
 	_loaded = false;
 }
 

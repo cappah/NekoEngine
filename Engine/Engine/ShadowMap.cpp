@@ -110,4 +110,6 @@ void ShadowMap::Render()
 
 ShadowMap::~ShadowMap()
 {
+	delete _texture;
+	delete _fbo;
 }
