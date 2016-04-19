@@ -7,8 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1270119B1CC31326001840A7 /* launcher.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1270119A1CC31326001840A7 /* launcher.mm */; };
-		1270125F1CC3164C001840A7 /* libEngine.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 127012531CC315FD001840A7 /* libEngine.dylib */; };
+		12B748301CC6E7C600825D36 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 12B7482F1CC6E7C600825D36 /* Assets.xcassets */; };
+		12B748381CC6E80100825D36 /* launcher.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1270119A1CC31326001840A7 /* launcher.mm */; };
+		12B7483B1CC6E81B00825D36 /* libEngine.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 127012531CC315FD001840A7 /* libEngine.dylib */; };
+		12B7483D1CC6E97200825D36 /* libEngine.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 127012531CC315FD001840A7 /* libEngine.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		12B748521CC6EA4E00825D36 /* libMacGLRenderer.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 12B748471CC6EA3300825D36 /* libMacGLRenderer.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		12B748531CC6EA4E00825D36 /* libTestGame.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 12B7484F1CC6EA4000825D36 /* libTestGame.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -19,29 +23,59 @@
 			remoteGlobalIDString = 12822AF11CC1AD4300EE5D0A;
 			remoteInfo = Engine;
 		};
-		127012541CC31603001840A7 /* PBXContainerItemProxy */ = {
+		12B748391CC6E81400825D36 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1270124E1CC315FD001840A7 /* Engine.xcodeproj */;
 			proxyType = 1;
 			remoteGlobalIDString = 12822AF01CC1AD4300EE5D0A;
 			remoteInfo = Engine;
 		};
+		12B748461CC6EA3300825D36 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 12B748421CC6EA3300825D36 /* MacGLRenderer.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1295DB991CC0F4CB003F27AB;
+			remoteInfo = MacGLRenderer;
+		};
+		12B748481CC6EA3A00825D36 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 12B748421CC6EA3300825D36 /* MacGLRenderer.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 1295DB981CC0F4CB003F27AB;
+			remoteInfo = MacGLRenderer;
+		};
+		12B7484E1CC6EA4000825D36 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 12B7484A1CC6EA4000825D36 /* TestGame.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 127011EF1CC313D7001840A7;
+			remoteInfo = TestGame;
+		};
+		12B748501CC6EA4400825D36 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 12B7484A1CC6EA4000825D36 /* TestGame.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 127011EE1CC313D7001840A7;
+			remoteInfo = TestGame;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		1270118C1CC312F3001840A7 /* CopyFiles */ = {
+		12B7483C1CC6E95500825D36 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
-			dstPath = /usr/share/man/man1/;
-			dstSubfolderSpec = 0;
+			dstPath = "";
+			dstSubfolderSpec = 6;
 			files = (
+				12B748521CC6EA4E00825D36 /* libMacGLRenderer.dylib in CopyFiles */,
+				12B748531CC6EA4E00825D36 /* libTestGame.dylib in CopyFiles */,
+				12B7483D1CC6E97200825D36 /* libEngine.dylib in CopyFiles */,
 			);
-			runOnlyForDeploymentPostprocessing = 1;
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		1270118E1CC312F3001840A7 /* Launcher */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Launcher; sourceTree = BUILT_PRODUCTS_DIR; };
 		1270119A1CC31326001840A7 /* launcher.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = launcher.mm; path = Mac/launcher.mm; sourceTree = "<group>"; };
 		1270119D1CC31346001840A7 /* AudioClip.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioClip.h; sourceTree = "<group>"; };
 		1270119E1CC31346001840A7 /* AudioSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioSource.h; sourceTree = "<group>"; };
@@ -101,14 +135,19 @@
 		127011DE1CC31346001840A7 /* VFSArchive.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VFSArchive.h; sourceTree = "<group>"; };
 		127011DF1CC31346001840A7 /* VFSFile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VFSFile.h; sourceTree = "<group>"; };
 		1270124E1CC315FD001840A7 /* Engine.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Engine.xcodeproj; path = ../Engine/Engine.xcodeproj; sourceTree = "<group>"; };
+		12B748271CC6E7C600825D36 /* Launcher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Launcher.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		12B7482F1CC6E7C600825D36 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		12B748341CC6E7C600825D36 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		12B748421CC6EA3300825D36 /* MacGLRenderer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MacGLRenderer.xcodeproj; path = ../MacGLRenderer/MacGLRenderer.xcodeproj; sourceTree = "<group>"; };
+		12B7484A1CC6EA4000825D36 /* TestGame.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = TestGame.xcodeproj; path = ../TestGame/TestGame.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		1270118B1CC312F3001840A7 /* Frameworks */ = {
+		12B748241CC6E7C600825D36 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1270125F1CC3164C001840A7 /* libEngine.dylib in Frameworks */,
+				12B7483B1CC6E81B00825D36 /* libEngine.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -119,8 +158,11 @@
 			isa = PBXGroup;
 			children = (
 				1270124E1CC315FD001840A7 /* Engine.xcodeproj */,
+				12B748421CC6EA3300825D36 /* MacGLRenderer.xcodeproj */,
+				12B7484A1CC6EA4000825D36 /* TestGame.xcodeproj */,
 				127011981CC31312001840A7 /* Include */,
 				127011991CC31317001840A7 /* Source */,
+				12B748281CC6E7C600825D36 /* Launcher */,
 				1270118F1CC312F3001840A7 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -128,7 +170,7 @@
 		1270118F1CC312F3001840A7 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				1270118E1CC312F3001840A7 /* Launcher */,
+				12B748271CC6E7C600825D36 /* Launcher.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -309,26 +351,54 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		12B748281CC6E7C600825D36 /* Launcher */ = {
+			isa = PBXGroup;
+			children = (
+				12B7482F1CC6E7C600825D36 /* Assets.xcassets */,
+				12B748341CC6E7C600825D36 /* Info.plist */,
+			);
+			path = Launcher;
+			sourceTree = "<group>";
+		};
+		12B748431CC6EA3300825D36 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				12B748471CC6EA3300825D36 /* libMacGLRenderer.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		12B7484B1CC6EA4000825D36 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				12B7484F1CC6EA4000825D36 /* libTestGame.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		1270118D1CC312F3001840A7 /* Launcher */ = {
+		12B748261CC6E7C600825D36 /* Launcher */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 127011951CC312F3001840A7 /* Build configuration list for PBXNativeTarget "Launcher" */;
+			buildConfigurationList = 12B748351CC6E7C600825D36 /* Build configuration list for PBXNativeTarget "Launcher" */;
 			buildPhases = (
-				1270118A1CC312F3001840A7 /* Sources */,
-				1270118B1CC312F3001840A7 /* Frameworks */,
-				1270118C1CC312F3001840A7 /* CopyFiles */,
+				12B748231CC6E7C600825D36 /* Sources */,
+				12B748241CC6E7C600825D36 /* Frameworks */,
+				12B748251CC6E7C600825D36 /* Resources */,
+				12B7483C1CC6E95500825D36 /* CopyFiles */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				127012551CC31603001840A7 /* PBXTargetDependency */,
+				12B748511CC6EA4400825D36 /* PBXTargetDependency */,
+				12B748491CC6EA3A00825D36 /* PBXTargetDependency */,
+				12B7483A1CC6E81400825D36 /* PBXTargetDependency */,
 			);
 			name = Launcher;
 			productName = Launcher;
-			productReference = 1270118E1CC312F3001840A7 /* Launcher */;
-			productType = "com.apple.product-type.tool";
+			productReference = 12B748271CC6E7C600825D36 /* Launcher.app */;
+			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
 
@@ -339,7 +409,7 @@
 				LastUpgradeCheck = 0730;
 				ORGANIZATIONNAME = "Alexandru Naiman";
 				TargetAttributes = {
-					1270118D1CC312F3001840A7 = {
+					12B748261CC6E7C600825D36 = {
 						CreatedOnToolsVersion = 7.3;
 					};
 				};
@@ -350,6 +420,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = 127011851CC312F3001840A7;
 			productRefGroup = 1270118F1CC312F3001840A7 /* Products */;
@@ -359,10 +430,18 @@
 					ProductGroup = 1270124F1CC315FD001840A7 /* Products */;
 					ProjectRef = 1270124E1CC315FD001840A7 /* Engine.xcodeproj */;
 				},
+				{
+					ProductGroup = 12B748431CC6EA3300825D36 /* Products */;
+					ProjectRef = 12B748421CC6EA3300825D36 /* MacGLRenderer.xcodeproj */;
+				},
+				{
+					ProductGroup = 12B7484B1CC6EA4000825D36 /* Products */;
+					ProjectRef = 12B7484A1CC6EA4000825D36 /* TestGame.xcodeproj */;
+				},
 			);
 			projectRoot = "";
 			targets = (
-				1270118D1CC312F3001840A7 /* Launcher */,
+				12B748261CC6E7C600825D36 /* Launcher */,
 			);
 		};
 /* End PBXProject section */
@@ -375,24 +454,59 @@
 			remoteRef = 127012521CC315FD001840A7 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		12B748471CC6EA3300825D36 /* libMacGLRenderer.dylib */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.dylib";
+			path = libMacGLRenderer.dylib;
+			remoteRef = 12B748461CC6EA3300825D36 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		12B7484F1CC6EA4000825D36 /* libTestGame.dylib */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.dylib";
+			path = libTestGame.dylib;
+			remoteRef = 12B7484E1CC6EA4000825D36 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 /* End PBXReferenceProxy section */
 
+/* Begin PBXResourcesBuildPhase section */
+		12B748251CC6E7C600825D36 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				12B748301CC6E7C600825D36 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
-		1270118A1CC312F3001840A7 /* Sources */ = {
+		12B748231CC6E7C600825D36 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1270119B1CC31326001840A7 /* launcher.mm in Sources */,
+				12B748381CC6E80100825D36 /* launcher.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		127012551CC31603001840A7 /* PBXTargetDependency */ = {
+		12B7483A1CC6E81400825D36 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = Engine;
-			targetProxy = 127012541CC31603001840A7 /* PBXContainerItemProxy */;
+			targetProxy = 12B748391CC6E81400825D36 /* PBXContainerItemProxy */;
+		};
+		12B748491CC6EA3A00825D36 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = MacGLRenderer;
+			targetProxy = 12B748481CC6EA3A00825D36 /* PBXContainerItemProxy */;
+		};
+		12B748511CC6EA4400825D36 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = TestGame;
+			targetProxy = 12B748501CC6EA4400825D36 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -478,24 +592,34 @@
 			};
 			name = Release;
 		};
-		127011961CC312F3001840A7 /* Debug */ = {
+		12B748361CC6E7C600825D36 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
 				HEADER_SEARCH_PATHS = (
 					"\"$(SRCROOT)/../Include\"",
 					/usr/local/include,
 				);
+				INFOPLIST_FILE = Launcher/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = org.anaiman.NekoEngine.Launcher;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
 		};
-		127011971CC312F3001840A7 /* Release */ = {
+		12B748371CC6E7C600825D36 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
 				HEADER_SEARCH_PATHS = (
 					"\"$(SRCROOT)/../Include\"",
 					/usr/local/include,
 				);
+				INFOPLIST_FILE = Launcher/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = org.anaiman.NekoEngine.Launcher;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -512,14 +636,13 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		127011951CC312F3001840A7 /* Build configuration list for PBXNativeTarget "Launcher" */ = {
+		12B748351CC6E7C600825D36 /* Build configuration list for PBXNativeTarget "Launcher" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				127011961CC312F3001840A7 /* Debug */,
-				127011971CC312F3001840A7 /* Release */,
+				12B748361CC6E7C600825D36 /* Debug */,
+				12B748371CC6E7C600825D36 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

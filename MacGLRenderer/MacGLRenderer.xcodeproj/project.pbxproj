@@ -347,6 +347,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				EXECUTABLE_PREFIX = lib;
 				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../Include\"";
+				INSTALL_PATH = "@rpath";
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_MODULE_NAME = MacGLRenderer;
 				PRODUCT_NAME = MacGLRenderer;
@@ -360,6 +361,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				EXECUTABLE_PREFIX = lib;
 				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../Include\"";
+				INSTALL_PATH = "@rpath";
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_MODULE_NAME = MacGLRenderer;
 				PRODUCT_NAME = MacGLRenderer;

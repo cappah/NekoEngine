@@ -527,6 +527,7 @@
 					/usr/local/include,
 					"\"$(SRCROOT)/../Include\"",
 				);
+				INSTALL_PATH = "@rpath";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -545,6 +546,7 @@
 					/usr/local/include,
 					"\"$(SRCROOT)/../Include\"",
 				);
+				INSTALL_PATH = "@rpath";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
