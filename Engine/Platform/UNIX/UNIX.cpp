@@ -76,7 +76,7 @@ PlatformModuleType Platform::LoadModule(const char* module)
 	char path[1024];
 	string prefix, suffix;
 
-	if (eaccess(module, R_OK) < 0)
+	if (access(module, R_OK) < 0)
 	{
 		// Module file does not exits; attempt to add "lib" and the shared library extension.
 

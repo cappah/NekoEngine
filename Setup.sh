@@ -1,6 +1,8 @@
 #!/bin/sh
 
 HAVE_X11=NO
+CC=gcc
+CXX=g++
 
 #############
 # Functions #
@@ -15,7 +17,7 @@ InstallDepsFail()
 InstallDepsPacman()
 {
 	echo "Attempting to install dependencies using pacman"
-	sudo pacman -Syy gcc make cmake sqlite openal libpng zlib libvorbis glm libx11;
+	sudo pacman -Syy gcc make cmake sqlite openal libpng zlib libvorbis libx11;
 
 	if [ $? -ne 0 ]; then
 		InstallDepsFail
@@ -28,7 +30,7 @@ InstallDepsAptGet()
 {
 	echo "Attempting to install dependencies using apt-get"
 	sudo apt-get update;
-	sudo apt-get install build-essential cmake libsqlite3-dev libpng-dev libglm-dev libx11-dev libopenal-dev libvorbis-dev libgles2-mesa-dev libgl1-mesa-dev; 
+	sudo apt-get install build-essential cmake libsqlite3-dev libpng-dev libx11-dev libopenal-dev libvorbis-dev libgles2-mesa-dev libgl1-mesa-dev; 
 
 	if [ $? -ne 0 ]; then
 		InstallDepsFail
@@ -40,7 +42,7 @@ InstallDepsAptGet()
 InstallDepsDnf()
 {
 	echo "Attempting to install dependencies using dnf"
-	sudo dnf -y install gcc gcc-c++ make cmake sqlite-devel libpng-devel glm-devel libX11-devel openal-devel libvorbis-devel mesa-libEGL-devel mesa-libGLES-devel mesa-libGL-devel;
+	sudo dnf -y install gcc gcc-c++ make cmake sqlite-devel libpng-devel libX11-devel openal-devel libvorbis-devel mesa-libEGL-devel mesa-libGLES-devel mesa-libGL-devel;
 
 	if [ $? -ne 0 ]; then
 		InstallDepsFail
@@ -52,7 +54,7 @@ InstallDepsDnf()
 InstallDepsYum()
 {
 	echo "Attempting to install dependencies using yum"
-	sudo yum -y install gcc gcc-c++ make cmake sqlite-devel libpng-devel glm-devel libX11-devel openal-devel libvorbis-devel mesa-libEGL-devel mesa-libGLES-devel mesa-libGL-devel;
+	sudo yum -y install gcc gcc-c++ make cmake sqlite-devel libpng-devel libX11-devel openal-devel libvorbis-devel mesa-libEGL-devel mesa-libGLES-devel mesa-libGL-devel;
 
 	if [ $? -ne 0 ]; then
 		InstallDepsFail
@@ -86,7 +88,7 @@ elif [ `uname` == "FreeBSD" ]; then
 	HAVE_X11=YES
 
 	echo "Attempting to install dependencies using pkg"
-	sudo pkg install gcc5 gmake cmake sqlite3 png glm libX11 openal-soft libvorbis libEGL libGL;
+	sudo pkg install gcc5 gmake cmake sqlite3 png libX11 openal-soft libvorbis libEGL libGL;
 
 	if [[ $? -ne 0 ]]; then
 		InstallDepsFail
@@ -95,8 +97,34 @@ elif [ `uname` == "FreeBSD" ]; then
 	echo "Dependencies installed"
 elif [ `uname` == "SunOS" ]; then
 	HAVE_X11=YES
+
+	if [ hash cmake 2>/dev/null ]; then
+		if [ hash pkgutil 2>/dev/null ]; then
+			echo "CMake not found and pkgutil is unavailable. Please install CMake or OpenCSW";
+			exit;
+		fi
+
+		echo "Attempting to install CMake using pkgutil"
+		sudo /opt/csw/bin/pkgutil -y -i cmake;
+	fi
+
+	if [ hash g++ 2>/dev/null ]; then
+		if [ hash pkgutil 2>/dev/null ]; then
+			echo "GCC not found and pkgutil is unavailable. Please install CMake or OpenCSW";
+			exit;
+		fi
+
+		echo "Attempting to install gcc5 using pkgutil"
+		sudo /opt/csw/bin/pkgutil -y -i gcc5core gcc5g++;
+	fi
+
+	if [ $? -ne 0 ]; then
+		InstallDepsFail
+	fi
+
+	echo "Dependencies installed"
 elif [ `uname` == "Darwin" ]; then
-	if hash brew 2>/dev/null; then
+	if [ hash brew 2>/dev/null ]; then
 		echo "Homebrew not found. Attempting to install..."
 		/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 		if [[ $? -ne 0 ]]; then
@@ -105,9 +133,9 @@ elif [ `uname` == "Darwin" ]; then
 	fi
 
 	brew update;
-	brew install libpng libvorbis glm;
+	brew install libpng libvorbis;
 
-	if [[ $? -ne 0 ]]; then
+	if [ $? -ne 0 ]; then
 		InstallDepsFail
 	fi
 fi
@@ -118,7 +146,7 @@ echo "Generating x11_icon.h"
 
 # Build tools
 mkdir -p Tools/bin
-cc -I/usr/local/include -L/usr/local/lib -o Tools/bin/png2argb Tools/png2argb.c -lpng
+gcc -I/usr/local/include -L/usr/local/lib -o Tools/bin/png2argb Tools/png2argb.c -lpng
 
 # Create x11_icon.h
 Tools/bin/png2argb Launcher/X11/icon_16.png Launcher/X11/icon_32.png Launcher/X11/icon_64.png Launcher/X11/icon_128.png Launcher/X11/icon_256.png Launcher/X11/icon_512.png > Engine/Platform/X11/x11_icon.h

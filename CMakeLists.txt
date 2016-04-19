@@ -22,13 +22,11 @@ file(GLOB RendererSourceFiles "GL4Renderer/*.cpp"
 	"GL4Renderer/Loaders/*.cpp"
 )
 
-set(FARRAH_VERSION_MAJOR 0)
-set(FARRAH_VERSION_MINOR 2)
-
 set(OPENAL_LIB openal)
 
 include_directories(/usr/local/include)
 include_directories(${PROJECT_SOURCE_DIR}/Include)
+include_directories(${PROJECT_SOURCE_DIR}/3rdparty/include_all)
 link_directories(/usr/local/lib)
 
 if(NOT MSVC)
