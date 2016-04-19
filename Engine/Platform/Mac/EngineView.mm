@@ -108,16 +108,20 @@ CFStringRef createStringForKey(CGKeyCode keyCode)
 
 - (void)mouseDragged:(NSEvent *)theEvent
 {
-	[super mouseDragged:theEvent];
+	[self mouseMoved:theEvent];
 }
 
 - (void)mouseMoved:(NSEvent *)theEvent
-{
-	[super mouseMoved:theEvent];
+{	
 	self.mouseLocation = NSMakePoint(theEvent.absoluteX, theEvent.absoluteY);
 }
 
 - (BOOL)acceptsFirstResponder
+{
+	return true;
+}
+
+- (BOOL)acceptsFirstMouse:(NSEvent *)theEvent
 {
 	return true;
 }

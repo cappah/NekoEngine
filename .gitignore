@@ -245,4 +245,5 @@ _Pvt_Extensions
 .fake/
 
 # Xcode
-.xcuserdatad
+*.xcuserdata
+*.xcuserdatad
