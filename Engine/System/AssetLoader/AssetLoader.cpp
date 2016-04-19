@@ -239,7 +239,7 @@ int AssetLoader::LoadWAV(string &file, ALenum *format, ALvoid **data, ALsizei *s
 	memset(&wave_data, 0x0, sizeof(wave_data_t));
 	if(f->Read(&wave_data, sizeof(wave_data_t), 1) != 1)
 	{ ret = ENGINE_IO_FAIL; goto exit; }
-
+	
 	if(wave_data.sub_chunk_id[0] != 'd' ||
 	   wave_data.sub_chunk_id[1] != 'a' ||
 	   wave_data.sub_chunk_id[2] != 't' ||

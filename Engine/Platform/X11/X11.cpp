@@ -224,6 +224,7 @@ void Platform::SetWindowTitle(PlatformWindowType hWnd, const char* title)
 
 bool Platform::EnterFullscreen(int width, int height)
 {
+	return false;
 }
 
 bool Platform::CapturePointer()

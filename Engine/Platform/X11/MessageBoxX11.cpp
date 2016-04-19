@@ -117,6 +117,9 @@ int MessageBoxX11(const char* title, const char* text, unsigned int flags)
 	XSizeHints hints;
 	XEvent e;
 	int ret = X11_MSG_BOX_RET_CANCEL;
+	
+	memset(&primaryBtn, 0x0, sizeof(button));
+	memset(&secondaryBtn, 0x0, sizeof(button));
 
 	/* Open a display */
 	if(!(dpy = XOpenDisplay(0)))
