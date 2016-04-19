@@ -99,7 +99,7 @@ int Texture::Load()
 
 		if(!file)
 		{
-			Logger::Log(TEX_MODULE, LOG_CRITICAL, "Failed to load texture id %d. Reason: unsupported texture format.", _resourceInfo->id);
+			Logger::Log(TEX_MODULE, LOG_CRITICAL, "Failed to load texture id %d, file name [%s]. Reason: unsupported texture format.", GetResourceInfo()->id, GetResourceInfo()->filePath.c_str());
 			return ENGINE_FAIL;
 		}
 	}

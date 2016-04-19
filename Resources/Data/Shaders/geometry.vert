@@ -27,7 +27,7 @@ layout(std140) uniform BoneBlock
 };
 
 #define MaterialType MaterialData1.x
-#define AnimatedMesh MaterialData1.y
+#define AnimatedMesh MaterialData1.z
 
 layout(location=U_TEXTURE4) uniform TEXTURE_2D HeightmapTexture;
 

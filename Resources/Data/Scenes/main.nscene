@@ -4,8 +4,8 @@ name=Main
 bgmusic=bg_meat_grinder
 bgmusicvol=0.2
 gamemodule=TestGame
-ambcolor=1.0, 1.0, 1.0
-ambintensity=0.2
+ambcolor=0.02, 0.02, 0.02
+ambintensity=0.02
 EndSceneInfo
 
 # Camera
@@ -83,10 +83,10 @@ EndObject
 Object
 id=5
 mesh=stm_arissa
-material=mat_skyreflect
-material=mat_skyreflect
-material=mat_skyreflect
-material=mat_skyreflect
+material=mat_arissa
+material=mat_arissa
+material=mat_arissa
+material=mat_arissa
 position=-117.5, -30.0, -145.0
 rotation=0.0, 0.0, 0.0
 scale=45.0, 45.0, 45.0
@@ -175,7 +175,7 @@ scale=0.1, 0.1, 0.1
 position=550.0, 150.0, -600.0
 rotation=0.0, 90.0, 0.0
 color=0.0, 1.0, 0.0
-opt=lt_point;tr_linear;tr_speed:150;fwd:posz;tr_end:550.0, 150.0, 600.0;lt_attenuation:300.0, 350.0;lt_intensity:1.0
+opt=lt_point;tr_linear;tr_speed:150;fwd:posz;tr_end:550.0, 150.0, 600.0;lt_attenuation:300.0, 350.0;lt_intensity:2.0
 EndObject
 
 Object=Light
@@ -186,7 +186,7 @@ scale=0.1, 0.1, 0.1
 position=550.0, 150.0, 600.0
 rotation=0.0, 90.0, 0.0
 color=1.0, 0.0, 0.0
-opt=lt_point;tr_linear;tr_speed:150;fwd:posz;tr_end:550.0, 150.0, -600.0;lt_attenuation:300.0, 350.0;lt_intensity:1.0
+opt=lt_point;tr_linear;tr_speed:150;fwd:posz;tr_end:550.0, 150.0, -600.0;lt_attenuation:300.0, 350.0;lt_intensity:2.0
 EndObject
 
 Object=Light
@@ -198,7 +198,7 @@ position=0.0, 150.0, 0.0
 rotation=0.0, 0.0, 0.0
 color=1.0, 1.0, 1.0
 #opt=tr_linear;tr_speed:100.0;fwd:posz;tr_end:-4000.0, 150.0, -600.0;lt_point;lt_coords:50.0, -60.0, -600.0
-opt=lt_directional;lt_intensity:1.0;lt_direction:1.0, 0.5, 0.0
+opt=lt_directional;lt_intensity:0.5;lt_direction:1.0, 0.5, 0.0
 EndObject
 
 # Big light
@@ -210,7 +210,7 @@ scale=0.1, 0.1, 0.1
 position=0.0, 150.0, 0.0
 rotation=0.0, 0.0, 0.0
 color=1.0, 1.0, 1.0
-opt=lt_point;lt_attenuation:500.0, 550.0;lt_intensity:1.5
+opt=lt_point;lt_attenuation:500.0, 550.0;lt_intensity:1.0
 EndObject
 
 # Fire light

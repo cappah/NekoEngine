@@ -1,0 +1,8 @@
+NMTL1 
+type=normalandspecular
+texture=tex_arissa_d,linear,linear,repeat,repeat
+texture=tex_arissa_n,linear,linear,repeat,repeat
+texture=tex_arissa_s,linear,linear,repeat,repeat
+kdiffuse=1.0
+kspecular=0.1
+shininess=4.0

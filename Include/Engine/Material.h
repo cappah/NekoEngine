@@ -57,7 +57,9 @@ typedef struct MATERIAL_BLOCK
 	float Shininess;
 	float Bloom;
 	float MaterialType;
-	float padding[3];
+	float NoDiscard;
+	float AnimatedMesh;
+	float padding;
 } MaterialBlock;
 
 class Material :

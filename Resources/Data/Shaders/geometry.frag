@@ -39,6 +39,7 @@ layout(std140) uniform MaterialBlock
 #define Bloom MaterialData.w
 #define MaterialType MaterialData1.x
 #define ShaderType int(MaterialData1.x)
+#define NoDiscard MaterialData1.y
 
 layout(location=U_TEXTURE0) uniform TEXTURE_2D u_texture0;
 layout(location=U_TEXTURE1) uniform TEXTURE_2D u_texture1;
@@ -67,6 +68,7 @@ void setColorSpecularMap()
 {
 	o_ColorSpecular = texture(GET_TEX_2D(u_texture0), vertexData.UV);
 
+	o_ColorSpecular.a += NoDiscard;
 	if(o_ColorSpecular.a < 0.1)
 		discard;
 
@@ -80,6 +82,7 @@ void setColorSpecularArg()
 {
 	o_ColorSpecular = texture(GET_TEX_2D(u_texture0), vertexData.UV);
 
+	o_ColorSpecular.a += NoDiscard;
 	if(o_ColorSpecular.a < 0.1)
 		discard;
 

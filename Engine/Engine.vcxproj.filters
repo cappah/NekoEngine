@@ -19,27 +19,6 @@
     <Filter Include="Resources\Data\Shaders\postproc">
       <UniqueIdentifier>{5a2836ac-cef7-40a8-8c8e-dee8a1f4e58b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resources\Data\Materials\t-90">
-      <UniqueIdentifier>{a7fe867a-56e9-4abc-968e-e90b5722b76d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resources\Data\Materials\kat">
-      <UniqueIdentifier>{6fa06b34-2766-44ef-94db-615c0a147513}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resources\Data\Materials\juliet">
-      <UniqueIdentifier>{7e66c4d7-178c-4f8b-9694-90b844584efc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resources\Data\Materials\lara">
-      <UniqueIdentifier>{71a542d6-63a8-48e3-92a2-8e9794a4ac7f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resources\Data\Materials\ellie">
-      <UniqueIdentifier>{6a588d08-2c6c-4946-af28-2aba1e9b5f95}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resources\Data\Materials\isis">
-      <UniqueIdentifier>{ade9087f-59d8-4ae9-ae94-25071287cc10}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resources\Data\Materials\truck">
-      <UniqueIdentifier>{92537d66-631d-4c14-b69c-30d65fc4d123}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Resources\Data\Shaders\forward">
       <UniqueIdentifier>{6c97070b-0dfe-4a63-b1d5-3693dd61e7cf}</UniqueIdentifier>
     </Filter>
@@ -113,6 +92,9 @@
     </Filter>
     <Filter Include="Source\Platform\Windows">
       <UniqueIdentifier>{5ba0d0b8-394f-4fe6-b59e-05d2f9369117}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources\Data\Materials\nyra">
+      <UniqueIdentifier>{ec869461-269a-4d65-8550-9f3eac1923db}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -403,28 +385,7 @@
     <None Include="..\Resources\Data\Materials\bila.nmtl">
       <Filter>Resources\Data\Materials</Filter>
     </None>
-    <None Include="..\Resources\Data\Materials\car.nmtl">
-      <Filter>Resources\Data\Materials</Filter>
-    </None>
-    <None Include="..\Resources\Data\Materials\car_glass.nmtl">
-      <Filter>Resources\Data\Materials</Filter>
-    </None>
-    <None Include="..\Resources\Data\Materials\cat.nmtl">
-      <Filter>Resources\Data\Materials</Filter>
-    </None>
-    <None Include="..\Resources\Data\Materials\dancer_eye.nmtl">
-      <Filter>Resources\Data\Materials</Filter>
-    </None>
-    <None Include="..\Resources\Data\Materials\dancer1.nmtl">
-      <Filter>Resources\Data\Materials</Filter>
-    </None>
-    <None Include="..\Resources\Data\Materials\dancer2.nmtl">
-      <Filter>Resources\Data\Materials</Filter>
-    </None>
-    <None Include="..\Resources\Data\Materials\farmhouse.nmtl">
-      <Filter>Resources\Data\Materials</Filter>
-    </None>
-    <None Include="..\Resources\Data\Materials\fire.nmtl">
+    <None Include="..\Resources\Data\Materials\house.nmtl">
       <Filter>Resources\Data\Materials</Filter>
     </None>
     <None Include="..\Resources\Data\Materials\m_house.nmtl">
@@ -442,137 +403,14 @@
     <None Include="..\Resources\Data\Materials\w_girl.nmtl">
       <Filter>Resources\Data\Materials</Filter>
     </None>
-    <None Include="..\Resources\Data\Materials\truck\mat1.nmtl">
-      <Filter>Resources\Data\Materials\truck</Filter>
+    <None Include="..\Resources\Data\Materials\nyra\head.nmtl">
+      <Filter>Resources\Data\Materials\nyra</Filter>
     </None>
-    <None Include="..\Resources\Data\Materials\truck\mat2.nmtl">
-      <Filter>Resources\Data\Materials\truck</Filter>
+    <None Include="..\Resources\Data\Materials\nyra\body.nmtl">
+      <Filter>Resources\Data\Materials\nyra</Filter>
     </None>
-    <None Include="..\Resources\Data\Materials\t-90\gun.nmtl">
-      <Filter>Resources\Data\Materials\t-90</Filter>
-    </None>
-    <None Include="..\Resources\Data\Materials\t-90\turret.nmtl">
-      <Filter>Resources\Data\Materials\t-90</Filter>
-    </None>
-    <None Include="..\Resources\Data\Materials\t-90\body2.nmtl">
-      <Filter>Resources\Data\Materials\t-90</Filter>
-    </None>
-    <None Include="..\Resources\Data\Materials\t-90\body.nmtl">
-      <Filter>Resources\Data\Materials\t-90</Filter>
-    </None>
-    <None Include="..\Resources\Data\Materials\ellie\ellie_backpack.nmtl">
-      <Filter>Resources\Data\Materials\ellie</Filter>
-    </None>
-    <None Include="..\Resources\Data\Materials\ellie\ellie_eye.nmtl">
-      <Filter>Resources\Data\Materials\ellie</Filter>
-    </None>
-    <None Include="..\Resources\Data\Materials\ellie\ellie_eyelashes.nmtl">
-      <Filter>Resources\Data\Materials\ellie</Filter>
-    </None>
-    <None Include="..\Resources\Data\Materials\ellie\ellie_hair.nmtl">
-      <Filter>Resources\Data\Materials\ellie</Filter>
-    </None>
-    <None Include="..\Resources\Data\Materials\ellie\ellie_hands_mouth.nmtl">
-      <Filter>Resources\Data\Materials\ellie</Filter>
-    </None>
-    <None Include="..\Resources\Data\Materials\ellie\ellie_head.nmtl">
-      <Filter>Resources\Data\Materials\ellie</Filter>
-    </None>
-    <None Include="..\Resources\Data\Materials\ellie\ellie_jeans.nmtl">
-      <Filter>Resources\Data\Materials\ellie</Filter>
-    </None>
-    <None Include="..\Resources\Data\Materials\ellie\ellie_lacrimal.nmtl">
-      <Filter>Resources\Data\Materials\ellie</Filter>
-    </None>
-    <None Include="..\Resources\Data\Materials\ellie\ellie_shirt.nmtl">
-      <Filter>Resources\Data\Materials\ellie</Filter>
-    </None>
-    <None Include="..\Resources\Data\Materials\ellie\ellie_shoes.nmtl">
-      <Filter>Resources\Data\Materials\ellie</Filter>
-    </None>
-    <None Include="..\Resources\Data\Materials\lara\lara_hair.nmtl">
-      <Filter>Resources\Data\Materials\lara</Filter>
-    </None>
-    <None Include="..\Resources\Data\Materials\lara\lara_hands.nmtl">
-      <Filter>Resources\Data\Materials\lara</Filter>
-    </None>
-    <None Include="..\Resources\Data\Materials\lara\lara_head.nmtl">
-      <Filter>Resources\Data\Materials\lara</Filter>
-    </None>
-    <None Include="..\Resources\Data\Materials\lara\lara_legs.nmtl">
-      <Filter>Resources\Data\Materials\lara</Filter>
-    </None>
-    <None Include="..\Resources\Data\Materials\lara\lara_mouth.nmtl">
-      <Filter>Resources\Data\Materials\lara</Filter>
-    </None>
-    <None Include="..\Resources\Data\Materials\lara\lara_ponytail.nmtl">
-      <Filter>Resources\Data\Materials\lara</Filter>
-    </None>
-    <None Include="..\Resources\Data\Materials\lara\lara_torso.nmtl">
-      <Filter>Resources\Data\Materials\lara</Filter>
-    </None>
-    <None Include="..\Resources\Data\Materials\lara\lara_boots.nmtl">
-      <Filter>Resources\Data\Materials\lara</Filter>
-    </None>
-    <None Include="..\Resources\Data\Materials\lara\lara_eye.nmtl">
-      <Filter>Resources\Data\Materials\lara</Filter>
-    </None>
-    <None Include="..\Resources\Data\Materials\lara\lara_eyebrows.nmtl">
-      <Filter>Resources\Data\Materials\lara</Filter>
-    </None>
-    <None Include="..\Resources\Data\Materials\lara\lara_eyelash.nmtl">
-      <Filter>Resources\Data\Materials\lara</Filter>
-    </None>
-    <None Include="..\Resources\Data\Materials\kat\kat_cloth.nmtl">
-      <Filter>Resources\Data\Materials\kat</Filter>
-    </None>
-    <None Include="..\Resources\Data\Materials\kat\kat_eye.nmtl">
-      <Filter>Resources\Data\Materials\kat</Filter>
-    </None>
-    <None Include="..\Resources\Data\Materials\kat\kat_face.nmtl">
-      <Filter>Resources\Data\Materials\kat</Filter>
-    </None>
-    <None Include="..\Resources\Data\Materials\kat\kat_hair.nmtl">
-      <Filter>Resources\Data\Materials\kat</Filter>
-    </None>
-    <None Include="..\Resources\Data\Materials\kat\kat_body.nmtl">
-      <Filter>Resources\Data\Materials\kat</Filter>
-    </None>
-    <None Include="..\Resources\Data\Materials\kat\kat_caruncles.nmtl">
-      <Filter>Resources\Data\Materials\kat</Filter>
-    </None>
-    <None Include="..\Resources\Data\Materials\juliet\juliet_hair.nmtl">
-      <Filter>Resources\Data\Materials\juliet</Filter>
-    </None>
-    <None Include="..\Resources\Data\Materials\juliet\juliet_skin.nmtl">
-      <Filter>Resources\Data\Materials\juliet</Filter>
-    </None>
-    <None Include="..\Resources\Data\Materials\juliet\juliet_cloth.nmtl">
-      <Filter>Resources\Data\Materials\juliet</Filter>
-    </None>
-    <None Include="..\Resources\Data\Materials\isis\isis_eyelashes.nmtl">
-      <Filter>Resources\Data\Materials\isis</Filter>
-    </None>
-    <None Include="..\Resources\Data\Materials\isis\isis_hair.nmtl">
-      <Filter>Resources\Data\Materials\isis</Filter>
-    </None>
-    <None Include="..\Resources\Data\Materials\isis\isis_head.nmtl">
-      <Filter>Resources\Data\Materials\isis</Filter>
-    </None>
-    <None Include="..\Resources\Data\Materials\isis\isis_skin.nmtl">
-      <Filter>Resources\Data\Materials\isis</Filter>
-    </None>
-    <None Include="..\Resources\Data\Materials\isis\isis_teeth.nmtl">
-      <Filter>Resources\Data\Materials\isis</Filter>
-    </None>
-    <None Include="..\Resources\Data\Materials\isis\isis_clothes.nmtl">
-      <Filter>Resources\Data\Materials\isis</Filter>
-    </None>
-    <None Include="..\Resources\Data\Materials\isis\isis_eye.nmtl">
-      <Filter>Resources\Data\Materials\isis</Filter>
-    </None>
-    <None Include="..\Resources\Data\Materials\isis\isis_eye_reflection.nmtl">
-      <Filter>Resources\Data\Materials\isis</Filter>
+    <None Include="..\Resources\Data\Materials\arissa.nmtl">
+      <Filter>Resources\Data\Materials</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

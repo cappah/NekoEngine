@@ -164,6 +164,8 @@ int Material::Load()
 				_noCulling = true;
 			if (strstr(lineBuff, "bloom"))
 				_materialInfo.Bloom = 1.f;
+			if (strstr(lineBuff, "nodiscard"))
+				_materialInfo.NoDiscard = 1.f;
 			continue;
 		}
 
