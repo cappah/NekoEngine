@@ -92,11 +92,7 @@ PlatformWindowType Platform::CreateWindow(int width, int height, bool fullscreen
 	
 	NSUInteger styleMask = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask | NSResizableWindowMask /*| NSFullScreenWindowMask*/;
 	
-	NSRect screenRect = [[NSScreen mainScreen] frame];
-	int posX = (screenRect.size.width - width) / 2;
-	int posY = (screenRect.size.height - height) / 2;
-	
-	hWnd = [[NSWindow alloc] initWithContentRect:NSMakeRect(posX, posY, width, height) styleMask:styleMask backing:NSBackingStoreBuffered defer:false];
+	hWnd = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, width, height) styleMask:styleMask backing:NSBackingStoreBuffered defer:false];
 	[hWnd cascadeTopLeftFromPoint:NSMakePoint(20, 20)];
 	[hWnd setTitle:@"NekoEngine"];
 	//[hWnd setCollectionBehavior:[hWnd collectionBehavior] | NSWindowCollectionBehaviorFullScreenPrimary];
@@ -106,6 +102,8 @@ PlatformWindowType Platform::CreateWindow(int width, int height, bool fullscreen
 	[hWnd setContentView:_engineView];
 	[hWnd setInitialFirstResponder:_engineView];
 	[hWnd makeFirstResponder:_engineView];
+	
+	[hWnd center];
 	
 	_engineApp = [[EngineApp alloc] init];
 
@@ -148,6 +146,8 @@ bool Platform::GetPointerPosition(long& x, long& y)
 bool Platform::SetPointerPosition(long x, long y)
 {
 	NSRect globalPosition = [_activeWindow convertRectToScreen:NSMakeRect(x, _engineView.frame.size.height - y - 1, 0, 0)];
+	
+	CGAssociateMouseAndMouseCursorPosition(false);
 	CGWarpMouseCursorPosition(CGPointMake(globalPosition.origin.x, CGDisplayBounds(CGMainDisplayID()).size.height - globalPosition.origin.y));
 	CGAssociateMouseAndMouseCursorPosition(true);
 	
