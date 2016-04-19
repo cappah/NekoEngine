@@ -19,9 +19,6 @@
       <Group
          location = "group:Resources/Data"
          name = "Data">
-         <FileRef
-            location = "group:assets.txt">
-         </FileRef>
          <Group
             location = "group:Fonts"
             name = "Fonts">

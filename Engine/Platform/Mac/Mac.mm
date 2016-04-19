@@ -95,7 +95,7 @@ PlatformWindowType Platform::CreateWindow(int width, int height, bool fullscreen
 	hWnd = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, width, height) styleMask:styleMask backing:NSBackingStoreBuffered defer:false];
 	[hWnd cascadeTopLeftFromPoint:NSMakePoint(20, 20)];
 	[hWnd setTitle:@"NekoEngine"];
-	//[hWnd setCollectionBehavior:[hWnd collectionBehavior] | NSWindowCollectionBehaviorFullScreenPrimary];
+	[hWnd setCollectionBehavior:[hWnd collectionBehavior] | NSWindowCollectionBehaviorFullScreenPrimary];
 	[hWnd makeKeyAndOrderFront:nil];
 	
 	_engineView = [[EngineView alloc] initWithFrame:hWnd.contentView.frame];
@@ -103,10 +103,13 @@ PlatformWindowType Platform::CreateWindow(int width, int height, bool fullscreen
 	[hWnd setInitialFirstResponder:_engineView];
 	[hWnd makeFirstResponder:_engineView];
 	
-	[hWnd center];
+	[hWnd center];	
+	
+	if(fullscreen)
+		[hWnd toggleFullScreen:nil];
 	
 	_engineApp = [[EngineApp alloc] init];
-
+	
 	return hWnd;
 }
 

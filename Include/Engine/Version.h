@@ -43,10 +43,10 @@
 #define	ENGINE_VERSION_MAJOR	0
 #define ENGINE_VERSION_MINOR	3
 #define ENGINE_VERSION_REVISION 0
-#define ENGINE_VERSION_BUILD	215
+#define ENGINE_VERSION_BUILD	216
 #define ENGINE_VERSION_PATCH	0
 
-#define ENGINE_VERSION_STRING	"0.3.0.215"
+#define ENGINE_VERSION_STRING	"0.3.0.216"
 
 #if defined(ES_PLATFORM_WINDOWS)
 	#if defined(ES_ARCH_X8664)
@@ -114,9 +114,9 @@
 	#endif
 #elif defined(ES_PLATFORM_MAC)
 	#if defined(ES_ARCH_X8664)
-		#define ENGINE_PLATFORM_STRING		"MacOS X x86_64"
+		#define ENGINE_PLATFORM_STRING		"Mac OS X x86_64"
 	#else
-		#define ENGINE_PLATFORM_STRING		"MacOS X x86"
+		#define ENGINE_PLATFORM_STRING		"Mac OS X x86"
 	#endif
 #elif defined(ES_PLATFORM_BB10)
 	#if defined(ES_ARCH_ARM)
