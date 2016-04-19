@@ -2,7 +2,7 @@ NSCENE1
 SceneInfo
 name=Main
 bgmusic=bg_meat_grinder
-bgmusicvol=1.0
+bgmusicvol=0.2
 gamemodule=TestGame
 ambcolor=1.0, 1.0, 1.0
 ambintensity=0.2

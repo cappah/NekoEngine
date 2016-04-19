@@ -341,14 +341,14 @@ void Scene::_LoadSceneInfo(VFSFile *f)
 
 		if (!strncmp(split[0], "name", len))
 			_name = split[1];
-		else if (!strncmp(split[0], "bgmusicvol", len))
-			_bgMusicVolume = (float)atof(split[1]);
 		else if (!strncmp(split[0], "bgmusic", len))
 		{
-			_bgMusic = ResourceManager::GetResourceID(split[1], ResourceType::RES_MESH);
+			_bgMusic = ResourceManager::GetResourceID(split[1], ResourceType::RES_AUDIOCLIP);
 			if (_bgMusic == ENGINE_NOT_FOUND)
 				Logger::Log(SCENE_MODULE, LOG_CRITICAL, "Failed to load background music for scene id %d. Audioclip \"%s\" not found.", _id, split[1]);
 		}
+		else if (!strncmp(split[0], "bgmusicvol", len))
+			_bgMusicVolume = (float)atof(split[1]);
 		else if (!strncmp(split[0], "ambintensity", len))
 			_ambientColorIntensity = (float)atof(split[1]);
 		else if (!strncmp(split[0], "ambcolor", len))
