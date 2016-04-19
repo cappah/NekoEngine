@@ -88,7 +88,7 @@ PlatformModuleType Platform::LoadModule(const char* module)
 #ifdef __APPLE__
 		if (len > 7)
 		{
-			if(strncmp(module - 7, ".dylib", 6))
+			if(strncmp(module + len - 6, ".dylib", 6))
 				suffix = ".dylib";
 		}
 		else
@@ -96,7 +96,7 @@ PlatformModuleType Platform::LoadModule(const char* module)
 #else
 		if (len > 4)
 		{
-			if(strncmp(module - 4, ".so", 3))
+			if(strncmp(module + len - 3, ".so", 3))
 				suffix = ".so";
 		}
 		else
