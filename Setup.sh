@@ -15,11 +15,11 @@ InstallDepsFail()
 InstallDepsPacman()
 {
 	echo "Attempting to install dependencies using pacman"
-#	pacman -Syy cmake sqlite openal libpng zlib libvorbis glm libx11;
+	sudo pacman -Syy gcc make cmake sqlite openal libpng zlib libvorbis glm libx11;
 
-#	if [[ $? -ne 0 ]]; then
-#		InstallDepsFail
-#	fi
+	if [[ $? -ne 0 ]]; then
+		InstallDepsFail
+	fi
 
 	echo "Dependencies installed"
 }
@@ -27,8 +27,8 @@ InstallDepsPacman()
 InstallDepsAptGet()
 {
 	echo "Attempting to install dependencies using apt-get"
-	apt-get update;
-	apt-get install cmake libsqlite3-dev libpng-dev libglm-dev libx11-dev libopenal-dev libvorbis-dev libgles2-mesa-dev libgl1-mesa-dev; 
+	sudo apt-get update;
+	sudo apt-get install build-essential cmake libsqlite3-dev libpng-dev libglm-dev libx11-dev libopenal-dev libvorbis-dev libgles2-mesa-dev libgl1-mesa-dev; 
 
 	if [[ $? -ne 0 ]]; then
 		InstallDepsFail
@@ -39,12 +39,28 @@ InstallDepsAptGet()
 
 InstallDepsDnf()
 {
+	echo "Attempting to install dependencies using dnf"
+	sudo dnf -y install gcc gcc-c++ make cmake sqlite-devel libpng-devel glm-devel libX11-devel openal-devel libvorbis-devel mesa-libEGL-devel mesa-libGLES-devel mesa-libGL-devel;
+
+	if [[ $? -ne 0 ]]; then
+		InstallDepsFail
+	fi
+
+	echo "Dependencies installed"
+
 	echo "pacman"
 }
 
 InstallDepsYum()
 {
-	echo "pacman"
+	echo "Attempting to install dependencies using yum"
+	sudo yum -y install gcc gcc-c++ make cmake sqlite-devel libpng-devel glm-devel libX11-devel openal-devel libvorbis-devel mesa-libEGL-devel mesa-libGLES-devel mesa-libGL-devel;
+
+	if [[ $? -ne 0 ]]; then
+		InstallDepsFail
+	fi
+
+	echo "Dependencies installed"
 }
 
 ########
