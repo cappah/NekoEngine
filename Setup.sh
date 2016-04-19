@@ -90,9 +90,12 @@ elif [ `uname` == "FreeBSD" ]; then
 	echo "Attempting to install dependencies using pkg"
 	sudo pkg install gcc5 gmake cmake sqlite3 png libX11 openal-soft libvorbis libGL;
 
-	if [[ $? -ne 0 ]]; then
+	if [ $? -ne 0 ]; then
 		InstallDepsFail
 	fi
+
+	CC=gcc5
+	CXX=g++5
 
 	echo "Dependencies installed"
 elif [ `uname` == "SunOS" ]; then
@@ -146,7 +149,7 @@ echo "Generating x11_icon.h"
 
 # Build tools
 mkdir -p Tools/bin
-gcc -I/usr/local/include -L/usr/local/lib -o Tools/bin/png2argb Tools/png2argb.c -lpng
+$CC -I/usr/local/include -L/usr/local/lib -o Tools/bin/png2argb Tools/png2argb.c -lpng
 
 # Create x11_icon.h
 Tools/bin/png2argb Launcher/X11/icon_16.png Launcher/X11/icon_32.png Launcher/X11/icon_64.png Launcher/X11/icon_128.png Launcher/X11/icon_256.png Launcher/X11/icon_512.png > Engine/Platform/X11/x11_icon.h
@@ -160,10 +163,13 @@ mkdir -p build
 
 echo "Generating Makefile"
 cd build
-if [ $1 == "release" ]; then
-	cmake -DCMAKE_BUILD_TYPE=RELEASE ..
-else
-	cmake -DCMAKE_BUILD_TYPE=DEBUG ..
+
+if [ $# -gt 0 ]; then
+	if [ $1 == "release" ]; then
+		cmake -DCMAKE_BUILD_TYPE=RELEASE ..
+	else
+		cmake -DCMAKE_BUILD_TYPE=DEBUG ..
+	fi
 fi
 
 echo ""
