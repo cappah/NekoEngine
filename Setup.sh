@@ -30,7 +30,7 @@ InstallDepsAptGet()
 {
 	echo "Attempting to install dependencies using apt-get"
 	sudo apt-get update;
-	sudo apt-get install build-essential cmake libsqlite3-dev libpng-dev libx11-dev libopenal-dev libvorbis-dev libgles2-mesa-dev libgl1-mesa-dev; 
+	sudo apt-get install build-essential cmake libsqlite3-dev libpng-dev libx11-dev libopenal-dev libvorbis-dev libgl1-mesa-dev; 
 
 	if [ $? -ne 0 ]; then
 		InstallDepsFail
@@ -42,7 +42,7 @@ InstallDepsAptGet()
 InstallDepsDnf()
 {
 	echo "Attempting to install dependencies using dnf"
-	sudo dnf -y install gcc gcc-c++ make cmake sqlite-devel libpng-devel libX11-devel openal-devel libvorbis-devel mesa-libEGL-devel mesa-libGLES-devel mesa-libGL-devel;
+	sudo dnf -y install gcc gcc-c++ make cmake sqlite-devel libpng-devel libX11-devel openal-devel libvorbis-devel mesa-libGL-devel;
 
 	if [ $? -ne 0 ]; then
 		InstallDepsFail
@@ -54,7 +54,7 @@ InstallDepsDnf()
 InstallDepsYum()
 {
 	echo "Attempting to install dependencies using yum"
-	sudo yum -y install gcc gcc-c++ make cmake sqlite-devel libpng-devel libX11-devel openal-devel libvorbis-devel mesa-libEGL-devel mesa-libGLES-devel mesa-libGL-devel;
+	sudo yum -y install gcc gcc-c++ make cmake sqlite-devel libpng-devel libX11-devel openal-devel libvorbis-devel mesa-libGL-devel;
 
 	if [ $? -ne 0 ]; then
 		InstallDepsFail
@@ -88,7 +88,7 @@ elif [ `uname` == "FreeBSD" ]; then
 	HAVE_X11=YES
 
 	echo "Attempting to install dependencies using pkg"
-	sudo pkg install gcc5 gmake cmake sqlite3 png libX11 openal-soft libvorbis libEGL libGL;
+	sudo pkg install gcc5 gmake cmake sqlite3 png libX11 openal-soft libvorbis libGL;
 
 	if [[ $? -ne 0 ]]; then
 		InstallDepsFail
