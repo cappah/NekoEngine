@@ -3,6 +3,7 @@
 HAVE_X11=NO
 CC=gcc
 CXX=g++
+SU=sudo
 
 #############
 # Functions #
@@ -17,7 +18,14 @@ InstallDepsFail()
 InstallDepsPacman()
 {
 	echo "Attempting to install dependencies using pacman"
-	sudo pacman -Syy gcc make cmake sqlite openal libpng zlib libvorbis libx11;
+
+	PACKAGES="gcc make cmake sqlite openal libpng zlib libvorbis libx11"
+
+	if ! type sudo 2> /dev/null; then
+		su -c "pacman -Syy $PACKAGES"		
+	else
+		sudo pacman -Syy $PACKAGES
+	fi
 
 	if [ $? -ne 0 ]; then
 		InstallDepsFail
@@ -29,8 +37,14 @@ InstallDepsPacman()
 InstallDepsAptGet()
 {
 	echo "Attempting to install dependencies using apt-get"
-	sudo apt-get update;
-	sudo apt-get install build-essential cmake libsqlite3-dev libpng-dev libx11-dev libopenal-dev libvorbis-dev libgl1-mesa-dev; 
+
+	PACKAGES="build-essential cmake libsqlite3-dev libpng-dev libx11-dev libopenal-dev libvorbis-dev libgl1-mesa-dev"
+
+	if ! type sudo 2> /dev/null; then
+		su -c "apt-get install $PACKAGES"		
+	else
+		sudo apt-get install $PACKAGES
+	fi
 
 	if [ $? -ne 0 ]; then
 		InstallDepsFail
@@ -42,7 +56,13 @@ InstallDepsAptGet()
 InstallDepsDnf()
 {
 	echo "Attempting to install dependencies using dnf"
-	sudo dnf -y install gcc gcc-c++ make cmake sqlite-devel libpng-devel libX11-devel openal-devel libvorbis-devel mesa-libGL-devel;
+	PACKAGES="gcc gcc-c++ make cmake sqlite-devel libpng-devel libX11-devel openal-devel libvorbis-devel mesa-libGL-devel"
+
+	if ! type sudo 2> /dev/null; then
+		su -c "dnf -y install $PACKAGES"		
+	else
+		sudo dnf -y install $PACKAGES
+	fi
 
 	if [ $? -ne 0 ]; then
 		InstallDepsFail
@@ -54,10 +74,12 @@ InstallDepsDnf()
 InstallDepsYum()
 {
 	echo "Attempting to install dependencies using yum"
-	sudo yum -y install gcc gcc-c++ make cmake sqlite-devel libpng-devel libX11-devel openal-devel libvorbis-devel mesa-libGL-devel;
+	PACKAGES="gcc gcc-c++ make cmake sqlite-devel libpng-devel libX11-devel openal-devel libvorbis-devel mesa-libGL-devel"
 
-	if [ $? -ne 0 ]; then
-		InstallDepsFail
+	if ! type sudo 2> /dev/null; then
+		su -c "yum -y install $PACKAGES"		
+	else
+		sudo yum -y install $PACKAGES
 	fi
 
 	echo "Dependencies installed"
@@ -72,13 +94,13 @@ if [ `uname` == "Linux" ]; then
 	HAVE_X11=YES
 
 	# Search for package manager
-	if hash pacman 2>/dev/null; then	
+	if type pacman 2> /dev/null; then	
 		InstallDepsPacman
-	elif hash apt-get 2>/dev/null; then
+	elif type apt-get 2> /dev/null; then
 		InstallDepsAptGet
-	elif hash dnf 2>/dev/null; then
+	elif type dnf 2> /dev/null; then
 		InstallDepsDnf
-	elif hash yum 2>/dev/null; then
+	elif type yum 2> /dev/null; then
 		InstallDepsYum
 	else
 		echo "ERROR: Unknown distribution. You will have to install the dependencies manually."
@@ -164,13 +186,17 @@ mkdir -p build
 echo "Generating Makefile"
 cd build
 
+BUILD=DEBUG
+
 if [ $# -gt 0 ]; then
 	if [ $1 == "release" ]; then
-		cmake -DCMAKE_BUILD_TYPE=RELEASE ..
+		BUILD=RELEASE
 	else
-		cmake -DCMAKE_BUILD_TYPE=DEBUG ..
+		BUILD=DEBUG
 	fi
 fi
+
+cmake -DCMAKE_BUILD_TYPE=$BUILD ..
 
 echo ""
 echo "Setup done. Now cd build and run make to build the engine."
