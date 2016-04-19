@@ -182,7 +182,7 @@ bool GLShader::LoadFromSource(ShaderType type, int count, const char **source, i
 	
 	for (ShaderDefine &define : GLRenderer::GetShaderDefines())
 	{
-		int len = strlen(defines);
+		size_t len = strlen(defines);
 
 		if (len >= 8190)
 		{
