@@ -530,6 +530,7 @@
 					"\"$(SRCROOT)/../3rdparty/include_all\"",
 				);
 				INSTALL_PATH = "@rpath";
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};
@@ -555,6 +556,7 @@
 				);
 				INSTALL_PATH = "@rpath";
 				LLVM_LTO = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};
