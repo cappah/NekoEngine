@@ -527,6 +527,7 @@
 				HEADER_SEARCH_PATHS = (
 					/usr/local/include,
 					"\"$(SRCROOT)/../Include\"",
+					"\"$(SRCROOT)/../3rdparty/include_all\"",
 				);
 				INSTALL_PATH = "@rpath";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -550,6 +551,7 @@
 				HEADER_SEARCH_PATHS = (
 					/usr/local/include,
 					"\"$(SRCROOT)/../Include\"",
+					"\"$(SRCROOT)/../3rdparty/include_all\"",
 				);
 				INSTALL_PATH = "@rpath";
 				LLVM_LTO = YES;
