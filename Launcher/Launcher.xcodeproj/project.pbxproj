@@ -613,6 +613,7 @@
 				HEADER_SEARCH_PATHS = (
 					"\"$(SRCROOT)/../Include\"",
 					/usr/local/include,
+					"\"$(SRCROOT)/../3rdparty/include_all\"",
 				);
 				INFOPLIST_FILE = Launcher/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path @executable_path/../Frameworks";
@@ -629,6 +630,7 @@
 				HEADER_SEARCH_PATHS = (
 					"\"$(SRCROOT)/../Include\"",
 					/usr/local/include,
+					"\"$(SRCROOT)/../3rdparty/include_all\"",
 				);
 				INFOPLIST_FILE = Launcher/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path @executable_path/../Frameworks";
