@@ -94,12 +94,7 @@ MGLShader::MGLShader()
 }
 
 void MGLShader::Enable()
-{
-#ifdef _DEBUG
-	if(!Validate())
-		DIE("Shader program validation failed");
-#endif
-	
+{	
 	GL_CHECK(glUseProgram(_program));
 	MGLRenderer::SetActiveShader(this);
 }
@@ -127,7 +122,7 @@ void MGLShader::VSUniformBlockBinding(int location, const char *name)
 	GL_CHECK(_vsBuffers[location].index = glGetUniformBlockIndex(_program, name));
 	
 #ifdef _DEBUG
-	printf(s"VSUniformBlockBinding: name: %s location: %d index: %d binding: %d\n", name, location, _vsBuffers[location].index, _vsBuffers[location].binding);
+	printf("VSUniformBlockBinding: name: %s location: %d index: %d binding: %d\n", name, location, _vsBuffers[location].index, _vsBuffers[location].binding);
 #endif
 	
 	if(_vsBuffers[location].index == GL_INVALID_INDEX)

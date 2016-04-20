@@ -686,7 +686,6 @@ void Engine::Draw() noexcept
 	// Effects
 
 	DeferredBuffer::CopyLight(PostProcessor::GetBuffer());
-	DeferredBuffer::CopyDepth(PostProcessor::GetBuffer());
 	DeferredBuffer::CopyColor(PostProcessor::GetColorBuffer());
 	DeferredBuffer::CopyBrightness(PostProcessor::GetBrightnessBuffer());
 	

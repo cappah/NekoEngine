@@ -37,6 +37,7 @@
  */
 
 #include <Engine/Engine.h>
+#include <Platform/Platform.h>
 #include <string>
 
 void CleanUp()
@@ -57,11 +58,19 @@ int main(int argc, char *argv[])
 			args.append(argv[i]);
 			args.append(" ");
 		}
+		
+		args.append("--log=/Users/racetrack/Desktop/Engine.log --renderer=libMacGLRenderer.dylib --game=libTestGame.dylib ");
+		
+		args.append("--data=");
+		args.append([[[NSBundle mainBundle] resourcePath] UTF8String]);
+		args.append("/Data --ini=");
+		args.append([[[NSBundle mainBundle] resourcePath] UTF8String]);
+		args.append("/Engine.ini");
 
 		if (Engine::Initialize(args, false) != ENGINE_OK)
 		{
-			printf("Failed to initialize engine.\n");
-			//esMessageBox("Fatal error", "Failed to initialize engine. The program will now exit.", ES_MSG_ERROR);
+			printf("Failed to initialize engine.\n");			
+			Platform::MessageBox("Fatal error", "Failed to initialize engine", MessageBoxButtons::OK, MessageBoxIcon::Error);
 			return -1;
 		}
 

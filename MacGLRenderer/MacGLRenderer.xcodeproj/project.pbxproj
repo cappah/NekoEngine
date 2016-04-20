@@ -343,28 +343,39 @@
 		1295DBA31CC0F4CB003F27AB /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_COMPATIBILITY_VERSION = 70;
+				DYLIB_CURRENT_VERSION = 70;
 				EXECUTABLE_PREFIX = lib;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_UNROLL_LOOPS = YES;
 				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../Include\"";
 				INSTALL_PATH = "@rpath";
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_MODULE_NAME = MacGLRenderer;
 				PRODUCT_NAME = MacGLRenderer;
+				SKIP_INSTALL = YES;
 			};
 			name = Debug;
 		};
 		1295DBA41CC0F4CB003F27AB /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
+				CLANG_USE_OPTIMIZATION_PROFILE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 70;
+				DYLIB_CURRENT_VERSION = 70;
 				EXECUTABLE_PREFIX = lib;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_UNROLL_LOOPS = YES;
 				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../Include\"";
 				INSTALL_PATH = "@rpath";
+				LLVM_LTO = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_MODULE_NAME = MacGLRenderer;
 				PRODUCT_NAME = MacGLRenderer;
+				SKIP_INSTALL = YES;
 			};
 			name = Release;
 		};

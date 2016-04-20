@@ -13,6 +13,8 @@
 		12B7483D1CC6E97200825D36 /* libEngine.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 127012531CC315FD001840A7 /* libEngine.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		12B748521CC6EA4E00825D36 /* libMacGLRenderer.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 12B748471CC6EA3300825D36 /* libMacGLRenderer.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		12B748531CC6EA4E00825D36 /* libTestGame.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 12B7484F1CC6EA4000825D36 /* libTestGame.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		12B748551CC6EFE200825D36 /* Data in Resources */ = {isa = PBXBuildFile; fileRef = 12B748541CC6EFE200825D36 /* Data */; };
+		12B748571CC6F52100825D36 /* Engine.ini in Resources */ = {isa = PBXBuildFile; fileRef = 12B748561CC6F52100825D36 /* Engine.ini */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -140,6 +142,8 @@
 		12B748341CC6E7C600825D36 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		12B748421CC6EA3300825D36 /* MacGLRenderer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MacGLRenderer.xcodeproj; path = ../MacGLRenderer/MacGLRenderer.xcodeproj; sourceTree = "<group>"; };
 		12B7484A1CC6EA4000825D36 /* TestGame.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = TestGame.xcodeproj; path = ../TestGame/TestGame.xcodeproj; sourceTree = "<group>"; };
+		12B748541CC6EFE200825D36 /* Data */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Data; path = ../../Resources/Data; sourceTree = "<group>"; };
+		12B748561CC6F52100825D36 /* Engine.ini */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Engine.ini; path = ../../Resources/Engine.ini; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -356,6 +360,8 @@
 			children = (
 				12B7482F1CC6E7C600825D36 /* Assets.xcassets */,
 				12B748341CC6E7C600825D36 /* Info.plist */,
+				12B748541CC6EFE200825D36 /* Data */,
+				12B748561CC6F52100825D36 /* Engine.ini */,
 			);
 			path = Launcher;
 			sourceTree = "<group>";
@@ -475,6 +481,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				12B748571CC6F52100825D36 /* Engine.ini in Resources */,
+				12B748551CC6EFE200825D36 /* Data in Resources */,
 				12B748301CC6E7C600825D36 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -597,6 +605,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+					_DEBUG,
+				);
 				HEADER_SEARCH_PATHS = (
 					"\"$(SRCROOT)/../Include\"",
 					/usr/local/include,
@@ -643,6 +656,7 @@
 				12B748371CC6E7C600825D36 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

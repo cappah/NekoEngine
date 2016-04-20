@@ -286,6 +286,11 @@ void MGLRenderer::SetColorMask(bool r, bool g, bool b, bool a)
 
 void MGLRenderer::DrawArrays(PolygonMode mode, int32_t first, int32_t count)
 {
+#ifdef _DEBUG
+	if(!_activeShader->Validate())
+	{ DIE("Shader program validation failed"); }
+#endif
+	
 	_activeShader->EnableTextures();
 	
 	if(_boundFramebuffer)
@@ -298,6 +303,11 @@ void MGLRenderer::DrawArrays(PolygonMode mode, int32_t first, int32_t count)
 
 void MGLRenderer::DrawElements(PolygonMode mode, int32_t count, ElementType type, const void *indices)
 {
+#ifdef _DEBUG
+	if(!_activeShader->Validate())
+	{ DIE("Shader program validation failed"); }
+#endif
+	
 	_activeShader->EnableTextures();
 	
 	if(_boundFramebuffer)
@@ -310,6 +320,11 @@ void MGLRenderer::DrawElements(PolygonMode mode, int32_t count, ElementType type
 
 void MGLRenderer::DrawElementsBaseVertex(PolygonMode mode, int32_t count, ElementType type, const void *indices, int32_t baseVertex)
 {
+#ifdef _DEBUG
+	if(!_activeShader->Validate())
+	{ DIE("Shader program validation failed"); }
+#endif
+	
 	_activeShader->EnableTextures();
 	
 	if(_boundFramebuffer)
