@@ -30,8 +30,6 @@ InstallDepsPacman()
 	if [ $? -ne 0 ]; then
 		InstallDepsFail
 	fi
-
-	echo "Dependencies installed"
 }
 
 InstallDepsAptGet()
@@ -49,8 +47,6 @@ InstallDepsAptGet()
 	if [ $? -ne 0 ]; then
 		InstallDepsFail
 	fi
-
-	echo "Dependencies installed"
 }
 
 InstallDepsDnf()
@@ -67,8 +63,6 @@ InstallDepsDnf()
 	if [ $? -ne 0 ]; then
 		InstallDepsFail
 	fi
-
-	echo "Dependencies installed"
 }
 
 InstallDepsYum()
@@ -81,8 +75,6 @@ InstallDepsYum()
 	else
 		sudo yum -y install $PACKAGES
 	fi
-
-	echo "Dependencies installed"
 }
 
 ########
@@ -90,82 +82,88 @@ InstallDepsYum()
 ########
 
 # Install dependencies
-if [ `uname` == "Linux" ]; then
-	HAVE_X11=YES
+OS=`uname`
+case $OS in
+	'Linux')
+		HAVE_X11=YES
 
-	# Search for package manager
-	if type pacman 2> /dev/null; then	
-		InstallDepsPacman
-	elif type apt-get 2> /dev/null; then
-		InstallDepsAptGet
-	elif type dnf 2> /dev/null; then
-		InstallDepsDnf
-	elif type yum 2> /dev/null; then
-		InstallDepsYum
-	else
-		echo "ERROR: Unknown distribution. You will have to install the dependencies manually."
-		exit;
-	fi
-elif [ `uname` == "FreeBSD" ]; then
-	HAVE_X11=YES
-
-	echo "Attempting to install dependencies using pkg"
-	sudo pkg install gcc5 gmake cmake sqlite3 png libX11 openal-soft libvorbis libGL;
-
-	if [ $? -ne 0 ]; then
-		InstallDepsFail
-	fi
-
-	CC=gcc5
-	CXX=g++5
-
-	echo "Dependencies installed"
-elif [ `uname` == "SunOS" ]; then
-	HAVE_X11=YES
-
-	if [ hash cmake 2>/dev/null ]; then
-		if [ hash pkgutil 2>/dev/null ]; then
-			echo "CMake not found and pkgutil is unavailable. Please install CMake or OpenCSW";
+		# Search for package manager
+		if type pacman 2> /dev/null; then	
+			InstallDepsPacman
+		elif type apt-get 2> /dev/null; then
+			InstallDepsAptGet
+		elif type dnf 2> /dev/null; then
+			InstallDepsDnf
+		elif type yum 2> /dev/null; then
+			InstallDepsYum
+		else
+			echo "ERROR: Unknown distribution. You will have to install the dependencies manually."
 			exit;
 		fi
+	;;
+	'FreeBSD')
+		HAVE_X11=YES
 
-		echo "Attempting to install CMake using pkgutil"
-		sudo /opt/csw/bin/pkgutil -y -i cmake;
-	fi
+		echo "Attempting to install dependencies using pkg"
+		sudo pkg install gcc5 gmake cmake sqlite3 png libX11 openal-soft libvorbis libGL;
 
-	if [ hash g++ 2>/dev/null ]; then
-		if [ hash pkgutil 2>/dev/null ]; then
-			echo "GCC not found and pkgutil is unavailable. Please install CMake or OpenCSW";
-			exit;
-		fi
-
-		echo "Attempting to install gcc5 using pkgutil"
-		sudo /opt/csw/bin/pkgutil -y -i gcc5core gcc5g++;
-	fi
-
-	if [ $? -ne 0 ]; then
-		InstallDepsFail
-	fi
-
-	echo "Dependencies installed"
-elif [ `uname` == "Darwin" ]; then
-	if [ hash brew 2>/dev/null ]; then
-		echo "Homebrew not found. Attempting to install..."
-		/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-		if [[ $? -ne 0 ]]; then
+		if [ $? -ne 0 ]; then
 			InstallDepsFail
 		fi
-	fi
 
-	brew update;
-	brew install libpng libvorbis;
+		CC=gcc5
+		CXX=g++5
+	;;
+	'SunOS')
+		HAVE_X11=YES
 
-	if [ $? -ne 0 ]; then
-		InstallDepsFail
-	fi
-fi
+		if [ hash cmake 2>/dev/null ]; then
+			if [ hash pkgutil 2>/dev/null ]; then
+				echo "CMake not found and pkgutil is unavailable. Please install CMake or OpenCSW";
+				exit;
+			fi
 
-if [ $HAVE_X11 == YES ]; then
+			echo "Attempting to install CMake using pkgutil"
+			sudo /opt/csw/bin/pkgutil -y -i cmake;
+		fi
+
+		if [ hash g++ 2>/dev/null ]; then
+			if [ hash pkgutil 2>/dev/null ]; then
+				echo "GCC not found and pkgutil is unavailable. Please install CMake or OpenCSW";
+				exit;
+			fi
+
+			echo "Attempting to install gcc5 using pkgutil"
+			sudo /opt/csw/bin/pkgutil -y -i gcc5core gcc5g++;
+		fi
+
+		if [ $? -ne 0 ]; then
+			InstallDepsFail
+		fi
+	;;
+	'Darwin')
+		if [ hash brew 2>/dev/null ]; then
+			echo "Homebrew not found. Attempting to install..."
+			/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+			if $? -ne 0 ; then
+				InstallDepsFail
+			fi
+		fi
+
+		brew update;
+		brew install libpng libvorbis;
+
+		if $? -ne 0 ; then
+			InstallDepsFail
+		fi
+	;;
+	*)
+	;;
+esac
+
+echo "Dependencies installed"
+
+if $HAVE_X11 == YES ; then
 
 echo "Generating x11_icon.h"
 
