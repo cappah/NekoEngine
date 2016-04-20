@@ -289,7 +289,7 @@ bool CDDSImage::load(string filename, bool flipImage)
 	// open file
 	FILE *fp = fopen(filename.c_str(), "rb");
 	if (!fp)
-		return NULL;
+		return false;
 
 	// read in file marker, make sure its a DDS file
 	char filecode[5];

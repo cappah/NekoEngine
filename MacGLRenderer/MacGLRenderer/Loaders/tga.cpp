@@ -164,12 +164,25 @@ char *_loadTGA(string path, int *width, int *height, int *bpp)
 		return NULL;
 
 	TGA_HEADER header;
-	if(fread(&header, sizeof(header), 1, fp) != 1)
+	if (fread(&header, sizeof(header), 1, fp) != 1)
+	{
+		fclose(fp);
 		return NULL;
+	}
 
-	fseek(fp, 0, SEEK_END);
+	if (fseek(fp, 0, SEEK_END) != 0)
+	{
+		fclose(fp);
+		return NULL;
+	}
+
 	size_t fileLen = ftell(fp);
-	fseek(fp, sizeof(header) + header.identsize, SEEK_SET);
+
+	if(fseek(fp, sizeof(header) + header.identsize, SEEK_SET) != 0)
+	{
+		fclose(fp);
+		return NULL;
+	}
 
 	if (header.imagetype != IT_COMPRESSED && header.imagetype != IT_UNCOMPRESSED)
 	{
@@ -184,6 +197,13 @@ char *_loadTGA(string path, int *width, int *height, int *bpp)
 	}
 
 	size_t bufferSize = fileLen - sizeof(header) - header.identsize;
+	
+	if(bufferSize == 0)
+	{
+		fclose(fp);
+		return NULL;
+	}
+	
 	char *pBuffer = (char *)calloc(sizeof(char), bufferSize);
 
 	if (!pBuffer)
@@ -204,7 +224,7 @@ char *_loadTGA(string path, int *width, int *height, int *bpp)
 	*height = header.height;
 	*bpp = header.bits;
 
-	unsigned long imgSize = header.width * header.height;
+	unsigned long imgSize = (unsigned long)header.width * (unsigned long)header.height;
 
 	if (imgSize < header.width || imgSize < header.height)
 	{
@@ -260,7 +280,7 @@ char* _loadTGAFromMemory(const uint8_t *mem, size_t memSize, int* width, int* he
 	*height = header.height;
 	*bpp = header.bits;
 
-	unsigned long imgSize = header.width * header.height;
+	unsigned long imgSize = (unsigned long)header.width * (unsigned long)header.height;
 
 	if (imgSize < header.width || imgSize < header.height)
 	{

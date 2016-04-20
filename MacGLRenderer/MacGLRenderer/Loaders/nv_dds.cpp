@@ -166,6 +166,8 @@
 //         GL_UNSIGNED_BYTE, image[0].get_mipmap(i));
 // }
 
+#include "../glad.h"
+
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
@@ -287,7 +289,7 @@ bool CDDSImage::load(string filename, bool flipImage)
 	// open file
 	FILE *fp = fopen(filename.c_str(), "rb");
 	if (!fp)
-		return NULL;
+		return false;
 
 	// read in file marker, make sure its a DDS file
 	char filecode[5];
@@ -876,7 +878,6 @@ bool CDDSImage::upload_texture2D(unsigned int imageIndex, GLenum target)
 {
 	assert(m_valid);
 	assert(!m_images.empty());
-	assert(imageIndex >= 0);
 	assert(imageIndex < m_images.size());
 	assert(m_images[imageIndex]);
 
@@ -884,7 +885,7 @@ bool CDDSImage::upload_texture2D(unsigned int imageIndex, GLenum target)
 
 	assert(image.get_height() > 0);
 	assert(image.get_width() > 0);
-	assert(target == GL_TEXTURE_2D || target == GL_TEXTURE_RECTANGLE ||
+	assert(target == GL_TEXTURE_2D || target == GL_TEXTURE_RECTANGLE_NV ||
 		(target >= GL_TEXTURE_CUBE_MAP_POSITIVE_X_ARB &&
 			target <= GL_TEXTURE_CUBE_MAP_NEGATIVE_Z_ARB));
 
@@ -992,7 +993,7 @@ bool CDDSImage::upload_texture3D()
 
 bool CDDSImage::upload_textureRectangle()
 {
-	return upload_texture2D(0, GL_TEXTURE_RECTANGLE);
+	return upload_texture2D(0, GL_TEXTURE_RECTANGLE_NV);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
