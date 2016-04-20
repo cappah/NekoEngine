@@ -153,14 +153,14 @@ void read_png_file(char *file_name)
   process_file();
 }
 
-void main(int argc, char **argv)
+int main(int argc, char **argv)
 {
   if (isatty(fileno(stdin)) && argc < 2) { // NULL stdin, no arguments
     __err("  Usage: %s image.png [image2.png [image3.png [...]]] > buffer.argb\n"
           "     or: cat image.png | %s > buffer.argb\n"
           "     or: cat image.png | %s image2.png > buffer.argb\n"
           , argv[0], argv[0], argv[0]);
-    return;
+    return -1;
   }
 
   // Output the buffer code...
@@ -179,5 +179,7 @@ void main(int argc, char **argv)
   }
 
   printf("};\n");
+
+  return 0;
 }
 
