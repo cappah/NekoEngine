@@ -1,6 +1,9 @@
 NekoEngine
 ============
 
+[![Build Status](https://travis-ci.org/nalexandru/NekoEngine.svg?branch=master)](https://travis-ci.org/nalexandru/NekoEngine)
+
+
 Cross-platform 3D Game Engine
 
 **Requirements:**
