@@ -98,7 +98,7 @@ PlatformWindowType Platform::CreateWindow(int width, int height, bool fullscreen
 	[hWnd setCollectionBehavior:[hWnd collectionBehavior] | NSWindowCollectionBehaviorFullScreenPrimary];
 	[hWnd makeKeyAndOrderFront:nil];
 	
-	_engineView = [[EngineView alloc] initWithFrame:hWnd.contentView.frame];
+	_engineView = [[EngineView alloc] initWithFrame:((NSView *)hWnd.contentView).frame];
 	[hWnd setContentView:_engineView];
 	[hWnd setInitialFirstResponder:_engineView];
 	[hWnd makeFirstResponder:_engineView];
