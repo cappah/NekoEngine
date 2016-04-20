@@ -1,0 +1,16 @@
+language: cpp
+
+compiler:
+- gcc
+
+before_install:
+- sudo apt-get -qq update
+- sudo apt-get install -y libsqlite3-dev libpng-dev libx11-dev libopenal-dev libvorbis-dev libgl1-mesa-dev
+
+before_script:
+- mkdir -p Tools/bin
+- gcc -o Tools/png2argb Tools/png2argb.c -lpng
+- Tools/bin/png2argb Launcher/X11/icon_16.png Launcher/X11/icon_32.png Launcher/X11/icon_64.png Launcher/X11/icon_128.png Launcher/X11/icon_256.png Launcher/X11/icon_512.png > Engine/Platform/X11/x11_icon.h
+- mkdir build
+- cd build
+- cmake ..
