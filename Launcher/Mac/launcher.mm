@@ -59,13 +59,18 @@ int main(int argc, char *argv[])
 			args.append(" ");
 		}
 		
-		args.append("--log=/Users/racetrack/Desktop/Engine.log --renderer=libMacGLRenderer.dylib --game=libTestGame.dylib ");
+		args.append("--renderer=libMacGLRenderer.dylib --game=libTestGame.dylib ");
 		
 		args.append("--data=");
 		args.append([[[NSBundle mainBundle] resourcePath] UTF8String]);
 		args.append("/Data --ini=");
 		args.append([[[NSBundle mainBundle] resourcePath] UTF8String]);
-		args.append("/Engine.ini");
+		args.append("/Engine.ini --log=");
+		
+		NSArray *urls = [[NSFileManager defaultManager] URLsForDirectory:NSLibraryDirectory inDomains:NSUserDomainMask];
+		NSURL *logUrl = [[urls lastObject] URLByAppendingPathComponent:@"Logs"];
+		logUrl = [logUrl URLByAppendingPathComponent:@"NekoEngine.log"];
+		args.append([[logUrl path] UTF8String]);
 
 		if (Engine::Initialize(args, false) != ENGINE_OK)
 		{
