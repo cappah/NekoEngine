@@ -11,14 +11,15 @@ before_install:
 - wget http://www.cmake.org/files/v3.5/cmake-3.5.0-Linux-x86_64.tar.gz
 - tar xf cmake-3.5.0-Linux-x86_64.tar.gz
 - sudo cp -r cmake-3.5.0-Linux-x86_64/* /usr
-- sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
 - sudo apt-get -qq update
-- sudo apt-get install -y libsqlite3-dev libpng-dev libx11-dev libopenal-dev libvorbis-dev libgl1-mesa-dev g++-5
+- sudo apt-get install -y libsqlite3-dev libpng-dev libx11-dev libopenal-dev libvorbis-dev libgl1-mesa-dev
 
 before_script:
 - mkdir -p Tools/bin
 - gcc -o Tools/bin/png2argb Tools/png2argb.c -lpng
 - Tools/bin/png2argb Launcher/X11/icon_16.png Launcher/X11/icon_32.png Launcher/X11/icon_64.png Launcher/X11/icon_128.png Launcher/X11/icon_256.png Launcher/X11/icon_512.png > Engine/Platform/X11/x11_icon.h
+
+script:
 - mkdir build
 - cd build
-- cmake ..
+- cmake .. && make
