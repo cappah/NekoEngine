@@ -263,7 +263,7 @@ void Object::Draw(RShader* shader) noexcept
 	_mesh->Bind();
 
 	if (!_materials.size()) // used only for lighting pass
-		r->DrawElementsBaseVertex(PolygonMode::Triangles, (int32_t)_mesh->GetIndexCount(0), ElementType::UnsignedInt, (void *)(_mesh->GetIboOffset(0) * sizeof(unsigned int)), (uint32_t)_mesh->GetVboOffset());
+		_mesh->Draw(r, 0);
 	else
 	{
 		Camera *cam = SceneManager::GetActiveScene()->GetSceneCamera();
@@ -282,7 +282,7 @@ void Object::Draw(RShader* shader) noexcept
 			PreDraw(shader, i);
 
 			shader->BindUniformBuffers();
-			r->DrawElementsBaseVertex(PolygonMode::Triangles, (int32_t)_mesh->GetIndexCount(i), ElementType::UnsignedInt, (void *)(_mesh->GetIboOffset(i) * sizeof(unsigned int)), (uint32_t)_mesh->GetVboOffset());
+			_mesh->Draw(r, i);
 		
 			PostDraw(i);
 		}

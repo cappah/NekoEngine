@@ -462,11 +462,16 @@ int Scene::Load()
 				_lights.push_back(l);
 			else if (!_skybox && s)
 			{
-				obj->GetMesh()->SetVertexOffset(_sceneVertices.size());
-				obj->GetMesh()->SetIndexOffset(_sceneIndices.size());
+				if(Engine::GetRenderer()->HasCapability(RendererCapability::DrawBaseVertex))
+				{
+					obj->GetMesh()->SetVertexOffset(_sceneVertices.size());
+					obj->GetMesh()->SetIndexOffset(_sceneIndices.size());
 
-				_AddVertices(obj->GetMesh()->GetVertices());
-				_AddIndices(obj->GetMesh()->GetIndices());
+					_AddVertices(obj->GetMesh()->GetVertices());
+					_AddIndices(obj->GetMesh()->GetIndices());
+				}
+				else
+					obj->GetMesh()->CreateBuffers(false);
 
 				_skybox = s;
 			}
@@ -474,11 +479,16 @@ int Scene::Load()
 				_terrain = t;
 			else
 			{
-				obj->GetMesh()->SetVertexOffset(_sceneVertices.size());
-				obj->GetMesh()->SetIndexOffset(_sceneIndices.size());
+				if(Engine::GetRenderer()->HasCapability(RendererCapability::DrawBaseVertex))
+				{
+					obj->GetMesh()->SetVertexOffset(_sceneVertices.size());
+					obj->GetMesh()->SetIndexOffset(_sceneIndices.size());
 
-				_AddVertices(obj->GetMesh()->GetVertices());
-				_AddIndices(obj->GetMesh()->GetIndices());
+					_AddVertices(obj->GetMesh()->GetVertices());
+					_AddIndices(obj->GetMesh()->GetIndices());
+				}
+				else
+					obj->GetMesh()->CreateBuffers(false);
 
 				_objects.push_back(obj);
 			}

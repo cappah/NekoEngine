@@ -71,7 +71,8 @@ enum class RendererCapability : uint8_t
 	MemoryInformation = 0,
 	AnisotropicFiltering = 1,
 	MultisampledFramebuffer,
-	PerSampleShading
+	PerSampleShading,
+	DrawBaseVertex
 };
 
 enum class PolygonMode : uint8_t

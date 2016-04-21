@@ -358,6 +358,8 @@ bool GLRenderer::HasCapability(RendererCapability cap)
 	case RendererCapability::PerSampleShading:
 		ext = "GL_ARB_sample_shading";
 		break;
+	case RendererCapability::DrawBaseVertex: // Supported in OpenGL 3.2+
+		return true;
 	default:
 		return false;
 	}

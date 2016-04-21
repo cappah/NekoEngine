@@ -377,12 +377,10 @@ bool MGLRenderer::HasCapability(RendererCapability cap)
     switch (cap)
     {
         case RendererCapability::MemoryInformation:
-            return false;
         case RendererCapability::AnisotropicFiltering:
-            return true;
         case RendererCapability::MultisampledFramebuffer:
-            return true;
         case RendererCapability::PerSampleShading:
+		case RendererCapability::DrawBaseVertex:
 			return true;
         default:
             return false;

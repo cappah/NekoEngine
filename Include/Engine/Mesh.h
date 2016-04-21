@@ -76,6 +76,8 @@ public:
 
 	ENGINE_API void UpdateIndices(std::vector<uint32_t>& indices);
 	ENGINE_API void UpdateVertices(std::vector<Vertex> &vertices);
+	
+	ENGINE_API void Draw(Renderer* r, size_t group);
 
 	ENGINE_API void Release() noexcept;
 

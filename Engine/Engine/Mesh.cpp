@@ -185,6 +185,14 @@ void Mesh::UpdateVertices(vector<Vertex> &vertices)
 	_vertexBuffer->UpdateData(0, (sizeof(Vertex) * vertices.size()), (void *)vertices.data());
 }
 
+void Mesh::Draw(Renderer* r, size_t group)
+{
+	if(_hasOwnBuffer)
+		r->DrawElements(PolygonMode::Triangles, (int32_t)_groupCount[group], ElementType::UnsignedInt, (void *)(_groupOffset[group] * sizeof(unsigned int)));
+	else
+		r->DrawElementsBaseVertex(PolygonMode::Triangles, (int32_t)_groupCount[group], ElementType::UnsignedInt, (void *)((_indexOffset + _groupOffset[group]) * sizeof(unsigned int)), (uint32_t)_vertexOffset);
+}
+
 void Mesh::_CalculateTangents()
 {
 	for (size_t i = 0; i < _indices.size(); i += 3)
