@@ -177,6 +177,12 @@ char *_loadTGA(string path, int *width, int *height, int *bpp)
 	}
 
 	size_t fileLen = ftell(fp);
+	
+	if(fileLen < sizeof(header) + header.identsize)
+	{
+		fclose(fp);
+		return NULL;
+	}
 
 	if(fseek(fp, sizeof(header) + header.identsize, SEEK_SET) != 0)
 	{

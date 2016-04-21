@@ -373,9 +373,7 @@ void MGLRenderer::ReadPixels(int x, int y, int width, int height, TextureFormat 
 }
 
 bool MGLRenderer::HasCapability(RendererCapability cap)
-{
-    const char *ext = nullptr;
-    
+{    
     switch (cap)
     {
         case RendererCapability::MemoryInformation:
@@ -389,8 +387,6 @@ bool MGLRenderer::HasCapability(RendererCapability cap)
         default:
             return false;
     }
-    
-    return _HasExtension(ext);
 }
 
 RBuffer* MGLRenderer::CreateBuffer(BufferType type, bool dynamic, bool persistent)

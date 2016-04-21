@@ -166,8 +166,6 @@
 //         GL_UNSIGNED_BYTE, image[0].get_mipmap(i));
 // }
 
-#include "../glad.h"
-
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
@@ -885,7 +883,7 @@ bool CDDSImage::upload_texture2D(unsigned int imageIndex, GLenum target)
 
 	assert(image.get_height() > 0);
 	assert(image.get_width() > 0);
-	assert(target == GL_TEXTURE_2D || target == GL_TEXTURE_RECTANGLE_NV ||
+	assert(target == GL_TEXTURE_2D || target == GL_TEXTURE_RECTANGLE ||
 		(target >= GL_TEXTURE_CUBE_MAP_POSITIVE_X_ARB &&
 			target <= GL_TEXTURE_CUBE_MAP_NEGATIVE_Z_ARB));
 
@@ -993,7 +991,7 @@ bool CDDSImage::upload_texture3D()
 
 bool CDDSImage::upload_textureRectangle()
 {
-	return upload_texture2D(0, GL_TEXTURE_RECTANGLE_NV);
+	return upload_texture2D(0, GL_TEXTURE_RECTANGLE);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

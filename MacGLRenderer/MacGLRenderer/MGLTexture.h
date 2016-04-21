@@ -42,8 +42,8 @@
 #include <Renderer/RTexture.h>
 #include <OpenGL/gl3.h>
 
-#include "Loaders/tga.h"
-#include "Loaders/nv_dds.h"
+#include <Loaders/tga.h>
+#include <Loaders/nv_dds.h>
 
 class MGLTexture : public RTexture
 {
