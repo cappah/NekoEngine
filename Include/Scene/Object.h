@@ -43,7 +43,8 @@
 #include <glm/glm.hpp>
 
 #include <Engine/Engine.h>
-#include <Engine/Mesh.h>
+#include <Engine/StaticMesh.h>
+#include <Engine/SkeletalMesh.h>
 #include <Engine/Shader.h>
 #include <Engine/Texture.h>
 #include <Engine/Material.h>
@@ -80,13 +81,13 @@ public:
 	ENGINE_API Object() noexcept;
 	 
 	ENGINE_API int GetId() noexcept { return _id; }
-	ENGINE_API Mesh* GetMesh() noexcept { return _mesh; }
+	ENGINE_API StaticMesh* GetMesh() noexcept { return _mesh; }
 
 	ENGINE_API void SetId(int id) noexcept { _id = id; }
 	ENGINE_API void SetPosition(glm::vec3& position) noexcept;
 	ENGINE_API void SetRotation(glm::vec3& rotation) noexcept;
 	ENGINE_API void SetScale(glm::vec3& scale) noexcept;
-	ENGINE_API void SetModelId(int id) noexcept { _modelId = id; }
+	ENGINE_API void SetMeshId(int id, MeshType type) noexcept { _modelId = id; _meshType = type; }
 	ENGINE_API void SetColor(glm::vec3& color) noexcept { _objectBlock.ObjectColor = color; }
 	ENGINE_API void SetForwardDirection(ForwardDirection dir) noexcept;
 	ENGINE_API void AddMaterialId(int id) noexcept { _materialIds.push_back(id); }
@@ -113,7 +114,8 @@ public:
 	ENGINE_API virtual ~Object() noexcept;
 
 protected:
-	Mesh* _mesh;
+	StaticMesh* _mesh;
+	MeshType _meshType;
 	std::vector<int> _materialIds;
 	std::vector<Material*> _materials;
 	int _id, _modelId;

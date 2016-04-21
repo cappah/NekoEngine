@@ -42,6 +42,7 @@
 #include <Engine/ResourceManager.h>
 #include <Engine/ResourceDatabase.h>
 #include <Engine/EngineUtils.h>
+#include <System/Logger.h>
 
 #include <algorithm>
 
@@ -84,6 +85,7 @@ int ResourceManager::_LoadResources()
 
 	if (!_db->Open(databaseFile.c_str()))
 	{
+		Logger::Log(RM_MODULE, LOG_CRITICAL, "Failed to open resource database");
 		delete _db;
 		_db = nullptr;
 		return ENGINE_FAIL;
@@ -205,8 +207,11 @@ Resource* ResourceManager::_LoadResourceInternal(ResourceInfo *ri)
 
 	switch (ri->type)
 	{
-	case ResourceType::RES_MESH:
-		res = new Mesh((MeshResource *)ri);
+	case ResourceType::RES_STATIC_MESH:
+		res = new StaticMesh((MeshResource *)ri);
+		break;
+	case ResourceType::RES_SKELETAL_MESH:
+		res = new SkeletalMesh((MeshResource *)ri);
 		break;
 	case ResourceType::RES_TEXTURE:
 		res = new Texture((TextureResource *)ri);

@@ -212,7 +212,12 @@ int Object::Load()
 	}
 
 	if(!_mesh)
-		_mesh = (Mesh*)ResourceManager::GetResource(_modelId, ResourceType::RES_MESH);
+	{
+		if(_meshType == MeshType::Static)
+			_mesh = (StaticMesh*)ResourceManager::GetResource(_modelId, ResourceType::RES_STATIC_MESH);
+		else
+			_mesh = (StaticMesh*)ResourceManager::GetResource(_modelId, ResourceType::RES_SKELETAL_MESH);
+	}
 
 	if (!_mesh)
 	{
@@ -325,7 +330,9 @@ void Object::Unload() noexcept
 	if (_mesh != nullptr)
 	{
 		if (_mesh->GetResourceInfo() != nullptr)
-			ResourceManager::UnloadResource(_mesh->GetResourceInfo()->id, ResourceType::RES_MESH);
+			ResourceManager::UnloadResource(_mesh->GetResourceInfo()->id,
+											_mesh->GetResourceInfo()->meshType == MeshType::Static ?
+											ResourceType::RES_STATIC_MESH : ResourceType::RES_SKELETAL_MESH);
 		else
 			delete _mesh;
 

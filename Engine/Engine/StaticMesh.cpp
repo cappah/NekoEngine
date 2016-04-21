@@ -40,7 +40,7 @@
 
 #include <glm/glm.hpp>
 
-#include <Engine/Mesh.h>
+#include <Engine/StaticMesh.h>
 #include <Engine/Vertex.h>
 #include <Engine/Engine.h>
 #include <Engine/EngineUtils.h>
@@ -51,12 +51,12 @@
 #include <vector>
 #include <string.h>
 
-#define MESH_MODULE	"Mesh"
+#define MESH_MODULE	"StaticMesh"
 
 using namespace std;
 using namespace glm;
 
-Mesh::Mesh(MeshResource *res) noexcept :
+StaticMesh::StaticMesh(MeshResource *res) noexcept :
 	_vertexBuffer(nullptr),
 	_indexBuffer(nullptr),
 	_arrayBuffer(nullptr),
@@ -68,12 +68,12 @@ Mesh::Mesh(MeshResource *res) noexcept :
 	_groupOffset(0),
 	_dynamic(false),
 	_hasOwnBuffer(false)
-{
+{	
 	_resourceInfo = res;
 	_groupOffset.push_back(0);
 }
 
-int Mesh::Load()
+int StaticMesh::Load()
 {
 	string path("/");
 	path.append(GetResourceInfo()->filePath);
@@ -95,7 +95,7 @@ int Mesh::Load()
 	return ENGINE_OK;
 }
 
-int Mesh::LoadDynamic(vector<Vertex> &vertices, vector<uint32_t> &indices)
+int StaticMesh::LoadDynamic(vector<Vertex> &vertices, vector<uint32_t> &indices)
 {
 	_vertices = vertices;
 	_indices = indices;
@@ -107,7 +107,7 @@ int Mesh::LoadDynamic(vector<Vertex> &vertices, vector<uint32_t> &indices)
 	return CreateBuffers(true);
 }
 
-int Mesh::CreateBuffers(bool dynamic)
+int StaticMesh::CreateBuffers(bool dynamic)
 {
 	_arrayBuffer = Engine::GetRenderer()->CreateArrayBuffer();
 
@@ -169,7 +169,7 @@ int Mesh::CreateBuffers(bool dynamic)
 	return ENGINE_OK;
 }
 
-void Mesh::UpdateIndices(vector<uint32_t> &indices)
+void StaticMesh::UpdateIndices(vector<uint32_t> &indices)
 {
 	if (!_dynamic)
 		return;
@@ -177,7 +177,7 @@ void Mesh::UpdateIndices(vector<uint32_t> &indices)
 	_indexBuffer->UpdateData(0, (sizeof(uint32_t) * indices.size()), (void *)indices.data());
 }
 
-void Mesh::UpdateVertices(vector<Vertex> &vertices)
+void StaticMesh::UpdateVertices(vector<Vertex> &vertices)
 {
 	if (!_dynamic)
 		return;
@@ -185,7 +185,7 @@ void Mesh::UpdateVertices(vector<Vertex> &vertices)
 	_vertexBuffer->UpdateData(0, (sizeof(Vertex) * vertices.size()), (void *)vertices.data());
 }
 
-void Mesh::Draw(Renderer* r, size_t group)
+void StaticMesh::Draw(Renderer* r, size_t group)
 {
 	if(_hasOwnBuffer)
 		r->DrawElements(PolygonMode::Triangles, (int32_t)_groupCount[group], ElementType::UnsignedInt, (void *)(_groupOffset[group] * sizeof(unsigned int)));
@@ -193,7 +193,7 @@ void Mesh::Draw(Renderer* r, size_t group)
 		r->DrawElementsBaseVertex(PolygonMode::Triangles, (int32_t)_groupCount[group], ElementType::UnsignedInt, (void *)((_indexOffset + _groupOffset[group]) * sizeof(unsigned int)), (uint32_t)_vertexOffset);
 }
 
-void Mesh::_CalculateTangents()
+void StaticMesh::_CalculateTangents()
 {
 	for (size_t i = 0; i < _indices.size(); i += 3)
 	{
@@ -226,14 +226,14 @@ void Mesh::_CalculateTangents()
 		_vertices[i].tgt = normalize(_vertices[i].tgt);
 }
 
-void Mesh::Release() noexcept
+void StaticMesh::Release() noexcept
 {
 	delete _vertexBuffer;
 	delete _indexBuffer;
 	delete _arrayBuffer;
 }
 
-Mesh::~Mesh() noexcept
+StaticMesh::~StaticMesh() noexcept
 {
 	Release();
 }

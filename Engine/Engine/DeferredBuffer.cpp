@@ -118,7 +118,7 @@ int DeferredBuffer::Initialize() noexcept
 	if (!_lightSphere)
 		return ENGINE_FAIL;
 
-	_lightSphere->SetModelId(ResourceManager::GetResourceID("stm_light_sphere", ResourceType::RES_MESH));
+	_lightSphere->SetMeshId(ResourceManager::GetResourceID("stm_light_sphere", ResourceType::RES_STATIC_MESH), MeshType::Static);
 	_lightSphere->SetId(0xB000B5);
 	_lightSphere->AddMaterialId(OBJ_NO_MATERIAL);
 

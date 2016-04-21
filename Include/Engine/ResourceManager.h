@@ -50,7 +50,8 @@
 #include <Resource/TextureFontResource.h>
 #include <Resource/MaterialResource.h>
 
-#include <Engine/Mesh.h>
+#include <Engine/StaticMesh.h>
+#include <Engine/SkeletalMesh.h>
 #include <Engine/Texture.h>
 #include <Engine/Shader.h>
 #include <Audio/AudioClip.h>
@@ -66,7 +67,8 @@ public:
 	ENGINE_API static int GetResourceID(const char* name, ResourceType type);
 	ENGINE_API static int UnloadResource(int id, ResourceType type) noexcept;
 
-	ENGINE_API static size_t LoadedMeshes() noexcept { return _loadedResources[ResourceType::RES_MESH]; }
+	ENGINE_API static size_t LoadedStaticMeshes() noexcept { return _loadedResources[ResourceType::RES_STATIC_MESH]; }
+	ENGINE_API static size_t LoadedSkeletalMeshes() noexcept { return _loadedResources[ResourceType::RES_SKELETAL_MESH]; }
 	ENGINE_API static size_t LoadedTextures() noexcept { return _loadedResources[ResourceType::RES_TEXTURE]; }
 	ENGINE_API static size_t LoadedShaders() noexcept { return _loadedResources[ResourceType::RES_SHADER]; }
 	ENGINE_API static size_t LoadedMaterials() noexcept { return _loadedResources[ResourceType::RES_MATERIAL]; }

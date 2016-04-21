@@ -1,9 +1,9 @@
 /* Neko Engine
  *
- * MeshResource.h
+ * SkeletalMesh.h
  * Author: Alexandru Naiman
  *
- * MeshResource definition 
+ * SkeletalMesh class definition
  *
  * ----------------------------------------------------------------------------------
  *
@@ -38,19 +38,21 @@
 
 #pragma once
 
-#include <Resource/ResourceInfo.h>
+#include <vector>
 
-#include <string>
+#include <glm/glm.hpp>
 
-enum MeshType
+#include <Engine/StaticMesh.h>
+
+class SkeletalMesh : public StaticMesh
 {
-	Static,
-	Skeletal
-};
+public:
+	ENGINE_API SkeletalMesh(MeshResource *res) noexcept;
+	
+	ENGINE_API virtual void Draw(Renderer* r, size_t group) override;
 
-struct MeshResource : public ResourceInfo
-{
-	MeshResource() { type = ResourceType::RES_STATIC_MESH; }
-	std::string filePath;
-	MeshType meshType;
+	ENGINE_API virtual ~SkeletalMesh() noexcept;
+
+private:
+	void _CalculateTransforms();
 };

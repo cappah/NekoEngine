@@ -359,22 +359,40 @@ bool Engine::_InitRenderer()
 bool Engine::_InitSystem()
 {
 	if (VFS::Initialize() != ENGINE_OK)
+	{
+		Logger::Log(ENGINE_MODULE, LOG_CRITICAL, "Failed to initialize the virtual file system");
 		return false;
-
+	}
+	
 	if (ResourceManager::Initialize() != ENGINE_OK)
+	{
+		Logger::Log(ENGINE_MODULE, LOG_CRITICAL, "Failed to initialize the resource manager");
 		return false;
+	}
 
 	if (SceneManager::Initialize() != ENGINE_OK)
+	{
+		Logger::Log(ENGINE_MODULE, LOG_CRITICAL, "Failed to initialize the scene manager");
 		return false;
+	}
 	
 	if (DeferredBuffer::Initialize() != ENGINE_OK)
+	{
+		Logger::Log(ENGINE_MODULE, LOG_CRITICAL, "Failed to initialize the deferredm buffer");
 		return false;
+	}
 	
 	if (SoundManager::Initialize() != ENGINE_OK)
+	{
+		Logger::Log(ENGINE_MODULE, LOG_CRITICAL, "Failed to initialize the sound manager");
 		return false;
+	}
 
 	if (PostProcessor::Initialize() != ENGINE_OK)
+	{
+		Logger::Log(ENGINE_MODULE, LOG_CRITICAL, "Failed to initialize the post processor");
 		return false;
+	}
 
 	return true;
 }
@@ -634,12 +652,13 @@ void Engine::Draw() noexcept
 		DrawString(vec2(0.f, _engineFont->GetCharacterHeight() *  5), vec3(1.f, 1.f, 1.f), "Tris:      %d", SceneManager::GetActiveScene()->GetTriangleCount());
 		DrawString(vec2(0.f, _engineFont->GetCharacterHeight() *  6), vec3(1.f, 1.f, 1.f), "Objects:   %d", SceneManager::GetActiveScene()->GetObjectCount());
 		DrawString(vec2(0.f, _engineFont->GetCharacterHeight() *  7), vec3(1.f, 1.f, 1.f), "Lights:    %d", SceneManager::GetActiveScene()->GetNumLights());
-		DrawString(vec2(0.f, _engineFont->GetCharacterHeight() *  8), vec3(1.f, 1.f, 1.f), "Meshes:    %d", ResourceManager::LoadedMeshes());
-		DrawString(vec2(0.f, _engineFont->GetCharacterHeight() *  9), vec3(1.f, 1.f, 1.f), "Textures:  %d", ResourceManager::LoadedTextures());
-		DrawString(vec2(0.f, _engineFont->GetCharacterHeight() * 10), vec3(1.f, 1.f, 1.f), "Shaders:   %d", ResourceManager::LoadedShaders());
-		DrawString(vec2(0.f, _engineFont->GetCharacterHeight() * 11), vec3(1.f, 1.f, 1.f), "Materials: %d", ResourceManager::LoadedMaterials());
-		DrawString(vec2(0.f, _engineFont->GetCharacterHeight() * 12), vec3(1.f, 1.f, 1.f), "Sounds:    %d", ResourceManager::LoadedSounds());
-		DrawString(vec2(0.f, _engineFont->GetCharacterHeight() * 13), vec3(1.f, 1.f, 1.f), "Fonts:     %d", ResourceManager::LoadedFonts());
+		DrawString(vec2(0.f, _engineFont->GetCharacterHeight() *  8), vec3(1.f, 1.f, 1.f), "StMeshes:  %d", ResourceManager::LoadedStaticMeshes());
+		DrawString(vec2(0.f, _engineFont->GetCharacterHeight() *  9), vec3(1.f, 1.f, 1.f), "SkMeshes:  %d", ResourceManager::LoadedSkeletalMeshes());
+		DrawString(vec2(0.f, _engineFont->GetCharacterHeight() * 10), vec3(1.f, 1.f, 1.f), "Textures:  %d", ResourceManager::LoadedTextures());
+		DrawString(vec2(0.f, _engineFont->GetCharacterHeight() * 11), vec3(1.f, 1.f, 1.f), "Shaders:   %d", ResourceManager::LoadedShaders());
+		DrawString(vec2(0.f, _engineFont->GetCharacterHeight() * 12), vec3(1.f, 1.f, 1.f), "Materials: %d", ResourceManager::LoadedMaterials());
+		DrawString(vec2(0.f, _engineFont->GetCharacterHeight() * 13), vec3(1.f, 1.f, 1.f), "Sounds:    %d", ResourceManager::LoadedSounds());
+		DrawString(vec2(0.f, _engineFont->GetCharacterHeight() * 14), vec3(1.f, 1.f, 1.f), "Fonts:     %d", ResourceManager::LoadedFonts());
 
 		if(_haveMemoryInfo)
 		{

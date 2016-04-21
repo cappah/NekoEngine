@@ -100,7 +100,7 @@ void Terrain::GenerateTerrain() noexcept
 		}
 	}
 
-	_mesh = new Mesh(nullptr);
+	_mesh = new StaticMesh(nullptr);
 	_mesh->LoadDynamic(_terrainVertices, indices);
 
 	indices.clear();

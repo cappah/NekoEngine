@@ -42,7 +42,8 @@
 
 enum class ResourceType : unsigned
 {
-	RES_MESH = 0,
+	RES_STATIC_MESH = 0,
+	RES_SKELETAL_MESH,
 	RES_TEXTURE,
 	RES_SHADER,
 	RES_AUDIOCLIP,

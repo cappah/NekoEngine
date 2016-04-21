@@ -107,7 +107,7 @@ Object *Scene::_LoadObject(VFSFile *f, const string &className)
 			obj->SetId(atoi(split[1]));
 		else if (!strncmp(split[0], "mesh", len))
 		{
-			int id = ResourceManager::GetResourceID(split[1], ResourceType::RES_MESH);
+			int id = ResourceManager::GetResourceID(split[1], ResourceType::RES_STATIC_MESH);
 			if (id == ENGINE_NOT_FOUND)
 			{
 				Logger::Log(SCENE_MODULE, LOG_CRITICAL, "Failed to load mesh for object id %d. Mesh \"%s\" not found.", obj->GetId(), split[1]);
@@ -115,7 +115,19 @@ Object *Scene::_LoadObject(VFSFile *f, const string &className)
 				return nullptr;
 			}
 
-			obj->SetModelId(id);
+			obj->SetMeshId(id, MeshType::Static);
+		}
+		else if (!strncmp(split[0], "skmesh", len))
+		{
+			int id = ResourceManager::GetResourceID(split[1], ResourceType::RES_SKELETAL_MESH);
+			if (id == ENGINE_NOT_FOUND)
+			{
+				Logger::Log(SCENE_MODULE, LOG_CRITICAL, "Failed to load mesh for object id %d. Mesh \"%s\" not found.", obj->GetId(), split[1]);
+				delete obj;
+				return nullptr;
+			}
+			
+			obj->SetMeshId(id, MeshType::Skeletal);
 		}
 		else if (!strncmp(split[0], "material", len))
 		{

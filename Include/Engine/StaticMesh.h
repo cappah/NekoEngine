@@ -1,6 +1,6 @@
 /* Neko Engine
  *
- * Mesh.h
+ * StaticMesh.h
  * Author: Alexandru Naiman
  *
  * Mesh class definition 
@@ -46,10 +46,10 @@
 #include <Resource/Resource.h>
 #include <Resource/MeshResource.h>
 
-class Mesh : public Resource
+class StaticMesh : public Resource
 {
 public:
-	ENGINE_API Mesh(MeshResource *res) noexcept;
+	ENGINE_API StaticMesh(MeshResource *res) noexcept;
 
 	ENGINE_API MeshResource* GetResourceInfo() noexcept { return (MeshResource*)_resourceInfo; }
 	ENGINE_API size_t GetIndexCount(size_t group) noexcept { return _groupCount[group]; }
@@ -77,13 +77,13 @@ public:
 	ENGINE_API void UpdateIndices(std::vector<uint32_t>& indices);
 	ENGINE_API void UpdateVertices(std::vector<Vertex> &vertices);
 	
-	ENGINE_API void Draw(Renderer* r, size_t group);
+	ENGINE_API virtual void Draw(Renderer* r, size_t group);
 
 	ENGINE_API void Release() noexcept;
 
-	ENGINE_API virtual ~Mesh() noexcept;
+	ENGINE_API virtual ~StaticMesh() noexcept;
 
-private:
+protected:
 	RBuffer* _vertexBuffer;
 	RBuffer* _indexBuffer;
 	RArrayBuffer* _arrayBuffer;

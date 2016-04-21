@@ -17,7 +17,7 @@
 		12822B1B1CC1ADAE00EE5D0A /* Engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B0C1CC1ADAE00EE5D0A /* Engine.cpp */; };
 		12822B1C1CC1ADAE00EE5D0A /* LoadingScreen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B0D1CC1ADAE00EE5D0A /* LoadingScreen.cpp */; };
 		12822B1D1CC1ADAE00EE5D0A /* Material.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B0E1CC1ADAE00EE5D0A /* Material.cpp */; };
-		12822B1E1CC1ADAE00EE5D0A /* Mesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B0F1CC1ADAE00EE5D0A /* Mesh.cpp */; };
+		12822B1E1CC1ADAE00EE5D0A /* StaticMesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B0F1CC1ADAE00EE5D0A /* StaticMesh.cpp */; };
 		12822B1F1CC1ADAE00EE5D0A /* PostProcessor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B101CC1ADAE00EE5D0A /* PostProcessor.cpp */; };
 		12822B201CC1ADAE00EE5D0A /* ResourceDatabase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B111CC1ADAE00EE5D0A /* ResourceDatabase.cpp */; };
 		12822B211CC1ADAE00EE5D0A /* ResourceManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B121CC1ADAE00EE5D0A /* ResourceManager.cpp */; };
@@ -57,6 +57,8 @@
 		12822BB71CC1DA4C00EE5D0A /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12822BB61CC1DA4C00EE5D0A /* Carbon.framework */; };
 		12822BBA1CC1DB9500EE5D0A /* EngineAppDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 12822BB81CC1DB9500EE5D0A /* EngineAppDelegate.h */; };
 		12822BBB1CC1DB9500EE5D0A /* EngineAppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 12822BB91CC1DB9500EE5D0A /* EngineAppDelegate.mm */; };
+		12CE01701CC9919300F3D84B /* SkeletalMesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12CE016F1CC9919300F3D84B /* SkeletalMesh.cpp */; };
+		12CE01721CC991B900F3D84B /* SkeletalMesh.h in Headers */ = {isa = PBXBuildFile; fileRef = 12CE01711CC991B900F3D84B /* SkeletalMesh.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -73,7 +75,7 @@
 		12822B0C1CC1ADAE00EE5D0A /* Engine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Engine.cpp; sourceTree = "<group>"; };
 		12822B0D1CC1ADAE00EE5D0A /* LoadingScreen.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LoadingScreen.cpp; sourceTree = "<group>"; };
 		12822B0E1CC1ADAE00EE5D0A /* Material.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Material.cpp; sourceTree = "<group>"; };
-		12822B0F1CC1ADAE00EE5D0A /* Mesh.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Mesh.cpp; sourceTree = "<group>"; };
+		12822B0F1CC1ADAE00EE5D0A /* StaticMesh.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StaticMesh.cpp; sourceTree = "<group>"; };
 		12822B101CC1ADAE00EE5D0A /* PostProcessor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PostProcessor.cpp; sourceTree = "<group>"; };
 		12822B111CC1ADAE00EE5D0A /* ResourceDatabase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ResourceDatabase.cpp; sourceTree = "<group>"; };
 		12822B121CC1ADAE00EE5D0A /* ResourceManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ResourceManager.cpp; sourceTree = "<group>"; };
@@ -111,7 +113,7 @@
 		12822B601CC1AE4E00EE5D0A /* GameModule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GameModule.h; sourceTree = "<group>"; };
 		12822B611CC1AE4E00EE5D0A /* LoadingScreen.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LoadingScreen.h; sourceTree = "<group>"; };
 		12822B621CC1AE4E00EE5D0A /* Material.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Material.h; sourceTree = "<group>"; };
-		12822B631CC1AE4E00EE5D0A /* Mesh.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Mesh.h; sourceTree = "<group>"; };
+		12822B631CC1AE4E00EE5D0A /* StaticMesh.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StaticMesh.h; sourceTree = "<group>"; };
 		12822B641CC1AE4E00EE5D0A /* PostProcessor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PostProcessor.h; sourceTree = "<group>"; };
 		12822B651CC1AE4E00EE5D0A /* ResourceDatabase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ResourceDatabase.h; sourceTree = "<group>"; };
 		12822B661CC1AE4E00EE5D0A /* ResourceManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ResourceManager.h; sourceTree = "<group>"; };
@@ -169,6 +171,8 @@
 		12822BB61CC1DA4C00EE5D0A /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
 		12822BB81CC1DB9500EE5D0A /* EngineAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EngineAppDelegate.h; path = Platform/Mac/EngineAppDelegate.h; sourceTree = SOURCE_ROOT; };
 		12822BB91CC1DB9500EE5D0A /* EngineAppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = EngineAppDelegate.mm; path = Platform/Mac/EngineAppDelegate.mm; sourceTree = SOURCE_ROOT; };
+		12CE016F1CC9919300F3D84B /* SkeletalMesh.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SkeletalMesh.cpp; sourceTree = "<group>"; };
+		12CE01711CC991B900F3D84B /* SkeletalMesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkeletalMesh.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -248,13 +252,14 @@
 				12822B0C1CC1ADAE00EE5D0A /* Engine.cpp */,
 				12822B0D1CC1ADAE00EE5D0A /* LoadingScreen.cpp */,
 				12822B0E1CC1ADAE00EE5D0A /* Material.cpp */,
-				12822B0F1CC1ADAE00EE5D0A /* Mesh.cpp */,
+				12822B0F1CC1ADAE00EE5D0A /* StaticMesh.cpp */,
 				12822B101CC1ADAE00EE5D0A /* PostProcessor.cpp */,
 				12822B111CC1ADAE00EE5D0A /* ResourceDatabase.cpp */,
 				12822B121CC1ADAE00EE5D0A /* ResourceManager.cpp */,
 				12822B131CC1ADAE00EE5D0A /* SceneManager.cpp */,
 				12822B141CC1ADAE00EE5D0A /* Shader.cpp */,
 				12822B151CC1ADAE00EE5D0A /* ShadowMap.cpp */,
+				12CE016F1CC9919300F3D84B /* SkeletalMesh.cpp */,
 				12822B161CC1ADAE00EE5D0A /* SoundManager.cpp */,
 				12822B171CC1ADAE00EE5D0A /* SSAO.cpp */,
 				12822B181CC1ADAE00EE5D0A /* Texture.cpp */,
@@ -381,13 +386,14 @@
 				12822B601CC1AE4E00EE5D0A /* GameModule.h */,
 				12822B611CC1AE4E00EE5D0A /* LoadingScreen.h */,
 				12822B621CC1AE4E00EE5D0A /* Material.h */,
-				12822B631CC1AE4E00EE5D0A /* Mesh.h */,
+				12822B631CC1AE4E00EE5D0A /* StaticMesh.h */,
 				12822B641CC1AE4E00EE5D0A /* PostProcessor.h */,
 				12822B651CC1AE4E00EE5D0A /* ResourceDatabase.h */,
 				12822B661CC1AE4E00EE5D0A /* ResourceManager.h */,
 				12822B671CC1AE4E00EE5D0A /* SceneManager.h */,
 				12822B681CC1AE4E00EE5D0A /* Shader.h */,
 				12822B691CC1AE4E00EE5D0A /* ShadowMap.h */,
+				12CE01711CC991B900F3D84B /* SkeletalMesh.h */,
 				12822B6A1CC1AE4E00EE5D0A /* SoundManager.h */,
 				12822B6B1CC1AE4E00EE5D0A /* SSAO.h */,
 				12822B6C1CC1AE4E00EE5D0A /* Texture.h */,
@@ -540,6 +546,7 @@
 			files = (
 				1279C0FE1CC91E5800E521AD /* Compat.h in Headers */,
 				12822BB31CC1D84300EE5D0A /* EngineView.h in Headers */,
+				12CE01721CC991B900F3D84B /* SkeletalMesh.h in Headers */,
 				12822BBA1CC1DB9500EE5D0A /* EngineAppDelegate.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -603,6 +610,7 @@
 				12822B1F1CC1ADAE00EE5D0A /* PostProcessor.cpp in Sources */,
 				12822B201CC1ADAE00EE5D0A /* ResourceDatabase.cpp in Sources */,
 				12822B081CC1AD9C00EE5D0A /* AudioClip.cpp in Sources */,
+				12CE01701CC9919300F3D84B /* SkeletalMesh.cpp in Sources */,
 				12822B561CC1AE2E00EE5D0A /* VFSFile.cpp in Sources */,
 				12822B1B1CC1ADAE00EE5D0A /* Engine.cpp in Sources */,
 				12822B2F1CC1ADD500EE5D0A /* Mac.mm in Sources */,
@@ -611,7 +619,7 @@
 				12822B211CC1ADAE00EE5D0A /* ResourceManager.cpp in Sources */,
 				12822B401CC1AE0E00EE5D0A /* Camera.cpp in Sources */,
 				12822BB51CC1D84700EE5D0A /* EngineView.mm in Sources */,
-				12822B1E1CC1ADAE00EE5D0A /* Mesh.cpp in Sources */,
+				12822B1E1CC1ADAE00EE5D0A /* StaticMesh.cpp in Sources */,
 				12822B541CC1AE2E00EE5D0A /* VFS.cpp in Sources */,
 				12822B1A1CC1ADAE00EE5D0A /* DeferredBuffer.cpp in Sources */,
 				12822B381CC1AE0600EE5D0A /* SMAA.cpp in Sources */,
