@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		126DE7B01CC8673B00A9E5AB /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 126DE7AF1CC8673B00A9E5AB /* libz.dylib */; };
 		126DE7B81CC86C6000A9E5AB /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 126DE7B61CC86C6000A9E5AB /* libsqlite3.dylib */; };
+		1279C0FE1CC91E5800E521AD /* Compat.h in Headers */ = {isa = PBXBuildFile; fileRef = 1279C0FD1CC91E5800E521AD /* Compat.h */; };
+		1279C1001CC91E7600E521AD /* reallocarray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1279C0FF1CC91E7600E521AD /* reallocarray.cpp */; };
 		12822B081CC1AD9C00EE5D0A /* AudioClip.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B061CC1AD9C00EE5D0A /* AudioClip.cpp */; };
 		12822B091CC1AD9C00EE5D0A /* AudioSource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B071CC1AD9C00EE5D0A /* AudioSource.cpp */; };
 		12822B1A1CC1ADAE00EE5D0A /* DeferredBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B0B1CC1ADAE00EE5D0A /* DeferredBuffer.cpp */; };
@@ -41,7 +43,6 @@
 		12822B4B1CC1AE2000EE5D0A /* AssetLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B491CC1AE2000EE5D0A /* AssetLoader.cpp */; };
 		12822B4C1CC1AE2000EE5D0A /* ogg_callbacks.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B4A1CC1AE2000EE5D0A /* ogg_callbacks.cpp */; };
 		12822B4F1CC1AE2800EE5D0A /* Logger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B4D1CC1AE2800EE5D0A /* Logger.cpp */; };
-		12822B501CC1AE2800EE5D0A /* Memory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B4E1CC1AE2800EE5D0A /* Memory.cpp */; };
 		12822B541CC1AE2E00EE5D0A /* VFS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B511CC1AE2E00EE5D0A /* VFS.cpp */; };
 		12822B551CC1AE2E00EE5D0A /* VFSArchive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B521CC1AE2E00EE5D0A /* VFSArchive.cpp */; };
 		12822B561CC1AE2E00EE5D0A /* VFSFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B531CC1AE2E00EE5D0A /* VFSFile.cpp */; };
@@ -63,6 +64,8 @@
 		126DE7AF1CC8673B00A9E5AB /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		126DE7B51CC86C6000A9E5AB /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		126DE7B61CC86C6000A9E5AB /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
+		1279C0FD1CC91E5800E521AD /* Compat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Compat.h; sourceTree = "<group>"; };
+		1279C0FF1CC91E7600E521AD /* reallocarray.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = reallocarray.cpp; path = Platform/Compat/reallocarray.cpp; sourceTree = SOURCE_ROOT; };
 		12822AF11CC1AD4300EE5D0A /* libEngine.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libEngine.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		12822B061CC1AD9C00EE5D0A /* AudioClip.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AudioClip.cpp; path = Audio/AudioClip.cpp; sourceTree = SOURCE_ROOT; };
 		12822B071CC1AD9C00EE5D0A /* AudioSource.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AudioSource.cpp; path = Audio/AudioSource.cpp; sourceTree = SOURCE_ROOT; };
@@ -96,7 +99,6 @@
 		12822B491CC1AE2000EE5D0A /* AssetLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AssetLoader.cpp; path = System/AssetLoader/AssetLoader.cpp; sourceTree = SOURCE_ROOT; };
 		12822B4A1CC1AE2000EE5D0A /* ogg_callbacks.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ogg_callbacks.cpp; path = System/AssetLoader/ogg_callbacks.cpp; sourceTree = SOURCE_ROOT; };
 		12822B4D1CC1AE2800EE5D0A /* Logger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Logger.cpp; path = System/Logger.cpp; sourceTree = SOURCE_ROOT; };
-		12822B4E1CC1AE2800EE5D0A /* Memory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Memory.cpp; path = System/Memory.cpp; sourceTree = SOURCE_ROOT; };
 		12822B511CC1AE2E00EE5D0A /* VFS.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VFS.cpp; path = System/VFS/VFS.cpp; sourceTree = SOURCE_ROOT; };
 		12822B521CC1AE2E00EE5D0A /* VFSArchive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VFSArchive.cpp; path = System/VFS/VFSArchive.cpp; sourceTree = SOURCE_ROOT; };
 		12822B531CC1AE2E00EE5D0A /* VFSFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VFSFile.cpp; path = System/VFS/VFSFile.cpp; sourceTree = SOURCE_ROOT; };
@@ -153,7 +155,6 @@
 		12822B941CC1AE4E00EE5D0A /* AssetLoader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AssetLoader.h; sourceTree = "<group>"; };
 		12822B951CC1AE4E00EE5D0A /* ogg_callbacks.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ogg_callbacks.h; sourceTree = "<group>"; };
 		12822B961CC1AE4E00EE5D0A /* Logger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Logger.h; sourceTree = "<group>"; };
-		12822B971CC1AE4E00EE5D0A /* Memory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Memory.h; sourceTree = "<group>"; };
 		12822B991CC1AE4E00EE5D0A /* VFS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VFS.h; sourceTree = "<group>"; };
 		12822B9A1CC1AE4E00EE5D0A /* VFSArchive.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VFSArchive.h; sourceTree = "<group>"; };
 		12822B9B1CC1AE4E00EE5D0A /* VFSFile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VFSFile.h; sourceTree = "<group>"; };
@@ -190,6 +191,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1279C0FC1CC91E4200E521AD /* Compat */ = {
+			isa = PBXGroup;
+			children = (
+				1279C0FF1CC91E7600E521AD /* reallocarray.cpp */,
+			);
+			name = Compat;
+			sourceTree = "<group>";
+		};
 		12822AE81CC1AD4300EE5D0A = {
 			isa = PBXGroup;
 			children = (
@@ -259,6 +268,7 @@
 			children = (
 				12822B2B1CC1ADC600EE5D0A /* UNIX */,
 				12822B2A1CC1ADC200EE5D0A /* Mac */,
+				1279C0FC1CC91E4200E521AD /* Compat */,
 				12822B301CC1ADDB00EE5D0A /* shared.cpp */,
 			);
 			name = Platform;
@@ -290,7 +300,6 @@
 				12822B481CC1AE1800EE5D0A /* AssetLoader */,
 				12822B471CC1AE1500EE5D0A /* VFS */,
 				12822B4D1CC1AE2800EE5D0A /* Logger.cpp */,
-				12822B4E1CC1AE2800EE5D0A /* Memory.cpp */,
 			);
 			name = System;
 			sourceTree = "<group>";
@@ -393,6 +402,7 @@
 		12822B701CC1AE4E00EE5D0A /* Platform */ = {
 			isa = PBXGroup;
 			children = (
+				1279C0FD1CC91E5800E521AD /* Compat.h */,
 				12822B711CC1AE4E00EE5D0A /* Platform.h */,
 			);
 			name = Platform;
@@ -471,7 +481,6 @@
 			children = (
 				12822B931CC1AE4E00EE5D0A /* AssetLoader */,
 				12822B961CC1AE4E00EE5D0A /* Logger.h */,
-				12822B971CC1AE4E00EE5D0A /* Memory.h */,
 				12822B981CC1AE4E00EE5D0A /* VFS */,
 			);
 			name = System;
@@ -529,6 +538,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1279C0FE1CC91E5800E521AD /* Compat.h in Headers */,
 				12822BB31CC1D84300EE5D0A /* EngineView.h in Headers */,
 				12822BBA1CC1DB9500EE5D0A /* EngineAppDelegate.h in Headers */,
 			);
@@ -601,7 +611,6 @@
 				12822B211CC1ADAE00EE5D0A /* ResourceManager.cpp in Sources */,
 				12822B401CC1AE0E00EE5D0A /* Camera.cpp in Sources */,
 				12822BB51CC1D84700EE5D0A /* EngineView.mm in Sources */,
-				12822B501CC1AE2800EE5D0A /* Memory.cpp in Sources */,
 				12822B1E1CC1ADAE00EE5D0A /* Mesh.cpp in Sources */,
 				12822B541CC1AE2E00EE5D0A /* VFS.cpp in Sources */,
 				12822B1A1CC1ADAE00EE5D0A /* DeferredBuffer.cpp in Sources */,
@@ -611,6 +620,7 @@
 				12822B421CC1AE0E00EE5D0A /* Object.cpp in Sources */,
 				12822B4B1CC1AE2000EE5D0A /* AssetLoader.cpp in Sources */,
 				12822B2D1CC1ADD000EE5D0A /* UNIX.cpp in Sources */,
+				1279C1001CC91E7600E521AD /* reallocarray.cpp in Sources */,
 				12822B551CC1AE2E00EE5D0A /* VFSArchive.cpp in Sources */,
 				12822B281CC1ADAE00EE5D0A /* TextureFont.cpp in Sources */,
 				12822B261CC1ADAE00EE5D0A /* SSAO.cpp in Sources */,

@@ -73,7 +73,7 @@ SSAO::SSAO(int width, int height) :
 		_dataBlock.Radius = SSAO_MED_RADIUS;
 	}
 
-	srandom(time(NULL));
+	srandom((unsigned int)time(NULL));
 
 	// Generate kernel
 	for (int i = 0; i < (int)_dataBlock.KernelSize; ++i)
