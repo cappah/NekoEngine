@@ -47,3 +47,7 @@
 void ENGINE_API *reallocarray(void *optr, size_t nmemb, size_t size);
 #endif
 
+#if defined(NE_PLATFORM_WIN32) || defined(NE_PLATFORM_WIN64)
+	#define random() rand()
+	#define srandom(x) srand(x)
+#endif
