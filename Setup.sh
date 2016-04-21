@@ -12,7 +12,7 @@ SU=sudo
 InstallDepsFail()
 {
 	echo "Failed to install dependencies. You will have to install them manually"
-	exit -1;
+	exit;
 }
 
 InstallDepsPacman()
@@ -64,7 +64,7 @@ InstallDepsDnf()
 		sudo dnf -y install $PACKAGES
 	fi
 
-	if $? -ne 0 ; then
+	if [ $? -ne 0 ]; then
 		InstallDepsFail
 	fi
 
@@ -113,7 +113,7 @@ GenerateMakefile()
 
 	BUILD=DEBUG
 
-	if $# -gt 0 ; then
+	if [ $# -gt 0 ]; then
 		if $1 == "release" ; then
 			BUILD=RELEASE
 		else
@@ -155,7 +155,7 @@ case $OS in
 		echo "Attempting to install dependencies using pkg"
 		sudo pkg install gcc5 gmake cmake sqlite3 png libX11 openal-soft libvorbis libGL;
 
-		if $? -ne 0 ; then
+		if [ $? -ne 0 ]; then
 			InstallDepsFail
 		fi
 
@@ -186,7 +186,7 @@ case $OS in
 			sudo /opt/csw/bin/pkgutil -y -i gcc5core gcc5g++;
 		fi
 
-		if $? -ne 0 ; then
+		if [ $? -ne 0 ]; then
 			InstallDepsFail
 		fi
 
@@ -205,12 +205,26 @@ case $OS in
 		brew update;
 		brew install libpng libvorbis;
 
-		if [  "$?" -ne "0" ]; then
+		if [ $? -ne 0 ]; then
 			InstallDepsFail
 		fi
 
 		echo ""
 		echo "Setup done. Now open the Xcode workspace file."
+	;;
+	'OpenBSD')
+		echo "Attempting to install dependencies using pkg"
+		sudo pkg_add gcc g++ gmake cmake png openal libvorbis;
+
+		if [ $? -ne 0 ]; then
+			InstallDepsFail
+		fi
+
+		CC=egcc
+		CXX=eg++
+
+		GenerateX11Icon
+		GenerateMakefile
 	;;
 	*)
 	;;

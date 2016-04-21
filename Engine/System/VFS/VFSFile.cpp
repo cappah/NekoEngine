@@ -97,7 +97,9 @@ int VFSFile::Open()
 		if (!_gzfp)
 			return ENGINE_FAIL;
 
+	#ifndef NE_PLATFORM_OPENBSD
 		gzbuffer(_gzfp, 131072); // 128 kB buffer
+	#endif
 	}
 
 	_references++;

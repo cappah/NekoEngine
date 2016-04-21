@@ -73,19 +73,19 @@ SSAO::SSAO(int width, int height) :
 		_dataBlock.Radius = SSAO_MED_RADIUS;
 	}
 
-	srandom((unsigned int)time(NULL));
+	NE_SRANDOM((unsigned int)time(NULL));
 
 	// Generate kernel
 	for (int i = 0; i < (int)_dataBlock.KernelSize; ++i)
 	{
 		float scale = (float)i / _dataBlock.KernelSize;
 
-		_dataBlock.Kernel[i].x = 2.f * (float)random() / RAND_MAX - 1.f;
-		_dataBlock.Kernel[i].y = 2.f * (float)random() / RAND_MAX - 1.f;
-		_dataBlock.Kernel[i].z = (float)random() / RAND_MAX;
+		_dataBlock.Kernel[i].x = 2.f * (float)NE_RANDOM() / RAND_MAX - 1.f;
+		_dataBlock.Kernel[i].y = 2.f * (float)NE_RANDOM() / RAND_MAX - 1.f;
+		_dataBlock.Kernel[i].z = (float)NE_RANDOM() / RAND_MAX;
 
 		_dataBlock.Kernel[i] = normalize(_dataBlock.Kernel[i]);
-		_dataBlock.Kernel[i] *= (float)random() / RAND_MAX;
+		_dataBlock.Kernel[i] *= (float)NE_RANDOM() / RAND_MAX;
 
 		_dataBlock.Kernel[i] *= .1f + 1.f * ((scale * scale) - .1f);
 	}
@@ -93,8 +93,8 @@ SSAO::SSAO(int width, int height) :
 	// Generate noise
 	for (int i = 0; i < _noiseSize; i++)
 	{
-		_noise[i] = glm::vec3(2.f * (float)random() / RAND_MAX - 1.f,
-			2.f * (float)random() / RAND_MAX - 1.f,
+		_noise[i] = glm::vec3(2.f * (float)NE_RANDOM() / RAND_MAX - 1.f,
+			2.f * (float)NE_RANDOM() / RAND_MAX - 1.f,
 			0.f);
 	}
 

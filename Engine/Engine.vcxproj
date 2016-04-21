@@ -156,6 +156,7 @@
     <ClInclude Include="..\include\Engine\TextureFont.h" />
     <ClInclude Include="..\include\Engine\Version.h" />
     <ClInclude Include="..\include\Engine\Vertex.h" />
+    <ClInclude Include="..\Include\Platform\Compat.h" />
     <ClInclude Include="..\include\Platform\Platform.h" />
     <ClInclude Include="..\Include\PostEffects\Bloom.h" />
     <ClInclude Include="..\include\PostEffects\Effect.h" />
@@ -187,7 +188,6 @@
     <ClInclude Include="..\include\System\AssetLoader\AssetLoader.h" />
     <ClInclude Include="..\include\System\AssetLoader\ogg_callbacks.h" />
     <ClInclude Include="..\include\System\Logger.h" />
-    <ClInclude Include="..\Include\System\Memory.h" />
     <ClInclude Include="..\include\System\VFS\VFS.h" />
     <ClInclude Include="..\include\System\VFS\VFSArchive.h" />
     <ClInclude Include="..\include\System\VFS\VFSFile.h" />
@@ -262,6 +262,7 @@
     <ClCompile Include="Engine\SSAO.cpp" />
     <ClCompile Include="Engine\Texture.cpp" />
     <ClCompile Include="Engine\TextureFont.cpp" />
+    <ClCompile Include="Platform\Compat\reallocarray.cpp" />
     <ClCompile Include="Platform\shared.cpp" />
     <ClCompile Include="Platform\Windows\Windows.cpp" />
     <ClCompile Include="PostEffects\Effect.cpp" />
@@ -276,7 +277,6 @@
     <ClCompile Include="System\AssetLoader\AssetLoader.cpp" />
     <ClCompile Include="System\AssetLoader\ogg_callbacks.cpp" />
     <ClCompile Include="System\Logger.cpp" />
-    <ClCompile Include="System\Memory.cpp" />
     <ClCompile Include="System\VFS\VFS.cpp" />
     <ClCompile Include="System\VFS\VFSArchive.cpp" />
     <ClCompile Include="System\VFS\VFSFile.cpp" />

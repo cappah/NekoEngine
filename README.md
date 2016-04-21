@@ -1,10 +1,14 @@
 NekoEngine
 ============
 
-[![Build Status](https://travis-ci.org/nalexandru/NekoEngine.svg?branch=master)](https://travis-ci.org/nalexandru/NekoEngine)
-
+|**System**|**Status**|
+|---|---|
+|**Linux, OS X**  |[![Build Status](https://travis-ci.org/nalexandru/NekoEngine.svg?branch=master)](https://travis-ci.org/nalexandru/NekoEngine)|
+|**Windows**      |[![Build status](https://ci.appveyor.com/api/projects/status/843uw7e81ruf7qaa?svg=true)](https://ci.appveyor.com/project/nalexandru/nekoengine)|
 
 Cross-platform 3D Game Engine
+
+For the features see the [Roadmap](https://github.com/nalexandru/NekoEngine/wiki/Roadmap)
 
 **Requirements:**
 

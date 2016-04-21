@@ -96,6 +96,9 @@
     <Filter Include="Resources\Data\Materials\nyra">
       <UniqueIdentifier>{ec869461-269a-4d65-8550-9f3eac1923db}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Platform\Compat">
+      <UniqueIdentifier>{86dcbca2-196c-4c43-b8d6-0b98e47732e8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Resources\Data\Shaders\include\SMAA.h">
@@ -263,9 +266,6 @@
     <ClInclude Include="..\Include\Scene\ObjectComponent.h">
       <Filter>Include\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="..\Include\System\Memory.h">
-      <Filter>Include\System</Filter>
-    </ClInclude>
     <ClInclude Include="..\Include\PostEffects\Bloom.h">
       <Filter>Include\PostEffects</Filter>
     </ClInclude>
@@ -277,6 +277,9 @@
     </ClInclude>
     <ClInclude Include="..\Include\Engine\DeferredBuffer.h">
       <Filter>Include\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Platform\Compat.h">
+      <Filter>Include\Platform</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -515,14 +518,14 @@
     <ClCompile Include="Scene\ObjectComponent.cpp">
       <Filter>Source\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="System\Memory.cpp">
-      <Filter>Source\System</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\SSAO.cpp">
       <Filter>Source\Engine</Filter>
     </ClCompile>
     <ClCompile Include="Engine\DeferredBuffer.cpp">
       <Filter>Source\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\Compat\reallocarray.cpp">
+      <Filter>Source\Platform\Compat</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
