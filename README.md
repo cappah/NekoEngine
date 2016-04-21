@@ -8,6 +8,8 @@ NekoEngine
 
 Cross-platform 3D Game Engine
 
+For the features see the [Roadmap](https://github.com/nalexandru/NekoEngine/wiki/Roadmap)
+
 **Requirements:**
 
        A PC with a modern graphics card capable of OpenGL 4.5  (for Windows & *nix)
