@@ -27,9 +27,11 @@ InstallDepsPacman()
 		sudo pacman -Syy $PACKAGES
 	fi
 
-	if [ $? -ne 0 ]; then
+	if $? -ne 0 ; then
 		InstallDepsFail
 	fi
+
+	echo "Dependencies installed."
 }
 
 InstallDepsAptGet()
@@ -44,9 +46,11 @@ InstallDepsAptGet()
 		sudo apt-get install $PACKAGES
 	fi
 
-	if [ $? -ne 0 ]; then
+	if $? -ne 0 ; then
 		InstallDepsFail
 	fi
+
+	echo "Dependencies installed."
 }
 
 InstallDepsDnf()
@@ -60,9 +64,11 @@ InstallDepsDnf()
 		sudo dnf -y install $PACKAGES
 	fi
 
-	if [ $? -ne 0 ]; then
+	if $? -ne 0 ; then
 		InstallDepsFail
 	fi
+
+	echo "Dependencies installed."
 }
 
 InstallDepsYum()
@@ -75,18 +81,59 @@ InstallDepsYum()
 	else
 		sudo yum -y install $PACKAGES
 	fi
+
+	echo "Dependencies installed."
+}
+
+######################
+# Generate functions #
+######################
+
+GenerateX11Icon()
+{
+	echo "Generating x11_icon.h"
+
+	# Build tools
+	mkdir -p Tools/bin
+	$CC -I/usr/local/include -L/usr/local/lib -o Tools/bin/png2argb Tools/png2argb.c -lpng
+
+	# Create x11_icon.h
+	Tools/bin/png2argb Launcher/X11/icon_16.png Launcher/X11/icon_32.png Launcher/X11/icon_64.png Launcher/X11/icon_128.png Launcher/X11/icon_256.png Launcher/X11/icon_512.png > Engine/Platform/X11/x11_icon.h
+
+	echo "Done"
+}
+
+GenerateMakefile()
+{
+	echo "Creating build directory"
+	mkdir -p build
+
+	echo "Generating Makefile"
+	cd build
+
+	BUILD=DEBUG
+
+	if $# -gt 0 ; then
+		if $1 == "release" ; then
+			BUILD=RELEASE
+		else
+			BUILD=DEBUG
+		fi
+	fi
+
+	cmake -DCMAKE_BUILD_TYPE=$BUILD ..
+
+	echo ""
+	echo "Setup done. Now cd build and run make to build the engine."
 }
 
 ########
 # Main #
 ########
 
-# Install dependencies
 OS=`uname`
 case $OS in
 	'Linux')
-		HAVE_X11=YES
-
 		# Search for package manager
 		if type pacman 2> /dev/null; then	
 			InstallDepsPacman
@@ -100,23 +147,25 @@ case $OS in
 			echo "ERROR: Unknown distribution. You will have to install the dependencies manually."
 			exit;
 		fi
+
+		GenerateX11Icon
+		GenerateMakefile
 	;;
 	'FreeBSD')
-		HAVE_X11=YES
-
 		echo "Attempting to install dependencies using pkg"
 		sudo pkg install gcc5 gmake cmake sqlite3 png libX11 openal-soft libvorbis libGL;
 
-		if [ $? -ne 0 ]; then
+		if $? -ne 0 ; then
 			InstallDepsFail
 		fi
 
 		CC=gcc5
 		CXX=g++5
+
+		GenerateX11Icon
+		GenerateMakefile
 	;;
 	'SunOS')
-		HAVE_X11=YES
-
 		if [ hash cmake 2>/dev/null ]; then
 			if [ hash pkgutil 2>/dev/null ]; then
 				echo "CMake not found and pkgutil is unavailable. Please install CMake or OpenCSW";
@@ -137,9 +186,12 @@ case $OS in
 			sudo /opt/csw/bin/pkgutil -y -i gcc5core gcc5g++;
 		fi
 
-		if [ $? -ne 0 ]; then
+		if $? -ne 0 ; then
 			InstallDepsFail
 		fi
+
+		GenerateX11Icon
+		GenerateMakefile
 	;;
 	'Darwin')
 		if [ hash brew 2>/dev/null ]; then
@@ -153,48 +205,13 @@ case $OS in
 		brew update;
 		brew install libpng libvorbis;
 
-		if $? -ne 0 ; then
+		if [  "$?" -ne "0" ]; then
 			InstallDepsFail
 		fi
+
+		echo ""
+		echo "Setup done. Now open the Xcode workspace file."
 	;;
 	*)
 	;;
 esac
-
-echo "Dependencies installed"
-
-if $HAVE_X11 == YES ; then
-
-echo "Generating x11_icon.h"
-
-# Build tools
-mkdir -p Tools/bin
-$CC -I/usr/local/include -L/usr/local/lib -o Tools/bin/png2argb Tools/png2argb.c -lpng
-
-# Create x11_icon.h
-Tools/bin/png2argb Launcher/X11/icon_16.png Launcher/X11/icon_32.png Launcher/X11/icon_64.png Launcher/X11/icon_128.png Launcher/X11/icon_256.png Launcher/X11/icon_512.png > Engine/Platform/X11/x11_icon.h
-
-echo "Done"
-
-fi
-
-echo "Creatting build directory"
-mkdir -p build
-
-echo "Generating Makefile"
-cd build
-
-BUILD=DEBUG
-
-if [ $# -gt 0 ]; then
-	if [ $1 == "release" ]; then
-		BUILD=RELEASE
-	else
-		BUILD=DEBUG
-	fi
-fi
-
-cmake -DCMAKE_BUILD_TYPE=$BUILD ..
-
-echo ""
-echo "Setup done. Now cd build and run make to build the engine."

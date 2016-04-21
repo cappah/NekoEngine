@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		126DE7AE1CC8673600A9E5AB /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 126DE7AD1CC8673600A9E5AB /* libsqlite3.dylib */; };
+		126DE7B01CC8673B00A9E5AB /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 126DE7AF1CC8673B00A9E5AB /* libz.dylib */; };
 		12822B081CC1AD9C00EE5D0A /* AudioClip.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B061CC1AD9C00EE5D0A /* AudioClip.cpp */; };
 		12822B091CC1AD9C00EE5D0A /* AudioSource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B071CC1AD9C00EE5D0A /* AudioSource.cpp */; };
 		12822B1A1CC1ADAE00EE5D0A /* DeferredBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B0B1CC1ADAE00EE5D0A /* DeferredBuffer.cpp */; };
@@ -45,8 +47,6 @@
 		12822B561CC1AE2E00EE5D0A /* VFSFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B531CC1AE2E00EE5D0A /* VFSFile.cpp */; };
 		12822B9D1CC1AED300EE5D0A /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12822B9C1CC1AED300EE5D0A /* Cocoa.framework */; };
 		12822B9F1CC1AED800EE5D0A /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12822B9E1CC1AED800EE5D0A /* OpenAL.framework */; };
-		12822BA11CC1AEDE00EE5D0A /* libz.1.2.5.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 12822BA01CC1AEDE00EE5D0A /* libz.1.2.5.tbd */; };
-		12822BA31CC1AEEC00EE5D0A /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 12822BA21CC1AEEC00EE5D0A /* libsqlite3.tbd */; };
 		12822BA81CC1AF0E00EE5D0A /* libpng16.16.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 12822BA51CC1AF0E00EE5D0A /* libpng16.16.dylib */; };
 		12822BA91CC1AF0E00EE5D0A /* libvorbis.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 12822BA61CC1AF0E00EE5D0A /* libvorbis.0.dylib */; };
 		12822BAB1CC1AF2B00EE5D0A /* libogg.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 12822BAA1CC1AF2B00EE5D0A /* libogg.0.dylib */; };
@@ -59,6 +59,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		126DE7AD1CC8673600A9E5AB /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
+		126DE7AF1CC8673B00A9E5AB /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		12822AF11CC1AD4300EE5D0A /* libEngine.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libEngine.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		12822B061CC1AD9C00EE5D0A /* AudioClip.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AudioClip.cpp; path = Audio/AudioClip.cpp; sourceTree = SOURCE_ROOT; };
 		12822B071CC1AD9C00EE5D0A /* AudioSource.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AudioSource.cpp; path = Audio/AudioSource.cpp; sourceTree = SOURCE_ROOT; };
@@ -173,12 +175,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				126DE7B01CC8673B00A9E5AB /* libz.dylib in Frameworks */,
+				126DE7AE1CC8673600A9E5AB /* libsqlite3.dylib in Frameworks */,
 				12822BAD1CC1B00500EE5D0A /* libvorbisfile.3.dylib in Frameworks */,
 				12822BAB1CC1AF2B00EE5D0A /* libogg.0.dylib in Frameworks */,
 				12822BA81CC1AF0E00EE5D0A /* libpng16.16.dylib in Frameworks */,
 				12822BA91CC1AF0E00EE5D0A /* libvorbis.0.dylib in Frameworks */,
-				12822BA31CC1AEEC00EE5D0A /* libsqlite3.tbd in Frameworks */,
-				12822BA11CC1AEDE00EE5D0A /* libz.1.2.5.tbd in Frameworks */,
 				12822B9F1CC1AED800EE5D0A /* OpenAL.framework in Frameworks */,
 				12822B9D1CC1AED300EE5D0A /* Cocoa.framework in Frameworks */,
 				12822BB71CC1DA4C00EE5D0A /* Carbon.framework in Frameworks */,
@@ -511,6 +513,8 @@
 		12822BAF1CC1B01F00EE5D0A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				126DE7AF1CC8673B00A9E5AB /* libz.dylib */,
+				126DE7AD1CC8673600A9E5AB /* libsqlite3.dylib */,
 				12822BB61CC1DA4C00EE5D0A /* Carbon.framework */,
 				12822B9E1CC1AED800EE5D0A /* OpenAL.framework */,
 				12822B9C1CC1AED300EE5D0A /* Cocoa.framework */,
