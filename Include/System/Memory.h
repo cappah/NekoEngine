@@ -42,6 +42,6 @@
 
 #include <stddef.h>
 
-#ifndef ES_PLATFORM_OPENBSD
+#ifndef NE_PLATFORM_OPENBSD
 void ENGINE_API *reallocarray(void *optr, size_t nmemb, size_t size);
 #endif

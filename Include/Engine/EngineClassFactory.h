@@ -44,7 +44,7 @@
 #include <string>
 #include <map>
 
-#ifdef ES_PLATFORM_WINDOWS
+#ifdef NE_PLATFORM_WINDOWS
 	#ifdef ENGINE_INTERNAL
 		#define ENGINE_API	__declspec(dllexport)
 	#else

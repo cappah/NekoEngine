@@ -131,197 +131,197 @@ private:
 
 // Platform defines
 #if defined(_WIN64)
-	#define ES_PLATFORM_WIN64
-	#define ES_PLATFORM_WINDOWS
-	#define ES_ARCH_X8664
+	#define NE_PLATFORM_WIN64
+	#define NE_PLATFORM_WINDOWS
+	#define NE_ARCH_X8664
 #elif defined(_WIN32)
-	#define ES_PLATFORM_WIN32
-	#define ES_PLATFORM_WINDOWS
-	#define ES_ARCH_X86
+	#define NE_PLATFORM_WIN32
+	#define NE_PLATFORM_WINDOWS
+	#define NE_ARCH_X86
 #elif defined(__linux__)
-	#define ES_PLATFORM_LINUX
-	#define ES_PLATFORM_X11
+	#define NE_PLATFORM_LINUX
+	#define NE_PLATFORM_X11
 	#if defined(__arm__)
 		#ifdef __LP64__
-			#define ES_PLATFORM_LINUX_ARM64
-			#define ES_ARCH_ARM64
+			#define NE_PLATFORM_LINUX_ARM64
+			#define NE_ARCH_ARM64
 		#else
-			#define ES_PLATFORM_LINUX_ARM
-			#define ES_ARCH_ARM
+			#define NE_PLATFORM_LINUX_ARM
+			#define NE_ARCH_ARM
 		#endif
 	#elif defined(__sparc)
 		#ifdef __LP64__
-			#define ES_PLATFORM_LINUX_SPARC64
-			#define ES_ARCH_SPARC64
+			#define NE_PLATFORM_LINUX_SPARC64
+			#define NE_ARCH_SPARC64
 		#else
-			#define ES_PLATFORM_LINUX_SPARC
-			#define ES_ARCH_SPARC
+			#define NE_PLATFORM_LINUX_SPARC
+			#define NE_ARCH_SPARC
 		#endif
 	#elif defined(__mips__)
 		#ifdef __LP64__
-			#define ES_PLATFORM_LINUX_MIPS64
-			#define ES_ARCH_MIPS64
+			#define NE_PLATFORM_LINUX_MIPS64
+			#define NE_ARCH_MIPS64
 		#else
-			#define ES_PLATFORM_LINUX_MIPS
-			#define ES_ARCH_MIPS
+			#define NE_PLATFORM_LINUX_MIPS
+			#define NE_ARCH_MIPS
 		#endif
 	#elif defined(__powerpc__)
 		#ifdef __LP64__
-			#define ES_PLATFORM_LINUX_PPC64
-			#define ES_ARCH_PPC64
+			#define NE_PLATFORM_LINUX_PPC64
+			#define NE_ARCH_PPC64
 		#else
-			#define ES_PLATFORM_LINUX_PPC
-			#define ES_ARCH_PPC
+			#define NE_PLATFORM_LINUX_PPC
+			#define NE_ARCH_PPC
 		#endif
 	#else
 		#ifdef __LP64__
-			#define ES_PLATFORM_LINUX_X8664
-			#define ES_ARCH_X8664
+			#define NE_PLATFORM_LINUX_X8664
+			#define NE_ARCH_X8664
 		#else
-			#define ES_PLATFORM_LINUX_X86
-			#define ES_ARCH_X86
+			#define NE_PLATFORM_LINUX_X86
+			#define NE_ARCH_X86
 		#endif
 	#endif
 #elif defined(__APPLE__) && defined(__MACH__)
 	#include <TargetConditionals.h>
 	#if TARGET_IPHONE_SIMULATOR == 1
-		#define ES_PLATFORM_IOS
-		#define ES_PLATFORM_IOS_SIM
-		#define ES_ARCH_X8664
-		#define ES_DEVICE_MOBILE
+		#define NE_PLATFORM_IOS
+		#define NE_PLATFORM_IOS_SIM
+		#define NE_ARCH_X8664
+		#define NE_DEVICE_MOBILE
 	#elif TARGET_OS_IPHONE == 1
-		#define ES_PLATFORM_IOS
+		#define NE_PLATFORM_IOS
 		#ifdef __LP64__	
-			#define ES_ARCH_ARM64
+			#define NE_ARCH_ARM64
 		#else
-			#define ES_ARCH_ARM
+			#define NE_ARCH_ARM
 		#endif
-		#define ES_DEVICE_MOBILE
+		#define NE_DEVICE_MOBILE
 	#else
-		#define ES_PLATFORM_MAC
+		#define NE_PLATFORM_MAC
 		#ifdef __LP64__
-			#define ES_ARCH_X8664
+			#define NE_ARCH_X8664
 		#else
-			#define ES_ARCH_X86
+			#define NE_ARCH_X86
 		#endif
 	#endif
 #elif defined(__QNX__)
-	#define ES_DEVICE_MOBILE
+	#define NE_DEVICE_MOBILE
 	#ifdef __arm__
-		#define ES_PLATFORM_BB10
+		#define NE_PLATFORM_BB10
 		#ifdef __LP64__
-			#define ES_ARCH_ARM64
+			#define NE_ARCH_ARM64
 		#else
-			#define ES_ARCH_ARM
+			#define NE_ARCH_ARM
 		#endif
 	#else
-		#define ES_PLATFORM_BB10
+		#define NE_PLATFORM_BB10
 		#ifdef __LP64__
-			#define ES_ARCH_X8664
+			#define NE_ARCH_X8664
 		#else
-			#define ES_ARCH_ARM
+			#define NE_ARCH_ARM
 		#endif
 	#endif
 #elif defined(__FreeBSD__)
-	#define ES_PLATFORM_FREEBSD
-	#define ES_PLATFORM_X11
+	#define NE_PLATFORM_FREEBSD
+	#define NE_PLATFORM_X11
 	#if defined(__arm__)
 		#ifdef __LP64__
-			#define ES_PLATFORM_FREEBSD_ARM64
-			#define ES_ARCH_ARM64
+			#define NE_PLATFORM_FREEBSD_ARM64
+			#define NE_ARCH_ARM64
 		#else
-			#define ES_PLATFORM_FREEBSD_ARM
-			#define ES_ARCH_ARM
+			#define NE_PLATFORM_FREEBSD_ARM
+			#define NE_ARCH_ARM
 		#endif
 	#else
 		#ifdef __LP64__
-			#define ES_PLATFORM_FREEBSD_X8664
-			#define ES_ARCH_X8664
+			#define NE_PLATFORM_FREEBSD_X8664
+			#define NE_ARCH_X8664
 		#else
-			#define ES_PLATFORM_FREEBSD_X86
-			#define ES_ARCH_X86
+			#define NE_PLATFORM_FREEBSD_X86
+			#define NE_ARCH_X86
 		#endif
 	#endif
 #elif defined(__DragonFly__)
-	#define ES_PLATFORM_DRAGONFLY
-	#define ES_PLATFORM_X11
+	#define NE_PLATFORM_DRAGONFLY
+	#define NE_PLATFORM_X11
 	#if defined(__arm__)
 		#ifdef __LP64__
-			#define ES_PLATFORM_DRAGONFLY_ARM64
-			#define ES_ARCH_ARM64
+			#define NE_PLATFORM_DRAGONFLY_ARM64
+			#define NE_ARCH_ARM64
 		#else
-			#define ES_PLATFORM_DRAGONFLY_ARM
-			#define ES_ARCH_ARM
+			#define NE_PLATFORM_DRAGONFLY_ARM
+			#define NE_ARCH_ARM
 		#endif
 	#else
 		#ifdef __LP64__
-			#define ES_PLATFORM_DRAGONFLY_X8664
-			#define ES_ARCH_X8664
+			#define NE_PLATFORM_DRAGONFLY_X8664
+			#define NE_ARCH_X8664
 		#else
-			#define ES_PLATFORM_DRAGONFLY_X86
-			#define ES_ARCH_X86
+			#define NE_PLATFORM_DRAGONFLY_X86
+			#define NE_ARCH_X86
 		#endif
 	#endif
 #elif defined(__NetBSD__)
-	#define ES_PLATFORM_NETBSD
-	#define ES_PLATFORM_X11
+	#define NE_PLATFORM_NETBSD
+	#define NE_PLATFORM_X11
 	#if defined(__arm__)
 		#ifdef __LP64__
-			#define ES_PLATFORM_NETBSD_ARM64
-			#define ES_ARCH_ARM64
+			#define NE_PLATFORM_NETBSD_ARM64
+			#define NE_ARCH_ARM64
 		#else
-			#define ES_PLATFORM_NETBSD_ARM
-			#define ES_ARCH_ARM
+			#define NE_PLATFORM_NETBSD_ARM
+			#define NE_ARCH_ARM
 		#endif
 	#else
 		#ifdef __LP64__
-			#define ES_PLATFORM_NETBSD_X8664
-			#define ES_ARCH_X8664
+			#define NE_PLATFORM_NETBSD_X8664
+			#define NE_ARCH_X8664
 		#else
-			#define ES_PLATFORM_NETBSD_X86
-			#define ES_ARCH_X86
+			#define NE_PLATFORM_NETBSD_X86
+			#define NE_ARCH_X86
 		#endif
 	#endif
 #elif defined(__OpenBSD__)
-	#define ES_PLATFORM_OPENBSD
-	#define ES_PLATFORM_X11
+	#define NE_PLATFORM_OPENBSD
+	#define NE_PLATFORM_X11
 	#if defined(__arm__)
 		#ifdef __LP64__
-			#define ES_PLATFORM_OPENBSD_ARM64
-			#define ES_ARCH_ARM64
+			#define NE_PLATFORM_OPENBSD_ARM64
+			#define NE_ARCH_ARM64
 		#else
-			#define ES_PLATFORM_OPENBSD_ARM
-			#define ES_ARCH_ARM
+			#define NE_PLATFORM_OPENBSD_ARM
+			#define NE_ARCH_ARM
 		#endif
 	#else
 		#ifdef __LP64__
-			#define ES_PLATFORM_OPENBSD_X8664
-			#define ES_ARCH_X8664
+			#define NE_PLATFORM_OPENBSD_X8664
+			#define NE_ARCH_X8664
 		#else
-			#define ES_PLATFORM_OPENBSD_X86
-			#define ES_ARCH_X86
+			#define NE_PLATFORM_OPENBSD_X86
+			#define NE_ARCH_X86
 		#endif
 	#endif
 #elif defined(sun) || defined(__sun)
-	#define ES_PLATFORM_SOLARIS
-	#define ES_PLATFORM_X11
+	#define NE_PLATFORM_SOLARIS
+	#define NE_PLATFORM_X11
 	#if defined(__sparc)
 		#ifdef __LP64__
-			#define ES_PLATFORM_SOLARIS_SPARC64
-			#define ES_ARCH_SPARC64
+			#define NE_PLATFORM_SOLARIS_SPARC64
+			#define NE_ARCH_SPARC64
 		#else
-			#define ES_PLATFORM_SOLARIS_SPARC
-			#define ES_ARCH_SPARC
+			#define NE_PLATFORM_SOLARIS_SPARC
+			#define NE_ARCH_SPARC
 		#endif
 	#else
 		#ifdef __LP64__
-			#define ES_PLATFORM_SOLARIS_X8664
-			#define ES_ARCH_X8664
+			#define NE_PLATFORM_SOLARIS_X8664
+			#define NE_ARCH_X8664
 		#else
-			#define ES_PLATFORM_SOLARIS_X86
-			#define ES_ARCH_X86
+			#define NE_PLATFORM_SOLARIS_X86
+			#define NE_ARCH_X86
 		#endif
 	#endif
 #elif defined(__ANDROID__)
-	#define ES_PLATFORM_ANDROID
+	#define NE_PLATFORM_ANDROID
 #endif

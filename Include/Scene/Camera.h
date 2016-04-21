@@ -49,7 +49,7 @@ enum class ProjectionType : unsigned short
 	Ortographic = 1
 };
 
-#ifdef ES_PLATFORM_IOS
+#ifdef NE_PLATFORM_IOS
 #define DEFAULT_VSENS	.75f
 #define DEFAULT_HSENS	.75f
 #define DEFAULT_TRANS	300.f

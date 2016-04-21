@@ -324,6 +324,12 @@ bool CDDSImage::load(string filename, bool flipImage)
 	swap_endian(&ddsh.ddspf.dwRGBBitCount);
 	swap_endian(&ddsh.dwCaps1);
 	swap_endian(&ddsh.dwCaps2);
+	
+	if(ddsh.dwSize != sizeof(DDS_HEADER))
+	{
+		fclose(fp);
+		return false;
+	}
 
 	// default to flat texture type (1D, 2D, or rectangle)
 	m_type = TextureFlat;
@@ -1050,14 +1056,22 @@ inline unsigned int CDDSImage::size_rgb(unsigned int width, unsigned int height)
 // Swap the bytes in a 32 bit value
 inline void CDDSImage::swap_endian(void *val)
 {
-#ifdef MACOS
+	// Check for Big Endian
+	union
+	{
+		uint32_t i;
+		char c[4];
+	} bint { 0x01020304 };
+	
+	if(bint.c[0] != 1)
+		return; // Litte Endian, nothing to do
+	   
 	unsigned int *ival = (unsigned int *)val;
 
 	*ival = ((*ival >> 24) & 0x000000ff) |
 		((*ival >> 8) & 0x0000ff00) |
 		((*ival << 8) & 0x00ff0000) |
 		((*ival << 24) & 0xff000000);
-#endif
 }
 
 ///////////////////////////////////////////////////////////////////////////////

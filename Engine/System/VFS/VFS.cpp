@@ -47,7 +47,7 @@
 
 #define VFS_MODULE	"VFS"
 
-#ifdef ES_PLATFORM_WINDOWS
+#ifdef NE_PLATFORM_WINDOWS
 // Really, M$ ?
 #define stat _stat
 #endif

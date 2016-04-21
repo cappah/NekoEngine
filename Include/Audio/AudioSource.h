@@ -40,10 +40,10 @@
 
 #include <Platform/Platform.h>
 
-#ifdef ES_PLATFORM_MAC
-#include <OpenAL/al.h>
+#ifdef NE_PLATFORM_MAC
+	#include <OpenAL/al.h>
 #else
-#include <AL/al.h>
+	#include <AL/al.h>
 #endif
 
 #include <glm/glm.hpp>

@@ -111,7 +111,7 @@ extern "C" GameModule NEKO_GAME_MODULE_BASE_EXPORT *createGameModule()					\
 #define REGISTER_OBJECT_CLASS(x) GameModuleClassFactoryRegisterClass<x> regClass ## x(#x);
 
 #else
-#ifdef ES_DEVICE_MOBILE
+#ifdef NE_DEVICE_MOBILE
 	extern "C" GameModule *createGameModule();
 #endif
 #endif

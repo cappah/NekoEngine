@@ -41,7 +41,7 @@
 
 #include <Platform/Platform.h>
 
-#ifdef ES_PLATFORM_MAC
+#ifdef NE_PLATFORM_MAC
 	#include <OpenAL/al.h>
 #else
 	#include <AL/al.h>

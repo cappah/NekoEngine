@@ -41,7 +41,7 @@
 #include <Platform/Platform.h>
 
 #ifdef ENGINE_INTERNAL
-	#ifdef ES_PLATFORM_MAC
+	#ifdef NE_PLATFORM_MAC
 		#include <OpenAL/al.h>
 		#include <OpenAL/alc.h>
 	#else
@@ -50,7 +50,7 @@
 	#endif
 #endif
 
-#ifdef ES_PLATFORM_WINDOWS
+#ifdef NE_PLATFORM_WINDOWS
 	#ifdef ENGINE_INTERNAL
 		#define ENGINE_API	__declspec(dllexport)
 	#else
