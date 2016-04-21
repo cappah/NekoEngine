@@ -46,11 +46,10 @@
 #include <Engine/DeferredBuffer.h>
 #include <Engine/SceneManager.h>
 #include <Engine/ResourceManager.h>
+#include <Platform/Compat.h>
 
 using namespace std;
 using namespace glm;
-
-#define ARC4RAND() (arc4random() % ((unsigned)RAND_MAX + 1))
 
 SSAO::SSAO(int width, int height) :
 	_fbos{ 0, 0 },
@@ -74,19 +73,19 @@ SSAO::SSAO(int width, int height) :
 		_dataBlock.Radius = SSAO_MED_RADIUS;
 	}
 
-	arc4random_stir();
-	
+	srandom(time(NULL));
+
 	// Generate kernel
 	for (int i = 0; i < (int)_dataBlock.KernelSize; ++i)
 	{
 		float scale = (float)i / _dataBlock.KernelSize;
 
-		_dataBlock.Kernel[i].x = 2.f * (float)ARC4RAND() / RAND_MAX - 1.f;
-		_dataBlock.Kernel[i].y = 2.f * (float)ARC4RAND() / RAND_MAX - 1.f;
-		_dataBlock.Kernel[i].z = (float)ARC4RAND() / RAND_MAX;
+		_dataBlock.Kernel[i].x = 2.f * (float)random() / RAND_MAX - 1.f;
+		_dataBlock.Kernel[i].y = 2.f * (float)random() / RAND_MAX - 1.f;
+		_dataBlock.Kernel[i].z = (float)random() / RAND_MAX;
 
 		_dataBlock.Kernel[i] = normalize(_dataBlock.Kernel[i]);
-		_dataBlock.Kernel[i] *= (float)ARC4RAND() / RAND_MAX;
+		_dataBlock.Kernel[i] *= (float)random() / RAND_MAX;
 
 		_dataBlock.Kernel[i] *= .1f + 1.f * ((scale * scale) - .1f);
 	}
@@ -94,8 +93,8 @@ SSAO::SSAO(int width, int height) :
 	// Generate noise
 	for (int i = 0; i < _noiseSize; i++)
 	{
-		_noise[i] = glm::vec3(2.f * (float)ARC4RAND() / RAND_MAX - 1.f,
-			2.f * (float)ARC4RAND() / RAND_MAX - 1.f,
+		_noise[i] = glm::vec3(2.f * (float)random() / RAND_MAX - 1.f,
+			2.f * (float)random() / RAND_MAX - 1.f,
 			0.f);
 	}
 

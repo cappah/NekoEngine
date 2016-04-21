@@ -16,6 +16,7 @@ file(GLOB EngineSourceFiles "Engine/*.cpp"
 	"Engine/System/AssetLoader/*.cpp"
 	"Engine/System/VFS/*.cpp"
 	"Engine/Platform/*.cpp"
+	"Engine/Platform/Compat/*.cpp"
 )
 file(GLOB TestGameSourceFiles "TestGame/*.cpp")
 file(GLOB RendererSourceFiles "GL4Renderer/*.cpp"

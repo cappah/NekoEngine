@@ -45,7 +45,7 @@
 #include <System/AssetLoader/ogg_callbacks.h>
 #include <System/VFS/VFS.h>
 
-#include <System/Memory.h>
+#include <Platform/Compat.h>
 
 #define AM_MODULE	"AssetLoader"
 

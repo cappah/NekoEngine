@@ -45,8 +45,8 @@
 #include <Engine/Engine.h>
 #include <Engine/Shader.h>
 #include <Scene/Scene.h>
-#include <System/Memory.h>
 #include <System/VFS/VFS.h>
+#include <Platform/Compat.h>
 
 #define SHADER_MODULE		"Shader"
 
