@@ -50,6 +50,8 @@
 using namespace std;
 using namespace glm;
 
+#define ARC4RAND() (arc4random() % ((unsigned)RAND_MAX + 1))
+
 SSAO::SSAO(int width, int height) :
 	_fbos{ 0, 0 },
 	_textures{ 0, 0 ,0 },
@@ -58,10 +60,6 @@ SSAO::SSAO(int width, int height) :
 	_blurRadius(SSAO_BLUR_RADIUS_4),
 	_noiseSize(SSAO_MAX_NOISE)
 {
-	time_t t;
-
-	srand((unsigned)time(&t));
-
 	_dataBlock.KernelSize = SSAO_HIGH_SAMPLES;
 	_dataBlock.Radius = SSAO_HIGH_RADIUS;
 
@@ -76,17 +74,19 @@ SSAO::SSAO(int width, int height) :
 		_dataBlock.Radius = SSAO_MED_RADIUS;
 	}
 
+	arc4random_stir();
+	
 	// Generate kernel
 	for (int i = 0; i < (int)_dataBlock.KernelSize; ++i)
 	{
 		float scale = (float)i / _dataBlock.KernelSize;
 
-		_dataBlock.Kernel[i].x = 2.f * (float)rand() / RAND_MAX - 1.f;
-		_dataBlock.Kernel[i].y = 2.f * (float)rand() / RAND_MAX - 1.f;
-		_dataBlock.Kernel[i].z = (float)rand() / RAND_MAX;
+		_dataBlock.Kernel[i].x = 2.f * (float)ARC4RAND() / RAND_MAX - 1.f;
+		_dataBlock.Kernel[i].y = 2.f * (float)ARC4RAND() / RAND_MAX - 1.f;
+		_dataBlock.Kernel[i].z = (float)ARC4RAND() / RAND_MAX;
 
 		_dataBlock.Kernel[i] = normalize(_dataBlock.Kernel[i]);
-		_dataBlock.Kernel[i] *= (float)rand() / RAND_MAX;
+		_dataBlock.Kernel[i] *= (float)ARC4RAND() / RAND_MAX;
 
 		_dataBlock.Kernel[i] *= .1f + 1.f * ((scale * scale) - .1f);
 	}
@@ -94,8 +94,8 @@ SSAO::SSAO(int width, int height) :
 	// Generate noise
 	for (int i = 0; i < _noiseSize; i++)
 	{
-		_noise[i] = glm::vec3(2.f * (float)rand() / RAND_MAX - 1.f,
-			2.f * (float)rand() / RAND_MAX - 1.f,
+		_noise[i] = glm::vec3(2.f * (float)ARC4RAND() / RAND_MAX - 1.f,
+			2.f * (float)ARC4RAND() / RAND_MAX - 1.f,
 			0.f);
 	}
 
