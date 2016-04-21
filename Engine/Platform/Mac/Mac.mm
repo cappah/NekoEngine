@@ -76,7 +76,7 @@ PlatformWindowType Platform::CreateWindow(int width, int height, bool fullscreen
 	[NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
 	
 	_engineAppDelegate = [[EngineAppDelegate alloc] init];
-	[NSApp setDelegate:_engineAppDelegate];
+	[[NSApplication sharedApplication] setDelegate:_engineAppDelegate];
 	
 	NSWindow *hWnd;
 	NSMenu *menuBar = [[NSMenu alloc] init];
