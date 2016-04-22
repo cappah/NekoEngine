@@ -166,7 +166,7 @@ case $OS in
 		GenerateMakefile
 	;;
 	'SunOS')
-		if [ hash cmake 2>/dev/null ]; then
+		if ! type hash cmake 2>/dev/null; then
 			if [ hash pkgutil 2>/dev/null ]; then
 				echo "CMake not found and pkgutil is unavailable. Please install CMake or OpenCSW";
 				exit;
@@ -176,7 +176,7 @@ case $OS in
 			sudo /opt/csw/bin/pkgutil -y -i cmake;
 		fi
 
-		if [ hash g++ 2>/dev/null ]; then
+		if ! type g++-5.2 2>/dev/null; then
 			if [ hash pkgutil 2>/dev/null ]; then
 				echo "GCC not found and pkgutil is unavailable. Please install CMake or OpenCSW";
 				exit;
