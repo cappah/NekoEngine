@@ -186,13 +186,29 @@ case $OS in
 		fi
 
 		if ! type g++-5.2 2>/dev/null; then
-			if ! type pkgutil 2>/dev/null; then
-				echo "GCC not found and pkgutil is unavailable. Please install CMake or OpenCSW";
-				exit;
-			fi
+			if type g++ 2>/dev/null; then
+				echo "WARNING: Using system provided gcc. The build WILL FAIL with gcc 4.8 on Solaris 11"
+				echo "Continiue only if you are on OpenIndiana 2016.04 or newer"
+				echo "Type yes and press Enter to continue."	
+				read response	
+				case $response in
+					'yes')
+					echo "Continuing on user action"
+					;;	
+					*)
+					echo "Aborting because of user action"
+					exit;
+					;;
+				esac
+			else
+				if ! type pkgutil 2>/dev/null; then
+					echo "GCC not found and pkgutil is unavailable. Please install CMake or OpenCSW";
+					exit;
+				fi
 
-			echo "Attempting to install gcc5 using pkgutil"
-			sudo /opt/csw/bin/pkgutil -y -i gcc5core gcc5g++;
+				echo "Attempting to install gcc5 using pkgutil"
+				sudo /opt/csw/bin/pkgutil -y -i gcc5core gcc5g++;
+			fi
 		fi
 
 		if [ $? -ne 0 ]; then
