@@ -20,17 +20,11 @@ before_install:
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then tar xf cmake-3.5.0-Linux-x86_64.tar.gz; fi
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo cp -r cmake-3.5.0-Linux-x86_64/* /usr; fi
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get -qq update; fi
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install -y libsqlite3-dev libpng-dev libx11-dev libopenal-dev libvorbis-dev libgl1-mesa-dev libbsd-dev; fi
 
 before_script:
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then mkdir -p Tools/bin; fi
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then gcc -o Tools/bin/png2argb Tools/png2argb.c -lpng; fi
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then Tools/bin/png2argb Launcher/X11/icon_16.png Launcher/X11/icon_32.png Launcher/X11/icon_64.png Launcher/X11/icon_128.png Launcher/X11/icon_256.png Launcher/X11/icon_512.png > Engine/Platform/X11/x11_icon.h; fi
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install libvorbis; fi
+- ./Setup.sh
 
 script:
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then mkdir build; fi
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd build; fi
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cmake .. && make; fi
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then xcodebuild -workspace "Neko Engine.xcworkspace" -scheme NekoEngine -configuration Debug; fi

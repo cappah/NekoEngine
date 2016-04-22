@@ -41,12 +41,12 @@ InstallDepsAptGet()
 	PACKAGES="build-essential cmake libsqlite3-dev libpng-dev libx11-dev libopenal-dev libvorbis-dev libgl1-mesa-dev libbsd-dev"
 
 	if ! type sudo 2> /dev/null; then
-		su -c "apt-get install $PACKAGES"		
+		su -c "apt-get -y install $PACKAGES"		
 	else
-		sudo apt-get install $PACKAGES
+		sudo apt-get -y install $PACKAGES
 	fi
 
-	if $? -ne 0 ; then
+	if [ $? -ne 0 ]; then
 		InstallDepsFail
 	fi
 
@@ -118,7 +118,7 @@ GenerateMakefile()
 	BUILD=DEBUG
 
 	if [ $# -gt 0 ]; then
-		if $1 == "release" ; then
+		if [ "$1" == "release" ]; then
 			BUILD=RELEASE
 		else
 			BUILD=DEBUG
@@ -128,7 +128,12 @@ GenerateMakefile()
 	cmake -DCMAKE_BUILD_TYPE=$BUILD ..
 
 	echo ""
-	echo "Setup done. Now cd build and run make to build the engine."
+
+	if [ $? -eq 0 ]; then
+		echo "Setup done. Now cd build and run make to build the engine."
+	else
+		echo "Failed to generate makefiles."
+	fi
 }
 
 ########
@@ -170,8 +175,8 @@ case $OS in
 		GenerateMakefile
 	;;
 	'SunOS')
-		if ! type hash cmake 2>/dev/null; then
-			if [ hash pkgutil 2>/dev/null ]; then
+		if ! type cmake 2>/dev/null; then
+			if ! type pkgutil  2>/dev/null; then
 				echo "CMake not found and pkgutil is unavailable. Please install CMake or OpenCSW";
 				exit;
 			fi
@@ -181,7 +186,7 @@ case $OS in
 		fi
 
 		if ! type g++-5.2 2>/dev/null; then
-			if [ hash pkgutil 2>/dev/null ]; then
+			if ! type pkgutil 2>/dev/null; then
 				echo "GCC not found and pkgutil is unavailable. Please install CMake or OpenCSW";
 				exit;
 			fi
