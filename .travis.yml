@@ -20,7 +20,7 @@ before_install:
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then tar xf cmake-3.5.0-Linux-x86_64.tar.gz; fi
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo cp -r cmake-3.5.0-Linux-x86_64/* /usr; fi
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get -qq update; fi
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install -y libsqlite3-dev libpng-dev libx11-dev libopenal-dev libvorbis-dev libgl1-mesa-dev; fi
+- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install -y libsqlite3-dev libpng-dev libx11-dev libopenal-dev libvorbis-dev libgl1-mesa-dev libbsd-dev; fi
 
 before_script:
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then mkdir -p Tools/bin; fi

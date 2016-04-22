@@ -38,7 +38,7 @@ InstallDepsAptGet()
 {
 	echo "Attempting to install dependencies using apt-get"
 
-	PACKAGES="build-essential cmake libsqlite3-dev libpng-dev libx11-dev libopenal-dev libvorbis-dev libgl1-mesa-dev"
+	PACKAGES="build-essential cmake libsqlite3-dev libpng-dev libx11-dev libopenal-dev libvorbis-dev libgl1-mesa-dev libbsd-dev"
 
 	if ! type sudo 2> /dev/null; then
 		su -c "apt-get install $PACKAGES"		
@@ -56,7 +56,7 @@ InstallDepsAptGet()
 InstallDepsDnf()
 {
 	echo "Attempting to install dependencies using dnf"
-	PACKAGES="gcc gcc-c++ make cmake sqlite-devel libpng-devel libX11-devel openal-devel libvorbis-devel mesa-libGL-devel"
+	PACKAGES="gcc gcc-c++ make cmake sqlite-devel libpng-devel libX11-devel openal-devel libvorbis-devel mesa-libGL-devel libbsd-devel"
 
 	if ! type sudo 2> /dev/null; then
 		su -c "dnf -y install $PACKAGES"		
@@ -74,12 +74,16 @@ InstallDepsDnf()
 InstallDepsYum()
 {
 	echo "Attempting to install dependencies using yum"
-	PACKAGES="gcc gcc-c++ make cmake sqlite-devel libpng-devel libX11-devel openal-devel libvorbis-devel mesa-libGL-devel"
+	PACKAGES="gcc gcc-c++ make cmake sqlite-devel libpng-devel libX11-devel openal-devel libvorbis-devel mesa-libGL-devel libbsd-devel"
 
 	if ! type sudo 2> /dev/null; then
 		su -c "yum -y install $PACKAGES"		
 	else
 		sudo yum -y install $PACKAGES
+	fi
+
+	if [ $? -ne 0 ]; then
+		InstallDepsFail
 	fi
 
 	echo "Dependencies installed."
