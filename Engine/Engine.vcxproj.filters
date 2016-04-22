@@ -233,9 +233,6 @@
     <ClInclude Include="..\include\Engine\Material.h">
       <Filter>Include\Engine</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\Engine\Mesh.h">
-      <Filter>Include\Engine</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\Platform\Platform.h">
       <Filter>Include\Platform</Filter>
     </ClInclude>
@@ -280,6 +277,12 @@
     </ClInclude>
     <ClInclude Include="..\Include\Platform\Compat.h">
       <Filter>Include\Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Engine\SkeletalMesh.h">
+      <Filter>Include\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Engine\StaticMesh.h">
+      <Filter>Include\Engine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -506,9 +509,6 @@
     <ClCompile Include="Platform\shared.cpp">
       <Filter>Source\Platform</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Mesh.cpp">
-      <Filter>Source\Engine</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Material.cpp">
       <Filter>Source\Engine</Filter>
     </ClCompile>
@@ -526,6 +526,12 @@
     </ClCompile>
     <ClCompile Include="Platform\Compat\reallocarray.cpp">
       <Filter>Source\Platform\Compat</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\StaticMesh.cpp">
+      <Filter>Source\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\SkeletalMesh.cpp">
+      <Filter>Source\Engine</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
