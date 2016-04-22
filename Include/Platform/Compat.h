@@ -43,7 +43,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#ifndef NE_PLATFORM_OPENBSD
+#if !defined(NE_PLATFORM_OPENBSD) && !defined(NE_PLATFORM_LINUX)
 void ENGINE_API *reallocarray(void *optr, size_t nmemb, size_t size);
 #endif
 
@@ -52,9 +52,9 @@ void ENGINE_API *reallocarray(void *optr, size_t nmemb, size_t size);
 	#define NE_RANDOM() (arc4random() % ((unsigned)RAND_MAX + 1))
 	#define NE_SRANDOM(x)
 #elif defined(NE_PLATFORM_LINUX)
-	#include <stdlib.h>
-	#define NE_RANDOM() random()
-	#define NE_SRANDOM(x) srandom(x)
+	#include <bsd/stdlib.h>
+	#define NE_RANDOM() (arc4random() % ((unsigned)RAND_MAX + 1))
+	#define NE_SRANDOM(x)
 //#elif defined(NE_PLATFORM_WIN32) || defined(NE_PLATFORM_WIN64)
 #else
 	#define NE_RANDOM() rand()

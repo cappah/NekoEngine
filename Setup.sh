@@ -27,7 +27,7 @@ InstallDepsPacman()
 		sudo pacman -Syy $PACKAGES
 	fi
 
-	if $? -ne 0 ; then
+	if [ $? -ne 0 ]; then
 		InstallDepsFail
 	fi
 

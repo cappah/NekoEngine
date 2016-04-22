@@ -219,6 +219,8 @@ size_t Platform::GetConfigSection(const char *section, char *out, size_t size, c
 
 		offset = strlen(out);
 
+		fclose(fp);
+
 		return strlen(out);
 	}
 

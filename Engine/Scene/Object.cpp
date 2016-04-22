@@ -77,6 +77,7 @@ Object::Object() noexcept
 	memset(&_matrixBlock, 0x0, sizeof(_matrixBlock));
 
 	_objectUbo = _matrixUbo = nullptr;
+	_meshType = MeshType::Static;
 }
 
 void Object::SetPosition(vec3 &position) noexcept

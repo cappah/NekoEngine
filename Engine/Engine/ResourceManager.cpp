@@ -51,6 +51,7 @@
 static const char* _resourceTypes[] =
 {
 	"mesh",
+	"skeletalmesh",
 	"texture",
 	"shader",
 	"audioclip",

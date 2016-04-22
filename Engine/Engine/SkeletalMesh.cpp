@@ -72,5 +72,4 @@ void SkeletalMesh::_CalculateTransforms()
 
 SkeletalMesh::~SkeletalMesh() noexcept
 {
-	Release();
 }

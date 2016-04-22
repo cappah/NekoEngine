@@ -184,13 +184,7 @@ bool GLShader::LoadFromSource(ShaderType type, int count, const char **source, i
 	{
 		size_t len = strlen(defines);
 
-		if (len >= 8190)
-		{
-			free(src);
-			return false;
-		}
-
-		if (snprintf(defines + len, 8192, "#define %s %s\n", define.name.c_str(), define.value.c_str()) >= 8192)
+		if (snprintf(defines + len, 8192 - len - 1, "#define %s %s\n", define.name.c_str(), define.value.c_str()) >= 8192)
 		{
 			free(src);
 			return false;

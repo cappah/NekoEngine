@@ -15,7 +15,7 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#ifndef NE_PLATFORM_OPENBSD
+#if !defined(NE_PLATFORM_OPENBSD) && !defined(NE_PLATFORM_LINUX)
 
 #include <sys/types.h>
 #include <errno.h>

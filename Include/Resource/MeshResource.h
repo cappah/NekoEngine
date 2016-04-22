@@ -50,7 +50,7 @@ enum MeshType
 
 struct MeshResource : public ResourceInfo
 {
-	MeshResource() { type = ResourceType::RES_STATIC_MESH; }
+	MeshResource() { type = ResourceType::RES_STATIC_MESH; meshType = MeshType::Static; }
 	std::string filePath;
 	MeshType meshType;
 };
