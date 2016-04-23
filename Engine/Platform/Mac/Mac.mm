@@ -183,7 +183,7 @@ MessageBoxResult Platform::MessageBox(const char* title, const char* message, Me
 			[alert setAlertStyle:NSWarningAlertStyle];
 		break;
 		case MessageBoxIcon::Error:
-			[alert setAlertStyle:NSWarningAlertStyle];
+			[alert setAlertStyle:NSCriticalAlertStyle];
 		break;
 		case MessageBoxIcon::Question:
 			[alert setAlertStyle:NSInformationalAlertStyle];
