@@ -49,6 +49,7 @@ enum class ResourceType : unsigned
 	RES_AUDIOCLIP,
 	RES_FONT,
 	RES_MATERIAL,
+	RES_ANIMCLIP,
 	RES_END
 };
 

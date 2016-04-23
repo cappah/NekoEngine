@@ -1,9 +1,9 @@
 /* Neko Engine
  *
- * SkeletalMesh.h
+ * AnimationClip.h
  * Author: Alexandru Naiman
  *
- * SkeletalMesh class definition
+ * AnimationClip class definition
  *
  * ----------------------------------------------------------------------------------
  *
@@ -38,27 +38,27 @@
 
 #pragma once
 
-#include <string>
 #include <vector>
-#include <unordered_map>
 
 #include <glm/glm.hpp>
 
-#include <Engine/StaticMesh.h>
+#include <Engine/Vertex.h>
+#include <Resource/Resource.h>
+#include <Resource/AnimationClipResource.h>
 
-typedef struct SKMESH_BONE
-{
-	std::string name;
-	std::unordered_map<uint32_t, float> vertexWeights;
-} Bone;
-
-class SkeletalMesh : public StaticMesh
+class AnimationClip : public Resource
 {
 public:
-	ENGINE_API SkeletalMesh(MeshResource *res) noexcept;
-	
-	ENGINE_API void Update(float deltaTime);
-	ENGINE_API virtual void Draw(Renderer* r, size_t group) override;
+	ENGINE_API AnimationClip(AnimationClipResource *res) noexcept;
 
-	ENGINE_API virtual ~SkeletalMesh() noexcept;
+	ENGINE_API AnimationClipResource* GetResourceInfo() noexcept { return (AnimationClipResource*)_resourceInfo; }
+	ENGINE_API float GetDuration() noexcept { return _duration; }
+
+	ENGINE_API virtual int Load() override;
+	ENGINE_API void Release() noexcept;
+
+	ENGINE_API virtual ~AnimationClip() noexcept;
+
+protected:
+	float _duration;
 };

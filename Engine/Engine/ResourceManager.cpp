@@ -56,7 +56,8 @@ static const char* _resourceTypes[] =
 	"shader",
 	"audioclip",
 	"font",
-	"material"
+	"material",
+	"animationclip"
 };
 
 using namespace std;

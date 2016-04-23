@@ -1,9 +1,9 @@
 /* Neko Engine
  *
- * Mesh.cpp
+ * StaticMesh.cpp
  * Author: Alexandru Naiman
  *
- * Mesh class implementation 
+ * StaticMesh class implementation 
  *
  * ----------------------------------------------------------------------------------
  *

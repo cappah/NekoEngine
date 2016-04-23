@@ -48,6 +48,7 @@
 #include <Resource/AudioClipResource.h>
 #include <Resource/TextureFontResource.h>
 #include <Resource/MaterialResource.h>
+#include <Resource/AnimationClipResource.h>
 
 using namespace std;
 
@@ -59,7 +60,8 @@ char resource_to_table_map[10][40] =
 	{ 's', 'h', 'a', 'd', 'e', 'r', 's', 0x0 },
 	{ 'a', 'u', 'd', 'i', 'o', 'c', 'l', 'i', 'p', 's', 0x0 },
 	{ 'f', 'o', 'n', 't', 's', 0x0 },
-	{ 'm', 'a', 't', 'e', 'r', 'i', 'a', 'l', 's', 0x0 }
+	{ 'm', 'a', 't', 'e', 'r', 'i', 'a', 'l', 's', 0x0 },
+	{ 'a', 'n', 'i', 'm', 'c', 'l', 'i', 'p', 's', 0x0 }
 };
 
 bool ResourceDatabase::Open(const char *file) noexcept
@@ -217,6 +219,23 @@ bool ResourceDatabase::GetResources(vector<ResourceInfo *> &vec)
 				}
 			}
 			break;
+			case ResourceType::RES_ANIMCLIP:
+			{
+				while (sqlite3_step(stmt) == SQLITE_ROW)
+				{
+					AnimationClipResource *res = new AnimationClipResource();
+					res->id = sqlite3_column_int(stmt, 0);
+					res->filePath = (const char *)sqlite3_column_text(stmt, 1);
+					const unsigned char *ptr = sqlite3_column_text(stmt, 2);
+					if (ptr)
+						res->comment = (const char *)ptr;
+					ptr = sqlite3_column_text(stmt, 3);
+					if (ptr)
+						res->name = (const char *)ptr;
+					vec.push_back(res);
+				}
+			}
+			break;
 			default:
 				continue;
 		}
@@ -250,6 +269,9 @@ bool ResourceDatabase::_CheckDatabase() noexcept
 	if (!_TableExists("materials"))
 		return false;
 
+	if (!_TableExists("animclips"))
+		return false;
+	
 	return true;
 }
 

@@ -3,7 +3,7 @@
  * StaticMesh.h
  * Author: Alexandru Naiman
  *
- * Mesh class definition 
+ * StaticMesh class definition 
  *
  * ----------------------------------------------------------------------------------
  *

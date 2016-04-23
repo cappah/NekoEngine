@@ -11,6 +11,9 @@
 		126DE7B81CC86C6000A9E5AB /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 126DE7B61CC86C6000A9E5AB /* libsqlite3.dylib */; };
 		1279C0FE1CC91E5800E521AD /* Compat.h in Headers */ = {isa = PBXBuildFile; fileRef = 1279C0FD1CC91E5800E521AD /* Compat.h */; };
 		1279C1001CC91E7600E521AD /* reallocarray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1279C0FF1CC91E7600E521AD /* reallocarray.cpp */; };
+		127DF8B01CCB13AD005F2693 /* AnimationClipResource.h in Headers */ = {isa = PBXBuildFile; fileRef = 127DF8AF1CCB13AD005F2693 /* AnimationClipResource.h */; };
+		127DF8B21CCB14DA005F2693 /* AnimationClip.h in Headers */ = {isa = PBXBuildFile; fileRef = 127DF8B11CCB14DA005F2693 /* AnimationClip.h */; };
+		127DF8B41CCB1572005F2693 /* AnimationClip.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 127DF8B31CCB1572005F2693 /* AnimationClip.cpp */; };
 		12822B081CC1AD9C00EE5D0A /* AudioClip.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B061CC1AD9C00EE5D0A /* AudioClip.cpp */; };
 		12822B091CC1AD9C00EE5D0A /* AudioSource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B071CC1AD9C00EE5D0A /* AudioSource.cpp */; };
 		12822B1A1CC1ADAE00EE5D0A /* DeferredBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B0B1CC1ADAE00EE5D0A /* DeferredBuffer.cpp */; };
@@ -68,6 +71,9 @@
 		126DE7B61CC86C6000A9E5AB /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		1279C0FD1CC91E5800E521AD /* Compat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Compat.h; sourceTree = "<group>"; };
 		1279C0FF1CC91E7600E521AD /* reallocarray.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = reallocarray.cpp; path = Platform/Compat/reallocarray.cpp; sourceTree = SOURCE_ROOT; };
+		127DF8AF1CCB13AD005F2693 /* AnimationClipResource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnimationClipResource.h; sourceTree = "<group>"; };
+		127DF8B11CCB14DA005F2693 /* AnimationClip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnimationClip.h; sourceTree = "<group>"; };
+		127DF8B31CCB1572005F2693 /* AnimationClip.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AnimationClip.cpp; sourceTree = "<group>"; };
 		12822AF11CC1AD4300EE5D0A /* libEngine.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libEngine.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		12822B061CC1AD9C00EE5D0A /* AudioClip.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AudioClip.cpp; path = Audio/AudioClip.cpp; sourceTree = SOURCE_ROOT; };
 		12822B071CC1AD9C00EE5D0A /* AudioSource.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AudioSource.cpp; path = Audio/AudioSource.cpp; sourceTree = SOURCE_ROOT; };
@@ -248,6 +254,7 @@
 		12822B0A1CC1AD9F00EE5D0A /* Engine */ = {
 			isa = PBXGroup;
 			children = (
+				127DF8B31CCB1572005F2693 /* AnimationClip.cpp */,
 				12822B0B1CC1ADAE00EE5D0A /* DeferredBuffer.cpp */,
 				12822B0C1CC1ADAE00EE5D0A /* Engine.cpp */,
 				12822B0D1CC1ADAE00EE5D0A /* LoadingScreen.cpp */,
@@ -379,6 +386,7 @@
 		12822B5B1CC1AE4E00EE5D0A /* Engine */ = {
 			isa = PBXGroup;
 			children = (
+				127DF8B11CCB14DA005F2693 /* AnimationClip.h */,
 				12822B5C1CC1AE4E00EE5D0A /* DeferredBuffer.h */,
 				12822B5D1CC1AE4E00EE5D0A /* Engine.h */,
 				12822B5E1CC1AE4E00EE5D0A /* EngineClassFactory.h */,
@@ -454,6 +462,7 @@
 		12822B811CC1AE4E00EE5D0A /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				127DF8AF1CCB13AD005F2693 /* AnimationClipResource.h */,
 				12822B821CC1AE4E00EE5D0A /* AudioClipResource.h */,
 				12822B831CC1AE4E00EE5D0A /* MaterialResource.h */,
 				12822B841CC1AE4E00EE5D0A /* MeshResource.h */,
@@ -545,7 +554,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				1279C0FE1CC91E5800E521AD /* Compat.h in Headers */,
+				127DF8B01CCB13AD005F2693 /* AnimationClipResource.h in Headers */,
 				12822BB31CC1D84300EE5D0A /* EngineView.h in Headers */,
+				127DF8B21CCB14DA005F2693 /* AnimationClip.h in Headers */,
 				12CE01721CC991B900F3D84B /* SkeletalMesh.h in Headers */,
 				12822BBA1CC1DB9500EE5D0A /* EngineAppDelegate.h in Headers */,
 			);
@@ -641,6 +652,7 @@
 				12822B271CC1ADAE00EE5D0A /* Texture.cpp in Sources */,
 				12822B4C1CC1AE2000EE5D0A /* ogg_callbacks.cpp in Sources */,
 				12822B4F1CC1AE2800EE5D0A /* Logger.cpp in Sources */,
+				127DF8B41CCB1572005F2693 /* AnimationClip.cpp in Sources */,
 				12822B231CC1ADAE00EE5D0A /* Shader.cpp in Sources */,
 				12822BBB1CC1DB9500EE5D0A /* EngineAppDelegate.mm in Sources */,
 				12822B461CC1AE0E00EE5D0A /* Terrain.cpp in Sources */,
