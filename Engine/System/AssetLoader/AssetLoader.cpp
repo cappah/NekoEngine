@@ -103,7 +103,7 @@ typedef struct WAVE_DATA
 	int sub_chunk_2_size;	///< == NumSamples * NumChannels * BitsPerSammple/8. This is the number of bytes in the data. You can also think of this as the size of the read of the subchunk following this number.
 } wave_data_t;
 
-int AssetLoader::LoadNFG(string& file, vector<Vertex>& vertices, vector<uint32_t>& indices, vector<uint32_t>& groupOffset, vector<uint32_t>& groupCount)
+int AssetLoader::LoadMesh(string& file, vector<Vertex>& vertices, vector<uint32_t>& indices, vector<uint32_t>& groupOffset, vector<uint32_t>& groupCount)
 {
 	unsigned int offset = 0;
 	uint32_t indexBuff[3];
@@ -131,7 +131,7 @@ int AssetLoader::LoadNFG(string& file, vector<Vertex>& vertices, vector<uint32_t
 		if (lineBuff[0] == 0x0)
 			continue;
 
-		if (strstr(lineBuff, "NrVertices"))
+		if (strstr(lineBuff, "vertices"))
 		{
 			char *ptr = strchr(lineBuff, ':');
 			if (!ptr)
@@ -139,7 +139,7 @@ int AssetLoader::LoadNFG(string& file, vector<Vertex>& vertices, vector<uint32_t
 
 			vertexCount = atoi(++ptr);
 		}
-		else if (strstr(lineBuff, "NrIndices"))
+		else if (strstr(lineBuff, "indices"))
 		{
 			char *ptr = strchr(lineBuff, ':');
 			if (!ptr)
@@ -148,15 +148,8 @@ int AssetLoader::LoadNFG(string& file, vector<Vertex>& vertices, vector<uint32_t
 			indexCount = atoi(++ptr);
 		}
 		else if (strchr(lineBuff, '[')) // Vertex line
-		{
-			char *ptr = strchr(lineBuff, '.');
-			if (!ptr)
-				break;
-
-			vertices.push_back(_ReadVertex(++ptr));
-		}
-		else if (strstr(lineBuff, "NewVertexGroup")) { } // left for compatibility with older format models; no longer necessary
-		else if (strstr(lineBuff, "NewIndexGroup"))
+			vertices.push_back(_ReadVertex(lineBuff));
+		else if (strstr(lineBuff, "newidgrp"))
 		{
 			groupOffset.push_back((uint32_t)indices.size());
 			groupCount.push_back((uint32_t)indices.size() - offset);
@@ -164,11 +157,7 @@ int AssetLoader::LoadNFG(string& file, vector<Vertex>& vertices, vector<uint32_t
 		}
 		else // Index line
 		{
-			char *ptr = strchr(lineBuff, '.');
-			if (!ptr)
-				break;
-
-			EngineUtils::ReadUIntArray(++ptr, 3, indexBuff);
+			EngineUtils::ReadUIntArray(lineBuff, 3, indexBuff);
 			
 			indices.push_back(indexBuff[0]);
 			indices.push_back(indexBuff[1]);

@@ -78,7 +78,7 @@ int StaticMesh::Load()
 	string path("/");
 	path.append(GetResourceInfo()->filePath);
 
-	if (AssetLoader::LoadNFG(path, _vertices, _indices, _groupOffset, _groupCount) != ENGINE_OK)
+	if (AssetLoader::LoadMesh(path, _vertices, _indices, _groupOffset, _groupCount) != ENGINE_OK)
 	{
 		Logger::Log(MESH_MODULE, LOG_CRITICAL, "Failed to load mesh id=%s", _resourceInfo->name.c_str());
 		return ENGINE_FAIL;

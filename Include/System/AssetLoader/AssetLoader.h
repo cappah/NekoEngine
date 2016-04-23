@@ -49,7 +49,7 @@ class AssetLoader
 {
 public:
 	// Models
-	static int LoadNFG(std::string& file, std::vector<Vertex>& vertices,
+	static int LoadMesh(std::string& file, std::vector<Vertex>& vertices,
 		std::vector<uint32_t>& indices,
 		std::vector<uint32_t>& groupOffset,
 		std::vector<uint32_t>& groupCount);
@@ -92,15 +92,19 @@ private:
 				buff[i_buff - 1] = 0x0;
 
 			if ((pch = strstr(buff, "pos")) != NULL)
-				EngineUtils::ReadFloatArray(buff + 5, 3, &v.pos.x);
+				EngineUtils::ReadFloatArray(buff + 4, 3, &v.pos.x);
 			else if ((pch = strstr(buff, "binorm")) != NULL)
-				EngineUtils::ReadFloatArray(buff + 8, 3, &v.binorm.x);
+				EngineUtils::ReadFloatArray(buff + 7, 3, &v.binorm.x);
 			else if ((pch = strstr(buff, "norm")) != NULL)
-				EngineUtils::ReadFloatArray(buff + 6, 3, &v.norm.x);
+				EngineUtils::ReadFloatArray(buff + 5, 3, &v.norm.x);
 			else if ((pch = strstr(buff, "tgt")) != NULL)
-				EngineUtils::ReadFloatArray(buff + 5, 3, &v.tgt.x);
+				EngineUtils::ReadFloatArray(buff + 4, 3, &v.tgt.x);
 			else if ((pch = strstr(buff, "uv")) != NULL)
-				EngineUtils::ReadFloatArray(buff + 4, 2, &v.uv.x);
+				EngineUtils::ReadFloatArray(buff + 3, 2, &v.uv.x);
+			else if ((pch = strstr(buff, "bonei")) != NULL)
+				EngineUtils::ReadFloatArray(buff + 6, 4, &v.index.x);
+			else if ((pch = strstr(buff, "bonew")) != NULL)
+				EngineUtils::ReadFloatArray(buff + 6, 4, &v.weight.x);
 
 			memset(buff, 0x0, i_buff);
 
