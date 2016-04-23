@@ -59,15 +59,14 @@ SkeletalMesh::SkeletalMesh(MeshResource *res) noexcept :
 	{ DIE("Attempt to load static mesh as skeletal !"); }
 }
 
-void SkeletalMesh::Draw(Renderer* r, size_t group)
+void SkeletalMesh::Update(float deltaTime)
 {
-	_CalculateTransforms();
-	StaticMesh::Draw(r, group);
+	
 }
 
-void SkeletalMesh::_CalculateTransforms()
+void SkeletalMesh::Draw(Renderer* r, size_t group)
 {
-	//
+	StaticMesh::Draw(r, group);
 }
 
 SkeletalMesh::~SkeletalMesh() noexcept

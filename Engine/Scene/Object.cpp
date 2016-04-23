@@ -313,6 +313,9 @@ void Object::Update(float deltaTime) noexcept
 	if (!_loaded)
 		return;
 
+	if(_meshType == MeshType::Skeletal)
+		((SkeletalMesh*)_mesh)->Update(deltaTime);
+	
 	for (pair<string, ObjectComponent*> kvp : _components)
 		kvp.second->Update(deltaTime);
 }
