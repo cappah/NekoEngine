@@ -284,6 +284,9 @@
     <ClInclude Include="..\Include\Engine\StaticMesh.h">
       <Filter>Include\Engine</Filter>
     </ClInclude>
+    <ClInclude Include="..\Include\Engine\AnimationClip.h">
+      <Filter>Include\Engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Resources\Data\scenes.cfg">
@@ -531,6 +534,9 @@
       <Filter>Source\Engine</Filter>
     </ClCompile>
     <ClCompile Include="Engine\SkeletalMesh.cpp">
+      <Filter>Source\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\AnimationClip.cpp">
       <Filter>Source\Engine</Filter>
     </ClCompile>
   </ItemGroup>
