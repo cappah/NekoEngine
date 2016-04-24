@@ -667,7 +667,7 @@ void Engine::Draw() noexcept
 			totalMem = _renderer->GetVideoMemorySize();
 			availableMem = _renderer->GetUsedVideoMemorySize();
 
-			DrawString(vec2(0.f, _engineFont->GetCharacterHeight() * 14), vec3(1.f, 1.f, 1.f), "VRAM:      %d/%d MB", (totalMem - availableMem) / 1024, totalMem / 1024);
+			DrawString(vec2(0.f, _engineFont->GetCharacterHeight() * 15), vec3(1.f, 1.f, 1.f), "VRAM:      %d/%d MB", (totalMem - availableMem) / 1024, totalMem / 1024);
 		}
 
 #ifdef _DEBUG
