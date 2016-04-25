@@ -471,6 +471,8 @@ bool MGLRenderer::Initialize(PlatformWindowType hWnd, bool debug)
 		NSOpenGLProfileVersion4_1Core,
 		NSOpenGLPFADoubleBuffer,
 		NSOpenGLPFAAccelerated,
+        NSOpenGLPFANoRecovery,
+        NSOpenGLPFAAllowOfflineRenderers,
 		0
 	};
 	
