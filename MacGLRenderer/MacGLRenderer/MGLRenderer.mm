@@ -376,12 +376,17 @@ bool MGLRenderer::HasCapability(RendererCapability cap)
 {    
     switch (cap)
     {
-        case RendererCapability::MemoryInformation:
         case RendererCapability::AnisotropicFiltering:
         case RendererCapability::MultisampledFramebuffer:
         case RendererCapability::PerSampleShading:
 		case RendererCapability::DrawBaseVertex:
 			return true;
+        case RendererCapability::MemoryInformation:
+        {
+            if(_HasExtension("GL_NVX_gpu_memory_info"))
+                return true;
+            return false;
+        }
         default:
             return false;
     }
