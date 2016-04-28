@@ -165,10 +165,16 @@ int AssetLoader::LoadMesh(string& file, vector<Vertex>& vertices, vector<uint32_
 		}
 	}
 
-	groupCount.push_back((uint32_t)indices.size() - offset);
-
-	f->Close();
-
+    groupCount.push_back((uint32_t)indices.size() - offset);
+    
+    f->Close();
+    
+    if(vertices.size() != vertexCount)
+        return ENGINE_FAIL;
+    
+    if(indices.size() != indexCount)
+        return ENGINE_FAIL;
+    
 	return ENGINE_OK;
 }
 

@@ -216,8 +216,17 @@ bool MGLShader::LoadFromSource(ShaderType type, int count, const char **source, 
 	char defines[8192] { 0 };
 	
 	for (ShaderDefine &define : MGLRenderer::GetShaderDefines())
+    {
 		if (snprintf(defines + strlen(defines), 8192, "#define %s %s\n", define.name.c_str(), define.value.c_str()) >= 8192)
+        {
+            for (int i = 2; i < srcCount; i++)
+                free((void*)src[i]);
+            
+            free(src);
+            
 			return false;
+        }
+    }
 	defines[strlen(defines)] = 0x0;
 	
 	src[1] = defines;

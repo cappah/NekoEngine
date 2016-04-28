@@ -269,7 +269,7 @@ void MGLFramebuffer::CopyStencil(RFramebuffer* dest)
 		destFbo = d->GetId();
 	}
 	
-	GL_CHECK(glBindFramebuffer(GL_DRAW_FRAMEBUFFER, _id));
+	GL_CHECK(glBindFramebuffer(GL_DRAW_FRAMEBUFFER, destFbo));
 	GL_CHECK(glBindFramebuffer(GL_READ_FRAMEBUFFER, _id));
 	
 	GL_CHECK(glBlitFramebuffer(0, 0, _width, _height, 0, 0, _width, _height, GL_STENCIL_BUFFER_BIT, GL_NEAREST));
