@@ -11,6 +11,7 @@ License: http://creativecommons.org/licenses/by/3.0/
 Models from Mixamo:
 
 Arissa
+Sophia
 
 Models from turbosquid:
 
