@@ -162,14 +162,14 @@ case $OS in
 	;;
 	'FreeBSD')
 		echo "Attempting to install dependencies using pkg"
-		sudo pkg install gcc5 gmake cmake sqlite3 png libX11 openal-soft libvorbis libGL;
+		sudo pkg install llvm38 gmake cmake sqlite3 png libX11 openal-soft libvorbis libGL;
 
 		if [ $? -ne 0 ]; then
 			InstallDepsFail
 		fi
 
-		CC=gcc5
-		CXX=g++5
+		CC=clang38
+		CXX=clang++38
 
 		GenerateX11Icon
 		GenerateMakefile
