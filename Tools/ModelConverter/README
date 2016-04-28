@@ -1,0 +1,2 @@
+Program to convert models to NekoEngine NMESH format
+It works on Mac OS X 10.11 (older releases might work too). In order to build it you will need assimp 3.2 & glm installed with homebrew.

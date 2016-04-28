@@ -94,3 +94,8 @@ void SkeletalMesh::Draw(Renderer* r, size_t group)
 SkeletalMesh::~SkeletalMesh() noexcept
 {
 }
+
+void SkeletalMesh::_GetNodeHierarchy(float time, void *node, glm::mat4 &parentTransform)
+{
+	//
+}

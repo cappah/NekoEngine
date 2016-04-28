@@ -60,4 +60,6 @@ public:
 	
 private:
 	std::vector<Bone> _bones;
+	
+	void _GetNodeHierarchy(float time, void *node, glm::mat4 &parentTransform);
 };
