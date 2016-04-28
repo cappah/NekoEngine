@@ -64,40 +64,6 @@
                location = "group:sophia.nmtl">
             </FileRef>
          </Group>
-         <Group
-            location = "group:Models"
-            name = "Models">
-            <FileRef
-               location = "group:arissa.nmesh">
-            </FileRef>
-            <FileRef
-               location = "group:bila.nmesh">
-            </FileRef>
-            <FileRef
-               location = "group:house.nmesh">
-            </FileRef>
-            <FileRef
-               location = "group:light_sphere.nmesh">
-            </FileRef>
-            <FileRef
-               location = "group:m_house.nmesh">
-            </FileRef>
-            <FileRef
-               location = "group:muscle_car.nmesh">
-            </FileRef>
-            <FileRef
-               location = "group:nyra.nmesh">
-            </FileRef>
-            <FileRef
-               location = "group:skysphere.nmesh">
-            </FileRef>
-            <FileRef
-               location = "group:sophia.nmesh">
-            </FileRef>
-            <FileRef
-               location = "group:w_girl.nmesh">
-            </FileRef>
-         </Group>
          <FileRef
             location = "group:resources.db">
          </FileRef>
@@ -230,6 +196,44 @@
             </FileRef>
             <FileRef
                location = "group:ssao_blur.frag">
+            </FileRef>
+         </Group>
+         <Group
+            location = "group:../SkeletalMeshes"
+            name = "SkeletalMeshes">
+            <FileRef
+               location = "group:sophia.nmesh">
+            </FileRef>
+         </Group>
+         <Group
+            location = "group:../StaticMeshes"
+            name = "StaticMeshes">
+            <FileRef
+               location = "group:arissa.nmesh">
+            </FileRef>
+            <FileRef
+               location = "group:bila.nmesh">
+            </FileRef>
+            <FileRef
+               location = "group:house.nmesh">
+            </FileRef>
+            <FileRef
+               location = "group:light_sphere.nmesh">
+            </FileRef>
+            <FileRef
+               location = "group:m_house.nmesh">
+            </FileRef>
+            <FileRef
+               location = "group:muscle_car.nmesh">
+            </FileRef>
+            <FileRef
+               location = "group:nyra.nmesh">
+            </FileRef>
+            <FileRef
+               location = "group:skysphere.nmesh">
+            </FileRef>
+            <FileRef
+               location = "group:w_girl.nmesh">
             </FileRef>
          </Group>
          <Group
