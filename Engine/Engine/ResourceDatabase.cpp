@@ -54,7 +54,7 @@ using namespace std;
 
 char resource_to_table_map[10][40] =
 {
-	{ 'm', 'e', 's', 'h', 'e', 's', 0x0 },
+	{ 's', 't', 'm', 'e', 's', 'h', 'e', 's', 0x0 },
 	{ 's', 'k', 'm', 'e', 's', 'h', 'e', 's', 0x0 },
 	{ 't', 'e', 'x', 't', 'u', 'r', 'e', 's', 0x0 },
 	{ 's', 'h', 'a', 'd', 'e', 'r', 's', 0x0 },
@@ -250,7 +250,7 @@ bool ResourceDatabase::GetResources(vector<ResourceInfo *> &vec)
 
 bool ResourceDatabase::_CheckDatabase() noexcept
 {
-	if (!_TableExists("meshes"))
+	if (!_TableExists("stmeshes"))
 		return false;
 	
 	if (!_TableExists("skmeshes"))
