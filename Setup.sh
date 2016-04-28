@@ -19,7 +19,7 @@ InstallDepsPacman()
 {
 	echo "Attempting to install dependencies using pacman"
 
-	PACKAGES="gcc make cmake sqlite openal libpng zlib libvorbis libx11"
+	PACKAGES="gcc make cmake sqlite openal libpng zlib libvorbis libx11 libbsd mesa-libgl"
 
 	if ! type sudo 2> /dev/null; then
 		su -c "pacman -Syy $PACKAGES"		
