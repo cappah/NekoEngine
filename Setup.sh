@@ -22,9 +22,9 @@ InstallDepsPacman()
 	PACKAGES="gcc make cmake sqlite openal libpng zlib libvorbis libx11 libbsd mesa-libgl"
 
 	if ! type sudo 2> /dev/null; then
-		su -c "pacman -Syy $PACKAGES"		
+		su -c "pacman --noconfirm -Syy $PACKAGES"		
 	else
-		sudo pacman -Syy $PACKAGES
+		sudo pacman --noconfirm -Syy $PACKAGES
 	fi
 
 	if [ $? -ne 0 ]; then
