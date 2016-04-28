@@ -45,7 +45,7 @@
 #include <Engine/Engine.h>
 #include <Engine/EngineUtils.h>
 #include <System/Logger.h>
-
+#include <System/AssetLoader/AssetLoader.h>
 
 #define SK_MESH_MODULE	"SkeletalMesh"
 
@@ -57,6 +57,28 @@ SkeletalMesh::SkeletalMesh(MeshResource *res) noexcept :
 {
 	if(res->meshType != MeshType::Skeletal)
 	{ DIE("Attempt to load static mesh as skeletal !"); }
+}
+
+int SkeletalMesh::Load()
+{
+	string path("/");
+	path.append(GetResourceInfo()->filePath);
+	
+	if (AssetLoader::LoadMesh(path, MeshType::Skeletal, _vertices, _indices, _groupOffset, _groupCount, &_bones) != ENGINE_OK)
+	{
+		Logger::Log(SK_MESH_MODULE, LOG_CRITICAL, "Failed to load mesh id=%s", _resourceInfo->name.c_str());
+		return ENGINE_FAIL;
+	}
+	
+	_indexCount = _indices.size();
+	_vertexCount = _vertices.size();
+	_triangleCount = _indexCount / 3;
+	
+	_CalculateTangents();
+	
+	Logger::Log(SK_MESH_MODULE, LOG_DEBUG, "Loaded mesh id %d from %s, %d vertices, %d indices", _resourceInfo->id, path.c_str(), _vertexCount, _indexCount);
+	
+	return ENGINE_OK;
 }
 
 void SkeletalMesh::Update(float deltaTime)

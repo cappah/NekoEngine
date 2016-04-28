@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1255C57C1CD24CF60036E1DA /* Bone.h in Headers */ = {isa = PBXBuildFile; fileRef = 1255C57B1CD24CF60036E1DA /* Bone.h */; };
 		126DE7B01CC8673B00A9E5AB /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 126DE7AF1CC8673B00A9E5AB /* libz.dylib */; };
 		126DE7B81CC86C6000A9E5AB /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 126DE7B61CC86C6000A9E5AB /* libsqlite3.dylib */; };
 		1279C0FE1CC91E5800E521AD /* Compat.h in Headers */ = {isa = PBXBuildFile; fileRef = 1279C0FD1CC91E5800E521AD /* Compat.h */; };
@@ -65,6 +66,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1255C57B1CD24CF60036E1DA /* Bone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bone.h; sourceTree = "<group>"; };
 		126DE7AD1CC8673600A9E5AB /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		126DE7AF1CC8673B00A9E5AB /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		126DE7B51CC86C6000A9E5AB /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
@@ -387,6 +389,7 @@
 			isa = PBXGroup;
 			children = (
 				127DF8B11CCB14DA005F2693 /* AnimationClip.h */,
+				1255C57B1CD24CF60036E1DA /* Bone.h */,
 				12822B5C1CC1AE4E00EE5D0A /* DeferredBuffer.h */,
 				12822B5D1CC1AE4E00EE5D0A /* Engine.h */,
 				12822B5E1CC1AE4E00EE5D0A /* EngineClassFactory.h */,
@@ -558,6 +561,7 @@
 				12822BB31CC1D84300EE5D0A /* EngineView.h in Headers */,
 				127DF8B21CCB14DA005F2693 /* AnimationClip.h in Headers */,
 				12CE01721CC991B900F3D84B /* SkeletalMesh.h in Headers */,
+				1255C57C1CD24CF60036E1DA /* Bone.h in Headers */,
 				12822BBA1CC1DB9500EE5D0A /* EngineAppDelegate.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

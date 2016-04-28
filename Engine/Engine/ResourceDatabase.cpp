@@ -110,6 +110,8 @@ bool ResourceDatabase::GetResources(vector<ResourceInfo *> &vec)
 				while (sqlite3_step(stmt) == SQLITE_ROW)
 				{
 					MeshResource *res = new MeshResource();
+					res->meshType = MeshType::Skeletal;
+					res->type = ResourceType::RES_SKELETAL_MESH;
 					res->id = sqlite3_column_int(stmt, 0);
 					res->filePath = (const char *)sqlite3_column_text(stmt, 1);
 					const unsigned char *ptr = sqlite3_column_text(stmt, 2);

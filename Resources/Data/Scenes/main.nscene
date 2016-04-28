@@ -80,13 +80,23 @@ rotation=0.0, 85.0, 0.0
 EndObject
 
 # Arissa
+#Object
+#id=5
+#mesh=stm_arissa
+#material=mat_arissa
+#material=mat_arissa
+#material=mat_arissa
+#material=mat_arissa
+#position=-117.5, -30.0, -145.0
+#rotation=0.0, 0.0, 0.0
+#scale=45.0, 45.0, 45.0
+#EndObject
+
+# Arissa
 Object
 id=5
-mesh=stm_arissa
-material=mat_arissa
-material=mat_arissa
-material=mat_arissa
-material=mat_arissa
+skmesh=skm_sophia
+material=mat_sophia
 position=-117.5, -30.0, -145.0
 rotation=0.0, 0.0, 0.0
 scale=45.0, 45.0, 45.0

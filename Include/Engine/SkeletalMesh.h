@@ -44,21 +44,20 @@
 
 #include <glm/glm.hpp>
 
+#include <Engine/Bone.h>
 #include <Engine/StaticMesh.h>
-
-typedef struct SKMESH_BONE
-{
-	std::string name;
-	std::unordered_map<uint32_t, float> vertexWeights;
-} Bone;
 
 class SkeletalMesh : public StaticMesh
 {
 public:
 	ENGINE_API SkeletalMesh(MeshResource *res) noexcept;
 	
+	ENGINE_API virtual int Load() override;
 	ENGINE_API void Update(float deltaTime);
 	ENGINE_API virtual void Draw(Renderer* r, size_t group) override;
 
 	ENGINE_API virtual ~SkeletalMesh() noexcept;
+	
+private:
+	std::vector<Bone> _bones;
 };

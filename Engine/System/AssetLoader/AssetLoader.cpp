@@ -103,12 +103,13 @@ typedef struct WAVE_DATA
 	int sub_chunk_2_size;	///< == NumSamples * NumChannels * BitsPerSammple/8. This is the number of bytes in the data. You can also think of this as the size of the read of the subchunk following this number.
 } wave_data_t;
 
-int AssetLoader::LoadMesh(string& file, vector<Vertex>& vertices, vector<uint32_t>& indices, vector<uint32_t>& groupOffset, vector<uint32_t>& groupCount)
+int AssetLoader::LoadMesh(string& file, MeshType type, vector<Vertex> &vertices, vector<uint32_t> &indices, vector<uint32_t> &groupOffset, vector<uint32_t> &groupCount, vector<Bone> *bones)
 {
 	unsigned int offset = 0;
 	uint32_t indexBuff[3];
 	size_t indexCount = 0;
 	size_t vertexCount = 0;
+	size_t boneCount = 0;
 	char lineBuff[LINE_BUFF];
 	memset(lineBuff, 0x0, LINE_BUFF);
 
@@ -147,6 +148,14 @@ int AssetLoader::LoadMesh(string& file, vector<Vertex>& vertices, vector<uint32_
 
 			indexCount = atoi(++ptr);
 		}
+		else if (strstr(lineBuff, "bones"))
+		{
+			char *ptr = strchr(lineBuff, ':');
+			if (!ptr)
+				break;
+			
+			boneCount = atoi(++ptr);
+		}
 		else if (strchr(lineBuff, '[')) // Vertex line
 			vertices.push_back(_ReadVertex(lineBuff));
 		else if (strstr(lineBuff, "newidgrp"))
@@ -154,6 +163,17 @@ int AssetLoader::LoadMesh(string& file, vector<Vertex>& vertices, vector<uint32_
 			groupOffset.push_back((uint32_t)indices.size());
 			groupCount.push_back((uint32_t)indices.size() - offset);
 			offset = (uint32_t)indices.size();
+		}
+		else if(strchr(lineBuff, '{')) // Bone line
+		{
+			if(bones)
+				bones->push_back(_ReadBone(lineBuff));
+			else
+			{
+				Logger::Log(AM_MODULE, LOG_CRITICAL, "Bone line found, but no bone array provided");
+				f->Close();
+				return ENGINE_FAIL;
+			}
 		}
 		else // Index line
 		{
@@ -168,13 +188,19 @@ int AssetLoader::LoadMesh(string& file, vector<Vertex>& vertices, vector<uint32_
     groupCount.push_back((uint32_t)indices.size() - offset);
     
     f->Close();
-    
+	
     if(vertices.size() != vertexCount)
         return ENGINE_FAIL;
     
     if(indices.size() != indexCount)
         return ENGINE_FAIL;
-    
+	
+	if(bones)
+	{
+		if(bones->size() != boneCount)
+			return ENGINE_FAIL;
+	}
+		
 	return ENGINE_OK;
 }
 

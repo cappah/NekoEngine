@@ -60,36 +60,42 @@
             <FileRef
                location = "group:w_girl.nmtl">
             </FileRef>
+            <FileRef
+               location = "group:sophia.nmtl">
+            </FileRef>
          </Group>
          <Group
             location = "group:Models"
             name = "Models">
             <FileRef
-               location = "group:arissa.zfg">
+               location = "group:arissa.nmesh">
             </FileRef>
             <FileRef
-               location = "group:bila.zfg">
+               location = "group:bila.nmesh">
             </FileRef>
             <FileRef
-               location = "group:house.zfg">
+               location = "group:house.nmesh">
             </FileRef>
             <FileRef
-               location = "group:light_sphere.zfg">
+               location = "group:light_sphere.nmesh">
             </FileRef>
             <FileRef
-               location = "group:m_house.zfg">
+               location = "group:m_house.nmesh">
             </FileRef>
             <FileRef
-               location = "group:muscle_car.zfg">
+               location = "group:muscle_car.nmesh">
             </FileRef>
             <FileRef
-               location = "group:nyra.zfg">
+               location = "group:nyra.nmesh">
             </FileRef>
             <FileRef
-               location = "group:skysphere.zfg">
+               location = "group:skysphere.nmesh">
             </FileRef>
             <FileRef
-               location = "group:w_girl.zfg">
+               location = "group:sophia.nmesh">
+            </FileRef>
+            <FileRef
+               location = "group:w_girl.nmesh">
             </FileRef>
          </Group>
          <FileRef
@@ -317,6 +323,9 @@
             </FileRef>
             <FileRef
                location = "group:water_n.dds">
+            </FileRef>
+            <FileRef
+               location = "group:sophia.tga">
             </FileRef>
          </Group>
       </Group>

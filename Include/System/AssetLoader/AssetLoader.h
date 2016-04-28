@@ -41,6 +41,8 @@
 #include <string>
 #include <vector>
 
+#include <Resource/MeshResource.h>
+#include <Engine/Bone.h>
 #include <Engine/Vertex.h>
 #include <Engine/Engine.h>
 #include <Renderer/Renderer.h>
@@ -48,22 +50,24 @@
 class AssetLoader
 {
 public:
-	// Models
-	static int LoadMesh(std::string& file, std::vector<Vertex>& vertices,
-		std::vector<uint32_t>& indices,
-		std::vector<uint32_t>& groupOffset,
-		std::vector<uint32_t>& groupCount);
-
+	// Meshes
+	static int LoadMesh(std::string &file, MeshType type,
+		std::vector<Vertex> &vertices,
+		std::vector<uint32_t> &indices,
+		std::vector<uint32_t> &groupOffset,
+		std::vector<uint32_t> &groupCount,
+		std::vector<Bone> *bones = nullptr);
+	
 	// Sound
-	static int LoadWAV(std::string& file, ALenum* format, ALvoid** data, ALsizei* size, ALsizei* freq);
-	static int LoadOGG(std::string& file, ALenum* format, unsigned char** data, ALsizei* size, ALsizei* freq);
+	static int LoadWAV(std::string &file, ALenum *format, ALvoid **data, ALsizei *size, ALsizei *freq);
+	static int LoadOGG(std::string &file, ALenum *format, unsigned char **data, ALsizei *size, ALsizei *freq);
 
 private:
 
 	/**
-	 * Read a vertex from a model file
+	 * Read a vertex from a mesh file
 	 */
-	static inline Vertex _ReadVertex(const char* line) noexcept
+	static inline Vertex _ReadVertex(const char *line) noexcept
 	{
 		int n = 0, i = 0, i_buff = 0;
 		char c, buff[60] = { 0 }, *pch;		
@@ -114,6 +118,47 @@ private:
 		}
 
 		return v;
+	}
+	
+	static inline Bone _ReadBone(const char *line) noexcept
+	{
+		int n = 0, i = 0, i_buff = 0;
+		char c, buff[60] = { 0 }, *pch;
+		Bone b;
+		
+		while (1)
+		{
+			while ((c = line[i]) != ';' && c != ' ' && c != 0x0)
+			{
+				buff[i_buff++] = c;
+				i++;
+			}
+			
+			if (c == 0x0 || c == '\n')
+				break;
+			
+			if (c == ' ')
+			{
+				i++;
+				continue;
+			}
+			
+			if(i_buff > 0)
+				buff[i_buff - 1] = 0x0;
+			
+			if ((pch = strstr(buff, "name")) != NULL)
+				b.name = buff + 5;
+			else if ((pch = strstr(buff, "offset")) != NULL)
+				EngineUtils::ReadFloatArray(buff + 7, 16, &b.offset[0][0]);
+										
+			memset(buff, 0x0, i_buff);
+										
+			i_buff = 0;
+			i++;
+			n++;
+		}
+		
+		return b;
 	}
 };
 
