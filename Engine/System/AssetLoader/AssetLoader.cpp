@@ -204,11 +204,6 @@ int AssetLoader::LoadMesh(string& file, MeshType type, vector<Vertex> &vertices,
 	return ENGINE_OK;
 }
 
-int AssetLoader::LoadAnimation(string &file, double *duration, double *ticksPerSecond, vector<AnimationNode> &channels)
-{
-	return ENGINE_FAIL;
-}
-
 int AssetLoader::LoadWAV(string &file, ALenum *format, ALvoid **data, ALsizei *size, ALsizei *freq)
 {
 	wave_fmt_t wave_fmt;

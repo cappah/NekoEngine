@@ -59,9 +59,6 @@ public:
 		std::vector<uint32_t> &groupCount,
 		std::vector<Bone> *bones = nullptr);
 	
-	// Animations
-	static int LoadAnimation(std::string &file, double *duration, double *ticksPerSecond, std::vector<AnimationNode> &channels);
-	
 	// Sound
 	static int LoadWAV(std::string &file, ALenum *format, ALvoid **data, ALsizei *size, ALsizei *freq);
 	static int LoadOGG(std::string &file, ALenum *format, unsigned char **data, ALsizei *size, ALsizei *freq);

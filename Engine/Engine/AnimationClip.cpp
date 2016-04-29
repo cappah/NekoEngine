@@ -40,34 +40,57 @@
 
 #include <glm/glm.hpp>
 
+#include <System/VFS/VFS.h>
 #include <Engine/AnimationClip.h>
+#include <System/AssetLoader/AssetLoader.h>
 
 #define AC_MODULE	"AnimationClip"
+#define AC_LINE_BUFF	1024
 
 using namespace std;
 using namespace glm;
 
 AnimationClip::AnimationClip(AnimationClipResource *res) noexcept :
-	_duration(0.f)
+	_duration(0.f),
+	_ticksPerSecond(0.f)
 {
 }
 
 int AnimationClip::Load()
 {
+	char lineBuff[AC_LINE_BUFF];
+	memset(lineBuff, 0x0, AC_LINE_BUFF);
+
 	string path("/");
 	path.append(GetResourceInfo()->filePath);
-
-/*	if (AssetLoader::LoadNFG(path, _vertices, _indices, _groupOffset, _groupCount) != ENGINE_OK)
+	
+	
+	VFSFile *f = VFS::Open(path);
+	if(!f)
 	{
-		Logger::Log(MESH_MODULE, LOG_CRITICAL, "Failed to load mesh id=%s", _resourceInfo->name.c_str());
-		return ENGINE_FAIL;
+		Logger::Log(AC_MODULE, LOG_CRITICAL, "Failed to open animation clip file for %s", _resourceInfo->name.c_str());
+		return ENGINE_IO_FAIL;
 	}
-
-	_indexCount = _indices.size();
-	_vertexCount = _vertices.size();
-	_triangleCount = _indexCount / 3;
-
-	_CalculateTangents();*/
+	
+	char header[7];
+	if (f->Read(header, sizeof(char), 7) != 7)
+	{
+		Logger::Log(AC_MODULE, LOG_CRITICAL, "Failed to read animation clip file for %s", _resourceInfo->name.c_str());
+		f->Close();
+		return ENGINE_IO_FAIL;
+	}
+	header[6] = 0x0;
+	
+	if (strncmp(header, "NANIM1 ", 7))
+	{
+		Logger::Log(AC_MODULE, LOG_CRITICAL, "Invalid header for animation clip file for %s", _resourceInfo->name.c_str());
+		f->Close();
+		return ENGINE_INVALID_RES;
+	}
+	
+	while (!f->EoF())
+	{
+	}
 
 	Logger::Log(AC_MODULE, LOG_DEBUG, "Loaded animation clip id %s from %s", _resourceInfo->name.c_str(), path.c_str());
 
@@ -76,6 +99,7 @@ int AnimationClip::Load()
 
 void AnimationClip::Release() noexcept
 {
+	_channels.clear();
 }
 
 AnimationClip::~AnimationClip() noexcept
