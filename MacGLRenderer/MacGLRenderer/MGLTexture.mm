@@ -455,8 +455,8 @@ void MGLTexture::SetCompressedImageCube(int level, int width, int height, Compre
 
 void MGLTexture::SetCompressedImageCubeFace(CubeFace face, int level, int width, int height, CompressedTextureFormat format, int size, const void *data)
 {
-	GL_CHECK(glBindTexture(GL_TexTarget[(int)_type], _id));	
-	GL_CHECK(glCompressedTexSubImage1D(GL_CubeFace[(int)face], level, 0, width, GL_CompressedTexFormat[(int)format], size, data));
+	GL_CHECK(glBindTexture(GL_TexTarget[(int)_type], _id));
+	GL_CHECK(glCompressedTexImage2D(GL_CubeFace[(int)face], level, GL_CompressedTexFormat[(int)format], width, height, 0, size, data));
 
 	_compressed = true;
 	_compressedFormat = format;

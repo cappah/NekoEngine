@@ -95,7 +95,7 @@ public:
 
 	virtual ~GLTexture();
 
-private:
+protected:
 	GLuint _id;
 	GLuint64 _handle;
 	bool _resident, _fixedLocations;
@@ -106,3 +106,50 @@ private:
 	bool _LoadDDSTexture(class nv_dds::CDDSImage& image);
 };
 
+class GLTexture_NoDSA :
+	public GLTexture
+{
+public:
+	GLTexture_NoDSA(TextureType type);
+	
+	//void MakeResident();
+	
+	virtual bool LoadFromFile(const char* file) override;
+	virtual bool LoadFromMemory(TextureFileFormat format, const uint8_t* mem, size_t size) override;
+	
+	virtual void SetStorage1D(int levels, TextureSizedFormat format, int width) override;
+	virtual void SetStorage2D(int levels, TextureSizedFormat format, int width, int height) override;
+	virtual void SetStorage3D(int levels, TextureSizedFormat format, int width, int height, int depth) override;
+	virtual void SetStorage2DMS(int samples, int width, int height, TextureSizedFormat format, bool fixedSampleLocations) override;
+	virtual void SetStorageCube(int levels, TextureSizedFormat format, int width, int height) override;
+	
+	virtual void SetImage1D(int level, int width, TextureFormat format, TextureInternalType type, const void* data) override;
+	virtual void SetImage2D(int level, int width, int height, TextureFormat format, TextureInternalType type, const void* data) override;
+	virtual void SetImage3D(int level, int width, int height, int depth, TextureFormat format, TextureInternalType type, const void* data) override;
+	virtual void SetImageCube(int level, int width, int height, TextureFormat format, TextureInternalType type,
+							  const void *posX, const void *negX, const void *posY, const void *negY, const void *posZ, const void *negZ) override;
+	virtual void SetImageCubeFace(CubeFace face, int level, int width, int height, TextureFormat format, TextureInternalType type, const void *data) override;
+	
+	virtual void SetCompressedImage1D(int level, int width, CompressedTextureFormat format, int size, const void* data) override;
+	virtual void SetCompressedImage2D(int level, int width, int height, CompressedTextureFormat format, int size, const void* data) override;
+	virtual void SetCompressedImage3D(int level, int width, int height, int depth, CompressedTextureFormat format, int size, const void* data) override;
+	virtual void SetCompressedImageCube(int level, int width, int height, CompressedTextureFormat format, int size,
+										const void *posX, const void *negX, const void *posY, const void *negY, const void *posZ, const void *negZ) override;
+	virtual void SetCompressedImageCubeFace(CubeFace face, int level, int width, int height, CompressedTextureFormat format, int size, const void *data) override;
+	
+	virtual void SetMinFilter(TextureFilter filter) override;
+	virtual void SetMagFilter(TextureFilter filter) override;
+	virtual void SetAnisotropic(int aniso) override;
+	virtual void SetWrapS(TextureWrap wrap) override;
+	virtual void SetWrapT(TextureWrap wrap) override;
+	virtual void SetWrapR(TextureWrap wrap) override;
+	
+	virtual void Resize1D(int width) override;
+	virtual void Resize2D(int width, int height) override;
+	virtual void Resize3D(int width, int height, int depth) override;
+	virtual void ResizeCubemap(int width, int height) override;
+	
+	virtual void GenerateMipmaps() override;
+	
+	virtual ~GLTexture_NoDSA();
+};

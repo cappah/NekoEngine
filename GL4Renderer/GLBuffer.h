@@ -74,7 +74,7 @@ public:
 
 	virtual ~GLBuffer();
 
-private:
+protected:
 	GLuint _id;
 	GLenum _target;
 	size_t _size, _totalSize;
@@ -82,3 +82,16 @@ private:
 	GLSyncRange *_syncRanges;
 };
 
+class GLBuffer_NoDSA :
+	public GLBuffer
+{
+public:
+	GLBuffer_NoDSA(BufferType type, bool dynamic, bool persistent);
+	
+	virtual void SetStorage(size_t size, void* data) override;
+	virtual void UpdateData(size_t offset, size_t size, void* data) override;
+	
+	virtual void SetNumBuffers(int n) override;
+	
+	virtual ~GLBuffer_NoDSA();
+};
