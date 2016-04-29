@@ -128,6 +128,7 @@ GLRenderer::GLRenderer()
 	_ctx = nullptr;
 	_dc = nullptr;
 	_hWnd = (PlatformWindowType)0;
+	_haveDSA = false;
 }
 
 void GLRenderer::SetDebugLogFunction(RendererDebugLogProc debugLog)
@@ -369,7 +370,10 @@ bool GLRenderer::HasCapability(RendererCapability cap)
 
 RBuffer* GLRenderer::CreateBuffer(BufferType type, bool dynamic, bool persistent)
 {
-	return (RBuffer *)new GLBuffer(type, dynamic, persistent);
+	if (_haveDSA)
+		return (RBuffer *)new GLBuffer(type, dynamic, persistent);
+	else
+		return (RBuffer *)new GLBuffer_NoDSA(type, dynamic, persistent);
 }
 
 RShader* GLRenderer::CreateShader()
@@ -436,6 +440,11 @@ bool GLRenderer::HasExtension(const char* extension)
 			return true;
 
 	return false;
+}
+
+void GLRenderer::_CheckExtensions()
+{
+	_haveDSA = HasExtension("GL_ARB_direct_state_access");
 }
 
 GLRenderer::~GLRenderer()

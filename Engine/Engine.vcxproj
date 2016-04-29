@@ -240,6 +240,16 @@
     <None Include="..\Resources\Data\Shaders\postproc\smaa.vert" />
     <None Include="..\Resources\Data\Shaders\ssao.frag" />
     <None Include="..\Resources\Data\Shaders\ssao_blur.frag" />
+    <None Include="..\Resources\Data\SkeletalMeshes\sophia.nmesh" />
+    <None Include="..\Resources\Data\StaticMeshes\arissa.nmesh" />
+    <None Include="..\Resources\Data\StaticMeshes\bila.nmesh" />
+    <None Include="..\Resources\Data\StaticMeshes\house.nmesh" />
+    <None Include="..\Resources\Data\StaticMeshes\light_sphere.nmesh" />
+    <None Include="..\Resources\Data\StaticMeshes\muscle_car.nmesh" />
+    <None Include="..\Resources\Data\StaticMeshes\m_house.nmesh" />
+    <None Include="..\Resources\Data\StaticMeshes\nyra.nmesh" />
+    <None Include="..\Resources\Data\StaticMeshes\skysphere.nmesh" />
+    <None Include="..\Resources\Data\StaticMeshes\w_girl.nmesh" />
     <None Include="..\Resources\Engine.ini" />
     <None Include="..\Resources\Engine_Low.ini" />
   </ItemGroup>

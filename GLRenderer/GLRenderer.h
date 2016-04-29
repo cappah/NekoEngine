@@ -50,8 +50,8 @@
 #define RENDERER_VERSION_MAJOR		0
 #define RENDERER_VERSION_MINOR		3
 #define RENDERER_VERSION_REVISION	0
-#define RENDERER_VERSION_BUILD		75
-#define RENDERER_VERSION_STRING		"0.3.0.75"
+#define RENDERER_VERSION_BUILD		77
+#define RENDERER_VERSION_STRING		"0.3.0.77"
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <Windows.h>
@@ -219,10 +219,12 @@ private:
 	RHI_GL_CTX _ctx;
 	RHI_DC _dc;
 	PlatformWindowType _hWnd;
+	bool _haveDSA;
 	static RFramebuffer* _boundFramebuffer;
 	static std::vector<ShaderDefine> _shaderDefines;
 	
 	void _DestroyContext();
+	void _CheckExtensions();
 };
 
 extern RendererDebugLogProc _debugLogFunc;

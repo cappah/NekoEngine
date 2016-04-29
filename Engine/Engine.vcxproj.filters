@@ -99,6 +99,12 @@
     <Filter Include="Source\Platform\Compat">
       <UniqueIdentifier>{86dcbca2-196c-4c43-b8d6-0b98e47732e8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resources\Data\StaticMeshes">
+      <UniqueIdentifier>{579ab449-d65c-4faa-89f0-3b8ba74d1ded}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources\Data\SkeletalMeshes">
+      <UniqueIdentifier>{78f1f2f4-ba14-4ea2-a6b9-0e97e09a22e6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Resources\Data\Shaders\include\SMAA.h">
@@ -420,6 +426,36 @@
     </None>
     <None Include="..\Resources\Data\Materials\arissa.nmtl">
       <Filter>Resources\Data\Materials</Filter>
+    </None>
+    <None Include="..\Resources\Data\StaticMeshes\m_house.nmesh">
+      <Filter>Resources\Data\StaticMeshes</Filter>
+    </None>
+    <None Include="..\Resources\Data\StaticMeshes\muscle_car.nmesh">
+      <Filter>Resources\Data\StaticMeshes</Filter>
+    </None>
+    <None Include="..\Resources\Data\StaticMeshes\nyra.nmesh">
+      <Filter>Resources\Data\StaticMeshes</Filter>
+    </None>
+    <None Include="..\Resources\Data\StaticMeshes\skysphere.nmesh">
+      <Filter>Resources\Data\StaticMeshes</Filter>
+    </None>
+    <None Include="..\Resources\Data\StaticMeshes\w_girl.nmesh">
+      <Filter>Resources\Data\StaticMeshes</Filter>
+    </None>
+    <None Include="..\Resources\Data\StaticMeshes\arissa.nmesh">
+      <Filter>Resources\Data\StaticMeshes</Filter>
+    </None>
+    <None Include="..\Resources\Data\StaticMeshes\bila.nmesh">
+      <Filter>Resources\Data\StaticMeshes</Filter>
+    </None>
+    <None Include="..\Resources\Data\StaticMeshes\house.nmesh">
+      <Filter>Resources\Data\StaticMeshes</Filter>
+    </None>
+    <None Include="..\Resources\Data\StaticMeshes\light_sphere.nmesh">
+      <Filter>Resources\Data\StaticMeshes</Filter>
+    </None>
+    <None Include="..\Resources\Data\SkeletalMeshes\sophia.nmesh">
+      <Filter>Resources\Data\SkeletalMeshes</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

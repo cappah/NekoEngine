@@ -166,6 +166,8 @@ bool GLRenderer::Initialize(PlatformWindowType hWnd, bool debug)
 
 	wglSwapIntervalEXT = (PFNWGLSWAPINTERVALEXTPROC)wglGetProcAddress("wglSwapIntervalEXT");
 
+	_CheckExtensions();
+
 	return true;
 }
 

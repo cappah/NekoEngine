@@ -48,6 +48,13 @@ GLenum GL_BufferTargets[3]
 	GL_UNIFORM_BUFFER
 };
 
+GLenum GL_GetBufferTargets[3]
+{
+	GL_ARRAY_BUFFER_BINDING,
+	GL_ELEMENT_ARRAY_BUFFER_BINDING,
+	GL_UNIFORM_BUFFER_BINDING
+};
+
 GLenum GL_AttribTypes[10]
 {
 	GL_BYTE,
@@ -284,7 +291,7 @@ void GLBuffer_NoDSA::SetStorage(size_t size, void* data)
 	_size = size;
 
 	GLint buff;
-	GL_CHECK(glGetIntegerv(GL_BufferTargets[(int)_type], &buff));
+	GL_CHECK(glGetIntegerv(GL_GetBufferTargets[(int)_type], &buff));
 
 	GL_CHECK(glBindBuffer(_target, _id));
 	
@@ -336,7 +343,7 @@ void GLBuffer_NoDSA::UpdateData(size_t offset, size_t size, void* data)
 	else
 	{
 		GLint buff;
-		GL_CHECK(glGetIntegerv(GL_BufferTargets[(int)_type], &buff));
+		GL_CHECK(glGetIntegerv(GL_GetBufferTargets[(int)_type], &buff));
 		
 		GL_CHECK(glBindBuffer(_target, _id));
 		GL_CHECK(glBufferSubData(_target, offset, size, data));
@@ -355,4 +362,6 @@ GLBuffer_NoDSA::~GLBuffer_NoDSA()
 	GL_CHECK(glDeleteBuffers(1, &_id));
 	
 	free(_syncRanges);
+	_syncRanges = nullptr;
+	_persistent = false;
 }

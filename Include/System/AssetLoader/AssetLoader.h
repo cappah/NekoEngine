@@ -124,13 +124,15 @@ private:
 	static inline Bone _ReadBone(const char *line) noexcept
 	{
 		int n = 0, i = 0, i_buff = 0;
-		char c, buff[60] = { 0 }, *pch;
+		char c, buff[512] = { 0 }, *pch;
 		Bone b;
 		
 		while (1)
 		{
 			while ((c = line[i]) != ';' && c != ' ' && c != 0x0)
 			{
+				if(i_buff == 511)
+				{ DIE("Bone string too long"); }
 				buff[i_buff++] = c;
 				i++;
 			}

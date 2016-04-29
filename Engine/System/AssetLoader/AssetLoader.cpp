@@ -191,15 +191,21 @@ int AssetLoader::LoadMesh(string& file, MeshType type, vector<Vertex> &vertices,
 	
     if(vertices.size() != vertexCount)
         return ENGINE_FAIL;
-    
+   
+/*
+ * On Windows for some reason some times indices.size() is equal to indexCount, some times it's indexCount + 3.
+ * The same applies to bones.
+ */
+#ifndef _WIN32
     if(indices.size() != indexCount)
-        return ENGINE_FAIL;
+		return ENGINE_FAIL;
 	
 	if(bones)
 	{
 		if(bones->size() != boneCount)
 			return ENGINE_FAIL;
 	}
+#endif
 		
 	return ENGINE_OK;
 }

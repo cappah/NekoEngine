@@ -179,6 +179,8 @@ bool GLRenderer::Initialize(PlatformWindowType hWnd, bool debug)
 
 	glXSwapIntervalEXT = (PFNGLXSWAPINTERVALEXTPROC)glXGetProcAddressARB((const GLubyte*)"glXSwapIntervalEXT");
 
+	_CheckExtensions();
+
 	return true;
 }
 
