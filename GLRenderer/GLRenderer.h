@@ -213,6 +213,7 @@ public:
 	// Internal functions
 	static void SetBoundFramebuffer(RFramebuffer* fbo) { _boundFramebuffer = fbo; }
 	static std::vector<ShaderDefine>& GetShaderDefines() { return _shaderDefines; }
+	static bool HasExtension(const char* extension);
 	
 private:
 	RHI_GL_CTX _ctx;
@@ -221,7 +222,6 @@ private:
 	static RFramebuffer* _boundFramebuffer;
 	static std::vector<ShaderDefine> _shaderDefines;
 	
-	bool _HasExtension(const char* extension);
 	void _DestroyContext();
 };
 

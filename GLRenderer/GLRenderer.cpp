@@ -364,7 +364,7 @@ bool GLRenderer::HasCapability(RendererCapability cap)
 		return false;
 	}
 
-	return _HasExtension(ext);
+	return HasExtension(ext);
 }
 
 RBuffer* GLRenderer::CreateBuffer(BufferType type, bool dynamic, bool persistent)
@@ -424,7 +424,7 @@ uint64_t GLRenderer::GetUsedVideoMemorySize()
 	return mem;
 }
 
-bool GLRenderer::_HasExtension(const char* extension)
+bool GLRenderer::HasExtension(const char* extension)
 {
 	int numExtensions;
 

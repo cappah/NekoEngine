@@ -93,4 +93,7 @@ public:
 	virtual void UpdateData(size_t offset, size_t size, void* data) override;
 	
 	virtual ~GLBuffer_NoDSA();
+
+private:
+	bool _haveBufferStorage;
 };

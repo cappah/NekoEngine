@@ -254,15 +254,26 @@ GLBuffer::~GLBuffer()
 GLBuffer_NoDSA::GLBuffer_NoDSA(BufferType type, bool dynamic, bool persistent)
 	: GLBuffer(type)
 {
-	_dynamic = dynamic;
-	_persistent = persistent;
-	_numBuffers = 3;
-	_syncRanges = nullptr;
+	_haveBufferStorage = GLRenderer::HasExtension("GL_ARB_buffer_storage");
+
+	if (_haveBufferStorage)
+	{
+		_dynamic = dynamic;
+		_persistent = persistent;		
+	}
+	else
+	{
+		_dynamic = (dynamic || persistent);
+		_persistent = false;
+	}
+	
 	_target = GL_BufferTargets[(int)type];
+	_syncRanges = nullptr;
+	_numBuffers = 1;
 	_size = 0;
 	_totalSize = 0;
-	_currentBuffer = 0;
-	
+	_currentBuffer = 0;	
+
 	GL_CHECK(glGenBuffers(1, &_id));
 }
 
@@ -271,41 +282,51 @@ void GLBuffer_NoDSA::SetStorage(size_t size, void* data)
 	int flags = 0;
 	
 	_size = size;
-	
-	if (_persistent)
-		flags = GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_COHERENT_BIT;
-	else if (_dynamic)
-		flags = GL_DYNAMIC_STORAGE_BIT;
-	
+
 	GLint buff;
 	GL_CHECK(glGetIntegerv(GL_BufferTargets[(int)_type], &buff));
-	
+
 	GL_CHECK(glBindBuffer(_target, _id));
 	
-	if (!_persistent)
+	if (_haveBufferStorage)
 	{
-		_totalSize = size;
-		GL_CHECK(glBufferStorage(_target, _size, data, flags));
-		return;
-	}
-	
-	if (!_syncRanges)
-		SetNumBuffers(_numBuffers);
-	
+		if (_persistent)
+			flags = GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_COHERENT_BIT;
+		else if (_dynamic)
+			flags = GL_DYNAMIC_STORAGE_BIT;
+
+		if (!_persistent)
+		{
+			_totalSize = size;
+			GL_CHECK(glBufferStorage(_target, _size, data, flags));
+			return;
+		}
+
+		if (!_syncRanges)
+			SetNumBuffers(_numBuffers);
+
 #pragma omp parallel for
-	for (int i = 0; i < _numBuffers; i++)
-	{
-		_syncRanges[i].offset = _size * i;
-		_syncRanges[i].sync = 0;
+		for (int i = 0; i < _numBuffers; i++)
+		{
+			_syncRanges[i].offset = _size * i;
+			_syncRanges[i].sync = 0;
+		}
+
+		_totalSize = _size * _numBuffers;
+		GL_CHECK(glBufferStorage(_target, _totalSize, data, flags));
+		GL_CHECK(_data = (uint8_t*)glMapBufferRange(_target, 0, _totalSize, flags));
+
+		_currentBuffer = 0;
+
+		GL_CHECK(glBindBuffer(_target, buff));
 	}
+	else
+	{
+		flags = _dynamic ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW;
 	
-	_totalSize = _size * _numBuffers;
-	GL_CHECK(glBufferStorage(_target, _totalSize, data, flags));
-	GL_CHECK(_data = (uint8_t*)glMapBufferRange(_target, 0, _totalSize, flags));
-	
-	_currentBuffer = 0;
-	
-	GL_CHECK(glBindBuffer(_target, buff));
+		GL_CHECK(glBufferData(_target, size, data, flags));
+		GL_CHECK(glBindBuffer(_target, buff));
+	}
 }
 
 void GLBuffer_NoDSA::UpdateData(size_t offset, size_t size, void* data)
