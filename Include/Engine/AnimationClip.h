@@ -38,6 +38,7 @@
 
 #pragma once
 
+#include <string>
 #include <vector>
 
 #include <glm/glm.hpp>
@@ -46,13 +47,23 @@
 #include <Resource/Resource.h>
 #include <Resource/AnimationClipResource.h>
 
+struct AnimationNode
+{
+	std::string name;
+	std::vector<glm::vec3> positions;
+	std::vector<glm::vec3> rotations;
+	std::vector<glm::vec3> scalings;
+};
+
 class AnimationClip : public Resource
 {
 public:
 	ENGINE_API AnimationClip(AnimationClipResource *res) noexcept;
 
 	ENGINE_API AnimationClipResource* GetResourceInfo() noexcept { return (AnimationClipResource*)_resourceInfo; }
-	ENGINE_API float GetDuration() noexcept { return _duration; }
+	ENGINE_API double GetDuration() noexcept { return _duration; }
+	ENGINE_API double GetTicksPerSecond() noexcept { return _ticksPerSecond; }
+	ENGINE_API std::vector<AnimationNode> &GetChannels();
 
 	ENGINE_API virtual int Load() override;
 	ENGINE_API void Release() noexcept;
@@ -60,5 +71,7 @@ public:
 	ENGINE_API virtual ~AnimationClip() noexcept;
 
 protected:
-	float _duration;
+	double _duration;
+	double _ticksPerSecond;
+	std::vector<AnimationNode> _channels;
 };

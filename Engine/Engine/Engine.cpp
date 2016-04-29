@@ -480,7 +480,6 @@ int Engine::Initialize(string cmdLine, bool editor)
 	
 	if (!_InitRenderer())
 		return ENGINE_FAIL;
-	
 #endif
 
 	_InitializeQuadVAO();

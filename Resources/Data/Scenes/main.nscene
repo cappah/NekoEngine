@@ -92,14 +92,14 @@ EndObject
 #scale=45.0, 45.0, 45.0
 #EndObject
 
-# Arissa
+# Sophia
 Object
 id=5
 skmesh=skm_sophia
 material=mat_sophia
 position=-117.5, -30.0, -145.0
 rotation=0.0, 0.0, 0.0
-scale=45.0, 45.0, 45.0
+scale=0.45, 0.45, 0.45
 EndObject
 
 # Muscle Car

@@ -41,11 +41,12 @@
 #include <string>
 #include <vector>
 
-#include <Resource/MeshResource.h>
 #include <Engine/Bone.h>
 #include <Engine/Vertex.h>
 #include <Engine/Engine.h>
 #include <Renderer/Renderer.h>
+#include <Engine/AnimationClip.h>
+#include <Resource/MeshResource.h>
 
 class AssetLoader
 {
@@ -57,6 +58,9 @@ public:
 		std::vector<uint32_t> &groupOffset,
 		std::vector<uint32_t> &groupCount,
 		std::vector<Bone> *bones = nullptr);
+	
+	// Animations
+	static int LoadAnimation(std::string &file, double *duration, double *ticksPerSecond, std::vector<AnimationNode> &channels);
 	
 	// Sound
 	static int LoadWAV(std::string &file, ALenum *format, ALvoid **data, ALsizei *size, ALsizei *freq);

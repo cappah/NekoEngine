@@ -42,21 +42,3 @@ position=0.0, 5000.0, 0.0
 scale=10000.0, 10000.0, 10000.0
 rotation=180.0, 0.0, 0.0
 EndObject
-
-# Kat
-Object
-id=2
-mesh=stm_kat
-material=mat_kat_eye
-material=mat_kat_body
-material=mat_kat_hair
-material=mat_kat_cloth
-material=mat_kat_cloth
-material=mat_kat_cloth
-material=mat_kat_caruncles
-material=mat_kat_body
-material=mat_kat_face
-position=-117.5, -30.0, -145.0
-rotation=0.0, 0.0, 0.0
-scale=15.5, 15.5, 15.5
-EndObject

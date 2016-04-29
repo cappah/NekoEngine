@@ -1,6 +1,6 @@
 NMTL1 
 type=lit
-texture=tex_w_girl,linear,linear,clamp,clamp
+texture=tex_sophia,linear,linear,clamp,clamp
 kdiffuse=1.0
 kspecular=0.1
 shininess=4.0
