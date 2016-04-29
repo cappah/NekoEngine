@@ -40,7 +40,12 @@
 
 #include <Renderer/RArrayBuffer.h>
 
-#include "glad.h"
+#ifdef __APPLE__
+	#include <OpenGL/gl3.h>
+	#include <OpenGL/gl3ext.h>
+#else
+	#include "glad.h"
+#endif
 
 class GLArrayBuffer :
 	public RArrayBuffer

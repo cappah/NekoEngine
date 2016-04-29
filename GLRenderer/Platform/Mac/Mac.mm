@@ -1,9 +1,9 @@
 /* Neko Engine
  *
- * GLShader.h
+ * MGLRenderer.mm
  * Author: Alexandru Naiman
  *
- * OpenGL Renderer Implementation
+ * MacOS X OpenGL Renderer Implementation
  *
  * ----------------------------------------------------------------------------------
  *
@@ -36,62 +36,53 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#pragma once
-
-#include <Renderer/RShader.h>
-
+#include "GLRenderer.h"
+#include "GLArrayBuffer.h"
 #include "GLBuffer.h"
+#include "GLFramebuffer.h"
+#include "GLShader.h"
+#include "GLTexture.h"
 
-#ifdef __APPLE__
-	#include <OpenGL/gl3.h>
-	#include <OpenGL/gl3ext.h>
-#else
-	#include "glad.h"
-#endif
+#include <OpenGL/gl3.h>
 
-typedef struct GL_UNIF_BUF
+bool GLRenderer::Initialize(PlatformWindowType hWnd, bool debug)
 {
-	GLBuffer *ubo;
-	size_t offset;
-	size_t size;
-	uint32_t binding;
-	int32_t index;
-} GLUniformBuffer;
+	_hWnd = hWnd;
+	
+	NSOpenGLPixelFormatAttribute attribs[] =
+	{
+		NSOpenGLPFAOpenGLProfile,
+		NSOpenGLProfileVersion4_1Core,
+		NSOpenGLPFADoubleBuffer,
+		NSOpenGLPFAAccelerated,
+        NSOpenGLPFANoRecovery,
+        NSOpenGLPFAAllowOfflineRenderers,
+		0
+	};
+	
+	NSOpenGLPixelFormat *pf = [[NSOpenGLPixelFormat alloc] initWithAttributes:attribs];
+	
+	_ctx = [[NSOpenGLContext alloc] initWithFormat:pf shareContext:nil];
+	[_ctx setView:_hWnd.contentView];
+	[_ctx makeCurrentContext];
+	
+	[_ctx flushBuffer];
+	
+	return true;
+}
 
-class GLShader :
-	public RShader
+void GLRenderer::SetSwapInterval(int swapInterval)
 {
-public:
-	GLShader();
+	//
+}
 
-	virtual void Enable() override { glUseProgram(_program); }
-	virtual void Disable() override { glUseProgram(0); }
+void GLRenderer::SwapBuffers()
+{
+	[_ctx makeCurrentContext];
+	[_ctx flushBuffer];
+}
 
-	virtual void BindUniformBuffers() override;
-
-	virtual void VSUniformBlockBinding(int location, const char *name) override;
-	virtual void FSUniformBlockBinding(int location, const char *name) override;
-	virtual void VSSetUniformBuffer(int location, uint64_t offset, uint64_t size, RBuffer *buf) override;
-	virtual void FSSetUniformBuffer(int location, uint64_t offset, uint64_t size, RBuffer *buf) override;
-
-	virtual void SetTexture(unsigned int location, RTexture *tex) override;
-
-	virtual void SetSubroutines(ShaderType type, int count, const unsigned int *indices) override;
-
-	virtual bool LoadFromSource(ShaderType type, int count, const char **source, int *length) override;
-	virtual bool LoadFromStageBinary(ShaderType type, const char *file) override;
-	virtual bool LoadFromBinary(const char *file) override;
-
-	virtual bool Link() override;
-
-	virtual ~GLShader();
-
-private:
-	GLint _program;
-	GLint _shaders[6];
-	GLUniformBuffer _vsBuffers[10];
-	GLUniformBuffer _fsBuffers[10];
-	uint8_t _vsNumBuffers;
-	uint8_t _fsNumBuffers;
-	uint8_t _nextBinding;
-};
+void GLRenderer::_DestroyContext()
+{
+	//
+}

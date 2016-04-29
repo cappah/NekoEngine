@@ -44,9 +44,18 @@
 #include "GLArrayBuffer.h"
 
 #include <Renderer/Renderer.h>
+#include <Platform/Platform.h>
 
 #include <stdio.h>
 #include <string.h>
+
+#ifndef GL_GPU_MEMORY_INFO_TOTAL_AVAILABLE_MEMORY_NVX
+#define GL_GPU_MEMORY_INFO_TOTAL_AVAILABLE_MEMORY_NVX 0
+#endif
+
+#ifndef GL_GPU_MEMORY_INFO_CURRENT_AVAILABLE_VIDMEM_NVX
+#define GL_GPU_MEMORY_INFO_CURRENT_AVAILABLE_VIDMEM_NVX 0
+#endif
 
 static GLenum GL_DrawModes[2] =
 {

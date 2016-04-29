@@ -124,20 +124,17 @@ void GLFramebuffer::Resize(int width, int height)
 
 void GLFramebuffer::AttachTexture(DrawAttachment attachment, class RTexture* texture)
 {
-	GLTexture *tex = (GLTexture *)texture;
-	GL_CHECK(glNamedFramebufferTexture(_id, GL_Attachments[(int)attachment], tex->GetId(), 0));
+	GL_CHECK(glNamedFramebufferTexture(_id, GL_Attachments[(int)attachment], ((GLTexture *)texture)->GetId(), 0));
 }
 
 void GLFramebuffer::AttachDepthTexture(class RTexture* texture)
 {
-	GLTexture *tex = (GLTexture *)texture;
-	GL_CHECK(glNamedFramebufferTexture(_id, GL_DEPTH_ATTACHMENT, tex->GetId(), 0));
+	GL_CHECK(glNamedFramebufferTexture(_id, GL_DEPTH_ATTACHMENT, ((GLTexture *)texture)->GetId(), 0));
 }
 
 void GLFramebuffer::AttachDepthStencilTexture(class RTexture* texture)
 {
-	GLTexture *tex = (GLTexture *)texture;
-	GL_CHECK(glNamedFramebufferTexture(_id, GL_DEPTH_STENCIL_ATTACHMENT, tex->GetId(), 0));
+	GL_CHECK(glNamedFramebufferTexture(_id, GL_DEPTH_STENCIL_ATTACHMENT, ((GLTexture *)texture)->GetId(), 0));
 }
 
 void GLFramebuffer::CreateDepthBuffer()
@@ -284,20 +281,17 @@ GLFramebuffer_NoDSA::GLFramebuffer_NoDSA(int width, int height)
 
 void GLFramebuffer_NoDSA::AttachTexture(DrawAttachment attachment, class RTexture* texture)
 {
-	GLTexture *tex = (GLTexture *)texture;
-	GL_CHECK(glNamedFramebufferTexture(_id, GL_Attachments[(int)attachment], tex->GetId(), 0));
+	GL_CHECK(glNamedFramebufferTexture(_id, GL_Attachments[(int)attachment], ((GLTexture *)texture)->GetId(), 0));
 }
 
 void GLFramebuffer_NoDSA::AttachDepthTexture(class RTexture* texture)
 {
-	GLTexture *tex = (GLTexture *)texture;
-	GL_CHECK(glNamedFramebufferTexture(_id, GL_DEPTH_ATTACHMENT, tex->GetId(), 0));
+	GL_CHECK(glNamedFramebufferTexture(_id, GL_DEPTH_ATTACHMENT, ((GLTexture *)texture)->GetId(), 0));
 }
 
 void GLFramebuffer_NoDSA::AttachDepthStencilTexture(class RTexture* texture)
 {
-	GLTexture *tex = (GLTexture *)texture;
-	GL_CHECK(glNamedFramebufferTexture(_id, GL_DEPTH_STENCIL_ATTACHMENT, tex->GetId(), 0));
+	GL_CHECK(glNamedFramebufferTexture(_id, GL_DEPTH_STENCIL_ATTACHMENT, ((GLTexture *)texture)->GetId(), 0));
 }
 
 void GLFramebuffer_NoDSA::CreateDepthBuffer()

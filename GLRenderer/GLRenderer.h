@@ -38,7 +38,12 @@
 
 #pragma once
 
-#include "glad.h"
+#ifdef __APPLE__
+	#include <OpenGL/gl3.h>
+	#include <OpenGL/gl3ext.h>
+#else
+	#include "glad.h"
+#endif
 
 #include <Renderer/Renderer.h>
 #include <Platform/Platform.h>
@@ -62,6 +67,9 @@ typedef HDC		RHI_DC;
 #include <GL/glx.h>
 typedef GLXContext 	RHI_GL_CTX;
 typedef Display* 	RHI_DC;
+#elif defined(__APPLE__)
+typedef NSOpenGLContext* RHI_GL_CTX;
+typedef NSView*		RHI_DC;
 #endif
 
 #include <stdio.h>
@@ -232,3 +240,75 @@ extern RendererDebugLogProc _debugLogFunc;
 void LogDebugOutput(GLenum source, GLenum type, GLuint id, GLenum severity, const char* msg);
 void DebugCallbackAMD(GLuint id, GLenum category, GLenum severity, GLsizei length, const GLchar* message, GLvoid* userParam);
 void DebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const GLvoid* userParam);
+
+/*
+ * These functions and constants do not exist in Apple's OpenGL implementation
+ */
+#ifdef __APPLE__
+
+#define glCreateBuffers(x, y)
+#define glNamedBufferStorage(x, y, z, w)
+#define glMapNamedBufferRange(x, y, z, w) NULL
+#define glUnmapNamedBuffer(x)
+#define glNamedBufferSubData(x, y, z, w)
+#define glBufferStorage(x, y, z, w)
+
+#define glCreateTextures(x, y, z)
+#define glGetTextureHandleARB(x) 0
+#define glMakeTextureHandleResidentARB(x)
+#define glTextureStorage1D(a, b, c, d)
+#define glTextureStorage2D(a, b, c, d, e)
+#define glTextureStorage3D(a, b, c, d, e, f)
+#define glTextureStorage2DMultisample(a, b, c, d, e, f)
+#define glTextureSubImage1D(a, b, c, d, e, f, g)
+#define glTextureSubImage2D(a, b, c, d, e, f, g, h, i)
+#define glTextureSubImage3D(a, b, c, d, e, f, g, h, i, j, k)
+#define glCompressedTextureSubImage1D(a, b, c, d, e, f, g)
+#define glCompressedTextureSubImage2D(a, b, c, d, e, f, g, h, i)
+#define glCompressedTextureSubImage3D(a, b, c, d, e, f, g, h, i, j, k)
+#define glTextureParameteri(x, y, z)
+#define glGenerateTextureMipmap(x)
+#define glMakeTextureHandleNonResidentARB(x)
+
+#define glCreateFramebuffers(x, y)
+#define glNamedFramebufferTexture(x, y, z, w)
+#define glCreateRenderbuffers(x, y)
+#define glNamedRenderbufferStorage(x, y, z, w)
+#define glNamedFramebufferRenderbuffer(x, y, w, z)
+#define glNamedRenderbufferStorageMultisample(a, b, c, d, e)
+#define glCheckNamedFramebufferStatus(x, y) 0
+#define glBlitNamedFramebuffer(a, b, c, d, e, f, g, h, i, j, k, l)
+#define glNamedFramebufferDrawBuffer(x, y)
+#define glNamedFramebufferDrawBuffers(x, y, z)
+
+#define GL_MAP_PERSISTENT_BIT	0
+#define GL_MAP_COHERENT_BIT		0
+#define GL_DYNAMIC_STORAGE_BIT	0
+
+#define GL_DEBUG_CATEGORY_API_ERROR_AMD 0
+#define GL_DEBUG_SOURCE_API 1
+#define GL_DEBUG_CATEGORY_APPLICATION_AMD 2
+#define GL_DEBUG_SOURCE_APPLICATION 3
+#define GL_DEBUG_CATEGORY_WINDOW_SYSTEM_AMD 4
+#define GL_DEBUG_SOURCE_WINDOW_SYSTEM 5
+#define GL_DEBUG_CATEGORY_SHADER_COMPILER_AMD 6
+#define GL_DEBUG_SOURCE_SHADER_COMPILER 7
+#define GL_DEBUG_SOURCE_THIRD_PARTY 8
+#define GL_DEBUG_CATEGORY_OTHER_AMD 9
+#define GL_DEBUG_SOURCE_OTHER 10
+
+#define GL_DEBUG_TYPE_ERROR 0
+#define GL_DEBUG_CATEGORY_DEPRECATION_AMD 1
+#define GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR 2
+#define GL_DEBUG_CATEGORY_UNDEFINED_BEHAVIOR_AMD 3
+#define GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR 4
+#define GL_DEBUG_TYPE_PORTABILITY_ARB 5
+#define GL_DEBUG_CATEGORY_PERFORMANCE_AMD 6
+#define GL_DEBUG_TYPE_PERFORMANCE 7
+#define GL_DEBUG_TYPE_OTHER 8
+
+#define GL_DEBUG_SEVERITY_HIGH 0
+#define GL_DEBUG_SEVERITY_MEDIUM 1
+#define GL_DEBUG_SEVERITY_LOW 2
+
+#endif

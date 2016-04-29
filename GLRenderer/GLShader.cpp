@@ -36,6 +36,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <Platform/Platform.h>
+
 #include "GLShader.h"
 #include "GLRenderer.h"
 #include "GLTexture.h"
@@ -44,6 +46,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#ifdef NE_PLATFORM_MAC
+#define GL_COMPUTE_SHADER	0
+#endif
 
 GLenum GL_ShaderType[6] =
 {
