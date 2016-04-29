@@ -3,7 +3,7 @@
  * GLTexture.cpp
  * Author: Alexandru Naiman
  *
- * OpenGL 4.5 Renderer Implementation
+ * OpenGL Renderer Implementation
  *
  * ----------------------------------------------------------------------------------
  *
@@ -137,7 +137,7 @@ GLenum GL_CubeFace[6] =
 	GL_TEXTURE_CUBE_MAP_NEGATIVE_Z
 };
 
-GLTexture::GLTexture(TextureType type)
+GLTexture::GLTexture(TextureType type, bool create)
 	: RTexture(type)
 {
 	_resident = false;
@@ -145,6 +145,9 @@ GLTexture::GLTexture(TextureType type)
 	_fixedLocations = false;
 	_sizedFormat = TextureSizedFormat::RGBA_8U;
 
+	if (!create)
+		return;
+	
 	GL_CHECK(glCreateTextures(GL_TexTarget[(int)type], 1, &_id));
 }
 
@@ -529,6 +532,229 @@ void GLTexture::_Destroy()
 }
 
 GLTexture::~GLTexture()
+{
+	_Destroy();
+}
+
+// Non-DSA variants
+
+GLTexture_NoDSA::GLTexture_NoDSA(TextureType type)
+	: GLTexture(type, false)
+{
+	GL_CHECK(glGenTextures(1, &_id));
+}
+
+void GLTexture_NoDSA::SetStorage1D(int levels, TextureSizedFormat format, int width)
+{
+	GL_CHECK(glTextureStorage1D(_id, levels, GL_TexFormatSized[(int)format], width));
+
+	_width = width;
+	_mipLevels = levels;
+	_sizedFormat = format;
+}
+
+void GLTexture_NoDSA::SetStorage2D(int levels, TextureSizedFormat format, int width, int height)
+{
+	GL_CHECK(glTextureStorage2D(_id, levels, GL_TexFormatSized[(int)format], width, height));
+
+	_width = width;
+	_height = height;
+	_mipLevels = levels;
+	_sizedFormat = format;
+}
+
+void GLTexture_NoDSA::SetStorage3D(int levels, TextureSizedFormat format, int width, int height, int depth)
+{
+	GL_CHECK(glTextureStorage3D(_id, levels, GL_TexFormatSized[(int)format], width, height, depth));
+
+	_width = width;
+	_height = height;
+	_depth = depth;
+	_mipLevels = levels;
+	_sizedFormat = format;
+}
+
+void GLTexture_NoDSA::SetStorage2DMS(int samples, int width, int height, TextureSizedFormat format, bool fixedSampleLocations)
+{
+	GL_CHECK(glTextureStorage2DMultisample(_id, samples, GL_TexFormatSized[(int)format], width, height, fixedSampleLocations));
+
+	_width = width;
+	_height = height;
+	_samples = samples;
+	_sizedFormat = format;
+	_fixedLocations = fixedSampleLocations;
+}
+
+void GLTexture_NoDSA::SetStorageCube(int levels, TextureSizedFormat format, int width, int height)
+{
+	GL_CHECK(glTextureStorage2D(_id, levels, GL_TexFormatSized[(int)format], width, height));
+
+	_width = width;
+	_height = height;
+	_mipLevels = levels;
+	_sizedFormat = format;
+}
+
+void GLTexture_NoDSA::SetImage1D(int level, int width, TextureFormat format, TextureInternalType type, const void* data)
+{
+	_format = format;
+	GL_CHECK(glTextureSubImage1D(_id, level, 0, width, GL_TexFormat[(int)format], GL_TexType[(int)type], data));
+}
+
+void GLTexture_NoDSA::SetImage2D(int level, int width, int height, TextureFormat format, TextureInternalType type, const void* data)
+{
+	_format = format;
+	GL_CHECK(glTextureSubImage2D(_id, level, 0, 0, width, height, GL_TexFormat[(int)format], GL_TexType[(int)type], data));
+}
+
+void GLTexture_NoDSA::SetImage3D(int level, int width, int height, int depth, TextureFormat format, TextureInternalType type, const void* data)
+{
+	_format = format;
+	GL_CHECK(glTextureSubImage3D(_id, level, 0, 0, 0, width, height, depth, GL_TexFormat[(int)format], GL_TexType[(int)type], data));
+}
+
+void GLTexture_NoDSA::SetImageCube(int level, int width, int height, TextureFormat format, TextureInternalType type,
+	const void *posX, const void *negX, const void *posY, const void *negY, const void *posZ, const void *negZ)
+{
+	_format = format;
+	GL_CHECK(glBindTexture(GL_TEXTURE_CUBE_MAP, _id));
+	GL_CHECK(glTexSubImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, level, 0, 0, width, height, GL_TexFormat[(int)format], GL_TexType[(int)type], posX));
+	GL_CHECK(glTexSubImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, level, 0, 0, width, height, GL_TexFormat[(int)format], GL_TexType[(int)type], negX));
+	GL_CHECK(glTexSubImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, level, 0, 0, width, height, GL_TexFormat[(int)format], GL_TexType[(int)type], posY));
+	GL_CHECK(glTexSubImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, level, 0, 0, width, height, GL_TexFormat[(int)format], GL_TexType[(int)type], negY));
+	GL_CHECK(glTexSubImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, level, 0, 0, width, height, GL_TexFormat[(int)format], GL_TexType[(int)type], posZ));
+	GL_CHECK(glTexSubImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, level, 0, 0, width, height, GL_TexFormat[(int)format], GL_TexType[(int)type], negZ));
+	GL_CHECK(glBindTexture(GL_TEXTURE_CUBE_MAP, 0));
+
+	/*	GL_CHECK(glTextureSubImage3D(_id, level, 0, 0, 0, width, height, 1, GL_TexFormat[(int)format], GL_TexType[(int)type], posX));
+	GL_CHECK(glTextureSubImage3D(_id, level, 0, 0, 0, width, height, 1, GL_TexFormat[(int)format], GL_TexType[(int)type], negX));
+	GL_CHECK(glTextureSubImage3D(_id, level, 0, 0, 0, width, height, 1, GL_TexFormat[(int)format], GL_TexType[(int)type], posY));
+	GL_CHECK(glTextureSubImage3D(_id, level, 0, 0, 0, width, height, 3, GL_TexFormat[(int)format], GL_TexType[(int)type], data));
+	GL_CHECK(glTextureSubImage3D(_id, level, 0, 0, 0, width, height, 4, GL_TexFormat[(int)format], GL_TexType[(int)type], data));
+	GL_CHECK(glTextureSubImage3D(_id, level, 0, 0, 0, width, height, 5, GL_TexFormat[(int)format], GL_TexType[(int)type], data));*/
+}
+
+void GLTexture_NoDSA::SetImageCubeFace(CubeFace face, int level, int width, int height, TextureFormat format, TextureInternalType type, const void *data)
+{
+	_format = format;
+	GL_CHECK(glBindTexture(GL_TEXTURE_CUBE_MAP, _id));
+	GL_CHECK(glTexSubImage2D(GL_CubeFace[(int)face], level, 0, 0, width, height, GL_TexFormat[(int)format], GL_TexType[(int)type], data));
+	GL_CHECK(glBindTexture(GL_TEXTURE_CUBE_MAP, 0));
+}
+
+void GLTexture_NoDSA::SetCompressedImage1D(int level, int width, CompressedTextureFormat format, int size, const void* data)
+{
+	_compressed = true;
+	_compressedFormat = format;
+	GL_CHECK(glCompressedTextureSubImage1D(_id, level, 0, width, GL_CompressedTexFormat[(int)format], size, data));
+}
+
+void GLTexture_NoDSA::SetCompressedImage2D(int level, int width, int height, CompressedTextureFormat format, int size, const void* data)
+{
+	_compressed = true;
+	_compressedFormat = format;
+	GL_CHECK(glBindTexture(GL_TEXTURE_2D, _id));
+	GL_CHECK(glCompressedTexImage2DARB(GL_TEXTURE_2D, level, GL_CompressedTexFormat[(int)format], width, height, 0, size, data));
+	//GL_CHECK(glCompressedTexSubImage2DARB(GL_TEXTURE_2D, level, 0, 0, width, height, GL_CompressedTexFormat[(int)format], size, data));
+	GL_CHECK(glBindTexture(GL_TEXTURE_2D, 0));
+	//	GL_CHECK(glCompressedTextureSubImage2D(_id, level, 0, 0, width, height, GL_CompressedTexFormat[(int)format], size, data));
+}
+
+void GLTexture_NoDSA::SetCompressedImage3D(int level, int width, int height, int depth, CompressedTextureFormat format, int size, const void* data)
+{
+	_compressed = true;
+	_compressedFormat = format;
+	GL_CHECK(glCompressedTextureSubImage3D(_id, level, 0, 0, 0, width, height, depth, GL_CompressedTexFormat[(int)format], size, data));
+}
+
+void GLTexture_NoDSA::SetCompressedImageCube(int level, int width, int height, CompressedTextureFormat format, int size,
+	const void *posX, const void *negX, const void *posY, const void *negY, const void *posZ, const void *negZ)
+{
+	_compressed = true;
+	_compressedFormat = format;
+	GL_CHECK(glBindTexture(GL_TEXTURE_CUBE_MAP, _id));
+	GL_CHECK(glCompressedTexSubImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, level, 0, 0, width, height, GL_CompressedTexFormat[(int)format], size, posX));
+	GL_CHECK(glCompressedTexSubImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, level, 0, 0, width, height, GL_CompressedTexFormat[(int)format], size, negX));
+	GL_CHECK(glCompressedTexSubImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, level, 0, 0, width, height, GL_CompressedTexFormat[(int)format], size, posY));
+	GL_CHECK(glCompressedTexSubImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, level, 0, 0, width, height, GL_CompressedTexFormat[(int)format], size, negY));
+	GL_CHECK(glCompressedTexSubImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, level, 0, 0, width, height, GL_CompressedTexFormat[(int)format], size, posZ));
+	GL_CHECK(glCompressedTexSubImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, level, 0, 0, width, height, GL_CompressedTexFormat[(int)format], size, negZ));
+	GL_CHECK(glBindTexture(GL_TEXTURE_CUBE_MAP, 0));
+}
+
+void GLTexture_NoDSA::SetCompressedImageCubeFace(CubeFace face, int level, int width, int height, CompressedTextureFormat format, int size, const void *data)
+{
+	_compressed = true;
+	_compressedFormat = format;
+	GL_CHECK(glBindTexture(GL_TEXTURE_CUBE_MAP, _id));
+	GL_CHECK(glCompressedTexSubImage2D(GL_CubeFace[(int)face], level, 0, 0, width, height, GL_CompressedTexFormat[(int)format], size, data));
+	GL_CHECK(glBindTexture(GL_TEXTURE_CUBE_MAP, 0));
+}
+
+void GLTexture_NoDSA::SetMinFilter(TextureFilter filter)
+{
+	GL_CHECK(glTextureParameteri(_id, GL_TEXTURE_MIN_FILTER, GL_TexFilter[(int)filter]));
+}
+
+void GLTexture_NoDSA::SetMagFilter(TextureFilter filter)
+{
+	GL_CHECK(glTextureParameteri(_id, GL_TEXTURE_MAG_FILTER, GL_TexFilter[(int)filter]));
+}
+
+void GLTexture_NoDSA::SetAnisotropic(int aniso)
+{
+	GL_CHECK(glTextureParameteri(_id, GL_TEXTURE_MAX_ANISOTROPY_EXT, aniso));
+}
+
+void GLTexture_NoDSA::SetWrapS(TextureWrap wrap)
+{
+	GL_CHECK(glTextureParameteri(_id, GL_TEXTURE_WRAP_S, GL_TexWrap[(int)wrap]));
+}
+
+void GLTexture_NoDSA::SetWrapT(TextureWrap wrap)
+{
+	GL_CHECK(glTextureParameteri(_id, GL_TEXTURE_WRAP_T, GL_TexWrap[(int)wrap]));
+}
+
+void GLTexture_NoDSA::SetWrapR(TextureWrap wrap)
+{
+	GL_CHECK(glTextureParameteri(_id, GL_TEXTURE_WRAP_R, GL_TexWrap[(int)wrap]));
+}
+
+void GLTexture_NoDSA::Resize1D(int width)
+{
+	_Destroy();
+	SetStorage1D(_mipLevels, _sizedFormat, width);
+}
+
+void GLTexture_NoDSA::Resize2D(int width, int height)
+{
+	_Destroy();
+
+	if (_type == TextureType::Tex2D)
+		SetStorage2D(_mipLevels, _sizedFormat, width, height);
+	else
+		SetStorage2DMS(_samples, width, height, _sizedFormat, _fixedLocations);
+}
+
+void GLTexture_NoDSA::Resize3D(int width, int height, int depth)
+{
+	_Destroy();
+	SetStorage3D(_mipLevels, _sizedFormat, width, height, depth);
+}
+
+void GLTexture_NoDSA::ResizeCubemap(int width, int height)
+{
+	_Destroy();
+	SetStorageCube(_mipLevels, _sizedFormat, width, height);
+}
+
+void GLTexture_NoDSA::GenerateMipmaps()
+{
+	GL_CHECK(glGenerateTextureMipmap(_id));
+}
+
+GLTexture_NoDSA::~GLTexture_NoDSA()
 {
 	_Destroy();
 }

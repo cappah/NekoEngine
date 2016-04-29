@@ -3,7 +3,7 @@
  * GLBuffer.cpp
  * Author: Alexandru Naiman
  *
- * OpenGL 4 Renderer Implementation
+ * OpenGL Renderer Implementation
  *
  * ----------------------------------------------------------------------------------
  *

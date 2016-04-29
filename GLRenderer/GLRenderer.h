@@ -3,7 +3,7 @@
  * GLRenderer.h
  * Author: Alexandru Naiman
  *
- * OpenGL 4.5 Renderer Implementation
+ * OpenGL Renderer Implementation
  *
  * ----------------------------------------------------------------------------------
  *
@@ -50,8 +50,8 @@
 #define RENDERER_VERSION_MAJOR		0
 #define RENDERER_VERSION_MINOR		3
 #define RENDERER_VERSION_REVISION	0
-#define RENDERER_VERSION_BUILD		70
-#define RENDERER_VERSION_STRING		"0.3.0.70"
+#define RENDERER_VERSION_BUILD		75
+#define RENDERER_VERSION_STRING		"0.3.0.75"
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <Windows.h>

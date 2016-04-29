@@ -3,7 +3,7 @@
  * GLFramebuffer.h
  * Author: Alexandru Naiman
  *
- * OpenGL 4.5 Renderer Implementation
+ * OpenGL Renderer Implementation
  *
  * ----------------------------------------------------------------------------------
  *
@@ -52,7 +52,7 @@ class GLFramebuffer :
 	public RFramebuffer
 {
 public:
-	GLFramebuffer(int width, int height);
+	GLFramebuffer(int width, int height, bool create = true);
 
 	GLuint GetId() { return _id; }
 
@@ -97,11 +97,6 @@ class GLFramebuffer_NoDSA :
 public:
 	GLFramebuffer_NoDSA(int width, int height);
 	
-	virtual void Bind(int location) override;
-	virtual void Unbind() override;
-	
-	virtual void Resize(int width, int height) override;
-	
 	virtual void AttachTexture(DrawAttachment attachment, class RTexture* texture) override;
 	virtual void AttachDepthTexture(class RTexture* texture) override;
 	virtual void AttachDepthStencilTexture(class RTexture* texture) override;
@@ -125,4 +120,3 @@ public:
 	
 	virtual ~GLFramebuffer_NoDSA();
 };
-

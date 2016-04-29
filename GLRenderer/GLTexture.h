@@ -3,7 +3,7 @@
  * GLTexture.h
  * Author: Alexandru Naiman
  *
- * OpenGL 4.5 Renderer Implementation
+ * OpenGL Renderer Implementation
  *
  * ----------------------------------------------------------------------------------
  *
@@ -49,7 +49,7 @@ class GLTexture :
 	public RTexture	
 {
 public:
-	GLTexture(TextureType type);
+	GLTexture(TextureType type, bool create = true);
 
 	GLuint GetId() { return _id; }
 	GLuint64 GetHandle() { return _handle; }
@@ -111,11 +111,6 @@ class GLTexture_NoDSA :
 {
 public:
 	GLTexture_NoDSA(TextureType type);
-	
-	//void MakeResident();
-	
-	virtual bool LoadFromFile(const char* file) override;
-	virtual bool LoadFromMemory(TextureFileFormat format, const uint8_t* mem, size_t size) override;
 	
 	virtual void SetStorage1D(int levels, TextureSizedFormat format, int width) override;
 	virtual void SetStorage2D(int levels, TextureSizedFormat format, int width, int height) override;
