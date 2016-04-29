@@ -33,11 +33,7 @@ LauncherLibs =
 	"Engine"
 ]
 
-GL4RendererLibs =
-[
-]
-
-GL3RendererLibs =
+GLRendererLibs =
 [
 ]
 
@@ -69,16 +65,10 @@ LauncherDirs =
 [
 ]
 
-GL4RendererDirs =
+GLRendererDirs =
 [
-	"GL4Renderer",
-	"GL4Renderer/Loaders"
-]
-
-GL3RendererDirs =
-[
-	"GL3Renderer",
-	"GL3Renderer/Loaders"
+	"GLRenderer",
+	"GLRenderer/Loaders"
 ]
 
 VKRendererDirs =
@@ -101,8 +91,7 @@ AllModules =
 	ModuleInfo.new("engine.cpp", EngineDirs, "lib", EngineLibs, "libEngine"),
 	ModuleInfo.new("launcher.cpp", LauncherDirs, "exe", LauncherLibs, "NekoLauncher"),
 	ModuleInfo.new("game.cpp", GameDirs, "lib", GameLibs, "libGame"),
-	ModuleInfo.new("gl4renderer.cpp", GL4RendererDirs, "lib", GL4RendererLibs, "libGL4Renderer"),
-	ModuleInfo.new("gl3renderer.cpp", GL3RendererDirs, "lib", GL3RendererLibs, "libGL3Renderer"),
+	ModuleInfo.new("glrenderer.cpp", GL4RendererDirs, "lib", GL4RendererLibs, "libGLRenderer"),
 	ModuleInfo.new("vkrenderer.cpp", VKRendererDirs, "lib", VKRendererLibs, "libVKRenderer")
 ]
 
@@ -121,15 +110,11 @@ def process_arguments()
 	when /windows/
 		BuildOptions.compilerType = "msvc"
 		BuildOptions.compiler = "cl.exe"
-		BuildOptions.renderers = "GL4Renderer"
-	when /mac/
-		BuildOptions.compilerType = "gcc"
-		BuildOptions.compiler = "gcc"
-		BuildOptions.renderers = "GL3Renderer"
+		BuildOptions.renderers = "GLRenderer"
 	else
 		BuildOptions.compilerType = "gcc"
 		BuildOptions.compiler = "gcc"
-		BuildOptions.renderers = "GL4Renderer"
+		BuildOptions.renderers = "GLRenderer"
 	end
 	
 	OptionParser.new do |opt|
@@ -201,16 +186,14 @@ case platform()
 
 		LauncherDirs.push("Farrah/Windows")
 		
-		GL4RendererDirs.push("GL4Renderer/Platform/Windows")
-		GL3RendererDirs.push("GL4Renderer/Platform/Windows")
+		GLRendererDirs.push("GLRenderer/Platform/Windows")
 
 		EngineLibs.push("zlibstatic")
 		EngineLibs.push("libsqlite3")
 		EngineLibs.push("libpng16")
 		EngineLibs.push("libvorbisfile")
 		EngineLibs.push("OpenAL32")
-		GL4RendererLibs.push("opengl32")
-		GL3RendererLibs.push("opengl32")
+		GLRendererLibs.push("opengl32")
 
 		PlatformCFlags.concat("-I" + ENV['SDK'] + '/Include -L' + ENV['SDK'] + '/lib ')
 	when /mac/
@@ -226,8 +209,7 @@ case platform()
 
 		LauncherDirs.push("Farrah/X11")
 		
-		GL4RendererDirs.push("GL4Renderer/Platform/X11")
-		GL3RendererDirs.push("GL4Renderer/Platform/X11")
+		GLRendererDirs.push("GLRenderer/Platform/X11")
 
 		PlatformCFlags.concat(" -DPLATFORM_X11")
 
@@ -236,10 +218,8 @@ case platform()
 		EngineLibs.push("png")
 		EngineLibs.push("vorbisfile")
 		EngineLibs.push("X11")
-		GL4RendererLibs.push("GL")
-		GL4RendererLibs.push("X11")
-		GL3RendererLibs.push("GL")
-		GL3RendererLibs.push("X11")
+		GLRendererLibs.push("GL")
+		GLRendererLibs.push("X11")
 	end
 end
 

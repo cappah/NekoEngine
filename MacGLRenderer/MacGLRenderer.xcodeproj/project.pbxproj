@@ -7,10 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		12755D6E1CC8F34300546005 /* nv_dds.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12755D6A1CC8F34300546005 /* nv_dds.cpp */; };
-		12755D6F1CC8F34300546005 /* nv_dds.h in Headers */ = {isa = PBXBuildFile; fileRef = 12755D6B1CC8F34300546005 /* nv_dds.h */; };
-		12755D701CC8F34300546005 /* tga.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12755D6C1CC8F34300546005 /* tga.cpp */; };
-		12755D711CC8F34300546005 /* tga.h in Headers */ = {isa = PBXBuildFile; fileRef = 12755D6D1CC8F34300546005 /* tga.h */; };
 		1295DB9F1CC0F4CB003F27AB /* MGLRenderer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1295DB9E1CC0F4CB003F27AB /* MGLRenderer.mm */; };
 		1295DBAE1CC0F4F1003F27AB /* RArrayBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 1295DBA81CC0F4F1003F27AB /* RArrayBuffer.h */; };
 		1295DBAF1CC0F4F1003F27AB /* RBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 1295DBA91CC0F4F1003F27AB /* RBuffer.h */; };
@@ -27,13 +23,13 @@
 		1295DBCB1CC0F61D003F27AB /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1295DBCA1CC0F61D003F27AB /* OpenGL.framework */; };
 		1295DBCE1CC0F98F003F27AB /* renderer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1295DBCD1CC0F98F003F27AB /* renderer.mm */; };
 		1295DBD01CC0FA77003F27AB /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1295DBCF1CC0FA77003F27AB /* AppKit.framework */; };
+		12A15F5F1CD390E700BEDD06 /* nv_dds.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12A15F5B1CD390E700BEDD06 /* nv_dds.cpp */; };
+		12A15F601CD390E700BEDD06 /* nv_dds.h in Headers */ = {isa = PBXBuildFile; fileRef = 12A15F5C1CD390E700BEDD06 /* nv_dds.h */; };
+		12A15F611CD390E700BEDD06 /* tga.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12A15F5D1CD390E700BEDD06 /* tga.cpp */; };
+		12A15F621CD390E700BEDD06 /* tga.h in Headers */ = {isa = PBXBuildFile; fileRef = 12A15F5E1CD390E700BEDD06 /* tga.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		12755D6A1CC8F34300546005 /* nv_dds.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = nv_dds.cpp; path = ../../GL4Renderer/Loaders/nv_dds.cpp; sourceTree = "<group>"; };
-		12755D6B1CC8F34300546005 /* nv_dds.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nv_dds.h; path = ../../GL4Renderer/Loaders/nv_dds.h; sourceTree = "<group>"; };
-		12755D6C1CC8F34300546005 /* tga.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tga.cpp; path = ../../GL4Renderer/Loaders/tga.cpp; sourceTree = "<group>"; };
-		12755D6D1CC8F34300546005 /* tga.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tga.h; path = ../../GL4Renderer/Loaders/tga.h; sourceTree = "<group>"; };
 		1295DB991CC0F4CB003F27AB /* libMacGLRenderer.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libMacGLRenderer.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		1295DB9E1CC0F4CB003F27AB /* MGLRenderer.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MGLRenderer.mm; sourceTree = "<group>"; };
 		1295DBA81CC0F4F1003F27AB /* RArrayBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RArrayBuffer.h; path = ../Include/Renderer/RArrayBuffer.h; sourceTree = "<group>"; };
@@ -57,6 +53,10 @@
 		1295DBCA1CC0F61D003F27AB /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		1295DBCD1CC0F98F003F27AB /* renderer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = renderer.mm; sourceTree = "<group>"; };
 		1295DBCF1CC0FA77003F27AB /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		12A15F5B1CD390E700BEDD06 /* nv_dds.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = nv_dds.cpp; path = ../../GLRenderer/Loaders/nv_dds.cpp; sourceTree = "<group>"; };
+		12A15F5C1CD390E700BEDD06 /* nv_dds.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nv_dds.h; path = ../../GLRenderer/Loaders/nv_dds.h; sourceTree = "<group>"; };
+		12A15F5D1CD390E700BEDD06 /* tga.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tga.cpp; path = ../../GLRenderer/Loaders/tga.cpp; sourceTree = "<group>"; };
+		12A15F5E1CD390E700BEDD06 /* tga.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tga.h; path = ../../GLRenderer/Loaders/tga.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,10 +75,10 @@
 		12822AA21CC1845E00EE5D0A /* Loaders */ = {
 			isa = PBXGroup;
 			children = (
-				12755D6A1CC8F34300546005 /* nv_dds.cpp */,
-				12755D6B1CC8F34300546005 /* nv_dds.h */,
-				12755D6C1CC8F34300546005 /* tga.cpp */,
-				12755D6D1CC8F34300546005 /* tga.h */,
+				12A15F5B1CD390E700BEDD06 /* nv_dds.cpp */,
+				12A15F5C1CD390E700BEDD06 /* nv_dds.h */,
+				12A15F5D1CD390E700BEDD06 /* tga.cpp */,
+				12A15F5E1CD390E700BEDD06 /* tga.h */,
 			);
 			name = Loaders;
 			sourceTree = "<group>";
@@ -168,12 +168,12 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				12755D711CC8F34300546005 /* tga.h in Headers */,
+				12A15F621CD390E700BEDD06 /* tga.h in Headers */,
 				1295DBAE1CC0F4F1003F27AB /* RArrayBuffer.h in Headers */,
 				1295DBB51CC0F4F7003F27AB /* Platform.h in Headers */,
 				1295DBB01CC0F4F1003F27AB /* Renderer.h in Headers */,
 				1295DBAF1CC0F4F1003F27AB /* RBuffer.h in Headers */,
-				12755D6F1CC8F34300546005 /* nv_dds.h in Headers */,
+				12A15F601CD390E700BEDD06 /* nv_dds.h in Headers */,
 				1295DBB21CC0F4F1003F27AB /* RShader.h in Headers */,
 				1295DBB11CC0F4F1003F27AB /* RFramebuffer.h in Headers */,
 				1295DBB31CC0F4F1003F27AB /* RTexture.h in Headers */,
@@ -237,9 +237,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				1295DBC21CC0F58E003F27AB /* MGLFramebuffer.mm in Sources */,
-				12755D6E1CC8F34300546005 /* nv_dds.cpp in Sources */,
+				12A15F5F1CD390E700BEDD06 /* nv_dds.cpp in Sources */,
 				1295DBBF1CC0F582003F27AB /* MGLBuffer.mm in Sources */,
-				12755D701CC8F34300546005 /* tga.cpp in Sources */,
+				12A15F611CD390E700BEDD06 /* tga.cpp in Sources */,
 				1295DBC91CC0F5B2003F27AB /* MGLTexture.mm in Sources */,
 				1295DBBD1CC0F575003F27AB /* MGLArrayBuffer.mm in Sources */,
 				1295DBC61CC0F598003F27AB /* MGLShader.mm in Sources */,
@@ -353,7 +353,7 @@
 				GCC_UNROLL_LOOPS = YES;
 				HEADER_SEARCH_PATHS = (
 					"\"$(SRCROOT)/../Include\"",
-					"\"$(SRCROOT)/../GL4Renderer\"",
+					"\"$(SRCROOT)/../GLRenderer\"",
 				);
 				INSTALL_PATH = "@rpath";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
@@ -374,7 +374,7 @@
 				GCC_UNROLL_LOOPS = YES;
 				HEADER_SEARCH_PATHS = (
 					"\"$(SRCROOT)/../Include\"",
-					"\"$(SRCROOT)/../GL4Renderer\"",
+					"\"$(SRCROOT)/../GLRenderer\"",
 				);
 				INSTALL_PATH = "@rpath";
 				LLVM_LTO = YES;

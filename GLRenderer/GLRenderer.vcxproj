@@ -13,7 +13,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{3DD5A636-6EC2-4CE3-82A8-E43068C321C4}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>GL4Renderer</RootNamespace>
+    <RootNamespace>GLRenderer</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -123,7 +123,7 @@
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="GL4Renderer.rc" />
+    <ResourceCompile Include="GLRenderer.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -19,8 +19,8 @@ file(GLOB EngineSourceFiles "Engine/*.cpp"
 	"Engine/Platform/Compat/*.cpp"
 )
 file(GLOB TestGameSourceFiles "TestGame/*.cpp")
-file(GLOB RendererSourceFiles "GL4Renderer/*.cpp"
-	"GL4Renderer/Loaders/*.cpp"
+file(GLOB RendererSourceFiles "GLRenderer/*.cpp"
+	"GLRenderer/Loaders/*.cpp"
 )
 
 set(OPENAL_LIB openal)
@@ -87,18 +87,18 @@ endif(PLATFORM_UNIX)
 if(PLATFORM_X11)
 	file(GLOB PlatformSourceFiles "Engine/Platform/X11/*.cpp")
 	file(GLOB ExecutableSourceFile "Launcher/X11/*.cpp")
-	file(GLOB RendererPlatformSourceFiles "GL4Renderer/Platform/X11/*.cpp")
+	file(GLOB RendererPlatformSourceFiles "GLRenderer/Platform/X11/*.cpp")
 	set(PLATFORM_LIBS "X11")
 	add_definitions(-DPLATFORM_X11)
 endif(PLATFORM_X11)
 
-# OpenGL 4.5 Renderer Library
+# OpenGL Renderer Library
 if(NOT PLATFORM_MAC)
-	add_library(GL4Renderer SHARED ${RendererSourceFiles} ${RendererPlatformSourceFiles})
-	target_compile_options(GL4Renderer PRIVATE -std=c++11)
-	target_compile_options(GL4Renderer PRIVATE -fPIC)
-	target_compile_options(GL4Renderer PRIVATE -frtti)
-	target_link_libraries(GL4Renderer GL X11)
+	add_library(GLRenderer SHARED ${RendererSourceFiles} ${RendererPlatformSourceFiles})
+	target_compile_options(GLRenderer PRIVATE -std=c++11)
+	target_compile_options(GLRenderer PRIVATE -fPIC)
+	target_compile_options(GLRenderer PRIVATE -frtti)
+	target_link_libraries(GLRenderer GL X11)
 endif(NOT PLATFORM_MAC)
 
 # Engine Library
