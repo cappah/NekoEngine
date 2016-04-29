@@ -62,6 +62,19 @@ GLenum GL_AttribTypes[10]
 	GL_FIXED
 };
 
+GLBuffer::GLBuffer(BufferType type)
+	: RBuffer(type)
+{
+	_dynamic = false;
+	_persistent = false;
+	_numBuffers = 1;
+	_syncRanges = nullptr;
+	_target = GL_BufferTargets[(int)type];
+	_size = 0;
+	_totalSize = 0;
+	_currentBuffer = 0;
+}
+
 GLBuffer::GLBuffer(BufferType type, bool dynamic, bool persistent)
 	: RBuffer(type)
 {
@@ -239,7 +252,7 @@ GLBuffer::~GLBuffer()
 // Non-DSA variants
 
 GLBuffer_NoDSA::GLBuffer_NoDSA(BufferType type, bool dynamic, bool persistent)
-: RBuffer(type)
+	: GLBuffer(type)
 {
 	_dynamic = dynamic;
 	_persistent = persistent;
@@ -265,7 +278,7 @@ void GLBuffer_NoDSA::SetStorage(size_t size, void* data)
 		flags = GL_DYNAMIC_STORAGE_BIT;
 	
 	GLint buff;
-	GL_CHECK(glGetIntegerv(GL_GetBufferTargets[(int)_type], &buff));
+	GL_CHECK(glGetIntegerv(GL_BufferTargets[(int)_type], &buff));
 	
 	GL_CHECK(glBindBuffer(_target, _id));
 	
@@ -302,7 +315,7 @@ void GLBuffer_NoDSA::UpdateData(size_t offset, size_t size, void* data)
 	else
 	{
 		GLint buff;
-		GL_CHECK(glGetIntegerv(GL_GetBufferTargets[(int)_type], &buff));
+		GL_CHECK(glGetIntegerv(GL_BufferTargets[(int)_type], &buff));
 		
 		GL_CHECK(glBindBuffer(_target, _id));
 		GL_CHECK(glBufferSubData(_target, offset, size, data));

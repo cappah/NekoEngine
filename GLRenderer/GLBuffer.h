@@ -52,6 +52,7 @@ class GLBuffer :
 	public RBuffer
 {
 public:
+	GLBuffer(BufferType type);
 	GLBuffer(BufferType type, bool dynamic, bool persistent);
 
 	virtual void Bind(int location) override;
@@ -90,8 +91,6 @@ public:
 	
 	virtual void SetStorage(size_t size, void* data) override;
 	virtual void UpdateData(size_t offset, size_t size, void* data) override;
-	
-	virtual void SetNumBuffers(int n) override;
 	
 	virtual ~GLBuffer_NoDSA();
 };
