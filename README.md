@@ -12,9 +12,7 @@ For the features see the [Roadmap](https://github.com/nalexandru/NekoEngine/wiki
 
 **Requirements:**
 
-       A PC with a modern graphics card capable of OpenGL 4.5  (for Windows & *nix)
-       - or -
-       A Mac with OpenGL 4.1 support (anything from 2011 onwards should work; only if Mac OS, otherwise see above)
+       A PC or Mac with a graphics card capable of OpenGL 4.1
 
 **The engine has been tested on the following operating systems:**
 
