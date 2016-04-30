@@ -28,20 +28,6 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "1295DB981CC0F4CB003F27AB"
-               BuildableName = "libMacGLRenderer.dylib"
-               BlueprintName = "MacGLRenderer"
-               ReferencedContainer = "container:MacGLRenderer/MacGLRenderer.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "127011EE1CC313D7001840A7"
                BuildableName = "libTestGame.dylib"
                BlueprintName = "TestGame"
