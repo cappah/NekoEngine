@@ -122,18 +122,19 @@ bool GLRenderer::Initialize(PlatformWindowType hWnd, bool debug)
 	std::vector<int> attribList;
 	attribList.push_back(WGL_CONTEXT_PROFILE_MASK_ARB);
 	attribList.push_back(WGL_CONTEXT_CORE_PROFILE_BIT_ARB);
-	attribList.push_back(WGL_CONTEXT_FLAGS_ARB);
-
-	if(debug)
-		attribList.push_back(WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB | WGL_CONTEXT_DEBUG_BIT_ARB);
-	else
-		attribList.push_back(WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB);
+	
+	if (debug)
+	{
+		attribList.push_back(WGL_CONTEXT_FLAGS_ARB);
+		attribList.push_back(WGL_CONTEXT_DEBUG_BIT_ARB);
+	}
 
 	attribList.push_back(0);
 
 	_ctx = wglCreateContextAttribsARB(_dc, nullptr, attribList.data());
 
 	if (!_ctx)
+
 		return false;
 
 	wglMakeCurrent(_dc, _ctx);
