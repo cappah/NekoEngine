@@ -120,10 +120,6 @@ bool GLRenderer::Initialize(PlatformWindowType hWnd, bool debug)
 	}
 
 	std::vector<int> attribList;
-	attribList.push_back(WGL_CONTEXT_MAJOR_VERSION_ARB);
-	attribList.push_back(4);
-	attribList.push_back(WGL_CONTEXT_MINOR_VERSION_ARB);
-	attribList.push_back(5);
 	attribList.push_back(WGL_CONTEXT_PROFILE_MASK_ARB);
 	attribList.push_back(WGL_CONTEXT_CORE_PROFILE_BIT_ARB);
 	attribList.push_back(WGL_CONTEXT_FLAGS_ARB);

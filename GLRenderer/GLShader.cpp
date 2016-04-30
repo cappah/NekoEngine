@@ -198,8 +198,11 @@ bool GLShader::LoadFromSource(ShaderType type, int count, const char **source, i
 	if (!src)
 		return false;
 
-	src[0] = "#version 410 core\n";
-	
+	if (_haveExplicitUniforms)
+		src[0] = "#version 410 core\n#extension GL_ARB_explicit_uniform_location : require\n";
+	else
+		src[0] = "#version 410 core\n";
+
 	if(_haveBindlessTexture)
 	{
 		src[1] = "#extension GL_ARB_bindless_texture : require\n\

@@ -132,10 +132,6 @@ bool GLRenderer::Initialize(PlatformWindowType hWnd, bool debug)
 	}
 
 	std::vector<int> context_attribs;
-	context_attribs.push_back(GLX_CONTEXT_MAJOR_VERSION_ARB);
-	context_attribs.push_back(4);
-	context_attribs.push_back(GLX_CONTEXT_MINOR_VERSION_ARB);
-	context_attribs.push_back(5);
 	context_attribs.push_back(GLX_CONTEXT_PROFILE_MASK_ARB);
 	context_attribs.push_back(GLX_CONTEXT_CORE_PROFILE_BIT_ARB);
 	context_attribs.push_back(GLX_CONTEXT_FLAGS_ARB);
