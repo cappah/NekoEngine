@@ -3,7 +3,7 @@
  * GLArrayBuffer.cpp
  * Author: Alexandru Naiman
  *
- * OpenGL 4.5 Renderer Implementation
+ * OpenGL Renderer Implementation
  *
  * ----------------------------------------------------------------------------------
  *
