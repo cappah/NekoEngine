@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		120718C01CCFD0BA001A1EEA /* Engine_Low.ini in Resources */ = {isa = PBXBuildFile; fileRef = 120718BF1CCFD0BA001A1EEA /* Engine_Low.ini */; };
+		12A15FB61CD4460F00BEDD06 /* libGLRenderer.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 12A15FB31CD445FE00BEDD06 /* libGLRenderer.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		12B748301CC6E7C600825D36 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 12B7482F1CC6E7C600825D36 /* Assets.xcassets */; };
 		12B748381CC6E80100825D36 /* launcher.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1270119A1CC31326001840A7 /* launcher.mm */; };
 		12B7483B1CC6E81B00825D36 /* libEngine.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 127012531CC315FD001840A7 /* libEngine.dylib */; };
@@ -25,6 +26,20 @@
 			proxyType = 2;
 			remoteGlobalIDString = 12822AF11CC1AD4300EE5D0A;
 			remoteInfo = Engine;
+		};
+		12A15FB21CD445FE00BEDD06 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 12A15FAE1CD445FE00BEDD06 /* GLRenderer.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 12A15F701CD40DC300BEDD06;
+			remoteInfo = GLRenderer;
+		};
+		12A15FB41CD4460100BEDD06 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 12A15FAE1CD445FE00BEDD06 /* GLRenderer.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 12A15F6F1CD40DC300BEDD06;
+			remoteInfo = GLRenderer;
 		};
 		12B748391CC6E81400825D36 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -70,6 +85,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 6;
 			files = (
+				12A15FB61CD4460F00BEDD06 /* libGLRenderer.dylib in CopyFiles */,
 				12B748521CC6EA4E00825D36 /* libMacGLRenderer.dylib in CopyFiles */,
 				12B748531CC6EA4E00825D36 /* libTestGame.dylib in CopyFiles */,
 				12B7483D1CC6E97200825D36 /* libEngine.dylib in CopyFiles */,
@@ -139,6 +155,7 @@
 		127011DE1CC31346001840A7 /* VFSArchive.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VFSArchive.h; sourceTree = "<group>"; };
 		127011DF1CC31346001840A7 /* VFSFile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VFSFile.h; sourceTree = "<group>"; };
 		1270124E1CC315FD001840A7 /* Engine.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Engine.xcodeproj; path = ../Engine/Engine.xcodeproj; sourceTree = "<group>"; };
+		12A15FAE1CD445FE00BEDD06 /* GLRenderer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GLRenderer.xcodeproj; path = ../GLRenderer/GLRenderer.xcodeproj; sourceTree = "<group>"; };
 		12B748271CC6E7C600825D36 /* Launcher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Launcher.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		12B7482F1CC6E7C600825D36 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		12B748341CC6E7C600825D36 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -166,6 +183,7 @@
 				1270124E1CC315FD001840A7 /* Engine.xcodeproj */,
 				12B748421CC6EA3300825D36 /* MacGLRenderer.xcodeproj */,
 				12B7484A1CC6EA4000825D36 /* TestGame.xcodeproj */,
+				12A15FAE1CD445FE00BEDD06 /* GLRenderer.xcodeproj */,
 				127011981CC31312001840A7 /* Include */,
 				127011991CC31317001840A7 /* Source */,
 				12B748281CC6E7C600825D36 /* Launcher */,
@@ -357,6 +375,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		12A15FAF1CD445FE00BEDD06 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				12A15FB31CD445FE00BEDD06 /* libGLRenderer.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		12B748281CC6E7C600825D36 /* Launcher */ = {
 			isa = PBXGroup;
 			children = (
@@ -400,6 +426,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				12A15FB51CD4460100BEDD06 /* PBXTargetDependency */,
 				12B748511CC6EA4400825D36 /* PBXTargetDependency */,
 				12B748491CC6EA3A00825D36 /* PBXTargetDependency */,
 				12B7483A1CC6E81400825D36 /* PBXTargetDependency */,
@@ -440,6 +467,10 @@
 					ProjectRef = 1270124E1CC315FD001840A7 /* Engine.xcodeproj */;
 				},
 				{
+					ProductGroup = 12A15FAF1CD445FE00BEDD06 /* Products */;
+					ProjectRef = 12A15FAE1CD445FE00BEDD06 /* GLRenderer.xcodeproj */;
+				},
+				{
 					ProductGroup = 12B748431CC6EA3300825D36 /* Products */;
 					ProjectRef = 12B748421CC6EA3300825D36 /* MacGLRenderer.xcodeproj */;
 				},
@@ -461,6 +492,13 @@
 			fileType = "compiled.mach-o.dylib";
 			path = libEngine.dylib;
 			remoteRef = 127012521CC315FD001840A7 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		12A15FB31CD445FE00BEDD06 /* libGLRenderer.dylib */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.dylib";
+			path = libGLRenderer.dylib;
+			remoteRef = 12A15FB21CD445FE00BEDD06 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		12B748471CC6EA3300825D36 /* libMacGLRenderer.dylib */ = {
@@ -505,6 +543,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		12A15FB51CD4460100BEDD06 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = GLRenderer;
+			targetProxy = 12A15FB41CD4460100BEDD06 /* PBXContainerItemProxy */;
+		};
 		12B7483A1CC6E81400825D36 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = Engine;

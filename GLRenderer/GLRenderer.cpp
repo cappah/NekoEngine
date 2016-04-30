@@ -131,6 +131,7 @@ extern GLenum GL_TexType[];
 RendererDebugLogProc _debugLogFunc = nullptr;
 RFramebuffer* GLRenderer::_boundFramebuffer = nullptr;
 std::vector<ShaderDefine> GLRenderer::_shaderDefines;
+GLShader* GLRenderer::_activeShader;
 
 GLRenderer::GLRenderer()
 {
@@ -301,16 +302,46 @@ void GLRenderer::SetColorMask(bool r, bool g, bool b, bool a)
 
 void GLRenderer::DrawArrays(PolygonMode mode, int32_t first, int32_t count)
 {
+	_activeShader->EnableTextures();
+	
+	if(!_haveDSA)
+	{
+		if(_boundFramebuffer)
+			_boundFramebuffer->Bind(FB_DRAW);
+		else
+		{ GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, 0)); }
+	}
+	
 	GL_CHECK(glDrawArrays(GL_DrawModes[(int)mode], first, (GLsizei)count));
 }
 
 void GLRenderer::DrawElements(PolygonMode mode, int32_t count, ElementType type, const void *indices)
 {
+	_activeShader->EnableTextures();
+	
+	if(!_haveDSA)
+	{
+		if(_boundFramebuffer)
+			_boundFramebuffer->Bind(FB_DRAW);
+		else
+		{ GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, 0)); }
+	}
+	
 	GL_CHECK(glDrawElements(GL_DrawModes[(int)mode], (GLsizei)count, GL_ElementType[(int)type], indices));
 }
 
 void GLRenderer::DrawElementsBaseVertex(PolygonMode mode, int32_t count, ElementType type, const void *indices, int32_t baseVertex)
 {
+	_activeShader->EnableTextures();
+	
+	if(!_haveDSA)
+	{
+		if(_boundFramebuffer)
+			_boundFramebuffer->Bind(FB_DRAW);
+		else
+		{ GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, 0)); }
+	}
+	
 	GL_CHECK(glDrawElementsBaseVertex(GL_DrawModes[(int)mode], (GLsizei)count, GL_ElementType[(int)type], indices, baseVertex));
 }
 
@@ -333,6 +364,7 @@ void GLRenderer::Clear(uint32_t mask)
 void GLRenderer::BindDefaultFramebuffer()
 {
 	GL_CHECK(glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0));
+	_boundFramebuffer = nullptr;
 }
 
 RFramebuffer* GLRenderer::GetBoundFramebuffer()
@@ -392,12 +424,18 @@ RShader* GLRenderer::CreateShader()
 
 RTexture* GLRenderer::CreateTexture(TextureType type)
 {
-	return (RTexture *)new GLTexture(type);
+	if(_haveDSA)
+		return (RTexture *)new GLTexture(type);
+	else
+		return (RTexture *)new GLTexture_NoDSA(type);
 }
 
 RFramebuffer* GLRenderer::CreateFramebuffer(int width, int height)
 {
-	return (RFramebuffer *)new GLFramebuffer(width, height);
+	if(_haveDSA)
+		return (RFramebuffer *)new GLFramebuffer(width, height);
+	else
+		return (RFramebuffer *)new GLFramebuffer_NoDSA(width, height);
 }
 
 RArrayBuffer* GLRenderer::CreateArrayBuffer()

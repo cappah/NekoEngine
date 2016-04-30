@@ -28,6 +28,7 @@
 		12A15FA61CD40EC200BEDD06 /* Mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 12A15FA51CD40EC200BEDD06 /* Mac.mm */; };
 		12A15FA81CD4191600BEDD06 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12A15FA71CD4191600BEDD06 /* Cocoa.framework */; };
 		12A15FAA1CD4191A00BEDD06 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12A15FA91CD4191A00BEDD06 /* OpenGL.framework */; };
+		12A15FAD1CD4449800BEDD06 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12A15FAC1CD4449800BEDD06 /* AppKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -53,6 +54,15 @@
 		12A15FA51CD40EC200BEDD06 /* Mac.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Mac.mm; path = Platform/Mac/Mac.mm; sourceTree = SOURCE_ROOT; };
 		12A15FA71CD4191600BEDD06 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		12A15FA91CD4191A00BEDD06 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
+		12A15FAC1CD4449800BEDD06 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		12A15FC11CD44DFE00BEDD06 /* RArrayBuffer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RArrayBuffer.h; sourceTree = "<group>"; };
+		12A15FC21CD44DFE00BEDD06 /* RBuffer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RBuffer.h; sourceTree = "<group>"; };
+		12A15FC31CD44DFE00BEDD06 /* Renderer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Renderer.h; sourceTree = "<group>"; };
+		12A15FC41CD44DFE00BEDD06 /* RFramebuffer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RFramebuffer.h; sourceTree = "<group>"; };
+		12A15FC51CD44DFE00BEDD06 /* RShader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RShader.h; sourceTree = "<group>"; };
+		12A15FC61CD44DFE00BEDD06 /* RTexture.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RTexture.h; sourceTree = "<group>"; };
+		12A15FCA1CD44E1200BEDD06 /* Compat.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Compat.h; sourceTree = "<group>"; };
+		12A15FCB1CD44E1200BEDD06 /* Platform.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Platform.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +70,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				12A15FAD1CD4449800BEDD06 /* AppKit.framework in Frameworks */,
 				12A15FAA1CD4191A00BEDD06 /* OpenGL.framework in Frameworks */,
 				12A15FA81CD4191600BEDD06 /* Cocoa.framework in Frameworks */,
 			);
@@ -71,6 +82,7 @@
 		12A15F671CD40DC300BEDD06 = {
 			isa = PBXGroup;
 			children = (
+				12A15FC71CD44E0200BEDD06 /* Include */,
 				12A15F721CD40DC300BEDD06 /* GLRenderer */,
 				12A15FAB1CD4191D00BEDD06 /* Frameworks */,
 				12A15F711CD40DC300BEDD06 /* Products */,
@@ -91,17 +103,17 @@
 				12A15FA31CD40E7200BEDD06 /* Platform */,
 				12A15F9A1CD40E5E00BEDD06 /* Loaders */,
 				12A15F861CD40E5600BEDD06 /* GLArrayBuffer.h */,
-				12A15F871CD40E5600BEDD06 /* GLBuffer.cpp */,
 				12A15F881CD40E5600BEDD06 /* GLBuffer.h */,
-				12A15F891CD40E5600BEDD06 /* GLFramebuffer.cpp */,
+				12A15F811CD40E4B00BEDD06 /* GLRenderer.h */,
 				12A15F8A1CD40E5600BEDD06 /* GLFramebuffer.h */,
-				12A15F8B1CD40E5600BEDD06 /* GLRenderer.cpp */,
-				12A15F8C1CD40E5600BEDD06 /* GLShader.cpp */,
 				12A15F8D1CD40E5600BEDD06 /* GLShader.h */,
-				12A15F8E1CD40E5600BEDD06 /* GLTexture.cpp */,
 				12A15F8F1CD40E5600BEDD06 /* GLTexture.h */,
 				12A15F801CD40E4B00BEDD06 /* GLArrayBuffer.cpp */,
-				12A15F811CD40E4B00BEDD06 /* GLRenderer.h */,
+				12A15F871CD40E5600BEDD06 /* GLBuffer.cpp */,
+				12A15F8B1CD40E5600BEDD06 /* GLRenderer.cpp */,
+				12A15F891CD40E5600BEDD06 /* GLFramebuffer.cpp */,
+				12A15F8C1CD40E5600BEDD06 /* GLShader.cpp */,
+				12A15F8E1CD40E5600BEDD06 /* GLTexture.cpp */,
 				12A15F821CD40E4B00BEDD06 /* renderer.cpp */,
 				12A15F7E1CD40E4100BEDD06 /* debug.cpp */,
 			);
@@ -138,10 +150,44 @@
 		12A15FAB1CD4191D00BEDD06 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				12A15FAC1CD4449800BEDD06 /* AppKit.framework */,
 				12A15FA91CD4191A00BEDD06 /* OpenGL.framework */,
 				12A15FA71CD4191600BEDD06 /* Cocoa.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		12A15FC01CD44DFE00BEDD06 /* Renderer */ = {
+			isa = PBXGroup;
+			children = (
+				12A15FC11CD44DFE00BEDD06 /* RArrayBuffer.h */,
+				12A15FC21CD44DFE00BEDD06 /* RBuffer.h */,
+				12A15FC31CD44DFE00BEDD06 /* Renderer.h */,
+				12A15FC41CD44DFE00BEDD06 /* RFramebuffer.h */,
+				12A15FC51CD44DFE00BEDD06 /* RShader.h */,
+				12A15FC61CD44DFE00BEDD06 /* RTexture.h */,
+			);
+			name = Renderer;
+			path = ../Include/Renderer;
+			sourceTree = "<group>";
+		};
+		12A15FC71CD44E0200BEDD06 /* Include */ = {
+			isa = PBXGroup;
+			children = (
+				12A15FC91CD44E1200BEDD06 /* Platform */,
+				12A15FC01CD44DFE00BEDD06 /* Renderer */,
+			);
+			name = Include;
+			sourceTree = "<group>";
+		};
+		12A15FC91CD44E1200BEDD06 /* Platform */ = {
+			isa = PBXGroup;
+			children = (
+				12A15FCA1CD44E1200BEDD06 /* Compat.h */,
+				12A15FCB1CD44E1200BEDD06 /* Platform.h */,
+			);
+			name = Platform;
+			path = ../Include/Platform;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -322,19 +368,24 @@
 				CLANG_ANALYZER_SECURITY_FLOATLOOPCOUNTER = YES;
 				CLANG_ANALYZER_SECURITY_INSECUREAPI_RAND = YES;
 				CLANG_ANALYZER_SECURITY_INSECUREAPI_STRCPY = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				DYLIB_COMPATIBILITY_VERSION = 77;
+				DYLIB_CURRENT_VERSION = 77;
 				EXECUTABLE_PREFIX = lib;
 				GCC_C_LANGUAGE_STANDARD = c11;
 				GCC_ENABLE_CPP_EXCEPTIONS = YES;
 				GCC_ENABLE_CPP_RTTI = YES;
 				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_UNROLL_LOOPS = YES;
 				HEADER_SEARCH_PATHS = (
 					/usr/local/include,
 					"\"$(SRCROOT)/../Include\"",
 				);
+				INSTALL_PATH = "@rpath";
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
 			};
 			name = Debug;
 		};
@@ -344,19 +395,27 @@
 				CLANG_ANALYZER_SECURITY_FLOATLOOPCOUNTER = YES;
 				CLANG_ANALYZER_SECURITY_INSECUREAPI_RAND = YES;
 				CLANG_ANALYZER_SECURITY_INSECUREAPI_STRCPY = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				CLANG_USE_OPTIMIZATION_PROFILE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 77;
+				DYLIB_CURRENT_VERSION = 77;
 				EXECUTABLE_PREFIX = lib;
 				GCC_C_LANGUAGE_STANDARD = c11;
 				GCC_ENABLE_CPP_EXCEPTIONS = YES;
 				GCC_ENABLE_CPP_RTTI = YES;
 				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
+				GCC_OPTIMIZATION_LEVEL = fast;
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_UNROLL_LOOPS = YES;
 				HEADER_SEARCH_PATHS = (
 					/usr/local/include,
 					"\"$(SRCROOT)/../Include\"",
 				);
+				INSTALL_PATH = "@rpath";
+				LLVM_LTO = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
 			};
 			name = Release;
 		};

@@ -151,6 +151,11 @@ GLTexture::GLTexture(TextureType type, bool create)
 	GL_CHECK(glCreateTextures(GL_TexTarget[(int)type], 1, &_id));
 }
 
+void GLTexture::Bind()
+{
+	GL_CHECK(glBindTexture(GL_TexTarget[(int)_type], _id));
+}
+
 void GLTexture::MakeResident()
 {
 	GL_CHECK(_handle = glGetTextureHandleARB(_id));

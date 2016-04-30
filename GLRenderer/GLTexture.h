@@ -56,6 +56,8 @@ class GLTexture :
 public:
 	GLTexture(TextureType type, bool create = true);
 
+	void Bind();
+	
 	GLuint GetId() { return _id; }
 	GLuint64 GetHandle() { return _handle; }
 	bool IsResident() { return _resident; }

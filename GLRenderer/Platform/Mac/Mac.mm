@@ -78,7 +78,6 @@ void GLRenderer::SetSwapInterval(int swapInterval)
 
 void GLRenderer::SwapBuffers()
 {
-	[_ctx makeCurrentContext];
 	[_ctx flushBuffer];
 }
 

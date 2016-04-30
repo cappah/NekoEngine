@@ -40,6 +40,8 @@
 
 #include <Renderer/RShader.h>
 
+#include <unordered_map>
+
 #include "GLBuffer.h"
 
 #ifdef __APPLE__
@@ -58,14 +60,20 @@ typedef struct GL_UNIF_BUF
 	int32_t index;
 } GLUniformBuffer;
 
+typedef struct UNIFORM_INFO
+{
+	std::string location;
+	std::string name;
+} UniformInfo;
+
 class GLShader :
 	public RShader
 {
 public:
 	GLShader();
 
-	virtual void Enable() override { glUseProgram(_program); }
-	virtual void Disable() override { glUseProgram(0); }
+	virtual void Enable() override;
+	virtual void Disable() override;
 
 	virtual void BindUniformBuffers() override;
 
@@ -83,6 +91,8 @@ public:
 	virtual bool LoadFromBinary(const char *file) override;
 
 	virtual bool Link() override;
+	
+	void EnableTextures();
 
 	virtual ~GLShader();
 
@@ -94,4 +104,10 @@ private:
 	uint8_t _vsNumBuffers;
 	uint8_t _fsNumBuffers;
 	uint8_t _nextBinding;
+	bool _haveExplicitUniforms, _haveBindlessTexture, _haveSubroutines;
+	std::vector<UniformInfo> _uniformInfo;
+	std::unordered_map<unsigned int, class GLTexture*> _textures;
+	std::unordered_map<int, int> _uniformLocations;
+	
+	char *_ExtractUniforms(const char *shaderSource);
 };

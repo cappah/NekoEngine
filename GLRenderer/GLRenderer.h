@@ -221,6 +221,7 @@ public:
 	// Internal functions
 	static void SetBoundFramebuffer(RFramebuffer* fbo) { _boundFramebuffer = fbo; }
 	static std::vector<ShaderDefine>& GetShaderDefines() { return _shaderDefines; }
+	static void SetActiveShader(class GLShader *shader) { _activeShader = shader; }
 	static bool HasExtension(const char* extension);
 	
 private:
@@ -230,6 +231,7 @@ private:
 	bool _haveDSA;
 	static RFramebuffer* _boundFramebuffer;
 	static std::vector<ShaderDefine> _shaderDefines;
+	static class GLShader* _activeShader;
 	
 	void _DestroyContext();
 	void _CheckExtensions();

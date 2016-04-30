@@ -59,7 +59,7 @@ int main(int argc, char *argv[])
 			args.append(" ");
 		}
 		
-		args.append("--renderer=libMacGLRenderer.dylib --game=libTestGame.dylib ");
+		args.append("--renderer=libGLRenderer.dylib --game=libTestGame.dylib ");
 		
 		args.append("--data=");
 		args.append([[[NSBundle mainBundle] resourcePath] UTF8String]);
