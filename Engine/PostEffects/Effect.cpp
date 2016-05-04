@@ -61,7 +61,8 @@ Effect::Effect(const char* name) noexcept :
 int Effect::Load(RBuffer *sharedUbo)
 {
 	// create ubo
-	_effectUbo = Engine::GetRenderer()->CreateBuffer(BufferType::Uniform, true, false);
+	if((_effectUbo = Engine::GetRenderer()->CreateBuffer(BufferType::Uniform, true, false)) == nullptr)
+		return ENGINE_OUT_OF_RESOURCES;
 	_effectUbo->SetStorage(sizeof(vec4), value_ptr(_effectData));
 
 	// load shaders
@@ -70,7 +71,7 @@ int Effect::Load(RBuffer *sharedUbo)
 		Shader *shader = (Shader *)ResourceManager::GetResource(shaderId, ResourceType::RES_SHADER);
 
 		if (!shader)
-			return ENGINE_FAIL;
+			return ENGINE_INVALID_RES;
 
 		shader->GetRShader()->FSUniformBlockBinding(0, "PPSharedData");
 		shader->GetRShader()->FSUniformBlockBinding(1, "PPEffectData");

@@ -58,7 +58,7 @@ Terrain::Terrain() noexcept
 {
 }
 
-void Terrain::GenerateTerrain() noexcept
+bool Terrain::_GenerateTerrain() noexcept
 {
 	vector<uint32_t> indices;
 	_uvStep = 1.f / (float)_numCells;
@@ -100,15 +100,19 @@ void Terrain::GenerateTerrain() noexcept
 		}
 	}
 
-	_mesh = new StaticMesh(nullptr);
+	if((_mesh = new StaticMesh(nullptr)) == nullptr)
+		return false;
 	_mesh->LoadDynamic(_terrainVertices, indices);
 
 	indices.clear();
+	
+	return true;
 }
 
 int Terrain::Load()
 {
-	GenerateTerrain();
+	if(!_GenerateTerrain())
+		return ENGINE_OUT_OF_RESOURCES;
 
 	int ret = Object::Load();
 

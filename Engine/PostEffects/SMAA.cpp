@@ -61,13 +61,15 @@ int SMAA::Load(RBuffer *sharedUbo)
 	if (ret != ENGINE_OK)
 		return ret;
 
-	_textures[SMAA_TEX_AREA] = Engine::GetRenderer()->CreateTexture(TextureType::Tex2D);
+	if((_textures[SMAA_TEX_AREA] = Engine::GetRenderer()->CreateTexture(TextureType::Tex2D)) == nullptr)
+		return ENGINE_OUT_OF_RESOURCES;
 	_textures[SMAA_TEX_AREA]->SetStorage2D(1, TextureSizedFormat::RG_8UI, AREATEX_WIDTH, AREATEX_HEIGHT);
 	_textures[SMAA_TEX_AREA]->SetImage2D(0, AREATEX_WIDTH, AREATEX_HEIGHT, TextureFormat::RG_INT, TextureInternalType::UnsignedByte, areaTexBytes);
 	_textures[SMAA_TEX_AREA]->SetMinFilter(TextureFilter::Linear);
 	_textures[SMAA_TEX_AREA]->SetMagFilter(TextureFilter::Linear);
 
-	_textures[SMAA_TEX_SEARCH] = Engine::GetRenderer()->CreateTexture(TextureType::Tex2D);
+	if((_textures[SMAA_TEX_SEARCH] = Engine::GetRenderer()->CreateTexture(TextureType::Tex2D)) == nullptr)
+		return ENGINE_OUT_OF_RESOURCES;
 	_textures[SMAA_TEX_SEARCH]->SetStorage2D(1, TextureSizedFormat::R_8UI, SEARCHTEX_WIDTH, SEARCHTEX_HEIGHT);
 	_textures[SMAA_TEX_SEARCH]->SetImage2D(0, SEARCHTEX_WIDTH, SEARCHTEX_HEIGHT, TextureFormat::RED_INT, TextureInternalType::UnsignedByte, searchTexBytes);
 	_textures[SMAA_TEX_SEARCH]->SetMinFilter(TextureFilter::Linear);

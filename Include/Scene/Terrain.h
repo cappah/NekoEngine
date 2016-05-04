@@ -51,8 +51,7 @@ public:
 
 	ENGINE_API void SetCellSize(float cellSize) noexcept { _cellSize = cellSize; }
 	ENGINE_API void SetNumCells(unsigned short numCells) noexcept { _numCells = numCells; }
-
-	ENGINE_API void GenerateTerrain() noexcept;
+	
 	ENGINE_API virtual int Load() override;
 	ENGINE_API virtual void PreDraw(RShader* shader, size_t group) noexcept override;
 	ENGINE_API virtual void Update(float deltaTime) noexcept override;
@@ -65,4 +64,6 @@ protected:
 	float _cellSize;
 	unsigned short _numCells;
 	float _uvStep;
+	
+	bool _GenerateTerrain() noexcept;
 };

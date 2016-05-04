@@ -71,34 +71,46 @@ PlatformWindowType Platform::_activeWindow = nullptr;
 
 PlatformWindowType Platform::CreateWindow(int width, int height, bool fullscreen)
 {
+	NSWindow *hWnd = nil;
+	NSMenu *menuBar = nil, *appMenu = nil;
+	NSMenuItem *appMenuItem = nil, *quitMenuItem = nil;
+	
 	NSApplicationLoad();
 	[NSApplication sharedApplication];
 	[NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
 	
-	_engineAppDelegate = [[EngineAppDelegate alloc] init];
+	if((_engineAppDelegate = [[EngineAppDelegate alloc] init]) == nil)
+	{ DIE("Failed to initialize EngineAppDelegate"); }
 	[[NSApplication sharedApplication] setDelegate:_engineAppDelegate];
 	
-	NSWindow *hWnd;
-	NSMenu *menuBar = [[NSMenu alloc] init];
-	NSMenuItem *appMenuItem = [[NSMenuItem alloc] init];
+	
+	
+	if((menuBar = [[NSMenu alloc] init]) == nil)
+	{ DIE("Failed to create menu"); }
+	if((appMenuItem = [[NSMenuItem alloc] init]) == nil)
+	{ DIE("Failed to create app menu item"); }
 	
 	[menuBar addItem:appMenuItem];
 	[NSApp setMainMenu:menuBar];
 	
-	NSMenu *appMenu = [[NSMenu alloc] init];
-	NSMenuItem *quitMenuItem = [[NSMenuItem alloc] initWithTitle:@"Quit NekoEngine" action:@selector(terminate:) keyEquivalent:@"q"];
+	if((appMenu = [[NSMenu alloc] init]) == nil)
+	{ DIE("Failed to create app menu"); }
+	if((quitMenuItem = [[NSMenuItem alloc] initWithTitle:@"Quit NekoEngine" action:@selector(terminate:) keyEquivalent:@"q"]) == nil)
+	{ DIE("Failed to create quit menu item"); }
 	[appMenu addItem:quitMenuItem];
 	[appMenuItem setSubmenu:appMenu];
 	
 	NSUInteger styleMask = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask | NSResizableWindowMask /*| NSFullScreenWindowMask*/;
 	
-	hWnd = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, width, height) styleMask:styleMask backing:NSBackingStoreBuffered defer:false];
+	if((hWnd = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, width, height) styleMask:styleMask backing:NSBackingStoreBuffered defer:false]) == nil)
+	{ DIE("Failed to create window"); }
 	[hWnd cascadeTopLeftFromPoint:NSMakePoint(20, 20)];
 	[hWnd setTitle:@"NekoEngine"];
 	[hWnd setCollectionBehavior:[hWnd collectionBehavior] | NSWindowCollectionBehaviorFullScreenPrimary];
 	[hWnd makeKeyAndOrderFront:nil];
 	
-	_engineView = [[EngineView alloc] initWithFrame:((NSView *)hWnd.contentView).frame];
+	if((_engineView = [[EngineView alloc] initWithFrame:((NSView *)hWnd.contentView).frame]) == nil)
+	{ DIE("Failed to initialize EngineView"); }
 	[hWnd setContentView:_engineView];
 	[hWnd setInitialFirstResponder:_engineView];
 	[hWnd makeFirstResponder:_engineView];
@@ -108,7 +120,8 @@ PlatformWindowType Platform::CreateWindow(int width, int height, bool fullscreen
 	if(fullscreen)
 		[hWnd toggleFullScreen:nil];
 	
-	_engineApp = [[EngineApp alloc] init];
+	if((_engineApp = [[EngineApp alloc] init]) == nil)
+	{ DIE("Failed to initialize EngineApp"); }
 	
 	return hWnd;
 }
@@ -160,6 +173,8 @@ bool Platform::SetPointerPosition(long x, long y)
 MessageBoxResult Platform::MessageBox(const char* title, const char* message, MessageBoxButtons buttons, MessageBoxIcon icon)
 {
 	NSAlert *alert = [[NSAlert alloc] init];
+	if(!alert)
+	{ DIE("Failed to create NSAlert"); }
 	
 	switch (buttons)
 	{

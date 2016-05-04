@@ -555,8 +555,10 @@ int Scene::Load()
 			Logger::Log(SCENE_MODULE, LOG_WARNING, "Failed to load background music id=%d for scene id=%d", _bgMusic, _id);
 	}
 
-	_sceneVertexBuffer = Engine::GetRenderer()->CreateBuffer(BufferType::Vertex, false, false);
-	_sceneIndexBuffer = Engine::GetRenderer()->CreateBuffer(BufferType::Index, false, false);
+	if((_sceneVertexBuffer = Engine::GetRenderer()->CreateBuffer(BufferType::Vertex, false, false)) == nullptr)
+		return ENGINE_OUT_OF_RESOURCES;
+	if((_sceneIndexBuffer = Engine::GetRenderer()->CreateBuffer(BufferType::Index, false, false)) == nullptr)
+		return ENGINE_OUT_OF_RESOURCES;
 
 	_sceneVertexBuffer->SetStorage(sizeof(Vertex) * _sceneVertices.size(), _sceneVertices.data());
 	_sceneIndexBuffer->SetStorage(sizeof(uint32_t) * _sceneIndices.size(), _sceneIndices.data());
@@ -607,7 +609,8 @@ int Scene::Load()
 	attrib.ptr = (void *)VERTEX_NUMBONES_OFFSET;
 	_sceneVertexBuffer->AddAttribute(attrib);
 
-	_sceneArrayBuffer = Engine::GetRenderer()->CreateArrayBuffer();
+	if((_sceneArrayBuffer = Engine::GetRenderer()->CreateArrayBuffer()) == nullptr)
+		return ENGINE_OUT_OF_RESOURCES;
 	_sceneArrayBuffer->SetVertexBuffer(_sceneVertexBuffer);
 	_sceneArrayBuffer->SetIndexBuffer(_sceneIndexBuffer);
 	_sceneArrayBuffer->CommitBuffers();

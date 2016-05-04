@@ -276,7 +276,8 @@ int AssetLoader::LoadWAV(string &file, ALenum *format, ALvoid **data, ALsizei *s
 	if((*data = (ALvoid *)malloc(wave_data.sub_chunk_2_size)) == NULL)
 	{ ret = ENGINE_FAIL; goto exit; }
 
-	f->Read(*data, 1, wave_data.sub_chunk_2_size);
+	if(f->Read(*data, 1, wave_data.sub_chunk_2_size) != wave_data.sub_chunk_2_size)
+	{ ret = ENGINE_IO_FAIL; goto exit; }
 	
 	*size = wave_data.sub_chunk_2_size;
 	*freq = wave_fmt.sample_rate;

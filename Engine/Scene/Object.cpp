@@ -232,10 +232,18 @@ int Object::Load()
 		return ENGINE_INVALID_RES;
 	}
 
-	_objectUbo = _renderer->CreateBuffer(BufferType::Uniform, true, false);
+	if((_objectUbo = _renderer->CreateBuffer(BufferType::Uniform, true, false)) == nullptr)
+	{
+		Unload();
+		return ENGINE_OUT_OF_RESOURCES;
+	}
 	_objectUbo->SetStorage(sizeof(ObjectBlock), &_objectBlock);
 
-	_matrixUbo = _renderer->CreateBuffer(BufferType::Uniform, true, false);
+	if((_matrixUbo = _renderer->CreateBuffer(BufferType::Uniform, true, false)) == nullptr)
+	{
+		Unload();
+		return ENGINE_OUT_OF_RESOURCES;
+	}
 	_matrixUbo->SetStorage(sizeof(ObjectMatrixBlock), nullptr);
 
 	_loaded = true;
@@ -262,14 +270,12 @@ void Object::Draw(RShader* shader) noexcept
 	if (!_loaded)
 		return;
 
-	Renderer* r = Engine::GetRenderer();
-
-	r->EnableDepthTest(true);
+	_renderer->EnableDepthTest(true);
 
 	_mesh->Bind();
 
 	if (!_materials.size()) // used only for lighting pass
-		_mesh->Draw(r, 0);
+		_mesh->Draw(_renderer, 0);
 	else
 	{
 		Camera *cam = SceneManager::GetActiveScene()->GetSceneCamera();
@@ -288,7 +294,7 @@ void Object::Draw(RShader* shader) noexcept
 			PreDraw(shader, i);
 
 			shader->BindUniformBuffers();
-			_mesh->Draw(r, i);
+			_mesh->Draw(_renderer, i);
 		
 			PostDraw(i);
 		}
@@ -296,7 +302,7 @@ void Object::Draw(RShader* shader) noexcept
 
 	_mesh->Unbind();
 
-	r->EnableDepthTest(false);
+	_renderer->EnableDepthTest(false);
 }
 
 void Object::PostDraw(size_t i) noexcept
