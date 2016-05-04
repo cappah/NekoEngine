@@ -91,6 +91,7 @@
 #define ENGINE_NOT_LOADED		-14
 #define ENGINE_MEM_FAIL			-15
 #define ENGINE_LOAD_GS_FAIL		-16
+#define ENGINE_OUT_OF_RESOURCES	-17
 
 #define KEY_ESCAPE			0x1B
 #define KEY_LEFTARROW			0x25

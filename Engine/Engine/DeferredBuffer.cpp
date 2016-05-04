@@ -81,10 +81,29 @@ int DeferredBuffer::Initialize() noexcept
 		_fboHeight *= 2;
 	}
 	
-	_fbos[GB_FBO_GEOMETRY] = Engine::GetRenderer()->CreateFramebuffer(_fboWidth, _fboHeight);
-	_fbos[GB_FBO_LIGHT] = Engine::GetRenderer()->CreateFramebuffer(_fboWidth, _fboHeight);
-	_fbos[GB_FBO_BRIGHT] = Engine::GetRenderer()->CreateFramebuffer(_fboWidth, _fboHeight);
-	_fbos[GB_FBO_LIGHT_ACCUM] = Engine::GetRenderer()->CreateFramebuffer(_fboWidth, _fboHeight);
+	if((_fbos[GB_FBO_GEOMETRY] = Engine::GetRenderer()->CreateFramebuffer(_fboWidth, _fboHeight)) == nullptr)
+	{
+		Release();
+		return ENGINE_OUT_OF_RESOURCES;
+	}
+	
+	if((_fbos[GB_FBO_LIGHT] = Engine::GetRenderer()->CreateFramebuffer(_fboWidth, _fboHeight)) == nullptr)
+	{
+		Release();
+		return ENGINE_OUT_OF_RESOURCES;
+	}
+	
+	if((_fbos[GB_FBO_BRIGHT] = Engine::GetRenderer()->CreateFramebuffer(_fboWidth, _fboHeight)) == nullptr)
+	{
+		Release();
+		return ENGINE_OUT_OF_RESOURCES;
+	}
+	
+	if((_fbos[GB_FBO_LIGHT_ACCUM] = Engine::GetRenderer()->CreateFramebuffer(_fboWidth, _fboHeight)) == nullptr)
+	{
+		Release();
+		return ENGINE_OUT_OF_RESOURCES;
+	}
 	
 	if (Engine::GetConfiguration().Renderer.Multisampling)
 	{
@@ -102,42 +121,71 @@ int DeferredBuffer::Initialize() noexcept
 	else
 		_samples = 1;
 
-	_GenerateTextures();
+	if(!_GenerateTextures())
+	{
+		Release();
+		return ENGINE_OUT_OF_RESOURCES;
+	}
 
 	if (!_AttachTextures())
+	{
+		Release();
 		return ENGINE_FAIL;
-
+	}
+	
 	DrawAttachment drawAttachments[4] { DrawAttachment::Color0, DrawAttachment::Color1, DrawAttachment::Color2, DrawAttachment::Color3 };
 	_fbos[GB_FBO_GEOMETRY]->SetDrawBuffers(4, drawAttachments);
 
 	if (Engine::GetConfiguration().Renderer.SSAO)
 		_ssao = new SSAO(_fboWidth, _fboHeight);
 
-	_lightSphere = Engine::NewObject("Object");
-
-	if (!_lightSphere)
+	if((_lightSphere = Engine::NewObject("Object")) == nullptr)
+	{
+		Release();
 		return ENGINE_FAIL;
+	}
 
 	_lightSphere->SetMeshId(ResourceManager::GetResourceID("stm_light_sphere", ResourceType::RES_STATIC_MESH), MeshType::Static);
 	_lightSphere->SetId(0xB000B5);
 	_lightSphere->AddMaterialId(OBJ_NO_MATERIAL);
 
 	if (_lightSphere->Load() != ENGINE_OK)
+	{
+		Release();
 		return ENGINE_FAIL;
+	}
 
-	_lightSphere->GetMesh()->CreateBuffers(false);
-
-	_shadow = new ShadowMap(Engine::GetConfiguration().Renderer.ShadowMapSize);
-	if (!_shadow)
+	if(_lightSphere->GetMesh()->CreateBuffers(false) != ENGINE_OK)
+	{
+		Release();
 		return ENGINE_FAIL;
+	}
 
-	_sceneLightUbo = Engine::GetRenderer()->CreateBuffer(BufferType::Uniform, true, false);
+	if((_shadow = new ShadowMap(Engine::GetConfiguration().Renderer.ShadowMapSize)) == nullptr)
+	{
+		Release();
+		return ENGINE_FAIL;
+	}
+
+	if((_sceneLightUbo = Engine::GetRenderer()->CreateBuffer(BufferType::Uniform, true, false)) == nullptr)
+	{
+		Release();
+		return ENGINE_OUT_OF_RESOURCES;
+	}
 	_sceneLightUbo->SetStorage(sizeof(LightSceneData), nullptr);
 
-	_lightUbo = Engine::GetRenderer()->CreateBuffer(BufferType::Uniform, true, false);
+	if((_lightUbo = Engine::GetRenderer()->CreateBuffer(BufferType::Uniform, true, false)) == nullptr)
+	{
+		Release();
+		return ENGINE_OUT_OF_RESOURCES;
+	}
 	_lightUbo->SetStorage(sizeof(LightData), nullptr);
 
-	_lightMatrixUbo = Engine::GetRenderer()->CreateBuffer(BufferType::Uniform, true, false);
+	if((_lightMatrixUbo = Engine::GetRenderer()->CreateBuffer(BufferType::Uniform, true, false)) == nullptr)
+	{
+		Release();
+		return ENGINE_OUT_OF_RESOURCES;
+	}
 	_lightMatrixUbo->SetStorage(sizeof(mat4), nullptr);
 
 	RShader *lightShader = _lightingShader->GetRShader();
@@ -345,7 +393,7 @@ void DeferredBuffer::_Bind() noexcept
 	_fbos[GB_FBO_GEOMETRY]->Bind(FB_DRAW);
 }
 
-void DeferredBuffer::_GenerateTextures() noexcept
+bool DeferredBuffer::_GenerateTextures() noexcept
 {
 	TextureSizedFormat internalFormat = TextureSizedFormat::RGBA_32F;
 
@@ -357,55 +405,89 @@ void DeferredBuffer::_GenerateTextures() noexcept
 	if (r->HasCapability(RendererCapability::MultisampledFramebuffer) && Engine::GetConfiguration().Renderer.Multisampling)
 	{
 		_gbTextures[GB_TEX_POSITION] = r->CreateTexture(TextureType::Tex2DMultisample);
+		if(!_gbTextures[GB_TEX_POSITION])
+			return false;
 		_gbTextures[GB_TEX_POSITION]->SetStorage2DMS(_samples, _fboWidth, _fboHeight, internalFormat, true);
 
 		_gbTextures[GB_TEX_NORMAL] = r->CreateTexture(TextureType::Tex2DMultisample);
+		if(!_gbTextures[GB_TEX_NORMAL])
+			return false;
 		_gbTextures[GB_TEX_NORMAL]->SetStorage2DMS(_samples, _fboWidth, _fboHeight, internalFormat, true);
 
 		_gbTextures[GB_TEX_COLOR_SPECULAR] = r->CreateTexture(TextureType::Tex2DMultisample);
+		if(!_gbTextures[GB_TEX_COLOR_SPECULAR])
+			return false;
 		_gbTextures[GB_TEX_COLOR_SPECULAR]->SetStorage2DMS(_samples, _fboWidth, _fboHeight, TextureSizedFormat::RGBA_16F, true);
 
 		_gbTextures[GB_TEX_MATERIAL_INFO] = r->CreateTexture(TextureType::Tex2DMultisample);
+		if(!_gbTextures[GB_TEX_MATERIAL_INFO])
+			return false;
 		_gbTextures[GB_TEX_MATERIAL_INFO]->SetStorage2DMS(_samples, _fboWidth, _fboHeight, TextureSizedFormat::RGBA_16F, true);
 
 		_gbTextures[GB_TEX_DEPTH_STENCIL] = r->CreateTexture(TextureType::Tex2DMultisample);
+		if(!_gbTextures[GB_TEX_DEPTH_STENCIL])
+			return false;
 		_gbTextures[GB_TEX_DEPTH_STENCIL]->SetStorage2DMS(_samples, _fboWidth, _fboHeight, TextureSizedFormat::DEPTH24_STENCIL8, true);
 
 		_gbTextures[GB_TEX_LIGHT] = r->CreateTexture(TextureType::Tex2DMultisample);
+		if(!_gbTextures[GB_TEX_LIGHT])
+			return false;
 		_gbTextures[GB_TEX_LIGHT]->SetStorage2DMS(_samples, _fboWidth, _fboHeight, TextureSizedFormat::RGB_16F, true);
 
 		_gbTextures[GB_TEX_LIGHT_ACCUM] = r->CreateTexture(TextureType::Tex2DMultisample);
+		if(!_gbTextures[GB_TEX_LIGHT_ACCUM])
+			return false;
 		_gbTextures[GB_TEX_LIGHT_ACCUM]->SetStorage2DMS(_samples, _fboWidth, _fboHeight, TextureSizedFormat::RGB_16F, true);
 
 		_gbTextures[GB_TEX_BRIGHT] = r->CreateTexture(TextureType::Tex2DMultisample);
+		if(!_gbTextures[GB_TEX_BRIGHT])
+			return false;
 		_gbTextures[GB_TEX_BRIGHT]->SetStorage2DMS(_samples, _fboWidth, _fboHeight, TextureSizedFormat::RGB_8U, true);
 	}
 	else
 	{
 		_gbTextures[GB_TEX_POSITION] = r->CreateTexture(TextureType::Tex2D);
+		if(!_gbTextures[GB_TEX_POSITION])
+			return false;
 		_gbTextures[GB_TEX_POSITION]->SetStorage2D(1, internalFormat, _fboWidth, _fboHeight);
 
 		_gbTextures[GB_TEX_NORMAL] = r->CreateTexture(TextureType::Tex2D);
+		if(!_gbTextures[GB_TEX_NORMAL])
+			return false;
 		_gbTextures[GB_TEX_NORMAL]->SetStorage2D(1, internalFormat, _fboWidth, _fboHeight);
 
 		_gbTextures[GB_TEX_COLOR_SPECULAR] = r->CreateTexture(TextureType::Tex2D);
+		if(!_gbTextures[GB_TEX_COLOR_SPECULAR])
+			return false;
 		_gbTextures[GB_TEX_COLOR_SPECULAR]->SetStorage2D(1, TextureSizedFormat::RGBA_16F, _fboWidth, _fboHeight);
 
 		_gbTextures[GB_TEX_MATERIAL_INFO] = r->CreateTexture(TextureType::Tex2D);
+		if(!_gbTextures[GB_TEX_MATERIAL_INFO])
+			return false;
 		_gbTextures[GB_TEX_MATERIAL_INFO]->SetStorage2D(1, TextureSizedFormat::RGBA_16F, _fboWidth, _fboHeight);
 
 		_gbTextures[GB_TEX_DEPTH_STENCIL] = r->CreateTexture(TextureType::Tex2D);
+		if(!_gbTextures[GB_TEX_DEPTH_STENCIL])
+			return false;
 		_gbTextures[GB_TEX_DEPTH_STENCIL]->SetStorage2D(1, TextureSizedFormat::DEPTH24_STENCIL8, _fboWidth, _fboHeight);
 
 		_gbTextures[GB_TEX_LIGHT] = r->CreateTexture(TextureType::Tex2D);
+		if(!_gbTextures[GB_TEX_LIGHT])
+			return false;
 		_gbTextures[GB_TEX_LIGHT]->SetStorage2D(1, TextureSizedFormat::RGB_16F, _fboWidth, _fboHeight);
 
 		_gbTextures[GB_TEX_LIGHT_ACCUM] = r->CreateTexture(TextureType::Tex2D);
+		if(!_gbTextures[GB_TEX_LIGHT_ACCUM])
+			return false;
 		_gbTextures[GB_TEX_LIGHT_ACCUM]->SetStorage2D(1, TextureSizedFormat::RGB_16F, _fboWidth, _fboHeight);
 
 		_gbTextures[GB_TEX_BRIGHT] = r->CreateTexture(TextureType::Tex2D);
+		if(!_gbTextures[GB_TEX_BRIGHT])
+			return false;
 		_gbTextures[GB_TEX_BRIGHT]->SetStorage2D(1, TextureSizedFormat::RGB_8U, _fboWidth, _fboHeight);
 	}
+	
+	return true;
 }
 
 bool DeferredBuffer::_AttachTextures() noexcept

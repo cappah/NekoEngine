@@ -139,7 +139,8 @@ int SceneManager::LoadScene(int id)
 	if (scn == nullptr)
 		return ENGINE_NOT_FOUND;
 
-	_loadingScreen = new LoadingScreen(scn->GetLoadingScreenTexture());
+	if ((_loadingScreen = new LoadingScreen(scn->GetLoadingScreenTexture())) == nullptr)
+		return ENGINE_OUT_OF_RESOURCES;
 
 	if (_activeScene != nullptr)
 		_UnloadScene();
@@ -174,8 +175,11 @@ int SceneManager::DrawScene(RShader* shader) noexcept
 	if (_activeScene == nullptr)
 	{
 		if (_loadingScreen == nullptr)
-			_loadingScreen = new LoadingScreen(LS_DEFAULT_TEXTURE);
-
+		{
+			if((_loadingScreen = new LoadingScreen(LS_DEFAULT_TEXTURE)) == nullptr)
+				return ENGINE_OUT_OF_RESOURCES;
+		}
+		
 		_loadingScreen->Draw();
 	}
 	else

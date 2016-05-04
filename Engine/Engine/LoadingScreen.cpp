@@ -52,11 +52,13 @@ LoadingScreen::LoadingScreen(const char* texture)
 {
 	TextureParams texParams { TextureFilter::Linear, TextureFilter::Linear, TextureWrap::ClampToEdge, TextureWrap::ClampToEdge };
 
-	_shader = (Shader*)ResourceManager::GetResourceByName("sh_loadscreen", ResourceType::RES_SHADER);
-
+	if((_shader = (Shader*)ResourceManager::GetResourceByName("sh_loadscreen", ResourceType::RES_SHADER)) == nullptr)
+	{ DIE("Cannot to load loading screen shader"); }
+	
 	float frame[2] = { (float)Engine::GetConfiguration().Engine.ScreenWidth, (float)Engine::GetConfiguration().Engine.ScreenHeight };
 
-	_uniformBuffer = Engine::GetRenderer()->CreateBuffer(BufferType::Uniform, false, true);
+	if((_uniformBuffer = Engine::GetRenderer()->CreateBuffer(BufferType::Uniform, false, true)) == nullptr)
+	{ DIE("Out of resources"); }
 	_uniformBuffer->SetNumBuffers(1);
 	_uniformBuffer->SetStorage(sizeof(float) * 2, frame);
 

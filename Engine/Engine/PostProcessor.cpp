@@ -56,40 +56,47 @@ std::vector<Effect *> PostProcessor::_effects;
 bool PostProcessor::_secondFb = true;
 RBuffer* PostProcessor::_ppUbo = nullptr;
 
-void PostProcessor::_GenerateTextures() noexcept
+bool PostProcessor::_GenerateTextures() noexcept
 {	
-	_ppTextures[PP_TEX_FBO0] = Engine::GetRenderer()->CreateTexture(TextureType::Tex2D);
+	if((_ppTextures[PP_TEX_FBO0] = Engine::GetRenderer()->CreateTexture(TextureType::Tex2D)) == nullptr)
+		return false;
 	_ppTextures[PP_TEX_FBO0]->SetStorage2D(1, _textureFormat, _fboWidth, _fboHeight);
 	_ppTextures[PP_TEX_FBO0]->SetMinFilter(TextureFilter::Linear);
 	_ppTextures[PP_TEX_FBO0]->SetMagFilter(TextureFilter::Linear);
 	_ppTextures[PP_TEX_FBO0]->SetWrapS(TextureWrap::ClampToEdge);
 	_ppTextures[PP_TEX_FBO0]->SetWrapT(TextureWrap::ClampToEdge);
 
-	_ppTextures[PP_TEX_FBO1] = Engine::GetRenderer()->CreateTexture(TextureType::Tex2D);
+	if((_ppTextures[PP_TEX_FBO1] = Engine::GetRenderer()->CreateTexture(TextureType::Tex2D)) == nullptr)
+		return false;
 	_ppTextures[PP_TEX_FBO1]->SetStorage2D(1, _textureFormat, _fboWidth, _fboHeight);
 	_ppTextures[PP_TEX_FBO1]->SetMinFilter(TextureFilter::Linear);
 	_ppTextures[PP_TEX_FBO1]->SetMagFilter(TextureFilter::Linear);
 	_ppTextures[PP_TEX_FBO1]->SetWrapS(TextureWrap::ClampToEdge);
 	_ppTextures[PP_TEX_FBO1]->SetWrapT(TextureWrap::ClampToEdge);
 
-	_ppTextures[PP_TEX_COLOR] = Engine::GetRenderer()->CreateTexture(TextureType::Tex2D);
+	if((_ppTextures[PP_TEX_COLOR] = Engine::GetRenderer()->CreateTexture(TextureType::Tex2D)) == nullptr)
+		return false;
 	_ppTextures[PP_TEX_COLOR]->SetStorage2D(1, _textureFormat, _fboWidth, _fboHeight);
 	_ppTextures[PP_TEX_COLOR]->SetMinFilter(TextureFilter::Linear);
 	_ppTextures[PP_TEX_COLOR]->SetMagFilter(TextureFilter::Linear);
 	_ppTextures[PP_TEX_COLOR]->SetWrapS(TextureWrap::ClampToEdge);
 	_ppTextures[PP_TEX_COLOR]->SetWrapT(TextureWrap::ClampToEdge);
 
-	_ppTextures[PP_TEX_BRIGHT] = Engine::GetRenderer()->CreateTexture(TextureType::Tex2D);
+	if((_ppTextures[PP_TEX_BRIGHT] = Engine::GetRenderer()->CreateTexture(TextureType::Tex2D)) == nullptr)
+		return false;
 	_ppTextures[PP_TEX_BRIGHT]->SetStorage2D(1, TextureSizedFormat::RGB_8U, _fboWidth, _fboHeight);
 	_ppTextures[PP_TEX_BRIGHT]->SetMinFilter(TextureFilter::Linear);
 	_ppTextures[PP_TEX_BRIGHT]->SetMagFilter(TextureFilter::Linear);
 	_ppTextures[PP_TEX_BRIGHT]->SetWrapS(TextureWrap::ClampToEdge);
 	_ppTextures[PP_TEX_BRIGHT]->SetWrapT(TextureWrap::ClampToEdge);
 
-	_ppTextures[PP_TEX_DEPTH_STENCIL] = Engine::GetRenderer()->CreateTexture(TextureType::Tex2D);
+	if((_ppTextures[PP_TEX_DEPTH_STENCIL] = Engine::GetRenderer()->CreateTexture(TextureType::Tex2D)) == nullptr)
+		return false;
 	_ppTextures[PP_TEX_DEPTH_STENCIL]->SetStorage2D(1, TextureSizedFormat::DEPTH24_STENCIL8, _fboWidth, _fboHeight);
 	_ppTextures[PP_TEX_DEPTH_STENCIL]->SetMinFilter(TextureFilter::Nearest);
 	_ppTextures[PP_TEX_DEPTH_STENCIL]->SetMagFilter(TextureFilter::Nearest);
+	
+	return true;
 }
 
 bool PostProcessor::_AttachTextures() noexcept
@@ -157,21 +164,57 @@ int PostProcessor::Initialize()
 	if (!_shader)
 		return ENGINE_FAIL;
 
-	_fbos[FBO_0] = Engine::GetRenderer()->CreateFramebuffer(_fboWidth, _fboHeight);
-	_fbos[FBO_1] = Engine::GetRenderer()->CreateFramebuffer(_fboWidth, _fboHeight);
-	_fbos[FBO_DRAW] = Engine::GetRenderer()->CreateFramebuffer(_fboWidth, _fboHeight);
-	_fbos[FBO_BRIGHT] = Engine::GetRenderer()->CreateFramebuffer(_fboWidth, _fboHeight);
-	_fbos[FBO_COLOR] = Engine::GetRenderer()->CreateFramebuffer(_fboWidth, _fboHeight);
+	if((_fbos[FBO_0] = Engine::GetRenderer()->CreateFramebuffer(_fboWidth, _fboHeight)) == nullptr)
+	{
+		Release();
+		return ENGINE_OUT_OF_RESOURCES;
+	}
+	
+	if((_fbos[FBO_1] = Engine::GetRenderer()->CreateFramebuffer(_fboWidth, _fboHeight)) == nullptr)
+	{
+		Release();
+		return ENGINE_OUT_OF_RESOURCES;
+	}
+	
+	if((_fbos[FBO_DRAW] = Engine::GetRenderer()->CreateFramebuffer(_fboWidth, _fboHeight)) == nullptr)
+	{
+		Release();
+		return ENGINE_OUT_OF_RESOURCES;
+	}
+	
+	if((_fbos[FBO_BRIGHT] = Engine::GetRenderer()->CreateFramebuffer(_fboWidth, _fboHeight)) == nullptr)
+	{
+		Release();
+		return ENGINE_OUT_OF_RESOURCES;
+	}
+	
+	if((_fbos[FBO_COLOR] = Engine::GetRenderer()->CreateFramebuffer(_fboWidth, _fboHeight)) == nullptr)
+	{
+		Release();
+		return ENGINE_OUT_OF_RESOURCES;
+	}
 
-	_GenerateTextures();
+	if (!_GenerateTextures())
+	{
+		Release();
+		return ENGINE_OUT_OF_RESOURCES;
+	}
+	
 	if (!_AttachTextures())
+	{
+		Release();
 		return ENGINE_FAIL;
-
+	}
+	
 	Logger::Log(PP_MODULE, LOG_INFORMATION, "Loading effects...");
 
 	float uboData[4] { (float)_fboWidth, (float)_fboHeight, 0, 0 };
 
-	_ppUbo = Engine::GetRenderer()->CreateBuffer(BufferType::Uniform, true, false);
+	if((_ppUbo = Engine::GetRenderer()->CreateBuffer(BufferType::Uniform, true, false)) == nullptr)
+	{
+		Release();
+		return ENGINE_OUT_OF_RESOURCES;
+	}
 	_ppUbo->SetStorage(sizeof(uboData), uboData);
 
 	_shader->GetRShader()->FSUniformBlockBinding(0, "PPSharedData");

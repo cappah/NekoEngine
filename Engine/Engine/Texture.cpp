@@ -126,12 +126,11 @@ int Texture::Load()
 		return ENGINE_FAIL;
 	}
 
-	_texture = Engine::GetRenderer()->CreateTexture(type);
-	if (!_texture)
+	if((_texture = Engine::GetRenderer()->CreateTexture(type)) == nullptr)
 	{
 		file->Close();
 		free(mem);
-		return ENGINE_FAIL;
+		return ENGINE_OUT_OF_RESOURCES;
 	}
 
 	if (!_texture->LoadFromMemory(format, mem, size))
@@ -161,16 +160,16 @@ void Texture::SetParameters(TextureParams &params) noexcept
 	_texture->SetWrapS(params.wrapS);
 	_texture->SetWrapT(params.wrapT);
 	
-		/*int32_t aniso = Engine::GetConfiguration().Renderer.Aniso, maxAniso;
-		GL_CHECK(glGetIntegerv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &maxAniso));
+	/*int32_t aniso = Engine::GetConfiguration().Renderer.Aniso, maxAniso;
+	GL_CHECK(glGetIntegerv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &maxAniso));
 
-		if (maxAniso < aniso)
-		{
-			Logger::Log(MODULE, LOG_WARNING, "Requested %dx anisotropic filtering, but the maximum supported is %dx", aniso, maxAniso);
-			aniso = maxAniso;
-		}
+	if (maxAniso < aniso)
+	{
+		Logger::Log(MODULE, LOG_WARNING, "Requested %dx anisotropic filtering, but the maximum supported is %dx", aniso, maxAniso);
+		aniso = maxAniso;
+	}
 
-		GL_CHECK(glTexParameteri(target, GL_TEXTURE_MAX_ANISOTROPY_EXT, aniso));*/
+	GL_CHECK(glTexParameteri(target, GL_TEXTURE_MAX_ANISOTROPY_EXT, aniso));*/
 
 	if (Engine::GetConfiguration().Renderer.Anisotropic)
 		_texture->SetAnisotropic(16);

@@ -104,8 +104,10 @@ SSAO::SSAO(int width, int height) :
 	if (_ssaoShader == nullptr || _ssaoBlurShader == nullptr)
 	{ DIE("Failed to load SSAO shaders"); }
 
-	_fbos[SSAO_FBO_0] = Engine::GetRenderer()->CreateFramebuffer(_fboWidth, _fboHeight);
-	_fbos[SSAO_FBO_1] = Engine::GetRenderer()->CreateFramebuffer(_fboWidth, _fboHeight);	
+	if((_fbos[SSAO_FBO_0] = Engine::GetRenderer()->CreateFramebuffer(_fboWidth, _fboHeight)) == nullptr)
+	{ DIE("Out of resources"); }
+	if((_fbos[SSAO_FBO_1] = Engine::GetRenderer()->CreateFramebuffer(_fboWidth, _fboHeight)) == nullptr)
+	{ DIE("Out of resources"); }
 	
 	_textures[SSAO_TEX_NOISE] = Engine::GetRenderer()->CreateTexture(TextureType::Tex2D);
 	_textures[SSAO_TEX_NOISE]->SetStorage2D(1, TextureSizedFormat::RGB_16F, _noiseSize / 4, _noiseSize / 4);
@@ -115,7 +117,9 @@ SSAO::SSAO(int width, int height) :
 	_textures[SSAO_TEX_NOISE]->SetWrapS(TextureWrap::Repeat);
 	_textures[SSAO_TEX_NOISE]->SetWrapT(TextureWrap::Repeat);
 
-	_GenerateTextures();
+	if(!_GenerateTextures())
+	{ DIE("Out of resources"); }
+	
 	if(!_AttachTextures())
 	{ DIE("Incomplete SSAO FBO"); }
 
@@ -124,13 +128,16 @@ SSAO::SSAO(int width, int height) :
 	_dataBlock.FrameAndNoise.z = (float)_fboWidth / (_noiseSize / 4);
 	_dataBlock.FrameAndNoise.w = (float)_fboHeight / (_noiseSize / 4);
 
-	_matrixUbo = Engine::GetRenderer()->CreateBuffer(BufferType::Uniform, true, false);
+	if((_matrixUbo = Engine::GetRenderer()->CreateBuffer(BufferType::Uniform, true, false)) == nullptr)
+	{ DIE("Out of resources"); }
 	_matrixUbo->SetStorage(sizeof(SSAOMatrixBlock), nullptr);
 
-	_dataUbo = Engine::GetRenderer()->CreateBuffer(BufferType::Uniform, true, false);
+	if((_dataUbo = Engine::GetRenderer()->CreateBuffer(BufferType::Uniform, true, false)) == nullptr)
+	{ DIE("Out of resources"); }
 	_dataUbo->SetStorage(sizeof(SSAODataBlock), &_dataBlock);
 
-	_blurUbo = Engine::GetRenderer()->CreateBuffer(BufferType::Uniform, true, false);
+	if((_blurUbo = Engine::GetRenderer()->CreateBuffer(BufferType::Uniform, true, false)) == nullptr)
+	{ DIE("Out of resources"); }
 	_blurUbo->SetStorage(sizeof(int), &_blurRadius);
 
 	RShader *shader = _ssaoShader->GetRShader();
@@ -201,17 +208,21 @@ void SSAO::Resize(int width, int height) noexcept
 	_dataUbo->UpdateData(0, sizeof(vec4), &_dataBlock.FrameAndNoise);
 }
 
-void SSAO::_GenerateTextures()
+bool SSAO::_GenerateTextures()
 {
-	_textures[SSAO_TEX_COLOR] = Engine::GetRenderer()->CreateTexture(TextureType::Tex2D);
+	if((_textures[SSAO_TEX_COLOR] = Engine::GetRenderer()->CreateTexture(TextureType::Tex2D)) == nullptr)
+		return false;
 	_textures[SSAO_TEX_COLOR]->SetStorage2D(1, TextureSizedFormat::R_32F, _fboWidth, _fboHeight);
 	_textures[SSAO_TEX_COLOR]->SetMinFilter(TextureFilter::Linear);
 	_textures[SSAO_TEX_COLOR]->SetMagFilter(TextureFilter::Linear);
 
-	_textures[SSAO_TEX_BLUR] = Engine::GetRenderer()->CreateTexture(TextureType::Tex2D);
+	if((_textures[SSAO_TEX_BLUR] = Engine::GetRenderer()->CreateTexture(TextureType::Tex2D)) == nullptr)
+		return false;
 	_textures[SSAO_TEX_BLUR]->SetStorage2D(1, TextureSizedFormat::R_32F, _fboWidth, _fboHeight);
 	_textures[SSAO_TEX_BLUR]->SetMinFilter(TextureFilter::Linear);
 	_textures[SSAO_TEX_BLUR]->SetMagFilter(TextureFilter::Linear);
+	
+	return true;
 }
 
 bool SSAO::_AttachTextures()

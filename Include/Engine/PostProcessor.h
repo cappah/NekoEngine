@@ -84,7 +84,7 @@ private:
 	static bool _secondFb;
 	static RBuffer *_ppUbo;
 
-	static void _GenerateTextures() noexcept;
+	static bool _GenerateTextures() noexcept;
 	static bool _AttachTextures() noexcept;
 	static void _DeleteTextures() noexcept;
 	

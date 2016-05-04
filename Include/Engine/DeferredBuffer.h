@@ -126,7 +126,7 @@ private:
 
 	static void _Bind() noexcept;
 
-	static void _GenerateTextures() noexcept;
+	static bool _GenerateTextures() noexcept;
 	static bool _AttachTextures() noexcept;
 	static void _DeleteTextures() noexcept;
 	

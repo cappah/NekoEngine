@@ -234,6 +234,8 @@ Resource* ResourceManager::_LoadResourceInternal(ResourceInfo *ri)
 		return nullptr;
 	}
 
+	assert(res);
+	
 	int ret = res->Load();
 
 	if (ret != ENGINE_OK)

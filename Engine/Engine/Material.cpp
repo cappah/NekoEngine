@@ -258,6 +258,11 @@ int Material::Load()
 		_subroutines[SUB_COLOR] = SH_SUB_C_SKYREFLECT;
 
 	_materialUbo = Engine::GetRenderer()->CreateBuffer(BufferType::Uniform, true, false);
+	if(!_materialUbo)
+	{
+		Unload();
+		return ENGINE_OUT_OF_RESOURCES;
+	}
 	_materialUbo->SetStorage(sizeof(MaterialBlock), &_materialInfo);
 	
 	Logger::Log(MAT_MODULE, LOG_DEBUG, "Loaded material %s", _resourceInfo->name.c_str());

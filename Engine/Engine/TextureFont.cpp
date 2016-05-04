@@ -172,11 +172,13 @@ TextureFont::TextureFont(TextureFontResource *res) noexcept
 	int vboSize = maxChars * 4;
 	int iboSize = maxChars * 6;
 
-	_vertexBuffer = Engine::GetRenderer()->CreateBuffer(BufferType::Vertex, false, true);
+	if((_vertexBuffer = Engine::GetRenderer()->CreateBuffer(BufferType::Vertex, false, true)) == nullptr)
+	{ DIE("Out of resources"); }
 	_vertexBuffer->SetNumBuffers(1);
 	_vertexBuffer->SetStorage(sizeof(Vertex) * vboSize, nullptr);
 
-	_indexBuffer = Engine::GetRenderer()->CreateBuffer(BufferType::Index, false, true);
+	if((_indexBuffer = Engine::GetRenderer()->CreateBuffer(BufferType::Index, false, true)) == nullptr)
+	{ DIE("Out of resources"); }
 	_indexBuffer->SetNumBuffers(1);
 	_indexBuffer->SetStorage(sizeof(uint32_t) * iboSize, nullptr);
 
@@ -198,7 +200,8 @@ TextureFont::TextureFont(TextureFontResource *res) noexcept
 	attrib.ptr = (void *)VERTEX_UV_OFFSET;
 	_vertexBuffer->AddAttribute(attrib);
 
-	_arrayBuffer = Engine::GetRenderer()->CreateArrayBuffer();
+	if((_arrayBuffer = Engine::GetRenderer()->CreateArrayBuffer()) == nullptr)
+	{ DIE("Out of resources"); }
 	_arrayBuffer->SetVertexBuffer(_vertexBuffer);
 	_arrayBuffer->SetIndexBuffer(_indexBuffer);
 	_arrayBuffer->CommitBuffers();

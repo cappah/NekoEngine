@@ -110,13 +110,19 @@ int StaticMesh::LoadDynamic(vector<Vertex> &vertices, vector<uint32_t> &indices)
 int StaticMesh::CreateBuffers(bool dynamic)
 {
 	_arrayBuffer = Engine::GetRenderer()->CreateArrayBuffer();
-
+	if(!_arrayBuffer)
+		return ENGINE_OUT_OF_RESOURCES;
+	
 	_indexBuffer = Engine::GetRenderer()->CreateBuffer(BufferType::Index, true, false);
+	if(!_indexBuffer)
+		return ENGINE_OUT_OF_RESOURCES;
 	_indexBuffer->SetStorage((sizeof(uint32_t) * _indices.size()), _indices.data());
 
 	_indexCount = _indices.size();
 
 	_vertexBuffer = Engine::GetRenderer()->CreateBuffer(BufferType::Vertex, true, false);
+	if(!_vertexBuffer)
+		return ENGINE_OUT_OF_RESOURCES;
 	_vertexBuffer->SetStorage((sizeof(Vertex) * _vertices.size()), _vertices.data());
 
 	_vertexCount = _vertices.size();

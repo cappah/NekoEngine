@@ -60,7 +60,8 @@ int Shader::Load()
 	string path("/");
 	path.append(GetResourceInfo()->vsFilePath);
 
-	_shader = Engine::GetRenderer()->CreateShader();
+	if((_shader = Engine::GetRenderer()->CreateShader()) == nullptr)
+		return ENGINE_OUT_OF_RESOURCES;
 	
 	if (!_CompileShader(ShaderType::Vertex, path))
 		return ENGINE_LOAD_VS_FAIL;

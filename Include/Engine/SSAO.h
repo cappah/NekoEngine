@@ -107,7 +107,7 @@ private:
 
 	RBuffer *_matrixUbo, *_dataUbo, *_blurUbo;
 
-	void _GenerateTextures();
+	bool _GenerateTextures();
 	bool _AttachTextures();
 	void _DeleteTextures(bool noise);
 };
