@@ -312,7 +312,7 @@ void TextureFont::Render()
 
 	_arrayBuffer->Bind();
 
-	r->DrawElementsBaseVertex(PolygonMode::Triangles, (int32_t)_indices.size(), ElementType::UnsignedInt, (const void*)_indexBuffer->GetOffset(), (int32_t)(_vertexBuffer->GetCurrentBuffer() * _vertices.size()));
+	r->DrawElements(PolygonMode::Triangles, (int32_t)_indices.size(), ElementType::UnsignedInt, 0);
 
 	_shader->Disable();
 

@@ -700,6 +700,8 @@ void Engine::Draw() noexcept
 	DeferredBuffer::RenderLighting();
 
 	SceneManager::GetActiveScene()->DrawSkybox();
+	
+	// SceneManager::GetActiveScene()->DrawForwardObjects();
 
 	// Effects
 
