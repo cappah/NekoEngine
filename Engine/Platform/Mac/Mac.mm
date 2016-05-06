@@ -83,8 +83,6 @@ PlatformWindowType Platform::CreateWindow(int width, int height, bool fullscreen
 	{ DIE("Failed to initialize EngineAppDelegate"); }
 	[[NSApplication sharedApplication] setDelegate:_engineAppDelegate];
 	
-	
-	
 	if((menuBar = [[NSMenu alloc] init]) == nil)
 	{ DIE("Failed to create menu"); }
 	if((appMenuItem = [[NSMenuItem alloc] init]) == nil)

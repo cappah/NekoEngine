@@ -1,6 +1,6 @@
 /* Neko Engine
  *
- * EngineView.mm
+ * EngineAppDelegate.mm
  * Author: Alexandru Naiman
  *
  * MacOS X platform support

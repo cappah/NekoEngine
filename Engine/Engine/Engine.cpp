@@ -38,12 +38,17 @@
 
 #define ENGINE_INTERNAL
 
+#include <Platform/PlatformDetect.h>
+
 #include <time.h>
 #include <memory>
 #include <string.h>
 #include <stdint.h>
 #include <chrono>
+
+#ifndef NE_DEVICE_MOBILE
 #include <png.h>
+#endif
 
 #include <glm/glm.hpp>
 
@@ -113,6 +118,11 @@ bool Engine::_startup = true;
 static bool iniFileLoaded = false;
 
 ObjectClassMapType *EngineClassFactory::_objectClassMap = nullptr;
+
+#ifdef NE_PLATFORM_MOBILE
+extern "C" Renderer *createRenderer();
+extern "C" GameModule *createGameModule();
+#endif
 
 void Engine::_ParseArgs(string cmdLine)
 {
@@ -279,72 +289,74 @@ void Engine::_InitializeQuadVAO()
 
 bool Engine::_InitRenderer()
 {
+#ifndef NE_PLATFORM_MOBILE
+	
 	_rendererLibrary = Platform::LoadModule(_rendererFile);
 
 	if (!_rendererLibrary)
 	{
 		Logger::Log(ENGINE_MODULE, LOG_CRITICAL, "Renderer not found");
 		Platform::MessageBox("Fatal Error", "The specified renderer cannot be found. Exiting.", MessageBoxButtons::OK, MessageBoxIcon::Error);
-			return false;
+		return false;
 	}
-	else
+	
+	RendererAPIVersionProc getRendererAPIVersion = (RendererAPIVersionProc)Platform::GetProcAddress(_rendererLibrary, "getRendererAPIVersion");
+
+	if (!getRendererAPIVersion)
 	{
-		RendererAPIVersionProc getRendererAPIVersion = (RendererAPIVersionProc)Platform::GetProcAddress(_rendererLibrary, "getRendererAPIVersion");
+		Logger::Log(ENGINE_MODULE, LOG_CRITICAL, "Renderer library is invalid");
+		Platform::MessageBox("Fatal Error", "Renderer library is invalid !", MessageBoxButtons::OK, MessageBoxIcon::Error);
+		return false;
+	}
 
-		if (!getRendererAPIVersion)
-		{
-			Logger::Log(ENGINE_MODULE, LOG_CRITICAL, "Renderer library is invalid");
-			Platform::MessageBox("Fatal Error", "Renderer library is invalid !", MessageBoxButtons::OK, MessageBoxIcon::Error);
-			return false;
-		}
+	if (getRendererAPIVersion() != RENDERER_API_VERSION)
+	{
+		Logger::Log(ENGINE_MODULE, LOG_CRITICAL, "Renderer library is invalid. API version mismatch (expected %d, have %d)", RENDERER_API_VERSION, getRendererAPIVersion());
+		Platform::MessageBox("Fatal Error", "Renderer API version mismatch !", MessageBoxButtons::OK, MessageBoxIcon::Error);
+		return false;
+	}
 
-		if (getRendererAPIVersion() != RENDERER_API_VERSION)
-		{
-			Logger::Log(ENGINE_MODULE, LOG_CRITICAL, "Renderer library is invalid. API version mismatch (expected %d, have %d)", RENDERER_API_VERSION, getRendererAPIVersion());
-			Platform::MessageBox("Fatal Error", "Renderer API version mismatch !", MessageBoxButtons::OK, MessageBoxIcon::Error);
-			return false;
-		}
+	CreateRendererProc createRenderer = (CreateRendererProc)Platform::GetProcAddress(_rendererLibrary, "createRenderer");
 
-		CreateRendererProc createRenderer = (CreateRendererProc)Platform::GetProcAddress(_rendererLibrary, "createRenderer");
-
-		if (!createRenderer)
-		{
-			Logger::Log(ENGINE_MODULE, LOG_CRITICAL, "Renderer library is invalid");
-			Platform::MessageBox("Fatal Error", "Renderer library is invalid !", MessageBoxButtons::OK, MessageBoxIcon::Error);
-			return false;
-		}
-
-		_renderer = createRenderer();
-
-		if (!_renderer)
-		{
-			Logger::Log(ENGINE_MODULE, LOG_CRITICAL, "Failed to load renderer");
-			Platform::MessageBox("Fatal Error", "Failed to load renderer", MessageBoxButtons::OK, MessageBoxIcon::Error);
-			return false;
-		}
-
-#ifdef _DEBUG
-		int ret = _renderer->Initialize(_engineWindow, true);
-#else
-		int ret = _renderer->Initialize(_engineWindow);
+	if (!createRenderer)
+	{
+		Logger::Log(ENGINE_MODULE, LOG_CRITICAL, "Renderer library is invalid");
+		Platform::MessageBox("Fatal Error", "Renderer library is invalid !", MessageBoxButtons::OK, MessageBoxIcon::Error);
+		return false;
+	}
+	
 #endif
 
-		if (!ret)
-		{
-			Logger::Log(ENGINE_MODULE, LOG_CRITICAL, "Renderer initialization failed");
-			Platform::MessageBox("Fatal Error", "Failed to initialize renderer", MessageBoxButtons::OK, MessageBoxIcon::Error);
-			return false;
-		}
-		
-		_renderer->SetDebugLogFunction(Logger::LogRendererDebugMessage);
+	_renderer = createRenderer();
 
-		/*if (ret != ENGINE_OK)
-		{
-			Logger::Log(MODULE, LOG_CRITICAL, "Renderer initialization failed with %d", ret);
-			Platform::MessageBox("Fatal Error", "Failed to initialize renderer", MessageBoxButtons::OK, MessageBoxIcon::Error);
-			return false;
-		}*/
+	if (!_renderer)
+	{
+		Logger::Log(ENGINE_MODULE, LOG_CRITICAL, "Failed to load renderer");
+		Platform::MessageBox("Fatal Error", "Failed to load renderer", MessageBoxButtons::OK, MessageBoxIcon::Error);
+		return false;
 	}
+
+#ifdef _DEBUG
+	int ret = _renderer->Initialize(_engineWindow, true);
+#else
+	int ret = _renderer->Initialize(_engineWindow);
+#endif
+
+	if (!ret)
+	{
+		Logger::Log(ENGINE_MODULE, LOG_CRITICAL, "Renderer initialization failed");
+		Platform::MessageBox("Fatal Error", "Failed to initialize renderer", MessageBoxButtons::OK, MessageBoxIcon::Error);
+		return false;
+	}
+		
+	_renderer->SetDebugLogFunction(Logger::LogRendererDebugMessage);
+
+	/*if (ret != ENGINE_OK)
+	{
+		Logger::Log(MODULE, LOG_CRITICAL, "Renderer initialization failed with %d", ret);
+		Platform::MessageBox("Fatal Error", "Failed to initialize renderer", MessageBoxButtons::OK, MessageBoxIcon::Error);
+		return false;
+	}*/
 
 	Logger::Log("Renderer", LOG_INFORMATION, "Renderer: %s", _renderer->GetName());
 	Logger::Log("Renderer", LOG_INFORMATION, "Version: %d.%d", _renderer->GetMajorVersion(), _renderer->GetMinorVersion());
@@ -401,6 +413,8 @@ bool Engine::_InitGame()
 {
 	Logger::Log(ENGINE_MODULE, LOG_INFORMATION, "Loading game module");
 
+#ifndef NE_PLATFORM_MOBILE
+	
 	_gameModuleLibrary = Platform::LoadModule(_gameModuleFile);
 
 	if (!_gameModuleLibrary)
@@ -411,35 +425,36 @@ bool Engine::_InitGame()
 			return false;
 
 		Logger::Log(ENGINE_MODULE, LOG_WARNING, "Continuing on user action...");
+		return true;
 	}
-	else
+
+	CreateGameModuleProc createGameModule = (CreateGameModuleProc)Platform::GetProcAddress(_gameModuleLibrary, "createGameModule");
+
+	if (!createGameModule)
 	{
-		CreateGameModuleProc createGameModule = (CreateGameModuleProc)Platform::GetProcAddress(_gameModuleLibrary, "createGameModule");
+		Logger::Log(ENGINE_MODULE, LOG_CRITICAL, "Game module library is invalid");
+		Platform::MessageBox("Fatal Error", "Game module library is invalid", MessageBoxButtons::OK, MessageBoxIcon::Error);
+		return false;
+	}
+	
+#endif
 
-		if (!createGameModule)
-		{
-			Logger::Log(ENGINE_MODULE, LOG_CRITICAL, "Game module library is invalid");
-			Platform::MessageBox("Fatal Error", "Game module library is invalid", MessageBoxButtons::OK, MessageBoxIcon::Error);
-			return false;
-		}
+	_gameModule = createGameModule();
 
-		_gameModule = createGameModule();
+	if (!_gameModule)
+	{
+		Logger::Log(ENGINE_MODULE, LOG_CRITICAL, "Failed to load game module");
+		Platform::MessageBox("Fatal Error", "Failed to load game module", MessageBoxButtons::OK, MessageBoxIcon::Error);
+		return false;
+	}
 
-		if (!_gameModule)
-		{
-			Logger::Log(ENGINE_MODULE, LOG_CRITICAL, "Failed to load game module");
-			Platform::MessageBox("Fatal Error", "Failed to load game module", MessageBoxButtons::OK, MessageBoxIcon::Error);
-			return false;
-		}
+	int ret = _gameModule->Initialize();
 
-		int ret = _gameModule->Initialize();
-
-		if (ret != ENGINE_OK)
-		{
-			Logger::Log(ENGINE_MODULE, LOG_CRITICAL, "Game module Initialize() call failed with %d", ret);
-			Platform::MessageBox("Fatal Error", "Failed to initialize game module", MessageBoxButtons::OK, MessageBoxIcon::Error);
-			return false;
-		}
+	if (ret != ENGINE_OK)
+	{
+		Logger::Log(ENGINE_MODULE, LOG_CRITICAL, "Game module Initialize() call failed with %d", ret);
+		Platform::MessageBox("Fatal Error", "Failed to initialize game module", MessageBoxButtons::OK, MessageBoxIcon::Error);
+		return false;
 	}
 
 	Logger::Log(ENGINE_MODULE, LOG_INFORMATION, "Game module loaded");
@@ -851,7 +866,9 @@ void Engine::CleanUp() noexcept
 
 	delete _renderer;
 	_renderer = nullptr;
-	Platform::ReleaseModule(_rendererLibrary);
+	
+	if(_rendererLibrary)
+		Platform::ReleaseModule(_rendererLibrary);
 	_rendererLibrary = nullptr;
 
 	EngineClassFactory::CleanUp();
@@ -878,6 +895,7 @@ Object *Engine::NewObject(const std::string &className)
 
 void Engine::SaveScreenshot() noexcept
 {
+#ifndef NE_DEVICE_MOBILE
 	unsigned char *pixels = nullptr;
 	
 	size_t imageSize = 3 /* BPP - RGB */ * _config.Engine.ScreenWidth * _config.Engine.ScreenHeight;
@@ -1009,4 +1027,5 @@ void Engine::SaveScreenshot() noexcept
 	free(pngInfo);
 	free(pngStruct);
 	free(pngRow);
+#endif
 }

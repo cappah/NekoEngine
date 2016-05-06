@@ -41,7 +41,7 @@
 #include <Platform/Platform.h>
 
 #ifdef ENGINE_INTERNAL
-	#ifdef NE_PLATFORM_MAC
+	#if defined(NE_PLATFORM_MAC) || defined(NE_PLATFORM_IOS)
 		#include <OpenAL/al.h>
 		#include <OpenAL/alc.h>
 	#else

@@ -8,6 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		120718C01CCFD0BA001A1EEA /* Engine_Low.ini in Resources */ = {isa = PBXBuildFile; fileRef = 120718BF1CCFD0BA001A1EEA /* Engine_Low.ini */; };
+		1296BC3D1CDC132C00D17488 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1296BC3C1CDC132C00D17488 /* main.m */; };
+		1296BC401CDC132C00D17488 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1296BC3F1CDC132C00D17488 /* AppDelegate.mm */; };
+		1296BC481CDC132C00D17488 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1296BC471CDC132C00D17488 /* Assets.xcassets */; };
+		1296BC4B1CDC132C00D17488 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1296BC491CDC132C00D17488 /* LaunchScreen.storyboard */; };
+		1296BC551CDC145600D17488 /* libEngine_iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1296BC511CDC132C00D17488 /* libEngine_iOS.a */; };
+		1296BD011CDC1B0700D17488 /* Engine_Low.ini in Resources */ = {isa = PBXBuildFile; fileRef = 1296BD001CDC1B0700D17488 /* Engine_Low.ini */; };
+		1296BD6C1CDC1B7D00D17488 /* Data in Resources */ = {isa = PBXBuildFile; fileRef = 12B748541CC6EFE200825D36 /* Data */; };
+		1296BD871CDC1E1A00D17488 /* TestGame_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1296BD861CDC1E1700D17488 /* TestGame_iOS.framework */; };
 		12A15FB61CD4460F00BEDD06 /* libGLRenderer.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 12A15FB31CD445FE00BEDD06 /* libGLRenderer.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		12B748301CC6E7C600825D36 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 12B7482F1CC6E7C600825D36 /* Assets.xcassets */; };
 		12B748381CC6E80100825D36 /* launcher.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1270119A1CC31326001840A7 /* launcher.mm */; };
@@ -25,6 +33,34 @@
 			proxyType = 2;
 			remoteGlobalIDString = 12822AF11CC1AD4300EE5D0A;
 			remoteInfo = Engine;
+		};
+		1296BC501CDC132C00D17488 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1270124E1CC315FD001840A7 /* Engine.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1296BB791CDB801100D17488;
+			remoteInfo = Engine_iOS;
+		};
+		1296BC531CDC144F00D17488 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1270124E1CC315FD001840A7 /* Engine.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 1296BCC21CDC189600D17488;
+			remoteInfo = Engine_iOS;
+		};
+		1296BD821CDC1E1700D17488 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 12B7484A1CC6EA4000825D36 /* TestGame.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 1296BD711CDC1D9600D17488;
+			remoteInfo = TestGame_iOS;
+		};
+		1296BD851CDC1E1700D17488 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 12B7484A1CC6EA4000825D36 /* TestGame.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1296BD721CDC1D9600D17488;
+			remoteInfo = TestGame_iOS;
 		};
 		12A15FB21CD445FE00BEDD06 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -139,6 +175,14 @@
 		127011DE1CC31346001840A7 /* VFSArchive.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VFSArchive.h; sourceTree = "<group>"; };
 		127011DF1CC31346001840A7 /* VFSFile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VFSFile.h; sourceTree = "<group>"; };
 		1270124E1CC315FD001840A7 /* Engine.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Engine.xcodeproj; path = ../Engine/Engine.xcodeproj; sourceTree = "<group>"; };
+		1296BC391CDC132C00D17488 /* Launcher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Launcher.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1296BC3C1CDC132C00D17488 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		1296BC3E1CDC132C00D17488 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		1296BC3F1CDC132C00D17488 /* AppDelegate.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = AppDelegate.mm; sourceTree = "<group>"; };
+		1296BC471CDC132C00D17488 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		1296BC4A1CDC132C00D17488 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		1296BC4C1CDC132C00D17488 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1296BD001CDC1B0700D17488 /* Engine_Low.ini */ = {isa = PBXFileReference; lastKnownFileType = text; name = Engine_Low.ini; path = ../../Resources/Engine_Low.ini; sourceTree = "<group>"; };
 		12A15FAE1CD445FE00BEDD06 /* GLRenderer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GLRenderer.xcodeproj; path = ../GLRenderer/GLRenderer.xcodeproj; sourceTree = "<group>"; };
 		12B748271CC6E7C600825D36 /* Launcher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Launcher.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		12B7482F1CC6E7C600825D36 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -149,6 +193,15 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		1296BC361CDC132C00D17488 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1296BD871CDC1E1A00D17488 /* TestGame_iOS.framework in Frameworks */,
+				1296BC551CDC145600D17488 /* libEngine_iOS.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		12B748241CC6E7C600825D36 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -169,6 +222,7 @@
 				127011981CC31312001840A7 /* Include */,
 				127011991CC31317001840A7 /* Source */,
 				12B748281CC6E7C600825D36 /* Launcher */,
+				1296BC3A1CDC132C00D17488 /* Launcher-iOS */,
 				1270118F1CC312F3001840A7 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -177,6 +231,7 @@
 			isa = PBXGroup;
 			children = (
 				12B748271CC6E7C600825D36 /* Launcher.app */,
+				1296BC391CDC132C00D17488 /* Launcher.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -353,8 +408,31 @@
 			isa = PBXGroup;
 			children = (
 				127012531CC315FD001840A7 /* libEngine.dylib */,
+				1296BC511CDC132C00D17488 /* libEngine_iOS.a */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		1296BC3A1CDC132C00D17488 /* Launcher-iOS */ = {
+			isa = PBXGroup;
+			children = (
+				1296BD001CDC1B0700D17488 /* Engine_Low.ini */,
+				1296BC3E1CDC132C00D17488 /* AppDelegate.h */,
+				1296BC3F1CDC132C00D17488 /* AppDelegate.mm */,
+				1296BC471CDC132C00D17488 /* Assets.xcassets */,
+				1296BC491CDC132C00D17488 /* LaunchScreen.storyboard */,
+				1296BC4C1CDC132C00D17488 /* Info.plist */,
+				1296BC3B1CDC132C00D17488 /* Supporting Files */,
+			);
+			path = "Launcher-iOS";
+			sourceTree = "<group>";
+		};
+		1296BC3B1CDC132C00D17488 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				1296BC3C1CDC132C00D17488 /* main.m */,
+			);
+			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 		12A15FAF1CD445FE00BEDD06 /* Products */ = {
@@ -381,6 +459,7 @@
 			isa = PBXGroup;
 			children = (
 				12B7484F1CC6EA4000825D36 /* libTestGame.dylib */,
+				1296BD861CDC1E1700D17488 /* TestGame_iOS.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -388,6 +467,25 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		1296BC381CDC132C00D17488 /* Launcher-iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1296BC521CDC132C00D17488 /* Build configuration list for PBXNativeTarget "Launcher-iOS" */;
+			buildPhases = (
+				1296BC351CDC132C00D17488 /* Sources */,
+				1296BC361CDC132C00D17488 /* Frameworks */,
+				1296BC371CDC132C00D17488 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1296BD831CDC1E1700D17488 /* PBXTargetDependency */,
+				1296BC541CDC144F00D17488 /* PBXTargetDependency */,
+			);
+			name = "Launcher-iOS";
+			productName = "Launcher-iOS";
+			productReference = 1296BC391CDC132C00D17488 /* Launcher.app */;
+			productType = "com.apple.product-type.application";
+		};
 		12B748261CC6E7C600825D36 /* Launcher */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 12B748351CC6E7C600825D36 /* Build configuration list for PBXNativeTarget "Launcher" */;
@@ -418,6 +516,10 @@
 				LastUpgradeCheck = 0730;
 				ORGANIZATIONNAME = "Alexandru Naiman";
 				TargetAttributes = {
+					1296BC381CDC132C00D17488 = {
+						CreatedOnToolsVersion = 7.3;
+						DevelopmentTeam = UJ5SVB42BG;
+					};
 					12B748261CC6E7C600825D36 = {
 						CreatedOnToolsVersion = 7.3;
 					};
@@ -451,6 +553,7 @@
 			projectRoot = "";
 			targets = (
 				12B748261CC6E7C600825D36 /* Launcher */,
+				1296BC381CDC132C00D17488 /* Launcher-iOS */,
 			);
 		};
 /* End PBXProject section */
@@ -461,6 +564,20 @@
 			fileType = "compiled.mach-o.dylib";
 			path = libEngine.dylib;
 			remoteRef = 127012521CC315FD001840A7 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1296BC511CDC132C00D17488 /* libEngine_iOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libEngine_iOS.a;
+			remoteRef = 1296BC501CDC132C00D17488 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1296BD861CDC1E1700D17488 /* TestGame_iOS.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = TestGame_iOS.framework;
+			remoteRef = 1296BD851CDC1E1700D17488 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		12A15FB31CD445FE00BEDD06 /* libGLRenderer.dylib */ = {
@@ -480,6 +597,17 @@
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
+		1296BC371CDC132C00D17488 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1296BC4B1CDC132C00D17488 /* LaunchScreen.storyboard in Resources */,
+				1296BC481CDC132C00D17488 /* Assets.xcassets in Resources */,
+				1296BD011CDC1B0700D17488 /* Engine_Low.ini in Resources */,
+				1296BD6C1CDC1B7D00D17488 /* Data in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		12B748251CC6E7C600825D36 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -494,6 +622,15 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		1296BC351CDC132C00D17488 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1296BC401CDC132C00D17488 /* AppDelegate.mm in Sources */,
+				1296BC3D1CDC132C00D17488 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		12B748231CC6E7C600825D36 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -505,6 +642,16 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		1296BC541CDC144F00D17488 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Engine_iOS;
+			targetProxy = 1296BC531CDC144F00D17488 /* PBXContainerItemProxy */;
+		};
+		1296BD831CDC1E1700D17488 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = TestGame_iOS;
+			targetProxy = 1296BD821CDC1E1700D17488 /* PBXContainerItemProxy */;
+		};
 		12A15FB51CD4460100BEDD06 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = GLRenderer;
@@ -521,6 +668,17 @@
 			targetProxy = 12B748501CC6EA4400825D36 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		1296BC491CDC132C00D17488 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1296BC4A1CDC132C00D17488 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		127011931CC312F3001840A7 /* Debug */ = {
@@ -604,6 +762,49 @@
 			};
 			name = Release;
 		};
+		1296BC4D1CDC132C00D17488 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_C_LANGUAGE_STANDARD = c11;
+				HEADER_SEARCH_PATHS = (
+					"\"$(SRCROOT)/../Include\"",
+					"\"$(SRCROOT)/../3rdparty/include_all\"",
+				);
+				INFOPLIST_FILE = "Launcher-iOS/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.anaiman.Launcher-iOS";
+				PRODUCT_NAME = Launcher;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		1296BC4E1CDC132C00D17488 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_C_LANGUAGE_STANDARD = c11;
+				HEADER_SEARCH_PATHS = (
+					"\"$(SRCROOT)/../Include\"",
+					"\"$(SRCROOT)/../3rdparty/include_all\"",
+				);
+				INFOPLIST_FILE = "Launcher-iOS/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.anaiman.Launcher-iOS";
+				PRODUCT_NAME = Launcher;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 		12B748361CC6E7C600825D36 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -656,6 +857,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		1296BC521CDC132C00D17488 /* Build configuration list for PBXNativeTarget "Launcher-iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1296BC4D1CDC132C00D17488 /* Debug */,
+				1296BC4E1CDC132C00D17488 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 		12B748351CC6E7C600825D36 /* Build configuration list for PBXNativeTarget "Launcher" */ = {
 			isa = XCConfigurationList;

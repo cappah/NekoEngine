@@ -39,9 +39,9 @@
 
 #pragma once
 
-#include <Platform/Platform.h>
+#include <Platform/PlatformDetect.h>
 
-#ifdef NE_PLATFORM_MAC
+#if defined(NE_PLATFORM_MAC) || defined(NE_PLATFORM_IOS)
 	#include <OpenAL/al.h>
 #else
 	#include <AL/al.h>
