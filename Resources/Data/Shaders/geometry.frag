@@ -38,7 +38,7 @@ layout(std140) uniform MaterialBlock
 #define Shininess MaterialData.z
 #define Bloom MaterialData.w
 #define MaterialType MaterialData1.x
-#define ShaderType int(MaterialData1.x)
+#define ShaderType MaterialData1.x
 #define NoDiscard MaterialData1.y
 
 layout(location=U_TEXTURE0) uniform TEXTURE_2D u_texture0;

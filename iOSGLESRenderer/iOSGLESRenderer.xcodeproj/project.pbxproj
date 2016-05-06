@@ -1,0 +1,338 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		124A32341CDC288500472893 /* IGLArrayBuffer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 124A32331CDC288500472893 /* IGLArrayBuffer.mm */; };
+		124A32361CDC288900472893 /* IGLBuffer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 124A32351CDC288900472893 /* IGLBuffer.mm */; };
+		124A32381CDC288C00472893 /* IGLFramebuffer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 124A32371CDC288C00472893 /* IGLFramebuffer.mm */; };
+		124A323A1CDC288F00472893 /* IGLRenderer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 124A32391CDC288F00472893 /* IGLRenderer.mm */; };
+		124A323C1CDC289200472893 /* IGLShader.mm in Sources */ = {isa = PBXBuildFile; fileRef = 124A323B1CDC289200472893 /* IGLShader.mm */; };
+		124A323E1CDC289600472893 /* IGLTexture.mm in Sources */ = {isa = PBXBuildFile; fileRef = 124A323D1CDC289600472893 /* IGLTexture.mm */; };
+		124A32401CDC289900472893 /* IGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 124A323F1CDC289900472893 /* IGLView.mm */; };
+		124A32421CDC289D00472893 /* renderer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 124A32411CDC289D00472893 /* renderer.mm */; };
+		124A32471CDC293500472893 /* tga.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 124A32451CDC293500472893 /* tga.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		124A321E1CDC283900472893 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		124A32201CDC283900472893 /* libiOSGLESRenderer.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libiOSGLESRenderer.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		124A322C1CDC286B00472893 /* IGLArrayBuffer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IGLArrayBuffer.h; sourceTree = "<group>"; };
+		124A322D1CDC286E00472893 /* IGLBuffer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IGLBuffer.h; sourceTree = "<group>"; };
+		124A322E1CDC287200472893 /* IGLFramebuffer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IGLFramebuffer.h; sourceTree = "<group>"; };
+		124A322F1CDC287700472893 /* IGLRenderer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IGLRenderer.h; sourceTree = "<group>"; };
+		124A32301CDC287A00472893 /* IGLShader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IGLShader.h; sourceTree = "<group>"; };
+		124A32311CDC287D00472893 /* IGLTexture.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IGLTexture.h; sourceTree = "<group>"; };
+		124A32321CDC288100472893 /* IGLView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IGLView.h; sourceTree = "<group>"; };
+		124A32331CDC288500472893 /* IGLArrayBuffer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = IGLArrayBuffer.mm; sourceTree = "<group>"; };
+		124A32351CDC288900472893 /* IGLBuffer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = IGLBuffer.mm; sourceTree = "<group>"; };
+		124A32371CDC288C00472893 /* IGLFramebuffer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = IGLFramebuffer.mm; sourceTree = "<group>"; };
+		124A32391CDC288F00472893 /* IGLRenderer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = IGLRenderer.mm; sourceTree = "<group>"; };
+		124A323B1CDC289200472893 /* IGLShader.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = IGLShader.mm; sourceTree = "<group>"; };
+		124A323D1CDC289600472893 /* IGLTexture.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = IGLTexture.mm; sourceTree = "<group>"; };
+		124A323F1CDC289900472893 /* IGLView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = IGLView.mm; sourceTree = "<group>"; };
+		124A32411CDC289D00472893 /* renderer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = renderer.mm; sourceTree = "<group>"; };
+		124A32451CDC293500472893 /* tga.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tga.cpp; path = ../../GLRenderer/Loaders/tga.cpp; sourceTree = "<group>"; };
+		124A32461CDC293500472893 /* tga.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tga.h; path = ../../GLRenderer/Loaders/tga.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		124A321D1CDC283900472893 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		124A32171CDC283900472893 = {
+			isa = PBXGroup;
+			children = (
+				124A32431CDC28D500472893 /* Include */,
+				124A32221CDC283900472893 /* iOSGLESRenderer */,
+				124A32211CDC283900472893 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		124A32211CDC283900472893 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				124A32201CDC283900472893 /* libiOSGLESRenderer.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		124A32221CDC283900472893 /* iOSGLESRenderer */ = {
+			isa = PBXGroup;
+			children = (
+				124A32441CDC292400472893 /* Loaders */,
+				124A322C1CDC286B00472893 /* IGLArrayBuffer.h */,
+				124A322D1CDC286E00472893 /* IGLBuffer.h */,
+				124A322E1CDC287200472893 /* IGLFramebuffer.h */,
+				124A322F1CDC287700472893 /* IGLRenderer.h */,
+				124A32301CDC287A00472893 /* IGLShader.h */,
+				124A32311CDC287D00472893 /* IGLTexture.h */,
+				124A32321CDC288100472893 /* IGLView.h */,
+				124A32331CDC288500472893 /* IGLArrayBuffer.mm */,
+				124A32351CDC288900472893 /* IGLBuffer.mm */,
+				124A32371CDC288C00472893 /* IGLFramebuffer.mm */,
+				124A32391CDC288F00472893 /* IGLRenderer.mm */,
+				124A323B1CDC289200472893 /* IGLShader.mm */,
+				124A323D1CDC289600472893 /* IGLTexture.mm */,
+				124A323F1CDC289900472893 /* IGLView.mm */,
+				124A32411CDC289D00472893 /* renderer.mm */,
+			);
+			path = iOSGLESRenderer;
+			sourceTree = "<group>";
+		};
+		124A32431CDC28D500472893 /* Include */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Include;
+			sourceTree = "<group>";
+		};
+		124A32441CDC292400472893 /* Loaders */ = {
+			isa = PBXGroup;
+			children = (
+				124A32451CDC293500472893 /* tga.cpp */,
+				124A32461CDC293500472893 /* tga.h */,
+			);
+			name = Loaders;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		124A321F1CDC283900472893 /* iOSGLESRenderer */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 124A32291CDC283900472893 /* Build configuration list for PBXNativeTarget "iOSGLESRenderer" */;
+			buildPhases = (
+				124A321C1CDC283900472893 /* Sources */,
+				124A321D1CDC283900472893 /* Frameworks */,
+				124A321E1CDC283900472893 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = iOSGLESRenderer;
+			productName = iOSGLESRenderer;
+			productReference = 124A32201CDC283900472893 /* libiOSGLESRenderer.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		124A32181CDC283900472893 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0730;
+				ORGANIZATIONNAME = "Alexandru Naiman";
+				TargetAttributes = {
+					124A321F1CDC283900472893 = {
+						CreatedOnToolsVersion = 7.3;
+						DevelopmentTeam = UJ5SVB42BG;
+					};
+				};
+			};
+			buildConfigurationList = 124A321B1CDC283900472893 /* Build configuration list for PBXProject "iOSGLESRenderer" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 124A32171CDC283900472893;
+			productRefGroup = 124A32211CDC283900472893 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				124A321F1CDC283900472893 /* iOSGLESRenderer */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		124A321C1CDC283900472893 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				124A323E1CDC289600472893 /* IGLTexture.mm in Sources */,
+				124A32361CDC288900472893 /* IGLBuffer.mm in Sources */,
+				124A32421CDC289D00472893 /* renderer.mm in Sources */,
+				124A32471CDC293500472893 /* tga.cpp in Sources */,
+				124A323A1CDC288F00472893 /* IGLRenderer.mm in Sources */,
+				124A32341CDC288500472893 /* IGLArrayBuffer.mm in Sources */,
+				124A323C1CDC289200472893 /* IGLShader.mm in Sources */,
+				124A32401CDC289900472893 /* IGLView.mm in Sources */,
+				124A32381CDC288C00472893 /* IGLFramebuffer.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		124A32271CDC283900472893 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		124A32281CDC283900472893 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		124A322A1CDC283900472893 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				GCC_C_LANGUAGE_STANDARD = c11;
+				GCC_FAST_MATH = YES;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
+				GCC_UNROLL_LOOPS = YES;
+				HEADER_SEARCH_PATHS = (
+					"\"$(SRCROOT)/../Include\"",
+					"\"$(SRCROOT)/../GLRenderer\"",
+				);
+				LLVM_LTO = YES;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		124A322B1CDC283900472893 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				GCC_C_LANGUAGE_STANDARD = c11;
+				GCC_FAST_MATH = YES;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_UNROLL_LOOPS = YES;
+				HEADER_SEARCH_PATHS = (
+					"\"$(SRCROOT)/../Include\"",
+					"\"$(SRCROOT)/../GLRenderer\"",
+				);
+				LLVM_LTO = YES;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		124A321B1CDC283900472893 /* Build configuration list for PBXProject "iOSGLESRenderer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				124A32271CDC283900472893 /* Debug */,
+				124A32281CDC283900472893 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		124A32291CDC283900472893 /* Build configuration list for PBXNativeTarget "iOSGLESRenderer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				124A322A1CDC283900472893 /* Debug */,
+				124A322B1CDC283900472893 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 124A32181CDC283900472893 /* Project object */;
+}

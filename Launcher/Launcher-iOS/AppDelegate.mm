@@ -16,7 +16,6 @@
 
 @implementation AppDelegate
 
-
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
 	UIWindow *window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
@@ -29,7 +28,7 @@
 	args.append([[[NSBundle mainBundle] resourcePath] UTF8String]);
 	args.append("/Data --ini=");
 	args.append([[[NSBundle mainBundle] resourcePath] UTF8String]);
-	args.append("/Engine.ini --log=");
+	args.append("/Engine_Low.ini --log=");
 	
 	NSArray *urls = [[NSFileManager defaultManager] URLsForDirectory:NSLibraryDirectory inDomains:NSUserDomainMask];
 	NSURL *logUrl = [[urls lastObject] URLByAppendingPathComponent:@"Logs"];
@@ -40,7 +39,7 @@
 	{
 		printf("Failed to initialize engine.\n");
 		Platform::MessageBox("Fatal error", "Failed to initialize engine", MessageBoxButtons::OK, MessageBoxIcon::Error);
-		return -1;
+		return false;
 	}
 	
 	Engine::Run();

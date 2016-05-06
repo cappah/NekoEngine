@@ -13,6 +13,8 @@
 		124A320C1CDC268800472893 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 124A320B1CDC268800472893 /* OpenAL.framework */; };
 		124A320F1CDC26CF00472893 /* Ogg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 124A320E1CDC26CF00472893 /* Ogg.framework */; };
 		124A32111CDC26D600472893 /* Vorbis.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 124A32101CDC26D600472893 /* Vorbis.framework */; };
+		124A32511CDC299500472893 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 124A32501CDC299500472893 /* OpenGLES.framework */; };
+		124A32521CDC29A400472893 /* libiOSGLESRenderer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 124A324D1CDC298200472893 /* libiOSGLESRenderer.a */; };
 		1296BC3D1CDC132C00D17488 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1296BC3C1CDC132C00D17488 /* main.m */; };
 		1296BC401CDC132C00D17488 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1296BC3F1CDC132C00D17488 /* AppDelegate.mm */; };
 		1296BC481CDC132C00D17488 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1296BC471CDC132C00D17488 /* Assets.xcassets */; };
@@ -32,6 +34,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		124A324C1CDC298200472893 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 124A32481CDC298100472893 /* iOSGLESRenderer.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 124A32201CDC283900472893;
+			remoteInfo = iOSGLESRenderer;
+		};
+		124A324E1CDC298800472893 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 124A32481CDC298100472893 /* iOSGLESRenderer.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 124A321F1CDC283900472893;
+			remoteInfo = iOSGLESRenderer;
+		};
 		127012521CC315FD001840A7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1270124E1CC315FD001840A7 /* Engine.xcodeproj */;
@@ -126,6 +142,8 @@
 		124A320B1CDC268800472893 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/System/Library/Frameworks/OpenAL.framework; sourceTree = DEVELOPER_DIR; };
 		124A320E1CDC26CF00472893 /* Ogg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Ogg.framework; path = Frameworks/Ogg.framework; sourceTree = "<group>"; };
 		124A32101CDC26D600472893 /* Vorbis.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Vorbis.framework; path = Frameworks/Vorbis.framework; sourceTree = "<group>"; };
+		124A32481CDC298100472893 /* iOSGLESRenderer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = iOSGLESRenderer.xcodeproj; path = ../iOSGLESRenderer/iOSGLESRenderer.xcodeproj; sourceTree = "<group>"; };
+		124A32501CDC299500472893 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/System/Library/Frameworks/OpenGLES.framework; sourceTree = DEVELOPER_DIR; };
 		1270119A1CC31326001840A7 /* launcher.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = launcher.mm; path = Mac/launcher.mm; sourceTree = "<group>"; };
 		1270119D1CC31346001840A7 /* AudioClip.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioClip.h; sourceTree = "<group>"; };
 		1270119E1CC31346001840A7 /* AudioSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioSource.h; sourceTree = "<group>"; };
@@ -207,6 +225,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				124A32521CDC29A400472893 /* libiOSGLESRenderer.a in Frameworks */,
+				124A32511CDC299500472893 /* OpenGLES.framework in Frameworks */,
 				124A320F1CDC26CF00472893 /* Ogg.framework in Frameworks */,
 				124A320C1CDC268800472893 /* OpenAL.framework in Frameworks */,
 				124A320A1CDC268100472893 /* libsqlite3.tbd in Frameworks */,
@@ -231,6 +251,7 @@
 		124A320D1CDC26AE00472893 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				124A32501CDC299500472893 /* OpenGLES.framework */,
 				124A32101CDC26D600472893 /* Vorbis.framework */,
 				124A320E1CDC26CF00472893 /* Ogg.framework */,
 				124A320B1CDC268800472893 /* OpenAL.framework */,
@@ -240,12 +261,21 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		124A32491CDC298100472893 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				124A324D1CDC298200472893 /* libiOSGLESRenderer.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		127011851CC312F3001840A7 = {
 			isa = PBXGroup;
 			children = (
 				1270124E1CC315FD001840A7 /* Engine.xcodeproj */,
 				12B7484A1CC6EA4000825D36 /* TestGame.xcodeproj */,
 				12A15FAE1CD445FE00BEDD06 /* GLRenderer.xcodeproj */,
+				124A32481CDC298100472893 /* iOSGLESRenderer.xcodeproj */,
 				127011981CC31312001840A7 /* Include */,
 				127011991CC31317001840A7 /* Source */,
 				12B748281CC6E7C600825D36 /* Launcher */,
@@ -506,6 +536,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				124A324F1CDC298800472893 /* PBXTargetDependency */,
 				1296BD831CDC1E1700D17488 /* PBXTargetDependency */,
 				1296BC541CDC144F00D17488 /* PBXTargetDependency */,
 			);
@@ -574,6 +605,10 @@
 					ProjectRef = 12A15FAE1CD445FE00BEDD06 /* GLRenderer.xcodeproj */;
 				},
 				{
+					ProductGroup = 124A32491CDC298100472893 /* Products */;
+					ProjectRef = 124A32481CDC298100472893 /* iOSGLESRenderer.xcodeproj */;
+				},
+				{
 					ProductGroup = 12B7484B1CC6EA4000825D36 /* Products */;
 					ProjectRef = 12B7484A1CC6EA4000825D36 /* TestGame.xcodeproj */;
 				},
@@ -587,6 +622,13 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		124A324D1CDC298200472893 /* libiOSGLESRenderer.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libiOSGLESRenderer.a;
+			remoteRef = 124A324C1CDC298200472893 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		127012531CC315FD001840A7 /* libEngine.dylib */ = {
 			isa = PBXReferenceProxy;
 			fileType = "compiled.mach-o.dylib";
@@ -670,6 +712,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		124A324F1CDC298800472893 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = iOSGLESRenderer;
+			targetProxy = 124A324E1CDC298800472893 /* PBXContainerItemProxy */;
+		};
 		1296BC541CDC144F00D17488 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = Engine_iOS;
