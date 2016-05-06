@@ -4,8 +4,8 @@ name=Main
 #bgmusic=1
 #bgmusicvol=1.0
 gamemodule=TestGame
-ambcolor=1.0, 1.0, 1.0
-ambintensity=1.0
+ambcolor=0.02, 0.02, 0.02
+ambintensity=0.02
 EndSceneInfo
 
 # Camera
@@ -55,9 +55,24 @@ material=mat_arissa
 material=mat_arissa
 material=mat_arissa
 material=mat_arissa
-position=0, 0.0, -155.0
+position=0.0, 0.0, -155.0
 rotation=0.0, 0.0, 0.0
 scale=45.0, 45.0, 45.0
+EndObject
+
+################
+# Scene lights #
+################
+
+Object=Light
+id=100
+mesh=stm_bila
+material=mat_bila
+scale=0.1, 0.1, 0.1
+position=100.0, 0.0, -155.0
+rotation=0.0, 90.0, 0.0
+color=1.0, 0.0, 0.0
+opt=lt_point;lt_attenuation:300.0, 350.0;lt_intensity:2.0
 EndObject
 
 #############

@@ -75,7 +75,7 @@ Object *Scene::_LoadObject(VFSFile *f, const string &className)
 
 	if (!obj)
 	{
-		Logger::Log(SCENE_MODULE, LOG_CRITICAL, "NewObject() call failed for class %s", _id, className.c_str());
+		Logger::Log(SCENE_MODULE, LOG_CRITICAL, "NewObject() call failed for class %s", className.c_str());
 		return nullptr;
 	}
 

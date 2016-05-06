@@ -146,7 +146,7 @@
 		124A32501CDC299500472893 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/System/Library/Frameworks/OpenGLES.framework; sourceTree = DEVELOPER_DIR; };
 		1270119A1CC31326001840A7 /* launcher.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = launcher.mm; path = Mac/launcher.mm; sourceTree = "<group>"; };
 		1270124E1CC315FD001840A7 /* Engine.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Engine.xcodeproj; path = ../Engine/Engine.xcodeproj; sourceTree = "<group>"; };
-		1296BC391CDC132C00D17488 /* Launcher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Launcher.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1296BC391CDC132C00D17488 /* NekoEngine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NekoEngine.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1296BC3C1CDC132C00D17488 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		1296BC3E1CDC132C00D17488 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		1296BC3F1CDC132C00D17488 /* AppDelegate.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = AppDelegate.mm; sourceTree = "<group>"; };
@@ -230,7 +230,7 @@
 			isa = PBXGroup;
 			children = (
 				12B748271CC6E7C600825D36 /* Launcher.app */,
-				1296BC391CDC132C00D17488 /* Launcher.app */,
+				1296BC391CDC132C00D17488 /* NekoEngine.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -324,7 +324,7 @@
 			);
 			name = "Launcher-iOS";
 			productName = "Launcher-iOS";
-			productReference = 1296BC391CDC132C00D17488 /* Launcher.app */;
+			productReference = 1296BC391CDC132C00D17488 /* NekoEngine.app */;
 			productType = "com.apple.product-type.application";
 		};
 		12B748261CC6E7C600825D36 /* Launcher */ = {
@@ -632,6 +632,7 @@
 				CLANG_WARN_CXX0X_EXTENSIONS = YES;
 				CLANG_WARN__EXIT_TIME_DESTRUCTORS = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEAD_CODE_STRIPPING = NO;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -648,8 +649,9 @@
 				INFOPLIST_FILE = "Launcher-iOS/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.anaiman.Launcher-iOS";
-				PRODUCT_NAME = Launcher;
+				PRODUCT_NAME = NekoEngine;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -668,6 +670,7 @@
 				CLANG_WARN_CXX0X_EXTENSIONS = YES;
 				CLANG_WARN__EXIT_TIME_DESTRUCTORS = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEAD_CODE_STRIPPING = NO;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -685,8 +688,9 @@
 				INFOPLIST_FILE = "Launcher-iOS/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.anaiman.Launcher-iOS";
-				PRODUCT_NAME = Launcher;
+				PRODUCT_NAME = NekoEngine;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
