@@ -62,32 +62,26 @@ int Texture::Load()
 {
 	TextureType type = GetResourceInfo()->textureType == TextureResourceType::TEXTURE_2D ? TextureType::Tex2D : TextureType::TexCubemap;
 	TextureFileFormat format = TextureFileFormat::DDS;
+	
 	string path("/");
 	path.append(GetResourceInfo()->filePath);
-
 	path.append(".dds");
-	VFSFile *file = VFS::Open(path);
-
-	if (!file)
-	{
-		path[path.length() - 3] = 't';
-		path[path.length() - 2] = 'g';
-		path[path.length() - 1] = 'a';
-
+	
+	VFSFile *file = nullptr;
+	
+	if(Engine::GetRenderer()->IsTextureFormatSupported(TextureFileFormat::DDS))
 		file = VFS::Open(path);
-		format = TextureFileFormat::TGA;
-	}
-
-	if (!file)
+	
+	if (!file && Engine::GetRenderer()->IsTextureFormatSupported(TextureFileFormat::KTX))
 	{
 		path[path.length() - 3] = 'k';
 		path[path.length() - 2] = 't';
 		path[path.length() - 1] = 'x';
-
+		
 		file = VFS::Open(path);
 		format = TextureFileFormat::KTX;
 	}
-
+	
 	if (!file)
 	{
 		path[path.length() - 3] = 't';
@@ -97,8 +91,11 @@ int Texture::Load()
 		file = VFS::Open(path);
 		format = TextureFileFormat::TGA;
 
-		if(!file)
+		if(!file || !Engine::GetRenderer()->IsTextureFormatSupported(TextureFileFormat::TGA))
 		{
+			if(file)
+				file->Close();
+			
 			Logger::Log(TEX_MODULE, LOG_CRITICAL, "Failed to load texture id %d, file name [%s]. Reason: unsupported texture format.", GetResourceInfo()->id, GetResourceInfo()->filePath.c_str());
 			return ENGINE_FAIL;
 		}

@@ -130,13 +130,11 @@ void Logger::_WriteMessage(LogMessage &msg)
 #else
 	if (msg.Severity == LOG_CRITICAL)
 		fprintf(stderr, "[%s][%s]: %s", msg.Module.c_str(), SeverityStr[msg.Severity].c_str(), msg.Message.c_str());
-	else
-	{
-		char buff[2048];
-		if (snprintf(buff, 2048, "[%s][%s]: %s", msg.Module.c_str(), SeverityStr[msg.Severity].c_str(), msg.Message.c_str()) >= 1024)
-			Platform::LogDebugMessage("MESSAGE TRUNCATED");
-		Platform::LogDebugMessage(buff);
-	}
+	
+	char buff[2048];
+	if (snprintf(buff, 2048, "[%s][%s]: %s", msg.Module.c_str(), SeverityStr[msg.Severity].c_str(), msg.Message.c_str()) >= 1024)
+		Platform::LogDebugMessage("MESSAGE TRUNCATED");
+	Platform::LogDebugMessage(buff);
 #endif
 
 	if (msg.Severity > LOG_ALL)

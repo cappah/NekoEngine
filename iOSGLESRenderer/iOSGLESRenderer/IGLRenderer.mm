@@ -134,7 +134,7 @@ void IGLRenderer::SetDebugLogFunction(RendererDebugLogProc debugLog)
 
 const char* IGLRenderer::GetName()
 {
-    return "OpenGL";
+    return "OpenGL|ES";
 }
 
 int IGLRenderer::GetMajorVersion()
@@ -430,7 +430,6 @@ bool IGLRenderer::IsTextureFormatSupported(TextureFileFormat format)
 {
     switch (format)
     {
-        case TextureFileFormat::DDS:
         case TextureFileFormat::TGA:
             return true;
         default:

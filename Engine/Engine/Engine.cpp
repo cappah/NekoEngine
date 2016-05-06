@@ -98,7 +98,7 @@ PlatformWindowType Engine::_engineWindow;
 Configuration Engine::_config;
 vector<int>* Engine::_pressedKeys;
 bool Engine::_disposed = false;
-bool Engine::_printStats = false;
+bool Engine::_printStats = true;
 TextureFont* Engine::_engineFont = nullptr;
 int Engine::_nFrames = 0;
 double Engine::_lastTime = 0.f;
@@ -646,7 +646,7 @@ void Engine::Draw() noexcept
 		_nFrames = 0;
 	}
 
-	if (_printStats)
+	if (_printStats && _engineFont)
 	{
 		// Uncomment to show time per frame
 		/*static double _lastFrameTime = esGetTime();
@@ -729,7 +729,8 @@ void Engine::Draw() noexcept
 	_renderer->EnableFaceCulling(false);
 	_renderer->EnableDepthTest(false);
 	
-	_engineFont->Render();
+	if(_engineFont)
+		_engineFont->Render();
 
 	_renderer->SwapBuffers();
 

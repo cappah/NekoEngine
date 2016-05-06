@@ -19,10 +19,10 @@
 		1296BC401CDC132C00D17488 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1296BC3F1CDC132C00D17488 /* AppDelegate.mm */; };
 		1296BC481CDC132C00D17488 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1296BC471CDC132C00D17488 /* Assets.xcassets */; };
 		1296BC4B1CDC132C00D17488 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1296BC491CDC132C00D17488 /* LaunchScreen.storyboard */; };
-		1296BC551CDC145600D17488 /* Engine_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1296BC511CDC132C00D17488 /* Engine_iOS.framework */; };
+		1296BC551CDC145600D17488 /* libEngine_iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1296BC511CDC132C00D17488 /* libEngine_iOS.a */; };
 		1296BD011CDC1B0700D17488 /* Engine_Low.ini in Resources */ = {isa = PBXBuildFile; fileRef = 1296BD001CDC1B0700D17488 /* Engine_Low.ini */; };
 		1296BD6C1CDC1B7D00D17488 /* Data in Resources */ = {isa = PBXBuildFile; fileRef = 12B748541CC6EFE200825D36 /* Data */; };
-		1296BD871CDC1E1A00D17488 /* TestGame_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1296BD861CDC1E1700D17488 /* TestGame_iOS.framework */; };
+		1296BD871CDC1E1A00D17488 /* libTestGame_iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1296BD861CDC1E1700D17488 /* libTestGame_iOS.a */; };
 		12A15FB61CD4460F00BEDD06 /* libGLRenderer.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 12A15FB31CD445FE00BEDD06 /* libGLRenderer.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		12B748301CC6E7C600825D36 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 12B7482F1CC6E7C600825D36 /* Assets.xcassets */; };
 		12B748381CC6E80100825D36 /* launcher.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1270119A1CC31326001840A7 /* launcher.mm */; };
@@ -145,63 +145,6 @@
 		124A32481CDC298100472893 /* iOSGLESRenderer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = iOSGLESRenderer.xcodeproj; path = ../iOSGLESRenderer/iOSGLESRenderer.xcodeproj; sourceTree = "<group>"; };
 		124A32501CDC299500472893 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/System/Library/Frameworks/OpenGLES.framework; sourceTree = DEVELOPER_DIR; };
 		1270119A1CC31326001840A7 /* launcher.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = launcher.mm; path = Mac/launcher.mm; sourceTree = "<group>"; };
-		1270119D1CC31346001840A7 /* AudioClip.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioClip.h; sourceTree = "<group>"; };
-		1270119E1CC31346001840A7 /* AudioSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioSource.h; sourceTree = "<group>"; };
-		127011A01CC31346001840A7 /* DeferredBuffer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DeferredBuffer.h; sourceTree = "<group>"; };
-		127011A11CC31346001840A7 /* Engine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Engine.h; sourceTree = "<group>"; };
-		127011A21CC31346001840A7 /* EngineClassFactory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EngineClassFactory.h; sourceTree = "<group>"; };
-		127011A31CC31346001840A7 /* EngineUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EngineUtils.h; sourceTree = "<group>"; };
-		127011A41CC31346001840A7 /* GameModule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GameModule.h; sourceTree = "<group>"; };
-		127011A51CC31346001840A7 /* LoadingScreen.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LoadingScreen.h; sourceTree = "<group>"; };
-		127011A61CC31346001840A7 /* Material.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Material.h; sourceTree = "<group>"; };
-		127011A71CC31346001840A7 /* Mesh.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Mesh.h; sourceTree = "<group>"; };
-		127011A81CC31346001840A7 /* PostProcessor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PostProcessor.h; sourceTree = "<group>"; };
-		127011A91CC31346001840A7 /* ResourceDatabase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ResourceDatabase.h; sourceTree = "<group>"; };
-		127011AA1CC31346001840A7 /* ResourceManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ResourceManager.h; sourceTree = "<group>"; };
-		127011AB1CC31346001840A7 /* SceneManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SceneManager.h; sourceTree = "<group>"; };
-		127011AC1CC31346001840A7 /* Shader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Shader.h; sourceTree = "<group>"; };
-		127011AD1CC31346001840A7 /* ShadowMap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShadowMap.h; sourceTree = "<group>"; };
-		127011AE1CC31346001840A7 /* SoundManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SoundManager.h; sourceTree = "<group>"; };
-		127011AF1CC31346001840A7 /* SSAO.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SSAO.h; sourceTree = "<group>"; };
-		127011B01CC31346001840A7 /* Texture.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Texture.h; sourceTree = "<group>"; };
-		127011B11CC31346001840A7 /* TextureFont.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TextureFont.h; sourceTree = "<group>"; };
-		127011B21CC31346001840A7 /* Version.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Version.h; sourceTree = "<group>"; };
-		127011B31CC31346001840A7 /* Vertex.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Vertex.h; sourceTree = "<group>"; };
-		127011B51CC31346001840A7 /* Platform.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Platform.h; sourceTree = "<group>"; };
-		127011B71CC31346001840A7 /* Bloom.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Bloom.h; sourceTree = "<group>"; };
-		127011B81CC31346001840A7 /* Effect.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Effect.h; sourceTree = "<group>"; };
-		127011B91CC31346001840A7 /* FXAA.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FXAA.h; sourceTree = "<group>"; };
-		127011BB1CC31346001840A7 /* AreaTex.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AreaTex.h; sourceTree = "<group>"; };
-		127011BC1CC31346001840A7 /* SearchTex.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SearchTex.h; sourceTree = "<group>"; };
-		127011BD1CC31346001840A7 /* SMAA.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SMAA.h; sourceTree = "<group>"; };
-		127011BF1CC31346001840A7 /* RArrayBuffer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RArrayBuffer.h; sourceTree = "<group>"; };
-		127011C01CC31346001840A7 /* RBuffer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RBuffer.h; sourceTree = "<group>"; };
-		127011C11CC31346001840A7 /* Renderer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Renderer.h; sourceTree = "<group>"; };
-		127011C21CC31346001840A7 /* RFramebuffer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RFramebuffer.h; sourceTree = "<group>"; };
-		127011C31CC31346001840A7 /* RShader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RShader.h; sourceTree = "<group>"; };
-		127011C41CC31346001840A7 /* RTexture.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RTexture.h; sourceTree = "<group>"; };
-		127011C61CC31346001840A7 /* AudioClipResource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioClipResource.h; sourceTree = "<group>"; };
-		127011C71CC31346001840A7 /* MaterialResource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MaterialResource.h; sourceTree = "<group>"; };
-		127011C81CC31346001840A7 /* MeshResource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MeshResource.h; sourceTree = "<group>"; };
-		127011C91CC31346001840A7 /* Resource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Resource.h; sourceTree = "<group>"; };
-		127011CA1CC31346001840A7 /* ResourceInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ResourceInfo.h; sourceTree = "<group>"; };
-		127011CB1CC31346001840A7 /* ShaderResource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShaderResource.h; sourceTree = "<group>"; };
-		127011CC1CC31346001840A7 /* TextureFontResource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TextureFontResource.h; sourceTree = "<group>"; };
-		127011CD1CC31346001840A7 /* TextureResource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TextureResource.h; sourceTree = "<group>"; };
-		127011CF1CC31346001840A7 /* Camera.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Camera.h; sourceTree = "<group>"; };
-		127011D01CC31346001840A7 /* Light.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Light.h; sourceTree = "<group>"; };
-		127011D11CC31346001840A7 /* Object.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Object.h; sourceTree = "<group>"; };
-		127011D21CC31346001840A7 /* ObjectComponent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ObjectComponent.h; sourceTree = "<group>"; };
-		127011D31CC31346001840A7 /* Scene.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Scene.h; sourceTree = "<group>"; };
-		127011D41CC31346001840A7 /* Skybox.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Skybox.h; sourceTree = "<group>"; };
-		127011D51CC31346001840A7 /* Terrain.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Terrain.h; sourceTree = "<group>"; };
-		127011D81CC31346001840A7 /* AssetLoader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AssetLoader.h; sourceTree = "<group>"; };
-		127011D91CC31346001840A7 /* ogg_callbacks.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ogg_callbacks.h; sourceTree = "<group>"; };
-		127011DA1CC31346001840A7 /* Logger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Logger.h; sourceTree = "<group>"; };
-		127011DB1CC31346001840A7 /* Memory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Memory.h; sourceTree = "<group>"; };
-		127011DD1CC31346001840A7 /* VFS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VFS.h; sourceTree = "<group>"; };
-		127011DE1CC31346001840A7 /* VFSArchive.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VFSArchive.h; sourceTree = "<group>"; };
-		127011DF1CC31346001840A7 /* VFSFile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VFSFile.h; sourceTree = "<group>"; };
 		1270124E1CC315FD001840A7 /* Engine.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Engine.xcodeproj; path = ../Engine/Engine.xcodeproj; sourceTree = "<group>"; };
 		1296BC391CDC132C00D17488 /* Launcher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Launcher.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1296BC3C1CDC132C00D17488 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -231,8 +174,8 @@
 				124A320C1CDC268800472893 /* OpenAL.framework in Frameworks */,
 				124A320A1CDC268100472893 /* libsqlite3.tbd in Frameworks */,
 				124A32081CDC267D00472893 /* libz.tbd in Frameworks */,
-				1296BD871CDC1E1A00D17488 /* TestGame_iOS.framework in Frameworks */,
-				1296BC551CDC145600D17488 /* Engine_iOS.framework in Frameworks */,
+				1296BD871CDC1E1A00D17488 /* libTestGame_iOS.a in Frameworks */,
+				1296BC551CDC145600D17488 /* libEngine_iOS.a in Frameworks */,
 				124A32111CDC26D600472893 /* Vorbis.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -276,7 +219,6 @@
 				12B7484A1CC6EA4000825D36 /* TestGame.xcodeproj */,
 				12A15FAE1CD445FE00BEDD06 /* GLRenderer.xcodeproj */,
 				124A32481CDC298100472893 /* iOSGLESRenderer.xcodeproj */,
-				127011981CC31312001840A7 /* Include */,
 				127011991CC31317001840A7 /* Source */,
 				12B748281CC6E7C600825D36 /* Launcher */,
 				1296BC3A1CDC132C00D17488 /* Launcher-iOS */,
@@ -293,21 +235,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		127011981CC31312001840A7 /* Include */ = {
-			isa = PBXGroup;
-			children = (
-				1270119C1CC31346001840A7 /* Audio */,
-				1270119F1CC31346001840A7 /* Engine */,
-				127011B41CC31346001840A7 /* Platform */,
-				127011B61CC31346001840A7 /* PostEffects */,
-				127011BE1CC31346001840A7 /* Renderer */,
-				127011C51CC31346001840A7 /* Resource */,
-				127011CE1CC31346001840A7 /* Scene */,
-				127011D61CC31346001840A7 /* System */,
-			);
-			name = Include;
-			sourceTree = "<group>";
-		};
 		127011991CC31317001840A7 /* Source */ = {
 			isa = PBXGroup;
 			children = (
@@ -316,156 +243,11 @@
 			name = Source;
 			sourceTree = "<group>";
 		};
-		1270119C1CC31346001840A7 /* Audio */ = {
-			isa = PBXGroup;
-			children = (
-				1270119D1CC31346001840A7 /* AudioClip.h */,
-				1270119E1CC31346001840A7 /* AudioSource.h */,
-			);
-			name = Audio;
-			path = ../Include/Audio;
-			sourceTree = "<group>";
-		};
-		1270119F1CC31346001840A7 /* Engine */ = {
-			isa = PBXGroup;
-			children = (
-				127011A01CC31346001840A7 /* DeferredBuffer.h */,
-				127011A11CC31346001840A7 /* Engine.h */,
-				127011A21CC31346001840A7 /* EngineClassFactory.h */,
-				127011A31CC31346001840A7 /* EngineUtils.h */,
-				127011A41CC31346001840A7 /* GameModule.h */,
-				127011A51CC31346001840A7 /* LoadingScreen.h */,
-				127011A61CC31346001840A7 /* Material.h */,
-				127011A71CC31346001840A7 /* Mesh.h */,
-				127011A81CC31346001840A7 /* PostProcessor.h */,
-				127011A91CC31346001840A7 /* ResourceDatabase.h */,
-				127011AA1CC31346001840A7 /* ResourceManager.h */,
-				127011AB1CC31346001840A7 /* SceneManager.h */,
-				127011AC1CC31346001840A7 /* Shader.h */,
-				127011AD1CC31346001840A7 /* ShadowMap.h */,
-				127011AE1CC31346001840A7 /* SoundManager.h */,
-				127011AF1CC31346001840A7 /* SSAO.h */,
-				127011B01CC31346001840A7 /* Texture.h */,
-				127011B11CC31346001840A7 /* TextureFont.h */,
-				127011B21CC31346001840A7 /* Version.h */,
-				127011B31CC31346001840A7 /* Vertex.h */,
-			);
-			name = Engine;
-			path = ../Include/Engine;
-			sourceTree = "<group>";
-		};
-		127011B41CC31346001840A7 /* Platform */ = {
-			isa = PBXGroup;
-			children = (
-				127011B51CC31346001840A7 /* Platform.h */,
-			);
-			name = Platform;
-			path = ../Include/Platform;
-			sourceTree = "<group>";
-		};
-		127011B61CC31346001840A7 /* PostEffects */ = {
-			isa = PBXGroup;
-			children = (
-				127011B71CC31346001840A7 /* Bloom.h */,
-				127011B81CC31346001840A7 /* Effect.h */,
-				127011B91CC31346001840A7 /* FXAA.h */,
-				127011BA1CC31346001840A7 /* SMAA */,
-				127011BD1CC31346001840A7 /* SMAA.h */,
-			);
-			name = PostEffects;
-			path = ../Include/PostEffects;
-			sourceTree = "<group>";
-		};
-		127011BA1CC31346001840A7 /* SMAA */ = {
-			isa = PBXGroup;
-			children = (
-				127011BB1CC31346001840A7 /* AreaTex.h */,
-				127011BC1CC31346001840A7 /* SearchTex.h */,
-			);
-			path = SMAA;
-			sourceTree = "<group>";
-		};
-		127011BE1CC31346001840A7 /* Renderer */ = {
-			isa = PBXGroup;
-			children = (
-				127011BF1CC31346001840A7 /* RArrayBuffer.h */,
-				127011C01CC31346001840A7 /* RBuffer.h */,
-				127011C11CC31346001840A7 /* Renderer.h */,
-				127011C21CC31346001840A7 /* RFramebuffer.h */,
-				127011C31CC31346001840A7 /* RShader.h */,
-				127011C41CC31346001840A7 /* RTexture.h */,
-			);
-			name = Renderer;
-			path = ../Include/Renderer;
-			sourceTree = "<group>";
-		};
-		127011C51CC31346001840A7 /* Resource */ = {
-			isa = PBXGroup;
-			children = (
-				127011C61CC31346001840A7 /* AudioClipResource.h */,
-				127011C71CC31346001840A7 /* MaterialResource.h */,
-				127011C81CC31346001840A7 /* MeshResource.h */,
-				127011C91CC31346001840A7 /* Resource.h */,
-				127011CA1CC31346001840A7 /* ResourceInfo.h */,
-				127011CB1CC31346001840A7 /* ShaderResource.h */,
-				127011CC1CC31346001840A7 /* TextureFontResource.h */,
-				127011CD1CC31346001840A7 /* TextureResource.h */,
-			);
-			name = Resource;
-			path = ../Include/Resource;
-			sourceTree = "<group>";
-		};
-		127011CE1CC31346001840A7 /* Scene */ = {
-			isa = PBXGroup;
-			children = (
-				127011CF1CC31346001840A7 /* Camera.h */,
-				127011D01CC31346001840A7 /* Light.h */,
-				127011D11CC31346001840A7 /* Object.h */,
-				127011D21CC31346001840A7 /* ObjectComponent.h */,
-				127011D31CC31346001840A7 /* Scene.h */,
-				127011D41CC31346001840A7 /* Skybox.h */,
-				127011D51CC31346001840A7 /* Terrain.h */,
-			);
-			name = Scene;
-			path = ../Include/Scene;
-			sourceTree = "<group>";
-		};
-		127011D61CC31346001840A7 /* System */ = {
-			isa = PBXGroup;
-			children = (
-				127011D71CC31346001840A7 /* AssetLoader */,
-				127011DA1CC31346001840A7 /* Logger.h */,
-				127011DB1CC31346001840A7 /* Memory.h */,
-				127011DC1CC31346001840A7 /* VFS */,
-			);
-			name = System;
-			path = ../Include/System;
-			sourceTree = "<group>";
-		};
-		127011D71CC31346001840A7 /* AssetLoader */ = {
-			isa = PBXGroup;
-			children = (
-				127011D81CC31346001840A7 /* AssetLoader.h */,
-				127011D91CC31346001840A7 /* ogg_callbacks.h */,
-			);
-			path = AssetLoader;
-			sourceTree = "<group>";
-		};
-		127011DC1CC31346001840A7 /* VFS */ = {
-			isa = PBXGroup;
-			children = (
-				127011DD1CC31346001840A7 /* VFS.h */,
-				127011DE1CC31346001840A7 /* VFSArchive.h */,
-				127011DF1CC31346001840A7 /* VFSFile.h */,
-			);
-			path = VFS;
-			sourceTree = "<group>";
-		};
 		1270124F1CC315FD001840A7 /* Products */ = {
 			isa = PBXGroup;
 			children = (
 				127012531CC315FD001840A7 /* libEngine.dylib */,
-				1296BC511CDC132C00D17488 /* Engine_iOS.framework */,
+				1296BC511CDC132C00D17488 /* libEngine_iOS.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -517,7 +299,7 @@
 			isa = PBXGroup;
 			children = (
 				12B7484F1CC6EA4000825D36 /* libTestGame.dylib */,
-				1296BD861CDC1E1700D17488 /* TestGame_iOS.framework */,
+				1296BD861CDC1E1700D17488 /* libTestGame_iOS.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -636,17 +418,17 @@
 			remoteRef = 127012521CC315FD001840A7 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		1296BC511CDC132C00D17488 /* Engine_iOS.framework */ = {
+		1296BC511CDC132C00D17488 /* libEngine_iOS.a */ = {
 			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = Engine_iOS.framework;
+			fileType = archive.ar;
+			path = libEngine_iOS.a;
 			remoteRef = 1296BC501CDC132C00D17488 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		1296BD861CDC1E1700D17488 /* TestGame_iOS.framework */ = {
+		1296BD861CDC1E1700D17488 /* libTestGame_iOS.a */ = {
 			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = TestGame_iOS.framework;
+			fileType = archive.ar;
+			path = libTestGame_iOS.a;
 			remoteRef = 1296BD851CDC1E1700D17488 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
@@ -850,6 +632,7 @@
 				CLANG_WARN_CXX0X_EXTENSIONS = YES;
 				CLANG_WARN__EXIT_TIME_DESTRUCTORS = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Launcher-iOS/Frameworks",
@@ -885,6 +668,7 @@
 				CLANG_WARN_CXX0X_EXTENSIONS = YES;
 				CLANG_WARN__EXIT_TIME_DESTRUCTORS = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Launcher-iOS/Frameworks",

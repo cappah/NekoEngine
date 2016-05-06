@@ -69,6 +69,14 @@ PlatformWindowType Platform::_activeWindow = nullptr;
 
 PlatformWindowType Platform::CreateWindow(int width, int height, bool fullscreen)
 {
+	if((_engineApp = [[EngineApp alloc] init]) == nil)
+	{ DIE("Failed to initialize EngineApp"); }
+	
+	CGRect rect = [[UIScreen mainScreen] bounds];
+	
+	Engine::GetConfiguration().Engine.ScreenWidth = rect.size.width;
+	Engine::GetConfiguration().Engine.ScreenHeight = rect.size.height;
+	
 	return [[[UIApplication sharedApplication] delegate] window];
 }
 
