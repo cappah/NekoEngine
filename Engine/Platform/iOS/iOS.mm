@@ -46,6 +46,7 @@
 #import <UIKit/UIKit.h>
 
 #import "EngineAppDelegate.h"
+#import "EngineInputDelegate.h"
 
 @interface EngineApp : NSObject
 
@@ -64,6 +65,7 @@
 
 static EngineApp *_engineApp;
 static EngineAppDelegate *_engineAppDelegate;
+static EngineInputDelegate *_engineInputDelegate;
 
 PlatformWindowType Platform::_activeWindow = nullptr;
 
@@ -71,6 +73,9 @@ PlatformWindowType Platform::CreateWindow(int width, int height, bool fullscreen
 {
 	if((_engineApp = [[EngineApp alloc] init]) == nil)
 	{ DIE("Failed to initialize EngineApp"); }
+	
+	if((_engineInputDelegate = [[EngineInputDelegate alloc] init]) == nil)
+	{ DIE("Failed to initialize EngineInputDelegate"); }
 	
 	CGRect rect = [[UIScreen mainScreen] bounds];
 	
@@ -98,7 +103,7 @@ void Platform::ReleasePointer()
 {
 }
 
-bool Platform::GetPointerPosition(long& x, long& y)
+bool Platform::GetPointerPosition(long &x, long &y)
 {
 	return false;
 }
@@ -106,6 +111,17 @@ bool Platform::GetPointerPosition(long& x, long& y)
 bool Platform::SetPointerPosition(long x, long y)
 {
 	return false;
+}
+
+bool Platform::GetTouchMovementDelta(float &x, float &y)
+{
+	x = _engineInputDelegate.xDelta * .5;
+	y = -_engineInputDelegate.yDelta * .5;
+	
+	_engineInputDelegate.xDelta = 0;
+	_engineInputDelegate.yDelta = 0;
+	
+	return true;
 }
 
 MessageBoxResult Platform::MessageBox(const char* title, const char* message, MessageBoxButtons buttons, MessageBoxIcon icon)
@@ -148,6 +164,9 @@ void Platform::LogDebugMessage(const char* message)
 
 int Platform::MainLoop()
 {
+	id<EngineViewProtocol> engineView = (id<EngineViewProtocol>)[[[[[UIApplication sharedApplication] delegate] window] rootViewController] view];	
+	[engineView setInputDelegate:_engineInputDelegate];
+	
 	[NSTimer scheduledTimerWithTimeInterval:1.0/60.0 target:_engineApp selector:@selector(frame) userInfo:nil repeats:true];
 	
 	return 0;

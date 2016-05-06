@@ -1,9 +1,9 @@
 /* Neko Engine
  *
- * IGLView.h
+ * EngineInputDelegate.mm
  * Author: Alexandru Naiman
  *
- * iOS OpenGL|ES Renderer Implementation
+ * iOS platform support
  *
  * ----------------------------------------------------------------------------------
  *
@@ -36,17 +36,51 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import <UIKit/UIKit.h>
+#define ENGINE_INTERNAL
+#define PLATFORM_INTERNAL
 
-#include <Platform/Platform.h>
+#import "EngineInputDelegate.h"
 
-@interface IGLView : UIView <EngineViewProtocol>
+#include <Engine/Engine.h>
+
+@implementation EngineInputDelegate
+
+@synthesize view, xDelta, yDelta;
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
-	id<EngineInputDelegateProtocol> _inputDelegate;
+	UITouch *touch = [[event allTouches] anyObject];
+	CGPoint touchLocation = [touch locationInView:self.view];
+	
+	_lastX = touchLocation.x;
+	_lastY = touchLocation.y;
+	
+	_dragging = true;
 }
 
-- (bool) createBuffers;
-- (void) bindDrawable;
-- (void) swapBuffers;
+- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
+{
+	UITouch *touch = [[event allTouches] anyObject];
+	CGPoint touchLocation = [touch locationInView:self.view];
+	
+	if(!_dragging)
+		return;
+	
+	self.xDelta = touchLocation.x - _lastX;
+	self.yDelta = touchLocation.y - _lastY;
+	
+	_lastX = touchLocation.x;
+	_lastY = touchLocation.y;
+}
+
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+{
+	_dragging = false;
+}
+
+- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
+{
+	_dragging = false;
+}
 
 @end

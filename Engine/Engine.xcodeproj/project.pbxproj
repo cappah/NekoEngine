@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1243C8931CDCE15A00BA692E /* EngineInputDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1243C8921CDCE15A00BA692E /* EngineInputDelegate.mm */; };
 		124A31E01CDC260E00472893 /* AudioClip.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B061CC1AD9C00EE5D0A /* AudioClip.cpp */; };
 		124A31E11CDC260E00472893 /* AudioSource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B071CC1AD9C00EE5D0A /* AudioSource.cpp */; };
 		124A31E21CDC261500472893 /* AnimationClip.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 127DF8B31CCB1572005F2693 /* AnimationClip.cpp */; };
@@ -120,6 +121,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1243C8911CDCE15A00BA692E /* EngineInputDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EngineInputDelegate.h; path = Platform/iOS/EngineInputDelegate.h; sourceTree = SOURCE_ROOT; };
+		1243C8921CDCE15A00BA692E /* EngineInputDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = EngineInputDelegate.mm; path = Platform/iOS/EngineInputDelegate.mm; sourceTree = SOURCE_ROOT; };
 		124A31D31CDC258C00472893 /* libEngine_iOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libEngine_iOS.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		124A32131CDC270B00472893 /* Ogg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Ogg.framework; path = "../Launcher/Launcher-iOS/Frameworks/Ogg.framework"; sourceTree = "<group>"; };
 		124A32141CDC270B00472893 /* Vorbis.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Vorbis.framework; path = "../Launcher/Launcher-iOS/Frameworks/Vorbis.framework"; sourceTree = "<group>"; };
@@ -637,6 +640,8 @@
 			children = (
 				1296BB6F1CDB7EEA00D17488 /* EngineAppDelegate.h */,
 				1296BB701CDB7EEA00D17488 /* EngineAppDelegate.mm */,
+				1243C8911CDCE15A00BA692E /* EngineInputDelegate.h */,
+				1243C8921CDCE15A00BA692E /* EngineInputDelegate.mm */,
 				1296BB731CDB7F3400D17488 /* iOS.mm */,
 			);
 			name = iOS;
@@ -771,6 +776,7 @@
 				124A31E21CDC261500472893 /* AnimationClip.cpp in Sources */,
 				124A31F31CDC262800472893 /* UNIX.cpp in Sources */,
 				124A31E91CDC261500472893 /* ResourceDatabase.cpp in Sources */,
+				1243C8931CDCE15A00BA692E /* EngineInputDelegate.mm in Sources */,
 				124A31F21CDC261500472893 /* TextureFont.cpp in Sources */,
 				124A32001CDC264100472893 /* Terrain.cpp in Sources */,
 				124A31FD1CDC264100472893 /* ObjectComponent.cpp in Sources */,

@@ -69,6 +69,22 @@ typedef void* PlatformModuleType;
 typedef UIWindow* PlatformWindowType;
 typedef UIView* PlatformDisplayType;
 typedef void* PlatformModuleType;
+
+@protocol EngineInputDelegateProtocol <NSObject>
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event;
+- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event;
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event;
+- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event;
+
+@end
+
+@protocol EngineViewProtocol <NSObject>
+
+- (void)setInputDelegate:(id<EngineInputDelegateProtocol>)delegate;
+
+@end
+
 #endif
 
 enum class MessageBoxButtons : unsigned char
@@ -109,8 +125,9 @@ public:
 
 	static bool CapturePointer();
 	static void ReleasePointer();
-	static bool GetPointerPosition(long& x, long& y);
+	static bool GetPointerPosition(long &x, long &y);
 	static bool SetPointerPosition(long x, long y);
+	static bool GetTouchMovementDelta(float &x, float &y);
 
 	static MessageBoxResult MessageBox(const char* title, const char* message, MessageBoxButtons buttons, MessageBoxIcon icon);
 

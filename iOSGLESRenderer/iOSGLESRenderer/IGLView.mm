@@ -77,6 +77,8 @@
 	if(![self createBuffers])
 		return nil;
 	
+	_inputDelegate = nil;
+	
 	return self;
 }
 
@@ -132,6 +134,39 @@
 	glDeleteFramebuffers(1, &_defaultFbo);
 	glDeleteRenderbuffers(1, &_colorBuffer);
 	glDeleteRenderbuffers(1, &_depthBuffer);
+}
+
+#pragma mark EngineViewProtocol
+
+- (void)setInputDelegate:(id<EngineInputDelegateProtocol>)delegate
+{
+	_inputDelegate = delegate;
+}
+
+#pragma mark Events
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+{
+	if(_inputDelegate)
+		[_inputDelegate touchesBegan:touches withEvent:event];
+}
+
+- (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+{
+	if(_inputDelegate)
+		[_inputDelegate touchesMoved:touches withEvent:event];
+}
+
+- (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+{
+	if(_inputDelegate)
+		[_inputDelegate touchesEnded:touches withEvent:event];
+}
+
+- (void)touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+{
+	if(_inputDelegate)
+		[_inputDelegate touchesCancelled:touches withEvent:event];
 }
 
 @end

@@ -168,6 +168,11 @@ bool Platform::SetPointerPosition(long x, long y)
 	return true;
 }
 
+bool Platform::GetTouchMovementDelta(float &x, float &y)
+{
+	return false;
+}
+
 MessageBoxResult Platform::MessageBox(const char* title, const char* message, MessageBoxButtons buttons, MessageBoxIcon icon)
 {
 	NSAlert *alert = [[NSAlert alloc] init];

@@ -277,6 +277,11 @@ bool Platform::SetPointerPosition(long x, long y)
 	return ret;
 }
 
+bool Platform::GetTouchMovementDelta(float &x, float &y)
+{
+	return false;
+}
+
 MessageBoxResult Platform::MessageBox(const char* title, const char* message, MessageBoxButtons buttons, MessageBoxIcon icon)
 {
 	bool capture = _pointerCaptured;

@@ -1,9 +1,9 @@
 /* Neko Engine
  *
- * IGLView.h
+ * EngineInputDelegate.h
  * Author: Alexandru Naiman
  *
- * iOS OpenGL|ES Renderer Implementation
+ * iOS platform support
  *
  * ----------------------------------------------------------------------------------
  *
@@ -36,17 +36,21 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#pragma once
+
+#import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
 #include <Platform/Platform.h>
 
-@interface IGLView : UIView <EngineViewProtocol>
+@interface EngineInputDelegate : NSObject <EngineInputDelegateProtocol>
 {
-	id<EngineInputDelegateProtocol> _inputDelegate;
+	float _lastX, _lastY;
+	bool _dragging;
 }
 
-- (bool) createBuffers;
-- (void) bindDrawable;
-- (void) swapBuffers;
+@property (strong, nonatomic) UIView *view;
+@property (nonatomic) float xDelta;
+@property (nonatomic) float yDelta;
 
 @end
