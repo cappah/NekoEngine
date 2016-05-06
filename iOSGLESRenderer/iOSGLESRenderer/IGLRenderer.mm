@@ -125,7 +125,10 @@ std::vector<ShaderDefine> IGLRenderer::_shaderDefines;
 IGLShader* IGLRenderer::_activeShader;
 static IGLView *_view;
 
-IGLRenderer::IGLRenderer() { }
+IGLRenderer::IGLRenderer()
+{
+	memset(&_state, 0x0, sizeof(RendererState));
+}
 
 void IGLRenderer::SetDebugLogFunction(RendererDebugLogProc debugLog)
 {
@@ -153,16 +156,43 @@ int IGLRenderer::GetMinorVersion()
 
 void IGLRenderer::SetClearColor(float r, float g, float b, float a)
 {
+	if((_state.ClearColor.r == r) &&
+	   (_state.ClearColor.g == g) &&
+	   (_state.ClearColor.b == b) &&
+	   (_state.ClearColor.a == a))
+		return;
+	
+	_state.ClearColor.r = r;
+	_state.ClearColor.g = g;
+	_state.ClearColor.b = b;
+	_state.ClearColor.a = a;
+	
     GL_CHECK(glClearColor(r, g, b, a));
 }
 
 void IGLRenderer::SetViewport(int x, int y, int width, int height)
 {
+	if((_state.Viewport.x == x) &&
+	   (_state.Viewport.y == y) &&
+	   (_state.Viewport.width == width) &&
+	   (_state.Viewport.height == height))
+		return;
+	
+	_state.Viewport.x = x;
+	_state.Viewport.y = y;
+	_state.Viewport.width = width;
+	_state.Viewport.height = height;
+	
     GL_CHECK(glViewport(x, y, width, height));
 }
 
 void IGLRenderer::EnableDepthTest(bool enable)
 {
+	if (enable == _state.DepthTest)
+		return;
+	
+	_state.DepthTest = enable;
+	
     if (enable)
     { GL_CHECK(glEnable(GL_DEPTH_TEST)); }
     else
@@ -171,6 +201,11 @@ void IGLRenderer::EnableDepthTest(bool enable)
 
 void IGLRenderer::SetDepthFunc(TestFunc func)
 {
+	if(_state.DepthFunc == func)
+		return;
+	
+	_state.DepthFunc = func;
+	
     GL_CHECK(glDepthFunc(GL_TestFunc[(int)func]));
 }
 
@@ -186,11 +221,21 @@ void IGLRenderer::SetDepthRangef(float n, float f)
 
 void IGLRenderer::SetDepthMask(bool mask)
 {
+	if(_state.DepthMask == mask)
+		return;
+	
+	_state.DepthMask = mask;
+	
     GL_CHECK(glDepthMask(mask ? GL_TRUE : GL_FALSE));
 }
 
 void IGLRenderer::EnableStencilTest(bool enable)
 {
+	if (enable == _state.StencilTest)
+		return;
+	
+	_state.StencilTest = enable;
+	
     if (enable)
     { GL_CHECK(glEnable(GL_STENCIL_TEST)); }
     else
@@ -199,6 +244,15 @@ void IGLRenderer::EnableStencilTest(bool enable)
 
 void IGLRenderer::SetStencilFunc(TestFunc func, int ref, unsigned int mask)
 {
+	if((_state.StencilFunc.F == func) &&
+	   (_state.StencilFunc.Ref == ref) &&
+	   (_state.StencilFunc.Mask == mask))
+		return;
+	
+	_state.StencilFunc.F = func;
+	_state.StencilFunc.Ref = ref;
+	_state.StencilFunc.Mask = mask;
+	
     GL_CHECK(glStencilFunc(GL_TestFunc[(int)func], ref, mask));
 }
 
@@ -219,6 +273,11 @@ void IGLRenderer::SetStencilOpSeparate(PolygonFace face, TestOp sfail, TestOp dp
 
 void IGLRenderer::EnableBlend(bool enable)
 {
+	if (enable == _state.Blend)
+		return;
+	
+	_state.Blend = enable;
+	
     if (enable)
     { GL_CHECK(glEnable(GL_BLEND)); }
     else
@@ -227,6 +286,13 @@ void IGLRenderer::EnableBlend(bool enable)
 
 void IGLRenderer::SetBlendFunc(BlendFactor src, BlendFactor dst)
 {
+	if((_state.BlendFunc.src == src) &&
+	   (_state.BlendFunc.dst) == dst)
+		return;
+	
+	_state.BlendFunc.src = src;
+	_state.BlendFunc.dst = dst;
+	
     GL_CHECK(glBlendFunc(GL_BlendFactor[(int)src], GL_BlendFactor[(int)dst]));
 }
 
@@ -252,6 +318,11 @@ void IGLRenderer::SetBlendEquationSeparate(BlendEquation color, BlendEquation al
 
 void IGLRenderer::SetStencilMask(unsigned int mask)
 {
+	if(_state.StencilMask == mask)
+		return;
+	
+	_state.StencilMask = mask;
+	
     GL_CHECK(glStencilMask(mask));
 }
 

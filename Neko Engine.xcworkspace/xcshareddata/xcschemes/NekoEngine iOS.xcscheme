@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "1296BC381CDC132C00D17488"
-               BuildableName = "Launcher.app"
+               BuildableName = "NekoEngine.app"
                BlueprintName = "Launcher-iOS"
                ReferencedContainer = "container:Launcher/Launcher.xcodeproj">
             </BuildableReference>
@@ -61,7 +61,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1296BC381CDC132C00D17488"
-            BuildableName = "Launcher.app"
+            BuildableName = "NekoEngine.app"
             BlueprintName = "Launcher-iOS"
             ReferencedContainer = "container:Launcher/Launcher.xcodeproj">
          </BuildableReference>
@@ -84,7 +84,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1296BC381CDC132C00D17488"
-            BuildableName = "Launcher.app"
+            BuildableName = "NekoEngine.app"
             BlueprintName = "Launcher-iOS"
             ReferencedContainer = "container:Launcher/Launcher.xcodeproj">
          </BuildableReference>
@@ -103,7 +103,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1296BC381CDC132C00D17488"
-            BuildableName = "Launcher.app"
+            BuildableName = "NekoEngine.app"
             BlueprintName = "Launcher-iOS"
             ReferencedContainer = "container:Launcher/Launcher.xcodeproj">
          </BuildableReference>

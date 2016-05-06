@@ -67,6 +67,51 @@ typedef struct SHADER_DEFINE
     std::string value;
 } ShaderDefine;
 
+typedef struct COLOR
+{
+	int r;
+	int g;
+	int b;
+	int a;
+} Color;
+
+typedef struct FUNC
+{
+	TestFunc F;
+	int Ref;
+	unsigned int Mask;
+} Func;
+
+typedef struct BLEND_FUNC
+{
+	BlendFactor src;
+	BlendFactor dst;
+} BlendFunc;
+
+typedef struct RENDERER_STATE
+{
+	bool Blend;
+	bool DepthTest;
+	bool StencilTest;
+	bool DepthMask;
+	unsigned int StencilMask;
+	
+	Color ClearColor;
+	
+	Func StencilFunc;
+	TestFunc DepthFunc;
+	BlendFunc BlendFunc;
+	
+	struct VIEWPORT
+	{
+		float x;
+		float y;
+		float width;
+		float height;
+	} Viewport;
+	
+} RendererState;
+
 class IGLRenderer : public Renderer
 {
 public:
@@ -152,6 +197,7 @@ private:
 	static class IGLShader* _activeShader;
     static RFramebuffer* _boundFramebuffer;
     static std::vector<ShaderDefine> _shaderDefines;
+	RendererState _state;
     
     bool _HasExtension(const char* extension);
     void _DestroyContext();

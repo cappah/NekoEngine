@@ -73,8 +73,8 @@ IGLFramebuffer::IGLFramebuffer(int width, int height)
 void IGLFramebuffer::Bind(int location)
 {
 	_lastTarget = GL_FramebufferTarget[location];
-	GL_CHECK(glBindFramebuffer(_lastTarget, _id));
-	GL_CHECK(glViewport(0, 0, _width, _height));
+	GL_CHECK(glBindFramebuffer(_lastTarget, _id));	
+//	GL_CHECK(glViewport(0, 0, _width, _height));
 	IGLRenderer::SetBoundFramebuffer(this);
 }
 

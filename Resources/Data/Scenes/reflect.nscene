@@ -38,15 +38,6 @@ EndObject
 # Scene objects #
 #################
 
-#Object
-#id=5
-#mesh=stm_cat
-#material=mat_skyreflect
-#position=-117.5, -30.0, -145.0
-#rotation=0.0, 0.0, 0.0
-#scale=40, 40, 40
-#EndObject
-
 # Arissa
 Object
 id=2

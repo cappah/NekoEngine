@@ -456,8 +456,8 @@
 		};
 		1296BD7B1CDC1D9700D17488 /* Engine_iOS.framework */ = {
 			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = Engine_iOS.framework;
+			fileType = archive.ar;
+			path = libEngine_iOS.a;
 			remoteRef = 1296BD7A1CDC1D9700D17488 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
@@ -673,6 +673,7 @@
 				124A31CC1CDC252200472893 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		127011EA1CC313D6001840A7 /* Build configuration list for PBXProject "TestGame" */ = {
 			isa = XCConfigurationList;
