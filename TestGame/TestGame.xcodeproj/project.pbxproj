@@ -7,15 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		124A31CD1CDC253900472893 /* MovingObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 127012011CC31417001840A7 /* MovingObject.cpp */; };
+		124A31CE1CDC253900472893 /* TestGame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 127012021CC31417001840A7 /* TestGame.cpp */; };
 		127012031CC31417001840A7 /* MovingObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 127012011CC31417001840A7 /* MovingObject.cpp */; };
 		127012041CC31417001840A7 /* TestGame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 127012021CC31417001840A7 /* TestGame.cpp */; };
 		127012071CC3141C001840A7 /* MovingObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 127012051CC3141C001840A7 /* MovingObject.h */; };
 		127012081CC3141C001840A7 /* TestGame.h in Headers */ = {isa = PBXBuildFile; fileRef = 127012061CC3141C001840A7 /* TestGame.h */; };
 		1270125E1CC31645001840A7 /* libEngine.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1270125B1CC31615001840A7 /* libEngine.dylib */; };
-		1296BD751CDC1D9700D17488 /* TestGame_iOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 1296BD741CDC1D9700D17488 /* TestGame_iOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1296BD7D1CDC1DC300D17488 /* MovingObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 127012011CC31417001840A7 /* MovingObject.cpp */; };
-		1296BD7E1CDC1DC300D17488 /* TestGame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 127012021CC31417001840A7 /* TestGame.cpp */; };
-		1296BD7F1CDC1DCF00D17488 /* Engine_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1296BD7B1CDC1D9700D17488 /* Engine_iOS.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,16 +38,22 @@
 			remoteGlobalIDString = 1296BCC31CDC189600D17488;
 			remoteInfo = Engine_iOS;
 		};
-		1296BD801CDC1DDD00D17488 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 127012561CC31615001840A7 /* Engine.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 1296BCC21CDC189600D17488;
-			remoteInfo = Engine_iOS;
-		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		124A31C21CDC252200472893 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		124A31C41CDC252200472893 /* libTestGame_iOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libTestGame_iOS.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		127011EF1CC313D7001840A7 /* libTestGame.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libTestGame.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		127012011CC31417001840A7 /* MovingObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MovingObject.cpp; sourceTree = "<group>"; };
 		127012021CC31417001840A7 /* TestGame.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TestGame.cpp; sourceTree = "<group>"; };
@@ -113,25 +117,21 @@
 		1270124C1CC3143F001840A7 /* VFSArchive.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VFSArchive.h; sourceTree = "<group>"; };
 		1270124D1CC3143F001840A7 /* VFSFile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VFSFile.h; sourceTree = "<group>"; };
 		127012561CC31615001840A7 /* Engine.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Engine.xcodeproj; path = ../Engine/Engine.xcodeproj; sourceTree = "<group>"; };
-		1296BD721CDC1D9600D17488 /* TestGame_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TestGame_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		1296BD741CDC1D9700D17488 /* TestGame_iOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestGame_iOS.h; sourceTree = "<group>"; };
-		1296BD761CDC1D9700D17488 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		124A31C11CDC252200472893 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		127011EC1CC313D7001840A7 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				1270125E1CC31645001840A7 /* libEngine.dylib in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		1296BD6E1CDC1D9600D17488 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				1296BD7F1CDC1DCF00D17488 /* Engine_iOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -144,7 +144,6 @@
 				127012561CC31615001840A7 /* Engine.xcodeproj */,
 				127011FD1CC313F4001840A7 /* Engine */,
 				127011FF1CC31407001840A7 /* Game */,
-				1296BD731CDC1D9700D17488 /* TestGame_iOS */,
 				127011F01CC313D7001840A7 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -153,7 +152,7 @@
 			isa = PBXGroup;
 			children = (
 				127011EF1CC313D7001840A7 /* libTestGame.dylib */,
-				1296BD721CDC1D9600D17488 /* TestGame_iOS.framework */,
+				124A31C41CDC252200472893 /* libTestGame_iOS.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -355,15 +354,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		1296BD731CDC1D9700D17488 /* TestGame_iOS */ = {
-			isa = PBXGroup;
-			children = (
-				1296BD741CDC1D9700D17488 /* TestGame_iOS.h */,
-				1296BD761CDC1D9700D17488 /* Info.plist */,
-			);
-			path = TestGame_iOS;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -376,17 +366,26 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		1296BD6F1CDC1D9600D17488 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				1296BD751CDC1D9700D17488 /* TestGame_iOS.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		124A31C31CDC252200472893 /* TestGame_iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 124A31CA1CDC252200472893 /* Build configuration list for PBXNativeTarget "TestGame_iOS" */;
+			buildPhases = (
+				124A31C01CDC252200472893 /* Sources */,
+				124A31C11CDC252200472893 /* Frameworks */,
+				124A31C21CDC252200472893 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TestGame_iOS;
+			productName = TestGame_iOS;
+			productReference = 124A31C41CDC252200472893 /* libTestGame_iOS.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 		127011EE1CC313D7001840A7 /* TestGame */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 127011FA1CC313D7001840A7 /* Build configuration list for PBXNativeTarget "TestGame" */;
@@ -405,25 +404,6 @@
 			productReference = 127011EF1CC313D7001840A7 /* libTestGame.dylib */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
-		1296BD711CDC1D9600D17488 /* TestGame_iOS */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 1296BD7C1CDC1D9700D17488 /* Build configuration list for PBXNativeTarget "TestGame_iOS" */;
-			buildPhases = (
-				1296BD6D1CDC1D9600D17488 /* Sources */,
-				1296BD6E1CDC1D9600D17488 /* Frameworks */,
-				1296BD6F1CDC1D9600D17488 /* Headers */,
-				1296BD701CDC1D9600D17488 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				1296BD811CDC1DDD00D17488 /* PBXTargetDependency */,
-			);
-			name = TestGame_iOS;
-			productName = TestGame_iOS;
-			productReference = 1296BD721CDC1D9600D17488 /* TestGame_iOS.framework */;
-			productType = "com.apple.product-type.framework";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -433,12 +413,12 @@
 				LastUpgradeCheck = 0730;
 				ORGANIZATIONNAME = "Alexandru Naiman";
 				TargetAttributes = {
-					127011EE1CC313D7001840A7 = {
-						CreatedOnToolsVersion = 7.3;
-					};
-					1296BD711CDC1D9600D17488 = {
+					124A31C31CDC252200472893 = {
 						CreatedOnToolsVersion = 7.3;
 						DevelopmentTeam = UJ5SVB42BG;
+					};
+					127011EE1CC313D7001840A7 = {
+						CreatedOnToolsVersion = 7.3;
 					};
 				};
 			};
@@ -461,7 +441,7 @@
 			projectRoot = "";
 			targets = (
 				127011EE1CC313D7001840A7 /* TestGame */,
-				1296BD711CDC1D9600D17488 /* TestGame_iOS */,
+				124A31C31CDC252200472893 /* TestGame_iOS */,
 			);
 		};
 /* End PBXProject section */
@@ -483,32 +463,22 @@
 		};
 /* End PBXReferenceProxy section */
 
-/* Begin PBXResourcesBuildPhase section */
-		1296BD701CDC1D9600D17488 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
+/* Begin PBXSourcesBuildPhase section */
+		124A31C01CDC252200472893 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				124A31CD1CDC253900472893 /* MovingObject.cpp in Sources */,
+				124A31CE1CDC253900472893 /* TestGame.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-/* End PBXResourcesBuildPhase section */
-
-/* Begin PBXSourcesBuildPhase section */
 		127011EB1CC313D7001840A7 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				127012031CC31417001840A7 /* MovingObject.cpp in Sources */,
 				127012041CC31417001840A7 /* TestGame.cpp in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		1296BD6D1CDC1D9600D17488 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				1296BD7D1CDC1DC300D17488 /* MovingObject.cpp in Sources */,
-				1296BD7E1CDC1DC300D17488 /* TestGame.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -520,14 +490,41 @@
 			name = Engine;
 			targetProxy = 1270125C1CC3161F001840A7 /* PBXContainerItemProxy */;
 		};
-		1296BD811CDC1DDD00D17488 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = Engine_iOS;
-			targetProxy = 1296BD801CDC1DDD00D17488 /* PBXContainerItemProxy */;
-		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		124A31CB1CDC252200472893 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_C_LANGUAGE_STANDARD = c11;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		124A31CC1CDC252200472893 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_C_LANGUAGE_STANDARD = c11;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 		127011F81CC313D7001840A7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -666,62 +663,17 @@
 			};
 			name = Release;
 		};
-		1296BD771CDC1D9700D17488 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_C_LANGUAGE_STANDARD = c11;
-				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
-				INFOPLIST_FILE = TestGame_iOS/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.anaiman.TestGame-iOS";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
-		1296BD781CDC1D9700D17488 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_C_LANGUAGE_STANDARD = c11;
-				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
-				INFOPLIST_FILE = TestGame_iOS/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.anaiman.TestGame-iOS";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		124A31CA1CDC252200472893 /* Build configuration list for PBXNativeTarget "TestGame_iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				124A31CB1CDC252200472893 /* Debug */,
+				124A31CC1CDC252200472893 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		127011EA1CC313D6001840A7 /* Build configuration list for PBXProject "TestGame" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -739,14 +691,6 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
-		};
-		1296BD7C1CDC1D9700D17488 /* Build configuration list for PBXNativeTarget "TestGame_iOS" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				1296BD771CDC1D9700D17488 /* Debug */,
-				1296BD781CDC1D9700D17488 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};

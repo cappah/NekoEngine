@@ -28,8 +28,8 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "1296BCC21CDC189600D17488"
-               BuildableName = "Engine_iOS.framework"
+               BlueprintIdentifier = "124A31D21CDC258C00472893"
+               BuildableName = "libEngine_iOS.a"
                BlueprintName = "Engine_iOS"
                ReferencedContainer = "container:Engine/Engine.xcodeproj">
             </BuildableReference>
@@ -42,8 +42,8 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "1296BD711CDC1D9600D17488"
-               BuildableName = "TestGame_iOS.framework"
+               BlueprintIdentifier = "124A31C31CDC252200472893"
+               BuildableName = "libTestGame_iOS.a"
                BlueprintName = "TestGame_iOS"
                ReferencedContainer = "container:TestGame/TestGame.xcodeproj">
             </BuildableReference>

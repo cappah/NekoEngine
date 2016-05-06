@@ -8,11 +8,16 @@
 
 /* Begin PBXBuildFile section */
 		120718C01CCFD0BA001A1EEA /* Engine_Low.ini in Resources */ = {isa = PBXBuildFile; fileRef = 120718BF1CCFD0BA001A1EEA /* Engine_Low.ini */; };
+		124A32081CDC267D00472893 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 124A32071CDC267D00472893 /* libz.tbd */; };
+		124A320A1CDC268100472893 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 124A32091CDC268100472893 /* libsqlite3.tbd */; };
+		124A320C1CDC268800472893 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 124A320B1CDC268800472893 /* OpenAL.framework */; };
+		124A320F1CDC26CF00472893 /* Ogg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 124A320E1CDC26CF00472893 /* Ogg.framework */; };
+		124A32111CDC26D600472893 /* Vorbis.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 124A32101CDC26D600472893 /* Vorbis.framework */; };
 		1296BC3D1CDC132C00D17488 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1296BC3C1CDC132C00D17488 /* main.m */; };
 		1296BC401CDC132C00D17488 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1296BC3F1CDC132C00D17488 /* AppDelegate.mm */; };
 		1296BC481CDC132C00D17488 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1296BC471CDC132C00D17488 /* Assets.xcassets */; };
 		1296BC4B1CDC132C00D17488 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1296BC491CDC132C00D17488 /* LaunchScreen.storyboard */; };
-		1296BC551CDC145600D17488 /* libEngine_iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1296BC511CDC132C00D17488 /* libEngine_iOS.a */; };
+		1296BC551CDC145600D17488 /* Engine_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1296BC511CDC132C00D17488 /* Engine_iOS.framework */; };
 		1296BD011CDC1B0700D17488 /* Engine_Low.ini in Resources */ = {isa = PBXBuildFile; fileRef = 1296BD001CDC1B0700D17488 /* Engine_Low.ini */; };
 		1296BD6C1CDC1B7D00D17488 /* Data in Resources */ = {isa = PBXBuildFile; fileRef = 12B748541CC6EFE200825D36 /* Data */; };
 		1296BD871CDC1E1A00D17488 /* TestGame_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1296BD861CDC1E1700D17488 /* TestGame_iOS.framework */; };
@@ -45,14 +50,14 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 1270124E1CC315FD001840A7 /* Engine.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = 1296BCC21CDC189600D17488;
+			remoteGlobalIDString = 124A31D21CDC258C00472893;
 			remoteInfo = Engine_iOS;
 		};
 		1296BD821CDC1E1700D17488 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 12B7484A1CC6EA4000825D36 /* TestGame.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = 1296BD711CDC1D9600D17488;
+			remoteGlobalIDString = 124A31C31CDC252200472893;
 			remoteInfo = TestGame_iOS;
 		};
 		1296BD851CDC1E1700D17488 /* PBXContainerItemProxy */ = {
@@ -116,6 +121,11 @@
 
 /* Begin PBXFileReference section */
 		120718BF1CCFD0BA001A1EEA /* Engine_Low.ini */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Engine_Low.ini; path = ../../Resources/Engine_Low.ini; sourceTree = "<group>"; };
+		124A32071CDC267D00472893 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/usr/lib/libz.tbd; sourceTree = DEVELOPER_DIR; };
+		124A32091CDC268100472893 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/usr/lib/libsqlite3.tbd; sourceTree = DEVELOPER_DIR; };
+		124A320B1CDC268800472893 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/System/Library/Frameworks/OpenAL.framework; sourceTree = DEVELOPER_DIR; };
+		124A320E1CDC26CF00472893 /* Ogg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Ogg.framework; path = Frameworks/Ogg.framework; sourceTree = "<group>"; };
+		124A32101CDC26D600472893 /* Vorbis.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Vorbis.framework; path = Frameworks/Vorbis.framework; sourceTree = "<group>"; };
 		1270119A1CC31326001840A7 /* launcher.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = launcher.mm; path = Mac/launcher.mm; sourceTree = "<group>"; };
 		1270119D1CC31346001840A7 /* AudioClip.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioClip.h; sourceTree = "<group>"; };
 		1270119E1CC31346001840A7 /* AudioSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioSource.h; sourceTree = "<group>"; };
@@ -197,8 +207,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				124A320F1CDC26CF00472893 /* Ogg.framework in Frameworks */,
+				124A320C1CDC268800472893 /* OpenAL.framework in Frameworks */,
+				124A320A1CDC268100472893 /* libsqlite3.tbd in Frameworks */,
+				124A32081CDC267D00472893 /* libz.tbd in Frameworks */,
 				1296BD871CDC1E1A00D17488 /* TestGame_iOS.framework in Frameworks */,
-				1296BC551CDC145600D17488 /* libEngine_iOS.a in Frameworks */,
+				1296BC551CDC145600D17488 /* Engine_iOS.framework in Frameworks */,
+				124A32111CDC26D600472893 /* Vorbis.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -213,6 +228,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		124A320D1CDC26AE00472893 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				124A32101CDC26D600472893 /* Vorbis.framework */,
+				124A320E1CDC26CF00472893 /* Ogg.framework */,
+				124A320B1CDC268800472893 /* OpenAL.framework */,
+				124A32091CDC268100472893 /* libsqlite3.tbd */,
+				124A32071CDC267D00472893 /* libz.tbd */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		127011851CC312F3001840A7 = {
 			isa = PBXGroup;
 			children = (
@@ -408,7 +435,7 @@
 			isa = PBXGroup;
 			children = (
 				127012531CC315FD001840A7 /* libEngine.dylib */,
-				1296BC511CDC132C00D17488 /* libEngine_iOS.a */,
+				1296BC511CDC132C00D17488 /* Engine_iOS.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -416,6 +443,7 @@
 		1296BC3A1CDC132C00D17488 /* Launcher-iOS */ = {
 			isa = PBXGroup;
 			children = (
+				124A320D1CDC26AE00472893 /* Frameworks */,
 				1296BD001CDC1B0700D17488 /* Engine_Low.ini */,
 				1296BC3E1CDC132C00D17488 /* AppDelegate.h */,
 				1296BC3F1CDC132C00D17488 /* AppDelegate.mm */,
@@ -566,10 +594,10 @@
 			remoteRef = 127012521CC315FD001840A7 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		1296BC511CDC132C00D17488 /* libEngine_iOS.a */ = {
+		1296BC511CDC132C00D17488 /* Engine_iOS.framework */ = {
 			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libEngine_iOS.a;
+			fileType = wrapper.framework;
+			path = Engine_iOS.framework;
 			remoteRef = 1296BC501CDC132C00D17488 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
@@ -766,9 +794,23 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_OPTIMIZATION = space;
+				CLANG_ADDRESS_SANITIZER_CONTAINER_OVERFLOW = YES;
+				CLANG_ANALYZER_SECURITY_FLOATLOOPCOUNTER = YES;
+				CLANG_ANALYZER_SECURITY_INSECUREAPI_RAND = YES;
+				CLANG_ANALYZER_SECURITY_INSECUREAPI_STRCPY = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				CLANG_WARN_CXX0X_EXTENSIONS = YES;
+				CLANG_WARN__EXIT_TIME_DESTRUCTORS = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Launcher-iOS/Frameworks",
+				);
 				GCC_C_LANGUAGE_STANDARD = c11;
+				GCC_FAST_MATH = YES;
+				GCC_UNROLL_LOOPS = YES;
+				GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS = YES;
 				HEADER_SEARCH_PATHS = (
 					"\"$(SRCROOT)/../Include\"",
 					"\"$(SRCROOT)/../3rdparty/include_all\"",
@@ -787,9 +829,24 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_OPTIMIZATION = space;
+				CLANG_ADDRESS_SANITIZER_CONTAINER_OVERFLOW = YES;
+				CLANG_ANALYZER_SECURITY_FLOATLOOPCOUNTER = YES;
+				CLANG_ANALYZER_SECURITY_INSECUREAPI_RAND = YES;
+				CLANG_ANALYZER_SECURITY_INSECUREAPI_STRCPY = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				CLANG_WARN_CXX0X_EXTENSIONS = YES;
+				CLANG_WARN__EXIT_TIME_DESTRUCTORS = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Launcher-iOS/Frameworks",
+				);
 				GCC_C_LANGUAGE_STANDARD = c11;
+				GCC_FAST_MATH = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_UNROLL_LOOPS = YES;
+				GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS = YES;
 				HEADER_SEARCH_PATHS = (
 					"\"$(SRCROOT)/../Include\"",
 					"\"$(SRCROOT)/../3rdparty/include_all\"",
@@ -865,6 +922,7 @@
 				1296BC4E1CDC132C00D17488 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		12B748351CC6E7C600825D36 /* Build configuration list for PBXNativeTarget "Launcher" */ = {
 			isa = XCConfigurationList;

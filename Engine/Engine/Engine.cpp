@@ -119,7 +119,7 @@ static bool iniFileLoaded = false;
 
 ObjectClassMapType *EngineClassFactory::_objectClassMap = nullptr;
 
-#ifdef NE_PLATFORM_MOBILE
+#ifdef NE_DEVICE_MOBILE
 extern "C" Renderer *createRenderer();
 extern "C" GameModule *createGameModule();
 #endif
@@ -289,7 +289,7 @@ void Engine::_InitializeQuadVAO()
 
 bool Engine::_InitRenderer()
 {
-#ifndef NE_PLATFORM_MOBILE
+#ifndef NE_DEVICE_MOBILE
 	
 	_rendererLibrary = Platform::LoadModule(_rendererFile);
 
@@ -413,7 +413,7 @@ bool Engine::_InitGame()
 {
 	Logger::Log(ENGINE_MODULE, LOG_INFORMATION, "Loading game module");
 
-#ifndef NE_PLATFORM_MOBILE
+#ifndef NE_DEVICE_MOBILE
 	
 	_gameModuleLibrary = Platform::LoadModule(_gameModuleFile);
 

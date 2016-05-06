@@ -7,6 +7,47 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		124A31E01CDC260E00472893 /* AudioClip.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B061CC1AD9C00EE5D0A /* AudioClip.cpp */; };
+		124A31E11CDC260E00472893 /* AudioSource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B071CC1AD9C00EE5D0A /* AudioSource.cpp */; };
+		124A31E21CDC261500472893 /* AnimationClip.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 127DF8B31CCB1572005F2693 /* AnimationClip.cpp */; };
+		124A31E31CDC261500472893 /* DeferredBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B0B1CC1ADAE00EE5D0A /* DeferredBuffer.cpp */; };
+		124A31E41CDC261500472893 /* Engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B0C1CC1ADAE00EE5D0A /* Engine.cpp */; };
+		124A31E51CDC261500472893 /* LoadingScreen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B0D1CC1ADAE00EE5D0A /* LoadingScreen.cpp */; };
+		124A31E61CDC261500472893 /* Material.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B0E1CC1ADAE00EE5D0A /* Material.cpp */; };
+		124A31E71CDC261500472893 /* StaticMesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B0F1CC1ADAE00EE5D0A /* StaticMesh.cpp */; };
+		124A31E81CDC261500472893 /* PostProcessor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B101CC1ADAE00EE5D0A /* PostProcessor.cpp */; };
+		124A31E91CDC261500472893 /* ResourceDatabase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B111CC1ADAE00EE5D0A /* ResourceDatabase.cpp */; };
+		124A31EA1CDC261500472893 /* ResourceManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B121CC1ADAE00EE5D0A /* ResourceManager.cpp */; };
+		124A31EB1CDC261500472893 /* SceneManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B131CC1ADAE00EE5D0A /* SceneManager.cpp */; };
+		124A31EC1CDC261500472893 /* Shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B141CC1ADAE00EE5D0A /* Shader.cpp */; };
+		124A31ED1CDC261500472893 /* ShadowMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B151CC1ADAE00EE5D0A /* ShadowMap.cpp */; };
+		124A31EE1CDC261500472893 /* SkeletalMesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12CE016F1CC9919300F3D84B /* SkeletalMesh.cpp */; };
+		124A31EF1CDC261500472893 /* SoundManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B161CC1ADAE00EE5D0A /* SoundManager.cpp */; };
+		124A31F01CDC261500472893 /* SSAO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B171CC1ADAE00EE5D0A /* SSAO.cpp */; };
+		124A31F11CDC261500472893 /* Texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B181CC1ADAE00EE5D0A /* Texture.cpp */; };
+		124A31F21CDC261500472893 /* TextureFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B191CC1ADAE00EE5D0A /* TextureFont.cpp */; };
+		124A31F31CDC262800472893 /* UNIX.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B2C1CC1ADD000EE5D0A /* UNIX.cpp */; };
+		124A31F41CDC262D00472893 /* EngineAppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1296BB701CDB7EEA00D17488 /* EngineAppDelegate.mm */; };
+		124A31F51CDC263000472893 /* iOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1296BB731CDB7F3400D17488 /* iOS.mm */; };
+		124A31F61CDC263000472893 /* reallocarray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1279C0FF1CC91E7600E521AD /* reallocarray.cpp */; };
+		124A31F71CDC263000472893 /* shared.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B301CC1ADDB00EE5D0A /* shared.cpp */; };
+		124A31F81CDC263600472893 /* Effect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B351CC1AE0600EE5D0A /* Effect.cpp */; };
+		124A31F91CDC263600472893 /* SMAA.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B361CC1AE0600EE5D0A /* SMAA.cpp */; };
+		124A31FA1CDC264100472893 /* Camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B391CC1AE0E00EE5D0A /* Camera.cpp */; };
+		124A31FB1CDC264100472893 /* Light.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B3A1CC1AE0E00EE5D0A /* Light.cpp */; };
+		124A31FC1CDC264100472893 /* Object.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B3B1CC1AE0E00EE5D0A /* Object.cpp */; };
+		124A31FD1CDC264100472893 /* ObjectComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B3C1CC1AE0E00EE5D0A /* ObjectComponent.cpp */; };
+		124A31FE1CDC264100472893 /* Scene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B3D1CC1AE0E00EE5D0A /* Scene.cpp */; };
+		124A31FF1CDC264100472893 /* Skybox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B3E1CC1AE0E00EE5D0A /* Skybox.cpp */; };
+		124A32001CDC264100472893 /* Terrain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B3F1CC1AE0E00EE5D0A /* Terrain.cpp */; };
+		124A32011CDC264100472893 /* AssetLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B491CC1AE2000EE5D0A /* AssetLoader.cpp */; };
+		124A32021CDC264100472893 /* ogg_callbacks.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B4A1CC1AE2000EE5D0A /* ogg_callbacks.cpp */; };
+		124A32031CDC264100472893 /* VFS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B511CC1AE2E00EE5D0A /* VFS.cpp */; };
+		124A32041CDC264100472893 /* VFSArchive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B521CC1AE2E00EE5D0A /* VFSArchive.cpp */; };
+		124A32051CDC264100472893 /* VFSFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B531CC1AE2E00EE5D0A /* VFSFile.cpp */; };
+		124A32061CDC264100472893 /* Logger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B4D1CC1AE2800EE5D0A /* Logger.cpp */; };
+		124A32151CDC270B00472893 /* Ogg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 124A32131CDC270B00472893 /* Ogg.framework */; };
+		124A32161CDC270B00472893 /* Vorbis.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 124A32141CDC270B00472893 /* Vorbis.framework */; };
 		1255C57C1CD24CF60036E1DA /* Bone.h in Headers */ = {isa = PBXBuildFile; fileRef = 1255C57B1CD24CF60036E1DA /* Bone.h */; };
 		126DE7B01CC8673B00A9E5AB /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 126DE7AF1CC8673B00A9E5AB /* libz.dylib */; };
 		126DE7B81CC86C6000A9E5AB /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 126DE7B61CC86C6000A9E5AB /* libsqlite3.dylib */; };
@@ -62,57 +103,26 @@
 		12822BBA1CC1DB9500EE5D0A /* EngineAppDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 12822BB81CC1DB9500EE5D0A /* EngineAppDelegate.h */; };
 		12822BBB1CC1DB9500EE5D0A /* EngineAppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 12822BB91CC1DB9500EE5D0A /* EngineAppDelegate.mm */; };
 		1296BBD41CDBB6B500D17488 /* PlatformDetect.h in Headers */ = {isa = PBXBuildFile; fileRef = 1296BBD31CDBB6B500D17488 /* PlatformDetect.h */; };
-		1296BCD11CDC196700D17488 /* shared.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B301CC1ADDB00EE5D0A /* shared.cpp */; };
-		1296BCD21CDC196A00D17488 /* reallocarray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1279C0FF1CC91E7600E521AD /* reallocarray.cpp */; };
-		1296BCD31CDC196F00D17488 /* EngineAppDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 1296BB6F1CDB7EEA00D17488 /* EngineAppDelegate.h */; };
-		1296BCD41CDC196F00D17488 /* EngineAppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1296BB701CDB7EEA00D17488 /* EngineAppDelegate.mm */; };
-		1296BCD51CDC196F00D17488 /* iOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1296BB731CDB7F3400D17488 /* iOS.mm */; };
-		1296BCD61CDC197300D17488 /* UNIX.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B2C1CC1ADD000EE5D0A /* UNIX.cpp */; };
-		1296BCD71CDC197B00D17488 /* Effect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B351CC1AE0600EE5D0A /* Effect.cpp */; };
-		1296BCD81CDC197B00D17488 /* SMAA.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B361CC1AE0600EE5D0A /* SMAA.cpp */; };
-		1296BCD91CDC197B00D17488 /* Camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B391CC1AE0E00EE5D0A /* Camera.cpp */; };
-		1296BCDA1CDC197B00D17488 /* Light.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B3A1CC1AE0E00EE5D0A /* Light.cpp */; };
-		1296BCDB1CDC197B00D17488 /* Object.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B3B1CC1AE0E00EE5D0A /* Object.cpp */; };
-		1296BCDC1CDC197B00D17488 /* ObjectComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B3C1CC1AE0E00EE5D0A /* ObjectComponent.cpp */; };
-		1296BCDD1CDC197B00D17488 /* Scene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B3D1CC1AE0E00EE5D0A /* Scene.cpp */; };
-		1296BCDE1CDC197B00D17488 /* Skybox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B3E1CC1AE0E00EE5D0A /* Skybox.cpp */; };
-		1296BCDF1CDC197B00D17488 /* Terrain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B3F1CC1AE0E00EE5D0A /* Terrain.cpp */; };
-		1296BCE01CDC198300D17488 /* AssetLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B491CC1AE2000EE5D0A /* AssetLoader.cpp */; };
-		1296BCE11CDC198300D17488 /* ogg_callbacks.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B4A1CC1AE2000EE5D0A /* ogg_callbacks.cpp */; };
-		1296BCE21CDC198300D17488 /* VFS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B511CC1AE2E00EE5D0A /* VFS.cpp */; };
-		1296BCE31CDC198300D17488 /* VFSArchive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B521CC1AE2E00EE5D0A /* VFSArchive.cpp */; };
-		1296BCE41CDC198300D17488 /* VFSFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B531CC1AE2E00EE5D0A /* VFSFile.cpp */; };
-		1296BCE51CDC198300D17488 /* Logger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B4D1CC1AE2800EE5D0A /* Logger.cpp */; };
-		1296BCE61CDC198A00D17488 /* AnimationClip.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 127DF8B31CCB1572005F2693 /* AnimationClip.cpp */; };
-		1296BCE71CDC198A00D17488 /* DeferredBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B0B1CC1ADAE00EE5D0A /* DeferredBuffer.cpp */; };
-		1296BCE81CDC198A00D17488 /* Engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B0C1CC1ADAE00EE5D0A /* Engine.cpp */; };
-		1296BCE91CDC198A00D17488 /* LoadingScreen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B0D1CC1ADAE00EE5D0A /* LoadingScreen.cpp */; };
-		1296BCEA1CDC198A00D17488 /* Material.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B0E1CC1ADAE00EE5D0A /* Material.cpp */; };
-		1296BCEB1CDC198A00D17488 /* StaticMesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B0F1CC1ADAE00EE5D0A /* StaticMesh.cpp */; };
-		1296BCEC1CDC198A00D17488 /* PostProcessor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B101CC1ADAE00EE5D0A /* PostProcessor.cpp */; };
-		1296BCED1CDC198A00D17488 /* ResourceDatabase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B111CC1ADAE00EE5D0A /* ResourceDatabase.cpp */; };
-		1296BCEE1CDC198A00D17488 /* ResourceManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B121CC1ADAE00EE5D0A /* ResourceManager.cpp */; };
-		1296BCEF1CDC198A00D17488 /* SceneManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B131CC1ADAE00EE5D0A /* SceneManager.cpp */; };
-		1296BCF01CDC198A00D17488 /* Shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B141CC1ADAE00EE5D0A /* Shader.cpp */; };
-		1296BCF11CDC198A00D17488 /* ShadowMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B151CC1ADAE00EE5D0A /* ShadowMap.cpp */; };
-		1296BCF21CDC198A00D17488 /* SkeletalMesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12CE016F1CC9919300F3D84B /* SkeletalMesh.cpp */; };
-		1296BCF31CDC198A00D17488 /* SoundManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B161CC1ADAE00EE5D0A /* SoundManager.cpp */; };
-		1296BCF41CDC198A00D17488 /* SSAO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B171CC1ADAE00EE5D0A /* SSAO.cpp */; };
-		1296BCF51CDC198A00D17488 /* Texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B181CC1ADAE00EE5D0A /* Texture.cpp */; };
-		1296BCF61CDC198A00D17488 /* TextureFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B191CC1ADAE00EE5D0A /* TextureFont.cpp */; };
-		1296BCF71CDC198E00D17488 /* AudioClip.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B061CC1AD9C00EE5D0A /* AudioClip.cpp */; };
-		1296BCF81CDC198E00D17488 /* AudioSource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B071CC1AD9C00EE5D0A /* AudioSource.cpp */; };
-		1296BCF91CDC1A0600D17488 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1296BCB81CDC181F00D17488 /* OpenAL.framework */; };
-		1296BCFA1CDC1A0800D17488 /* Vorbis.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1296BCCC1CDC18FE00D17488 /* Vorbis.framework */; };
-		1296BCFB1CDC1A1100D17488 /* Ogg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1296BCCB1CDC18FE00D17488 /* Ogg.framework */; };
-		1296BCFC1CDC1A1400D17488 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 1296BCBA1CDC184200D17488 /* libsqlite3.tbd */; };
-		1296BCFD1CDC1A1600D17488 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 1296BCBC1CDC184F00D17488 /* libz.tbd */; };
-		1296BCFF1CDC1A6000D17488 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1296BCFE1CDC1A6000D17488 /* UIKit.framework */; };
 		12CE01701CC9919300F3D84B /* SkeletalMesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12CE016F1CC9919300F3D84B /* SkeletalMesh.cpp */; };
 		12CE01721CC991B900F3D84B /* SkeletalMesh.h in Headers */ = {isa = PBXBuildFile; fileRef = 12CE01711CC991B900F3D84B /* SkeletalMesh.h */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		124A31D11CDC258C00472893 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		124A31D31CDC258C00472893 /* libEngine_iOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libEngine_iOS.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		124A32131CDC270B00472893 /* Ogg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Ogg.framework; path = "../Launcher/Launcher-iOS/Frameworks/Ogg.framework"; sourceTree = "<group>"; };
+		124A32141CDC270B00472893 /* Vorbis.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Vorbis.framework; path = "../Launcher/Launcher-iOS/Frameworks/Vorbis.framework"; sourceTree = "<group>"; };
 		1255C57B1CD24CF60036E1DA /* Bone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bone.h; sourceTree = "<group>"; };
 		126DE7AD1CC8673600A9E5AB /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		126DE7AF1CC8673B00A9E5AB /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
@@ -230,19 +240,20 @@
 		1296BB701CDB7EEA00D17488 /* EngineAppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = EngineAppDelegate.mm; path = Platform/iOS/EngineAppDelegate.mm; sourceTree = SOURCE_ROOT; };
 		1296BB731CDB7F3400D17488 /* iOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = iOS.mm; path = Platform/iOS/iOS.mm; sourceTree = SOURCE_ROOT; };
 		1296BBD31CDBB6B500D17488 /* PlatformDetect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlatformDetect.h; sourceTree = "<group>"; };
-		1296BCB81CDC181F00D17488 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/System/Library/Frameworks/OpenAL.framework; sourceTree = DEVELOPER_DIR; };
-		1296BCBA1CDC184200D17488 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/usr/lib/libsqlite3.tbd; sourceTree = DEVELOPER_DIR; };
-		1296BCBC1CDC184F00D17488 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/usr/lib/libz.tbd; sourceTree = DEVELOPER_DIR; };
-		1296BCC31CDC189600D17488 /* Engine_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Engine_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		1296BCCB1CDC18FE00D17488 /* Ogg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Ogg.framework; path = Engine_iOS/Ogg.framework; sourceTree = "<group>"; };
-		1296BCCC1CDC18FE00D17488 /* Vorbis.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Vorbis.framework; path = Engine_iOS/Vorbis.framework; sourceTree = "<group>"; };
-		1296BCCF1CDC192A00D17488 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Engine_iOS/Info.plist; sourceTree = "<group>"; };
-		1296BCFE1CDC1A6000D17488 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
 		12CE016F1CC9919300F3D84B /* SkeletalMesh.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SkeletalMesh.cpp; sourceTree = "<group>"; };
 		12CE01711CC991B900F3D84B /* SkeletalMesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkeletalMesh.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		124A31D01CDC258C00472893 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				124A32151CDC270B00472893 /* Ogg.framework in Frameworks */,
+				124A32161CDC270B00472893 /* Vorbis.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		12822AEE1CC1AD4300EE5D0A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -259,22 +270,18 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		1296BCBF1CDC189600D17488 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				1296BCFF1CDC1A6000D17488 /* UIKit.framework in Frameworks */,
-				1296BCFB1CDC1A1100D17488 /* Ogg.framework in Frameworks */,
-				1296BCF91CDC1A0600D17488 /* OpenAL.framework in Frameworks */,
-				1296BCFC1CDC1A1400D17488 /* libsqlite3.tbd in Frameworks */,
-				1296BCFA1CDC1A0800D17488 /* Vorbis.framework in Frameworks */,
-				1296BCFD1CDC1A1600D17488 /* libz.tbd in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		124A32121CDC26FD00472893 /* Frameworks_iOS */ = {
+			isa = PBXGroup;
+			children = (
+				124A32131CDC270B00472893 /* Ogg.framework */,
+				124A32141CDC270B00472893 /* Vorbis.framework */,
+			);
+			name = Frameworks_iOS;
+			sourceTree = "<group>";
+		};
 		1279C0FC1CC91E4200E521AD /* Compat */ = {
 			isa = PBXGroup;
 			children = (
@@ -290,7 +297,7 @@
 				12822AF31CC1AD4300EE5D0A /* Source */,
 				12822BAE1CC1B01400EE5D0A /* Libraries */,
 				12822BAF1CC1B01F00EE5D0A /* Frameworks */,
-				1296BCB11CDC176500D17488 /* Frameworks_iOS */,
+				124A32121CDC26FD00472893 /* Frameworks_iOS */,
 				12822AF21CC1AD4300EE5D0A /* Products */,
 			);
 			sourceTree = "<group>";
@@ -299,7 +306,7 @@
 			isa = PBXGroup;
 			children = (
 				12822AF11CC1AD4300EE5D0A /* libEngine.dylib */,
-				1296BCC31CDC189600D17488 /* Engine_iOS.framework */,
+				124A31D31CDC258C00472893 /* libEngine_iOS.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -635,20 +642,6 @@
 			name = iOS;
 			sourceTree = "<group>";
 		};
-		1296BCB11CDC176500D17488 /* Frameworks_iOS */ = {
-			isa = PBXGroup;
-			children = (
-				1296BCCF1CDC192A00D17488 /* Info.plist */,
-				1296BCBC1CDC184F00D17488 /* libz.tbd */,
-				1296BCBA1CDC184200D17488 /* libsqlite3.tbd */,
-				1296BCFE1CDC1A6000D17488 /* UIKit.framework */,
-				1296BCCB1CDC18FE00D17488 /* Ogg.framework */,
-				1296BCCC1CDC18FE00D17488 /* Vorbis.framework */,
-				1296BCB81CDC181F00D17488 /* OpenAL.framework */,
-			);
-			name = Frameworks_iOS;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -667,17 +660,26 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		1296BCC01CDC189600D17488 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				1296BCD31CDC196F00D17488 /* EngineAppDelegate.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		124A31D21CDC258C00472893 /* Engine_iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 124A31D91CDC258C00472893 /* Build configuration list for PBXNativeTarget "Engine_iOS" */;
+			buildPhases = (
+				124A31CF1CDC258C00472893 /* Sources */,
+				124A31D01CDC258C00472893 /* Frameworks */,
+				124A31D11CDC258C00472893 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Engine_iOS;
+			productName = Engine_iOS;
+			productReference = 124A31D31CDC258C00472893 /* libEngine_iOS.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 		12822AF01CC1AD4300EE5D0A /* Engine */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 12822AFC1CC1AD4300EE5D0A /* Build configuration list for PBXNativeTarget "Engine" */;
@@ -695,24 +697,6 @@
 			productReference = 12822AF11CC1AD4300EE5D0A /* libEngine.dylib */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
-		1296BCC21CDC189600D17488 /* Engine_iOS */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 1296BCC81CDC189600D17488 /* Build configuration list for PBXNativeTarget "Engine_iOS" */;
-			buildPhases = (
-				1296BCBE1CDC189600D17488 /* Sources */,
-				1296BCBF1CDC189600D17488 /* Frameworks */,
-				1296BCC01CDC189600D17488 /* Headers */,
-				1296BCC11CDC189600D17488 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = Engine_iOS;
-			productName = Engine_iOS;
-			productReference = 1296BCC31CDC189600D17488 /* Engine_iOS.framework */;
-			productType = "com.apple.product-type.framework";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -722,12 +706,12 @@
 				LastUpgradeCheck = 0730;
 				ORGANIZATIONNAME = "Alexandru Naiman";
 				TargetAttributes = {
-					12822AF01CC1AD4300EE5D0A = {
-						CreatedOnToolsVersion = 7.3;
-					};
-					1296BCC21CDC189600D17488 = {
+					124A31D21CDC258C00472893 = {
 						CreatedOnToolsVersion = 7.3;
 						DevelopmentTeam = UJ5SVB42BG;
+					};
+					12822AF01CC1AD4300EE5D0A = {
+						CreatedOnToolsVersion = 7.3;
 					};
 				};
 			};
@@ -744,22 +728,58 @@
 			projectRoot = "";
 			targets = (
 				12822AF01CC1AD4300EE5D0A /* Engine */,
-				1296BCC21CDC189600D17488 /* Engine_iOS */,
+				124A31D21CDC258C00472893 /* Engine_iOS */,
 			);
 		};
 /* End PBXProject section */
 
-/* Begin PBXResourcesBuildPhase section */
-		1296BCC11CDC189600D17488 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
+/* Begin PBXSourcesBuildPhase section */
+		124A31CF1CDC258C00472893 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				124A31F91CDC263600472893 /* SMAA.cpp in Sources */,
+				124A31E01CDC260E00472893 /* AudioClip.cpp in Sources */,
+				124A31ED1CDC261500472893 /* ShadowMap.cpp in Sources */,
+				124A31E41CDC261500472893 /* Engine.cpp in Sources */,
+				124A31EE1CDC261500472893 /* SkeletalMesh.cpp in Sources */,
+				124A31FF1CDC264100472893 /* Skybox.cpp in Sources */,
+				124A31E81CDC261500472893 /* PostProcessor.cpp in Sources */,
+				124A31F71CDC263000472893 /* shared.cpp in Sources */,
+				124A31F81CDC263600472893 /* Effect.cpp in Sources */,
+				124A31FE1CDC264100472893 /* Scene.cpp in Sources */,
+				124A32041CDC264100472893 /* VFSArchive.cpp in Sources */,
+				124A32061CDC264100472893 /* Logger.cpp in Sources */,
+				124A31FC1CDC264100472893 /* Object.cpp in Sources */,
+				124A31E31CDC261500472893 /* DeferredBuffer.cpp in Sources */,
+				124A31EC1CDC261500472893 /* Shader.cpp in Sources */,
+				124A31F51CDC263000472893 /* iOS.mm in Sources */,
+				124A31E51CDC261500472893 /* LoadingScreen.cpp in Sources */,
+				124A31EF1CDC261500472893 /* SoundManager.cpp in Sources */,
+				124A31F61CDC263000472893 /* reallocarray.cpp in Sources */,
+				124A31FB1CDC264100472893 /* Light.cpp in Sources */,
+				124A31F01CDC261500472893 /* SSAO.cpp in Sources */,
+				124A31F41CDC262D00472893 /* EngineAppDelegate.mm in Sources */,
+				124A32051CDC264100472893 /* VFSFile.cpp in Sources */,
+				124A32011CDC264100472893 /* AssetLoader.cpp in Sources */,
+				124A31FA1CDC264100472893 /* Camera.cpp in Sources */,
+				124A32021CDC264100472893 /* ogg_callbacks.cpp in Sources */,
+				124A31E71CDC261500472893 /* StaticMesh.cpp in Sources */,
+				124A31E61CDC261500472893 /* Material.cpp in Sources */,
+				124A31E11CDC260E00472893 /* AudioSource.cpp in Sources */,
+				124A31F11CDC261500472893 /* Texture.cpp in Sources */,
+				124A31E21CDC261500472893 /* AnimationClip.cpp in Sources */,
+				124A31F31CDC262800472893 /* UNIX.cpp in Sources */,
+				124A31E91CDC261500472893 /* ResourceDatabase.cpp in Sources */,
+				124A31F21CDC261500472893 /* TextureFont.cpp in Sources */,
+				124A32001CDC264100472893 /* Terrain.cpp in Sources */,
+				124A31FD1CDC264100472893 /* ObjectComponent.cpp in Sources */,
+				124A32031CDC264100472893 /* VFS.cpp in Sources */,
+				124A31EB1CDC261500472893 /* SceneManager.cpp in Sources */,
+				124A31EA1CDC261500472893 /* ResourceManager.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-/* End PBXResourcesBuildPhase section */
-
-/* Begin PBXSourcesBuildPhase section */
 		12822AED1CC1AD4300EE5D0A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -807,55 +827,63 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		1296BCBE1CDC189600D17488 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				1296BCE41CDC198300D17488 /* VFSFile.cpp in Sources */,
-				1296BCE01CDC198300D17488 /* AssetLoader.cpp in Sources */,
-				1296BCF11CDC198A00D17488 /* ShadowMap.cpp in Sources */,
-				1296BCDD1CDC197B00D17488 /* Scene.cpp in Sources */,
-				1296BCF01CDC198A00D17488 /* Shader.cpp in Sources */,
-				1296BCE31CDC198300D17488 /* VFSArchive.cpp in Sources */,
-				1296BCF21CDC198A00D17488 /* SkeletalMesh.cpp in Sources */,
-				1296BCE71CDC198A00D17488 /* DeferredBuffer.cpp in Sources */,
-				1296BCDA1CDC197B00D17488 /* Light.cpp in Sources */,
-				1296BCD81CDC197B00D17488 /* SMAA.cpp in Sources */,
-				1296BCD41CDC196F00D17488 /* EngineAppDelegate.mm in Sources */,
-				1296BCD51CDC196F00D17488 /* iOS.mm in Sources */,
-				1296BCF61CDC198A00D17488 /* TextureFont.cpp in Sources */,
-				1296BCD21CDC196A00D17488 /* reallocarray.cpp in Sources */,
-				1296BCD91CDC197B00D17488 /* Camera.cpp in Sources */,
-				1296BCDF1CDC197B00D17488 /* Terrain.cpp in Sources */,
-				1296BCF81CDC198E00D17488 /* AudioSource.cpp in Sources */,
-				1296BCE51CDC198300D17488 /* Logger.cpp in Sources */,
-				1296BCD11CDC196700D17488 /* shared.cpp in Sources */,
-				1296BCEF1CDC198A00D17488 /* SceneManager.cpp in Sources */,
-				1296BCED1CDC198A00D17488 /* ResourceDatabase.cpp in Sources */,
-				1296BCF41CDC198A00D17488 /* SSAO.cpp in Sources */,
-				1296BCD71CDC197B00D17488 /* Effect.cpp in Sources */,
-				1296BCF51CDC198A00D17488 /* Texture.cpp in Sources */,
-				1296BCE21CDC198300D17488 /* VFS.cpp in Sources */,
-				1296BCE91CDC198A00D17488 /* LoadingScreen.cpp in Sources */,
-				1296BCDB1CDC197B00D17488 /* Object.cpp in Sources */,
-				1296BCE61CDC198A00D17488 /* AnimationClip.cpp in Sources */,
-				1296BCEE1CDC198A00D17488 /* ResourceManager.cpp in Sources */,
-				1296BCF31CDC198A00D17488 /* SoundManager.cpp in Sources */,
-				1296BCD61CDC197300D17488 /* UNIX.cpp in Sources */,
-				1296BCE81CDC198A00D17488 /* Engine.cpp in Sources */,
-				1296BCDE1CDC197B00D17488 /* Skybox.cpp in Sources */,
-				1296BCEB1CDC198A00D17488 /* StaticMesh.cpp in Sources */,
-				1296BCE11CDC198300D17488 /* ogg_callbacks.cpp in Sources */,
-				1296BCF71CDC198E00D17488 /* AudioClip.cpp in Sources */,
-				1296BCEC1CDC198A00D17488 /* PostProcessor.cpp in Sources */,
-				1296BCEA1CDC198A00D17488 /* Material.cpp in Sources */,
-				1296BCDC1CDC197B00D17488 /* ObjectComponent.cpp in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		124A31DA1CDC258C00472893 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../Launcher/Launcher-iOS/Frameworks\"",
+				);
+				GCC_C_LANGUAGE_STANDARD = c11;
+				GCC_FAST_MATH = YES;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
+				GCC_UNROLL_LOOPS = YES;
+				HEADER_SEARCH_PATHS = (
+					"\"$(SRCROOT)/../Include\"",
+					"\"$(SRCROOT)/../3rdparty/include_all\"",
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				LLVM_LTO = YES;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		124A31DB1CDC258C00472893 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../Launcher/Launcher-iOS/Frameworks\"",
+				);
+				GCC_C_LANGUAGE_STANDARD = c11;
+				GCC_FAST_MATH = YES;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_UNROLL_LOOPS = YES;
+				HEADER_SEARCH_PATHS = (
+					"\"$(SRCROOT)/../Include\"",
+					"\"$(SRCROOT)/../3rdparty/include_all\"",
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				LLVM_LTO = YES;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 		12822AFA1CC1AD4300EE5D0A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1011,80 +1039,17 @@
 			};
 			name = Release;
 		};
-		1296BCC91CDC189600D17488 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Engine_iOS",
-				);
-				GCC_C_LANGUAGE_STANDARD = c11;
-				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/../Include\"",
-					"\"$(SRCROOT)/../3rdparty/include_all\"",
-				);
-				INFOPLIST_FILE = Engine_iOS/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.anaiman.Engine-iOS";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
-		1296BCCA1CDC189600D17488 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Engine_iOS",
-				);
-				GCC_C_LANGUAGE_STANDARD = c11;
-				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/../Include\"",
-					"\"$(SRCROOT)/../3rdparty/include_all\"",
-				);
-				INFOPLIST_FILE = Engine_iOS/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.anaiman.Engine-iOS";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		124A31D91CDC258C00472893 /* Build configuration list for PBXNativeTarget "Engine_iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				124A31DA1CDC258C00472893 /* Debug */,
+				124A31DB1CDC258C00472893 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		12822AEC1CC1AD4300EE5D0A /* Build configuration list for PBXProject "Engine" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -1102,14 +1067,6 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
-		};
-		1296BCC81CDC189600D17488 /* Build configuration list for PBXNativeTarget "Engine_iOS" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				1296BCC91CDC189600D17488 /* Debug */,
-				1296BCCA1CDC189600D17488 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};
