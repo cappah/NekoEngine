@@ -9,3 +9,7 @@ zlib 1.2.8 - http://www.zlib.net/
 dirent - https://github.com/tronkko/dirent
 
 All libraries were compiled using MSVC2015.
+
+iOS Frameworks:
+Vorbis - https://github.com/iosdevzone/IDZPrecompiledVorbis
+OGG - https://github.com/iosdevzone/IDZPrecompiledOgg
