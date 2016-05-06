@@ -18,9 +18,10 @@ For the features see the [Roadmap](https://github.com/nalexandru/NekoEngine/wiki
 
 * Windows 7 & 10
 * Linux
-* FreeBSD 10.2
+* FreeBSD 10 & 11-CURRENT
 * Solaris 11
 * Mac OS X 10.11
+* iOS 9.3
 
 Howto
 ===============================
@@ -28,3 +29,4 @@ Howto
 * [Microsoft Windows](https://github.com/nalexandru/NekoEngine/wiki/Windows-Guide)
 * [Unix & Unix-like](https://github.com/nalexandru/NekoEngine/wiki/Unix-Guide)
 * [Mac OS X](https://github.com/nalexandru/NekoEngine/wiki/Mac-Guide)
+* [iOS](https://github.com/nalexandru/NekoEngine/wiki/iOS-Guide)
