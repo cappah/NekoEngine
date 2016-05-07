@@ -306,10 +306,10 @@ void GLRenderer::DrawArrays(PolygonMode mode, int32_t first, int32_t count)
 	
 	if(!_haveDSA)
 	{
-		if(_boundFramebuffer)
+		if (_boundFramebuffer)
 			_boundFramebuffer->Bind(FB_DRAW);
 		else
-		{ GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, 0)); }
+			BindDefaultFramebuffer();
 	}
 	
 	GL_CHECK(glDrawArrays(GL_DrawModes[(int)mode], first, (GLsizei)count));
@@ -321,10 +321,10 @@ void GLRenderer::DrawElements(PolygonMode mode, int32_t count, ElementType type,
 	
 	if(!_haveDSA)
 	{
-		if(_boundFramebuffer)
+		if (_boundFramebuffer)
 			_boundFramebuffer->Bind(FB_DRAW);
 		else
-		{ GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, 0)); }
+			BindDefaultFramebuffer();
 	}
 	
 	GL_CHECK(glDrawElements(GL_DrawModes[(int)mode], (GLsizei)count, GL_ElementType[(int)type], indices));
@@ -336,10 +336,10 @@ void GLRenderer::DrawElementsBaseVertex(PolygonMode mode, int32_t count, Element
 	
 	if(!_haveDSA)
 	{
-		if(_boundFramebuffer)
+		if (_boundFramebuffer)
 			_boundFramebuffer->Bind(FB_DRAW);
 		else
-		{ GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, 0)); }
+			BindDefaultFramebuffer();
 	}
 	
 	GL_CHECK(glDrawElementsBaseVertex(GL_DrawModes[(int)mode], (GLsizei)count, GL_ElementType[(int)type], indices, baseVertex));
@@ -363,7 +363,7 @@ void GLRenderer::Clear(uint32_t mask)
 
 void GLRenderer::BindDefaultFramebuffer()
 {
-	GL_CHECK(glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0));
+	GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, 0));
 	_boundFramebuffer = nullptr;
 }
 

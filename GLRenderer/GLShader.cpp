@@ -98,8 +98,8 @@ GLShader::GLShader()
 	_program = 0;
 	_vsNumBuffers = 0;
 	_fsNumBuffers = 0;
-	
-	_haveExplicitUniforms = GLRenderer::HasExtension("GL_ARB_explicit_uniform_location");
+
+	_haveExplicitUniforms = GLRenderer::HasExtension("GL_ARB_explicit_uniform_location") && GLRenderer::HasExtension("GL_ARB_direct_state_access");
 	_haveBindlessTexture = GLRenderer::HasExtension("GL_ARB_bindless_texture");
 	_haveSubroutines = _haveExplicitUniforms && GLRenderer::HasExtension("GL_ARB_shader_subroutine");
 }
@@ -436,7 +436,7 @@ void GLShader::EnableTextures()
 	{
 		GL_CHECK(glActiveTexture(GL_TEXTURE0+i));
 		kvp.second->Bind();
-		GL_CHECK(glUniform1i(_haveExplicitUniforms ? kvp.first : _uniformLocations[kvp.first], i));
+		GL_CHECK(glProgramUniform1i(_program, _haveExplicitUniforms ? kvp.first : _uniformLocations[kvp.first], i));
 		++i;
 	}
 }

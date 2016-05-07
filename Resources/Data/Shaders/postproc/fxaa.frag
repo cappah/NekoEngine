@@ -1,7 +1,7 @@
 noperspective in vec2 v_uv;
 
-layout(location = O_FRAGCOLOR) out vec4 o_FragColor;
-layout(location = O_COLORTEXTURE) out vec4 o_ColorTexture;
+layout(location=O_FRAGCOLOR) out vec4 o_FragColor;
+layout(location=O_COLORTEXTURE) out vec4 o_ColorTexture;
 
 layout(location=U_TEXTURE0) uniform TEXTURE_2D PreviousImage;
 layout(location=U_TEXTURE1) uniform TEXTURE_2D OriginalImage;
