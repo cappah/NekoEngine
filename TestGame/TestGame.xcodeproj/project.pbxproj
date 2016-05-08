@@ -349,7 +349,7 @@
 			isa = PBXGroup;
 			children = (
 				1270125B1CC31615001840A7 /* libEngine.dylib */,
-				1296BD7B1CDC1D9700D17488 /* Engine_iOS.framework */,
+				1296BD7B1CDC1D9700D17488 /* libEngine_iOS.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -454,7 +454,7 @@
 			remoteRef = 1270125A1CC31615001840A7 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		1296BD7B1CDC1D9700D17488 /* Engine_iOS.framework */ = {
+		1296BD7B1CDC1D9700D17488 /* libEngine_iOS.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libEngine_iOS.a;
@@ -565,6 +565,7 @@
 				HEADER_SEARCH_PATHS = (
 					/usr/local/include,
 					"\"$(SRCROOT)/../Include\"",
+					"\"$(SRCROOT)/../3rdparty/include_all\"",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -607,6 +608,7 @@
 				HEADER_SEARCH_PATHS = (
 					/usr/local/include,
 					"\"$(SRCROOT)/../Include\"",
+					"\"$(SRCROOT)/../3rdparty/include_all\"",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = NO;

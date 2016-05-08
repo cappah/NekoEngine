@@ -78,7 +78,7 @@ PlatformWindowType Platform::CreateWindow(int width, int height, bool fullscreen
 	{ DIE("Failed to initialize EngineInputDelegate"); }
 	
 	CGRect rect = [[UIScreen mainScreen] bounds];
-	
+    
 	Engine::GetConfiguration().Engine.ScreenWidth = rect.size.width;
 	Engine::GetConfiguration().Engine.ScreenHeight = rect.size.height;
 	
@@ -115,7 +115,7 @@ bool Platform::SetPointerPosition(long x, long y)
 
 bool Platform::GetTouchMovementDelta(float &x, float &y)
 {
-	x = _engineInputDelegate.xDelta * .5;
+	x = -_engineInputDelegate.xDelta * .5;
 	y = -_engineInputDelegate.yDelta * .5;
 	
 	_engineInputDelegate.xDelta = 0;
