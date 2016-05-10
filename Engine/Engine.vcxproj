@@ -151,6 +151,7 @@
     <ClInclude Include="..\include\Engine\Shader.h" />
     <ClInclude Include="..\Include\Engine\ShadowMap.h" />
     <ClInclude Include="..\Include\Engine\SkeletalMesh.h" />
+    <ClInclude Include="..\Include\Engine\Skeleton.h" />
     <ClInclude Include="..\include\Engine\SoundManager.h" />
     <ClInclude Include="..\Include\Engine\SSAO.h" />
     <ClInclude Include="..\Include\Engine\StaticMesh.h" />
@@ -271,6 +272,7 @@
     <ClCompile Include="Engine\Shader.cpp" />
     <ClCompile Include="Engine\ShadowMap.cpp" />
     <ClCompile Include="Engine\SkeletalMesh.cpp" />
+    <ClCompile Include="Engine\Skeleton.cpp" />
     <ClCompile Include="Engine\SoundManager.cpp" />
     <ClCompile Include="Engine\SSAO.cpp" />
     <ClCompile Include="Engine\StaticMesh.cpp" />

@@ -44,7 +44,7 @@
 
 #include <glm/glm.hpp>
 
-#include <Engine/Bone.h>
+#include <Engine/Skeleton.h>
 #include <Engine/StaticMesh.h>
 
 class SkeletalMesh : public StaticMesh
@@ -60,6 +60,7 @@ public:
 	
 private:
 	std::vector<Bone> _bones;
+	Skeleton *_skeleton;
 	
 	void _GetNodeHierarchy(float time, void *node, glm::mat4 &parentTransform);
 };
