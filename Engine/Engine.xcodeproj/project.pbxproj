@@ -50,6 +50,9 @@
 		124A32151CDC270B00472893 /* Ogg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 124A32131CDC270B00472893 /* Ogg.framework */; };
 		124A32161CDC270B00472893 /* Vorbis.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 124A32141CDC270B00472893 /* Vorbis.framework */; };
 		1255C57C1CD24CF60036E1DA /* Bone.h in Headers */ = {isa = PBXBuildFile; fileRef = 1255C57B1CD24CF60036E1DA /* Bone.h */; };
+		126DB02F1CE42C0600FB6B77 /* Skeleton.h in Headers */ = {isa = PBXBuildFile; fileRef = 126DB02E1CE42C0600FB6B77 /* Skeleton.h */; };
+		126DB0311CE42C3900FB6B77 /* Skeleton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 126DB0301CE42C3900FB6B77 /* Skeleton.cpp */; };
+		126DB0321CE42C3900FB6B77 /* Skeleton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 126DB0301CE42C3900FB6B77 /* Skeleton.cpp */; };
 		126DE7B01CC8673B00A9E5AB /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 126DE7AF1CC8673B00A9E5AB /* libz.dylib */; };
 		126DE7B81CC86C6000A9E5AB /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 126DE7B61CC86C6000A9E5AB /* libsqlite3.dylib */; };
 		1279C0FE1CC91E5800E521AD /* Compat.h in Headers */ = {isa = PBXBuildFile; fileRef = 1279C0FD1CC91E5800E521AD /* Compat.h */; };
@@ -127,6 +130,8 @@
 		124A32131CDC270B00472893 /* Ogg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Ogg.framework; path = "../Launcher/Launcher-iOS/Frameworks/Ogg.framework"; sourceTree = "<group>"; };
 		124A32141CDC270B00472893 /* Vorbis.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Vorbis.framework; path = "../Launcher/Launcher-iOS/Frameworks/Vorbis.framework"; sourceTree = "<group>"; };
 		1255C57B1CD24CF60036E1DA /* Bone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bone.h; sourceTree = "<group>"; };
+		126DB02E1CE42C0600FB6B77 /* Skeleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Skeleton.h; sourceTree = "<group>"; };
+		126DB0301CE42C3900FB6B77 /* Skeleton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Skeleton.cpp; sourceTree = "<group>"; };
 		126DE7AD1CC8673600A9E5AB /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		126DE7AF1CC8673B00A9E5AB /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		126DE7B51CC86C6000A9E5AB /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
@@ -353,6 +358,7 @@
 				12822B141CC1ADAE00EE5D0A /* Shader.cpp */,
 				12822B151CC1ADAE00EE5D0A /* ShadowMap.cpp */,
 				12CE016F1CC9919300F3D84B /* SkeletalMesh.cpp */,
+				126DB0301CE42C3900FB6B77 /* Skeleton.cpp */,
 				12822B161CC1ADAE00EE5D0A /* SoundManager.cpp */,
 				12822B171CC1ADAE00EE5D0A /* SSAO.cpp */,
 				12822B181CC1ADAE00EE5D0A /* Texture.cpp */,
@@ -490,6 +496,7 @@
 				12822B681CC1AE4E00EE5D0A /* Shader.h */,
 				12822B691CC1AE4E00EE5D0A /* ShadowMap.h */,
 				12CE01711CC991B900F3D84B /* SkeletalMesh.h */,
+				126DB02E1CE42C0600FB6B77 /* Skeleton.h */,
 				12822B6A1CC1AE4E00EE5D0A /* SoundManager.h */,
 				12822B6B1CC1AE4E00EE5D0A /* SSAO.h */,
 				12822B6C1CC1AE4E00EE5D0A /* Texture.h */,
@@ -657,6 +664,7 @@
 				1279C0FE1CC91E5800E521AD /* Compat.h in Headers */,
 				127DF8B01CCB13AD005F2693 /* AnimationClipResource.h in Headers */,
 				12822BB31CC1D84300EE5D0A /* EngineView.h in Headers */,
+				126DB02F1CE42C0600FB6B77 /* Skeleton.h in Headers */,
 				127DF8B21CCB14DA005F2693 /* AnimationClip.h in Headers */,
 				1296BBD41CDBB6B500D17488 /* PlatformDetect.h in Headers */,
 				12CE01721CC991B900F3D84B /* SkeletalMesh.h in Headers */,
@@ -782,6 +790,7 @@
 				124A31FD1CDC264100472893 /* ObjectComponent.cpp in Sources */,
 				124A32031CDC264100472893 /* VFS.cpp in Sources */,
 				124A31EB1CDC261500472893 /* SceneManager.cpp in Sources */,
+				126DB0321CE42C3900FB6B77 /* Skeleton.cpp in Sources */,
 				124A31EA1CDC261500472893 /* ResourceManager.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -829,6 +838,7 @@
 				12822BBB1CC1DB9500EE5D0A /* EngineAppDelegate.mm in Sources */,
 				12822B461CC1AE0E00EE5D0A /* Terrain.cpp in Sources */,
 				12822B431CC1AE0E00EE5D0A /* ObjectComponent.cpp in Sources */,
+				126DB0311CE42C3900FB6B77 /* Skeleton.cpp in Sources */,
 				12822B1C1CC1ADAE00EE5D0A /* LoadingScreen.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
