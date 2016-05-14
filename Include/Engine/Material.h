@@ -75,8 +75,11 @@ public:
 		_resourceInfo = res;
 		memset(&_materialInfo, 0x0, sizeof(MaterialBlock));
 	};
-
-	MaterialResource* GetResourceInfo() noexcept { return (MaterialResource*)_resourceInfo; }
+	
+	ENGINE_API MaterialResource* GetResourceInfo() noexcept { return (MaterialResource*)_resourceInfo; }
+	
+	ENGINE_API void SetAnimatedMesh(bool animated) noexcept;
+	
 	ENGINE_API bool EnableBlend() { return _blend; }
 	ENGINE_API bool DisableCulling() { return _noCulling; }
 

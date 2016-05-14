@@ -109,6 +109,15 @@ void Material::_LoadTexture(const char* name, int *id, TextureFilter* minFilter,
 		free(p);
 }
 
+void Material::SetAnimatedMesh(bool animated) noexcept
+{
+	_materialInfo.AnimatedMesh = animated ? 1.f : 0.f;
+	
+	_materialUbo->BeginUpdate();
+	_materialUbo->UpdateData(0, sizeof(MaterialBlock), &_materialInfo);
+	_materialUbo->EndUpdate();
+}
+
 int Material::Load()
 {
 	char lineBuff[LINE_BUFF];

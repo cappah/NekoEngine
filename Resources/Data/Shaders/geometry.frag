@@ -41,6 +41,8 @@ layout(std140) uniform MaterialBlock
 #define ShaderType MaterialData1.x
 #define NoDiscard MaterialData1.y
 
+#define AnimatedMesh MaterialData1.z
+
 layout(location=U_TEXTURE0) uniform TEXTURE_2D u_texture0;
 layout(location=U_TEXTURE1) uniform TEXTURE_2D u_texture1;
 layout(location=U_TEXTURE2) uniform TEXTURE_2D u_texture2;

@@ -302,7 +302,7 @@ public:
 	static Configuration &GetConfiguration() noexcept { return _config; }
 	
 	static void BindQuadVAO() noexcept { _quadVAO->Bind(); };
-
+	
 	/**
 	 * Swap buffers
 	 */

@@ -45,9 +45,9 @@
 
 #define PP_TEX_FBO0					0
 #define PP_TEX_FBO1					1
-#define PP_TEX_COLOR					2
-#define PP_TEX_BRIGHT					3
-#define PP_TEX_DEPTH_STENCIL				4
+#define PP_TEX_COLOR				2
+#define PP_TEX_BRIGHT				3
+#define PP_TEX_DEPTH_STENCIL		4
 
 #define FBO_0						0
 #define FBO_1						1
@@ -65,7 +65,7 @@ public:
 	ENGINE_API static RFramebuffer* GetBuffer() noexcept { return _fbos[FBO_DRAW]; }
 	ENGINE_API static RFramebuffer* GetColorBuffer() noexcept { return _fbos[FBO_COLOR]; }
 	ENGINE_API static RFramebuffer* GetBrightnessBuffer() noexcept { return _fbos[FBO_BRIGHT]; }
-
+	
 	ENGINE_API static void ApplyEffects() noexcept;
 
 	ENGINE_API static void DrawEffect(RShader *shader, bool writeColor) noexcept;

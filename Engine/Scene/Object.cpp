@@ -209,6 +209,7 @@ int Object::Load()
 		}
 
 		_blend |= mat->EnableBlend();
+		mat->SetAnimatedMesh(_meshType == MeshType::Skeletal);
 		_materials.push_back(mat);
 	}
 

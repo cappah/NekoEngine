@@ -65,8 +65,8 @@ void main()
 
 	if(AnimatedMesh >= 0.9)
 	{
-		vec4 new_pos = vec4(0.0);
-		vec3 new_normal = vec3(0.0);
+		vec4 new_pos = vec4(a_pos, 0.0);
+		vec3 new_normal = a_norm;
 
 		vec4 curIndex = a_bone_index;
 		vec4 curWeight = a_bone_weight;
@@ -84,6 +84,9 @@ void main()
 			curIndex = curIndex.yzwx;
 			curWeight = curWeight.yzwx;
 		}
+		
+		l_pos = new_pos.xyz;
+		vertexData.Normal = (Model * vec4(new_normal, 0.0)).xyz;
 	}
 	else
 	{
