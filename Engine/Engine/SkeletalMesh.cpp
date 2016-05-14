@@ -78,6 +78,12 @@ int SkeletalMesh::Load()
 	_CalculateTangents();
 	
 	_skeleton = new Skeleton(_bones);
+	
+	if(_skeleton->Load() != ENGINE_OK)
+	{
+		Logger::Log(SK_MESH_MODULE, LOG_CRITICAL, "Failed to load skeleton for mesh id=%s", _resourceInfo->name.c_str());
+		return ENGINE_FAIL;
+	}
 
 	Logger::Log(SK_MESH_MODULE, LOG_DEBUG, "Loaded mesh id %d from %s, %d vertices, %d indices", _resourceInfo->id, path.c_str(), _vertexCount, _indexCount);
 	

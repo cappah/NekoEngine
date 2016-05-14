@@ -87,6 +87,9 @@ GLShader::GLShader()
 	_shaders[3] = -1;
 	_shaders[4] = -1;
 	_shaders[5] = -1;
+	
+	memset(_vsBuffers, 0x0, sizeof(_vsBuffers));
+	memset(_fsBuffers, 0x0, sizeof(_fsBuffers));
 
 	for (int i = 0; i < 10; ++i)
 		_vsBuffers[i].index = GL_INVALID_INDEX;
@@ -119,11 +122,11 @@ void GLShader::Disable()
 void GLShader::BindUniformBuffers()
 {
 	for (int i = 0; i < 10; ++i)
-		if (_vsBuffers[i].index != GL_INVALID_INDEX)
+		if ((_vsBuffers[i].index != GL_INVALID_INDEX) && _vsBuffers[i].ubo)
 			_vsBuffers[i].ubo->BindUniform(_vsBuffers[i].binding, _vsBuffers[i].offset, _vsBuffers[i].size);
 
 	for (int i = 0; i < 10; ++i)
-		if (_fsBuffers[i].index != GL_INVALID_INDEX)
+		if ((_fsBuffers[i].index != GL_INVALID_INDEX) && _fsBuffers[i].ubo)
 			_fsBuffers[i].ubo->BindUniform(_fsBuffers[i].binding, _fsBuffers[i].offset, _fsBuffers[i].size);
 }
 

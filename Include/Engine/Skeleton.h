@@ -46,11 +46,15 @@
 
 #include <Engine/Bone.h>
 #include <Engine/Engine.h>
+#include <Engine/Shader.h>
+#include <Renderer/Renderer.h>
 
 class Skeleton
 {
 public:
 	ENGINE_API Skeleton(std::vector<Bone> bones) noexcept;
+	
+	ENGINE_API void Bind(RShader *shader);
 	
 	ENGINE_API int Load();
 	ENGINE_API void Update(float deltaTime);
@@ -61,5 +65,7 @@ public:
 	
 private:
 	Bone *_rootBone;
-	std::vector<Bone> _bones;
+	Bone _bones[SH_MAX_BONES];
+	unsigned int _numBones;
+	RBuffer *_buffer;
 };

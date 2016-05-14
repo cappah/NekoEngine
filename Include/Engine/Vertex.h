@@ -61,7 +61,7 @@ struct Vertex
 		tgt(glm::vec3(0.f)),
 		uv(glm::vec2(0.f)),
 		terrainUv(glm::vec2(0.f)),
-		index(glm::vec4(0.f)),
+		index(glm::vec4(0)),
 		weight(glm::vec4(0.f)),
 		numBones(0.f)
 	{ }

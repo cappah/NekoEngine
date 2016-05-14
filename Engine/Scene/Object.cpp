@@ -275,6 +275,9 @@ void Object::Draw(RShader* shader) noexcept
 
 	_mesh->Bind();
 
+	if(_meshType == MeshType::Skeletal)
+		((SkeletalMesh*)_mesh)->GetSkeleton()->Bind(shader);
+	
 	if (!_materials.size()) // used only for lighting pass
 		_mesh->Draw(_renderer, 0);
 	else

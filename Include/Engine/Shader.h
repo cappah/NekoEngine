@@ -102,6 +102,8 @@
 #define SH_SUB_N_MAP		5
 #define SH_SUB_N_ARG		6
 
+#define SH_MAX_BONES		100
+
 using namespace std;
 
 class Shader : public Resource

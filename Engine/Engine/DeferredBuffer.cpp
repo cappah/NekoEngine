@@ -207,8 +207,11 @@ int DeferredBuffer::Initialize() noexcept
 	_sceneLightUbo->UpdateData(sizeof(vec4) * 3, sizeof(vec3), &data.x);
 
 	RShader *geomShader = _geometryShader->GetRShader();
+	
 	geomShader->VSUniformBlockBinding(0, "MatrixBlock");
 	geomShader->VSUniformBlockBinding(1, "MaterialBlock");
+	geomShader->VSUniformBlockBinding(2, "BoneBlock");
+	
 	geomShader->FSUniformBlockBinding(0, "ObjectBlock");
 	geomShader->FSUniformBlockBinding(1, "MaterialBlock");
 

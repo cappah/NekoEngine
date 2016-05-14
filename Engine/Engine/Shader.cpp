@@ -256,6 +256,8 @@ void Shader::SetDefines(Renderer *r)
 	r->AddShaderDefine("O_MATERIALINFO", "3");
 	r->AddShaderDefine("O_VIEWNORMAL", "4");
 	
+	r->AddShaderDefine("SH_MAX_BONES", to_string(SH_MAX_BONES));
+	
 #ifdef _DEBUG
 	r->AddShaderDefine("_DEBUG", "1");
 #endif

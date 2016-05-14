@@ -52,6 +52,8 @@ class SkeletalMesh : public StaticMesh
 public:
 	ENGINE_API SkeletalMesh(MeshResource *res) noexcept;
 	
+	ENGINE_API Skeleton* GetSkeleton() noexcept { return _skeleton; }
+	
 	ENGINE_API virtual int Load() override;
 	ENGINE_API void Update(float deltaTime);
 	ENGINE_API virtual void Draw(Renderer* r, size_t group) override;

@@ -23,7 +23,7 @@ layout(std140) uniform MaterialBlock
 
 layout(std140) uniform BoneBlock
 {
-	mat4 BoneMatrices[30];
+	mat4 BoneMatrices[SH_MAX_BONES];
 };
 
 #define MaterialType MaterialData1.x

@@ -54,12 +54,32 @@ using namespace glm;
 
 Skeleton::Skeleton(vector<Bone> bones) noexcept
 {
-	_bones = bones;
+	_numBones = (unsigned int)bones.size();
+	
+	if(_numBones > SH_MAX_BONES)
+	{
+		Logger::Log(SK_MESH_MODULE, LOG_WARNING, "Truncating skeleton");
+		_numBones = SH_MAX_BONES;
+	}
+	
+#pragma omp parallel
+	for(unsigned int i = 0; i < _numBones; i++)
+		_bones[i] = bones[i];
+}
+
+void Skeleton::Bind(RShader *shader)
+{
+	shader->VSSetUniformBuffer(2, 0, sizeof(_bones), _buffer);
 }
 
 int Skeleton::Load()
 {
-	return true;
+	if((_buffer = Engine::GetRenderer()->CreateBuffer(BufferType::Uniform, false, false)) == nullptr)
+	{ DIE("Out of resources"); }
+	
+	_buffer->SetStorage(sizeof(Bone) * SH_MAX_BONES, _bones);
+	
+	return ENGINE_OK;
 }
 
 void Skeleton::Update(float deltaTime)
