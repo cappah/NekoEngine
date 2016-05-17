@@ -269,8 +269,9 @@ static inline NMeshVertex _ReadVertex(const char* line) noexcept
 		ss << "binorm[" << v.binorm.x << "," << v.binorm.y << "," << v.binorm.z << "];";
 		ss << "tgt[" << v.tgt.x << "," << v.tgt.y << "," << v.tgt.z << "];";
 		ss << "uv[" << v.uv.x << "," << v.uv.y << "," << "];";
-		ss << "bonei[" << v.index.x << "," << v.index.y << "," << v.index.z << "," << v.index.w << "];";
-		ss << "bonew[" << v.index.x << "," << v.index.y << "," << v.index.z << "," << v.index.w << "];" << endl;
+        ss << "bonei[" << v.boneIndices.x << "," << v.boneIndices.y << "," << v.boneIndices.z << "," << v.boneIndices.w << "];";
+        ss << "bonew[" << v.boneWeights.x << "," << v.boneWeights.y << "," << v.boneWeights.z << "," << v.boneWeights.w << "];";        
+        ss << "bonen[" << v.numBones << "];" << endl;
 	}
 
 	ss << "indices:" << _indices.size() << endl;
@@ -305,7 +306,8 @@ static inline NMeshVertex _ReadVertex(const char* line) noexcept
 		ss << bi.offset[0][0] << "," << bi.offset[0][1] << "," << bi.offset[0][2] << "," << bi.offset[0][3] << ",";
 		ss << bi.offset[1][0] << "," << bi.offset[1][1] << "," << bi.offset[1][2] << "," << bi.offset[1][3] << ",";
 		ss << bi.offset[2][0] << "," << bi.offset[2][1] << "," << bi.offset[2][2] << "," << bi.offset[2][3] << ",";
-		ss << bi.offset[3][0] << "," << bi.offset[3][1] << "," << bi.offset[3][2] << "," << bi.offset[3][3] << "};" << endl;
+		ss << bi.offset[3][0] << "," << bi.offset[3][1] << "," << bi.offset[3][2] << "," << bi.offset[3][3] << "};";
+        ss << "parent{" << bi.parentId << "};" << endl;
 	}
 	
 	gzFile fp = gzopen([path UTF8String], "wb");

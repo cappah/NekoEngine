@@ -596,16 +596,19 @@ int Scene::Load()
 
 	attrib.index = SHADER_INDEX_ATTRIBUTE;
 	attrib.size = 4;
+    attrib.type = BufferDataType::Int;
 	attrib.ptr = (void *)VERTEX_INDEX_OFFSET;
 	_sceneVertexBuffer->AddAttribute(attrib);
 
 	attrib.index = SHADER_WEIGHT_ATTRIBUTE;
 	attrib.size = 4;
+    attrib.type = BufferDataType::Float;
 	attrib.ptr = (void *)VERTEX_WEIGHT_OFFSET;
 	_sceneVertexBuffer->AddAttribute(attrib);
 
 	attrib.index = SHADER_NUMBONES_ATTRIBUTE;
 	attrib.size = 1;
+    attrib.type = BufferDataType::Int;
 	attrib.ptr = (void *)VERTEX_NUMBONES_OFFSET;
 	_sceneVertexBuffer->AddAttribute(attrib);
 

@@ -23,9 +23,9 @@ typedef struct NMESH_VERTEX
 	glm::vec3 tgt;
 	glm::vec2 uv;
 	glm::vec2 terrainUv;
-	glm::vec4 index;
-	glm::vec4 weight;
-	float numBones;
+    glm::ivec4 boneIndices;
+    glm::vec4 boneWeights;
+	int numBones;
 } NMeshVertex;
 
 typedef struct NMESH_GROUPINFO
@@ -39,6 +39,7 @@ typedef struct NMESH_BONEINFO
 	std::string name;
 	glm::mat4 offset;
 	glm::mat4 finalTransform;
+    int parentId;
 } NMeshBoneInfo;
 
 @interface NMesh : NSObject

@@ -66,7 +66,7 @@ Skeleton::Skeleton(vector<Bone> bones) noexcept
 	for (unsigned int i = 0; i < _numBones; i++)
 	{
 		_bones[i] = bones[i];
-		_bones[i].parent = &_bones[_bones[i].parentId];
+        _bones[i].parent = _bones[i].parentId == i ? nullptr : &_bones[_bones[i].parentId];
 	}
 }
 

@@ -102,7 +102,6 @@
 #define SH_SUB_N_MAP		5
 #define SH_SUB_N_ARG		6
 
-#define SH_BONES_PER_VERTEX	10
 #define SH_MAX_BONES		100
 
 using namespace std;

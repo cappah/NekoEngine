@@ -57,7 +57,7 @@
 			NMeshVertex v;
 			memset(&v, 0x0, sizeof(NMeshVertex));
 			
-			v.index = glm::vec4(-1.f);
+			v.boneIndices = glm::ivec4(-1);
 		
 			v.pos.x = inMesh->mVertices[j].x;
 			v.pos.y = inMesh->mVertices[j].y;
@@ -102,8 +102,8 @@
 				if([mesh getVertexAtIndex:vertexId].numBones == 4)
 					return false;
 				
-				[mesh getVertexAtIndex:vertexId].weight[[mesh getVertexAtIndex:vertexId].numBones] = inMesh->mBones[i]->mWeights[j].mWeight;
-				[mesh getVertexAtIndex:vertexId].index[[mesh getVertexAtIndex:vertexId].numBones++] = boneIndex;
+				[mesh getVertexAtIndex:vertexId].boneWeights[[mesh getVertexAtIndex:vertexId].numBones] = inMesh->mBones[i]->mWeights[j].mWeight;
+				[mesh getVertexAtIndex:vertexId].boneIndices[[mesh getVertexAtIndex:vertexId].numBones++] = boneIndex;
 			}
 		}
 		

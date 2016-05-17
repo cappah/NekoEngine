@@ -40,8 +40,6 @@
 
 #include <glm/glm.hpp>
 
-#include <Engine/Shader.h>
-
 #define VERTEX_POSITION_OFFSET		0
 #define VERTEX_COLOR_OFFSET		sizeof(glm::vec3)
 #define VERTEX_NORMAL_OFFSET		(sizeof(glm::vec3) + sizeof(glm::vec3))
@@ -50,8 +48,8 @@
 #define VERTEX_UV_OFFSET		(sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3))
 #define VERTEX_TUV_OFFSET		(sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec2))
 #define VERTEX_INDEX_OFFSET		(sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec2) + sizeof(glm::vec2))
-#define VERTEX_WEIGHT_OFFSET		(sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec2) + sizeof(glm::vec2) + sizeof(float) * 10)
-#define VERTEX_NUMBONES_OFFSET		(sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec2) + sizeof(glm::vec2) + sizeof(float) * 10 + sizeof(float) * 10)
+#define VERTEX_WEIGHT_OFFSET		(sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec2) + sizeof(glm::vec2) + sizeof(glm::ivec4))
+#define VERTEX_NUMBONES_OFFSET		(sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec2) + sizeof(glm::vec2) + sizeof(glm::ivec4) + sizeof(glm::vec4))
 
 struct Vertex 
 {
@@ -63,9 +61,9 @@ struct Vertex
 		tgt(glm::vec3(0.f)),
 		uv(glm::vec2(0.f)),
 		terrainUv(glm::vec2(0.f)),
-		boneIndices(),
-		boneWeights(),
-		numBones(0.f)
+        boneIndices(glm::ivec4(0)),
+        boneWeights(glm::vec4(0)),
+		numBones(0)
 	{ }
 
 	/*Vertex(const Vertex& vert) :
@@ -88,7 +86,7 @@ struct Vertex
 	glm::vec3 tgt;
 	glm::vec2 uv;
 	glm::vec2 terrainUv;
-	float boneIndices[SH_BONES_PER_VERTEX];
-	float boneWeights[SH_BONES_PER_VERTEX];
+    glm::ivec4 boneIndices;
+    glm::vec4 boneWeights;
 	int numBones;
 };

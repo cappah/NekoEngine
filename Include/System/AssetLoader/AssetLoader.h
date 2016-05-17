@@ -107,9 +107,9 @@ private:
 			else if ((pch = strstr(buff, "uv")) != NULL)
 				EngineUtils::ReadFloatArray(buff + 3, 2, &v.uv.x);
 			else if ((pch = strstr(buff, "bonei")) != NULL)
-				EngineUtils::ReadFloatArray(buff + 6, SH_BONES_PER_VERTEX, v.boneIndices);
+				EngineUtils::ReadIntArray(buff + 6, 4, &v.boneIndices.x);
 			else if ((pch = strstr(buff, "bonew")) != NULL)
-				EngineUtils::ReadFloatArray(buff + 6, SH_BONES_PER_VERTEX, v.boneWeights);
+				EngineUtils::ReadFloatArray(buff + 6, 4, &v.boneWeights.x);
 			else if ((pch = strstr(buff, "bonen")) != NULL)
 				EngineUtils::ReadIntArray(buff + 6, 1, &v.numBones);
 

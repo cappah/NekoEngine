@@ -36,8 +36,6 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#pragma once
-
 #include <glm/glm.hpp>
 
 #include <Engine/Animator.h>
