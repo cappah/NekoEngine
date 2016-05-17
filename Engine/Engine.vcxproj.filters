@@ -105,6 +105,12 @@
     <Filter Include="Resources\Data\SkeletalMeshes">
       <UniqueIdentifier>{78f1f2f4-ba14-4ea2-a6b9-0e97e09a22e6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Scene\Components">
+      <UniqueIdentifier>{de87b5f2-2796-4b68-ad6d-2e2eb1eb2b58}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\Scene\Components">
+      <UniqueIdentifier>{864e702a-2452-43d6-adb8-5fd7ab514fe3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Resources\Data\Shaders\include\SMAA.h">
@@ -147,9 +153,6 @@
       <Filter>Include\Engine</Filter>
     </ClInclude>
     <ClInclude Include="..\include\Engine\Engine.h">
-      <Filter>Include\Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\Engine\EngineClassFactory.h">
       <Filter>Include\Engine</Filter>
     </ClInclude>
     <ClInclude Include="..\include\Engine\EngineUtils.h">
@@ -294,6 +297,15 @@
       <Filter>Include\Engine</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\Engine\Skeleton.h">
+      <Filter>Include\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Scene\Components\StaticMeshComponent.h">
+      <Filter>Include\Scene\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Scene\Components\SkeletalMeshComponent.h">
+      <Filter>Include\Scene\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Engine\EngineClassFactory.h">
       <Filter>Include\Engine</Filter>
     </ClInclude>
   </ItemGroup>
@@ -580,6 +592,12 @@
     </ClCompile>
     <ClCompile Include="Engine\Skeleton.cpp">
       <Filter>Source\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Components\SkeletalMeshComponent.cpp">
+      <Filter>Source\Scene\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Components\StaticMeshComponent.cpp">
+      <Filter>Source\Scene\Components</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

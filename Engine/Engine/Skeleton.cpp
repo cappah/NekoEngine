@@ -1,9 +1,9 @@
 /* Neko Engine
  *
- * Mesh.cpp
+ * Skeleton.cpp
  * Author: Alexandru Naiman
  *
- * Mesh class implementation 
+ * Skeleton class implementation 
  *
  * ----------------------------------------------------------------------------------
  *

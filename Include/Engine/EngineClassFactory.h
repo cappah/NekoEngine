@@ -55,41 +55,64 @@
 #endif
 
 #define ENGINE_REGISTER_OBJECT_CLASS(x) static EngineClassFactoryRegisterObjectClass<x> regClass ## x(#x);
+#define ENGINE_REGISTER_COMPONENT_CLASS(x) static EngineClassFactoryRegisterComponentClass<x> regClass ## x(#x);
 
 class GameModule;
 class Object;
+class ObjectComponent;
 
 typedef GameModule *(*CreateGameModuleProc)();
 typedef std::map<std::string, Object*(*)()> ObjectClassMapType;
+typedef std::map<std::string, ObjectComponent*(*)(Object*)> ComponentClassMapType;
 
 template<typename T> Object *engineFactoryCreateObject() { return new T(); }
+template<typename T> Object *engineFactoryCreateComponent(Object *parent) { return new T(parent); }
 
 class EngineClassFactory
 {
 public:
 	static Object *NewObject(const std::string &s)
 	{
-		ObjectClassMapType::iterator it = GetMap()->find(s);
-		if (it == GetMap()->end())
+		ObjectClassMapType::iterator it = GetObjectMap()->find(s);
+		if (it == GetObjectMap()->end())
 			return nullptr;
 		return it->second();
 	}
 
-	static ObjectClassMapType *GetMap() noexcept
+	static ObjectComponent *NewComponent(const std::string &s, Object *parent)
+	{
+		ComponentClassMapType::iterator it = GetComponentMap()->find(s);
+		if (it == GetComponentMap()->end())
+			return nullptr;
+		return it->second(parent);
+	}
+
+	static ObjectClassMapType *GetObjectMap() noexcept
 	{
 		if(!_objectClassMap)
 			_objectClassMap = new ObjectClassMapType();
 		return _objectClassMap;
 	}
 
+	static ComponentClassMapType *GetComponentMap() noexcept
+	{
+		if (!_componentClassMap)
+			_componentClassMap = new ComponentClassMapType();
+		return _componentClassMap;
+	}
+
 	static void CleanUp() noexcept
 	{
 		if(_objectClassMap)
 			delete _objectClassMap;
+
+		if (_componentClassMap)
+			delete _componentClassMap;
 	}
 
 protected:
 	static ObjectClassMapType *_objectClassMap;
+	static ComponentClassMapType *_componentClassMap;
 };
 
 template<typename T>
@@ -98,6 +121,16 @@ class ENGINE_API EngineClassFactoryRegisterObjectClass : EngineClassFactory
 public:
 	EngineClassFactoryRegisterObjectClass(const std::string &name) noexcept
 	{
-		GetMap()->insert(std::make_pair(name, &engineFactoryCreateObject<T>));
+		GetObjectMap()->insert(std::make_pair(name, &engineFactoryCreateObject<T>));
+	}
+};
+
+template<typename T>
+class ENGINE_API EngineClassFactoryRegisterComponentClass : EngineClassFactory
+{
+public:
+	EngineClassFactoryRegisterComponentClass(const std::string &name) noexcept
+	{
+		GetComponentMap()->insert(std::make_pair(name, &engineFactoryCreateComponent<T>));
 	}
 };

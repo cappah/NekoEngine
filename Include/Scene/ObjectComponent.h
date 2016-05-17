@@ -48,6 +48,7 @@ public:
 	ENGINE_API class Object* GetParent() { return _parent; }
 	ENGINE_API void SetParent(class Object *obj) { _parent = obj; }
 
+	ENGINE_API virtual void Draw(RShader *shader) noexcept { }
 	ENGINE_API virtual void Update(float deltaTime) noexcept { }
 
 	ENGINE_API virtual ~ObjectComponent() { }
@@ -56,4 +57,3 @@ protected:
 	class Object* _parent;
 	glm::vec3 _position, _rotation, _scale;
 };
-

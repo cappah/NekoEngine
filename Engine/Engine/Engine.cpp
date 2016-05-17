@@ -118,6 +118,7 @@ bool Engine::_startup = true;
 static bool iniFileLoaded = false;
 
 ObjectClassMapType *EngineClassFactory::_objectClassMap = nullptr;
+ComponentClassMapType *EngineClassFactory::_componentClassMap = nullptr;
 
 #ifdef NE_DEVICE_MOBILE
 extern "C" Renderer *createRenderer();
@@ -893,6 +894,19 @@ Object *Engine::NewObject(const std::string &className)
 
 	if (_gameModule)
 		return _gameModule->NewObject(className);
+
+	return nullptr;
+}
+
+ObjectComponent *Engine::NewComponent(const std::string &className, Object *parent)
+{
+	ObjectComponent *obj = EngineClassFactory::NewComponent(className, parent);
+
+	if (obj)
+		return obj;
+
+	if (_gameModule)
+		return _gameModule->NewComponent(className, parent);
 
 	return nullptr;
 }

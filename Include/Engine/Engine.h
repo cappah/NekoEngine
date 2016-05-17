@@ -290,6 +290,7 @@ public:
 	static GameModule *GetGameModule() noexcept { return _gameModule; }
 
 	static Object *NewObject(const std::string &className);
+	static ObjectComponent *NewComponent(const std::string &className, Object *parent);
 
 	static Renderer *GetRenderer() noexcept { return _renderer; }
 

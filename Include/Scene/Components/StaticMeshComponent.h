@@ -1,9 +1,9 @@
 /* Neko Engine
  *
- * SkeletalMesh.cpp
+ * StaticMeshComponent.h
  * Author: Alexandru Naiman
  *
- * SkeletalMesh class implementation 
+ * StaticMeshComponent class definition 
  *
  * ----------------------------------------------------------------------------------
  *
@@ -36,76 +36,24 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#define ENGINE_INTERNAL
+#pragma once
 
-#include <glm/glm.hpp>
-
-#include <Engine/SkeletalMesh.h>
-#include <Engine/Vertex.h>
 #include <Engine/Engine.h>
-#include <Engine/EngineUtils.h>
-#include <System/Logger.h>
-#include <System/AssetLoader/AssetLoader.h>
 
-#define SK_MESH_MODULE	"SkeletalMesh"
-
-using namespace std;
-using namespace glm;
-
-SkeletalMesh::SkeletalMesh(MeshResource *res) noexcept :
-	StaticMesh(res),
-	_skeleton(nullptr)
+class StaticMeshComponent
 {
-	if(res->meshType != MeshType::Skeletal)
-	{ DIE("Attempt to load static mesh as skeletal !"); }
-}
+public:
+	ENGINE_API StaticMeshComponent(class Object* parent = nullptr) : _parent(parent) { }
 
-int SkeletalMesh::Load()
-{
-	string path("/");
-	path.append(GetResourceInfo()->filePath);
-	
-	if (AssetLoader::LoadMesh(path, MeshType::Skeletal, _vertices, _indices, _groupOffset, _groupCount, &_bones) != ENGINE_OK)
-	{
-		Logger::Log(SK_MESH_MODULE, LOG_CRITICAL, "Failed to load mesh id=%s", _resourceInfo->name.c_str());
-		return ENGINE_FAIL;
-	}
-	
-	_indexCount = _indices.size();
-	_vertexCount = _vertices.size();
-	_triangleCount = _indexCount / 3;
-	
-	_CalculateTangents();
-	
-	_skeleton = new Skeleton(_bones);
-	
-	if(_skeleton->Load() != ENGINE_OK)
-	{
-		Logger::Log(SK_MESH_MODULE, LOG_CRITICAL, "Failed to load skeleton for mesh id=%s", _resourceInfo->name.c_str());
-		return ENGINE_FAIL;
-	}
+	ENGINE_API class Object* GetParent() { return _parent; }
+	ENGINE_API void SetParent(class Object *obj) { _parent = obj; }
 
-	Logger::Log(SK_MESH_MODULE, LOG_DEBUG, "Loaded mesh id %d from %s, %d vertices, %d indices", _resourceInfo->id, path.c_str(), _vertexCount, _indexCount);
-	
-	return ENGINE_OK;
-}
+	ENGINE_API virtual void Draw(RShader *shader) noexcept { }
+	ENGINE_API virtual void Update(float deltaTime) noexcept { }
 
-void SkeletalMesh::Update(float deltaTime)
-{
-	
-}
+	ENGINE_API virtual ~StaticMeshComponent() { }
 
-void SkeletalMesh::Draw(Renderer* r, size_t group)
-{
-	StaticMesh::Draw(r, group);
-}
-
-SkeletalMesh::~SkeletalMesh() noexcept
-{
-	delete _skeleton;
-}
-
-void SkeletalMesh::_GetNodeHierarchy(float time, void *node, glm::mat4 &parentTransform)
-{
-	//
-}
+protected:
+	class Object* _parent;
+	glm::vec3 _position, _rotation, _scale;
+};

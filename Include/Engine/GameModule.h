@@ -43,48 +43,75 @@
 
 #ifndef ENGINE_INTERNAL
 
-#define NEKO_GAME_MODULE()																\
-class Object;																			\
-template<typename T> Object *gameModuleFactoryCreateObject() { return new T(); }		\
-class GameModuleClassFactory															\
-{																						\
-public:																					\
-	static Object *NewObject(const std::string &s)										\
-	{																					\
-		ObjectClassMapType::iterator it = GetMap()->find(s);							\
-		if (it == GetMap()->end())														\
-			return nullptr;																\
-		return it->second();															\
-	}																					\
-	static ObjectClassMapType *GetMap()	noexcept										\
-	{																					\
-		if(!_objectClassMap)															\
-			_objectClassMap = new ObjectClassMapType();									\
-		return _objectClassMap;															\
-	}																					\
-	static void CleanUp() noexcept														\
-	{																					\
-		if(_objectClassMap)																\
-			delete _objectClassMap;														\
-	}																					\
-protected:																				\
-	static ObjectClassMapType *_objectClassMap;											\
-};																						\
-template<typename T>																	\
-class GameModuleClassFactoryRegisterClass : GameModuleClassFactory						\
-{																						\
-public:																					\
-	GameModuleClassFactoryRegisterClass(const std::string &name) noexcept				\
-	{																					\
-		GetMap()->insert(std::make_pair(name, &gameModuleFactoryCreateObject<T>));		\
-	}																					\
-};																						\
+#define NEKO_GAME_MODULE()																				\
+class Object;																							\
+template<typename T> Object *gameModuleFactoryCreateObject() { return new T(); }						\
+template<typename T> Object *gameModuleFactoryCreateComponent(Object *parent) { return new T(parent); }	\
+class GameModuleClassFactory																			\
+{																										\
+public:																									\
+	static Object *NewObject(const std::string &s)														\
+	{																									\
+		ObjectClassMapType::iterator it = GetObjectMap()->find(s);										\
+		if (it == GetObjectMap()->end())																\
+			return nullptr;																				\
+		return it->second();																			\
+	}																									\
+	static ObjectComponent *NewComponent(const std::string &s, Object *parent)							\
+	{																									\
+		ComponentClassMapType::iterator it = GetComponentMap()->find(s);								\
+		if (it == GetComponentMap()->end())																\
+			return nullptr;																				\
+		return it->second(parent);																		\
+	}																									\
+	static ObjectClassMapType *GetObjectMap()	noexcept												\
+	{																									\
+		if(!_objectClassMap)																			\
+			_objectClassMap = new ObjectClassMapType();													\
+		return _objectClassMap;																			\
+	}																									\
+	static ComponentClassMapType *GetComponentMap()	noexcept											\
+	{																									\
+		if(!_componentClassMap)																			\
+			_componentClassMap = new ComponentClassMapType();											\
+		return _componentClassMap;																		\
+	}																									\
+	static void CleanUp() noexcept																		\
+	{																									\
+		if(_objectClassMap)																				\
+			delete _objectClassMap;																		\
+		if(_componentClassMap)																			\
+			delete _componentClassMap;																	\
+	}																									\
+protected:																								\
+	static ObjectClassMapType *_objectClassMap;															\
+	static ComponentClassMapType *_componentClassMap;													\
+};																										\
+template<typename T>																					\
+class GameModuleClassFactoryRegisterObjectClass : GameModuleClassFactory								\
+{																										\
+public:																									\
+	GameModuleClassFactoryRegisterObjectClass(const std::string &name) noexcept							\
+	{																									\
+		GetObjectMap()->insert(std::make_pair(name, &gameModuleFactoryCreateObject<T>));				\
+	}																									\
+};																										\
+template<typename T>																					\
+class GameModuleClassFactoryRegisterComponentClass : GameModuleClassFactory								\
+{																										\
+public:																									\
+	GameModuleClassFactoryRegisterComponentClass(const std::string &name) noexcept						\
+	{																									\
+		GetComponentMap()->insert(std::make_pair(name, &gameModuleFactoryCreateComponent<T>));			\
+	}																									\
+};																										\
 
-#define NEKO_GAME_MODULE_CLASS(ClassName)												\
-public:																					\
-	ClassName() noexcept { _gameModuleName = #ClassName; }								\
-	virtual Object *NewObject(const std::string &s) override;							\
-	~ClassName() noexcept;																\
+#define NEKO_GAME_MODULE_CLASS(ClassName)																\
+public:																									\
+	ClassName() noexcept { _gameModuleName = #ClassName; }												\
+	virtual Object *NewObject(const std::string &s) override;											\
+	virtual ObjectComponent *NewComponent(const std::string &s, Object *parent) override;				\
+	~ClassName() noexcept;																				\
 
 #ifdef WIN32
 #define NEKO_GAME_MODULE_BASE_EXPORT __declspec(dllexport)
@@ -92,23 +119,29 @@ public:																					\
 #define NEKO_GAME_MODULE_BASE_EXPORT
 #endif
 
-#define NEKO_GAME_MODULE_IMPL(ClassName)												\
-ObjectClassMapType *GameModuleClassFactory::_objectClassMap = nullptr;					\
-Object *ClassName::NewObject(const std::string &s)										\
-{																						\
-	return GameModuleClassFactory::NewObject(s);										\
-}																						\
-ClassName::~ClassName()	noexcept														\
-{																						\
-	CleanUp();																			\
-	GameModuleClassFactory::CleanUp();													\
-}																						\
-extern "C" GameModule NEKO_GAME_MODULE_BASE_EXPORT *createGameModule()					\
-{																						\
-	return new ClassName();																\
-}																						\
+#define NEKO_GAME_MODULE_IMPL(ClassName)																\
+ObjectClassMapType *GameModuleClassFactory::_objectClassMap = nullptr;									\
+ComponentClassMapType *GameModuleClassFactory::_componentClassMap = nullptr;							\
+Object *ClassName::NewObject(const std::string &s)														\
+{																										\
+	return GameModuleClassFactory::NewObject(s);														\
+}																										\
+ObjectComponent *ClassName::NewComponent(const std::string &s, Object *parent)							\
+{																										\
+	return GameModuleClassFactory::NewComponent(s, parent);												\
+}																										\
+ClassName::~ClassName()	noexcept																		\
+{																										\
+	CleanUp();																							\
+	GameModuleClassFactory::CleanUp();																	\
+}																										\
+extern "C" GameModule NEKO_GAME_MODULE_BASE_EXPORT *createGameModule()									\
+{																										\
+	return new ClassName();																				\
+}																										\
 
-#define REGISTER_OBJECT_CLASS(x) GameModuleClassFactoryRegisterClass<x> regClass ## x(#x);
+#define REGISTER_OBJECT_CLASS(x) GameModuleClassFactoryRegisterObjectClass<x> regClass ## x(#x);
+#define REGISTER_COMPONENT_CLASS(x) GameModuleClassFactoryRegisterComponentClass<x> regClass ## x(#x);
 
 #else
 #ifdef NE_DEVICE_MOBILE
@@ -122,6 +155,7 @@ public:
 	GameModule() : _gameModuleName("GameModule") {};
 
 	virtual Object *NewObject(const std::string &s) = 0;
+	virtual ObjectComponent *NewComponent(const std::string &s, Object *parent) = 0;
 	const char *GetModuleName() { return _gameModuleName; }
 
 	virtual int Initialize() = 0;
