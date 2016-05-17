@@ -39,3 +39,15 @@
 #define ENGINE_INTERNAL
 
 #include <Scene/Components/StaticMeshComponent.h>
+
+ENGINE_REGISTER_COMPONENT_CLASS(StaticMeshComponent);
+
+void StaticMeshComponent::Draw(RShader *shader) noexcept
+{
+	//
+}
+
+void StaticMeshComponent::Update(float deltaTime) noexcept
+{
+	//
+}

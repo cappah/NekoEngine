@@ -66,7 +66,7 @@ typedef std::map<std::string, Object*(*)()> ObjectClassMapType;
 typedef std::map<std::string, ObjectComponent*(*)(Object*)> ComponentClassMapType;
 
 template<typename T> Object *engineFactoryCreateObject() { return new T(); }
-template<typename T> Object *engineFactoryCreateComponent(Object *parent) { return new T(parent); }
+template<typename T> ObjectComponent *engineFactoryCreateComponent(Object *parent) { return new T(parent); }
 
 class EngineClassFactory
 {

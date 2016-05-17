@@ -39,3 +39,15 @@
 #define ENGINE_INTERNAL
 
 #include <Scene/Components/SkeletalMeshComponent.h>
+
+ENGINE_REGISTER_COMPONENT_CLASS(SkeletalMeshComponent);
+
+void SkeletalMeshComponent::Draw(RShader *shader) noexcept
+{
+	//
+}
+
+void SkeletalMeshComponent::Update(float deltaTime) noexcept
+{
+	//
+}

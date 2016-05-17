@@ -39,21 +39,15 @@
 #pragma once
 
 #include <Engine/Engine.h>
+#include <Scene/ObjectComponent.h>
 
-class StaticMeshComponent
+class StaticMeshComponent : public ObjectComponent
 {
 public:
-	ENGINE_API StaticMeshComponent(class Object* parent = nullptr) : _parent(parent) { }
+	ENGINE_API StaticMeshComponent(class Object* parent = nullptr) : ObjectComponent(parent) { }
 
-	ENGINE_API class Object* GetParent() { return _parent; }
-	ENGINE_API void SetParent(class Object *obj) { _parent = obj; }
-
-	ENGINE_API virtual void Draw(RShader *shader) noexcept { }
-	ENGINE_API virtual void Update(float deltaTime) noexcept { }
+	ENGINE_API virtual void Draw(RShader *shader) noexcept override;
+	ENGINE_API virtual void Update(float deltaTime) noexcept override;
 
 	ENGINE_API virtual ~StaticMeshComponent() { }
-
-protected:
-	class Object* _parent;
-	glm::vec3 _position, _rotation, _scale;
 };
