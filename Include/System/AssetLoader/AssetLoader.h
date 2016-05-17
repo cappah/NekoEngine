@@ -51,7 +51,7 @@
 class AssetLoader
 {
 public:
-	// Meshes
+	// Mesh
 	static int LoadMesh(std::string &file, MeshType type,
 		std::vector<Vertex> &vertices,
 		std::vector<uint32_t> &indices,
@@ -107,9 +107,11 @@ private:
 			else if ((pch = strstr(buff, "uv")) != NULL)
 				EngineUtils::ReadFloatArray(buff + 3, 2, &v.uv.x);
 			else if ((pch = strstr(buff, "bonei")) != NULL)
-				EngineUtils::ReadFloatArray(buff + 6, 4, &v.index.x);
+				EngineUtils::ReadFloatArray(buff + 6, SH_BONES_PER_VERTEX, v.boneIndices);
 			else if ((pch = strstr(buff, "bonew")) != NULL)
-				EngineUtils::ReadFloatArray(buff + 6, 4, &v.weight.x);
+				EngineUtils::ReadFloatArray(buff + 6, SH_BONES_PER_VERTEX, v.boneWeights);
+			else if ((pch = strstr(buff, "bonen")) != NULL)
+				EngineUtils::ReadIntArray(buff + 6, 1, &v.numBones);
 
 			memset(buff, 0x0, i_buff);
 
@@ -153,6 +155,8 @@ private:
 				b.name = buff + 5;
 			else if ((pch = strstr(buff, "offset")) != NULL)
 				EngineUtils::ReadFloatArray(buff + 7, 16, &b.offset[0][0]);
+			else if ((pch = strstr(buff, "parent")) != NULL)
+				b.parentId = atoi(buff + 7);
 										
 			memset(buff, 0x0, i_buff);
 										

@@ -4,9 +4,9 @@ layout(location = SHADER_COLOR_ATTRIBUTE) in vec3 a_color;
 layout(location = SHADER_TANGENT_ATTRIBUTE) in vec3 a_tgt;
 layout(location = SHADER_UV_ATTRIBUTE) in vec2 a_uv;
 layout(location = SHADER_TERRAINUV_ATTRIBUTE) in vec2 a_uv_terrain;
-layout(location = SHADER_INDEX_ATTRIBUTE) in vec4 a_bone_index;
-layout(location = SHADER_WEIGHT_ATTRIBUTE) in vec4 a_bone_weight;
-layout(location = SHADER_NUMBONES_ATTRIBUTE) in float a_num_bones;
+layout(location = SHADER_INDEX_ATTRIBUTE) in float a_bone_index[SH_BONES_PER_VERTEX];
+layout(location = SHADER_WEIGHT_ATTRIBUTE) in float a_bone_weight[SH_BONES_PER_VERTEX];
+layout(location = SHADER_NUMBONES_ATTRIBUTE) in int a_num_bones;
 
 layout(std140) uniform MatrixBlock
 {
@@ -68,10 +68,10 @@ void main()
 		vec4 new_pos = vec4(a_pos, 0.0);
 		vec3 new_normal = a_norm;
 
-        vec4 w0 = BoneMatrices[int(a_bone_index.x)] * vec4(a_pos, 0.0);
-        vec4 w1 = BoneMatrices[int(a_bone_index.y)] * vec4(a_pos, 0.0);
-        vec4 w2 = BoneMatrices[int(a_bone_index.z)] * vec4(a_pos, 0.0);
-        vec4 w3 = BoneMatrices[int(a_bone_index.w)] * vec4(a_pos, 0.0);
+        vec4 w0 = BoneMatrices[int(a_bone_index[0])] * vec4(a_pos, 0.0);
+        vec4 w1 = BoneMatrices[int(a_bone_index[1])] * vec4(a_pos, 0.0);
+        vec4 w2 = BoneMatrices[int(a_bone_index[2])] * vec4(a_pos, 0.0);
+        vec4 w3 = BoneMatrices[int(a_bone_index[3])] * vec4(a_pos, 0.0);
         
 		/*vec4 curIndex = a_bone_index;
 		vec4 curWeight = a_bone_weight;
@@ -90,7 +90,7 @@ void main()
 			curWeight = curWeight.yzwx;
 		}*/
 		
-        l_pos = (w0 * a_bone_weight.x + w1 * a_bone_weight.y + w2 * a_bone_weight.z + w3 * a_bone_weight.w).xyz;
+        l_pos = (w0 * a_bone_weight[0] + w1 * a_bone_weight[1] + w2 * a_bone_weight[2] + w3 * a_bone_weight[3]).xyz;
 		vertexData.Normal = (Model * vec4(new_normal, 0.0)).xyz;
 	}
 	else

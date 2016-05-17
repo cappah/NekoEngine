@@ -137,6 +137,7 @@
     <ClInclude Include="..\include\Audio\AudioClip.h" />
     <ClInclude Include="..\include\Audio\AudioSource.h" />
     <ClInclude Include="..\Include\Engine\AnimationClip.h" />
+    <ClInclude Include="..\Include\Engine\Animator.h" />
     <ClInclude Include="..\Include\Engine\Bone.h" />
     <ClInclude Include="..\Include\Engine\DeferredBuffer.h" />
     <ClInclude Include="..\include\Engine\Engine.h" />
@@ -183,6 +184,7 @@
     <ClInclude Include="..\include\Resource\TextureFontResource.h" />
     <ClInclude Include="..\include\Resource\TextureResource.h" />
     <ClInclude Include="..\include\Scene\Camera.h" />
+    <ClInclude Include="..\Include\Scene\Components\AnimatorComponent.h" />
     <ClInclude Include="..\Include\Scene\Components\SkeletalMeshComponent.h" />
     <ClInclude Include="..\Include\Scene\Components\StaticMeshComponent.h" />
     <ClInclude Include="..\include\Scene\Light.h" />
@@ -264,6 +266,7 @@
     <ClCompile Include="Audio\AudioClip.cpp" />
     <ClCompile Include="Audio\AudioSource.cpp" />
     <ClCompile Include="Engine\AnimationClip.cpp" />
+    <ClCompile Include="Engine\Animator.cpp" />
     <ClCompile Include="Engine\DeferredBuffer.cpp" />
     <ClCompile Include="Engine\Engine.cpp" />
     <ClCompile Include="Engine\LoadingScreen.cpp" />
@@ -287,6 +290,7 @@
     <ClCompile Include="PostEffects\Effect.cpp" />
     <ClCompile Include="PostEffects\SMAA.cpp" />
     <ClCompile Include="Scene\Camera.cpp" />
+    <ClCompile Include="Scene\Components\AnimatorComponent.cpp" />
     <ClCompile Include="Scene\Components\SkeletalMeshComponent.cpp" />
     <ClCompile Include="Scene\Components\StaticMeshComponent.cpp" />
     <ClCompile Include="Scene\Light.cpp" />

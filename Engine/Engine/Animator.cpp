@@ -1,9 +1,9 @@
 /* Neko Engine
  *
- * Skeleton.cpp
+ * Animator.cpp
  * Author: Alexandru Naiman
  *
- * Skeleton class implementation 
+ * Animator implementation
  *
  * ----------------------------------------------------------------------------------
  *
@@ -36,79 +36,13 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#define ENGINE_INTERNAL
+#pragma once
 
 #include <glm/glm.hpp>
-#include <glm/gtc/type_ptr.hpp>
 
-#include <Engine/Skeleton.h>
-#include <Engine/Vertex.h>
-#include <Engine/Engine.h>
-#include <Engine/EngineUtils.h>
-#include <System/Logger.h>
-#include <System/AssetLoader/AssetLoader.h>
+#include <Engine/Animator.h>
 
-#define SK_MESH_MODULE	"SkeletalMesh"
-
-using namespace std;
-using namespace glm;
-
-Skeleton::Skeleton(vector<Bone> bones) noexcept
-{
-	_numBones = (unsigned int)bones.size();
-	
-	if(_numBones > SH_MAX_BONES)
-	{
-		Logger::Log(SK_MESH_MODULE, LOG_WARNING, "Truncating skeleton");
-		_numBones = SH_MAX_BONES;
-	}
-	
-	for (unsigned int i = 0; i < _numBones; i++)
-	{
-		_bones[i] = bones[i];
-		_bones[i].parent = &_bones[_bones[i].parentId];
-	}
-}
-
-void Skeleton::Bind(RShader *shader)
-{
-	shader->VSSetUniformBuffer(2, 0, sizeof(_transforms), _buffer);
-}
-
-int Skeleton::Load()
-{
-	if((_buffer = Engine::GetRenderer()->CreateBuffer(BufferType::Uniform, false, false)) == nullptr)
-	{ DIE("Out of resources"); }
-	
-	_PrepareTransforms();
-	_buffer->SetStorage(sizeof(_transforms), _transforms);
-	
-	return ENGINE_OK;
-}
-
-void Skeleton::Update(float deltaTime)
-{
-	_PrepareTransforms();
-	_buffer->UpdateData(0, sizeof(_transforms), _transforms);
-}
-
-void Skeleton::Draw(Renderer* r, size_t group)
-{
-	//
-}
-
-void Skeleton::GetNodeHierarchy(float time, void *node, glm::mat4 &parentTransform)
-{
-	//
-}
-
-void Skeleton::_PrepareTransforms()
-{
-	for (uint16_t i = 0; i < _numBones; ++i)
-		memcpy(&_transforms[i][0], &_bones[i].transform[0], sizeof(glm::mat4));
-}
-
-Skeleton::~Skeleton() noexcept
+void Animator::PlayAnimation(AnimationClip *clip)
 {
 	//
 }

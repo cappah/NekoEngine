@@ -40,6 +40,8 @@
 
 #include <glm/glm.hpp>
 
+#include <Engine/Shader.h>
+
 #define VERTEX_POSITION_OFFSET		0
 #define VERTEX_COLOR_OFFSET		sizeof(glm::vec3)
 #define VERTEX_NORMAL_OFFSET		(sizeof(glm::vec3) + sizeof(glm::vec3))
@@ -48,8 +50,8 @@
 #define VERTEX_UV_OFFSET		(sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3))
 #define VERTEX_TUV_OFFSET		(sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec2))
 #define VERTEX_INDEX_OFFSET		(sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec2) + sizeof(glm::vec2))
-#define VERTEX_WEIGHT_OFFSET		(sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec2) + sizeof(glm::vec2) + sizeof(glm::vec4))
-#define VERTEX_NUMBONES_OFFSET		(sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec2) + sizeof(glm::vec2) + sizeof(glm::vec4) + sizeof(glm::vec4))
+#define VERTEX_WEIGHT_OFFSET		(sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec2) + sizeof(glm::vec2) + sizeof(float) * 10)
+#define VERTEX_NUMBONES_OFFSET		(sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec2) + sizeof(glm::vec2) + sizeof(float) * 10 + sizeof(float) * 10)
 
 struct Vertex 
 {
@@ -61,12 +63,12 @@ struct Vertex
 		tgt(glm::vec3(0.f)),
 		uv(glm::vec2(0.f)),
 		terrainUv(glm::vec2(0.f)),
-		index(glm::vec4(0)),
-		weight(glm::vec4(0.f)),
+		boneIndices(),
+		boneWeights(),
 		numBones(0.f)
 	{ }
 
-	Vertex(const Vertex& vert) :
+	/*Vertex(const Vertex& vert) :
 		pos(vert.pos),
 		color(vert.color),
 		norm(vert.norm),
@@ -74,10 +76,10 @@ struct Vertex
 		tgt(vert.tgt),
 		uv(vert.uv),
 		terrainUv(vert.terrainUv),
-		index(vert.index),
-		weight(vert.weight),
+		boneIndices(),
+		boneWeights(),
 		numBones(vert.numBones)
-	{ }
+	{ }*/
 
 	glm::vec3 pos;
 	glm::vec3 color;
@@ -86,7 +88,7 @@ struct Vertex
 	glm::vec3 tgt;
 	glm::vec2 uv;
 	glm::vec2 terrainUv;
-	glm::vec4 index;
-	glm::vec4 weight;
-	float numBones;
+	float boneIndices[SH_BONES_PER_VERTEX];
+	float boneWeights[SH_BONES_PER_VERTEX];
+	int numBones;
 };

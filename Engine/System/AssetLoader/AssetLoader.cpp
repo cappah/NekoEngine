@@ -189,7 +189,7 @@ int AssetLoader::LoadMesh(string& file, MeshType type, vector<Vertex> &vertices,
     
     f->Close();
 	
-return ENGINE_OK;
+	return ENGINE_OK;
 }
 
 int AssetLoader::LoadWAV(string &file, ALenum *format, ALvoid **data, ALsizei *size, ALsizei *freq)

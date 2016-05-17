@@ -52,4 +52,6 @@ struct Bone
 	std::string name;
 	glm::mat4 offset;
 	glm::mat4 transform;
+	uint16_t parentId;
+	Bone *parent;
 };

@@ -70,5 +70,5 @@ private:
 	RBuffer *_buffer;
 	glm::mat4 _transforms[SH_MAX_BONES];
 
-	void _CreateTransforms();
+	void _PrepareTransforms();
 };
