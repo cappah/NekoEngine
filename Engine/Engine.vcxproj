@@ -137,6 +137,7 @@
     <ClInclude Include="..\include\Audio\AudioClip.h" />
     <ClInclude Include="..\include\Audio\AudioSource.h" />
     <ClInclude Include="..\Include\Engine\AnimationClip.h" />
+    <ClInclude Include="..\Include\Engine\Bone.h" />
     <ClInclude Include="..\Include\Engine\DeferredBuffer.h" />
     <ClInclude Include="..\include\Engine\Engine.h" />
     <ClInclude Include="..\Include\Engine\EngineClassFactory.h" />

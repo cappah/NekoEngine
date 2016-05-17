@@ -66,6 +66,9 @@ public:
 private:
 	Bone *_rootBone;
 	Bone _bones[SH_MAX_BONES];
-	unsigned int _numBones;
+	uint16_t _numBones;
 	RBuffer *_buffer;
+	glm::mat4 _transforms[SH_MAX_BONES];
+
+	void _CreateTransforms();
 };

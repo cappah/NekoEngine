@@ -39,6 +39,7 @@
 #define ENGINE_INTERNAL
 
 #include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include <Engine/Skeleton.h>
 #include <Engine/Vertex.h>
@@ -62,14 +63,13 @@ Skeleton::Skeleton(vector<Bone> bones) noexcept
 		_numBones = SH_MAX_BONES;
 	}
 	
-#pragma omp parallel
 	for(unsigned int i = 0; i < _numBones; i++)
 		_bones[i] = bones[i];
 }
 
 void Skeleton::Bind(RShader *shader)
 {
-	shader->VSSetUniformBuffer(2, 0, sizeof(_bones), _buffer);
+	shader->VSSetUniformBuffer(2, 0, sizeof(_transforms), _buffer);
 }
 
 int Skeleton::Load()
@@ -77,14 +77,16 @@ int Skeleton::Load()
 	if((_buffer = Engine::GetRenderer()->CreateBuffer(BufferType::Uniform, false, false)) == nullptr)
 	{ DIE("Out of resources"); }
 	
-	_buffer->SetStorage(sizeof(Bone) * SH_MAX_BONES, _bones);
+	_CreateTransforms();
+	_buffer->SetStorage(sizeof(_transforms), _transforms);
 	
 	return ENGINE_OK;
 }
 
 void Skeleton::Update(float deltaTime)
 {
-	//
+	_CreateTransforms();
+	_buffer->UpdateData(0, sizeof(_transforms), _transforms);
 }
 
 void Skeleton::Draw(Renderer* r, size_t group)
@@ -95,6 +97,12 @@ void Skeleton::Draw(Renderer* r, size_t group)
 void Skeleton::GetNodeHierarchy(float time, void *node, glm::mat4 &parentTransform)
 {
 	//
+}
+
+void Skeleton::_CreateTransforms()
+{
+	for (uint16_t i = 0; i < _numBones; ++i)
+		memcpy(&_transforms[i][0], &_bones[i].transform[0], sizeof(glm::mat4));
 }
 
 Skeleton::~Skeleton() noexcept
