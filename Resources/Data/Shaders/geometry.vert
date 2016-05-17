@@ -68,7 +68,12 @@ void main()
 		vec4 new_pos = vec4(a_pos, 0.0);
 		vec3 new_normal = a_norm;
 
-		vec4 curIndex = a_bone_index;
+        vec4 w0 = BoneMatrices[int(a_bone_index.x)] * vec4(a_pos, 0.0);
+        vec4 w1 = BoneMatrices[int(a_bone_index.y)] * vec4(a_pos, 0.0);
+        vec4 w2 = BoneMatrices[int(a_bone_index.z)] * vec4(a_pos, 0.0);
+        vec4 w3 = BoneMatrices[int(a_bone_index.w)] * vec4(a_pos, 0.0);
+        
+		/*vec4 curIndex = a_bone_index;
 		vec4 curWeight = a_bone_weight;
 
 		for(int i = 0; i < int(a_num_bones); i++)
@@ -83,9 +88,9 @@ void main()
 
 			curIndex = curIndex.yzwx;
 			curWeight = curWeight.yzwx;
-		}
+		}*/
 		
-		l_pos = new_pos.xyz;
+        l_pos = (w0 * a_bone_weight.x + w1 * a_bone_weight.y + w2 * a_bone_weight.z + w3 * a_bone_weight.w).xyz;
 		vertexData.Normal = (Model * vec4(new_normal, 0.0)).xyz;
 	}
 	else

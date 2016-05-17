@@ -107,6 +107,12 @@
 		12822BBA1CC1DB9500EE5D0A /* EngineAppDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 12822BB81CC1DB9500EE5D0A /* EngineAppDelegate.h */; };
 		12822BBB1CC1DB9500EE5D0A /* EngineAppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 12822BB91CC1DB9500EE5D0A /* EngineAppDelegate.mm */; };
 		1296BBD41CDBB6B500D17488 /* PlatformDetect.h in Headers */ = {isa = PBXBuildFile; fileRef = 1296BBD31CDBB6B500D17488 /* PlatformDetect.h */; };
+		12B0CF5D1CEB4A9700E5D2FE /* SkeletalMeshComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12B0CF5B1CEB4A9700E5D2FE /* SkeletalMeshComponent.cpp */; };
+		12B0CF5E1CEB4A9700E5D2FE /* SkeletalMeshComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12B0CF5B1CEB4A9700E5D2FE /* SkeletalMeshComponent.cpp */; };
+		12B0CF5F1CEB4A9700E5D2FE /* StaticMeshComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12B0CF5C1CEB4A9700E5D2FE /* StaticMeshComponent.cpp */; };
+		12B0CF601CEB4A9700E5D2FE /* StaticMeshComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12B0CF5C1CEB4A9700E5D2FE /* StaticMeshComponent.cpp */; };
+		12B0CF641CEB4AB400E5D2FE /* SkeletalMeshComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 12B0CF621CEB4AB400E5D2FE /* SkeletalMeshComponent.h */; };
+		12B0CF651CEB4AB400E5D2FE /* StaticMeshComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 12B0CF631CEB4AB400E5D2FE /* StaticMeshComponent.h */; };
 		12CE01701CC9919300F3D84B /* SkeletalMesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12CE016F1CC9919300F3D84B /* SkeletalMesh.cpp */; };
 		12CE01721CC991B900F3D84B /* SkeletalMesh.h in Headers */ = {isa = PBXBuildFile; fileRef = 12CE01711CC991B900F3D84B /* SkeletalMesh.h */; };
 /* End PBXBuildFile section */
@@ -248,6 +254,10 @@
 		1296BB701CDB7EEA00D17488 /* EngineAppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = EngineAppDelegate.mm; path = Platform/iOS/EngineAppDelegate.mm; sourceTree = SOURCE_ROOT; };
 		1296BB731CDB7F3400D17488 /* iOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = iOS.mm; path = Platform/iOS/iOS.mm; sourceTree = SOURCE_ROOT; };
 		1296BBD31CDBB6B500D17488 /* PlatformDetect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlatformDetect.h; sourceTree = "<group>"; };
+		12B0CF5B1CEB4A9700E5D2FE /* SkeletalMeshComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SkeletalMeshComponent.cpp; path = Scene/Components/SkeletalMeshComponent.cpp; sourceTree = SOURCE_ROOT; };
+		12B0CF5C1CEB4A9700E5D2FE /* StaticMeshComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = StaticMeshComponent.cpp; path = Scene/Components/StaticMeshComponent.cpp; sourceTree = SOURCE_ROOT; };
+		12B0CF621CEB4AB400E5D2FE /* SkeletalMeshComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SkeletalMeshComponent.h; path = Components/SkeletalMeshComponent.h; sourceTree = "<group>"; };
+		12B0CF631CEB4AB400E5D2FE /* StaticMeshComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StaticMeshComponent.h; path = Components/StaticMeshComponent.h; sourceTree = "<group>"; };
 		12CE016F1CC9919300F3D84B /* SkeletalMesh.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SkeletalMesh.cpp; sourceTree = "<group>"; };
 		12CE01711CC991B900F3D84B /* SkeletalMesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkeletalMesh.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -412,6 +422,7 @@
 		12822B331CC1ADF000EE5D0A /* Scene */ = {
 			isa = PBXGroup;
 			children = (
+				12B0CF5A1CEB4A8B00E5D2FE /* Components */,
 				12822B391CC1AE0E00EE5D0A /* Camera.cpp */,
 				12822B3A1CC1AE0E00EE5D0A /* Light.cpp */,
 				12822B3B1CC1AE0E00EE5D0A /* Object.cpp */,
@@ -575,6 +586,7 @@
 		12822B8A1CC1AE4E00EE5D0A /* Scene */ = {
 			isa = PBXGroup;
 			children = (
+				12B0CF611CEB4AA100E5D2FE /* Components */,
 				12822B8B1CC1AE4E00EE5D0A /* Camera.h */,
 				12822B8C1CC1AE4E00EE5D0A /* Light.h */,
 				12822B8D1CC1AE4E00EE5D0A /* Object.h */,
@@ -654,6 +666,24 @@
 			name = iOS;
 			sourceTree = "<group>";
 		};
+		12B0CF5A1CEB4A8B00E5D2FE /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				12B0CF5B1CEB4A9700E5D2FE /* SkeletalMeshComponent.cpp */,
+				12B0CF5C1CEB4A9700E5D2FE /* StaticMeshComponent.cpp */,
+			);
+			name = Components;
+			sourceTree = "<group>";
+		};
+		12B0CF611CEB4AA100E5D2FE /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				12B0CF621CEB4AB400E5D2FE /* SkeletalMeshComponent.h */,
+				12B0CF631CEB4AB400E5D2FE /* StaticMeshComponent.h */,
+			);
+			name = Components;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -661,9 +691,11 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				12B0CF641CEB4AB400E5D2FE /* SkeletalMeshComponent.h in Headers */,
 				1279C0FE1CC91E5800E521AD /* Compat.h in Headers */,
 				127DF8B01CCB13AD005F2693 /* AnimationClipResource.h in Headers */,
 				12822BB31CC1D84300EE5D0A /* EngineView.h in Headers */,
+				12B0CF651CEB4AB400E5D2FE /* StaticMeshComponent.h in Headers */,
 				126DB02F1CE42C0600FB6B77 /* Skeleton.h in Headers */,
 				127DF8B21CCB14DA005F2693 /* AnimationClip.h in Headers */,
 				1296BBD41CDBB6B500D17488 /* PlatformDetect.h in Headers */,
@@ -755,6 +787,7 @@
 				124A31E01CDC260E00472893 /* AudioClip.cpp in Sources */,
 				124A31ED1CDC261500472893 /* ShadowMap.cpp in Sources */,
 				124A31E41CDC261500472893 /* Engine.cpp in Sources */,
+				12B0CF601CEB4A9700E5D2FE /* StaticMeshComponent.cpp in Sources */,
 				124A31EE1CDC261500472893 /* SkeletalMesh.cpp in Sources */,
 				124A31FF1CDC264100472893 /* Skybox.cpp in Sources */,
 				124A31E81CDC261500472893 /* PostProcessor.cpp in Sources */,
@@ -780,6 +813,7 @@
 				124A31E71CDC261500472893 /* StaticMesh.cpp in Sources */,
 				124A31E61CDC261500472893 /* Material.cpp in Sources */,
 				124A31E11CDC260E00472893 /* AudioSource.cpp in Sources */,
+				12B0CF5E1CEB4A9700E5D2FE /* SkeletalMeshComponent.cpp in Sources */,
 				124A31F11CDC261500472893 /* Texture.cpp in Sources */,
 				124A31E21CDC261500472893 /* AnimationClip.cpp in Sources */,
 				124A31F31CDC262800472893 /* UNIX.cpp in Sources */,
@@ -803,6 +837,7 @@
 				12822B201CC1ADAE00EE5D0A /* ResourceDatabase.cpp in Sources */,
 				12822B081CC1AD9C00EE5D0A /* AudioClip.cpp in Sources */,
 				12CE01701CC9919300F3D84B /* SkeletalMesh.cpp in Sources */,
+				12B0CF5F1CEB4A9700E5D2FE /* StaticMeshComponent.cpp in Sources */,
 				12822B561CC1AE2E00EE5D0A /* VFSFile.cpp in Sources */,
 				12822B1B1CC1ADAE00EE5D0A /* Engine.cpp in Sources */,
 				12822B2F1CC1ADD500EE5D0A /* Mac.mm in Sources */,
@@ -828,6 +863,7 @@
 				12822B091CC1AD9C00EE5D0A /* AudioSource.cpp in Sources */,
 				12822B411CC1AE0E00EE5D0A /* Light.cpp in Sources */,
 				12822B371CC1AE0600EE5D0A /* Effect.cpp in Sources */,
+				12B0CF5D1CEB4A9700E5D2FE /* SkeletalMeshComponent.cpp in Sources */,
 				12822B251CC1ADAE00EE5D0A /* SoundManager.cpp in Sources */,
 				12822B451CC1AE0E00EE5D0A /* Skybox.cpp in Sources */,
 				12822B271CC1ADAE00EE5D0A /* Texture.cpp in Sources */,
