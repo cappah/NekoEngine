@@ -391,7 +391,7 @@ bool Engine::_InitSystem()
 	
 	if (DeferredBuffer::Initialize() != ENGINE_OK)
 	{
-		Logger::Log(ENGINE_MODULE, LOG_CRITICAL, "Failed to initialize the deferredm buffer");
+		Logger::Log(ENGINE_MODULE, LOG_CRITICAL, "Failed to initialize the deferred buffer");
 		return false;
 	}
 	
