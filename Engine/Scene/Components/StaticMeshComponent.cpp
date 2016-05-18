@@ -152,7 +152,32 @@ void StaticMeshComponent::Update(float deltaTime) noexcept
 
 void StaticMeshComponent::Unload()
 {
+	if(!_loaded)
+		return;
+	
 	ObjectComponent::Unload();
+
+	for(Material *mat : _materials)
+		ResourceManager::UnloadResource(mat->GetResourceInfo()->id, ResourceType::RES_MATERIAL);
+
+	_materials.clear();
+	_materialIds.clear();
+
+	if (_mesh != nullptr)
+	{
+		if (_mesh->GetResourceInfo() != nullptr)
+			ResourceManager::UnloadResource(_mesh->GetResourceInfo()->id,
+			_mesh->GetResourceInfo()->meshType == MeshType::Static ?
+			ResourceType::RES_STATIC_MESH : ResourceType::RES_SKELETAL_MESH);
+		else
+			delete _mesh;
+
+		_mesh = nullptr;
+	}
+
+	delete _matrixUbo;
+	
+	_loaded = false;
 }
 
 StaticMeshComponent::~StaticMeshComponent()

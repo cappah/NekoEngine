@@ -325,8 +325,8 @@ void Object::Unload() noexcept
 	{
 		if (_mesh->GetResourceInfo() != nullptr)
 			ResourceManager::UnloadResource(_mesh->GetResourceInfo()->id,
-											_mesh->GetResourceInfo()->meshType == MeshType::Static ?
-											ResourceType::RES_STATIC_MESH : ResourceType::RES_SKELETAL_MESH);
+			_mesh->GetResourceInfo()->meshType == MeshType::Static ?
+			ResourceType::RES_STATIC_MESH : ResourceType::RES_SKELETAL_MESH);
 		else
 			delete _mesh;
 
@@ -335,6 +335,9 @@ void Object::Unload() noexcept
 
 	delete _objectUbo;
 	delete _matrixUbo;
+	
+	for(pair<string, ObjectComponent*> kvp : _components)
+		kvp.second->Unload();
 	
 	_loaded = false;
 }
