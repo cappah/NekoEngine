@@ -46,7 +46,7 @@
 #define NEKO_GAME_MODULE()																				\
 class Object;																							\
 template<typename T> Object *gameModuleFactoryCreateObject() { return new T(); }						\
-template<typename T> Object *gameModuleFactoryCreateComponent(Object *parent) { return new T(parent); }	\
+template<typename T> Object *gameModuleFactoryCreateComponent(ComponentInitializer *initializer) { return new T(initializer); }	\
 class GameModuleClassFactory																			\
 {																										\
 public:																									\
@@ -57,12 +57,12 @@ public:																									\
 			return nullptr;																				\
 		return it->second();																			\
 	}																									\
-	static ObjectComponent *NewComponent(const std::string &s, Object *parent)							\
+	static ObjectComponent *NewComponent(const std::string &s, ComponentInitializer *initializer)							\
 	{																									\
 		ComponentClassMapType::iterator it = GetComponentMap()->find(s);								\
 		if (it == GetComponentMap()->end())																\
 			return nullptr;																				\
-		return it->second(parent);																		\
+		return it->second(initializer);																		\
 	}																									\
 	static ObjectClassMapType *GetObjectMap()	noexcept												\
 	{																									\
@@ -110,7 +110,7 @@ public:																									\
 public:																									\
 	ClassName() noexcept { _gameModuleName = #ClassName; }												\
 	virtual Object *NewObject(const std::string &s) override;											\
-	virtual ObjectComponent *NewComponent(const std::string &s, Object *parent) override;				\
+	virtual ObjectComponent *NewComponent(const std::string &s, ComponentInitializer *initializer) override;				\
 	~ClassName() noexcept;																				\
 
 #ifdef WIN32
@@ -126,9 +126,9 @@ Object *ClassName::NewObject(const std::string &s)														\
 {																										\
 	return GameModuleClassFactory::NewObject(s);														\
 }																										\
-ObjectComponent *ClassName::NewComponent(const std::string &s, Object *parent)							\
+ObjectComponent *ClassName::NewComponent(const std::string &s, ComponentInitializer *initializer)							\
 {																										\
-	return GameModuleClassFactory::NewComponent(s, parent);												\
+	return GameModuleClassFactory::NewComponent(s, initializer);												\
 }																										\
 ClassName::~ClassName()	noexcept																		\
 {																										\
@@ -155,7 +155,7 @@ public:
 	GameModule() : _gameModuleName("GameModule") {};
 
 	virtual Object *NewObject(const std::string &s) = 0;
-	virtual ObjectComponent *NewComponent(const std::string &s, Object *parent) = 0;
+	virtual ObjectComponent *NewComponent(const std::string &s, ComponentInitializer *initializer) = 0;
 	const char *GetModuleName() { return _gameModuleName; }
 
 	virtual int Initialize() = 0;

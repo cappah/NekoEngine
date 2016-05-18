@@ -45,7 +45,7 @@
 class SkeletalMeshComponent : public StaticMeshComponent
 {
 public:
-	ENGINE_API SkeletalMeshComponent(class Object* parent = nullptr) : StaticMeshComponent(parent) { }
+	ENGINE_API SkeletalMeshComponent(ComponentInitializer *initializer);
 
 	ENGINE_API virtual int Load() override;
 	

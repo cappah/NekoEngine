@@ -898,15 +898,15 @@ Object *Engine::NewObject(const std::string &className)
 	return nullptr;
 }
 
-ObjectComponent *Engine::NewComponent(const std::string &className, Object *parent)
+ObjectComponent *Engine::NewComponent(const std::string &className, ComponentInitializer *initializer)
 {
-	ObjectComponent *obj = EngineClassFactory::NewComponent(className, parent);
+	ObjectComponent *obj = EngineClassFactory::NewComponent(className, initializer);
 
 	if (obj)
 		return obj;
 
 	if (_gameModule)
-		return _gameModule->NewComponent(className, parent);
+		return _gameModule->NewComponent(className, initializer);
 
 	return nullptr;
 }

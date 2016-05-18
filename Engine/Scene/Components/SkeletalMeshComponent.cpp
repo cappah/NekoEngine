@@ -47,6 +47,10 @@
 
 ENGINE_REGISTER_COMPONENT_CLASS(SkeletalMeshComponent);
 
+SkeletalMeshComponent::SkeletalMeshComponent(ComponentInitializer *initializer)
+	: StaticMeshComponent(initializer)
+{ }
+
 int SkeletalMeshComponent::Load()
 {
 	int ret = ObjectComponent::Load();

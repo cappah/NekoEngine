@@ -342,11 +342,8 @@ void Object::Unload() noexcept
 	_loaded = false;
 }
 
-void Object::AddComponent(std::string &name, std::string &className)
+void Object::AddComponent(std::string &name, ObjectComponent *comp)
 {
-	ObjectComponent *comp = Engine::NewComponent(className, this);
-	if (!comp) { DIE("Out of resources"); }
-
 	_components.insert({ name, comp });
 }
 

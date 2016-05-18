@@ -38,12 +38,24 @@
 
 #pragma once
 
+#include <map>
+
 #include <Engine/Engine.h>
+
+typedef std::multimap<std::string, std::string> ArgumentMapType;
+typedef std::pair<ArgumentMapType::iterator, ArgumentMapType::iterator> ArgumentMapRangeType;
+
+class ComponentInitializer
+{
+public:
+	Object *parent;
+	ArgumentMapType arguments;
+};
 
 class ObjectComponent
 {
 public:
-	ENGINE_API ObjectComponent(class Object* parent = nullptr) : _parent(parent) { }
+	ENGINE_API ObjectComponent(ComponentInitializer *initializer) : _parent(initializer->parent) { }
 
 	ENGINE_API class Object* GetParent() { return _parent; }
 	ENGINE_API void SetParent(class Object *obj) { _parent = obj; }

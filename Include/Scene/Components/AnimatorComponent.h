@@ -46,7 +46,7 @@
 class AnimatorComponent : public ObjectComponent
 {
 public:
-	ENGINE_API AnimatorComponent(class Object* parent = nullptr) : ObjectComponent(parent) { }
+	ENGINE_API AnimatorComponent(ComponentInitializer *initializer) : ObjectComponent(initializer) { }
 	
 	void SetMesh(SkeletalMesh *mesh) noexcept { _mesh = mesh; }
 

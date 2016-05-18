@@ -46,7 +46,8 @@
 
 using namespace glm;
 
-AudioSource::AudioSource() noexcept
+AudioSource::AudioSource(ComponentInitializer *initializer) noexcept
+	: ObjectComponent(initializer)
 {
 	_clip = nullptr;
 

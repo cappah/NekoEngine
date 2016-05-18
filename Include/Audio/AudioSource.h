@@ -58,7 +58,7 @@ class AudioSource :
 	public ObjectComponent
 {
 public:
-	AudioSource() noexcept;
+	AudioSource(ComponentInitializer *initializer) noexcept;
 
 	ENGINE_API bool HasClip() noexcept { return _clip != nullptr; }
 

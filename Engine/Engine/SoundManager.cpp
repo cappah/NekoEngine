@@ -76,8 +76,8 @@ int SoundManager::Initialize()
 	AL_CHECK_RET(alListener3f(AL_VELOCITY, 0.f, 0.f, 0.f), ENGINE_FAIL);
 	AL_CHECK_RET(alListenerfv(AL_ORIENTATION, listenerOrientation), ENGINE_FAIL);
 
-	_bgMusicSource = new AudioSource();
-	_bgMusicSource->SetLooping(true);
+	/*_bgMusicSource = new AudioSource();
+	_bgMusicSource->SetLooping(true);*/
 
 	Logger::Log(SNDMGR_MODULE, LOG_INFORMATION, "Initialized");
 

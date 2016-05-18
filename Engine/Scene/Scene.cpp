@@ -387,6 +387,53 @@ void Scene::_LoadSceneInfo(VFSFile *f)
 	DeferredBuffer::SetAmbientColor(_ambientColor, _ambientColorIntensity);
 }
 
+ObjectComponent *Scene::_LoadComponent(VFSFile *f, const std::string &className)
+{
+	map<string, string> _componentInfo;
+
+	char lineBuff[SCENE_LINE_BUFF];
+	memset(lineBuff, 0x0, SCENE_LINE_BUFF);
+
+	while (!f->EoF())
+	{
+		memset(lineBuff, 0x0, SCENE_LINE_BUFF);
+		f->Gets(lineBuff, SCENE_LINE_BUFF);
+
+		if (lineBuff[0] == 0x0)
+			continue;
+
+		EngineUtils::RemoveComment(lineBuff);
+		EngineUtils::RemoveNewline(lineBuff);
+
+		if (lineBuff[0] == 0x0)
+			continue;
+
+		if (!strncmp(lineBuff, "EndComponent", 12))
+			break;
+	
+		char *ptr = lineBuff;
+
+		// skip tabs
+		while (*ptr == '\t') ptr++;
+
+		vector<char*> split = EngineUtils::SplitString(lineBuff, '=');
+
+		if (split.size() != 2)
+		{
+			for (char* c : split)
+				free(c);
+			continue;
+		}
+
+		_componentInfo.insert(make_pair(split[0], split[1]));
+
+		for (char* c : split)
+			free(c);
+	}
+
+	return nullptr;
+}
+
 size_t Scene::GetVertexCount() noexcept
 {
 	size_t verts = 0;

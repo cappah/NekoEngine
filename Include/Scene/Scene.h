@@ -145,6 +145,7 @@ private:
 	Object *_LoadObject(VFSFile *f, const std::string &className);
 	Camera *_LoadCamera(VFSFile *f);
 	void _LoadSceneInfo(VFSFile *f);
+	ObjectComponent *_LoadComponent(VFSFile *f, const std::string &className);
 
 	void _AddVertices(std::vector<Vertex>& vertices) { _sceneVertices.insert(_sceneVertices.end(), vertices.begin(), vertices.end()); }
 	void _AddIndices(std::vector<uint32_t>& indices) { _sceneIndices.insert(_sceneIndices.end(), indices.begin(), indices.end()); }

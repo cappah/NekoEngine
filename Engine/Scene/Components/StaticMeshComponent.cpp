@@ -47,6 +47,17 @@
 
 ENGINE_REGISTER_COMPONENT_CLASS(StaticMeshComponent);
 
+StaticMeshComponent::StaticMeshComponent(ComponentInitializer *initializer)
+	: ObjectComponent(initializer)
+{
+	_meshId = initializer->arguments.find("mesh")->second;
+	
+	ArgumentMapRangeType range = initializer->arguments.equal_range("materials");
+		
+	for (ArgumentMapType::iterator it = range.first; it != range.second; ++it)
+		_materialIds.push_back(ResourceManager::GetResourceID(it->second.c_str(), ResourceType::RES_MATERIAL));
+}
+
 int StaticMeshComponent::Load()
 {
 	int ret = ObjectComponent::Load();

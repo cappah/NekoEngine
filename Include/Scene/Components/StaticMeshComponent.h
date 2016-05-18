@@ -53,7 +53,7 @@ typedef struct MATRIX_BLOCK
 class StaticMeshComponent : public ObjectComponent
 {
 public:
-	ENGINE_API StaticMeshComponent(class Object* parent = nullptr) : ObjectComponent(parent) { }
+	ENGINE_API StaticMeshComponent(ComponentInitializer *initializer);
 
 	ENGINE_API virtual int Load() override;
 	
