@@ -1,9 +1,9 @@
 /* Neko Engine
  *
- * AnimationClip.h
+ * AnimationNode.h
  * Author: Alexandru Naiman
  *
- * AnimationClip class definition
+ * AnimationNode struct definition
  *
  * ----------------------------------------------------------------------------------
  *
@@ -41,30 +41,26 @@
 #include <string>
 #include <vector>
 
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/quaternion.hpp>
 #include <glm/glm.hpp>
 
-#include <Engine/Vertex.h>
-#include <Resource/Resource.h>
-#include <Engine/AnimationNode.h>
-#include <Resource/AnimationClipResource.h>
-
-class AnimationClip : public Resource
+struct VectorKey
 {
-public:
-	ENGINE_API AnimationClip(AnimationClipResource *res) noexcept;
+	glm::vec3 value;
+	double time;
+};
 
-	ENGINE_API AnimationClipResource* GetResourceInfo() noexcept { return (AnimationClipResource*)_resourceInfo; }
-	ENGINE_API double GetDuration() noexcept { return _duration; }
-	ENGINE_API double GetTicksPerSecond() noexcept { return _ticksPerSecond; }
-	ENGINE_API std::vector<AnimationNode> &GetChannels();
+struct QuatKey
+{
+	glm::quat value;
+	double time;
+};
 
-	ENGINE_API virtual int Load() override;
-	ENGINE_API void Release() noexcept;
-
-	ENGINE_API virtual ~AnimationClip() noexcept;
-
-protected:
-	double _duration;
-	double _ticksPerSecond;
-	std::vector<AnimationNode> _channels;
+struct AnimationNode
+{
+	std::string name;	
+	std::vector<VectorKey> positionKeys;
+	std::vector<QuatKey> rotationKeys;
+	std::vector<VectorKey> scalingKeys;
 };

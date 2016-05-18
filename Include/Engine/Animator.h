@@ -51,4 +51,7 @@ public:
 	void PlayAnimation(AnimationClip *clip);
 
 	virtual ~Animator() { };
+
+private:
+	
 };

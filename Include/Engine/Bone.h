@@ -39,6 +39,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 #include <glm/glm.hpp>
 
 struct Bone
@@ -46,12 +47,17 @@ struct Bone
 	Bone() :
 	name("unnamed"),
 	offset(glm::mat4(0.f)),
-	transform(glm::mat4(0.f))
+	parentId(0),
+	parent(nullptr),
+	numChildren(0),
+	children(nullptr)
 	{ }
 	
 	std::string name;
 	glm::mat4 offset;
-	glm::mat4 transform;
-	uint16_t parentId;
+	uint16_t parentId;	
 	Bone *parent;
+	uint16_t numChildren;
+	Bone **children;
+	std::vector<uint16_t> childrenIds;
 };

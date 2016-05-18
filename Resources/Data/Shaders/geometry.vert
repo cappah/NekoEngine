@@ -55,43 +55,21 @@ vec3 get_position()
 	}
 }
 
-void get_anim_position()
-{
-}
-
 void main()
 {
 	vec3 l_pos = vec3(0.0);
 
 	if(AnimatedMesh >= 0.9)
 	{
-		vec4 new_pos = vec4(a_pos, 0.0);
-		vec3 new_normal = a_norm;
-
-        vec4 w0 = BoneMatrices[a_bone_index.x] * vec4(a_pos, 0.0);
-        vec4 w1 = BoneMatrices[a_bone_index.y] * vec4(a_pos, 0.0);
-        vec4 w2 = BoneMatrices[a_bone_index.z] * vec4(a_pos, 0.0);
-        vec4 w3 = BoneMatrices[a_bone_index.w] * vec4(a_pos, 0.0);
-        
-		/*vec4 curIndex = a_bone_index;
-		vec4 curWeight = a_bone_weight;
-
-		for(int i = 0; i < int(a_num_bones); i++)
-		{
-			mat4 m44 = BoneMatrices[int(curIndex.x)];
-			new_pos += m44 * vec4(a_pos, 1.0) * curWeight.x;
-
-			mat3 m33 = mat3(m44[0].xyz,
-							m44[1].xyz,
-							m44[2].xyz);
-			new_normal += m33 * a_norm * curWeight.x;
-
-			curIndex = curIndex.yzwx;
-			curWeight = curWeight.yzwx;
-		}*/
+		mat4 boneTransform = BoneMatrices[a_bone_index.x] * a_bone_weight.x;
+		boneTransform += BoneMatrices[a_bone_index.y] * a_bone_weight.y;
+		boneTransform += BoneMatrices[a_bone_index.z] * a_bone_weight.z;
+		boneTransform += BoneMatrices[a_bone_index.w] * a_bone_weight.w;
 		
-        l_pos = (w0 * a_bone_weight.x + w1 * a_bone_weight.y + w2 * a_bone_weight.z + w3 * a_bone_weight.w).xyz;
-		vertexData.Normal = (Model * vec4(new_normal, 0.0)).xyz;
+		l_pos = (boneTransform * vec4(a_pos, 1.0)).xyz;
+		
+		vec4 new_normal = boneTransform * vec4(a_norm, 0.0);
+		vertexData.Normal = (Model * new_normal).xyz;
 	}
 	else
 	{
@@ -99,8 +77,6 @@ void main()
 		vertexData.Normal = (Model * vec4(a_norm, 0.0)).xyz;
 	}
 
-
-	vec4 pos = ModelViewProjection * vec4(l_pos, 1.0);
 	vertexData.Color = a_color;
 	vertexData.CubemapUV = a_pos;
 
@@ -111,6 +87,6 @@ void main()
 
 	vertexData.Tangent = (Model * vec4(a_tgt, 0.0)).xyz;	
 
-	gl_Position = pos;
+	gl_Position = ModelViewProjection * vec4(l_pos, 1.0);
 }
 

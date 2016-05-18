@@ -43,11 +43,14 @@
 #include <unordered_map>
 
 #include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/quaternion.hpp>
 
 #include <Engine/Bone.h>
 #include <Engine/Engine.h>
 #include <Engine/Shader.h>
 #include <Renderer/Renderer.h>
+#include <Engine/AnimationNode.h>
 
 class Skeleton
 {
@@ -59,7 +62,6 @@ public:
 	ENGINE_API int Load();
 	ENGINE_API void Update(float deltaTime);
 	ENGINE_API void Draw(Renderer* r, size_t group);
-	ENGINE_API void GetNodeHierarchy(float time, void *node, glm::mat4 &parentTransform);
 
 	ENGINE_API virtual ~Skeleton() noexcept;
 	
@@ -68,7 +70,15 @@ private:
 	Bone _bones[SH_MAX_BONES];
 	uint16_t _numBones;
 	RBuffer *_buffer;
+	glm::mat4 _globalInverseTransform;
 	glm::mat4 _transforms[SH_MAX_BONES];
+	std::map<std::string, uint16_t> _boneMap;
 
 	void _PrepareTransforms();
+	glm::mat4 _BoneTransform(double time, vector<glm::mat4> &transforms);
+	
+	void _CalculatePosition(glm::vec3 &out, double time, const AnimationNode *node);
+	void _CalculateRotation(glm::quat &out, double time, const AnimationNode *node);
+	void _CalculateScaling(glm::vec3 &out, double time, const AnimationNode *node);
+	void _TransformHierarchy(double time, const Bone *bone, glm::mat4 &parentTransform);
 };
