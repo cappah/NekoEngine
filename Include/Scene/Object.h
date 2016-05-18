@@ -107,7 +107,8 @@ public:
 	ENGINE_API virtual void Update(float deltaTime) noexcept;
 	ENGINE_API void Unload() noexcept;
 
-	ENGINE_API void AddComponent(std::string &name, ObjectComponent *comp);
+	ENGINE_API void AddComponent(const char *name, ObjectComponent *comp);
+	ENGINE_API ObjectComponent *GetComponent(const char *name) { return _components[name]; }
 
 	ENGINE_API virtual ~Object() noexcept;
 

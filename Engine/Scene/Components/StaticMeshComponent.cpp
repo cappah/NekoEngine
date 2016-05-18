@@ -50,12 +50,16 @@ ENGINE_REGISTER_COMPONENT_CLASS(StaticMeshComponent);
 StaticMeshComponent::StaticMeshComponent(ComponentInitializer *initializer)
 	: ObjectComponent(initializer)
 {
+	_mesh = nullptr;
+	_loaded = false;
 	_meshId = initializer->arguments.find("mesh")->second;
 	
-	ArgumentMapRangeType range = initializer->arguments.equal_range("materials");
+	ArgumentMapRangeType range = initializer->arguments.equal_range("material");
 		
 	for (ArgumentMapType::iterator it = range.first; it != range.second; ++it)
 		_materialIds.push_back(ResourceManager::GetResourceID(it->second.c_str(), ResourceType::RES_MATERIAL));
+
+	_renderer = Engine::GetRenderer();
 }
 
 int StaticMeshComponent::Load()
@@ -64,16 +68,10 @@ int StaticMeshComponent::Load()
 	if(ret != ENGINE_OK)
 		return ret;
 	
-	bool noMaterial = false;
+	bool noMaterial = _materialIds.size() == 0;
 
 	for (int id : _materialIds)
 	{
-		if (id == OBJ_NO_MATERIAL)
-		{
-			noMaterial = true;
-			break;
-		}
-
 		Material* mat = (Material*)ResourceManager::GetResource(id, ResourceType::RES_MATERIAL);
 
 		if (mat == nullptr)

@@ -58,16 +58,10 @@ int SkeletalMeshComponent::Load()
 	if(ret != ENGINE_OK)
 		return ret;
 	
-	bool noMaterial = false;
+	bool noMaterial = _materialIds.size() == 0;
 
 	for (int id : _materialIds)
 	{
-		if (id == OBJ_NO_MATERIAL)
-		{
-			noMaterial = true;
-			break;
-		}
-
 		Material* mat = (Material*)ResourceManager::GetResource(id, ResourceType::RES_MATERIAL);
 
 		if (mat == nullptr)
@@ -121,8 +115,10 @@ void SkeletalMeshComponent::Draw(RShader *shader) noexcept
 
 void SkeletalMeshComponent::Update(float deltaTime) noexcept
 {
-	/*if (!_loaded)
-		return;*/
+	if (!_loaded)
+		return;
+
+	_mesh->Update(deltaTime);
 }
 
 void SkeletalMeshComponent::Unload()

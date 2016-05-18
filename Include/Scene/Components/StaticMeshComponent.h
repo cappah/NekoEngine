@@ -55,6 +55,8 @@ class StaticMeshComponent : public ObjectComponent
 public:
 	ENGINE_API StaticMeshComponent(ComponentInitializer *initializer);
 
+	ENGINE_API StaticMesh *GetMesh() noexcept { return _mesh; }
+
 	ENGINE_API virtual int Load() override;
 	
 	ENGINE_API virtual void Draw(RShader *shader) noexcept override;

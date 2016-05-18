@@ -56,6 +56,8 @@
 #include <Scene/Skybox.h>
 #include <Scene/Light.h>
 #include <System/VFS/VFS.h>
+#include <Scene/Components/StaticMeshComponent.h>
+#include <Scene/Components/SkeletalMeshComponent.h>
 
 #define SCENE_LINE_BUFF		1024
 #define SCENE_MODULE		"Scene"
@@ -98,7 +100,7 @@ Object *Scene::_LoadObject(VFSFile *f, const string &className)
 
 		vector<char*> split = EngineUtils::SplitString(lineBuff, '=');
 
-		if (split.size() != 2)
+		if (split.size() < 2)
 			continue;
 
 		size_t len = strlen(split[0]);
@@ -215,6 +217,8 @@ Object *Scene::_LoadObject(VFSFile *f, const string &className)
 			for (char* c : optSplit)
 				free(c);
 		}
+		else if (!strncmp(split[0], "Component", len))
+			obj->AddComponent(split[2], _LoadComponent(f, obj, split[1]));
 
 		Terrain *t = nullptr;
 
@@ -387,9 +391,10 @@ void Scene::_LoadSceneInfo(VFSFile *f)
 	DeferredBuffer::SetAmbientColor(_ambientColor, _ambientColorIntensity);
 }
 
-ObjectComponent *Scene::_LoadComponent(VFSFile *f, const std::string &className)
+ObjectComponent *Scene::_LoadComponent(VFSFile *f, Object *parent, const std::string &className)
 {
-	map<string, string> _componentInfo;
+	ComponentInitializer initializer;
+	initializer.parent = parent;
 
 	char lineBuff[SCENE_LINE_BUFF];
 	memset(lineBuff, 0x0, SCENE_LINE_BUFF);
@@ -410,11 +415,6 @@ ObjectComponent *Scene::_LoadComponent(VFSFile *f, const std::string &className)
 
 		if (!strncmp(lineBuff, "EndComponent", 12))
 			break;
-	
-		char *ptr = lineBuff;
-
-		// skip tabs
-		while (*ptr == '\t') ptr++;
 
 		vector<char*> split = EngineUtils::SplitString(lineBuff, '=');
 
@@ -425,13 +425,53 @@ ObjectComponent *Scene::_LoadComponent(VFSFile *f, const std::string &className)
 			continue;
 		}
 
-		_componentInfo.insert(make_pair(split[0], split[1]));
+		char *ptr = split[0];
+
+		// skip tabs
+		while (*ptr == '\t') ptr++;
+
+		initializer.arguments.insert(make_pair(ptr, split[1]));
 
 		for (char* c : split)
 			free(c);
 	}
 
-	return nullptr;
+	ObjectComponent *comp = Engine::NewComponent(className, &initializer);
+
+	if (comp->Load() != ENGINE_OK)
+		return nullptr;
+
+	StaticMeshComponent *stcomp = dynamic_cast<StaticMeshComponent*>(comp);
+	if (stcomp)
+	{
+		if (Engine::GetRenderer()->HasCapability(RendererCapability::DrawBaseVertex))
+		{
+			stcomp->GetMesh()->SetVertexOffset(_sceneVertices.size());
+			stcomp->GetMesh()->SetIndexOffset(_sceneIndices.size());
+
+			_AddVertices(stcomp->GetMesh()->GetVertices());
+			_AddIndices(stcomp->GetMesh()->GetIndices());
+		}
+		else
+			stcomp->GetMesh()->CreateBuffers(false);
+	}
+
+	SkeletalMeshComponent *skcomp = dynamic_cast<SkeletalMeshComponent*>(comp);
+	if (skcomp)
+	{
+		if (Engine::GetRenderer()->HasCapability(RendererCapability::DrawBaseVertex))
+		{
+			skcomp->GetMesh()->SetVertexOffset(_sceneVertices.size());
+			skcomp->GetMesh()->SetIndexOffset(_sceneIndices.size());
+
+			_AddVertices(skcomp->GetMesh()->GetVertices());
+			_AddIndices(skcomp->GetMesh()->GetIndices());
+		}
+		else
+			skcomp->GetMesh()->CreateBuffers(false);
+	}
+
+	return comp;
 }
 
 size_t Scene::GetVertexCount() noexcept
@@ -520,37 +560,11 @@ int Scene::Load()
 			if (l)
 				_lights.push_back(l);
 			else if (!_skybox && s)
-			{
-				if(Engine::GetRenderer()->HasCapability(RendererCapability::DrawBaseVertex))
-				{
-					obj->GetMesh()->SetVertexOffset(_sceneVertices.size());
-					obj->GetMesh()->SetIndexOffset(_sceneIndices.size());
-
-					_AddVertices(obj->GetMesh()->GetVertices());
-					_AddIndices(obj->GetMesh()->GetIndices());
-				}
-				else
-					obj->GetMesh()->CreateBuffers(false);
-
 				_skybox = s;
-			}
 			else if (!_terrain && t)
 				_terrain = t;
 			else
-			{
-				if(Engine::GetRenderer()->HasCapability(RendererCapability::DrawBaseVertex))
-				{
-					obj->GetMesh()->SetVertexOffset(_sceneVertices.size());
-					obj->GetMesh()->SetIndexOffset(_sceneIndices.size());
-
-					_AddVertices(obj->GetMesh()->GetVertices());
-					_AddIndices(obj->GetMesh()->GetIndices());
-				}
-				else
-					obj->GetMesh()->CreateBuffers(false);
-
 				_objects.push_back(obj);
-			}
 
 			for (char* c : split)
 				free(c);

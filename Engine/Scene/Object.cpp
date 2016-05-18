@@ -195,57 +195,6 @@ int Object::Load()
 		return ENGINE_OUT_OF_RESOURCES;
 	}
 	_objectUbo->SetStorage(sizeof(ObjectBlock), &_objectBlock);
-	
-	bool noMaterial = false;
-
-	for (int id : _materialIds)
-	{
-		if (id == OBJ_NO_MATERIAL)
-		{
-			noMaterial = true;
-			break;
-		}
-
-		Material* mat = (Material*)ResourceManager::GetResource(id, ResourceType::RES_MATERIAL);
-
-		if (mat == nullptr)
-		{
-			Unload();
-		    Logger::Log(OBJ_MODULE, LOG_CRITICAL, "Failed to load material id %d for object id %d", id, _id);
-			return ENGINE_INVALID_RES;
-		}
-
-		_blend |= mat->EnableBlend();
-		mat->SetAnimatedMesh(_meshType == MeshType::Skeletal);
-		_materials.push_back(mat);
-	}
-
-	if(!_mesh)
-	{
-		if(_meshType == MeshType::Static)
-			_mesh = (StaticMesh*)ResourceManager::GetResource(_modelId, ResourceType::RES_STATIC_MESH);
-		else
-			_mesh = (StaticMesh*)ResourceManager::GetResource(_modelId, ResourceType::RES_SKELETAL_MESH);
-	}
-
-	if (!_mesh)
-	{
-		Logger::Log(OBJ_MODULE, LOG_CRITICAL, "Failed to load mesh for object id %d", _id);
-		return ENGINE_INVALID_RES;
-	}
-
-	if (!noMaterial && (_materials.size() != _mesh->GetGroupCount()))
-	{
-		Logger::Log(OBJ_MODULE, LOG_CRITICAL, "Failed to load mesh for object id=%d. The mesh requires %d materials, but only %d are set", _id, _mesh->GetGroupCount(), _materials.size());
-		return ENGINE_INVALID_RES;
-	}
-
-	if((_matrixUbo = _renderer->CreateBuffer(BufferType::Uniform, true, false)) == nullptr)
-	{
-		Unload();
-		return ENGINE_OUT_OF_RESOURCES;
-	}
-	_matrixUbo->SetStorage(sizeof(ObjectMatrixBlock), nullptr);
 
 	_loaded = true;
 
@@ -257,54 +206,17 @@ void Object::Draw(RShader* shader) noexcept
 	if (!_loaded)
 		return;
 
-	_renderer->EnableDepthTest(true);
+	shader->FSSetUniformBuffer(0, 0, sizeof(ObjectBlock), _objectUbo);
+	_objectUbo->UpdateData(0, sizeof(vec3), &SceneManager::GetActiveScene()->GetSceneCamera()->GetPosition().x);
 
-	_mesh->Bind();
-
-	if(_meshType == MeshType::Skeletal)
-		((SkeletalMesh*)_mesh)->GetSkeleton()->Bind(shader);
-	
-	if (!_materials.size()) // used only for lighting pass
-		_mesh->Draw(_renderer, 0);
-	else
-	{
-		Camera *cam = SceneManager::GetActiveScene()->GetSceneCamera();
-
-		_matrixBlock.View = cam->GetView();
-		_matrixBlock.ModelViewProjection = (cam->GetProjectionMatrix() * cam->GetView()) * _matrixBlock.Model;
-		
-		shader->VSSetUniformBuffer(0, 0, sizeof(ObjectMatrixBlock), _matrixUbo);
-		_matrixUbo->UpdateData(0, sizeof(ObjectMatrixBlock), &_matrixBlock);
-		
-		shader->FSSetUniformBuffer(0, 0, sizeof(ObjectBlock), _objectUbo);
-		_objectUbo->UpdateData(0, sizeof(vec3), &cam->GetPosition().x);
-
-		for (size_t i = 0; i < _materials.size(); i++)
-		{
-			_materials[i]->Enable(shader);
-			if (_materials[i]->DisableCulling())
-				Engine::GetRenderer()->EnableFaceCulling(false);
-		
-			shader->BindUniformBuffers();
-			_mesh->Draw(_renderer, i);
-		
-			if (_materials[i]->DisableCulling())
-				Engine::GetRenderer()->EnableFaceCulling(true);
-		}
-	}
-
-	_mesh->Unbind();
-
-	_renderer->EnableDepthTest(false);
+	for (pair<string, ObjectComponent*> kvp : _components)
+		kvp.second->Draw(shader);
 }
 
 void Object::Update(float deltaTime) noexcept
 {
 	if (!_loaded)
 		return;
-
-	if(_meshType == MeshType::Skeletal)
-		((SkeletalMesh*)_mesh)->Update(deltaTime);
 	
 	for (pair<string, ObjectComponent*> kvp : _components)
 		kvp.second->Update(deltaTime);
@@ -342,7 +254,7 @@ void Object::Unload() noexcept
 	_loaded = false;
 }
 
-void Object::AddComponent(std::string &name, ObjectComponent *comp)
+void Object::AddComponent(const char *name, ObjectComponent *comp)
 {
 	_components.insert({ name, comp });
 }

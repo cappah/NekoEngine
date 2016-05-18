@@ -44,6 +44,7 @@
 #include <Engine/DeferredBuffer.h>
 #include <Engine/SceneManager.h>
 #include <Engine/ResourceManager.h>
+#include <Scene/Components/StaticMeshComponent.h>
 
 #define DR_MODULE	"DeferredBuffer"
 
@@ -145,9 +146,20 @@ int DeferredBuffer::Initialize() noexcept
 		return ENGINE_FAIL;
 	}
 
-	_lightSphere->SetMeshId(ResourceManager::GetResourceID("stm_light_sphere", ResourceType::RES_STATIC_MESH), MeshType::Static);
+	ComponentInitializer initializer;
+	initializer.parent = _lightSphere;
+	initializer.arguments.insert(make_pair("mesh", "stm_light_sphere"));
+
+	StaticMeshComponent *meshComponent = (StaticMeshComponent *)Engine::NewComponent("StaticMeshComponent", &initializer);
+	if (!meshComponent)
+	{
+		Release();
+		return ENGINE_FAIL;
+	}
+	meshComponent->Load();
+
+	_lightSphere->AddComponent("Mesh", meshComponent);
 	_lightSphere->SetId(0xB000B5);
-	_lightSphere->AddMaterialId(OBJ_NO_MATERIAL);
 
 	if (_lightSphere->Load() != ENGINE_OK)
 	{
@@ -155,7 +167,7 @@ int DeferredBuffer::Initialize() noexcept
 		return ENGINE_FAIL;
 	}
 
-	if(_lightSphere->GetMesh()->CreateBuffers(false) != ENGINE_OK)
+	if(meshComponent->GetMesh()->CreateBuffers(false) != ENGINE_OK)
 	{
 		Release();
 		return ENGINE_FAIL;

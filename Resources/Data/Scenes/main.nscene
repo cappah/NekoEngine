@@ -26,24 +26,24 @@ EndCamera
 
 # Terrain
 # Use material id 48 for the normal mapped version
-Object=Terrain
-id=0
-cellsize=80
-numcells=80
-material=mat_terrain
-position=0.0, -200.0, 0.0
-opt=noheight_mtl:1
-EndObject
+#Object=Terrain
+#id=0
+#cellsize=80
+#numcells=80
+#material=mat_terrain
+#position=0.0, -200.0, 0.0
+#opt=noheight_mtl:1
+#EndObject
 
 # Skybox
-Object=Skybox
-id=1
-mesh=stm_skysphere
-material=mat_skysphere
-position=0.0, 3200.0, 0.0
-scale=6400.0, 6400.0, 6400.0
-rotation=0.0, 0.0, 0.0
-EndObject
+#Object=Skybox
+#id=1
+#mesh=stm_skysphere
+#material=mat_skysphere
+#position=0.0, 3200.0, 0.0
+#scale=6400.0, 6400.0, 6400.0
+#rotation=0.0, 0.0, 0.0
+#EndObject
 
 #################
 # Scene objects #
@@ -52,7 +52,7 @@ EndObject
 # Front house
 Object
 id=2
-Component=StaticMesh
+Component=StaticMeshComponent=Mesh
 	mesh=stm_house
 	material=mat_house
 EndComponent
@@ -64,7 +64,7 @@ EndObject
 # Right house
 Object
 id=3
-Component=StaticMesh
+Component=StaticMeshComponent=Mesh
 	mesh=stm_house
 	material=mat_house
 EndComponent
@@ -76,7 +76,7 @@ EndObject
 # Medieval House
 Object
 id=4
-Component=StaticMesh
+Component=StaticMeshComponent=Mesh
 	mesh=stm_m_house
 	material=mat_m_house
 EndComponent
@@ -99,19 +99,19 @@ EndObject
 #EndObject
 
 # Sophia
-Object
-id=5
-skmesh=skm_sophia
-material=mat_sophia
-position=-117.5, -30.0, -145.0
-rotation=0.0, 0.0, 0.0
-scale=0.45, 0.45, 0.45
-EndObject
+#Object
+#id=5
+#skmesh=skm_sophia
+#material=mat_sophia
+#position=-117.5, -30.0, -145.0
+#rotation=0.0, 0.0, 0.0
+#scale=0.45, 0.45, 0.45
+#EndObject
 
 # Muscle Car
 Object=MovingObject
 id=6
-Component=StaticMesh
+Component=StaticMeshComponent=Mesh
 	mesh=stm_muscle_car
 	material=mat_skyreflect
 	material=mat_skyreflect
@@ -150,7 +150,7 @@ EndObject
 # Nyra
 Object
 id=12
-Component=StaticMesh
+Component=StaticMeshComponent=Mesh
 	mesh=stm_nyra
 	material=mat_nyra_body
 	material=mat_nyra_body
@@ -189,7 +189,7 @@ EndObject
 
 Object=Light
 id=100
-Component=StaticMesh
+Component=StaticMeshComponent=Mesh
 	mesh=stm_bila
 	material=mat_bila
 EndComponent
@@ -202,7 +202,7 @@ EndObject
 
 Object=Light
 id=101
-Component=StaticMesh
+Component=StaticMeshComponent=Mesh
 	mesh=stm_bila
 	material=mat_bila
 EndComponent
@@ -215,7 +215,7 @@ EndObject
 
 Object=Light
 id=102
-Component=StaticMesh
+Component=StaticMeshComponent=Mesh
 	mesh=stm_bila
 	material=mat_bila
 EndComponent
@@ -230,7 +230,7 @@ EndObject
 # Big light
 Object=Light
 id=103
-Component=StaticMesh
+Component=StaticMeshComponent=Mesh
 	mesh=stm_bila
 	material=mat_bila
 EndComponent
@@ -244,7 +244,7 @@ EndObject
 # Fire light
 Object=Light
 id=104
-Component=StaticMesh
+Component=StaticMeshComponent=Mesh
 	mesh=stm_bila
 	material=mat_bila
 EndComponent
