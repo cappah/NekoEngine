@@ -39,15 +39,23 @@
 #pragma once
 
 #include <Engine/Engine.h>
-#include <Scene/ObjectComponent.h>
+#include <Engine/SkeletalMesh.h>
+#include <Scene/Components/StaticMeshComponent.h>
 
-class SkeletalMeshComponent : public ObjectComponent
+class SkeletalMeshComponent : public StaticMeshComponent
 {
 public:
-	ENGINE_API SkeletalMeshComponent(class Object* parent = nullptr) : ObjectComponent(parent) { }
+	ENGINE_API SkeletalMeshComponent(class Object* parent = nullptr) : StaticMeshComponent(parent) { }
 
+	ENGINE_API virtual int Load() override;
+	
 	ENGINE_API virtual void Draw(RShader *shader) noexcept override;
 	ENGINE_API virtual void Update(float deltaTime) noexcept override;
 
-	ENGINE_API virtual ~SkeletalMeshComponent() { }
+	ENGINE_API virtual void Unload() override;
+
+	ENGINE_API virtual ~SkeletalMeshComponent();
+	
+private:
+	SkeletalMesh *_mesh;
 };

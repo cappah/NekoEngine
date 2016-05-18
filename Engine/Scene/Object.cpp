@@ -189,6 +189,13 @@ void Object::MoveRight(float distance) noexcept
 
 int Object::Load()
 {
+	if((_objectUbo = _renderer->CreateBuffer(BufferType::Uniform, true, false)) == nullptr)
+	{
+		Unload();
+		return ENGINE_OUT_OF_RESOURCES;
+	}
+	_objectUbo->SetStorage(sizeof(ObjectBlock), &_objectBlock);
+	
 	bool noMaterial = false;
 
 	for (int id : _materialIds)
@@ -232,13 +239,6 @@ int Object::Load()
 		Logger::Log(OBJ_MODULE, LOG_CRITICAL, "Failed to load mesh for object id=%d. The mesh requires %d materials, but only %d are set", _id, _mesh->GetGroupCount(), _materials.size());
 		return ENGINE_INVALID_RES;
 	}
-
-	if((_objectUbo = _renderer->CreateBuffer(BufferType::Uniform, true, false)) == nullptr)
-	{
-		Unload();
-		return ENGINE_OUT_OF_RESOURCES;
-	}
-	_objectUbo->SetStorage(sizeof(ObjectBlock), &_objectBlock);
 
 	if((_matrixUbo = _renderer->CreateBuffer(BufferType::Uniform, true, false)) == nullptr)
 	{

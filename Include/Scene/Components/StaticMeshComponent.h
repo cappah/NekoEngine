@@ -50,14 +50,6 @@ typedef struct MATRIX_BLOCK
 	glm::mat4 View;
 } MatrixBlock;
 
-/*typedef struct OBJECT_BLOCK
-{
-	glm::vec3 CameraPosition;
-	float padding;
-	glm::vec3 ObjectColor;
-	float padding1;
-} ObjectBlock;*/
-
 class StaticMeshComponent : public ObjectComponent
 {
 public:
@@ -72,7 +64,7 @@ public:
 	
 	ENGINE_API virtual ~StaticMeshComponent();
 	
-private:
+protected:
 	std::string _meshId;
 	StaticMesh *_mesh;
 	bool _loaded, _blend;

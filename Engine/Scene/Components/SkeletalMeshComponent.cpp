@@ -39,15 +39,94 @@
 #define ENGINE_INTERNAL
 
 #include <Scene/Components/SkeletalMeshComponent.h>
+#include <Scene/Camera.h>
+#include <Engine/SceneManager.h>
+#include <Engine/ResourceManager.h>
+
+#define SKCOMPONENT_MODULE	"SkeletalMeshComponent"
 
 ENGINE_REGISTER_COMPONENT_CLASS(SkeletalMeshComponent);
 
+int SkeletalMeshComponent::Load()
+{
+	int ret = ObjectComponent::Load();
+	
+	if(ret != ENGINE_OK)
+		return ret;
+	
+	bool noMaterial = false;
+
+	for (int id : _materialIds)
+	{
+		if (id == OBJ_NO_MATERIAL)
+		{
+			noMaterial = true;
+			break;
+		}
+
+		Material* mat = (Material*)ResourceManager::GetResource(id, ResourceType::RES_MATERIAL);
+
+		if (mat == nullptr)
+		{
+			Unload();
+			Logger::Log(SKCOMPONENT_MODULE, LOG_CRITICAL, "Failed to load material id %d", id);
+			return ENGINE_INVALID_RES;
+		}
+
+		_blend |= mat->EnableBlend();
+		mat->SetAnimatedMesh(0);
+		_materials.push_back(mat);
+	}
+	
+	if(!_mesh)
+		_mesh = (SkeletalMesh*)ResourceManager::GetResourceByName(_meshId.c_str(), ResourceType::RES_SKELETAL_MESH);
+
+	if (!_mesh)
+	{
+		Logger::Log(SKCOMPONENT_MODULE, LOG_CRITICAL, "Failed to load SkeletalMesh %s", _meshId.c_str());
+		return ENGINE_INVALID_RES;
+	}
+	
+	if (!noMaterial && (_materials.size() != _mesh->GetGroupCount()))
+	{
+		Logger::Log(SKCOMPONENT_MODULE, LOG_CRITICAL, "Failed to load SkeletalMesh %s. The mesh requires %d materials, but only %d are set", _meshId.c_str(), _mesh->GetGroupCount(), _materials.size());
+		return ENGINE_INVALID_RES;
+	}
+	
+	if((_matrixUbo = _renderer->CreateBuffer(BufferType::Uniform, true, false)) == nullptr)
+	{
+		Unload();
+		return ENGINE_OUT_OF_RESOURCES;
+	}
+	_matrixUbo->SetStorage(sizeof(MatrixBlock), nullptr);
+
+	_loaded = true;
+
+	return ENGINE_OK;
+}
+
 void SkeletalMeshComponent::Draw(RShader *shader) noexcept
 {
-	//
+	if (!_loaded)
+		return;
+	
+	_mesh->GetSkeleton()->Bind(shader);
+	
+	StaticMeshComponent::Draw(shader);
 }
 
 void SkeletalMeshComponent::Update(float deltaTime) noexcept
 {
-	//
+	/*if (!_loaded)
+		return;*/
+}
+
+void SkeletalMeshComponent::Unload()
+{
+	StaticMeshComponent::Unload();
+}
+
+SkeletalMeshComponent::~SkeletalMeshComponent()
+{
+	Unload();
 }
