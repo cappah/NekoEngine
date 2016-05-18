@@ -109,6 +109,9 @@ int StaticMesh::LoadDynamic(vector<Vertex> &vertices, vector<uint32_t> &indices)
 
 int StaticMesh::CreateBuffers(bool dynamic)
 {
+	if(_hasOwnBuffer)
+		return ENGINE_OK;
+	
 	_arrayBuffer = Engine::GetRenderer()->CreateArrayBuffer();
 	if(!_arrayBuffer)
 		return ENGINE_OUT_OF_RESOURCES;

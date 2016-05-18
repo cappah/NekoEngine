@@ -81,26 +81,22 @@ public:
 	ENGINE_API Object() noexcept;
 	 
 	ENGINE_API int GetId() noexcept { return _id; }
-	ENGINE_API StaticMesh* GetMesh() noexcept { return _mesh; }
 
 	ENGINE_API void SetId(int id) noexcept { _id = id; }
 	ENGINE_API void SetPosition(glm::vec3& position) noexcept;
 	ENGINE_API void SetRotation(glm::vec3& rotation) noexcept;
 	ENGINE_API void SetScale(glm::vec3& scale) noexcept;
-	ENGINE_API void SetMeshId(int id, MeshType type) noexcept { _modelId = id; _meshType = type; }
 	ENGINE_API void SetColor(glm::vec3& color) noexcept { _objectBlock.ObjectColor = color; }
 	ENGINE_API void SetForwardDirection(ForwardDirection dir) noexcept;
-	ENGINE_API void AddMaterialId(int id) noexcept { _materialIds.push_back(id); }
 
 	ENGINE_API void LookAt(glm::vec3& point) noexcept;
 	ENGINE_API void MoveForward(float distance) noexcept;
 	ENGINE_API void MoveRight(float distance) noexcept;
 
-	ENGINE_API size_t GetVertexCount() noexcept { if (_mesh) return _mesh->GetVertexCount(); return 0; }
-	ENGINE_API size_t GetTriangleCount() noexcept { if (_mesh) return _mesh->GetTriangleCount(); return 0; }
+	ENGINE_API size_t GetVertexCount() noexcept { return 0; }
+	ENGINE_API size_t GetTriangleCount() noexcept { return 0; }
 	ENGINE_API glm::vec3& GetPosition() noexcept { return _position; }
-	ENGINE_API bool GetBlend() noexcept { return _blend; }
-	ENGINE_API glm::mat4& GetModelMatrix() noexcept { return _matrixBlock.Model; }
+	ENGINE_API glm::mat4& GetModelMatrix() noexcept { return _modelMatrix; }
 
 	ENGINE_API virtual int Load();
 	ENGINE_API virtual void Draw(RShader* shader) noexcept;
@@ -113,31 +109,17 @@ public:
 	ENGINE_API virtual ~Object() noexcept;
 
 protected:
-	StaticMesh* _mesh;
-	MeshType _meshType;
-	
-	int _id, _modelId;
-	
-	glm::vec3 _center, _forward, _right;
-	
-	bool _blend;
-	ForwardDirection _objectForward;
-	bool _loaded;
-	
-	std::map<std::string, ObjectComponent*> _components;
-	
-	
-	RBuffer *_objectUbo;	
-	ObjectBlock _objectBlock;
-	
+	int _id;
 	Renderer* _renderer;
 	glm::vec3 _position, _rotation, _scale;
-	glm::mat4 _translationMatrix, _scaleMatrix, _rotationMatrix;
-	std::vector<int> _materialIds;
-	std::vector<Material*> _materials;
-	RBuffer *_matrixUbo;
-	ObjectMatrixBlock _matrixBlock;
-	
-	void _UpdateModelMatrix() noexcept { _matrixBlock.Model = (_translationMatrix * _rotationMatrix) * _scaleMatrix; }
+	glm::vec3 _center, _forward, _right;
+	ForwardDirection _objectForward;
+	bool _loaded;	
+	std::map<std::string, ObjectComponent*> _components;
+	RBuffer *_objectUbo;
+	ObjectBlock _objectBlock;
+	glm::mat4 _translationMatrix, _scaleMatrix, _rotationMatrix, _modelMatrix;
+
+	void _UpdateModelMatrix() noexcept { _modelMatrix = (_translationMatrix * _rotationMatrix) * _scaleMatrix; }
 };
 

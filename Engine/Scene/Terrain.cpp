@@ -99,10 +99,10 @@ bool Terrain::_GenerateTerrain() noexcept
 			}
 		}
 	}
-
-	if((_mesh = new StaticMesh(nullptr)) == nullptr)
+// TODO: Add Mesh component
+	/*if((_mesh = new StaticMesh(nullptr)) == nullptr)
 		return false;
-	_mesh->LoadDynamic(_terrainVertices, indices);
+	_mesh->LoadDynamic(_terrainVertices, indices);*/
 
 	indices.clear();
 	
@@ -122,7 +122,6 @@ int Terrain::Load()
 	vec3 posVector(0.f, -30.f, 0.f);
 	SetPosition(posVector);
 	_center = vec3(0.f, 0.f, 0.f);
-	_blend = true;
 	SetForwardDirection(ForwardDirection::NegativeZ);
 
 	return ENGINE_OK;
@@ -201,8 +200,8 @@ void Terrain::Update(float deltaTime) noexcept
 		}
 	}
 
-	if (modified)
-		_mesh->UpdateVertices(_terrainVertices);
+/*	if (modified)
+		_mesh->UpdateVertices(_terrainVertices);*/
 }
 
 Terrain::~Terrain() noexcept

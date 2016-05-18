@@ -128,11 +128,12 @@ void StaticMeshComponent::Draw(RShader *shader) noexcept
 	{
 		Camera *cam = SceneManager::GetActiveScene()->GetSceneCamera();
 
+		_matrixBlock.Model = _parent->GetModelMatrix();
 		_matrixBlock.View = cam->GetView();
 		_matrixBlock.ModelViewProjection = (cam->GetProjectionMatrix() * cam->GetView()) * _matrixBlock.Model;
 		
-		shader->VSSetUniformBuffer(0, 0, sizeof(ObjectMatrixBlock), _matrixUbo);
-		_matrixUbo->UpdateData(0, sizeof(ObjectMatrixBlock), &_matrixBlock);		
+		shader->VSSetUniformBuffer(0, 0, sizeof(MatrixBlock), _matrixUbo);
+		_matrixUbo->UpdateData(0, sizeof(MatrixBlock), &_matrixBlock);
 		
 		for (size_t i = 0; i < _materials.size(); i++)
 		{

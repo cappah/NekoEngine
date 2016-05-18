@@ -107,42 +107,6 @@ Object *Scene::_LoadObject(VFSFile *f, const string &className)
 
 		if (!strncmp(split[0], "id", len))
 			obj->SetId(atoi(split[1]));
-		else if (!strncmp(split[0], "mesh", len))
-		{
-			int id = ResourceManager::GetResourceID(split[1], ResourceType::RES_STATIC_MESH);
-			if (id == ENGINE_NOT_FOUND)
-			{
-				Logger::Log(SCENE_MODULE, LOG_CRITICAL, "Failed to load mesh for object id %d. Mesh \"%s\" not found.", obj->GetId(), split[1]);
-				delete obj;
-				return nullptr;
-			}
-
-			obj->SetMeshId(id, MeshType::Static);
-		}
-		else if (!strncmp(split[0], "skmesh", len))
-		{
-			int id = ResourceManager::GetResourceID(split[1], ResourceType::RES_SKELETAL_MESH);
-			if (id == ENGINE_NOT_FOUND)
-			{
-				Logger::Log(SCENE_MODULE, LOG_CRITICAL, "Failed to load mesh for object id %d. Mesh \"%s\" not found.", obj->GetId(), split[1]);
-				delete obj;
-				return nullptr;
-			}
-			
-			obj->SetMeshId(id, MeshType::Skeletal);
-		}
-		else if (!strncmp(split[0], "material", len))
-		{
-			int id = ResourceManager::GetResourceID(split[1], ResourceType::RES_MATERIAL);
-			if (id == ENGINE_NOT_FOUND)
-			{
-				Logger::Log(SCENE_MODULE, LOG_CRITICAL, "Failed to load material for object id %d. Material \"%s\" not found.", obj->GetId(), split[1]);
-				delete obj;
-				return nullptr;
-			}
-
-			obj->AddMaterialId(id);
-		}
 		else if (!strncmp(split[0], "color", len))
 		{
 			EngineUtils::ReadFloatArray(split[1], 3, &vec.x);
@@ -616,71 +580,74 @@ int Scene::Load()
 			Logger::Log(SCENE_MODULE, LOG_WARNING, "Failed to load background music id=%d for scene id=%d", _bgMusic, _id);
 	}
 
-	if((_sceneVertexBuffer = Engine::GetRenderer()->CreateBuffer(BufferType::Vertex, false, false)) == nullptr)
-		return ENGINE_OUT_OF_RESOURCES;
-	if((_sceneIndexBuffer = Engine::GetRenderer()->CreateBuffer(BufferType::Index, false, false)) == nullptr)
-		return ENGINE_OUT_OF_RESOURCES;
+	if(Engine::GetRenderer()->HasCapability(RendererCapability::DrawBaseVertex))
+	{
+		if((_sceneVertexBuffer = Engine::GetRenderer()->CreateBuffer(BufferType::Vertex, false, false)) == nullptr)
+			return ENGINE_OUT_OF_RESOURCES;
+		if((_sceneIndexBuffer = Engine::GetRenderer()->CreateBuffer(BufferType::Index, false, false)) == nullptr)
+			return ENGINE_OUT_OF_RESOURCES;
 
-	_sceneVertexBuffer->SetStorage(sizeof(Vertex) * _sceneVertices.size(), _sceneVertices.data());
-	_sceneIndexBuffer->SetStorage(sizeof(uint32_t) * _sceneIndices.size(), _sceneIndices.data());
+		_sceneVertexBuffer->SetStorage(sizeof(Vertex) * _sceneVertices.size(), _sceneVertices.data());
+		_sceneIndexBuffer->SetStorage(sizeof(uint32_t) * _sceneIndices.size(), _sceneIndices.data());
 
-	BufferAttribute attrib;
-	attrib.index = SHADER_POSITION_ATTRIBUTE;
-	attrib.size = 3;
-	attrib.type = BufferDataType::Float;
-	attrib.normalize = false;
-	attrib.stride = sizeof(Vertex);
-	attrib.ptr = (void *)VERTEX_POSITION_OFFSET;
-	_sceneVertexBuffer->AddAttribute(attrib);
+		BufferAttribute attrib;
+		attrib.index = SHADER_POSITION_ATTRIBUTE;
+		attrib.size = 3;
+		attrib.type = BufferDataType::Float;
+		attrib.normalize = false;
+		attrib.stride = sizeof(Vertex);
+		attrib.ptr = (void *)VERTEX_POSITION_OFFSET;
+		_sceneVertexBuffer->AddAttribute(attrib);
 
-	attrib.index = SHADER_COLOR_ATTRIBUTE;
-	attrib.ptr = (void *)VERTEX_COLOR_OFFSET;
-	_sceneVertexBuffer->AddAttribute(attrib);
+		attrib.index = SHADER_COLOR_ATTRIBUTE;
+		attrib.ptr = (void *)VERTEX_COLOR_OFFSET;
+		_sceneVertexBuffer->AddAttribute(attrib);
 
-	attrib.index = SHADER_NORMAL_ATTRIBUTE;
-	attrib.ptr = (void *)VERTEX_NORMAL_OFFSET;
-	_sceneVertexBuffer->AddAttribute(attrib);
+		attrib.index = SHADER_NORMAL_ATTRIBUTE;
+		attrib.ptr = (void *)VERTEX_NORMAL_OFFSET;
+		_sceneVertexBuffer->AddAttribute(attrib);
 
-	attrib.index = SHADER_TANGENT_ATTRIBUTE;
-	attrib.ptr = (void *)VERTEX_TANGENT_OFFSET;
-	_sceneVertexBuffer->AddAttribute(attrib);
+		attrib.index = SHADER_TANGENT_ATTRIBUTE;
+		attrib.ptr = (void *)VERTEX_TANGENT_OFFSET;
+		_sceneVertexBuffer->AddAttribute(attrib);
 
-	attrib.index = SHADER_UV_ATTRIBUTE;
-	attrib.size = 2;
-	attrib.ptr = (void *)VERTEX_UV_OFFSET;
-	_sceneVertexBuffer->AddAttribute(attrib);
+		attrib.index = SHADER_UV_ATTRIBUTE;
+		attrib.size = 2;
+		attrib.ptr = (void *)VERTEX_UV_OFFSET;
+		_sceneVertexBuffer->AddAttribute(attrib);
 
-	attrib.index = SHADER_TERRAINUV_ATTRIBUTE;
-	attrib.size = 2;
-	attrib.ptr = (void *)VERTEX_TUV_OFFSET;
-	_sceneVertexBuffer->AddAttribute(attrib);
+		attrib.index = SHADER_TERRAINUV_ATTRIBUTE;
+		attrib.size = 2;
+		attrib.ptr = (void *)VERTEX_TUV_OFFSET;
+		_sceneVertexBuffer->AddAttribute(attrib);
 
-	attrib.index = SHADER_INDEX_ATTRIBUTE;
-	attrib.size = 4;
-    attrib.type = BufferDataType::Int;
-	attrib.ptr = (void *)VERTEX_INDEX_OFFSET;
-	_sceneVertexBuffer->AddAttribute(attrib);
+		attrib.index = SHADER_INDEX_ATTRIBUTE;
+		attrib.size = 4;
+		attrib.type = BufferDataType::Int;
+		attrib.ptr = (void *)VERTEX_INDEX_OFFSET;
+		_sceneVertexBuffer->AddAttribute(attrib);
 
-	attrib.index = SHADER_WEIGHT_ATTRIBUTE;
-	attrib.size = 4;
-    attrib.type = BufferDataType::Float;
-	attrib.ptr = (void *)VERTEX_WEIGHT_OFFSET;
-	_sceneVertexBuffer->AddAttribute(attrib);
+		attrib.index = SHADER_WEIGHT_ATTRIBUTE;
+		attrib.size = 4;
+		attrib.type = BufferDataType::Float;
+		attrib.ptr = (void *)VERTEX_WEIGHT_OFFSET;
+		_sceneVertexBuffer->AddAttribute(attrib);
 
-	attrib.index = SHADER_NUMBONES_ATTRIBUTE;
-	attrib.size = 1;
-    attrib.type = BufferDataType::Int;
-	attrib.ptr = (void *)VERTEX_NUMBONES_OFFSET;
-	_sceneVertexBuffer->AddAttribute(attrib);
+		attrib.index = SHADER_NUMBONES_ATTRIBUTE;
+		attrib.size = 1;
+		attrib.type = BufferDataType::Int;
+		attrib.ptr = (void *)VERTEX_NUMBONES_OFFSET;
+		_sceneVertexBuffer->AddAttribute(attrib);
 
-	if((_sceneArrayBuffer = Engine::GetRenderer()->CreateArrayBuffer()) == nullptr)
-		return ENGINE_OUT_OF_RESOURCES;
-	_sceneArrayBuffer->SetVertexBuffer(_sceneVertexBuffer);
-	_sceneArrayBuffer->SetIndexBuffer(_sceneIndexBuffer);
-	_sceneArrayBuffer->CommitBuffers();
+		if((_sceneArrayBuffer = Engine::GetRenderer()->CreateArrayBuffer()) == nullptr)
+			return ENGINE_OUT_OF_RESOURCES;
+		_sceneArrayBuffer->SetVertexBuffer(_sceneVertexBuffer);
+		_sceneArrayBuffer->SetIndexBuffer(_sceneIndexBuffer);
+		_sceneArrayBuffer->CommitBuffers();
 
-	_sceneVertices.clear();
-	_sceneIndices.clear();
+		_sceneVertices.clear();
+		_sceneIndices.clear();
+	}
 
 	Logger::Log(SCENE_MODULE, LOG_INFORMATION, "Scene %s, id=%d loaded with %d %s and %d %s", _name.c_str(), _id, _objects.size(), _objects.size() > 1 ? "objects" : "object", _cameras.size(), _cameras.size() > 1 ? "cameras" : "camera");
 
@@ -692,7 +659,7 @@ void Scene::Draw(RShader* shader) noexcept
 	if (_terrain)
 		_terrain->Draw(shader);
 
-	_sceneArrayBuffer->Bind();
+	if(_sceneArrayBuffer) _sceneArrayBuffer->Bind();
 
 	for (Object *obj : _objects)
 		if (distance(_activeCamera->GetPosition(), obj->GetPosition()) < _activeCamera->GetFogDistance() + 600)
@@ -702,7 +669,7 @@ void Scene::Draw(RShader* shader) noexcept
 		for (Light *l : _lights)
 			l->Draw(shader);
 
-	_sceneArrayBuffer->Unbind();
+	if(_sceneArrayBuffer) _sceneArrayBuffer->Unbind();
 }
 
 void Scene::DrawTerrain() noexcept
@@ -713,12 +680,12 @@ void Scene::DrawTerrain() noexcept
 
 void Scene::DrawSkybox() noexcept
 {
-	_sceneArrayBuffer->Bind();
+	if(_sceneArrayBuffer) _sceneArrayBuffer->Bind();
 
 	if (_skybox)
 		_skybox->Draw(nullptr);
 
-	_sceneArrayBuffer->Unbind();
+	if(_sceneArrayBuffer) _sceneArrayBuffer->Unbind();
 }
 
 void Scene::Update(float deltaTime) noexcept

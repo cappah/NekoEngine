@@ -59,25 +59,21 @@ ENGINE_REGISTER_OBJECT_CLASS(Object)
 
 Object::Object() noexcept
 {
-	_mesh = nullptr;
 	std::vector<Texture *> _Textures;
 	std::vector<int> _TextureIds;
 	std::vector<TextureParams> _TextureParams;
 	_id = -1;
-	_modelId = -1;
 	_translationMatrix = mat4();
 	_rotationMatrix = mat4();
 	_scaleMatrix = mat4();
-	_blend = false;
+	_modelMatrix = mat4();
 	_loaded = false;
 	SetForwardDirection(ForwardDirection::PositiveZ);
 	_renderer = Engine::GetRenderer();
 
 	memset(&_objectBlock, 0x0, sizeof(_objectBlock));
-	memset(&_matrixBlock, 0x0, sizeof(_matrixBlock));
 
-	_objectUbo = _matrixUbo = nullptr;
-	_meshType = MeshType::Static;
+	_objectUbo = nullptr;
 }
 
 void Object::SetPosition(vec3 &position) noexcept
@@ -227,26 +223,7 @@ void Object::Unload() noexcept
 	if(!_loaded)
 		return;
 
-	for(Material *mat : _materials)
-		ResourceManager::UnloadResource(mat->GetResourceInfo()->id, ResourceType::RES_MATERIAL);
-
-	_materials.clear();
-	_materialIds.clear();
-
-	if (_mesh != nullptr)
-	{
-		if (_mesh->GetResourceInfo() != nullptr)
-			ResourceManager::UnloadResource(_mesh->GetResourceInfo()->id,
-			_mesh->GetResourceInfo()->meshType == MeshType::Static ?
-			ResourceType::RES_STATIC_MESH : ResourceType::RES_SKELETAL_MESH);
-		else
-			delete _mesh;
-
-		_mesh = nullptr;
-	}
-
 	delete _objectUbo;
-	delete _matrixUbo;
 	
 	for(pair<string, ObjectComponent*> kvp : _components)
 		kvp.second->Unload();
