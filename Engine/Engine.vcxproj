@@ -137,7 +137,7 @@
     <ClInclude Include="..\include\Audio\AudioClip.h" />
     <ClInclude Include="..\include\Audio\AudioSource.h" />
     <ClInclude Include="..\Include\Engine\AnimationClip.h" />
-    <ClInclude Include="..\Include\Engine\Animator.h" />
+    <ClInclude Include="..\Include\Engine\AnimationNode.h" />
     <ClInclude Include="..\Include\Engine\Bone.h" />
     <ClInclude Include="..\Include\Engine\DeferredBuffer.h" />
     <ClInclude Include="..\include\Engine\Engine.h" />
@@ -266,7 +266,6 @@
     <ClCompile Include="Audio\AudioClip.cpp" />
     <ClCompile Include="Audio\AudioSource.cpp" />
     <ClCompile Include="Engine\AnimationClip.cpp" />
-    <ClCompile Include="Engine\Animator.cpp" />
     <ClCompile Include="Engine\DeferredBuffer.cpp" />
     <ClCompile Include="Engine\Engine.cpp" />
     <ClCompile Include="Engine\LoadingScreen.cpp" />

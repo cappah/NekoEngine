@@ -314,7 +314,7 @@
     <ClInclude Include="..\Include\Scene\Components\AnimatorComponent.h">
       <Filter>Include\Scene\Components</Filter>
     </ClInclude>
-    <ClInclude Include="..\Include\Engine\Animator.h">
+    <ClInclude Include="..\Include\Engine\AnimationNode.h">
       <Filter>Include\Engine</Filter>
     </ClInclude>
   </ItemGroup>
@@ -610,9 +610,6 @@
     </ClCompile>
     <ClCompile Include="Scene\Components\AnimatorComponent.cpp">
       <Filter>Source\Scene\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Animator.cpp">
-      <Filter>Source\Engine</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

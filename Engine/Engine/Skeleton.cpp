@@ -110,6 +110,8 @@ glm::mat4 Skeleton::_BoneTransform(double time, vector<glm::mat4> &transforms)
 	transforms.resize(_numBones);
 	
 	//for(
+
+	return mat4();
 }
 
 void Skeleton::_CalculatePosition(glm::vec3 &out, double time, const AnimationNode *node)

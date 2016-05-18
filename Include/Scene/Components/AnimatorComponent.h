@@ -50,7 +50,7 @@ public:
 	
 	void SetMesh(SkeletalMesh *mesh) noexcept { _mesh = mesh; }
 
-	void PlayAnimation(AnimationClip *clip);
+	void PlayAnimation(AnimationClip *clip) noexcept;
 	
 	ENGINE_API virtual void Update(float deltaTime) noexcept override;
 
