@@ -39,15 +39,48 @@
 #pragma once
 
 #include <Engine/Engine.h>
+#include <Engine/Material.h>
+#include <Engine/StaticMesh.h>
 #include <Scene/ObjectComponent.h>
+
+typedef struct MATRIX_BLOCK
+{
+	glm::mat4 ModelViewProjection;
+	glm::mat4 Model;
+	glm::mat4 View;
+} MatrixBlock;
+
+/*typedef struct OBJECT_BLOCK
+{
+	glm::vec3 CameraPosition;
+	float padding;
+	glm::vec3 ObjectColor;
+	float padding1;
+} ObjectBlock;*/
 
 class StaticMeshComponent : public ObjectComponent
 {
 public:
 	ENGINE_API StaticMeshComponent(class Object* parent = nullptr) : ObjectComponent(parent) { }
 
+	ENGINE_API virtual int Load() override;
+	
 	ENGINE_API virtual void Draw(RShader *shader) noexcept override;
 	ENGINE_API virtual void Update(float deltaTime) noexcept override;
 
-	ENGINE_API virtual ~StaticMeshComponent() { }
+	ENGINE_API virtual void Unload() override;
+	
+	ENGINE_API virtual ~StaticMeshComponent();
+	
+private:
+	std::string _meshId;
+	StaticMesh *_mesh;
+	bool _loaded, _blend;
+	Renderer* _renderer;
+	glm::vec3 _position, _rotation, _scale;
+	glm::mat4 _translationMatrix, _scaleMatrix, _rotationMatrix;
+	std::vector<int> _materialIds;
+	std::vector<Material*> _materials;
+	MatrixBlock _matrixBlock;
+	RBuffer *_matrixUbo;
 };

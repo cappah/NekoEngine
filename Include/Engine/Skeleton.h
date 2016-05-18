@@ -59,6 +59,8 @@ public:
 	
 	ENGINE_API void Bind(RShader *shader);
 	
+	
+	
 	ENGINE_API int Load();
 	ENGINE_API void Update(float deltaTime);
 	ENGINE_API void Draw(Renderer* r, size_t group);

@@ -40,9 +40,16 @@
 
 #include <Scene/Components/AnimatorComponent.h>
 
+#include <Engine/Skeleton.h>
+
 ENGINE_REGISTER_COMPONENT_CLASS(AnimatorComponent);
+
+void AnimatorComponent::PlayAnimation(AnimationClip *clip) noexcept
+{
+	//
+}
 
 void AnimatorComponent::Update(float deltaTime) noexcept
 {
-	//
+	Skeleton *skel = _mesh->GetSkeleton();
 }

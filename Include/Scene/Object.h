@@ -103,9 +103,7 @@ public:
 	ENGINE_API glm::mat4& GetModelMatrix() noexcept { return _matrixBlock.Model; }
 
 	ENGINE_API virtual int Load();
-	ENGINE_API virtual void PreDraw(RShader* shader, size_t i) noexcept;
 	ENGINE_API virtual void Draw(RShader* shader) noexcept;
-	ENGINE_API virtual void PostDraw(size_t group) noexcept;
 	ENGINE_API virtual void Update(float deltaTime) noexcept;
 	ENGINE_API void Unload() noexcept;
 
@@ -116,20 +114,29 @@ public:
 protected:
 	StaticMesh* _mesh;
 	MeshType _meshType;
-	std::vector<int> _materialIds;
-	std::vector<Material*> _materials;
+	
 	int _id, _modelId;
-	glm::vec3 _position, _rotation, _scale, _center, _forward, _right;
-	glm::mat4 _translationMatrix, _scaleMatrix, _rotationMatrix;
+	
+	glm::vec3 _center, _forward, _right;
+	
 	bool _blend;
 	ForwardDirection _objectForward;
 	bool _loaded;
-	Renderer* _renderer;
+	
 	std::map<std::string, ObjectComponent*> _components;
-	RBuffer *_objectUbo, *_matrixUbo;
-	ObjectMatrixBlock _matrixBlock;
+	
+	
+	RBuffer *_objectUbo;	
 	ObjectBlock _objectBlock;
-
+	
+	Renderer* _renderer;
+	glm::vec3 _position, _rotation, _scale;
+	glm::mat4 _translationMatrix, _scaleMatrix, _rotationMatrix;
+	std::vector<int> _materialIds;
+	std::vector<Material*> _materials;
+	RBuffer *_matrixUbo;
+	ObjectMatrixBlock _matrixBlock;
+	
 	void _UpdateModelMatrix() noexcept { _matrixBlock.Model = (_translationMatrix * _rotationMatrix) * _scaleMatrix; }
 };
 

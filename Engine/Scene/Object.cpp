@@ -252,20 +252,6 @@ int Object::Load()
 	return ENGINE_OK;
 }
 
-void Object::PreDraw(RShader* shader, size_t i) noexcept
-{
-	_materials[i]->Enable(shader);
-
-	/*if (_materials[i]->EnableBlend())
-	{
-		GL_CHECK(glEnable(GL_BLEND));
-		GL_CHECK(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
-	}*/
-
-	if (_materials[i]->DisableCulling())
-		Engine::GetRenderer()->EnableFaceCulling(false);
-}
-
 void Object::Draw(RShader* shader) noexcept
 {
 	if (!_loaded)
@@ -295,27 +281,21 @@ void Object::Draw(RShader* shader) noexcept
 
 		for (size_t i = 0; i < _materials.size(); i++)
 		{
-			PreDraw(shader, i);
-
+			_materials[i]->Enable(shader);
+			if (_materials[i]->DisableCulling())
+				Engine::GetRenderer()->EnableFaceCulling(false);
+		
 			shader->BindUniformBuffers();
 			_mesh->Draw(_renderer, i);
 		
-			PostDraw(i);
+			if (_materials[i]->DisableCulling())
+				Engine::GetRenderer()->EnableFaceCulling(true);
 		}
 	}
 
 	_mesh->Unbind();
 
 	_renderer->EnableDepthTest(false);
-}
-
-void Object::PostDraw(size_t i) noexcept
-{
-	/*if (_materials[i]->EnableBlend())
-	{ GL_CHECK(glDisable(GL_BLEND)); }*/
-
-	if (_materials[i]->DisableCulling())
-		Engine::GetRenderer()->EnableFaceCulling(true);
 }
 
 void Object::Update(float deltaTime) noexcept

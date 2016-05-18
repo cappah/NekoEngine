@@ -128,11 +128,6 @@ int Terrain::Load()
 	return ENGINE_OK;
 }
 
-void Terrain::PreDraw(RShader* shader, size_t group) noexcept
-{
-	Object::PreDraw(shader, group);
-}
-
 void Terrain::Update(float deltaTime) noexcept
 {
 	Object::Update(deltaTime);

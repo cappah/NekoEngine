@@ -40,13 +40,22 @@
 
 #include <Engine/Engine.h>
 #include <Scene/ObjectComponent.h>
+#include <Engine/AnimationClip.h>
+#include <Engine/SkeletalMesh.h>
 
 class AnimatorComponent : public ObjectComponent
 {
 public:
 	ENGINE_API AnimatorComponent(class Object* parent = nullptr) : ObjectComponent(parent) { }
+	
+	void SetMesh(SkeletalMesh *mesh) noexcept { _mesh = mesh; }
 
+	void PlayAnimation(AnimationClip *clip);
+	
 	ENGINE_API virtual void Update(float deltaTime) noexcept override;
 
 	ENGINE_API virtual ~AnimatorComponent() { }
+	
+private:
+	SkeletalMesh *_mesh;
 };
