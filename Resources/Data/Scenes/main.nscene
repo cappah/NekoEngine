@@ -5,7 +5,7 @@ name=Main
 #bgmusicvol=0.2
 gamemodule=TestGame
 ambcolor=0.02, 0.02, 0.02
-ambintensity=0.02
+ambintensity=0.2
 EndSceneInfo
 
 # Camera
@@ -26,24 +26,29 @@ EndCamera
 
 # Terrain
 # Use material id 48 for the normal mapped version
-#Object=Terrain
-#id=0
-#cellsize=80
-#numcells=80
-#material=mat_terrain
-#position=0.0, -200.0, 0.0
-#opt=noheight_mtl:1
-#EndObject
+Object=Terrain
+id=0
+cellsize=80
+numcells=80
+Component=StaticMeshComponent=Mesh
+	mesh=generated
+	material=mat_terrain
+EndComponent
+position=0.0, -200.0, 0.0
+opt=noheight_mtl:1
+EndObject
 
 # Skybox
-#Object=Skybox
-#id=1
-#mesh=stm_skysphere
-#material=mat_skysphere
-#position=0.0, 3200.0, 0.0
-#scale=6400.0, 6400.0, 6400.0
-#rotation=0.0, 0.0, 0.0
-#EndObject
+Object=Skybox
+id=1
+Component=StaticMeshComponent=Mesh
+	mesh=stm_skysphere
+	material=mat_skysphere
+EndComponent
+position=0.0, 3200.0, 0.0
+scale=6400.0, 6400.0, 6400.0
+rotation=0.0, 0.0, 0.0
+EndObject
 
 #################
 # Scene objects #

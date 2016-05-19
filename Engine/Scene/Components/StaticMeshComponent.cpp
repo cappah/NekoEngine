@@ -87,8 +87,16 @@ int StaticMeshComponent::Load()
 	}
 	
 	if(!_mesh)
-		_mesh = (StaticMesh*)ResourceManager::GetResourceByName(_meshId.c_str(), ResourceType::RES_STATIC_MESH);
-
+    {
+        if(!strncmp(_meshId.c_str(), "generated", 9))
+        {
+            _mesh = new StaticMesh(nullptr);
+            noMaterial = true; // skip material size check
+        }
+        else
+            _mesh = (StaticMesh*)ResourceManager::GetResourceByName(_meshId.c_str(), ResourceType::RES_STATIC_MESH);
+    }
+    
 	if (!_mesh)
 	{
 		Logger::Log(SMCOMPONENT_MODULE, LOG_CRITICAL, "Failed to load StaticMesh %s", _meshId.c_str());

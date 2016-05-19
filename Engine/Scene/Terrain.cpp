@@ -44,6 +44,7 @@
 #include <Engine/SceneManager.h>
 #include <System/Logger.h>
 #include <Scene/Terrain.h>
+#include <Scene/Components/StaticMeshComponent.h>
 
 using namespace glm;
 
@@ -99,10 +100,8 @@ bool Terrain::_GenerateTerrain() noexcept
 			}
 		}
 	}
-// TODO: Add Mesh component
-	/*if((_mesh = new StaticMesh(nullptr)) == nullptr)
-		return false;
-	_mesh->LoadDynamic(_terrainVertices, indices);*/
+    
+    ((StaticMeshComponent*)GetComponent("Mesh"))->GetMesh()->LoadDynamic(_terrainVertices, indices);
 
 	indices.clear();
 	
@@ -200,8 +199,8 @@ void Terrain::Update(float deltaTime) noexcept
 		}
 	}
 
-/*	if (modified)
-		_mesh->UpdateVertices(_terrainVertices);*/
+	if (modified)
+		((StaticMeshComponent*)GetComponent("Mesh"))->GetMesh()->UpdateVertices(_terrainVertices);
 }
 
 Terrain::~Terrain() noexcept
