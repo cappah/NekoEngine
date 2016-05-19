@@ -7,11 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		12150A1D1CEB87350066A044 /* Animator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12150A1C1CEB87350066A044 /* Animator.cpp */; };
-		12150A1E1CEB87350066A044 /* Animator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12150A1C1CEB87350066A044 /* Animator.cpp */; };
 		12150A201CEB875D0066A044 /* AnimatorComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12150A1F1CEB875D0066A044 /* AnimatorComponent.cpp */; };
 		12150A211CEB875D0066A044 /* AnimatorComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12150A1F1CEB875D0066A044 /* AnimatorComponent.cpp */; };
-		12150A231CEB877E0066A044 /* Animator.h in Headers */ = {isa = PBXBuildFile; fileRef = 12150A221CEB877E0066A044 /* Animator.h */; };
 		12150A251CEB87A10066A044 /* AnimatorComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 12150A241CEB87A10066A044 /* AnimatorComponent.h */; };
 		1243C8931CDCE15A00BA692E /* EngineInputDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1243C8921CDCE15A00BA692E /* EngineInputDelegate.mm */; };
 		124A31E01CDC260E00472893 /* AudioClip.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B061CC1AD9C00EE5D0A /* AudioClip.cpp */; };
@@ -136,9 +133,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		12150A1C1CEB87350066A044 /* Animator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Animator.cpp; sourceTree = "<group>"; };
 		12150A1F1CEB875D0066A044 /* AnimatorComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AnimatorComponent.cpp; path = Scene/Components/AnimatorComponent.cpp; sourceTree = SOURCE_ROOT; };
-		12150A221CEB877E0066A044 /* Animator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Animator.h; sourceTree = "<group>"; };
 		12150A241CEB87A10066A044 /* AnimatorComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AnimatorComponent.h; path = Components/AnimatorComponent.h; sourceTree = "<group>"; };
 		1243C8911CDCE15A00BA692E /* EngineInputDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EngineInputDelegate.h; path = Platform/iOS/EngineInputDelegate.h; sourceTree = SOURCE_ROOT; };
 		1243C8921CDCE15A00BA692E /* EngineInputDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = EngineInputDelegate.mm; path = Platform/iOS/EngineInputDelegate.mm; sourceTree = SOURCE_ROOT; };
@@ -365,7 +360,6 @@
 		12822B0A1CC1AD9F00EE5D0A /* Engine */ = {
 			isa = PBXGroup;
 			children = (
-				12150A1C1CEB87350066A044 /* Animator.cpp */,
 				127DF8B31CCB1572005F2693 /* AnimationClip.cpp */,
 				12822B0B1CC1ADAE00EE5D0A /* DeferredBuffer.cpp */,
 				12822B0C1CC1ADAE00EE5D0A /* Engine.cpp */,
@@ -501,7 +495,6 @@
 		12822B5B1CC1AE4E00EE5D0A /* Engine */ = {
 			isa = PBXGroup;
 			children = (
-				12150A221CEB877E0066A044 /* Animator.h */,
 				127DF8B11CCB14DA005F2693 /* AnimationClip.h */,
 				1255C57B1CD24CF60036E1DA /* Bone.h */,
 				12822B5C1CC1AE4E00EE5D0A /* DeferredBuffer.h */,
@@ -713,7 +706,6 @@
 				12B0CF651CEB4AB400E5D2FE /* StaticMeshComponent.h in Headers */,
 				126DB02F1CE42C0600FB6B77 /* Skeleton.h in Headers */,
 				127DF8B21CCB14DA005F2693 /* AnimationClip.h in Headers */,
-				12150A231CEB877E0066A044 /* Animator.h in Headers */,
 				1296BBD41CDBB6B500D17488 /* PlatformDetect.h in Headers */,
 				12CE01721CC991B900F3D84B /* SkeletalMesh.h in Headers */,
 				1255C57C1CD24CF60036E1DA /* Bone.h in Headers */,
@@ -823,7 +815,6 @@
 				124A31F01CDC261500472893 /* SSAO.cpp in Sources */,
 				124A31F41CDC262D00472893 /* EngineAppDelegate.mm in Sources */,
 				124A32051CDC264100472893 /* VFSFile.cpp in Sources */,
-				12150A1E1CEB87350066A044 /* Animator.cpp in Sources */,
 				124A32011CDC264100472893 /* AssetLoader.cpp in Sources */,
 				124A31FA1CDC264100472893 /* Camera.cpp in Sources */,
 				124A32021CDC264100472893 /* ogg_callbacks.cpp in Sources */,
@@ -875,7 +866,6 @@
 				12822B2D1CC1ADD000EE5D0A /* UNIX.cpp in Sources */,
 				1279C1001CC91E7600E521AD /* reallocarray.cpp in Sources */,
 				12822B551CC1AE2E00EE5D0A /* VFSArchive.cpp in Sources */,
-				12150A1D1CEB87350066A044 /* Animator.cpp in Sources */,
 				12822B281CC1ADAE00EE5D0A /* TextureFont.cpp in Sources */,
 				12822B261CC1ADAE00EE5D0A /* SSAO.cpp in Sources */,
 				12822B221CC1ADAE00EE5D0A /* SceneManager.cpp in Sources */,
