@@ -98,6 +98,8 @@ public:
 	ENGINE_API glm::vec3& GetPosition() noexcept { return _position; }
 	ENGINE_API glm::mat4& GetModelMatrix() noexcept { return _modelMatrix; }
 
+    ENGINE_API void BindUniformBuffer(RShader *shader) { shader->FSSetUniformBuffer(0, 0, sizeof(ObjectBlock), _objectUbo); }
+    
 	ENGINE_API virtual int Load();
 	ENGINE_API virtual void Draw(RShader* shader) noexcept;
 	ENGINE_API virtual void Update(float deltaTime) noexcept;

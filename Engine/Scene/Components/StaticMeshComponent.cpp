@@ -134,7 +134,8 @@ void StaticMeshComponent::Draw(RShader *shader) noexcept
 		
 		shader->VSSetUniformBuffer(0, 0, sizeof(MatrixBlock), _matrixUbo);
 		_matrixUbo->UpdateData(0, sizeof(MatrixBlock), &_matrixBlock);
-		
+        _parent->BindUniformBuffer(shader);
+        
 		for (size_t i = 0; i < _materials.size(); i++)
 		{
 			_materials[i]->Enable(shader);

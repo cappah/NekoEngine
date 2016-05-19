@@ -202,7 +202,6 @@ void Object::Draw(RShader* shader) noexcept
 	if (!_loaded)
 		return;
 
-	shader->FSSetUniformBuffer(0, 0, sizeof(ObjectBlock), _objectUbo);
 	_objectUbo->UpdateData(0, sizeof(vec3), &SceneManager::GetActiveScene()->GetSceneCamera()->GetPosition().x);
 
 	for (pair<string, ObjectComponent*> kvp : _components)
