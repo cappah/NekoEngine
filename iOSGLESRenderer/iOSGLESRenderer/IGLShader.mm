@@ -111,11 +111,11 @@ void IGLShader::Disable()
 void IGLShader::BindUniformBuffers()
 {
 	for (int i = 0; i < 10; ++i)
-		if ((_vsBuffers[i].index != GL_INVALID_INDEX)) && _vsBuffers[i].ubo)
+		if ((_vsBuffers[i].index != GL_INVALID_INDEX) && _vsBuffers[i].ubo)
 			_vsBuffers[i].ubo->BindUniform(_vsBuffers[i].binding, _vsBuffers[i].offset, _vsBuffers[i].size);
 	
 	for (int i = 0; i < 10; ++i)
-		if ((_fsBuffers[i].index != GL_INVALID_INDEX)) && _fsBuffers[i].ubo)
+		if ((_fsBuffers[i].index != GL_INVALID_INDEX) && _fsBuffers[i].ubo)
 			_fsBuffers[i].ubo->BindUniform(_fsBuffers[i].binding, _fsBuffers[i].offset, _fsBuffers[i].size);
 }
 

@@ -4,8 +4,8 @@ name=Main
 #bgmusic=bg_meat_grinder
 #bgmusicvol=0.2
 gamemodule=TestGame
-ambcolor=0.02, 0.02, 0.02
-ambintensity=0.2
+ambcolor=1.0, 1.0, 1.0
+ambintensity=1.2
 EndSceneInfo
 
 # Camera

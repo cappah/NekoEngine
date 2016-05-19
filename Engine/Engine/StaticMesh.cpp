@@ -132,36 +132,54 @@ int StaticMesh::CreateBuffers(bool dynamic)
 
 	_triangleCount = _indexCount / 3;
 
-	BufferAttribute attrib;
-	attrib.index = SHADER_POSITION_ATTRIBUTE;
-	attrib.size = 3;
-	attrib.type = BufferDataType::Float;
-	attrib.normalize = false;
-	attrib.stride = sizeof(Vertex);
-	attrib.ptr = (void *)VERTEX_POSITION_OFFSET;
-	_vertexBuffer->AddAttribute(attrib);
-
-	attrib.index = SHADER_COLOR_ATTRIBUTE;
-	attrib.ptr = (void *)VERTEX_COLOR_OFFSET;
-	_vertexBuffer->AddAttribute(attrib);
-
-	attrib.index = SHADER_NORMAL_ATTRIBUTE;
-	attrib.ptr = (void *)VERTEX_NORMAL_OFFSET;
-	_vertexBuffer->AddAttribute(attrib);
-
-	attrib.index = SHADER_TANGENT_ATTRIBUTE;
-	attrib.ptr = (void *)VERTEX_TANGENT_OFFSET;
-	_vertexBuffer->AddAttribute(attrib);
-
-	attrib.index = SHADER_UV_ATTRIBUTE;
-	attrib.size = 2;
-	attrib.ptr = (void *)VERTEX_UV_OFFSET;
-	_vertexBuffer->AddAttribute(attrib);
-
-	attrib.index = SHADER_TERRAINUV_ATTRIBUTE;
-	attrib.size = 2;
-	attrib.ptr = (void *)VERTEX_TUV_OFFSET;
-	_vertexBuffer->AddAttribute(attrib);
+    BufferAttribute attrib;
+    attrib.index = SHADER_POSITION_ATTRIBUTE;
+    attrib.size = 3;
+    attrib.type = BufferDataType::Float;
+    attrib.normalize = false;
+    attrib.stride = sizeof(Vertex);
+    attrib.ptr = (void *)VERTEX_POSITION_OFFSET;
+    _vertexBuffer->AddAttribute(attrib);
+    
+    attrib.index = SHADER_COLOR_ATTRIBUTE;
+    attrib.ptr = (void *)VERTEX_COLOR_OFFSET;
+    _vertexBuffer->AddAttribute(attrib);
+    
+    attrib.index = SHADER_NORMAL_ATTRIBUTE;
+    attrib.ptr = (void *)VERTEX_NORMAL_OFFSET;
+    _vertexBuffer->AddAttribute(attrib);
+    
+    attrib.index = SHADER_TANGENT_ATTRIBUTE;
+    attrib.ptr = (void *)VERTEX_TANGENT_OFFSET;
+    _vertexBuffer->AddAttribute(attrib);
+    
+    attrib.index = SHADER_UV_ATTRIBUTE;
+    attrib.size = 2;
+    attrib.ptr = (void *)VERTEX_UV_OFFSET;
+    _vertexBuffer->AddAttribute(attrib);
+    
+    attrib.index = SHADER_TERRAINUV_ATTRIBUTE;
+    attrib.size = 2;
+    attrib.ptr = (void *)VERTEX_TUV_OFFSET;
+    _vertexBuffer->AddAttribute(attrib);
+    
+    attrib.index = SHADER_INDEX_ATTRIBUTE;
+    attrib.size = 4;
+    attrib.type = BufferDataType::Int;
+    attrib.ptr = (void *)VERTEX_INDEX_OFFSET;
+    _vertexBuffer->AddAttribute(attrib);
+    
+    attrib.index = SHADER_WEIGHT_ATTRIBUTE;
+    attrib.size = 4;
+    attrib.type = BufferDataType::Float;
+    attrib.ptr = (void *)VERTEX_WEIGHT_OFFSET;
+    _vertexBuffer->AddAttribute(attrib);
+    
+    attrib.index = SHADER_NUMBONES_ATTRIBUTE;
+    attrib.size = 1;
+    attrib.type = BufferDataType::Int;
+    attrib.ptr = (void *)VERTEX_NUMBONES_OFFSET;
+    _vertexBuffer->AddAttribute(attrib);
 
 	_arrayBuffer->SetVertexBuffer(_vertexBuffer);
 	_arrayBuffer->SetIndexBuffer(_indexBuffer);

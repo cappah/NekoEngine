@@ -157,6 +157,12 @@ int DeferredBuffer::Initialize() noexcept
 		return ENGINE_FAIL;
 	}
 	meshComponent->Load();
+    
+    if(meshComponent->GetMesh()->CreateBuffers(false) != ENGINE_OK)
+    {
+        Release();
+        return ENGINE_FAIL;
+    }
 
 	_lightSphere->AddComponent("Mesh", meshComponent);
 	_lightSphere->SetId(0xB000B5);
@@ -166,13 +172,7 @@ int DeferredBuffer::Initialize() noexcept
 		Release();
 		return ENGINE_FAIL;
 	}
-
-	if(meshComponent->GetMesh()->CreateBuffers(false) != ENGINE_OK)
-	{
-		Release();
-		return ENGINE_FAIL;
-	}
-
+    
 	if((_shadow = new ShadowMap(Engine::GetConfiguration().Renderer.ShadowMapSize)) == nullptr)
 	{
 		Release();
