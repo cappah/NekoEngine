@@ -80,7 +80,7 @@ private:
 	AnimationClip *_animationClip;
 
 	void _PrepareTransforms();
-	glm::mat4 _TransformBones(double time);
+	void _TransformBones(double time);
 	
 	void _CalculatePosition(glm::vec3 &out, double time, const AnimationNode *node);
 	void _CalculateRotation(glm::quat &out, double time, const AnimationNode *node);

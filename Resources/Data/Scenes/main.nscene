@@ -104,14 +104,16 @@ EndObject
 #EndObject
 
 # Sophia
-#Object
-#id=5
-#skmesh=skm_sophia
-#material=mat_sophia
-#position=-117.5, -30.0, -145.0
-#rotation=0.0, 0.0, 0.0
-#scale=0.45, 0.45, 0.45
-#EndObject
+Object
+id=5
+Component=SkeletalMeshComponent=Mesh
+	mesh=skm_sophia
+	material=mat_sophia
+EndComponent
+position=-117.5, -30.0, -145.0
+rotation=0.0, 0.0, 0.0
+scale=0.45, 0.45, 0.45
+EndObject
 
 # Muscle Car
 Object=MovingObject

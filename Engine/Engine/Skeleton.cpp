@@ -102,7 +102,7 @@ void Skeleton::Draw(Renderer* r, size_t group)
 	//
 }
 
-glm::mat4 Skeleton::_TransformBones(double time)
+void Skeleton::_TransformBones(double time)
 {
 	glm::mat4 ident = glm::mat4(1.f);
 	
@@ -111,8 +111,6 @@ glm::mat4 Skeleton::_TransformBones(double time)
 	double animTime = mod(timeInTicks, _animationClip->GetDuration());
 	
 	_TransformHierarchy(animTime, _rootBone, ident);
-
-	return mat4();
 }
 
 void Skeleton::_CalculatePosition(glm::vec3 &out, double time, const AnimationNode *node)

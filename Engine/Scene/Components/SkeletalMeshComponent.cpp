@@ -85,6 +85,8 @@ int SkeletalMeshComponent::Load()
 		return ENGINE_INVALID_RES;
 	}
 	
+	StaticMeshComponent::_mesh = (StaticMesh*)_mesh;
+	
 	if (!noMaterial && (_materials.size() != _mesh->GetGroupCount()))
 	{
 		Logger::Log(SKCOMPONENT_MODULE, LOG_CRITICAL, "Failed to load SkeletalMesh %s. The mesh requires %d materials, but only %d are set", _meshId.c_str(), _mesh->GetGroupCount(), _materials.size());

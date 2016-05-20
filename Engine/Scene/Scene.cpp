@@ -405,21 +405,6 @@ ObjectComponent *Scene::_LoadComponent(VFSFile *f, Object *parent, const std::st
 	if (comp->Load() != ENGINE_OK)
 		return nullptr;
 
-	StaticMeshComponent *stcomp = dynamic_cast<StaticMeshComponent*>(comp);
-	if (stcomp)
-	{
-		if (Engine::GetRenderer()->HasCapability(RendererCapability::DrawBaseVertex))
-		{
-			stcomp->GetMesh()->SetVertexOffset(_sceneVertices.size());
-			stcomp->GetMesh()->SetIndexOffset(_sceneIndices.size());
-
-			_AddVertices(stcomp->GetMesh()->GetVertices());
-			_AddIndices(stcomp->GetMesh()->GetIndices());
-		}
-		else
-			stcomp->GetMesh()->CreateBuffers(false);
-	}
-
 	SkeletalMeshComponent *skcomp = dynamic_cast<SkeletalMeshComponent*>(comp);
 	if (skcomp)
 	{
@@ -433,6 +418,23 @@ ObjectComponent *Scene::_LoadComponent(VFSFile *f, Object *parent, const std::st
 		}
 		else
 			skcomp->GetMesh()->CreateBuffers(false);
+	}
+	else
+	{
+		StaticMeshComponent *stcomp = dynamic_cast<StaticMeshComponent*>(comp);
+		if (stcomp)
+		{
+			if (Engine::GetRenderer()->HasCapability(RendererCapability::DrawBaseVertex))
+			{
+				stcomp->GetMesh()->SetVertexOffset(_sceneVertices.size());
+				stcomp->GetMesh()->SetIndexOffset(_sceneIndices.size());
+				
+				_AddVertices(stcomp->GetMesh()->GetVertices());
+				_AddIndices(stcomp->GetMesh()->GetIndices());
+			}
+			else
+				stcomp->GetMesh()->CreateBuffers(false);
+		}
 	}
 
 	return comp;
