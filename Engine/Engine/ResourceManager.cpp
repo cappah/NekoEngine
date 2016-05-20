@@ -209,32 +209,35 @@ Resource* ResourceManager::_LoadResourceInternal(ResourceInfo *ri)
 
 	switch (ri->type)
 	{
-	case ResourceType::RES_STATIC_MESH:
-		res = new StaticMesh((MeshResource *)ri);
+		case ResourceType::RES_STATIC_MESH:
+			res = new StaticMesh((MeshResource *)ri);
 		break;
-	case ResourceType::RES_SKELETAL_MESH:
-		res = new SkeletalMesh((MeshResource *)ri);
+		case ResourceType::RES_SKELETAL_MESH:
+			res = new SkeletalMesh((MeshResource *)ri);
 		break;
-	case ResourceType::RES_TEXTURE:
-		res = new Texture((TextureResource *)ri);
+		case ResourceType::RES_TEXTURE:
+			res = new Texture((TextureResource *)ri);
 		break;
-	case ResourceType::RES_SHADER:
-		res = new Shader((ShaderResource *)ri);
+		case ResourceType::RES_SHADER:
+			res = new Shader((ShaderResource *)ri);
 		break;
-	case ResourceType::RES_AUDIOCLIP:
-		res = new AudioClip((AudioClipResource *)ri);
+		case ResourceType::RES_AUDIOCLIP:
+			res = new AudioClip((AudioClipResource *)ri);
 		break;
-	case ResourceType::RES_FONT:
-		res = new TextureFont((TextureFontResource *)ri);
+		case ResourceType::RES_FONT:
+			res = new TextureFont((TextureFontResource *)ri);
 		break;
-	case ResourceType::RES_MATERIAL:
-		res = new Material((MaterialResource *)ri);
+		case ResourceType::RES_MATERIAL:
+			res = new Material((MaterialResource *)ri);
 		break;
-	case ResourceType::RES_ANIMCLIP:
-		res = new AnimationClip((AnimationClipResource *)ri);
+		case ResourceType::RES_ANIMCLIP:
+			res = new AnimationClip((AnimationClipResource *)ri);
 		break;
-	default:
-		return nullptr;
+		default:
+		{
+			Logger::Log(RM_MODULE, LOG_WARNING, "Invalid resource type requested = %d", (int)ri->type);
+			return nullptr;
+		}
 	}
 
 	assert(res);
