@@ -16,6 +16,7 @@
 		127DF8F21CCBB04C005F2693 /* AssimpConverter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 127DF8F11CCBB04C005F2693 /* AssimpConverter.mm */; };
 		127DF8F41CCC17B3005F2693 /* libassimp.3.2.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 127DF8F31CCC17B3005F2693 /* libassimp.3.2.0.dylib */; };
 		127DF8F51CCC17E4005F2693 /* libassimp.3.2.0.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 127DF8F31CCC17B3005F2693 /* libassimp.3.2.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		12ECE5D71CEFBDEE004F3697 /* NAnim.mm in Sources */ = {isa = PBXBuildFile; fileRef = 12ECE5D61CEFBDEE004F3697 /* NAnim.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -45,6 +46,8 @@
 		127DF8F01CCBB04C005F2693 /* AssimpConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AssimpConverter.h; sourceTree = "<group>"; };
 		127DF8F11CCBB04C005F2693 /* AssimpConverter.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AssimpConverter.mm; sourceTree = "<group>"; };
 		127DF8F31CCC17B3005F2693 /* libassimp.3.2.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libassimp.3.2.0.dylib; path = /usr/local/Cellar/assimp/3.2/lib/libassimp.3.2.0.dylib; sourceTree = "<absolute>"; };
+		12ECE5D51CEFBDEE004F3697 /* NAnim.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NAnim.h; sourceTree = "<group>"; };
+		12ECE5D61CEFBDEE004F3697 /* NAnim.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NAnim.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -90,6 +93,8 @@
 				127DF8C41CCB8435005F2693 /* Supporting Files */,
 				127DF8DB1CCB8914005F2693 /* NMesh.h */,
 				127DF8DC1CCB8914005F2693 /* NMesh.mm */,
+				12ECE5D51CEFBDEE004F3697 /* NAnim.h */,
+				12ECE5D61CEFBDEE004F3697 /* NAnim.mm */,
 			);
 			path = ModelConverter;
 			sourceTree = "<group>";
@@ -182,6 +187,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				127DF8C61CCB8435005F2693 /* main.m in Sources */,
+				12ECE5D71CEFBDEE004F3697 /* NAnim.mm in Sources */,
 				127DF8F21CCBB04C005F2693 /* AssimpConverter.mm in Sources */,
 				127DF8C31CCB8435005F2693 /* AppDelegate.mm in Sources */,
 				127DF8DD1CCB8914005F2693 /* NMesh.mm in Sources */,

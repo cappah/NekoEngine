@@ -118,6 +118,7 @@
 		12B0CF651CEB4AB400E5D2FE /* StaticMeshComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 12B0CF631CEB4AB400E5D2FE /* StaticMeshComponent.h */; };
 		12CE01701CC9919300F3D84B /* SkeletalMesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12CE016F1CC9919300F3D84B /* SkeletalMesh.cpp */; };
 		12CE01721CC991B900F3D84B /* SkeletalMesh.h in Headers */ = {isa = PBXBuildFile; fileRef = 12CE01711CC991B900F3D84B /* SkeletalMesh.h */; };
+		12ECE5D91CEFBE85004F3697 /* AnimationNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 12ECE5D81CEFBE85004F3697 /* AnimationNode.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -265,6 +266,7 @@
 		12B0CF631CEB4AB400E5D2FE /* StaticMeshComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StaticMeshComponent.h; path = Components/StaticMeshComponent.h; sourceTree = "<group>"; };
 		12CE016F1CC9919300F3D84B /* SkeletalMesh.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SkeletalMesh.cpp; sourceTree = "<group>"; };
 		12CE01711CC991B900F3D84B /* SkeletalMesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkeletalMesh.h; sourceTree = "<group>"; };
+		12ECE5D81CEFBE85004F3697 /* AnimationNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnimationNode.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -496,6 +498,7 @@
 			isa = PBXGroup;
 			children = (
 				127DF8B11CCB14DA005F2693 /* AnimationClip.h */,
+				12ECE5D81CEFBE85004F3697 /* AnimationNode.h */,
 				1255C57B1CD24CF60036E1DA /* Bone.h */,
 				12822B5C1CC1AE4E00EE5D0A /* DeferredBuffer.h */,
 				12822B5D1CC1AE4E00EE5D0A /* Engine.h */,
@@ -701,6 +704,7 @@
 				12B0CF641CEB4AB400E5D2FE /* SkeletalMeshComponent.h in Headers */,
 				1279C0FE1CC91E5800E521AD /* Compat.h in Headers */,
 				127DF8B01CCB13AD005F2693 /* AnimationClipResource.h in Headers */,
+				12ECE5D91CEFBE85004F3697 /* AnimationNode.h in Headers */,
 				12150A251CEB87A10066A044 /* AnimatorComponent.h in Headers */,
 				12822BB31CC1D84300EE5D0A /* EngineView.h in Headers */,
 				12B0CF651CEB4AB400E5D2FE /* StaticMeshComponent.h in Headers */,

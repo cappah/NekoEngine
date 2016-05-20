@@ -9,6 +9,7 @@
 #import "AssimpConverter.h"
 
 #import "NMesh.h"
+#import "NAnim.h"
 
 #include <glm/gtc/type_ptr.hpp>
 
@@ -112,6 +113,61 @@
 		
 		if(i != scene->mNumMeshes - 1)
 			[mesh newGroup];
+	}
+	
+	for(int i = 0; i < scene->mNumAnimations; ++i)
+	{
+		aiAnimation *aiAnim = scene->mAnimations[i];
+		NAnim *anim = [[NAnim alloc] initWithName:aiAnim->mName.C_Str() duration:aiAnim->mDuration ticksPerSecond:aiAnim->mTicksPerSecond];
+		
+		for(int j = 0; j < aiAnim->mNumChannels; ++j)
+		{
+			aiNodeAnim *aiChannel = aiAnim->mChannels[j];
+			AnimationNode channel;
+			
+			channel.name = aiChannel->mNodeName.C_Str();
+			
+			for(int k = 0; k < aiChannel->mNumPositionKeys; ++k)
+			{
+				VectorKey vk;
+				vk.time = aiChannel->mPositionKeys[k].mTime;
+				
+				vk.value.x = aiChannel->mPositionKeys[k].mValue[0];
+				vk.value.y = aiChannel->mPositionKeys[k].mValue[1];
+				vk.value.z = aiChannel->mPositionKeys[k].mValue[2];
+				
+				channel.positionKeys.push_back(vk);
+			}
+			
+			for(int k = 0; k < aiChannel->mNumRotationKeys; ++k)
+			{
+				QuatKey qk;
+				qk.time = aiChannel->mRotationKeys[k].mTime;
+				
+				qk.value.x = aiChannel->mRotationKeys[k].mValue.x;
+				qk.value.y = aiChannel->mRotationKeys[k].mValue.y;
+				qk.value.z = aiChannel->mRotationKeys[k].mValue.z;
+				qk.value.w = aiChannel->mRotationKeys[k].mValue.w;
+				
+				channel.rotationKeys.push_back(qk);
+			}
+			
+			for(int k = 0; k < aiChannel->mNumScalingKeys; ++k)
+			{
+				VectorKey vk;
+				vk.time = aiChannel->mScalingKeys[k].mTime;
+				
+				vk.value.x = aiChannel->mScalingKeys[k].mValue[0];
+				vk.value.y = aiChannel->mScalingKeys[k].mValue[1];
+				vk.value.z = aiChannel->mScalingKeys[k].mValue[2];
+				
+				channel.scalingKeys.push_back(vk);
+			}
+			
+			[anim addChannel:channel];
+		}
+		
+		[anim writeFile:[NSString stringWithFormat:@"%s/%s.nanim", [[nmeshFile stringByDeletingLastPathComponent] UTF8String], [anim name].c_str()]];
 	}
 	
 	return [mesh writeFile:nmeshFile];
