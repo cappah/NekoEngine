@@ -23,6 +23,13 @@
          location = "group:Resources/Data"
          name = "Data">
          <Group
+            location = "group:Animations"
+            name = "Animations">
+            <FileRef
+               location = "group:sophia_idle.nanim">
+            </FileRef>
+         </Group>
+         <Group
             location = "group:Fonts"
             name = "Fonts">
             <FileRef

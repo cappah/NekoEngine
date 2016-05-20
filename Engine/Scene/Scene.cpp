@@ -182,8 +182,19 @@ Object *Scene::_LoadObject(VFSFile *f, const string &className)
 				free(c);
 		}
 		else if (!strncmp(split[0], "Component", len))
-			obj->AddComponent(split[2], _LoadComponent(f, obj, split[1]));
-
+		{
+			ObjectComponent *comp = _LoadComponent(f, obj, split[1]);
+			
+			if(!comp)
+			{
+				Logger::Log(SCENE_MODULE, LOG_CRITICAL, "Failed to load component %s of type %s for object id %d", split[2], split[1], obj->GetId());
+				delete obj;
+				return nullptr;
+			}
+			
+			obj->AddComponent(split[2], comp);
+		}
+		
 		Terrain *t = nullptr;
 
 		if((t = dynamic_cast<Terrain *>(obj)))

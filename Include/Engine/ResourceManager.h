@@ -49,6 +49,7 @@
 #include <Resource/AudioClipResource.h>
 #include <Resource/TextureFontResource.h>
 #include <Resource/MaterialResource.h>
+#include <Resource/AnimationClipResource.h>
 
 #include <Engine/StaticMesh.h>
 #include <Engine/SkeletalMesh.h>
@@ -57,6 +58,7 @@
 #include <Audio/AudioClip.h>
 #include <Engine/TextureFont.h>
 #include <Engine/Material.h>
+#include <Engine/AnimationClip.h>
 
 class ResourceManager
 {

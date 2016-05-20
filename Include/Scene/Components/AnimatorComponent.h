@@ -46,16 +46,22 @@
 class AnimatorComponent : public ObjectComponent
 {
 public:
-	ENGINE_API AnimatorComponent(ComponentInitializer *initializer) : ObjectComponent(initializer) { }
+	ENGINE_API AnimatorComponent(ComponentInitializer *initializer);
 	
-	void SetMesh(SkeletalMesh *mesh) noexcept { _mesh = mesh; }
+	ENGINE_API void SetMesh(SkeletalMesh *mesh) noexcept { _mesh = mesh; }
 
-	void PlayAnimation(AnimationClip *clip) noexcept;
+	ENGINE_API virtual int Load() override;
+	
+	ENGINE_API void PlayDefaultAnimation() noexcept;
+	ENGINE_API void PlayAnimation(AnimationClip *clip) noexcept;
 	
 	ENGINE_API virtual void Update(float deltaTime) noexcept override;
 
 	ENGINE_API virtual ~AnimatorComponent() { }
 	
 private:
+	std::string _defaultAnimId;
+	
 	SkeletalMesh *_mesh;
+	AnimationClip *_defaultAnim;
 };

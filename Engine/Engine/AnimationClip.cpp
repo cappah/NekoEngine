@@ -54,6 +54,7 @@ AnimationClip::AnimationClip(AnimationClipResource *res) noexcept :
 	_duration(0.f),
 	_ticksPerSecond(0.f)
 {
+	_resourceInfo = res;
 }
 
 int AnimationClip::Load()
@@ -64,32 +65,10 @@ int AnimationClip::Load()
 	string path("/");
 	path.append(GetResourceInfo()->filePath);
 	
-	
-	VFSFile *f = VFS::Open(path);
-	if(!f)
+	if(AssetLoader::LoadAnimation(path, _name, &_duration, &_ticksPerSecond, _channels) != ENGINE_OK)
 	{
-		Logger::Log(AC_MODULE, LOG_CRITICAL, "Failed to open animation clip file for %s", _resourceInfo->name.c_str());
-		return ENGINE_IO_FAIL;
-	}
-	
-	char header[7];
-	if (f->Read(header, sizeof(char), 7) != 7)
-	{
-		Logger::Log(AC_MODULE, LOG_CRITICAL, "Failed to read animation clip file for %s", _resourceInfo->name.c_str());
-		f->Close();
-		return ENGINE_IO_FAIL;
-	}
-	header[6] = 0x0;
-	
-	if (strncmp(header, "NANIM1 ", 7))
-	{
-		Logger::Log(AC_MODULE, LOG_CRITICAL, "Invalid header for animation clip file for %s", _resourceInfo->name.c_str());
-		f->Close();
-		return ENGINE_INVALID_RES;
-	}
-	
-	while (!f->EoF())
-	{
+		Logger::Log(AC_MODULE, LOG_CRITICAL, "Failed to load animation id=%s", _resourceInfo->name.c_str());
+		return ENGINE_FAIL;
 	}
 
 	Logger::Log(AC_MODULE, LOG_DEBUG, "Loaded animation clip id %s from %s", _resourceInfo->name.c_str(), path.c_str());

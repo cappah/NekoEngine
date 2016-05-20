@@ -41,15 +41,42 @@
 #include <Scene/Components/AnimatorComponent.h>
 
 #include <Engine/Skeleton.h>
+#include <Engine/ResourceManager.h>
 
 ENGINE_REGISTER_COMPONENT_CLASS(AnimatorComponent);
 
+AnimatorComponent::AnimatorComponent(ComponentInitializer *initializer)
+	: ObjectComponent(initializer)
+{
+	_mesh = nullptr;
+	_defaultAnim = nullptr;
+	_defaultAnimId = initializer->arguments.find("defaultanim")->second;
+}
+
+int AnimatorComponent::Load()
+{
+	_defaultAnim = (AnimationClip*)ResourceManager::GetResourceByName(_defaultAnimId.c_str(), ResourceType::RES_ANIMCLIP);
+	
+	if(!_defaultAnim)
+		return ENGINE_INVALID_RES;
+	
+	return ENGINE_OK;
+}
+
+void AnimatorComponent::PlayDefaultAnimation() noexcept
+{
+	if(_mesh)
+		_mesh->GetSkeleton()->SetAnimationClip(_defaultAnim);
+}
+
 void AnimatorComponent::PlayAnimation(AnimationClip *clip) noexcept
 {
-	_mesh->GetSkeleton()->SetAnimationClip(clip);
+	if(_mesh)
+		_mesh->GetSkeleton()->SetAnimationClip(clip);
 }
 
 void AnimatorComponent::Update(float deltaTime) noexcept
 {
-	_mesh->GetSkeleton()->Update(deltaTime);
+	if(_mesh)
+		_mesh->GetSkeleton()->Update(deltaTime);
 }

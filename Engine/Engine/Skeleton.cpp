@@ -55,7 +55,7 @@
 using namespace std;
 using namespace glm;
 
-Skeleton::Skeleton(std::vector<Bone> &bones, glm::mat4 &globalInverseTransform) noexcept
+Skeleton::Skeleton(std::vector<Bone> &bones, mat4 &globalInverseTransform) noexcept
 {
 	_numBones = (unsigned int)bones.size();
 	
@@ -104,7 +104,10 @@ void Skeleton::Draw(Renderer* r, size_t group)
 
 void Skeleton::_TransformBones(double time)
 {
-	glm::mat4 ident = glm::mat4(1.f);
+	if(!_animationClip)
+		return;
+	
+	mat4 ident = mat4(1.f);
 	
 	double ticks = _animationClip->GetTicksPerSecond() != 0 ? _animationClip->GetTicksPerSecond() : 25.f;
 	double timeInTicks = time * ticks;
@@ -113,7 +116,7 @@ void Skeleton::_TransformBones(double time)
 	_TransformHierarchy(animTime, _rootBone, ident);
 }
 
-void Skeleton::_CalculatePosition(glm::vec3 &out, double time, const AnimationNode *node)
+void Skeleton::_CalculatePosition(vec3 &out, double time, const AnimationNode *node)
 {
 	size_t numKeys = node->positionKeys.size();
 	
@@ -139,15 +142,15 @@ void Skeleton::_CalculatePosition(glm::vec3 &out, double time, const AnimationNo
 	double dt = node->positionKeys[nextPosIndex].time - node->positionKeys[posIndex].time;
 	double factor = (time - node->positionKeys[posIndex].time) / dt;
 	
-	const glm::vec3 &start = node->positionKeys[posIndex].value;
-	const glm::vec3 &end = node->positionKeys[nextPosIndex].value;
+	const vec3 &start = node->positionKeys[posIndex].value;
+	const vec3 &end = node->positionKeys[nextPosIndex].value;
 	
-	glm::vec3 delta = end - start;
+	vec3 delta = end - start;
 	
 	out = start + (float)factor * delta;
 }
 
-void Skeleton::_CalculateRotation(glm::quat &out, double time, const AnimationNode *node)
+void Skeleton::_CalculateRotation(quat &out, double time, const AnimationNode *node)
 {
 	size_t numKeys = node->rotationKeys.size();
 	
@@ -173,14 +176,14 @@ void Skeleton::_CalculateRotation(glm::quat &out, double time, const AnimationNo
 	double dt = node->rotationKeys[nextRotIndex].time - node->rotationKeys[rotIndex].time;
 	double factor = (time - node->rotationKeys[rotIndex].time) / dt;
 	
-	const glm::quat &start = node->rotationKeys[rotIndex].value;
-	const glm::quat &end = node->rotationKeys[nextRotIndex].value;
+	const quat &start = node->rotationKeys[rotIndex].value;
+	const quat &end = node->rotationKeys[nextRotIndex].value;
 	
-	out = glm::mix(start, end, (float)factor);
-	out = glm::normalize(out);
+	out = mix(start, end, (float)factor);
+	out = normalize(out);
 }
 
-void Skeleton::_CalculateScaling(glm::vec3 &out, double time, const AnimationNode *node)
+void Skeleton::_CalculateScaling(vec3 &out, double time, const AnimationNode *node)
 {
 	size_t numKeys = node->scalingKeys.size();
 	
@@ -206,38 +209,38 @@ void Skeleton::_CalculateScaling(glm::vec3 &out, double time, const AnimationNod
 	double dt = node->scalingKeys[nextScaleIndex].time - node->scalingKeys[scaleIndex].time;
 	double factor = (time - node->scalingKeys[scaleIndex].time) / dt;
 	
-	const glm::vec3 &start = node->scalingKeys[scaleIndex].value;
-	const glm::vec3 &end = node->scalingKeys[nextScaleIndex].value;
+	const vec3 &start = node->scalingKeys[scaleIndex].value;
+	const vec3 &end = node->scalingKeys[nextScaleIndex].value;
 	
-	glm::vec3 delta = end - start;
+	vec3 delta = end - start;
 	
 	out = start + (float)factor * delta;
 }
 
-void Skeleton::_TransformHierarchy(double time, const Bone *node, glm::mat4 &parentTransform)
+void Skeleton::_TransformHierarchy(double time, const Bone *node, mat4 &parentTransform)
 {
 	const AnimationNode *animNode = nullptr;
 	
-	glm::mat4 nodeTransform;
+	mat4 nodeTransform;
 	
 	if(animNode)
 	{
-		glm::vec3 scaling;
+		vec3 scaling;
 		_CalculateScaling(scaling, time, animNode);
-		glm::mat4 scaleMatrix = scale(mat4(), scaling);
+		mat4 scaleMatrix = scale(mat4(), scaling);
 		
-		glm::quat rotation;
+		quat rotation;
 		_CalculateRotation(rotation, time, animNode);
-		glm::mat4 rotationMatrix = mat4_cast(rotation);
+		mat4 rotationMatrix = mat4_cast(rotation);
 		
-		glm::vec3 position;
+		vec3 position;
 		_CalculatePosition(position, time, animNode);
-		glm::mat4 translationMatirx = translate(mat4(), position);
+		mat4 translationMatirx = translate(mat4(), position);
 		
 		nodeTransform = translationMatirx * rotationMatrix * scaleMatrix;
 	}
 	
-	glm::mat4 globalTransform = parentTransform * nodeTransform;
+	mat4 globalTransform = parentTransform * nodeTransform;
 	
 	if(_boneMap.find(node->name) != _boneMap.end())
 	{

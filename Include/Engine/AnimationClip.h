@@ -54,6 +54,7 @@ public:
 	ENGINE_API AnimationClip(AnimationClipResource *res) noexcept;
 
 	ENGINE_API AnimationClipResource* GetResourceInfo() noexcept { return (AnimationClipResource*)_resourceInfo; }
+	ENGINE_API const char *GetName() noexcept { return _name.c_str(); }
 	ENGINE_API double GetDuration() noexcept { return _duration; }
 	ENGINE_API double GetTicksPerSecond() noexcept { return _ticksPerSecond; }
 	ENGINE_API std::vector<AnimationNode> &GetChannels();
@@ -64,6 +65,7 @@ public:
 	ENGINE_API virtual ~AnimationClip() noexcept;
 
 protected:
+	std::string _name;
 	double _duration;
 	double _ticksPerSecond;
 	std::vector<AnimationNode> _channels;

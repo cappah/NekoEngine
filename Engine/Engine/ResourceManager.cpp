@@ -230,6 +230,9 @@ Resource* ResourceManager::_LoadResourceInternal(ResourceInfo *ri)
 	case ResourceType::RES_MATERIAL:
 		res = new Material((MaterialResource *)ri);
 		break;
+	case ResourceType::RES_ANIMCLIP:
+		res = new AnimationClip((AnimationClipResource *)ri);
+		break;
 	default:
 		return nullptr;
 	}

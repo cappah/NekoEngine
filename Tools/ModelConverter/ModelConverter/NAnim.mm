@@ -52,7 +52,7 @@ using namespace std;
 {
 	stringstream ss("", ios_base::app | ios_base::out);
 	
-	ss << "name" << _name << endl;
+	ss << "name:" << _name << endl;
 	ss << "duration:" << _duration << endl;
 	ss << "tickspersecond:" << _ticksPerSecond << endl;
 	ss << "channels:" << _channels.size() << endl;

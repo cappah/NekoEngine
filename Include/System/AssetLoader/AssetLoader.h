@@ -53,12 +53,18 @@ class AssetLoader
 public:
 	// Mesh
 	static int LoadMesh(std::string &file, MeshType type,
-		std::vector<Vertex> &vertices,
-		std::vector<uint32_t> &indices,
-		std::vector<uint32_t> &groupOffset,
-		std::vector<uint32_t> &groupCount,
-		std::vector<Bone> *bones = nullptr,
-		glm::mat4 *globalInverseTransform = nullptr);
+						std::vector<Vertex> &vertices,
+						std::vector<uint32_t> &indices,
+						std::vector<uint32_t> &groupOffset,
+						std::vector<uint32_t> &groupCount,
+						std::vector<Bone> *bones = nullptr,
+						glm::mat4 *globalInverseTransform = nullptr);
+	
+	static int LoadAnimation(std::string &file,
+							 std::string &name,
+							 double *duration,
+							 double *ticksPerSecond,
+							 std::vector<AnimationNode> &channels);
 	
 	// Sound
 	static int LoadWAV(std::string &file, ALenum *format, ALvoid **data, ALsizei *size, ALsizei *freq);

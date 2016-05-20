@@ -47,11 +47,11 @@
 
 #include <Platform/Compat.h>
 
-#define AM_MODULE	"AssetLoader"
+#define AL_MODULE	"AssetLoader"
 
-#define BUFFER_SIZE	65536
-#define DATA_SIZE	524288
-#define LINE_BUFF	1024
+#define BUFFER_SIZE		65536
+#define DATA_SIZE		524288
+#define AL_LINE_BUFF	1024
 
 using namespace std;
 
@@ -103,6 +103,8 @@ typedef struct WAVE_DATA
 	int sub_chunk_2_size;	///< == NumSamples * NumChannels * BitsPerSammple/8. This is the number of bytes in the data. You can also think of this as the size of the read of the subchunk following this number.
 } wave_data_t;
 
+using namespace glm;
+
 int AssetLoader::LoadMesh(string& file,
 						  MeshType type,
 						  vector<Vertex> &vertices,
@@ -110,26 +112,26 @@ int AssetLoader::LoadMesh(string& file,
 						  vector<uint32_t> &groupOffset,
 						  vector<uint32_t> &groupCount,
 						  vector<Bone> *bones,
-						  glm::mat4 *globalInverseTransform)
+						  mat4 *globalInverseTransform)
 {
 	unsigned int offset = 0;
 	uint32_t indexBuff[3];
 	size_t indexCount = 0;
 	size_t vertexCount = 0;
 	size_t boneCount = 0;
-	char lineBuff[LINE_BUFF];
-	memset(lineBuff, 0x0, LINE_BUFF);
+	char lineBuff[AL_LINE_BUFF];
+	memset(lineBuff, 0x0, AL_LINE_BUFF);
 
 	VFSFile *f = VFS::Open(file);
 	if(!f)
 	{
-		Logger::Log(AM_MODULE, LOG_CRITICAL, "Failed to open mesh file %s", file.c_str());
+		Logger::Log(AL_MODULE, LOG_CRITICAL, "Failed to open mesh file %s", file.c_str());
 		return ENGINE_IO_FAIL;
 	}
 
 	while (!f->EoF())
 	{
-		f->Gets(lineBuff, LINE_BUFF);
+		f->Gets(lineBuff, AL_LINE_BUFF);
 
 		if (lineBuff[0] == 0x0)
 			continue;
@@ -169,7 +171,7 @@ int AssetLoader::LoadMesh(string& file,
 			if(!ptr)
 				break;
 			
-			EngineUtils::ReadFloatArray(ptr, 16, &(*globalInverseTransform)[0][0]);
+			EngineUtils::ReadFloatArray(++ptr, 16, &(*globalInverseTransform)[0][0]);
 		}
 		else if (strchr(lineBuff, '[')) // Vertex line
 			vertices.push_back(_ReadVertex(lineBuff));
@@ -185,7 +187,7 @@ int AssetLoader::LoadMesh(string& file,
 				bones->push_back(_ReadBone(lineBuff));
 			else
 			{
-				Logger::Log(AM_MODULE, LOG_CRITICAL, "Bone line found, but no bone array provided");
+				Logger::Log(AL_MODULE, LOG_CRITICAL, "Bone line found, but no bone array provided");
 				f->Close();
 				return ENGINE_FAIL;
 			}
@@ -203,6 +205,123 @@ int AssetLoader::LoadMesh(string& file,
     groupCount.push_back((uint32_t)indices.size() - offset);
     
     f->Close();
+	
+	return ENGINE_OK;
+}
+
+int AssetLoader::LoadAnimation(std::string &file,
+						 std::string &name,
+						 double *duration,
+						 double *ticksPerSecond,
+						 std::vector<AnimationNode> &channels)
+{
+	char lineBuff[AL_LINE_BUFF], *pch = nullptr;
+	VectorKey vk;
+	QuatKey qk;
+	AnimationNode channel;
+	memset(lineBuff, 0x0, AL_LINE_BUFF);
+	
+	VFSFile *f = VFS::Open(file);
+	if(!f)
+	{
+		Logger::Log(AL_MODULE, LOG_CRITICAL, "Failed to open animation file %s", file.c_str());
+		return ENGINE_IO_FAIL;
+	}
+	
+	while (!f->EoF())
+	{
+		f->Gets(lineBuff, AL_LINE_BUFF);
+		
+		if (lineBuff[0] == 0x0)
+			continue;
+		
+		EngineUtils::RemoveNewline(lineBuff);;
+		
+		if (lineBuff[0] == 0x0)
+			continue;
+		
+		if (strstr(lineBuff, "name"))
+		{
+			char *ptr = strchr(lineBuff, ':');
+			if (!ptr)
+				break;
+			
+			name = ++ptr;
+		}
+		else if (strstr(lineBuff, "duration"))
+		{
+			char *ptr = strchr(lineBuff, ':');
+			if (!ptr)
+				break;
+			
+			*duration = atof(++ptr);
+		}
+		else if (strstr(lineBuff, "tickspersecond"))
+		{
+			char *ptr = strchr(lineBuff, ':');
+			if (!ptr)
+				break;
+			
+			*ticksPerSecond = atof(++ptr);
+		}
+		else if (strstr(lineBuff, "channels"))
+		{
+			char *ptr = strchr(lineBuff, ':');
+			if (!ptr)
+				break;
+			
+			channels.resize(atoi(++ptr));
+		}
+		else if (strstr(lineBuff, "EndChannel"))
+			channels.push_back(channel);
+		else if (strstr(lineBuff, "Channel"))
+		{
+			vector<char*> split = EngineUtils::SplitString(lineBuff, '=');
+			
+			channel.name = split[1];
+			channel.positionKeys.clear();
+			channel.rotationKeys.clear();
+			channel.scalingKeys.clear();
+			
+			for (char* c : split)
+				free(c);
+		}		
+		else if ((pch = strstr(lineBuff, "poskey")) != nullptr)
+		{
+			vector<char *> split = EngineUtils::SplitString(lineBuff + 7, '|');
+			
+			vk.time = atof(split[0]);
+			EngineUtils::ReadFloatArray(split[1], 3, &vk.value.x);
+			channel.positionKeys.push_back(vk);
+			
+			for (char* c : split)
+				free(c);
+		}
+		else if ((pch = strstr(lineBuff, "rotkey")) != nullptr)
+		{
+			vector<char *> split = EngineUtils::SplitString(lineBuff + 7, '|');
+			
+			qk.time = atof(split[0]);
+			EngineUtils::ReadFloatArray(split[1], 4, &qk.value.x);
+			channel.rotationKeys.push_back(qk);
+			
+			for (char* c : split)
+				free(c);
+		}
+		else if ((pch = strstr(lineBuff, "scalekey")) != nullptr)
+		{
+			vector<char *> split = EngineUtils::SplitString(lineBuff + 9, '|');
+			
+			vk.time = atof(split[0]);
+			EngineUtils::ReadFloatArray(split[1], 3, &vk.value.x);
+			channel.scalingKeys.push_back(vk);
+			
+			for (char* c : split)
+				free(c);
+		}
+	}
+	
+	f->Close();
 	
 	return ENGINE_OK;
 }
