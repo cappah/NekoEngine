@@ -164,6 +164,11 @@ static inline NMeshVertex _ReadVertex(const char* line) noexcept
 	_groups.push_back(gi);
 }
 
+- (void)setGlobalInverseTransform:(glm::mat4)globalInverseTransform
+{
+	_globalInverseTransform = globalInverseTransform;
+}
+
 - (NMeshVertex&)getVertexAtIndex:(size_t)index
 {
 	return _vertices[index];
@@ -296,6 +301,14 @@ static inline NMeshVertex _ReadVertex(const char* line) noexcept
 		}
 		
 		++pos;
+	}
+	
+	if(_bones.size())
+	{
+		ss << "git:" << _globalInverseTransform[0][0] << "," << _globalInverseTransform[0][1] << "," << _globalInverseTransform[0][2] << "," << _globalInverseTransform[0][3] << ",";
+		ss << _globalInverseTransform[1][0] << "," << _globalInverseTransform[1][1] << "," << _globalInverseTransform[1][2] << "," << _globalInverseTransform[1][3] << ",";
+		ss << _globalInverseTransform[2][0] << "," << _globalInverseTransform[2][1] << "," << _globalInverseTransform[2][2] << "," << _globalInverseTransform[2][3] << ",";
+		ss << _globalInverseTransform[3][0] << "," << _globalInverseTransform[3][1] << "," << _globalInverseTransform[3][2] << "," << _globalInverseTransform[3][3] << endl;
 	}
 	
 	ss << "bones:" << _bones.size() << endl;

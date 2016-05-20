@@ -107,6 +107,9 @@
 			}
 		}
 		
+		if(inMesh->mNumBones)
+			[mesh setGlobalInverseTransform:glm::make_mat4(&_globalInverseTransform.a1)];
+		
 		if(i != scene->mNumMeshes - 1)
 			[mesh newGroup];
 	}

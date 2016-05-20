@@ -103,7 +103,14 @@ typedef struct WAVE_DATA
 	int sub_chunk_2_size;	///< == NumSamples * NumChannels * BitsPerSammple/8. This is the number of bytes in the data. You can also think of this as the size of the read of the subchunk following this number.
 } wave_data_t;
 
-int AssetLoader::LoadMesh(string& file, MeshType type, vector<Vertex> &vertices, vector<uint32_t> &indices, vector<uint32_t> &groupOffset, vector<uint32_t> &groupCount, vector<Bone> *bones)
+int AssetLoader::LoadMesh(string& file,
+						  MeshType type,
+						  vector<Vertex> &vertices,
+						  vector<uint32_t> &indices,
+						  vector<uint32_t> &groupOffset,
+						  vector<uint32_t> &groupCount,
+						  vector<Bone> *bones,
+						  glm::mat4 *globalInverseTransform)
 {
 	unsigned int offset = 0;
 	uint32_t indexBuff[3];
@@ -155,6 +162,14 @@ int AssetLoader::LoadMesh(string& file, MeshType type, vector<Vertex> &vertices,
 				break;
 			
 			boneCount = atoi(++ptr);
+		}
+		else if (strstr(lineBuff, "git"))
+		{
+			char *ptr = strchr(lineBuff, ':');
+			if(!ptr)
+				break;
+			
+			EngineUtils::ReadFloatArray(ptr, 16, &(*globalInverseTransform)[0][0]);
 		}
 		else if (strchr(lineBuff, '[')) // Vertex line
 			vertices.push_back(_ReadVertex(lineBuff));

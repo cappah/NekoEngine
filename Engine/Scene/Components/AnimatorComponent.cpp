@@ -46,10 +46,10 @@ ENGINE_REGISTER_COMPONENT_CLASS(AnimatorComponent);
 
 void AnimatorComponent::PlayAnimation(AnimationClip *clip) noexcept
 {
-	//
+	_mesh->GetSkeleton()->SetAnimationClip(clip);
 }
 
 void AnimatorComponent::Update(float deltaTime) noexcept
 {
-	Skeleton *skel = _mesh->GetSkeleton();
+	_mesh->GetSkeleton()->Update(deltaTime);
 }

@@ -44,6 +44,7 @@
 #include <Engine/EngineUtils.h>
 #include <System/Logger.h>
 #include <System/AssetLoader/AssetLoader.h>
+#include <Engine/AnimationClip.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -54,7 +55,7 @@
 using namespace std;
 using namespace glm;
 
-Skeleton::Skeleton(vector<Bone> bones) noexcept
+Skeleton::Skeleton(std::vector<Bone> &bones, glm::mat4 &globalInverseTransform) noexcept
 {
 	_numBones = (unsigned int)bones.size();
 	
@@ -68,7 +69,10 @@ Skeleton::Skeleton(vector<Bone> bones) noexcept
 	{
 		_bones[i] = bones[i];
         _bones[i].parent = _bones[i].parentId == i ? nullptr : &_bones[_bones[i].parentId];
+		_boneMap.insert(make_pair(_bones[i].name, i));
 	}
+	
+	_globalInverseTransform = globalInverseTransform;
 }
 
 void Skeleton::Bind(RShader *shader)
@@ -89,6 +93,7 @@ int Skeleton::Load()
 
 void Skeleton::Update(float deltaTime)
 {
+	_TransformBones(deltaTime);
 	_buffer->UpdateData(0, sizeof(_transforms), _transforms);
 }
 
@@ -97,19 +102,15 @@ void Skeleton::Draw(Renderer* r, size_t group)
 	//
 }
 
-glm::mat4 Skeleton::_BoneTransform(double time, vector<glm::mat4> &transforms)
+glm::mat4 Skeleton::_TransformBones(double time)
 {
 	glm::mat4 ident = glm::mat4(1.f);
 	
-	double ticks;
-	double timeInTicks;
-	double animTime;
+	double ticks = _animationClip->GetTicksPerSecond() != 0 ? _animationClip->GetTicksPerSecond() : 25.f;
+	double timeInTicks = time * ticks;
+	double animTime = mod(timeInTicks, _animationClip->GetDuration());
 	
-	//rnh
-	
-	transforms.resize(_numBones);
-	
-	//for(
+	_TransformHierarchy(animTime, _rootBone, ident);
 
 	return mat4();
 }

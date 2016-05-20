@@ -57,7 +57,8 @@ public:
 		std::vector<uint32_t> &indices,
 		std::vector<uint32_t> &groupOffset,
 		std::vector<uint32_t> &groupCount,
-		std::vector<Bone> *bones = nullptr);
+		std::vector<Bone> *bones = nullptr,
+		glm::mat4 *globalInverseTransform = nullptr);
 	
 	// Sound
 	static int LoadWAV(std::string &file, ALenum *format, ALvoid **data, ALsizei *size, ALsizei *freq);

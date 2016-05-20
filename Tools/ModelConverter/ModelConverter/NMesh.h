@@ -48,6 +48,7 @@ typedef struct NMESH_BONEINFO
 	std::vector<uint32_t> _indices;
 	std::vector<NMeshGroupInfo> _groups;
 	std::vector<NMeshBoneInfo> _bones;
+	glm::mat4 _globalInverseTransform;
 }
 
 - (id)init;
@@ -57,6 +58,8 @@ typedef struct NMESH_BONEINFO
 - (size_t)addBone:(NMeshBoneInfo)bi;
 - (void)addGroup:(NMeshGroupInfo)gi;
 - (void)newGroup;
+
+- (void)setGlobalInverseTransform:(glm::mat4)globalInverseTransform;
 
 - (NMeshVertex&)getVertexAtIndex:(size_t)index;
 

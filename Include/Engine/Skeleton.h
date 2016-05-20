@@ -52,14 +52,16 @@
 #include <Renderer/Renderer.h>
 #include <Engine/AnimationNode.h>
 
+class AnimationClip;
+
 class Skeleton
 {
 public:
-	ENGINE_API Skeleton(std::vector<Bone> bones) noexcept;
+	ENGINE_API Skeleton(std::vector<Bone> &bones, glm::mat4 &globalInverseTransform) noexcept;
 	
 	ENGINE_API void Bind(RShader *shader);
 	
-	
+	ENGINE_API void SetAnimationClip(AnimationClip *clip) noexcept { _animationClip = clip; };
 	
 	ENGINE_API int Load();
 	ENGINE_API void Update(float deltaTime);
@@ -75,9 +77,10 @@ private:
 	glm::mat4 _globalInverseTransform;
 	glm::mat4 _transforms[SH_MAX_BONES];
 	std::map<std::string, uint16_t> _boneMap;
+	AnimationClip *_animationClip;
 
 	void _PrepareTransforms();
-	glm::mat4 _BoneTransform(double time, vector<glm::mat4> &transforms);
+	glm::mat4 _TransformBones(double time);
 	
 	void _CalculatePosition(glm::vec3 &out, double time, const AnimationNode *node);
 	void _CalculateRotation(glm::quat &out, double time, const AnimationNode *node);
