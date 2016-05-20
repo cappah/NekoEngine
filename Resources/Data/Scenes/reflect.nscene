@@ -25,14 +25,16 @@ fog_distance=3000
 EndCamera
 
 # Skybox
-#Object=Skybox
-#id=1
-#mesh=stm_skysphere
-#material=mat_skysphere
-#position=0.0, 2000.0, 0.0
-#scale=4000.0, 4000.0, 4000.0
-#rotation=0.0, 0.0, 0.0
-#EndObject
+Object=Skybox
+id=1
+Component=StaticMeshComponent=Mesh
+	mesh=stm_skysphere
+	material=mat_skysphere
+EndComponent
+position=0.0, 3200.0, 0.0
+scale=6400.0, 6400.0, 6400.0
+rotation=0.0, 0.0, 0.0
+EndObject
 
 #################
 # Scene objects #
@@ -41,16 +43,20 @@ EndCamera
 # Arissa
 Object
 id=2
-Component=StaticMeshComponent=Mesh
-	mesh=stm_arissa
-	material=mat_arissa
-	material=mat_arissa
-	material=mat_arissa
-	material=mat_arissa
+#Component=StaticMeshComponent=Mesh
+#	mesh=stm_arissa
+#	material=mat_arissa
+#	material=mat_arissa
+#	material=mat_arissa
+#	material=mat_arissa
+#EndComponent
+Component=SkeletalMeshComponent=Mesh
+	mesh=skm_sophia
+	material=mat_sophia
 EndComponent
 position=0.0, 0.0, -155.0
 rotation=0.0, 0.0, 0.0
-scale=45.0, 45.0, 45.0
+scale=0.45, 0.45, 0.45
 EndObject
 
 ################

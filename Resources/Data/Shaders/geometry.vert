@@ -59,7 +59,7 @@ void main()
 {
 	vec3 l_pos = vec3(0.0);
 
-	if(AnimatedMesh >= 0.9)
+	if(a_num_bones > 0)
 	{
 		mat4 boneTransform = BoneMatrices[a_bone_index.x] * a_bone_weight.x;
 		boneTransform += BoneMatrices[a_bone_index.y] * a_bone_weight.y;
