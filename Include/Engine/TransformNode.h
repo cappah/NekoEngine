@@ -1,9 +1,9 @@
 /* Neko Engine
  *
- * Skeleton.h
+ * TransformNode.h
  * Author: Alexandru Naiman
  *
- * Skeleton class definition
+ * TransformNode definition
  *
  * ----------------------------------------------------------------------------------
  *
@@ -40,53 +40,24 @@
 
 #include <string>
 #include <vector>
-#include <unordered_map>
-
 #include <glm/glm.hpp>
-#include <glm/gtc/quaternion.hpp>
-#include <glm/gtx/quaternion.hpp>
 
-#include <Engine/Bone.h>
-#include <Engine/Engine.h>
-#include <Engine/Shader.h>
-#include <Renderer/Renderer.h>
-#include <Engine/AnimationNode.h>
-#include <Engine/TransformNode.h>
-
-class AnimationClip;
-
-class Skeleton
+struct TransformNode
 {
-public:
-	ENGINE_API Skeleton(std::vector<Bone> &bones, std::vector<TransformNode> &nodes, glm::mat4 &globalInverseTransform) noexcept;
+	TransformNode() :
+	name("unnamed"),
+	transform(glm::mat4(0.f)),
+	parentId(0),
+	parent(nullptr),
+	numChildren(0),
+	children(nullptr)
+	{ }
 	
-	ENGINE_API void Bind(RShader *shader);
-	
-	ENGINE_API void SetAnimationClip(AnimationClip *clip) noexcept { _animationClip = clip; };
-	
-	ENGINE_API int Load();
-	ENGINE_API void Update(float deltaTime);
-	ENGINE_API void Draw(Renderer* r, size_t group);
-
-	ENGINE_API virtual ~Skeleton() noexcept;
-	
-private:
-	Bone _bones[SH_MAX_BONES];
-	TransformNode *_rootNode;
-	std::vector<TransformNode> _nodes;
-	uint16_t _numBones;
-	uint16_t _numNodes;
-	RBuffer *_buffer;
-	glm::mat4 _globalInverseTransform;
-	glm::mat4 _transforms[SH_MAX_BONES];
-	std::map<std::string, uint16_t> _boneMap;
-	AnimationClip *_animationClip;
-
-	void _PrepareTransforms();
-	void _TransformBones(double time);
-	
-	void _CalculatePosition(glm::vec3 &out, double time, const AnimationNode *node);
-	void _CalculateRotation(glm::quat &out, double time, const AnimationNode *node);
-	void _CalculateScaling(glm::vec3 &out, double time, const AnimationNode *node);
-	void _TransformHierarchy(double time, const TransformNode *node, glm::mat4 &parentTransform);
+	std::string name;
+	glm::mat4 transform;
+	int16_t parentId;
+	TransformNode *parent;
+	int16_t numChildren;
+	TransformNode **children;
+	std::vector<uint16_t> childrenIds;
 };

@@ -135,6 +135,11 @@ static inline NMeshVertex _ReadVertex(const char* line) noexcept
 	return self;
 }
 
+- (size_t)numBones
+{
+	return _bones.size();
+}
+
 - (void)addVertex:(NMeshVertex)vertex
 {
 	_vertices.push_back(vertex);
@@ -149,6 +154,12 @@ static inline NMeshVertex _ReadVertex(const char* line) noexcept
 {
 	_bones.push_back(bi);
 	return _bones.size() - 1;
+}
+
+- (size_t)addTransformNode:(NMeshTransformNodeInfo)tni
+{
+	_nodes.push_back(tni);
+	return _nodes.size() - 1;
 }
 
 - (void)addGroup:(NMeshGroupInfo)gi
@@ -319,8 +330,24 @@ static inline NMeshVertex _ReadVertex(const char* line) noexcept
 		ss << bi.offset[0][0] << "," << bi.offset[0][1] << "," << bi.offset[0][2] << "," << bi.offset[0][3] << ",";
 		ss << bi.offset[1][0] << "," << bi.offset[1][1] << "," << bi.offset[1][2] << "," << bi.offset[1][3] << ",";
 		ss << bi.offset[2][0] << "," << bi.offset[2][1] << "," << bi.offset[2][2] << "," << bi.offset[2][3] << ",";
-		ss << bi.offset[3][0] << "," << bi.offset[3][1] << "," << bi.offset[3][2] << "," << bi.offset[3][3] << "};";
-        ss << "parent{" << bi.parentId << "};" << endl;
+		ss << bi.offset[3][0] << "," << bi.offset[3][1] << "," << bi.offset[3][2] << "," << bi.offset[3][3] << "};" << endl;
+	}
+	
+	ss << "nodes:" << _nodes.size() << endl;
+	
+	for(NMeshTransformNodeInfo &tni : _nodes)
+	{
+		ss << "name(" << tni.name << ");" << "transform(";
+		ss << tni.transform[0][0] << "," << tni.transform[0][1] << "," << tni.transform[0][2] << "," << tni.transform[0][3] << ",";
+		ss << tni.transform[1][0] << "," << tni.transform[1][1] << "," << tni.transform[1][2] << "," << tni.transform[1][3] << ",";
+		ss << tni.transform[2][0] << "," << tni.transform[2][1] << "," << tni.transform[2][2] << "," << tni.transform[2][3] << ",";
+		ss << tni.transform[3][0] << "," << tni.transform[3][1] << "," << tni.transform[3][2] << "," << tni.transform[3][3] << ");";
+		ss << "parent(" << tni.parentId << ");" << "childn(" << tni.childIds.size() << ");children(";
+		
+		for(size_t i = 0; i < tni.childIds.size(); ++i)
+			ss << tni.childIds[i] << ((i == tni.childIds.size() - 1) ? "" : ",");
+		
+		ss << ");" << endl;
 	}
 	
 	gzFile fp = gzopen([path UTF8String], "wb");

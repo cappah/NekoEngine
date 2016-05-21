@@ -112,6 +112,7 @@ int AssetLoader::LoadMesh(string& file,
 						  vector<uint32_t> &groupOffset,
 						  vector<uint32_t> &groupCount,
 						  vector<Bone> *bones,
+						  vector<TransformNode> *nodes,
 						  mat4 *globalInverseTransform)
 {
 	unsigned int offset = 0;
@@ -119,6 +120,7 @@ int AssetLoader::LoadMesh(string& file,
 	size_t indexCount = 0;
 	size_t vertexCount = 0;
 	size_t boneCount = 0;
+	size_t nodeCount = 0;
 	char lineBuff[AL_LINE_BUFF];
 	memset(lineBuff, 0x0, AL_LINE_BUFF);
 
@@ -173,6 +175,14 @@ int AssetLoader::LoadMesh(string& file,
 			
 			EngineUtils::ReadFloatArray(++ptr, 16, &(*globalInverseTransform)[0][0]);
 		}
+		else if (strstr(lineBuff, "nodes"))
+		{
+			char *ptr = strchr(lineBuff, ':');
+			if (!ptr)
+				break;
+			
+			nodeCount = atoi(++ptr);
+		}
 		else if (strchr(lineBuff, '[')) // Vertex line
 			vertices.push_back(_ReadVertex(lineBuff));
 		else if (strstr(lineBuff, "newidgrp"))
@@ -187,7 +197,18 @@ int AssetLoader::LoadMesh(string& file,
 				bones->push_back(_ReadBone(lineBuff));
 			else
 			{
-				Logger::Log(AL_MODULE, LOG_CRITICAL, "Bone line found, but no bone array provided");
+				Logger::Log(AL_MODULE, LOG_CRITICAL, "Bone line found, but no Bone array provided");
+				f->Close();
+				return ENGINE_FAIL;
+			}
+		}
+		else if(strchr(lineBuff, '(')) // TransformNode line
+		{
+			if(nodes)
+				nodes->push_back(_ReadTransformNode(lineBuff));
+			else
+			{
+				Logger::Log(AL_MODULE, LOG_CRITICAL, "TransformNode line found, but no TransformNode array provided");
 				f->Close();
 				return ENGINE_FAIL;
 			}

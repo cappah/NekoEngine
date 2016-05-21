@@ -92,6 +92,8 @@ int SoundManager::Initialize()
 
 int SoundManager::SetBackgroundMusic(int clipId) noexcept
 {
+	StopBackgroundMusic();
+	
 	if (_bgMusicClip)
 	{
 		ResourceManager::UnloadResource(_bgMusicClip->GetResourceInfo()->id, ResourceType::RES_AUDIOCLIP);
@@ -127,12 +129,15 @@ void SoundManager::SetListenerPosition(float x, float y, float z) noexcept
 
 void SoundManager::SetListenerOrientation(float x, float y, float z) noexcept
 {
-	AL_CHECK(alListener3f(AL_ORIENTATION, x, y, z));
+//	AL_CHECK(alListener3f(AL_ORIENTATION, x, y, z));
 }
 
 void SoundManager::_UnsetBackgroundMusic() noexcept
 {
-	//_bgMusicSource->SetClipId(ASRC_NO_CLIP);
+	StopBackgroundMusic();
+	
+	ResourceManager::UnloadResource(_bgMusicClip->GetResourceInfo()->id, ResourceType::RES_AUDIOCLIP);
+	_bgMusicClip = nullptr;
 }
 
 void SoundManager::Release() noexcept

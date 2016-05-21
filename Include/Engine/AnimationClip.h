@@ -57,7 +57,7 @@ public:
 	ENGINE_API const char *GetName() noexcept { return _name.c_str(); }
 	ENGINE_API double GetDuration() noexcept { return _duration; }
 	ENGINE_API double GetTicksPerSecond() noexcept { return _ticksPerSecond; }
-	ENGINE_API std::vector<AnimationNode> &GetChannels();
+	ENGINE_API std::vector<AnimationNode> &GetChannels() { return _channels; }
 
 	ENGINE_API virtual int Load() override;
 	ENGINE_API void Release() noexcept;

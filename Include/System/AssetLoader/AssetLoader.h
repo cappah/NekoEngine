@@ -45,6 +45,7 @@
 #include <Engine/Vertex.h>
 #include <Engine/Engine.h>
 #include <Renderer/Renderer.h>
+#include <Engine/TransformNode.h>
 #include <Engine/AnimationClip.h>
 #include <Resource/MeshResource.h>
 
@@ -58,6 +59,7 @@ public:
 						std::vector<uint32_t> &groupOffset,
 						std::vector<uint32_t> &groupCount,
 						std::vector<Bone> *bones = nullptr,
+						std::vector<TransformNode> *nodes = nullptr,
 						glm::mat4 *globalInverseTransform = nullptr);
 	
 	static int LoadAnimation(std::string &file,
@@ -165,8 +167,6 @@ private:
 				b.name = buff + 5;
 			else if ((pch = strstr(buff, "offset")) != NULL)
 				EngineUtils::ReadFloatArray(buff + 7, 16, &b.offset[0][0]);
-			else if ((pch = strstr(buff, "parent")) != NULL)
-				b.parentId = atoi(buff + 7);
 										
 			memset(buff, 0x0, i_buff);
 										
@@ -176,6 +176,51 @@ private:
 		}
 		
 		return b;
+	}
+	
+	static inline TransformNode _ReadTransformNode(const char *line) noexcept
+	{
+		int n = 0, i = 0, i_buff = 0;
+		char c, buff[512] = { 0 }, *pch;
+		TransformNode t;
+		
+		while (1)
+		{
+			while ((c = line[i]) != ';' && c != ' ' && c != 0x0)
+			{
+				if(i_buff == 511)
+				{ DIE("TransformNode string too long"); }
+				buff[i_buff++] = c;
+				i++;
+			}
+			
+			if (c == 0x0 || c == '\n')
+				break;
+			
+			if (c == ' ')
+			{
+				i++;
+				continue;
+			}
+			
+			if(i_buff > 0)
+				buff[i_buff - 1] = 0x0;
+			
+			if ((pch = strstr(buff, "name")) != NULL)
+				t.name = buff + 5;
+			else if ((pch = strstr(buff, "offset")) != NULL)
+				EngineUtils::ReadFloatArray(buff + 7, 16, &t.transform[0][0]);
+			else if ((pch = strstr(buff, "parent")) != NULL)
+				t.parentId = atoi(buff + 7);
+				
+			memset(buff, 0x0, i_buff);
+			
+			i_buff = 0;
+			i++;
+			n++;
+		}
+		
+		return t;
 	}
 };
 

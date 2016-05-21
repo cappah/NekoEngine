@@ -119,6 +119,7 @@
 		12CE01701CC9919300F3D84B /* SkeletalMesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12CE016F1CC9919300F3D84B /* SkeletalMesh.cpp */; };
 		12CE01721CC991B900F3D84B /* SkeletalMesh.h in Headers */ = {isa = PBXBuildFile; fileRef = 12CE01711CC991B900F3D84B /* SkeletalMesh.h */; };
 		12ECE5D91CEFBE85004F3697 /* AnimationNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 12ECE5D81CEFBE85004F3697 /* AnimationNode.h */; };
+		12ECE5E01CF0FFD1004F3697 /* TransformNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 12ECE5DF1CF0FFD1004F3697 /* TransformNode.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -267,6 +268,7 @@
 		12CE016F1CC9919300F3D84B /* SkeletalMesh.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SkeletalMesh.cpp; sourceTree = "<group>"; };
 		12CE01711CC991B900F3D84B /* SkeletalMesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkeletalMesh.h; sourceTree = "<group>"; };
 		12ECE5D81CEFBE85004F3697 /* AnimationNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnimationNode.h; sourceTree = "<group>"; };
+		12ECE5DF1CF0FFD1004F3697 /* TransformNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransformNode.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -522,6 +524,7 @@
 				12822B6D1CC1AE4E00EE5D0A /* TextureFont.h */,
 				12822B6E1CC1AE4E00EE5D0A /* Version.h */,
 				12822B6F1CC1AE4E00EE5D0A /* Vertex.h */,
+				12ECE5DF1CF0FFD1004F3697 /* TransformNode.h */,
 			);
 			name = Engine;
 			path = ../Include/Engine;
@@ -708,6 +711,7 @@
 				12150A251CEB87A10066A044 /* AnimatorComponent.h in Headers */,
 				12822BB31CC1D84300EE5D0A /* EngineView.h in Headers */,
 				12B0CF651CEB4AB400E5D2FE /* StaticMeshComponent.h in Headers */,
+				12ECE5E01CF0FFD1004F3697 /* TransformNode.h in Headers */,
 				126DB02F1CE42C0600FB6B77 /* Skeleton.h in Headers */,
 				127DF8B21CCB14DA005F2693 /* AnimationClip.h in Headers */,
 				1296BBD41CDBB6B500D17488 /* PlatformDetect.h in Headers */,

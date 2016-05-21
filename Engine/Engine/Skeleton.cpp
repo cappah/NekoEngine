@@ -55,9 +55,10 @@
 using namespace std;
 using namespace glm;
 
-Skeleton::Skeleton(std::vector<Bone> &bones, mat4 &globalInverseTransform) noexcept
+Skeleton::Skeleton(vector<Bone> &bones, vector<TransformNode> &nodes, mat4 &globalInverseTransform) noexcept
 {
 	_numBones = (unsigned int)bones.size();
+	_numNodes = (unsigned int)nodes.size();
 	
 	if(_numBones > SH_MAX_BONES)
 	{
@@ -68,8 +69,15 @@ Skeleton::Skeleton(std::vector<Bone> &bones, mat4 &globalInverseTransform) noexc
 	for (unsigned int i = 0; i < _numBones; i++)
 	{
 		_bones[i] = bones[i];
-        _bones[i].parent = _bones[i].parentId == i ? nullptr : &_bones[_bones[i].parentId];
 		_boneMap.insert(make_pair(_bones[i].name, i));
+	}
+	
+	for (unsigned int i = 0; i < _numNodes; ++i)
+	{
+		_nodes.push_back(nodes[i]);
+		_nodes[i].parent = _nodes[i].parentId == -1 ? nullptr : &_nodes[_nodes[i].parentId];
+		if(!_nodes[i].parent)
+			_rootNode = &_nodes[i];
 	}
 	
 	_globalInverseTransform = globalInverseTransform;
@@ -113,7 +121,7 @@ void Skeleton::_TransformBones(double time)
 	double timeInTicks = time * ticks;
 	double animTime = mod(timeInTicks, _animationClip->GetDuration());
 	
-	_TransformHierarchy(animTime, _rootBone, ident);
+	_TransformHierarchy(animTime, _rootNode, ident);
 }
 
 void Skeleton::_CalculatePosition(vec3 &out, double time, const AnimationNode *node)
@@ -217,11 +225,20 @@ void Skeleton::_CalculateScaling(vec3 &out, double time, const AnimationNode *no
 	out = start + (float)factor * delta;
 }
 
-void Skeleton::_TransformHierarchy(double time, const Bone *node, mat4 &parentTransform)
+void Skeleton::_TransformHierarchy(double time, const TransformNode *node, mat4 &parentTransform)
 {
 	const AnimationNode *animNode = nullptr;
 	
-	mat4 nodeTransform;
+	mat4 nodeTransform = node->transform;
+	
+	for(uint i = 0; i < _animationClip->GetChannels().size(); ++i)
+	{
+		if(!_animationClip->GetChannels()[i].name.compare(node->name))
+		{
+			animNode = &_animationClip->GetChannels()[i];
+			break;
+		}
+	}
 	
 	if(animNode)
 	{

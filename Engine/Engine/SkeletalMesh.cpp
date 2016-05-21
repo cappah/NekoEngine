@@ -65,8 +65,10 @@ int SkeletalMesh::Load()
 	string path("/");
 	path.append(GetResourceInfo()->filePath);
 	glm::mat4 globalInverseTransform;
+	vector<Bone> bones;
+	vector<TransformNode> nodes;
 	
-	if (AssetLoader::LoadMesh(path, MeshType::Skeletal, _vertices, _indices, _groupOffset, _groupCount, &_bones, &globalInverseTransform) != ENGINE_OK)
+	if (AssetLoader::LoadMesh(path, MeshType::Skeletal, _vertices, _indices, _groupOffset, _groupCount, &bones, &nodes, &globalInverseTransform) != ENGINE_OK)
 	{
 		Logger::Log(SK_MESH_MODULE, LOG_CRITICAL, "Failed to load mesh id=%s", _resourceInfo->name.c_str());
 		return ENGINE_FAIL;
@@ -78,7 +80,7 @@ int SkeletalMesh::Load()
 	
 	_CalculateTangents();
 	
-	_skeleton = new Skeleton(_bones, globalInverseTransform);	
+	_skeleton = new Skeleton(bones, nodes, globalInverseTransform);
 	
 	if(_skeleton->Load() != ENGINE_OK)
 	{

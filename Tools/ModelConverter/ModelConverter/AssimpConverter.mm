@@ -16,6 +16,16 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+static std::vector<aiNode*> _nodes;
+
+void buildNodeList(aiNode *node)
+{
+	_nodes.push_back(node);
+	
+	for(unsigned int i = 0; i < node->mNumChildren; ++i)
+		buildNodeList(node->mChildren[i]);
+}
+
 @implementation AssimpConverter
 
 - (id)init
@@ -47,6 +57,8 @@
 	
 	_globalInverseTransform = scene->mRootNode->mTransformation;
 	_globalInverseTransform.Inverse();
+	
+	buildNodeList(scene->mRootNode);
 	
 	NMesh *mesh = [[NMesh alloc] init];
 	
@@ -108,11 +120,28 @@
 			}
 		}
 		
-		if(inMesh->mNumBones)
-			[mesh setGlobalInverseTransform:glm::make_mat4(&_globalInverseTransform.a1)];
-		
 		if(i != scene->mNumMeshes - 1)
 			[mesh newGroup];
+	}
+	
+	if([mesh numBones] > 0)
+	{
+		[mesh setGlobalInverseTransform:glm::make_mat4(&_globalInverseTransform.a1)];
+		
+		for(size_t i = 0; i < _nodes.size(); ++i)
+		{
+			NMeshTransformNodeInfo tni;
+			memset(&tni, 0x0, sizeof(NMeshTransformNodeInfo));
+			
+			tni.name = _nodes[i]->mName.data;
+			tni.transform = glm::make_mat4((float *)&_nodes[i]->mTransformation.a1);
+			tni.parentId = _nodes[i]->mParent ? (int)std::distance(_nodes.begin(), std::find(_nodes.begin(), _nodes.end(), _nodes[i]->mParent)) : -1;
+			
+			for(uint32_t j = 0; j < _nodes[i]->mNumChildren; ++j)
+				tni.childIds.push_back((int)std::distance(_nodes.begin(), std::find(_nodes.begin(), _nodes.end(), _nodes[i]->mChildren[j])));
+			
+			[mesh addTransformNode:tni];
+		}
 	}
 	
 	for(int i = 0; i < scene->mNumAnimations; ++i)
