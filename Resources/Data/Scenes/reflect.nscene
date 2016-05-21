@@ -31,9 +31,6 @@ Component=StaticMeshComponent=Mesh
 	mesh=stm_skysphere
 	material=mat_skysphere
 EndComponent
-Component=AnimatorComponent=Animator
-	defaultanim=ac_sophia_idle
-EndComponent
 position=0.0, 3200.0, 0.0
 scale=6400.0, 6400.0, 6400.0
 rotation=0.0, 0.0, 0.0
@@ -56,6 +53,9 @@ id=2
 Component=SkeletalMeshComponent=Mesh
 	mesh=skm_sophia
 	material=mat_sophia
+EndComponent
+Component=AnimatorComponent=Animator
+	defaultanim=ac_sophia_idle
 EndComponent
 position=0.0, 0.0, -155.0
 rotation=0.0, 0.0, 0.0

@@ -82,6 +82,9 @@ private:
 		Vertex v;
 
 		v.color = glm::vec3(0, 0, 0);
+		v.numBones = 0;
+		v.boneIndices = glm::ivec4(0);
+		v.boneWeights = glm::vec4(0.f);
 
 		while (1)
 		{
