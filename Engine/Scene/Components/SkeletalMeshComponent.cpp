@@ -49,7 +49,9 @@ ENGINE_REGISTER_COMPONENT_CLASS(SkeletalMeshComponent);
 
 SkeletalMeshComponent::SkeletalMeshComponent(ComponentInitializer *initializer)
 	: StaticMeshComponent(initializer)
-{ }
+{
+	_mesh = nullptr;
+}
 
 int SkeletalMeshComponent::Load()
 {
