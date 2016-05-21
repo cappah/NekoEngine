@@ -66,6 +66,10 @@ public:
 	ENGINE_API int SetConeInnerAngle(float a) noexcept;
 	ENGINE_API int SetConeOuterAngle(float a) noexcept;
 	ENGINE_API int SetConeOuterGain(float g) noexcept;
+	
+	ENGINE_API int SetDirection(float x, float y, float z) noexcept;
+	ENGINE_API int SetPosition(float x, float y, float z) noexcept;
+	ENGINE_API int SetVelocity(float x, float y, float z) noexcept;
 
 	ENGINE_API int SetDirection(glm::vec3 &dir) noexcept;
 	ENGINE_API int SetPosition(glm::vec3 &pos) noexcept;

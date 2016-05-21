@@ -87,6 +87,24 @@ int AudioSource::SetConeOuterGain(float g) noexcept
 	return ENGINE_OK;
 }
 
+int AudioSource::SetDirection(float x, float y, float z) noexcept
+{
+	AL_CHECK_RET(alSource3f(_src, AL_DIRECTION, x, y, z), ENGINE_FAIL);
+	return ENGINE_OK;
+}
+
+int AudioSource::SetPosition(float x, float y, float z) noexcept
+{
+	AL_CHECK_RET(alSource3f(_src, AL_POSITION, x, y, z), ENGINE_FAIL);
+	return ENGINE_OK;
+}
+
+int AudioSource::SetVelocity(float x, float y, float z) noexcept
+{
+	AL_CHECK_RET(alSource3f(_src, AL_VELOCITY, x, y, z), ENGINE_FAIL);
+	return ENGINE_OK;
+}
+
 int AudioSource::SetDirection(glm::vec3 &dir) noexcept
 {
 	AL_CHECK_RET(alSource3f(_src, AL_DIRECTION, dir.x, dir.y, dir.z), ENGINE_FAIL);

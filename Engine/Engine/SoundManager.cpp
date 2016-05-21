@@ -121,7 +121,7 @@ int SoundManager::SetBackgroundMusicVolume(float vol) noexcept
 
 void SoundManager::SetListenerPosition(float x, float y, float z) noexcept
 {
-	_bgMusicSource->SetPosition(vec3(x, y, z));
+	_bgMusicSource->SetPosition(x, y, z);
 	AL_CHECK(alListener3f(AL_POSITION, x, y, z));
 }
 
