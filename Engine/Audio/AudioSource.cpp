@@ -46,8 +46,7 @@
 
 using namespace glm;
 
-AudioSource::AudioSource(ComponentInitializer *initializer) noexcept
-	: ObjectComponent(initializer)
+AudioSource::AudioSource() noexcept
 {
 	_clip = nullptr;
 
@@ -112,21 +111,24 @@ int AudioSource::SetLooping(bool looping) noexcept
 	return ENGINE_OK;
 }
 
-int AudioSource::SetClipId(int id) noexcept
+int AudioSource::SetMaxDistance(float maxDistance) noexcept
 {
-	if (id == ASRC_NO_CLIP)
-	{
-		if(_clip)
-			ResourceManager::UnloadResource(_clip->GetResourceInfo()->id, ResourceType::RES_AUDIOCLIP);
-		_clip = nullptr;
+	AL_CHECK_RET(alSourcef(_src, AL_MAX_DISTANCE, maxDistance), ENGINE_FAIL);
+	return ENGINE_OK;
+}
 
-		return ENGINE_OK;
-	}
+int AudioSource::SetReferenceDistance(float referenceDistance) noexcept
+{
+	AL_CHECK_RET(alSourcef(_src, AL_REFERENCE_DISTANCE, referenceDistance), ENGINE_FAIL);
+	return ENGINE_OK;
+}
 
-	_clip = (AudioClip *)ResourceManager::GetResource(id, ResourceType::RES_AUDIOCLIP);
+int AudioSource::SetClip(AudioClip *clip) noexcept
+{
+	if (!clip)
+		return ENGINE_INVALID_ARGS;
 
-	if (!_clip)
-		return ENGINE_INVALID_RES;
+	_clip = clip;
 
 	AL_CHECK_RET(alSourcei(_src, AL_BUFFER, _clip->GetBufferID()), ENGINE_FAIL);
 
@@ -157,22 +159,14 @@ int AudioSource::Rewind() noexcept
 	return ENGINE_OK;
 }
 
-void AudioSource::Update(float deltaTime) noexcept
-{
-	ObjectComponent::Update(deltaTime);
-
-	vec3 srcPos = _parent->GetPosition() + _position;
-	AL_CHECK(alSource3f(_src, AL_POSITION, srcPos.x, srcPos.y, srcPos.z));
-}
-
 AudioSource::~AudioSource()
 {
 	AL_CHECK(alSourceStop(_src));
 	AL_CHECK(alSourcei(_src, AL_BUFFER, AL_NONE));
 	AL_CHECK(alDeleteSources(1, &_src));
 
-	if (_clip)
-		ResourceManager::UnloadResource(_clip->GetResourceInfo()->id, ResourceType::RES_AUDIOCLIP);
+	/*if (_clip)
+		ResourceManager::UnloadResource(_clip->GetResourceInfo()->id, ResourceType::RES_AUDIOCLIP);*/
 
 	_clip = nullptr;
 }

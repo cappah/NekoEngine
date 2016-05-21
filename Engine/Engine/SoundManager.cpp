@@ -45,13 +45,17 @@
 #include <Audio/AudioClip.h>
 #include <Audio/AudioSource.h>
 
+#include <glm/glm.hpp>
+
 #define SNDMGR_MODULE	"SoundManager"
 
 using namespace std;
+using namespace glm;
 
-ALCdevice* SoundManager::_device;
-ALCcontext* SoundManager::_context;
-AudioSource* SoundManager::_bgMusicSource;
+ALCdevice *SoundManager::_device;
+ALCcontext *SoundManager::_context;
+AudioSource *SoundManager::_bgMusicSource;
+AudioClip *SoundManager::_bgMusicClip;
 ALfloat listenerOrientation[] = { 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f };
 
 int SoundManager::Initialize()
@@ -76,17 +80,28 @@ int SoundManager::Initialize()
 	AL_CHECK_RET(alListener3f(AL_VELOCITY, 0.f, 0.f, 0.f), ENGINE_FAIL);
 	AL_CHECK_RET(alListenerfv(AL_ORIENTATION, listenerOrientation), ENGINE_FAIL);
 
-	/*_bgMusicSource = new AudioSource();
-	_bgMusicSource->SetLooping(true);*/
+	AL_CHECK_RET(alDistanceModel(AL_LINEAR_DISTANCE_CLAMPED), ENGINE_FAIL);
+
+	_bgMusicSource = new AudioSource();
+	_bgMusicSource->SetLooping(true);
 
 	Logger::Log(SNDMGR_MODULE, LOG_INFORMATION, "Initialized");
 
 	return ENGINE_OK;
 }
 
-int SoundManager::SetBackgroundMusic(int resId) noexcept
+int SoundManager::SetBackgroundMusic(int clipId) noexcept
 {
-	return _bgMusicSource->SetClipId(resId);
+	if (_bgMusicClip)
+	{
+		ResourceManager::UnloadResource(_bgMusicClip->GetResourceInfo()->id, ResourceType::RES_AUDIOCLIP);
+		_bgMusicClip = nullptr;
+	}
+
+	if ((_bgMusicClip = (AudioClip*)ResourceManager::GetResource(clipId, ResourceType::RES_AUDIOCLIP)) == nullptr)
+		return ENGINE_INVALID_RES;
+
+	return _bgMusicSource->SetClip(_bgMusicClip);
 }
 
 int SoundManager::PlayBackgroundMusic() noexcept
@@ -106,12 +121,18 @@ int SoundManager::SetBackgroundMusicVolume(float vol) noexcept
 
 void SoundManager::SetListenerPosition(float x, float y, float z) noexcept
 {
+	_bgMusicSource->SetPosition(vec3(x, y, z));
 	AL_CHECK(alListener3f(AL_POSITION, x, y, z));
+}
+
+void SoundManager::SetListenerOrientation(float x, float y, float z) noexcept
+{
+	AL_CHECK(alListener3f(AL_ORIENTATION, x, y, z));
 }
 
 void SoundManager::_UnsetBackgroundMusic() noexcept
 {
-	_bgMusicSource->SetClipId(ASRC_NO_CLIP);
+	//_bgMusicSource->SetClipId(ASRC_NO_CLIP);
 }
 
 void SoundManager::Release() noexcept

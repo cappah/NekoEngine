@@ -134,6 +134,13 @@ Component=StaticMeshComponent=Mesh
 	material=mat_skyreflect
 	material=mat_skyreflect
 EndComponent
+#Component=AudioSourceComponent=EngineAudio
+#	defaultclip=snd_engine
+#	loop=true
+#	playonload=true
+#	refdistance=600.0
+#	maxdistance=800.0
+#EndComponent
 position=550.0, 10.0, 150.0
 rotation=0.0, 180.0, 0.0
 scale=1.0, 1.0, 1.0

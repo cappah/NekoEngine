@@ -1,9 +1,9 @@
 /* Neko Engine
  *
- * AudioSource.h
+ * AnimatorComponent.h
  * Author: Alexandru Naiman
  *
- * Wrapper for OpenAL audio source
+ * AnimatorComponent class definition 
  *
  * ----------------------------------------------------------------------------------
  *
@@ -38,55 +38,31 @@
 
 #pragma once
 
-#include <Platform/PlatformDetect.h>
-
-#if defined(NE_PLATFORM_MAC) || defined(NE_PLATFORM_IOS)
-	#include <OpenAL/al.h>
-#else
-	#include <AL/al.h>
-#endif
-
-#include <glm/glm.hpp>
-
 #include <Engine/Engine.h>
-#include <Audio/AudioClip.h>
+#include <Audio/AudioSource.h>
+#include <Scene/ObjectComponent.h>
 
-#define ASRC_NO_CLIP	-1
-
-class AudioSource
+class AudioSourceComponent : public ObjectComponent
 {
 public:
-	AudioSource() noexcept;
+	ENGINE_API AudioSourceComponent(ComponentInitializer *initializer);
 
-	ENGINE_API bool HasClip() noexcept { return _clip != nullptr; }
+	ENGINE_API virtual int Load() override;
+	
+	ENGINE_API void PlayDefaultClip() noexcept;
+	ENGINE_API void PlaySound(AudioClip *clip) noexcept;
+	
+	ENGINE_API virtual void Update(float deltaTime) noexcept override;
 
-	ENGINE_API int SetPitch(float p) noexcept;
-	ENGINE_API int SetGain(float g) noexcept;
+	ENGINE_API virtual void Unload() override;
 
-	ENGINE_API int SetConeInnerAngle(float a) noexcept;
-	ENGINE_API int SetConeOuterAngle(float a) noexcept;
-	ENGINE_API int SetConeOuterGain(float g) noexcept;
-
-	ENGINE_API int SetDirection(glm::vec3 &dir) noexcept;
-	ENGINE_API int SetPosition(glm::vec3 &pos) noexcept;
-	ENGINE_API int SetVelocity(glm::vec3 &v) noexcept;
-
-	ENGINE_API int SetLooping(bool looping) noexcept;
-
-	ENGINE_API int SetMaxDistance(float maxDistance) noexcept;
-	ENGINE_API int SetReferenceDistance(float referenceDistance) noexcept;
-
-	ENGINE_API int SetClip(AudioClip *clip) noexcept;
-
-	ENGINE_API int Play() noexcept;
-	ENGINE_API int Pause() noexcept;
-	ENGINE_API int Stop() noexcept;
-	ENGINE_API int Rewind() noexcept;
-
-	virtual ~AudioSource();
-
+	ENGINE_API virtual ~AudioSourceComponent() { }
+	
 private:
-	ALuint _src;
-	AudioClip *_clip;
-};
+	std::string _defaultClipId;
+	
+	AudioSource *_src;
+	AudioClip *_defaultClip;
 
+	bool _playOnLoad;
+};

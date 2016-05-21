@@ -49,7 +49,7 @@ class SoundManager
 public:
 	ENGINE_API static int Initialize();
 
-	ENGINE_API static int SetBackgroundMusic(int resId) noexcept;
+	ENGINE_API static int SetBackgroundMusic(int clipId) noexcept;
 
 	ENGINE_API static int PlayBackgroundMusic() noexcept;
 	ENGINE_API static int StopBackgroundMusic() noexcept;
@@ -57,6 +57,7 @@ public:
 	ENGINE_API static int SetBackgroundMusicVolume(float vol) noexcept;
 
 	ENGINE_API static void SetListenerPosition(float x, float y, float z) noexcept;
+	ENGINE_API static void SetListenerOrientation(float x, float y, float z) noexcept;
 
 	static void Release() noexcept;
 
@@ -64,6 +65,7 @@ private:
 	static ALCdevice* _device;
 	static ALCcontext* _context;
 	static class AudioSource* _bgMusicSource;
+	static class AudioClip *_bgMusicClip;
 
 	static void _UnsetBackgroundMusic() noexcept;
 	

@@ -1,9 +1,9 @@
 /* Neko Engine
  *
- * AnimatorComponent.cpp
+ * AudioSourceComponent.cpp
  * Author: Alexandru Naiman
  *
- * Animator component class implementation
+ * AudioSource component class implementation
  *
  * ----------------------------------------------------------------------------------
  *
@@ -38,60 +38,76 @@
 
 #define ENGINE_INTERNAL
 
-#include <Scene/Components/AnimatorComponent.h>
-
-#include <Engine/Skeleton.h>
+#include <Scene/Components/AudioSourceComponent.h>
 #include <Engine/ResourceManager.h>
+#include <Scene/Object.h>
 
-ENGINE_REGISTER_COMPONENT_CLASS(AnimatorComponent);
+ENGINE_REGISTER_COMPONENT_CLASS(AudioSourceComponent);
 
-AnimatorComponent::AnimatorComponent(ComponentInitializer *initializer)
+AudioSourceComponent::AudioSourceComponent(ComponentInitializer *initializer)
 	: ObjectComponent(initializer)
 {
-	_mesh = nullptr;
-	_defaultAnim = nullptr;
-	_defaultAnimId = initializer->arguments.find("defaultanim")->second;
+	_src = nullptr;
+	_defaultClip = nullptr;
+	_defaultClipId = initializer->arguments.find("defaultclip")->second;
+
+	if((_src = new AudioSource()) == nullptr)
+	{ DIE("Out of resources"); }
+
+	_src->SetLooping(!initializer->arguments.find("loop")->second.compare("true") ? true : false);
+	_src->SetReferenceDistance((float)atof(initializer->arguments.find("refdistance")->second.c_str()));
+	_src->SetMaxDistance((float)atof(initializer->arguments.find("maxdistance")->second.c_str()));
+
+	_playOnLoad = !initializer->arguments.find("playonload")->second.compare("true") ? true : false;
 }
 
-int AnimatorComponent::Load()
+int AudioSourceComponent::Load()
 {
 	int ret = ObjectComponent::Load();
 
 	if (ret != ENGINE_OK)
 		return ret;
 
-	_defaultAnim = (AnimationClip*)ResourceManager::GetResourceByName(_defaultAnimId.c_str(), ResourceType::RES_ANIMCLIP);
+	_defaultClip = (AudioClip*)ResourceManager::GetResourceByName(_defaultClipId.c_str(), ResourceType::RES_AUDIOCLIP);
 	
-	if(!_defaultAnim)
+	if(!_defaultClip)
 		return ENGINE_INVALID_RES;
+
+	_src->SetClip(_defaultClip);
+
+	if(_playOnLoad)
+		_src->Play();
 	
 	return ENGINE_OK;
 }
 
-void AnimatorComponent::PlayDefaultAnimation() noexcept
+void AudioSourceComponent::PlayDefaultClip() noexcept
 {
-	if(_mesh)
-		_mesh->GetSkeleton()->SetAnimationClip(_defaultAnim);
+	//
 }
 
-void AnimatorComponent::PlayAnimation(AnimationClip *clip) noexcept
+void AudioSourceComponent::PlaySound(AudioClip *clip) noexcept
 {
-	if(_mesh)
-		_mesh->GetSkeleton()->SetAnimationClip(clip);
+	//
 }
 
-void AnimatorComponent::Update(float deltaTime) noexcept
+void AudioSourceComponent::Update(float deltaTime) noexcept
 {
+	if (!_src)
+		return;
+
 	ObjectComponent::Update(deltaTime);
 
-	if(_mesh)
-		_mesh->GetSkeleton()->Update(deltaTime);
+	_src->SetPosition(_parent->GetPosition() + _position);
 }
 
-void AnimatorComponent::Unload()
+void AudioSourceComponent::Unload()
 {
 	ObjectComponent::Unload();
 
-	if (_defaultAnim)
-		ResourceManager::UnloadResource(_defaultAnim->GetResourceInfo()->id, ResourceType::RES_ANIMCLIP);
+	if (_defaultClip)
+		ResourceManager::UnloadResource(_defaultClip->GetResourceInfo()->id, ResourceType::RES_AUDIOCLIP);
+
+	if (_src)
+		delete _src;
 }

@@ -67,7 +67,7 @@ public:
 	
 	ENGINE_API virtual void Unload() { }
 
-	ENGINE_API virtual ~ObjectComponent() { }
+	ENGINE_API virtual ~ObjectComponent() { Unload(); }
 
 protected:
 	class Object* _parent;

@@ -165,6 +165,7 @@ void StaticMeshComponent::Draw(RShader *shader) noexcept
 
 void StaticMeshComponent::Update(float deltaTime) noexcept
 {
+	ObjectComponent::Update(deltaTime);
 	/*if (!_loaded)
 		return;*/
 }

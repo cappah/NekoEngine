@@ -317,6 +317,9 @@
     <ClInclude Include="..\Include\Engine\AnimationNode.h">
       <Filter>Include\Engine</Filter>
     </ClInclude>
+    <ClInclude Include="..\Include\Scene\Components\AudioSourceComponent.h">
+      <Filter>Include\Scene\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Resources\Data\scenes.cfg">
@@ -609,6 +612,9 @@
       <Filter>Source\Scene\Components</Filter>
     </ClCompile>
     <ClCompile Include="Scene\Components\AnimatorComponent.cpp">
+      <Filter>Source\Scene\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Components\AudioSourceComponent.cpp">
       <Filter>Source\Scene\Components</Filter>
     </ClCompile>
   </ItemGroup>

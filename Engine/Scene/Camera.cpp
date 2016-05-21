@@ -116,6 +116,9 @@ void Camera::Update(float deltaTime) noexcept
 		_rotation.x = clamp(_rotation.x, -60.f, 85.f);
 
 	_UpdateView();
+
+	SoundManager::SetListenerPosition(_position.x, _position.y, _position.z);
+	SoundManager::SetListenerOrientation(_front.x, _front.y, _front.z);
 }
 
 void Camera::_UpdateView() noexcept

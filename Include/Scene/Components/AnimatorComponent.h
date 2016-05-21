@@ -57,6 +57,8 @@ public:
 	
 	ENGINE_API virtual void Update(float deltaTime) noexcept override;
 
+	ENGINE_API virtual void Unload() override;
+
 	ENGINE_API virtual ~AnimatorComponent() { }
 	
 private:

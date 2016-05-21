@@ -122,6 +122,8 @@ void SkeletalMeshComponent::Update(float deltaTime) noexcept
 	if (!_loaded)
 		return;
 
+	StaticMeshComponent::Update(deltaTime);
+
 	_mesh->Update(deltaTime);
 }
 
