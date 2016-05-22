@@ -64,6 +64,7 @@ public:
 private:
 	std::string _defaultAnimId;
 	std::string _targetMesh;
+	double _currentTime;
 	
 	SkeletalMesh *_mesh;
 	AnimationClip *_defaultAnim;

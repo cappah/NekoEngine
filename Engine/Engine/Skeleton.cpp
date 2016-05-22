@@ -121,14 +121,13 @@ int Skeleton::Load()
 		_transforms[i] = t;
 	
 	_buffer->SetStorage(sizeof(_transforms), _transforms);
-	
+
 	return ENGINE_OK;
 }
 
 void Skeleton::Update(float deltaTime)
 {
-	_TransformBones(deltaTime);
-	_buffer->UpdateData(0, sizeof(_transforms), _transforms);
+	//
 }
 
 void Skeleton::Draw(Renderer* r, size_t group)
@@ -136,7 +135,7 @@ void Skeleton::Draw(Renderer* r, size_t group)
 	//
 }
 
-void Skeleton::_TransformBones(double time)
+void Skeleton::TransformBones(double time)
 {
 	if(!_animationClip)
 		return;
@@ -148,6 +147,7 @@ void Skeleton::_TransformBones(double time)
 	double animTime = mod(timeInTicks, _animationClip->GetDuration());
 	
 	_TransformHierarchy(animTime, _rootNode, ident);
+	_buffer->UpdateData(0, sizeof(_transforms), _transforms);
 }
 
 void Skeleton::_CalculatePosition(vec3 &out, double time, const AnimationNode *node)
@@ -288,7 +288,7 @@ void Skeleton::_TransformHierarchy(double time, const TransformNode *node, mat4 
 	if(_boneMap.find(node->name) != _boneMap.end())
 	{
 		uint16_t index = _boneMap[node->name];
-		mat4 m = mat4();// _globalInverseTransform * globalTransform * _bones[index].offset;
+		mat4 m = _globalInverseTransform * globalTransform * _bones[index].offset;
 		memcpy(&_transforms[index], &m[0][0], sizeof(TrMat));
 	}
 	

@@ -73,6 +73,8 @@ public:
 	ENGINE_API void Update(float deltaTime);
 	ENGINE_API void Draw(Renderer* r, size_t group);
 
+	ENGINE_API void TransformBones(double time);
+
 	ENGINE_API virtual ~Skeleton() noexcept;
 	
 private:
@@ -86,9 +88,6 @@ private:
 	TrMat _transforms[SH_MAX_BONES];
 	std::map<std::string, uint16_t> _boneMap;
 	AnimationClip *_animationClip;
-
-	void _PrepareTransforms();
-	void _TransformBones(double time);
 	
 	void _CalculatePosition(glm::vec3 &out, double time, const AnimationNode *node);
 	void _CalculateRotation(glm::quat &out, double time, const AnimationNode *node);

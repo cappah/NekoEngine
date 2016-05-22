@@ -42,6 +42,7 @@
 #include <Scene/Components/SkeletalMeshComponent.h>
 #include <Scene/Object.h>
 #include <Engine/Skeleton.h>
+#include <Engine/SceneManager.h>
 #include <Engine/ResourceManager.h>
 
 ENGINE_REGISTER_COMPONENT_CLASS(AnimatorComponent);
@@ -53,6 +54,7 @@ AnimatorComponent::AnimatorComponent(ComponentInitializer *initializer)
 	_defaultAnim = nullptr;
 	_defaultAnimId = initializer->arguments.find("defaultanim")->second;
 	_targetMesh = initializer->arguments.find("targetmesh")->second;
+	_currentTime = 0.0;
 }
 
 int AnimatorComponent::Load()
@@ -95,8 +97,18 @@ void AnimatorComponent::Update(float deltaTime) noexcept
 {
 	ObjectComponent::Update(deltaTime);
 
-	if(_mesh)
-		_mesh->GetSkeleton()->Update(deltaTime);
+	if (!SceneManager::IsSceneLoaded())
+		return;
+
+	if (_mesh)
+	{
+		_currentTime += deltaTime;
+
+		if (_currentTime > _defaultAnim->GetDuration())
+			_currentTime = 0.0;
+
+		_mesh->GetSkeleton()->TransformBones(_currentTime);
+	}
 }
 
 void AnimatorComponent::Unload()

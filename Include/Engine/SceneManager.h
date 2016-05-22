@@ -57,7 +57,7 @@ public:
 	ENGINE_API static int LoadNextScene();
 	ENGINE_API static int DrawScene(RShader* shader) noexcept;
 	ENGINE_API static void UpdateScene(float deltaTime) noexcept;
-	ENGINE_API static bool IsSceneLoaded() noexcept { return _activeScene ? true : false; }
+	ENGINE_API static bool IsSceneLoaded() noexcept { return _activeScene && _activeScene->IsLoaded() ? true : false; }
 
 	ENGINE_API static void Release() noexcept;
 	
