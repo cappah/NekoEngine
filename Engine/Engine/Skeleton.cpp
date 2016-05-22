@@ -104,10 +104,38 @@ void Skeleton::Bind(RShader *shader)
 
 int Skeleton::Load()
 {
-	if((_buffer = Engine::GetRenderer()->CreateBuffer(BufferType::Uniform, false, false)) == nullptr)
+	if((_buffer = Engine::GetRenderer()->CreateBuffer(BufferType::Uniform, true, false)) == nullptr)
 	{ DIE("Out of resources"); }
 	
+	_buffer->SetNumBuffers(1);
+	
 	memset(_transforms, 0x0, sizeof(_transforms));
+	
+	for(int i = 0; i < SH_MAX_BONES; ++i)
+	{
+		int index = i * 16;
+		
+		_transforms[index] = 1.f;
+		_transforms[index+1] = 0.f;
+		_transforms[index+2] = 0.f;
+		_transforms[index+3] = 0.f;
+		
+		_transforms[index+4] = 0.f;
+		_transforms[index+5] = 1.f;
+		_transforms[index+6] = 0.f;
+		_transforms[index+7] = 0.f;
+		
+		_transforms[index+8] = 0.f;
+		_transforms[index+9] = 0.f;
+		_transforms[index+10] = 1.f;
+		_transforms[index+11] = 0.f;
+		
+		_transforms[index+12] = 0.f;
+		_transforms[index+13] = 0.f;
+		_transforms[index+14] = 0.f;
+		_transforms[index+15] = 1.f;
+	}
+	
 	_buffer->SetStorage(sizeof(_transforms), _transforms);
 	
 	return ENGINE_OK;
@@ -129,7 +157,7 @@ void Skeleton::_TransformBones(double time)
 	if(!_animationClip)
 		return;
 	
-	mat4 ident = mat4(1.f);
+	mat4 ident = mat4();
 	
 	double ticks = _animationClip->GetTicksPerSecond() != 0 ? _animationClip->GetTicksPerSecond() : 25.f;
 	double timeInTicks = time * ticks;
@@ -275,8 +303,11 @@ void Skeleton::_TransformHierarchy(double time, const TransformNode *node, mat4 
 	
 	if(_boneMap.find(node->name) != _boneMap.end())
 	{
-		uint16_t index = _boneMap[node->name];
-		_transforms[index] = mat4();//transpose(_globalInverseTransform * globalTransform * _bones[index].offset);
+		/*uint16_t index = _boneMap[node->name];
+		mat4 m = mat4();
+		memcpy((&_transforms + index), &m[0][0], sizeof(float)*16);*/
+		//memcpy((_transforms + ((sizeof(float) * 16) * index)), value_ptr(m), sizeof(float)*16);
+		//_transforms[index] = mat4(1.f);//transpose(_globalInverseTransform * globalTransform * _bones[index].offset);
 	}
 	
 	for(uint16_t i = 0; i < node->numChildren; ++i)

@@ -78,7 +78,7 @@ private:
 	uint16_t _numNodes;
 	RBuffer *_buffer;
 	glm::mat4 _globalInverseTransform;
-	glm::mat4 _transforms[SH_MAX_BONES];
+	float _transforms[SH_MAX_BONES * 16];
 	std::map<std::string, uint16_t> _boneMap;
 	AnimationClip *_animationClip;
 
