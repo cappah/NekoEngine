@@ -98,7 +98,9 @@ void AudioSourceComponent::Update(float deltaTime) noexcept
 
 	ObjectComponent::Update(deltaTime);
 
-	_src->SetPosition(_parent->GetPosition() + _position);
+	glm::vec3 pos = _parent->GetPosition() + _position;
+	
+	_src->SetPosition(pos.x, pos.y, pos.z);
 }
 
 void AudioSourceComponent::Unload()

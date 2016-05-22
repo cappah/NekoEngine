@@ -47,7 +47,7 @@ class SkeletalMeshComponent : public StaticMeshComponent
 public:
 	ENGINE_API SkeletalMeshComponent(ComponentInitializer *initializer);
 	
-	ENGINE_API StaticMesh *GetMesh() noexcept { return _mesh; }
+	ENGINE_API SkeletalMesh *GetMesh() noexcept { return _mesh; }
 
 	ENGINE_API virtual int Load() override;
 	

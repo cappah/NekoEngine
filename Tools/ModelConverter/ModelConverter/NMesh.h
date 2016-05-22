@@ -23,8 +23,8 @@ typedef struct NMESH_VERTEX
 	glm::vec3 tgt;
 	glm::vec2 uv;
 	glm::vec2 terrainUv;
-    glm::ivec4 boneIndices;
-    glm::vec4 boneWeights;
+    int boneIndices[4];
+    float boneWeights[4];
 	int numBones;
 } NMeshVertex;
 

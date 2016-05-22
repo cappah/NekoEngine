@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 #include <assimp/Importer.hpp>
+#include <glm/glm.hpp>
 
 @interface AssimpConverter : NSObject
 {
@@ -18,5 +19,6 @@
 
 - (id)init;
 - (bool)convert:(NSString *)srcFile output:(NSString *)nmeshFile;
+- (glm::mat4)convertMatrix:(aiMatrix4x4&)mat;
 
 @end

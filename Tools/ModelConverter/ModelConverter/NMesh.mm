@@ -285,9 +285,14 @@ static inline NMeshVertex _ReadVertex(const char* line) noexcept
 		ss << "binorm[" << v.binorm.x << "," << v.binorm.y << "," << v.binorm.z << "];";
 		ss << "tgt[" << v.tgt.x << "," << v.tgt.y << "," << v.tgt.z << "];";
 		ss << "uv[" << v.uv.x << "," << v.uv.y << "," << "];";
-        ss << "bonei[" << v.boneIndices.x << "," << v.boneIndices.y << "," << v.boneIndices.z << "," << v.boneIndices.w << "];";
-        ss << "bonew[" << v.boneWeights.x << "," << v.boneWeights.y << "," << v.boneWeights.z << "," << v.boneWeights.w << "];";        
+        ss << "bonei[" << v.boneIndices[0] << "," << v.boneIndices[1] << "," << v.boneIndices[2] << "," << v.boneIndices[3] << "];";
+        ss << "bonew[" << v.boneWeights[0] << "," << v.boneWeights[1] << "," << v.boneWeights[2] << "," << v.boneWeights[3] << "];";
         ss << "bonen[" << v.numBones << "];" << endl;
+		
+		float totalWeight = v.boneWeights[0] + v.boneWeights[1] + v.boneWeights[2] + v.boneWeights[3];
+		
+		if(totalWeight != 1.0)
+			NSLog(@"Warning: total weight is not 1.0 (%.01f)", totalWeight);
 	}
 
 	ss << "indices:" << _indices.size() << endl;

@@ -39,7 +39,8 @@
 #define ENGINE_INTERNAL
 
 #include <Scene/Components/AnimatorComponent.h>
-
+#include <Scene/Components/SkeletalMeshComponent.h>
+#include <Scene/Object.h>
 #include <Engine/Skeleton.h>
 #include <Engine/ResourceManager.h>
 
@@ -51,6 +52,7 @@ AnimatorComponent::AnimatorComponent(ComponentInitializer *initializer)
 	_mesh = nullptr;
 	_defaultAnim = nullptr;
 	_defaultAnimId = initializer->arguments.find("defaultanim")->second;
+	_targetMesh = initializer->arguments.find("targetmesh")->second;
 }
 
 int AnimatorComponent::Load()
@@ -64,6 +66,15 @@ int AnimatorComponent::Load()
 	
 	if(!_defaultAnim)
 		return ENGINE_INVALID_RES;
+	
+	SkeletalMeshComponent *comp = dynamic_cast<SkeletalMeshComponent*>(_parent->GetComponent(_targetMesh.c_str()));
+	
+	if(!comp)
+		return ENGINE_INVALID_ARGS;
+	
+	_mesh = comp->GetMesh();
+	
+	PlayDefaultAnimation();
 	
 	return ENGINE_OK;
 }

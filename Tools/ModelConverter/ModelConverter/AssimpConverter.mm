@@ -41,14 +41,18 @@ void buildNodeList(aiNode *node)
 	unsigned int processFlags =
 	//aiProcess_CalcTangentSpace         | // calculate tangents and bitangents if possible
 	aiProcess_JoinIdenticalVertices    | // join identical vertices/ optimize indexing
-	//aiProcess_ValidateDataStructure  | // perform a full validation of the loader's output
+	aiProcess_ValidateDataStructure  | // perform a full validation of the loader's output
 	aiProcess_Triangulate              | // Ensure all verticies are triangulated (each 3 vertices are triangle)
 	aiProcess_RemoveRedundantMaterials | // remove redundant materials
 	aiProcess_FindDegenerates          | // remove degenerated polygons from the import
 	aiProcess_FindInvalidData          | // detect invalid model data, such as invalid normal vectors
 	aiProcess_FindInstances            | // search for instanced meshes and remove them by references to one master
 	aiProcess_LimitBoneWeights         | // limit bone weights to 4 per vertex
-	0;
+	aiProcess_FixInfacingNormals |
+	aiProcess_OptimizeMeshes |
+	aiProcess_OptimizeGraph;
+	
+	_importer.SetPropertyInteger(AI_CONFIG_PP_LBW_MAX_WEIGHTS, 4);
 	
 	const aiScene *scene = _importer.ReadFile([srcFile UTF8String], processFlags);
 	
@@ -69,8 +73,6 @@ void buildNodeList(aiNode *node)
 		{
 			NMeshVertex v;
 			memset(&v, 0x0, sizeof(NMeshVertex));
-			
-			v.boneIndices = glm::ivec4(-1);
 		
 			v.pos.x = inMesh->mVertices[j].x;
 			v.pos.y = inMesh->mVertices[j].y;
@@ -80,8 +82,11 @@ void buildNodeList(aiNode *node)
 			v.norm.y = inMesh->mNormals[j].y;
 			v.norm.z = inMesh->mNormals[j].z;
 			
-			v.uv.x = inMesh->mTextureCoords[0][j].x;
-			v.uv.y = inMesh->mTextureCoords[0][j].y;
+			if(inMesh->mTextureCoords[0])
+			{
+				v.uv.x = inMesh->mTextureCoords[0][j].x;
+				v.uv.y = inMesh->mTextureCoords[0][j].y;
+			}
 			
 			[mesh addVertex:v];
 		}
@@ -94,39 +99,48 @@ void buildNodeList(aiNode *node)
 			[mesh addIndex:face.mIndices[2]];
 		}
 		
-		for(uint32_t j = 0; j < inMesh->mNumBones; ++j)
-		{
-			NMeshBoneInfo bi;
-			memset(&bi, 0x0, sizeof(NMeshBoneInfo));
-			
-			bi.name = inMesh->mBones[j]->mName.data;
-			
-			int boneIndex = [mesh getBoneIndex:bi.name];
-			if(boneIndex == -1)
-			{
-				bi.offset = glm::make_mat4((float *)&inMesh->mBones[j]->mOffsetMatrix.a1);
-				boneIndex = (int)[mesh addBone:bi];
-			}
-			
-			for(uint32_t k = 0; k < inMesh->mBones[j]->mNumWeights; ++k)
-			{
-				uint32_t vertexId = inMesh->mBones[j]->mWeights[k].mVertexId;
-				
-				if([mesh getVertexAtIndex:vertexId].numBones == 4)
-					return false;
-				
-				[mesh getVertexAtIndex:vertexId].boneWeights[[mesh getVertexAtIndex:vertexId].numBones] = inMesh->mBones[i]->mWeights[j].mWeight;
-				[mesh getVertexAtIndex:vertexId].boneIndices[[mesh getVertexAtIndex:vertexId].numBones++] = boneIndex;
-			}
-		}
-		
 		if(i != scene->mNumMeshes - 1)
 			[mesh newGroup];
 	}
 	
+	for(uint32_t i = 0; i < scene->mNumMeshes; ++i)
+	{
+		aiMesh *inMesh = scene->mMeshes[i];
+	
+		for(uint32_t j = 0; j < inMesh->mNumBones; ++j)
+		{
+			NMeshBoneInfo bi;
+			memset(&bi, 0x0, sizeof(NMeshBoneInfo));
+		
+			bi.name = inMesh->mBones[j]->mName.data;
+		
+			int boneIndex = [mesh getBoneIndex:bi.name];
+			if(boneIndex == -1)
+			{
+				bi.offset = [self convertMatrix:inMesh->mBones[j]->mOffsetMatrix];
+				boneIndex = (int)[mesh addBone:bi];
+			}
+		
+			for(uint32_t k = 0; k < inMesh->mBones[j]->mNumWeights; ++k)
+			{
+				uint32_t vertexId = inMesh->mBones[j]->mWeights[k].mVertexId;
+			
+				if(inMesh->mBones[j]->mNumWeights == 0)
+					continue;
+			
+				if([mesh getVertexAtIndex:vertexId].numBones == 4)
+					continue;
+			
+				[mesh getVertexAtIndex:vertexId].boneWeights[[mesh getVertexAtIndex:vertexId].numBones] = inMesh->mBones[j]->mWeights[k].mWeight;
+				[mesh getVertexAtIndex:vertexId].boneIndices[[mesh getVertexAtIndex:vertexId].numBones] = boneIndex;
+				[mesh getVertexAtIndex:vertexId].numBones++;
+			}
+		}
+	}
+	
 	if([mesh numBones] > 0)
 	{
-		[mesh setGlobalInverseTransform:glm::make_mat4(&_globalInverseTransform.a1)];
+		[mesh setGlobalInverseTransform:[self convertMatrix:_globalInverseTransform]];
 		
 		for(size_t i = 0; i < _nodes.size(); ++i)
 		{
@@ -134,7 +148,7 @@ void buildNodeList(aiNode *node)
 			memset(&tni, 0x0, sizeof(NMeshTransformNodeInfo));
 			
 			tni.name = _nodes[i]->mName.data;
-			tni.transform = glm::make_mat4((float *)&_nodes[i]->mTransformation.a1);
+			tni.transform = [self convertMatrix:_nodes[i]->mTransformation];
 			tni.parentId = _nodes[i]->mParent ? (int)std::distance(_nodes.begin(), std::find(_nodes.begin(), _nodes.end(), _nodes[i]->mParent)) : -1;
 			
 			for(uint32_t j = 0; j < _nodes[i]->mNumChildren; ++j)
@@ -200,6 +214,31 @@ void buildNodeList(aiNode *node)
 	}
 	
 	return [mesh writeFile:nmeshFile];
+}
+
+- (glm::mat4)convertMatrix:(aiMatrix4x4&)mat
+{
+	glm::mat4 m;
+	
+	/*m[0][0] = mat.a1; m[1][0] = mat.a2;
+	m[2][0] = mat.a3; m[3][0] = mat.a4;
+	m[0][1] = mat.b1; m[1][1] = mat.b2;
+	m[2][1] = mat.b3; m[3][1] = mat.b4;
+	m[0][2] = mat.c1; m[1][2] = mat.c2;
+	m[2][2] = mat.c3; m[3][2] = mat.c4;
+	m[0][3] = mat.d1; m[1][3] = mat.d2;
+	m[2][3] = mat.d3; m[3][3] = mat.d4;*/
+	
+	m[0][0] = mat.a1; m[0][1] = mat.a2;
+	m[0][2] = mat.a3; m[0][3] = mat.a4;
+	m[1][0] = mat.b1; m[1][1] = mat.b2;
+	m[1][2] = mat.b3; m[1][3] = mat.b4;
+	m[2][0] = mat.c1; m[2][1] = mat.c2;
+	m[2][2] = mat.c3; m[2][3] = mat.c4;
+	m[3][0] = mat.d1; m[3][1] = mat.d2;
+	m[3][2] = mat.d3; m[3][3] = mat.d4;
+	
+	return m;
 }
 
 @end

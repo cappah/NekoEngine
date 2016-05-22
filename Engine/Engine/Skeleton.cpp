@@ -72,12 +72,26 @@ Skeleton::Skeleton(vector<Bone> &bones, vector<TransformNode> &nodes, mat4 &glob
 		_boneMap.insert(make_pair(_bones[i].name, i));
 	}
 	
+	_nodes.reserve(_numNodes);
 	for (unsigned int i = 0; i < _numNodes; ++i)
 	{
 		_nodes.push_back(nodes[i]);
 		_nodes[i].parent = _nodes[i].parentId == -1 ? nullptr : &_nodes[_nodes[i].parentId];
+		
 		if(!_nodes[i].parent)
 			_rootNode = &_nodes[i];
+	}
+	
+	for (TransformNode &t : _nodes)
+	{
+		if(!t.numChildren)
+			continue;
+		
+		if((t.children = (TransformNode**)calloc(sizeof(TransformNode*), t.numChildren)) == nullptr)
+		{ DIE("Out of resources"); }
+		
+		for(int i = 0; i < t.numChildren; ++i)
+			t.children[i] = &_nodes[t.childrenIds[i]];
 	}
 	
 	_globalInverseTransform = globalInverseTransform;
@@ -254,7 +268,7 @@ void Skeleton::_TransformHierarchy(double time, const TransformNode *node, mat4 
 		_CalculatePosition(position, time, animNode);
 		mat4 translationMatirx = translate(mat4(), position);
 		
-		nodeTransform = translationMatirx * rotationMatrix * scaleMatrix;
+		nodeTransform = (translationMatirx * rotationMatrix) * scaleMatrix;
 	}
 	
 	mat4 globalTransform = parentTransform * nodeTransform;
@@ -262,7 +276,7 @@ void Skeleton::_TransformHierarchy(double time, const TransformNode *node, mat4 
 	if(_boneMap.find(node->name) != _boneMap.end())
 	{
 		uint16_t index = _boneMap[node->name];
-		_transforms[index] = _globalInverseTransform * globalTransform * _bones[index].offset;
+		_transforms[index] = mat4();//transpose(_globalInverseTransform * globalTransform * _bones[index].offset);
 	}
 	
 	for(uint16_t i = 0; i < node->numChildren; ++i)

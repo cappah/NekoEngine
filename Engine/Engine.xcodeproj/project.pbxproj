@@ -120,6 +120,9 @@
 		12CE01721CC991B900F3D84B /* SkeletalMesh.h in Headers */ = {isa = PBXBuildFile; fileRef = 12CE01711CC991B900F3D84B /* SkeletalMesh.h */; };
 		12ECE5D91CEFBE85004F3697 /* AnimationNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 12ECE5D81CEFBE85004F3697 /* AnimationNode.h */; };
 		12ECE5E01CF0FFD1004F3697 /* TransformNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 12ECE5DF1CF0FFD1004F3697 /* TransformNode.h */; };
+		12ECE5E21CF110D2004F3697 /* AudioSourceComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 12ECE5E11CF110D2004F3697 /* AudioSourceComponent.h */; };
+		12ECE5E41CF110F1004F3697 /* AudioSourceComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12ECE5E31CF110F1004F3697 /* AudioSourceComponent.cpp */; };
+		12ECE5E51CF110F1004F3697 /* AudioSourceComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12ECE5E31CF110F1004F3697 /* AudioSourceComponent.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -269,6 +272,8 @@
 		12CE01711CC991B900F3D84B /* SkeletalMesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkeletalMesh.h; sourceTree = "<group>"; };
 		12ECE5D81CEFBE85004F3697 /* AnimationNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnimationNode.h; sourceTree = "<group>"; };
 		12ECE5DF1CF0FFD1004F3697 /* TransformNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransformNode.h; sourceTree = "<group>"; };
+		12ECE5E11CF110D2004F3697 /* AudioSourceComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AudioSourceComponent.h; path = Components/AudioSourceComponent.h; sourceTree = "<group>"; };
+		12ECE5E31CF110F1004F3697 /* AudioSourceComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AudioSourceComponent.cpp; path = Scene/Components/AudioSourceComponent.cpp; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -681,6 +686,7 @@
 			isa = PBXGroup;
 			children = (
 				12150A1F1CEB875D0066A044 /* AnimatorComponent.cpp */,
+				12ECE5E31CF110F1004F3697 /* AudioSourceComponent.cpp */,
 				12B0CF5B1CEB4A9700E5D2FE /* SkeletalMeshComponent.cpp */,
 				12B0CF5C1CEB4A9700E5D2FE /* StaticMeshComponent.cpp */,
 			);
@@ -691,6 +697,7 @@
 			isa = PBXGroup;
 			children = (
 				12150A241CEB87A10066A044 /* AnimatorComponent.h */,
+				12ECE5E11CF110D2004F3697 /* AudioSourceComponent.h */,
 				12B0CF621CEB4AB400E5D2FE /* SkeletalMeshComponent.h */,
 				12B0CF631CEB4AB400E5D2FE /* StaticMeshComponent.h */,
 			);
@@ -718,6 +725,7 @@
 				12CE01721CC991B900F3D84B /* SkeletalMesh.h in Headers */,
 				1255C57C1CD24CF60036E1DA /* Bone.h in Headers */,
 				12822BBA1CC1DB9500EE5D0A /* EngineAppDelegate.h in Headers */,
+				12ECE5E21CF110D2004F3697 /* AudioSourceComponent.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -823,6 +831,7 @@
 				124A31F01CDC261500472893 /* SSAO.cpp in Sources */,
 				124A31F41CDC262D00472893 /* EngineAppDelegate.mm in Sources */,
 				124A32051CDC264100472893 /* VFSFile.cpp in Sources */,
+				12ECE5E51CF110F1004F3697 /* AudioSourceComponent.cpp in Sources */,
 				124A32011CDC264100472893 /* AssetLoader.cpp in Sources */,
 				124A31FA1CDC264100472893 /* Camera.cpp in Sources */,
 				124A32021CDC264100472893 /* ogg_callbacks.cpp in Sources */,
@@ -874,6 +883,7 @@
 				12822B2D1CC1ADD000EE5D0A /* UNIX.cpp in Sources */,
 				1279C1001CC91E7600E521AD /* reallocarray.cpp in Sources */,
 				12822B551CC1AE2E00EE5D0A /* VFSArchive.cpp in Sources */,
+				12ECE5E41CF110F1004F3697 /* AudioSourceComponent.cpp in Sources */,
 				12822B281CC1ADAE00EE5D0A /* TextureFont.cpp in Sources */,
 				12822B261CC1ADAE00EE5D0A /* SSAO.cpp in Sources */,
 				12822B221CC1ADAE00EE5D0A /* SceneManager.cpp in Sources */,

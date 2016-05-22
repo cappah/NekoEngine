@@ -56,10 +56,11 @@ Component=SkeletalMeshComponent=Mesh
 EndComponent
 Component=AnimatorComponent=Animator
 	defaultanim=ac_sophia_idle
+	targetmesh=Mesh
 EndComponent
 position=0.0, 0.0, -155.0
 rotation=0.0, 0.0, 0.0
-scale=0.45, 0.45, 0.45
+scale=1.0, 1.0, 1.0
 EndObject
 
 ################

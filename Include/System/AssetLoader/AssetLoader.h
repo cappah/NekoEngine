@@ -208,10 +208,20 @@ private:
 			
 			if ((pch = strstr(buff, "name")) != NULL)
 				t.name = buff + 5;
-			else if ((pch = strstr(buff, "offset")) != NULL)
-				EngineUtils::ReadFloatArray(buff + 7, 16, &t.transform[0][0]);
+			else if ((pch = strstr(buff, "transform")) != NULL)
+				EngineUtils::ReadFloatArray(buff + 10, 16, &t.transform[0][0]);
 			else if ((pch = strstr(buff, "parent")) != NULL)
 				t.parentId = atoi(buff + 7);
+			else if ((pch = strstr(buff, "childn")) != NULL)
+				t.numChildren = atoi(buff + 7);
+			else if ((pch = strstr(buff, "children")) != NULL)
+			{
+				int *children = (int*)calloc(sizeof(int), t.numChildren);
+				EngineUtils::ReadIntArray(buff + 9, t.numChildren, children);
+				
+				for(int i = 0; i < t.numChildren; ++i)
+					t.childrenIds.push_back(children[i]);
+			}
 				
 			memset(buff, 0x0, i_buff);
 			

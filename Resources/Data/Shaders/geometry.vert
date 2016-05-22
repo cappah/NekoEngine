@@ -57,7 +57,14 @@ vec3 get_position()
 
 void main()
 {
-	vec3 l_pos = vec3(0.0);
+	vec4 l_pos = vec4(1.0);
+	
+	/*mat4 ident = mat4(
+		1.0, 0.0, 0.0, 0.0,
+		0.0, 1.0, 0.0, 0.0,
+		0.0, 0.0, 1.0, 0.0,
+		0.0, 0.0, 0.0, 1.0
+	);*/
 
 	if(a_num_bones > 0)
 	{
@@ -66,14 +73,19 @@ void main()
 		boneTransform += BoneMatrices[a_bone_index.z] * a_bone_weight.z;
 		boneTransform += BoneMatrices[a_bone_index.w] * a_bone_weight.w;
 		
-		l_pos = (boneTransform * vec4(a_pos, 1.0)).xyz;
+	/*	mat4 boneTransform = ident * a_bone_weight.x;
+		boneTransform += ident * a_bone_weight.y;
+		boneTransform += ident * a_bone_weight.z;
+		boneTransform += ident * a_bone_weight.w;*/
+		
+		l_pos = boneTransform * vec4(a_pos, 1.0);
 		
 		vec4 new_normal = boneTransform * vec4(a_norm, 0.0);
 		vertexData.Normal = (Model * new_normal).xyz;
 	}
 	else
 	{
-		l_pos = get_position();
+		l_pos = vec4(get_position(), 1.0);
 		vertexData.Normal = (Model * vec4(a_norm, 0.0)).xyz;
 	}
 
@@ -82,11 +94,11 @@ void main()
 
 	vertexData.UV = a_uv;
 	vertexData.TerrainUV = a_uv_terrain;
-	vertexData.Position = (Model * vec4(l_pos, 1.0)).xyz;
-	vertexData.ViewSpacePosition = (View * Model * vec4(l_pos, 1.0)).xyz;
+	vertexData.Position = (Model * l_pos).xyz;
+	vertexData.ViewSpacePosition = (View * Model * l_pos).xyz;
 
 	vertexData.Tangent = (Model * vec4(a_tgt, 0.0)).xyz;	
 
-	gl_Position = ModelViewProjection * vec4(l_pos, 1.0);
+	gl_Position = ModelViewProjection * l_pos;
 }
 
