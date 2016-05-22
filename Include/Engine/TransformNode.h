@@ -49,8 +49,7 @@ struct TransformNode
 	transform(glm::mat4(0.f)),
 	parentId(0),
 	parent(nullptr),
-	numChildren(0),
-	children(nullptr)
+	numChildren(0)
 	{ }
 	
 	std::string name;
@@ -58,6 +57,6 @@ struct TransformNode
 	int16_t parentId;
 	TransformNode *parent;
 	int16_t numChildren;
-	TransformNode **children;
+	std::vector<TransformNode*> children;
 	std::vector<uint16_t> childrenIds;
 };

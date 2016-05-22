@@ -58,13 +58,6 @@ vec3 get_position()
 void main()
 {
 	vec4 l_pos = vec4(1.0);
-	
-	mat4 ident = mat4(
-		1.0, 0.0, 0.0, 0.0,
-		0.0, 1.0, 0.0, 0.0,
-		0.0, 0.0, 1.0, 0.0,
-		0.0, 0.0, 0.0, 1.0
-	);
 
 	if(a_num_bones > 0)
 	{

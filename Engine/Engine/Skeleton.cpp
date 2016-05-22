@@ -87,11 +87,8 @@ Skeleton::Skeleton(vector<Bone> &bones, vector<TransformNode> &nodes, mat4 &glob
 		if(!t.numChildren)
 			continue;
 		
-		if((t.children = (TransformNode**)calloc(sizeof(TransformNode*), t.numChildren)) == nullptr)
-		{ DIE("Out of resources"); }
-		
 		for(int i = 0; i < t.numChildren; ++i)
-			t.children[i] = &_nodes[t.childrenIds[i]];
+			t.children.push_back(&_nodes[t.childrenIds[i]]);
 	}
 	
 	_globalInverseTransform = globalInverseTransform;
@@ -272,7 +269,7 @@ void Skeleton::_TransformHierarchy(double time, const TransformNode *node, mat4 
 		_CalculateScaling(scaling, time, animNode);
 		mat4 scaleMatrix = scale(mat4(1), scaling);
 		
-		quat rotation;
+		quat rotation = quat();
 		_CalculateRotation(rotation, time, animNode);
 		mat4 rotationMatrix = mat4_cast(rotation);
 		

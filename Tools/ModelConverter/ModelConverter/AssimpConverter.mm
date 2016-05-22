@@ -40,17 +40,19 @@ void buildNodeList(aiNode *node)
 {
 	unsigned int processFlags =
 	//aiProcess_CalcTangentSpace         | // calculate tangents and bitangents if possible
-	aiProcess_JoinIdenticalVertices    | // join identical vertices/ optimize indexing
-	aiProcess_ValidateDataStructure  | // perform a full validation of the loader's output
+	//aiProcess_JoinIdenticalVertices    | // join identical vertices/ optimize indexing
+//	aiProcess_ValidateDataStructure  | // perform a full validation of the loader's output
 	aiProcess_Triangulate              | // Ensure all verticies are triangulated (each 3 vertices are triangle)
-	aiProcess_RemoveRedundantMaterials | // remove redundant materials
-	aiProcess_FindDegenerates          | // remove degenerated polygons from the import
-	aiProcess_FindInvalidData          | // detect invalid model data, such as invalid normal vectors
-	aiProcess_FindInstances            | // search for instanced meshes and remove them by references to one master
+	//aiProcess_RemoveRedundantMaterials | // remove redundant materials
+//	aiProcess_FindDegenerates          | // remove degenerated polygons from the import
+//	aiProcess_FindInvalidData          | // detect invalid model data, such as invalid normal vectors
+//	aiProcess_FindInstances            | // search for instanced meshes and remove them by references to one master
 	aiProcess_LimitBoneWeights         | // limit bone weights to 4 per vertex
-	aiProcess_FixInfacingNormals |
-	aiProcess_OptimizeMeshes |
-	aiProcess_OptimizeGraph;
+//	aiProcess_FixInfacingNormals |
+//	aiProcess_OptimizeMeshes |
+//	aiProcess_OptimizeGraph;
+	aiProcess_GenSmoothNormals |
+	aiProcess_FlipUVs;
 	
 	_importer.SetPropertyInteger(AI_CONFIG_PP_LBW_MAX_WEIGHTS, 4);
 	
@@ -228,15 +230,6 @@ void buildNodeList(aiNode *node)
 	m[2][2] = mat.c3; m[3][2] = mat.c4;
 	m[0][3] = mat.d1; m[1][3] = mat.d2;
 	m[2][3] = mat.d3; m[3][3] = mat.d4;
-	
-	/*m[0][0] = mat.a1; m[0][1] = mat.a2;
-	m[0][2] = mat.a3; m[0][3] = mat.a4;
-	m[1][0] = mat.b1; m[1][1] = mat.b2;
-	m[1][2] = mat.b3; m[1][3] = mat.b4;
-	m[2][0] = mat.c1; m[2][1] = mat.c2;
-	m[2][2] = mat.c3; m[2][3] = mat.c4;
-	m[3][0] = mat.d1; m[3][1] = mat.d2;
-	m[3][2] = mat.d3; m[3][3] = mat.d4;*/
 	
 	return m;
 }
