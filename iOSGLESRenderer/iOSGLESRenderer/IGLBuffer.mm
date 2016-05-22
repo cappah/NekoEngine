@@ -95,12 +95,34 @@ void IGLBuffer::Bind(int location)
         for (BufferAttribute &attrib : _attributes)
         {
             GL_CHECK(glEnableVertexAttribArray(attrib.index));
-            GL_CHECK(glVertexAttribPointer(attrib.index,
-                                           attrib.size,
-                                           GL_AttribTypes[(int)attrib.type],
-                                           attrib.normalize ? GL_TRUE : GL_FALSE,
-                                           (GLsizei)attrib.stride,
-                                           (GLsizei *)attrib.ptr));
+
+			switch (attrib.type)
+			{
+				case BufferDataType::Int:
+				case BufferDataType::Short:
+				case BufferDataType::Byte:
+				case BufferDataType::UnsignedInt:
+				case BufferDataType::UnsignedShort:
+				case BufferDataType::UnsignedByte:
+				{
+					GL_CHECK(glVertexAttribIPointer(attrib.index,
+						attrib.size,
+						GL_AttribTypes[(int)attrib.type],
+						(GLsizei)attrib.stride,
+						(GLsizei *)attrib.ptr));
+				}
+				break;
+				default:
+				{
+					GL_CHECK(glVertexAttribPointer(attrib.index,
+						attrib.size,
+						GL_AttribTypes[(int)attrib.type],
+						attrib.normalize ? GL_TRUE : GL_FALSE,
+						(GLsizei)attrib.stride,
+						(GLsizei *)attrib.ptr));
+				}
+				break;
+			}
         }
     }
 }

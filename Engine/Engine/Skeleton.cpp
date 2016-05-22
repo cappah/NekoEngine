@@ -288,7 +288,7 @@ void Skeleton::_TransformHierarchy(double time, const TransformNode *node, mat4 
 	if(_boneMap.find(node->name) != _boneMap.end())
 	{
 		uint16_t index = _boneMap[node->name];
-		mat4 m = _globalInverseTransform * globalTransform * _bones[index].offset;
+		mat4 m = mat4();// _globalInverseTransform * globalTransform * _bones[index].offset;
 		memcpy(&_transforms[index], &m[0][0], sizeof(TrMat));
 	}
 	
