@@ -109,32 +109,16 @@ int Skeleton::Load()
 	
 	_buffer->SetNumBuffers(1);
 	
-	memset(_transforms, 0x0, sizeof(_transforms));
+	TrMat t =
+	{
+		1.f, 0.f, 0.f, 0.f,
+		0.f, 1.f, 0.f, 0.f,
+		0.f, 0.f, 1.f, 0.f,
+		0.f, 0.f, 0.f, 1.f
+	};
 	
 	for(int i = 0; i < SH_MAX_BONES; ++i)
-	{
-		int index = i * 16;
-		
-		_transforms[index] = 1.f;
-		_transforms[index+1] = 0.f;
-		_transforms[index+2] = 0.f;
-		_transforms[index+3] = 0.f;
-		
-		_transforms[index+4] = 0.f;
-		_transforms[index+5] = 1.f;
-		_transforms[index+6] = 0.f;
-		_transforms[index+7] = 0.f;
-		
-		_transforms[index+8] = 0.f;
-		_transforms[index+9] = 0.f;
-		_transforms[index+10] = 1.f;
-		_transforms[index+11] = 0.f;
-		
-		_transforms[index+12] = 0.f;
-		_transforms[index+13] = 0.f;
-		_transforms[index+14] = 0.f;
-		_transforms[index+15] = 1.f;
-	}
+		_transforms[i] = t;
 	
 	_buffer->SetStorage(sizeof(_transforms), _transforms);
 	
@@ -286,7 +270,7 @@ void Skeleton::_TransformHierarchy(double time, const TransformNode *node, mat4 
 	{
 		vec3 scaling;
 		_CalculateScaling(scaling, time, animNode);
-		mat4 scaleMatrix = scale(mat4(), scaling);
+		mat4 scaleMatrix = scale(mat4(1), scaling);
 		
 		quat rotation;
 		_CalculateRotation(rotation, time, animNode);
@@ -294,7 +278,7 @@ void Skeleton::_TransformHierarchy(double time, const TransformNode *node, mat4 
 		
 		vec3 position;
 		_CalculatePosition(position, time, animNode);
-		mat4 translationMatirx = translate(mat4(), position);
+		mat4 translationMatirx = translate(mat4(1), position);
 		
 		nodeTransform = (translationMatirx * rotationMatrix) * scaleMatrix;
 	}
@@ -303,11 +287,9 @@ void Skeleton::_TransformHierarchy(double time, const TransformNode *node, mat4 
 	
 	if(_boneMap.find(node->name) != _boneMap.end())
 	{
-		/*uint16_t index = _boneMap[node->name];
-		mat4 m = mat4();
-		memcpy((&_transforms + index), &m[0][0], sizeof(float)*16);*/
-		//memcpy((_transforms + ((sizeof(float) * 16) * index)), value_ptr(m), sizeof(float)*16);
-		//_transforms[index] = mat4(1.f);//transpose(_globalInverseTransform * globalTransform * _bones[index].offset);
+		uint16_t index = _boneMap[node->name];
+		mat4 m = _globalInverseTransform * globalTransform * _bones[index].offset;
+		memcpy(&_transforms[index], &m[0][0], sizeof(TrMat));
 	}
 	
 	for(uint16_t i = 0; i < node->numChildren; ++i)

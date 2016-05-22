@@ -55,6 +55,11 @@
 
 class AnimationClip;
 
+typedef struct TR_MAT
+{
+	float m[16];
+} TrMat;
+
 class Skeleton
 {
 public:
@@ -78,7 +83,7 @@ private:
 	uint16_t _numNodes;
 	RBuffer *_buffer;
 	glm::mat4 _globalInverseTransform;
-	float _transforms[SH_MAX_BONES * 16];
+	TrMat _transforms[SH_MAX_BONES];
 	std::map<std::string, uint16_t> _boneMap;
 	AnimationClip *_animationClip;
 
