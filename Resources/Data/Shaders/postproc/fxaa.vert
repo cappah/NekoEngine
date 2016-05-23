@@ -1,6 +1,6 @@
 layout(location = SHADER_POSITION_ATTRIBUTE) in vec2 a_pos;
 
-noperspective out vec2 v_uv;
+NOPERSPECTIVE out vec2 v_uv;
 
 void main()
 {

@@ -5,7 +5,7 @@ name=Main
 #bgmusicvol=1.0
 gamemodule=TestGame
 ambcolor=0.02, 0.02, 0.02
-ambintensity=0.02
+ambintensity=1.00
 EndSceneInfo
 
 # Camera
@@ -74,7 +74,7 @@ id=100
 scale=0.1, 0.1, 0.1
 position=100.0, 0.0, -155.0
 rotation=0.0, 90.0, 0.0
-color=1.0, 0.0, 0.0
+color=1.0, 1.0, 1.0
 opt=lt_point;lt_attenuation:300.0, 350.0;lt_intensity:2.0
 EndObject
 

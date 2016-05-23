@@ -274,13 +274,15 @@ bool GLShader::LoadFromSource(ShaderType type, int count, const char **source, i
 	{
 		src[2] = "#define SUBROUTINE_DELEGATE(x) subroutine void x();\n\
 		#define SUBROUTINE(x, y, z) layout(location = x) subroutine uniform y z;\n\
-		#define SUBROUTINE_FUNC(x, y) layout(index = x) subroutine(y) \n";
+		#define SUBROUTINE_FUNC(x, y) layout(index = x) subroutine(y) \n\
+		#define NOPERSPECTIVE noperspective \n";
 	}
 	else
 	{
 		src[2] = "#define SUBROUTINE_DELEGATE(x) \n\
 		#define SUBROUTINE(x, y, z) \n\
-		#define SUBROUTINE_FUNC(x, y) \n";
+		#define SUBROUTINE_FUNC(x, y) \n\
+		#define NOPERSPECTIVE noperspective \n";
 	}
 	
 	char defines[8192] { 0 };

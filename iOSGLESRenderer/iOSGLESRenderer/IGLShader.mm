@@ -216,7 +216,8 @@ bool IGLShader::LoadFromSource(ShaderType type, int count, const char **source, 
 	#define SUBROUTINE_DELEGATE(x) \n\
 	#define SUBROUTINE(x, y, z) \n\
 	#define SUBROUTINE_FUNC(x, y) \n\
-	#define gl_SampleID 0\n";
+	#define gl_SampleID 0\n\
+	#define NOPERSPECTIVE\n";
 	
 	char defines[8192] { 0 };
 	

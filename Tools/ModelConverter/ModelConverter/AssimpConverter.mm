@@ -51,8 +51,7 @@ void buildNodeList(aiNode *node)
 //	aiProcess_FixInfacingNormals |
 //	aiProcess_OptimizeMeshes |
 //	aiProcess_OptimizeGraph;
-	aiProcess_GenSmoothNormals |
-	aiProcess_FlipUVs;
+	aiProcess_GenSmoothNormals;
 	
 	_importer.SetPropertyInteger(AI_CONFIG_PP_LBW_MAX_WEIGHTS, 4);
 	

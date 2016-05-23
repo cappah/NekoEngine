@@ -1,4 +1,4 @@
-noperspective in vec2 v_uv;
+NOPERSPECTIVE in vec2 v_uv;
 
 layout(location=O_FRAGCOLOR) out vec4 o_FragColor;
 layout(location=O_COLORTEXTURE) out vec4 o_ColorTexture;
