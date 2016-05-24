@@ -43,6 +43,7 @@
 #include <Scene/Object.h>
 #include <Engine/Skeleton.h>
 #include <Engine/SceneManager.h>
+#include <Engine/SkeletalMesh.h>
 #include <Engine/ResourceManager.h>
 
 ENGINE_REGISTER_COMPONENT_CLASS(AnimatorComponent);
@@ -50,7 +51,7 @@ ENGINE_REGISTER_COMPONENT_CLASS(AnimatorComponent);
 AnimatorComponent::AnimatorComponent(ComponentInitializer *initializer)
 	: ObjectComponent(initializer)
 {
-	_mesh = nullptr;
+	_skeleton = nullptr;
 	_defaultAnim = nullptr;
 	_defaultAnimId = initializer->arguments.find("defaultanim")->second;
 	_targetMesh = initializer->arguments.find("targetmesh")->second;
@@ -70,11 +71,16 @@ int AnimatorComponent::Load()
 		return ENGINE_INVALID_RES;
 	
 	SkeletalMeshComponent *comp = dynamic_cast<SkeletalMeshComponent*>(_parent->GetComponent(_targetMesh.c_str()));
-	
 	if(!comp)
 		return ENGINE_INVALID_ARGS;
 	
-	_mesh = comp->GetMesh();
+	SkeletalMesh *mesh = comp->GetMesh();
+	if(!mesh)
+		return ENGINE_INVALID_ARGS;
+	
+	_skeleton = mesh->CreateSkeleton();
+	if(!_skeleton)
+		return ENGINE_FAIL;
 	
 	PlayDefaultAnimation();
 	
@@ -83,14 +89,14 @@ int AnimatorComponent::Load()
 
 void AnimatorComponent::PlayDefaultAnimation() noexcept
 {
-	if(_mesh)
-		_mesh->GetSkeleton()->SetAnimationClip(_defaultAnim);
+	if(_skeleton)
+		_skeleton->SetAnimationClip(_defaultAnim);
 }
 
 void AnimatorComponent::PlayAnimation(AnimationClip *clip) noexcept
 {
-	if(_mesh)
-		_mesh->GetSkeleton()->SetAnimationClip(clip);
+	if(_skeleton)
+		_skeleton->SetAnimationClip(clip);
 }
 
 void AnimatorComponent::Update(float deltaTime) noexcept
@@ -100,14 +106,14 @@ void AnimatorComponent::Update(float deltaTime) noexcept
 	if (!SceneManager::IsSceneLoaded())
 		return;
 
-	if (_mesh)
+	if (_skeleton)
 	{
 		_currentTime += deltaTime;
 
 		if (_currentTime > _defaultAnim->GetDuration())
 			_currentTime = 0.0;
 
-		_mesh->GetSkeleton()->TransformBones(_currentTime);
+		_skeleton->TransformBones(_currentTime);
 	}
 }
 

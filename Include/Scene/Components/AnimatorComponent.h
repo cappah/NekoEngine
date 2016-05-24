@@ -41,14 +41,14 @@
 #include <Engine/Engine.h>
 #include <Scene/ObjectComponent.h>
 #include <Engine/AnimationClip.h>
-#include <Engine/SkeletalMesh.h>
+#include <Engine/Skeleton.h>
 
 class AnimatorComponent : public ObjectComponent
 {
 public:
 	ENGINE_API AnimatorComponent(ComponentInitializer *initializer);
 	
-	ENGINE_API void SetMesh(SkeletalMesh *mesh) noexcept { _mesh = mesh; }
+	ENGINE_API void BindSkeleton(RShader *shader) noexcept { _skeleton->Bind(shader); }
 
 	ENGINE_API virtual int Load() override;
 	
@@ -66,6 +66,6 @@ protected:
 	std::string _targetMesh;
 	double _currentTime;
 	
-	SkeletalMesh *_mesh;
+	Skeleton *_skeleton;
 	AnimationClip *_defaultAnim;
 };

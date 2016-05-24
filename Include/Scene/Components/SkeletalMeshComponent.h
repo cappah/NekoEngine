@@ -50,6 +50,7 @@ public:
 	ENGINE_API SkeletalMesh *GetMesh() noexcept { return _mesh; }
 
 	ENGINE_API virtual int Load() override;
+	ENGINE_API virtual int InitializeComponent() override;
 	
 	ENGINE_API virtual void Draw(RShader *shader) noexcept override;
 	ENGINE_API virtual void Update(float deltaTime) noexcept override;
@@ -60,4 +61,6 @@ public:
 	
 protected:
 	SkeletalMesh *_mesh;
+	std::string _animatorId;
+	class AnimatorComponent *_animator;
 };

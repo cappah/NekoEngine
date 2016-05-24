@@ -109,6 +109,7 @@ id=5
 Component=SkeletalMeshComponent=Mesh
 	mesh=skm_sophia
 	material=mat_sophia
+	animator=Animator
 EndComponent
 Component=AnimatorComponent=Animator
 	defaultanim=ac_sophia_idle
@@ -123,8 +124,9 @@ EndObject
 Object
 id=51
 Component=SkeletalMeshComponent=Mesh
-	mesh=skm_sophia2
+	mesh=skm_sophia
 	material=mat_sophia
+	animator=Animator
 EndComponent
 Component=DemoAnimatorComponent=Animator
 	defaultanim=ac_sophia_idle

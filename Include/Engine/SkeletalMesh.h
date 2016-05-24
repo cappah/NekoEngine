@@ -52,7 +52,7 @@ class SkeletalMesh : public StaticMesh
 public:
 	ENGINE_API SkeletalMesh(MeshResource *res) noexcept;
 	
-	ENGINE_API Skeleton* GetSkeleton() noexcept { return _skeleton; }
+	ENGINE_API Skeleton *CreateSkeleton();
 	
 	ENGINE_API virtual int Load() override;
 	ENGINE_API void Update(float deltaTime);
@@ -61,8 +61,7 @@ public:
 	ENGINE_API virtual ~SkeletalMesh() noexcept;
 	
 private:
-	std::vector<Bone> _bones;
-	Skeleton *_skeleton;
-	
-	void _GetNodeHierarchy(float time, void *node, glm::mat4 &parentTransform);
+	glm::mat4 _globalInverseTransform;
+	vector<Bone> _bones;
+	vector<TransformNode> _nodes;
 };

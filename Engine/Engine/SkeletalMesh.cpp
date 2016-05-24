@@ -53,22 +53,31 @@ using namespace std;
 using namespace glm;
 
 SkeletalMesh::SkeletalMesh(MeshResource *res) noexcept :
-	StaticMesh(res),
-	_skeleton(nullptr)
+	StaticMesh(res)
 {
 	if(res->meshType != MeshType::Skeletal)
 	{ DIE("Attempt to load static mesh as skeletal !"); }
+}
+
+Skeleton *SkeletalMesh::CreateSkeleton()
+{
+	Skeleton *skel = new Skeleton(_bones, _nodes, _globalInverseTransform);
+	
+	if(skel->Load() != ENGINE_OK)
+	{
+		Logger::Log(SK_MESH_MODULE, LOG_CRITICAL, "Failed to load skeleton for mesh id=%s", _resourceInfo->name.c_str());
+		return nullptr;
+	}
+	
+	return skel;
 }
 
 int SkeletalMesh::Load()
 {
 	string path("/");
 	path.append(GetResourceInfo()->filePath);
-	glm::mat4 globalInverseTransform;
-	vector<Bone> bones;
-	vector<TransformNode> nodes;
 	
-	if (AssetLoader::LoadMesh(path, MeshType::Skeletal, _vertices, _indices, _groupOffset, _groupCount, &bones, &nodes, &globalInverseTransform) != ENGINE_OK)
+	if (AssetLoader::LoadMesh(path, MeshType::Skeletal, _vertices, _indices, _groupOffset, _groupCount, &_bones, &_nodes, &_globalInverseTransform) != ENGINE_OK)
 	{
 		Logger::Log(SK_MESH_MODULE, LOG_CRITICAL, "Failed to load mesh id=%s", _resourceInfo->name.c_str());
 		return ENGINE_FAIL;
@@ -79,14 +88,6 @@ int SkeletalMesh::Load()
 	_triangleCount = _indexCount / 3;
 	
 	_CalculateTangents();
-	
-	_skeleton = new Skeleton(bones, nodes, globalInverseTransform);
-	
-	if(_skeleton->Load() != ENGINE_OK)
-	{
-		Logger::Log(SK_MESH_MODULE, LOG_CRITICAL, "Failed to load skeleton for mesh id=%s", _resourceInfo->name.c_str());
-		return ENGINE_FAIL;
-	}
 
 	Logger::Log(SK_MESH_MODULE, LOG_DEBUG, "Loaded mesh id %d from %s, %d vertices, %d indices", _resourceInfo->id, path.c_str(), _vertexCount, _indexCount);
 	
@@ -105,10 +106,5 @@ void SkeletalMesh::Draw(Renderer* r, size_t group)
 
 SkeletalMesh::~SkeletalMesh() noexcept
 {
-	delete _skeleton;
-}
-
-void SkeletalMesh::_GetNodeHierarchy(float time, void *node, glm::mat4 &parentTransform)
-{
-	//
+	
 }

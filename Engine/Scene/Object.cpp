@@ -191,6 +191,13 @@ int Object::Load()
 		return ENGINE_OUT_OF_RESOURCES;
 	}
 	_objectUbo->SetStorage(sizeof(ObjectBlock), &_objectBlock);
+	
+	for(pair<string, ObjectComponent*> kvp : _components)
+	{
+		int ret = kvp.second->InitializeComponent();
+		if(ret != ENGINE_OK)
+			return ret;
+	}
 
 	_loaded = true;
 

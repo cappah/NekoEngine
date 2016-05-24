@@ -61,6 +61,7 @@ public:
 	ENGINE_API void SetParent(class Object *obj) { _parent = obj; }
 
 	ENGINE_API virtual int Load() { return ENGINE_OK; }
+	ENGINE_API virtual int InitializeComponent() { return ENGINE_OK; }
 	
 	ENGINE_API virtual void Draw(RShader *shader) noexcept { }
 	ENGINE_API virtual void Update(float deltaTime) noexcept { }

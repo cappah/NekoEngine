@@ -39,6 +39,7 @@
 #define ENGINE_INTERNAL
 
 #include <Scene/Components/SkeletalMeshComponent.h>
+#include <Scene/Components/AnimatorComponent.h>
 #include <Scene/Camera.h>
 #include <Engine/SceneManager.h>
 #include <Engine/ResourceManager.h>
@@ -51,6 +52,7 @@ SkeletalMeshComponent::SkeletalMeshComponent(ComponentInitializer *initializer)
 	: StaticMeshComponent(initializer)
 {
 	_mesh = nullptr;
+	_animatorId = initializer->arguments.find("animator")->second;
 }
 
 int SkeletalMeshComponent::Load()
@@ -107,12 +109,26 @@ int SkeletalMeshComponent::Load()
 	return ENGINE_OK;
 }
 
+int SkeletalMeshComponent::InitializeComponent()
+{
+	int ret = ObjectComponent::InitializeComponent();
+	
+	if(ret != ENGINE_OK)
+		return ret;
+	
+	_animator = (AnimatorComponent*)_parent->GetComponent(_animatorId.c_str());
+	if(!_animator)
+		return ENGINE_INVALID_ARGS;
+	
+	return ENGINE_OK;
+}
+
 void SkeletalMeshComponent::Draw(RShader *shader) noexcept
 {
 	if (!_loaded)
 		return;
 	
-	_mesh->GetSkeleton()->Bind(shader);
+	_animator->BindSkeleton(shader);
 	
 	StaticMeshComponent::Draw(shader);
 }
@@ -135,4 +151,5 @@ void SkeletalMeshComponent::Unload()
 SkeletalMeshComponent::~SkeletalMeshComponent()
 {
 	Unload();
+
 }
