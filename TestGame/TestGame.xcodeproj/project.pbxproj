@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		124A31CD1CDC253900472893 /* MovingObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 127012011CC31417001840A7 /* MovingObject.cpp */; };
 		124A31CE1CDC253900472893 /* TestGame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 127012021CC31417001840A7 /* TestGame.cpp */; };
+		12615D661CF40C8D006FB6DB /* DemoAnimatorComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 12615D651CF40C8D006FB6DB /* DemoAnimatorComponent.h */; };
+		12615D691CF40C91006FB6DB /* DemoAnimatorComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12615D681CF40C91006FB6DB /* DemoAnimatorComponent.cpp */; };
+		12615D6A1CF40C91006FB6DB /* DemoAnimatorComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12615D681CF40C91006FB6DB /* DemoAnimatorComponent.cpp */; };
 		127012031CC31417001840A7 /* MovingObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 127012011CC31417001840A7 /* MovingObject.cpp */; };
 		127012041CC31417001840A7 /* TestGame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 127012021CC31417001840A7 /* TestGame.cpp */; };
 		127012071CC3141C001840A7 /* MovingObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 127012051CC3141C001840A7 /* MovingObject.h */; };
@@ -54,6 +57,8 @@
 
 /* Begin PBXFileReference section */
 		124A31C41CDC252200472893 /* libTestGame_iOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libTestGame_iOS.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		12615D651CF40C8D006FB6DB /* DemoAnimatorComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoAnimatorComponent.h; sourceTree = "<group>"; };
+		12615D681CF40C91006FB6DB /* DemoAnimatorComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DemoAnimatorComponent.cpp; sourceTree = "<group>"; };
 		127011EF1CC313D7001840A7 /* libTestGame.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libTestGame.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		127012011CC31417001840A7 /* MovingObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MovingObject.cpp; sourceTree = "<group>"; };
 		127012021CC31417001840A7 /* TestGame.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TestGame.cpp; sourceTree = "<group>"; };
@@ -170,6 +175,7 @@
 			children = (
 				127012011CC31417001840A7 /* MovingObject.cpp */,
 				127012021CC31417001840A7 /* TestGame.cpp */,
+				12615D681CF40C91006FB6DB /* DemoAnimatorComponent.cpp */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -188,6 +194,7 @@
 			children = (
 				127012051CC3141C001840A7 /* MovingObject.h */,
 				127012061CC3141C001840A7 /* TestGame.h */,
+				12615D651CF40C8D006FB6DB /* DemoAnimatorComponent.h */,
 			);
 			name = Include;
 			sourceTree = "<group>";
@@ -362,6 +369,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				127012081CC3141C001840A7 /* TestGame.h in Headers */,
+				12615D661CF40C8D006FB6DB /* DemoAnimatorComponent.h in Headers */,
 				127012071CC3141C001840A7 /* MovingObject.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -470,6 +478,7 @@
 			files = (
 				124A31CD1CDC253900472893 /* MovingObject.cpp in Sources */,
 				124A31CE1CDC253900472893 /* TestGame.cpp in Sources */,
+				12615D6A1CF40C91006FB6DB /* DemoAnimatorComponent.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -479,6 +488,7 @@
 			files = (
 				127012031CC31417001840A7 /* MovingObject.cpp in Sources */,
 				127012041CC31417001840A7 /* TestGame.cpp in Sources */,
+				12615D691CF40C91006FB6DB /* DemoAnimatorComponent.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

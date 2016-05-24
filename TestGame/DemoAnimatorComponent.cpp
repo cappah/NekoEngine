@@ -93,6 +93,8 @@ void DemoAnimatorComponent::Update(float deltaTime) noexcept
 		_currentTime = 0.0;
 	}
 
+	_mesh->GetSkeleton()->SetAnimationClip(_defaultAnim);
+	
 	AnimatorComponent::Update(deltaTime);
 }
 
