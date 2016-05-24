@@ -101,10 +101,10 @@ void Skeleton::Bind(RShader *shader)
 
 int Skeleton::Load()
 {
-	if((_buffer = Engine::GetRenderer()->CreateBuffer(BufferType::Uniform, true, false)) == nullptr)
+	if((_buffer = Engine::GetRenderer()->CreateBuffer(BufferType::Uniform, true, true)) == nullptr)
 	{ DIE("Out of resources"); }
 	
-	_buffer->SetNumBuffers(1);
+	_buffer->SetNumBuffers(3);
 	
 	TrMat t =
 	{
@@ -117,7 +117,7 @@ int Skeleton::Load()
 	for(int i = 0; i < SH_MAX_BONES; ++i)
 		_transforms[i] = t;
 	
-	_buffer->SetStorage(sizeof(_transforms), _transforms);
+	_buffer->SetStorage(sizeof(_transforms) * 3, nullptr);
 
 	return ENGINE_OK;
 }
@@ -144,7 +144,12 @@ void Skeleton::TransformBones(double time)
 	double animTime = mod(timeInTicks, _animationClip->GetDuration());
 	
 	_TransformHierarchy(animTime, _rootNode, ident);
+
+	_buffer->BeginUpdate();
 	_buffer->UpdateData(0, sizeof(_transforms), _transforms);
+	_buffer->EndUpdate();
+
+	_buffer->NextBuffer();
 }
 
 void Skeleton::_CalculatePosition(vec3 &out, double time, const AnimationNode *node)
