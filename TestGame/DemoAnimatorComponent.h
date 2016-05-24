@@ -1,9 +1,9 @@
 /* Neko Engine
  *
- * AnimatorComponent.h
+ * DemoAnimatorComponent.h
  * Author: Alexandru Naiman
  *
- * AnimatorComponent class definition 
+ * DemoAnimatorComponent class definition
  *
  * ----------------------------------------------------------------------------------
  *
@@ -38,31 +38,24 @@
 
 #pragma once
 
-#include <Engine/Engine.h>
-#include <Audio/AudioSource.h>
-#include <Scene/ObjectComponent.h>
+#include "TestGame.h"
+#include <Scene/Components/AnimatorComponent.h>
 
-class AudioSourceComponent : public ObjectComponent
+class DemoAnimatorComponent : public AnimatorComponent
 {
 public:
-	ENGINE_API AudioSourceComponent(ComponentInitializer *initializer);
+	TESTGAME_API DemoAnimatorComponent(ComponentInitializer *initializer);
 
-	ENGINE_API virtual int Load() override;
-	
-	ENGINE_API void PlayDefaultClip() noexcept;
-	ENGINE_API void PlaySound(AudioClip *clip) noexcept;
-	
-	ENGINE_API virtual void Update(float deltaTime) noexcept override;
+	TESTGAME_API virtual int Load() override;
 
-	ENGINE_API virtual void Unload() override;
+	TESTGAME_API virtual void Update(float deltaTime) noexcept override;
 
-	ENGINE_API virtual ~AudioSourceComponent() { }
-	
-protected:
-	std::string _defaultClipId;
-	
-	AudioSource *_src;
-	AudioClip *_defaultClip;
+	TESTGAME_API virtual void Unload() override;
 
-	bool _playOnLoad;
+	TESTGAME_API ~DemoAnimatorComponent() { }
+
+private:
+	std::string _clipIds[3];
+	AnimationClip *_clips[3];
+	AnimationClip *_initialAnim;
 };

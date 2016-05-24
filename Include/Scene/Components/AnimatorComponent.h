@@ -61,7 +61,7 @@ public:
 
 	ENGINE_API virtual ~AnimatorComponent() { }
 	
-private:
+protected:
 	std::string _defaultAnimId;
 	std::string _targetMesh;
 	double _currentTime;

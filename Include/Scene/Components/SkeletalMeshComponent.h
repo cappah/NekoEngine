@@ -58,6 +58,6 @@ public:
 
 	ENGINE_API virtual ~SkeletalMeshComponent();
 	
-private:
+protected:
 	SkeletalMesh *_mesh;
 };

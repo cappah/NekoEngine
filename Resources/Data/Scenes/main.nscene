@@ -110,9 +110,12 @@ Component=SkeletalMeshComponent=Mesh
 	mesh=skm_sophia
 	material=mat_sophia
 EndComponent
-Component=AnimatorComponent=Animator
+Component=DemoAnimatorComponent=Animator
 	defaultanim=ac_sophia_idle
 	targetmesh=Mesh
+	clip0=ac_sophia_idle
+	clip1=ac_sophia_idle
+	clip2=ac_sophia_idle
 EndComponent
 position=-117.5, -30.0, -145.0
 rotation=0.0, 0.0, 0.0

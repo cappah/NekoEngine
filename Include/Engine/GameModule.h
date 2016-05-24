@@ -43,21 +43,21 @@
 
 #ifndef ENGINE_INTERNAL
 
-#define NEKO_GAME_MODULE()																				\
-class Object;																							\
-template<typename T> Object *gameModuleFactoryCreateObject() { return new T(); }						\
-template<typename T> Object *gameModuleFactoryCreateComponent(ComponentInitializer *initializer) { return new T(initializer); }	\
-class GameModuleClassFactory																			\
-{																										\
-public:																									\
-	static Object *NewObject(const std::string &s)														\
-	{																									\
-		ObjectClassMapType::iterator it = GetObjectMap()->find(s);										\
-		if (it == GetObjectMap()->end())																\
-			return nullptr;																				\
-		return it->second();																			\
-	}																									\
-	static ObjectComponent *NewComponent(const std::string &s, ComponentInitializer *initializer)							\
+#define NEKO_GAME_MODULE()																										\
+class Object;																													\
+template<typename T> Object *gameModuleFactoryCreateObject() { return new T(); }												\
+template<typename T> ObjectComponent *gameModuleFactoryCreateComponent(ComponentInitializer *initializer) { return new T(initializer); }	\
+class GameModuleClassFactory																									\
+{																																\
+public:																															\
+	static Object *NewObject(const std::string &s)																				\
+	{																															\
+		ObjectClassMapType::iterator it = GetObjectMap()->find(s);																\
+		if (it == GetObjectMap()->end())																						\
+			return nullptr;																										\
+		return it->second();																									\
+	}																															\
+	static ObjectComponent *NewComponent(const std::string &s, ComponentInitializer *initializer)								\
 	{																									\
 		ComponentClassMapType::iterator it = GetComponentMap()->find(s);								\
 		if (it == GetComponentMap()->end())																\

@@ -413,7 +413,7 @@ ObjectComponent *Scene::_LoadComponent(VFSFile *f, Object *parent, const std::st
 
 	ObjectComponent *comp = Engine::NewComponent(className, &initializer);
 
-	if (comp->Load() != ENGINE_OK)
+	if (!comp || comp->Load() != ENGINE_OK)
 		return nullptr;
 
 	SkeletalMeshComponent *skcomp = dynamic_cast<SkeletalMeshComponent*>(comp);
