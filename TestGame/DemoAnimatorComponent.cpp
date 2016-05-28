@@ -70,7 +70,7 @@ int DemoAnimatorComponent::Load()
 	return ENGINE_OK;
 }
 
-void DemoAnimatorComponent::Update(float deltaTime) noexcept
+void DemoAnimatorComponent::Update(double deltaTime) noexcept
 {
 	if (Engine::GetKeyDown('j'))
 	{

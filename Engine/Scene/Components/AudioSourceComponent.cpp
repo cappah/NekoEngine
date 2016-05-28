@@ -91,7 +91,7 @@ void AudioSourceComponent::PlaySound(AudioClip *clip) noexcept
 	//
 }
 
-void AudioSourceComponent::Update(float deltaTime) noexcept
+void AudioSourceComponent::Update(double deltaTime) noexcept
 {
 	if (!_src)
 		return;

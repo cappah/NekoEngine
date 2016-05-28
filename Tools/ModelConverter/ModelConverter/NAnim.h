@@ -15,13 +15,13 @@
 
 struct VectorKey
 {
-	glm::vec3 value;
+	glm::dvec3 value;
 	double time;
 };
 
 struct QuatKey
 {
-	glm::quat value;
+	glm::dquat value;
 	double time;
 };
 

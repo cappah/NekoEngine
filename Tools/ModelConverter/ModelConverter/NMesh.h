@@ -37,13 +37,13 @@ typedef struct NMESH_GROUPINFO
 typedef struct NMESH_BONEINFO
 {
 	std::string name;
-	glm::mat4 offset;
+	glm::dmat4 offset;
 } NMeshBoneInfo;
 
 typedef struct NMESH_TNODEINFO
 {
 	std::string name;
-	glm::mat4 transform;
+	glm::dmat4 transform;
 	int parentId;
 	std::vector<int> childIds;
 } NMeshTransformNodeInfo;
@@ -55,7 +55,7 @@ typedef struct NMESH_TNODEINFO
 	std::vector<NMeshGroupInfo> _groups;
 	std::vector<NMeshBoneInfo> _bones;
 	std::vector<NMeshTransformNodeInfo> _nodes;
-	glm::mat4 _globalInverseTransform;
+	glm::dmat4 _globalInverseTransform;
 }
 
 - (id)init;
@@ -69,7 +69,7 @@ typedef struct NMESH_TNODEINFO
 - (void)addGroup:(NMeshGroupInfo)gi;
 - (void)newGroup;
 
-- (void)setGlobalInverseTransform:(glm::mat4)globalInverseTransform;
+- (void)setGlobalInverseTransform:(glm::dmat4)globalInverseTransform;
 
 - (NMeshVertex&)getVertexAtIndex:(size_t)index;
 

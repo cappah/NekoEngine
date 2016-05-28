@@ -618,7 +618,7 @@ void Engine::Frame() noexcept
 
 	if (deltaTime > UPDATE_DELTA)
 	{
-		Update((float)deltaTime);
+		Update(deltaTime);
 		lastTime = curTime;
 	}
 
@@ -740,7 +740,7 @@ void Engine::Draw() noexcept
 #endif
 }
 
-void Engine::Update(float deltaTime) noexcept
+void Engine::Update(double deltaTime) noexcept
 {
 	if (!SceneManager::IsSceneLoaded())
 		return;

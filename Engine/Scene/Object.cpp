@@ -215,7 +215,7 @@ void Object::Draw(RShader* shader) noexcept
 		kvp.second->Draw(shader);
 }
 
-void Object::Update(float deltaTime) noexcept
+void Object::Update(double deltaTime) noexcept
 {
 	if (!_loaded)
 		return;

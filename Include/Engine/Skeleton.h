@@ -63,7 +63,7 @@ typedef struct TR_MAT
 class Skeleton
 {
 public:
-	ENGINE_API Skeleton(std::vector<Bone> &bones, std::vector<TransformNode> &nodes, glm::mat4 &globalInverseTransform) noexcept;
+	ENGINE_API Skeleton(std::vector<Bone> &bones, std::vector<TransformNode> &nodes, glm::dmat4 &globalInverseTransform) noexcept;
 	
 	ENGINE_API void Bind(RShader *shader);
 	
@@ -84,13 +84,13 @@ private:
 	uint16_t _numBones;
 	uint16_t _numNodes;
 	RBuffer *_buffer;
-	glm::mat4 _globalInverseTransform;
+	glm::dmat4 _globalInverseTransform;
 	TrMat _transforms[SH_MAX_BONES];
 	std::map<std::string, uint16_t> _boneMap;
 	AnimationClip *_animationClip;
 	
-	void _CalculatePosition(glm::vec3 &out, double time, const AnimationNode *node);
-	void _CalculateRotation(glm::quat &out, double time, const AnimationNode *node);
-	void _CalculateScaling(glm::vec3 &out, double time, const AnimationNode *node);
-	void _TransformHierarchy(double time, const TransformNode *node, glm::mat4 &parentTransform);
+	void _CalculatePosition(glm::dvec3 &out, double time, const AnimationNode *node);
+	void _CalculateRotation(glm::dquat &out, double time, const AnimationNode *node);
+	void _CalculateScaling(glm::dvec3 &out, double time, const AnimationNode *node);
+	void _TransformHierarchy(double time, const TransformNode *node, glm::dmat4 &parentTransform);
 };

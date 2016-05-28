@@ -55,7 +55,7 @@ public:
 	ENGINE_API void PlayDefaultAnimation() noexcept;
 	ENGINE_API void PlayAnimation(AnimationClip *clip) noexcept;
 	
-	ENGINE_API virtual void Update(float deltaTime) noexcept override;
+	ENGINE_API virtual void Update(double deltaTime) noexcept override;
 
 	ENGINE_API virtual void Unload() override;
 

@@ -263,7 +263,7 @@ public:
 	/**
 	 * Update the loaded scene. Called once per frame.
 	 */
-	static void Update(float deltaTime) noexcept;
+	static void Update(double deltaTime) noexcept;
 
 	/**
 	 * Called when a key is pressed or released.

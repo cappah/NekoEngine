@@ -82,7 +82,7 @@ void Skybox::Draw(RShader* shader) noexcept
 	_skyboxShader->GetRShader()->Disable();
 }
 
-void Skybox::Update(float deltaTime) noexcept
+void Skybox::Update(double deltaTime) noexcept
 {
 	Object::Update(deltaTime);
 

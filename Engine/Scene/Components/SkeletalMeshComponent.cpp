@@ -133,7 +133,7 @@ void SkeletalMeshComponent::Draw(RShader *shader) noexcept
 	StaticMeshComponent::Draw(shader);
 }
 
-void SkeletalMeshComponent::Update(float deltaTime) noexcept
+void SkeletalMeshComponent::Update(double deltaTime) noexcept
 {
 	if (!_loaded)
 		return;

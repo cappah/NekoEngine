@@ -121,7 +121,7 @@ public:
 
 	void Initialize() noexcept;
 
-	void Update(float deltaTime) noexcept;
+	void Update(double deltaTime) noexcept;
 
 	void MoveForward(float distance) noexcept { _position += _front * distance; }
 	void MoveRight(float distance) noexcept { _position += _right * distance; }

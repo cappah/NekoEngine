@@ -60,7 +60,7 @@ public:
 						std::vector<uint32_t> &groupCount,
 						std::vector<Bone> *bones = nullptr,
 						std::vector<TransformNode> *nodes = nullptr,
-						glm::mat4 *globalInverseTransform = nullptr);
+						glm::dmat4 *globalInverseTransform = nullptr);
 	
 	static int LoadAnimation(std::string &file,
 							 std::string &name,
@@ -166,7 +166,7 @@ private:
 			if ((pch = strstr(buff, "name")) != NULL)
 				b.name = buff + 5;
 			else if ((pch = strstr(buff, "offset")) != NULL)
-				EngineUtils::ReadFloatArray(buff + 7, 16, &b.offset[0][0]);
+				EngineUtils::ReadDoubleArray(buff + 7, 16, &b.offset[0][0]);
 										
 			memset(buff, 0x0, i_buff);
 										
@@ -209,7 +209,7 @@ private:
 			if ((pch = strstr(buff, "name")) != NULL)
 				t.name = buff + 5;
 			else if ((pch = strstr(buff, "transform")) != NULL)
-				EngineUtils::ReadFloatArray(buff + 10, 16, &t.transform[0][0]);
+				EngineUtils::ReadDoubleArray(buff + 10, 16, &t.transform[0][0]);
 			else if ((pch = strstr(buff, "parent")) != NULL)
 				t.parentId = atoi(buff + 7);
 			else if ((pch = strstr(buff, "childn")) != NULL)

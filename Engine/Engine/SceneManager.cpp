@@ -188,7 +188,7 @@ int SceneManager::DrawScene(RShader* shader) noexcept
 	return ENGINE_OK;
 }
 
-void SceneManager::UpdateScene(float deltaTime) noexcept
+void SceneManager::UpdateScene(double deltaTime) noexcept
 {
 	if (_activeScene)
 		_activeScene->Update(deltaTime);

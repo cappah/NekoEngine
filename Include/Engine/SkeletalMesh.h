@@ -61,7 +61,7 @@ public:
 	ENGINE_API virtual ~SkeletalMesh() noexcept;
 	
 private:
-	glm::mat4 _globalInverseTransform;
+	glm::dmat4 _globalInverseTransform;
 	vector<Bone> _bones;
 	vector<TransformNode> _nodes;
 };

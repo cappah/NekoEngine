@@ -99,7 +99,7 @@ void AnimatorComponent::PlayAnimation(AnimationClip *clip) noexcept
 		_skeleton->SetAnimationClip(clip);
 }
 
-void AnimatorComponent::Update(float deltaTime) noexcept
+void AnimatorComponent::Update(double deltaTime) noexcept
 {
 	ObjectComponent::Update(deltaTime);
 
@@ -109,7 +109,7 @@ void AnimatorComponent::Update(float deltaTime) noexcept
 	if (_skeleton)
 	{
 		_currentTime += deltaTime;
-
+		
 		if (_currentTime > _defaultAnim->GetDuration())
 			_currentTime = 0.0;
 

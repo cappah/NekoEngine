@@ -102,7 +102,7 @@ public:
     
 	ENGINE_API virtual int Load();
 	ENGINE_API virtual void Draw(RShader* shader) noexcept;
-	ENGINE_API virtual void Update(float deltaTime) noexcept;
+	ENGINE_API virtual void Update(double deltaTime) noexcept;
 	ENGINE_API void Unload() noexcept;
 
 	ENGINE_API void AddComponent(const char *name, ObjectComponent *comp);

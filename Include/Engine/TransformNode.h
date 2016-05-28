@@ -53,7 +53,7 @@ struct TransformNode
 	{ }
 	
 	std::string name;
-	glm::mat4 transform;
+	glm::dmat4 transform;
 	int16_t parentId;
 	TransformNode *parent;
 	int16_t numChildren;

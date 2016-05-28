@@ -126,7 +126,7 @@ int Terrain::Load()
 	return ENGINE_OK;
 }
 
-void Terrain::Update(float deltaTime) noexcept
+void Terrain::Update(double deltaTime) noexcept
 {
 	Object::Update(deltaTime);
 

@@ -61,7 +61,7 @@ public:
 	void TESTGAME_API SetMovementRadius(float radius) noexcept { _radius = radius; }
 
 	virtual int TESTGAME_API Load() override;
-	virtual void TESTGAME_API Update(float deltaTime) noexcept override;
+	virtual void TESTGAME_API Update(double deltaTime) noexcept override;
 
 	virtual TESTGAME_API ~MovingObject() noexcept {};
 

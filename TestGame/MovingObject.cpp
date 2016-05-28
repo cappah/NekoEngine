@@ -76,7 +76,7 @@ int MovingObject::Load()
 	return ENGINE_OK;
 }
 
-void MovingObject::Update(float deltaTime) noexcept
+void MovingObject::Update(double deltaTime) noexcept
 {
 	Object::Update(deltaTime);
 

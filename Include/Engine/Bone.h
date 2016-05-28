@@ -46,9 +46,9 @@ struct Bone
 {
 	Bone() :
 	name("unnamed"),
-	offset(glm::mat4(0.f))
+	offset(glm::dmat4(0.f))
 	{ }
 	
 	std::string name;
-	glm::mat4 offset;
+	glm::dmat4 offset;
 };

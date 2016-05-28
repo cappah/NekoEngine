@@ -64,7 +64,7 @@ public:
 	ENGINE_API virtual int InitializeComponent() { return ENGINE_OK; }
 	
 	ENGINE_API virtual void Draw(RShader *shader) noexcept { }
-	ENGINE_API virtual void Update(float deltaTime) noexcept { }
+	ENGINE_API virtual void Update(double deltaTime) noexcept { }
 	
 	ENGINE_API virtual void Unload() { }
 

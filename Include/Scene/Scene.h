@@ -114,7 +114,7 @@ public:
 	ENGINE_API void Draw(RShader* shader) noexcept;
 	ENGINE_API void DrawTerrain() noexcept;
 	ENGINE_API void DrawSkybox() noexcept;
-	ENGINE_API void Update(float deltaTime) noexcept;
+	ENGINE_API void Update(double deltaTime) noexcept;
 	ENGINE_API void Unload() noexcept;
 
 	ENGINE_API void RenderForCamera(Camera *cam) noexcept;

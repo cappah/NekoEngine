@@ -52,7 +52,7 @@ public:
 	ENGINE_API void PlayDefaultClip() noexcept;
 	ENGINE_API void PlaySound(AudioClip *clip) noexcept;
 	
-	ENGINE_API virtual void Update(float deltaTime) noexcept override;
+	ENGINE_API virtual void Update(double deltaTime) noexcept override;
 
 	ENGINE_API virtual void Unload() override;
 

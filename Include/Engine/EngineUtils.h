@@ -169,6 +169,31 @@ public:
 			n++;
 		}
 	}
+	
+	/**
+	 * Read a float array from a comma separated string
+	 */
+	static inline void ReadDoubleArray(const char *str, int nDouble, double *doubleBuff) noexcept
+	{
+		int n = 0, i = 0, i_buff = 0;
+		char c, buff[60] = { 0 };
+		
+		while (n < nDouble)
+		{
+			while ((c = str[i]) != ',' && c != 0x0)
+			{
+				buff[i_buff++] = c;
+				i++;
+			}
+			
+			doubleBuff[n] = atof(buff);
+			::memset(buff, 0x0, i_buff);
+			
+			i_buff = 0;
+			i++;
+			n++;
+		}
+	}
 
 	/*
 	 * Remove comments from string. If no comment is found, the string is unchanged.

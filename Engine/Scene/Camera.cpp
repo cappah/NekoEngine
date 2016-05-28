@@ -63,7 +63,7 @@ void Camera::UpdatePerspective() noexcept
 	_projectionMatrix = perspective(_fov, (float)DeferredBuffer::GetWidth() / (float)DeferredBuffer::GetHeight(), _near, _far);
 }
 
-void Camera::Update(float deltaTime) noexcept
+void Camera::Update(double deltaTime) noexcept
 {
 	float hAngle = _horizontalSensivity * _xDelta * deltaTime;
 	float vAngle = _verticalSensivity * _yDelta * deltaTime;

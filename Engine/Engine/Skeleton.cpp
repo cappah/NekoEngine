@@ -55,7 +55,7 @@
 using namespace std;
 using namespace glm;
 
-Skeleton::Skeleton(vector<Bone> &bones, vector<TransformNode> &nodes, mat4 &globalInverseTransform) noexcept
+Skeleton::Skeleton(vector<Bone> &bones, vector<TransformNode> &nodes, dmat4 &globalInverseTransform) noexcept
 {
 	_numBones = (unsigned int)bones.size();
 	_numNodes = (unsigned int)nodes.size();
@@ -122,11 +122,6 @@ int Skeleton::Load()
 	return ENGINE_OK;
 }
 
-void Skeleton::Update(float deltaTime)
-{
-	//
-}
-
 void Skeleton::Draw(Renderer* r, size_t group)
 {
 	//
@@ -137,7 +132,7 @@ void Skeleton::TransformBones(double time)
 	if(!_animationClip)
 		return;
 	
-	mat4 ident = mat4();
+	dmat4 ident = dmat4();
 	
 	double ticks = _animationClip->GetTicksPerSecond() != 0 ? _animationClip->GetTicksPerSecond() : 25.f;
 	double timeInTicks = time * ticks;
@@ -152,7 +147,7 @@ void Skeleton::TransformBones(double time)
 	_buffer->NextBuffer();
 }
 
-void Skeleton::_CalculatePosition(vec3 &out, double time, const AnimationNode *node)
+void Skeleton::_CalculatePosition(dvec3 &out, double time, const AnimationNode *node)
 {
 	size_t numKeys = node->positionKeys.size();
 	
@@ -178,15 +173,14 @@ void Skeleton::_CalculatePosition(vec3 &out, double time, const AnimationNode *n
 	double dt = node->positionKeys[nextPosIndex].time - node->positionKeys[posIndex].time;
 	double factor = (time - node->positionKeys[posIndex].time) / dt;
 	
-	const vec3 &start = node->positionKeys[posIndex].value;
-	const vec3 &end = node->positionKeys[nextPosIndex].value;
+	const dvec3 &start = node->positionKeys[posIndex].value;
+	const dvec3 &end = node->positionKeys[nextPosIndex].value;
 	
-	vec3 delta = end - start;
-	
-	out = start + (float)factor * delta;
+	dvec3 delta = end - start;
+	out = start + factor * delta;
 }
 
-void Skeleton::_CalculateRotation(quat &out, double time, const AnimationNode *node)
+void Skeleton::_CalculateRotation(dquat &out, double time, const AnimationNode *node)
 {
 	size_t numKeys = node->rotationKeys.size();
 	
@@ -212,14 +206,14 @@ void Skeleton::_CalculateRotation(quat &out, double time, const AnimationNode *n
 	double dt = node->rotationKeys[nextRotIndex].time - node->rotationKeys[rotIndex].time;
 	double factor = (time - node->rotationKeys[rotIndex].time) / dt;
 	
-	const quat &start = node->rotationKeys[rotIndex].value;
-	const quat &end = node->rotationKeys[nextRotIndex].value;
+	const dquat &start = node->rotationKeys[rotIndex].value;
+	const dquat &end = node->rotationKeys[nextRotIndex].value;
 	
-	out = mix(start, end, (float)factor);
+	out = mix(start, end, factor);
 	out = normalize(out);
 }
 
-void Skeleton::_CalculateScaling(vec3 &out, double time, const AnimationNode *node)
+void Skeleton::_CalculateScaling(dvec3 &out, double time, const AnimationNode *node)
 {
 	size_t numKeys = node->scalingKeys.size();
 	
@@ -245,19 +239,18 @@ void Skeleton::_CalculateScaling(vec3 &out, double time, const AnimationNode *no
 	double dt = node->scalingKeys[nextScaleIndex].time - node->scalingKeys[scaleIndex].time;
 	double factor = (time - node->scalingKeys[scaleIndex].time) / dt;
 	
-	const vec3 &start = node->scalingKeys[scaleIndex].value;
-	const vec3 &end = node->scalingKeys[nextScaleIndex].value;
+	const dvec3 &start = node->scalingKeys[scaleIndex].value;
+	const dvec3 &end = node->scalingKeys[nextScaleIndex].value;
 	
-	vec3 delta = end - start;
-	
-	out = start + (float)factor * delta;
+	dvec3 delta = end - start;
+	out = start + factor * delta;
 }
 
-void Skeleton::_TransformHierarchy(double time, const TransformNode *node, mat4 &parentTransform)
+void Skeleton::_TransformHierarchy(double time, const TransformNode *node, dmat4 &parentTransform)
 {
 	const AnimationNode *animNode = nullptr;
 	
-	mat4 nodeTransform = node->transform;
+	dmat4 nodeTransform = node->transform;
 	
 	for(uint i = 0; i < _animationClip->GetChannels().size(); ++i)
 	{
@@ -270,22 +263,22 @@ void Skeleton::_TransformHierarchy(double time, const TransformNode *node, mat4 
 	
 	if(animNode)
 	{
-		vec3 scaling;
+		dvec3 scaling;
 		_CalculateScaling(scaling, time, animNode);
-		mat4 scaleMatrix = scale(mat4(1), scaling);
+		dmat4 scaleMatrix = scale(dmat4(1), scaling);
 		
-		quat rotation = quat();
+		dquat rotation = quat();
 		_CalculateRotation(rotation, time, animNode);
-		mat4 rotationMatrix = mat4_cast(rotation);
+		dmat4 rotationMatrix = mat4_cast(rotation);
 		
-		vec3 position;
+		dvec3 position;
 		_CalculatePosition(position, time, animNode);
-		mat4 translationMatirx = translate(mat4(1), position);
+		dmat4 translationMatirx = translate(dmat4(1), position);
 		
 		nodeTransform = (translationMatirx * rotationMatrix) * scaleMatrix;
 	}
 	
-	mat4 globalTransform = parentTransform * nodeTransform;
+	dmat4 globalTransform = parentTransform * nodeTransform;
 	
 	if(_boneMap.find(node->name) != _boneMap.end())
 	{

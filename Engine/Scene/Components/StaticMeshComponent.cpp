@@ -163,7 +163,7 @@ void StaticMeshComponent::Draw(RShader *shader) noexcept
 	_renderer->EnableDepthTest(false);
 }
 
-void StaticMeshComponent::Update(float deltaTime) noexcept
+void StaticMeshComponent::Update(double deltaTime) noexcept
 {
 	ObjectComponent::Update(deltaTime);
 	/*if (!_loaded)

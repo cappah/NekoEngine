@@ -701,7 +701,7 @@ void Scene::DrawSkybox() noexcept
 	if(_sceneArrayBuffer) _sceneArrayBuffer->Unbind();
 }
 
-void Scene::Update(float deltaTime) noexcept
+void Scene::Update(double deltaTime) noexcept
 {
 	if(_terrain)
 		_terrain->Update(deltaTime);

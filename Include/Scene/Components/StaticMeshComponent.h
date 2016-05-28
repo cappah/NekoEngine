@@ -60,7 +60,7 @@ public:
 	ENGINE_API virtual int Load() override;
 	
 	ENGINE_API virtual void Draw(RShader *shader) noexcept override;
-	ENGINE_API virtual void Update(float deltaTime) noexcept override;
+	ENGINE_API virtual void Update(double deltaTime) noexcept override;
 
 	ENGINE_API virtual void Unload() override;
 	

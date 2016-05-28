@@ -175,7 +175,7 @@ static inline NMeshVertex _ReadVertex(const char* line) noexcept
 	_groups.push_back(gi);
 }
 
-- (void)setGlobalInverseTransform:(glm::mat4)globalInverseTransform
+- (void)setGlobalInverseTransform:(glm::dmat4)globalInverseTransform
 {
 	_globalInverseTransform = globalInverseTransform;
 }

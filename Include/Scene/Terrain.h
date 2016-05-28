@@ -53,7 +53,7 @@ public:
 	ENGINE_API void SetNumCells(unsigned short numCells) noexcept { _numCells = numCells; }
 	
 	ENGINE_API virtual int Load() override;
-	ENGINE_API virtual void Update(float deltaTime) noexcept override;
+	ENGINE_API virtual void Update(double deltaTime) noexcept override;
 
 	ENGINE_API virtual ~Terrain() noexcept;
 

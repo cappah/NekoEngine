@@ -113,7 +113,7 @@ int AssetLoader::LoadMesh(string& file,
 						  vector<uint32_t> &groupCount,
 						  vector<Bone> *bones,
 						  vector<TransformNode> *nodes,
-						  mat4 *globalInverseTransform)
+						  dmat4 *globalInverseTransform)
 {
 	unsigned int offset = 0;
 	uint32_t indexBuff[3];
@@ -173,7 +173,7 @@ int AssetLoader::LoadMesh(string& file,
 			if(!ptr)
 				break;
 			
-			EngineUtils::ReadFloatArray(++ptr, 16, &(*globalInverseTransform)[0][0]);
+			EngineUtils::ReadDoubleArray(++ptr, 16, &(*globalInverseTransform)[0][0]);
 		}
 		else if (strstr(lineBuff, "nodes"))
 		{
@@ -312,7 +312,7 @@ int AssetLoader::LoadAnimation(std::string &file,
 			vector<char *> split = EngineUtils::SplitString(lineBuff + 7, '|');
 			
 			vk.time = atof(split[0]);
-			EngineUtils::ReadFloatArray(split[1], 3, &vk.value.x);
+			EngineUtils::ReadDoubleArray(split[1], 3, &vk.value.x);
 			channel.positionKeys.push_back(vk);
 			
 			for (char* c : split)
@@ -323,7 +323,7 @@ int AssetLoader::LoadAnimation(std::string &file,
 			vector<char *> split = EngineUtils::SplitString(lineBuff + 7, '|');
 			
 			qk.time = atof(split[0]);
-			EngineUtils::ReadFloatArray(split[1], 4, &qk.value.x);
+			EngineUtils::ReadDoubleArray(split[1], 4, &qk.value.x);
 			channel.rotationKeys.push_back(qk);
 			
 			for (char* c : split)
@@ -334,7 +334,7 @@ int AssetLoader::LoadAnimation(std::string &file,
 			vector<char *> split = EngineUtils::SplitString(lineBuff + 9, '|');
 			
 			vk.time = atof(split[0]);
-			EngineUtils::ReadFloatArray(split[1], 3, &vk.value.x);
+			EngineUtils::ReadDoubleArray(split[1], 3, &vk.value.x);
 			channel.scalingKeys.push_back(vk);
 			
 			for (char* c : split)
