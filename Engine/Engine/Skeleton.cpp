@@ -209,7 +209,7 @@ void Skeleton::_CalculateRotation(dquat &out, double time, const AnimationNode *
 	const dquat &start = node->rotationKeys[rotIndex].value;
 	const dquat &end = node->rotationKeys[nextRotIndex].value;
 	
-	out = mix(start, end, factor);
+	out = slerp(start, end, factor);
 	out = normalize(out);
 }
 
