@@ -9,7 +9,7 @@ endif(NOT CMAKE_BUILD_TYPE)
 
 file(GLOB EngineSourceFiles "Engine/*.cpp"
 	"Engine/Audio/*.cpp"
-	"Engine/Engine/*.cpp"
+	"Engine/Core/*.cpp"
 	"Engine/PostEffects/*.cpp"
 	"Engine/Scene/*.cpp"
 	"Engine/Scene/Components/*.cpp"
