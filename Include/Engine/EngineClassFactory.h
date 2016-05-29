@@ -60,24 +60,25 @@
 class GameModule;
 class Object;
 class ObjectComponent;
+class ObjectInitializer;
 class ComponentInitializer;
 
 typedef GameModule *(*CreateGameModuleProc)();
-typedef std::map<std::string, Object*(*)()> ObjectClassMapType;
+typedef std::map<std::string, Object*(*)(ObjectInitializer*)> ObjectClassMapType;
 typedef std::map<std::string, ObjectComponent*(*)(ComponentInitializer*)> ComponentClassMapType;
 
-template<typename T> Object *engineFactoryCreateObject() { return new T(); }
+template<typename T> Object *engineFactoryCreateObject(ObjectInitializer *initializer) { return new T(initializer); }
 template<typename T> ObjectComponent *engineFactoryCreateComponent(ComponentInitializer *initializer) { return new T(initializer); }
 
 class EngineClassFactory
 {
 public:
-	static Object *NewObject(const std::string &s)
+	static Object *NewObject(const std::string &s, ObjectInitializer *initializer)
 	{
 		ObjectClassMapType::iterator it = GetObjectMap()->find(s);
 		if (it == GetObjectMap()->end())
 			return nullptr;
-		return it->second();
+		return it->second(initializer);
 	}
 
 	static ObjectComponent *NewComponent(const std::string &s, ComponentInitializer *initializer)

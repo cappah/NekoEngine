@@ -53,7 +53,7 @@ class MovingObject :
 	public Object
 {
 public:
-	TESTGAME_API MovingObject() noexcept;
+	TESTGAME_API MovingObject(ObjectInitializer *initializer) noexcept;
 
 	void TESTGAME_API SetTrajectory(TrajectoryType trajectory) noexcept { _trajectory = trajectory; }
 	void TESTGAME_API SetDestination(glm::vec3 &destination) noexcept { _endPosition = destination; }

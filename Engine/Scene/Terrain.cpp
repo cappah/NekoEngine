@@ -46,17 +46,31 @@
 #include <Scene/Terrain.h>
 #include <Scene/Components/StaticMeshComponent.h>
 
+#define TERRAIN_MODULE	"Terrain"
+
 using namespace glm;
 
 ENGINE_REGISTER_OBJECT_CLASS(Terrain)
 
-Terrain::Terrain() noexcept
-	: Object(),
-	_cellSize(20),
-	_numCells(4),
+Terrain::Terrain(ObjectInitializer *initializer) noexcept : Object(initializer),
 	_uvStep(.05f),
 	_heightmapParams{TextureFilter::Trilinear, TextureFilter::Linear, TextureWrap::ClampToEdge, TextureWrap::ClampToEdge}
 {
+	if(!initializer)
+	{
+		Logger::Log(TERRAIN_MODULE, LOG_WARNING, "No initializer supplied, using default values");
+		
+		_numCells = 4;
+		_cellSize = 20;
+		
+		return;
+	}
+	
+	const char *ptr = initializer->arguments.find("numcells")->second.c_str();
+	_numCells = ptr ? (unsigned short)atoi(ptr) : 4;
+	
+	ptr = initializer->arguments.find("cellsize")->second.c_str();
+	_cellSize = ptr ? (float)atof(ptr) : 20;
 }
 
 bool Terrain::_GenerateTerrain() noexcept

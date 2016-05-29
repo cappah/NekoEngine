@@ -45,7 +45,7 @@ class Skybox :
 	public Object
 {
 public:
-	ENGINE_API Skybox() noexcept : Object(),
+	ENGINE_API Skybox(ObjectInitializer *initializer) noexcept : Object(initializer),
 		_shaderId(-1),
 		_skyboxShader(nullptr)
 	{ };

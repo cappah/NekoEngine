@@ -115,16 +115,14 @@ int Skeleton::Load()
 	};
 	
 	for(int i = 0; i < SH_MAX_BONES; ++i)
+	{
 		_transforms[i] = t;
+		_prevTransforms[i] = t;
+	}
 	
-	_buffer->SetStorage(sizeof(_transforms) * 3, nullptr);
+	_buffer->SetStorage(sizeof(_transforms), nullptr);
 
 	return ENGINE_OK;
-}
-
-void Skeleton::Draw(Renderer* r, size_t group)
-{
-	//
 }
 
 void Skeleton::TransformBones(double time)

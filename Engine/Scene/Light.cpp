@@ -40,4 +40,52 @@
 
 #include <Scene/Light.h>
 
+#define LIGHT_MODULE	"Light"
+
 ENGINE_REGISTER_OBJECT_CLASS(Light);
+
+using namespace glm;
+
+Light::Light(ObjectInitializer *initializer)
+	: Object(initializer)
+{
+	if(!initializer)
+	{
+		Logger::Log(LIGHT_MODULE, LOG_WARNING, "No initializer supplied, using default values");
+		
+		_intensity = 1.f;
+		_attenuation = vec2(0.f);
+		_direction = vec3(0.f);
+		_type = LightType::Directional;
+		_castShadows = false;
+		
+		return;
+	}
+	
+	const char *ptr = initializer->arguments.find("intensity")->second.c_str();
+	_intensity = ptr ? (float)atof(ptr) : 1.f;
+	
+	ptr = initializer->arguments.find("attenuation")->second.c_str();
+	if(ptr)
+		EngineUtils::ReadFloatArray(ptr, 2, &_attenuation.x);
+	else
+		_attenuation = vec2(0.f);
+	
+	ptr = initializer->arguments.find("direction")->second.c_str();
+	if(ptr)
+		EngineUtils::ReadFloatArray(ptr, 3, &_direction.x);
+	else
+		_direction = vec3(0.f);
+	
+	ptr = initializer->arguments.find("type")->second.c_str();
+	size_t len = strlen(ptr);
+	
+	if(!strncmp(ptr, "directional", len))
+		_type = LightType::Directional;
+	else if(!strncmp(ptr, "point", len))
+		_type = LightType::Point;
+	else if(!strncmp(ptr, "spot", len))
+		_type = LightType::Spot;
+	else
+		_type = LightType::Directional;
+}

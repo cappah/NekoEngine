@@ -46,16 +46,38 @@
 
 REGISTER_OBJECT_CLASS(MovingObject);
 
-MovingObject::MovingObject() noexcept
-	: Object(),
-	_radius(10.f),
+MovingObject::MovingObject(ObjectInitializer *initializer) noexcept : Object(initializer),
 	_lastDistance(0.f),
 	_circularCounter(0.f)
 {
 	_startPosition = glm::vec3(0.f, 0.f, 0.f);
-	_endPosition = glm::vec3(0.f, 0.f, 0.f);
+	
 	_speed = 50.f;
-	_trajectory = TrajectoryType::NoTrajectory;
+	
+	const char *ptr = initializer->arguments.find("trajectory")->second.c_str();
+	size_t len = strlen(ptr);
+	
+	if (!strncmp(ptr, "none", len))
+		_trajectory = TrajectoryType::NoTrajectory;
+	else if (!strncmp(ptr, "linear", len))
+		_trajectory = TrajectoryType::Linear;
+	else if (!strncmp(ptr, "circular", len))
+		_trajectory = TrajectoryType::Circular;
+	else
+		_trajectory = TrajectoryType::NoTrajectory;
+	
+	ptr = initializer->arguments.find("radius")->second.c_str();
+	_radius = ptr ? (float)atof(ptr) : 10.f;
+	
+	
+	ptr = initializer->arguments.find("speed")->second.c_str();
+	_speed = ptr ? (float)atof(ptr) : 50.f;
+	
+	ptr = initializer->arguments.find("end")->second.c_str();
+	if(ptr)
+		EngineUtils::ReadFloatArray(ptr, 3, &_endPosition.x);
+	else
+		_endPosition = glm::vec3(0.f, 0.f, 0.f);
 }
 
 int MovingObject::Load()

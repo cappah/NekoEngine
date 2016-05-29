@@ -55,10 +55,28 @@
 using namespace std;
 using namespace glm;
 
+static ObjectInitializer _objDefaultInitializer =
+{
+	7000,
+	"unnamed",
+	{ 0.f, 0.f, 0.f },
+	{ 0.f, 0.f, 0.f },
+	{ 1.f, 1.f, 1.f },
+	{ 0.f, 0.f, 0.f }
+};
+
 ENGINE_REGISTER_OBJECT_CLASS(Object)
 
-Object::Object() noexcept
+Object::Object(ObjectInitializer *initializer) noexcept
 {
+	if(!initializer)
+	{
+		Logger::Log(OBJ_MODULE, LOG_WARNING, "No initializer supplied, using default values");
+		
+		initializer = &_objDefaultInitializer;
+		++_objDefaultInitializer.id;
+	}
+	
 	std::vector<Texture *> _Textures;
 	std::vector<int> _TextureIds;
 	std::vector<TextureParams> _TextureParams;
@@ -68,12 +86,39 @@ Object::Object() noexcept
 	_scaleMatrix = mat4();
 	_modelMatrix = mat4();
 	_loaded = false;
-	SetForwardDirection(ForwardDirection::PositiveZ);
+	
 	_renderer = Engine::GetRenderer();
 
 	memset(&_objectBlock, 0x0, sizeof(_objectBlock));
 
 	_objectUbo = nullptr;
+	
+	SetPosition(initializer->position);
+	SetRotation(initializer->rotation);
+	SetScale(initializer->scale);
+	SetColor(initializer->color);
+	
+	_id = initializer->id;
+	
+	const char *type = initializer->arguments.find("type")->second.c_str();
+	if(!type)
+	{
+		SetForwardDirection(ForwardDirection::PositiveZ);
+		return;
+	}
+	
+	size_t len = strlen(type);
+	
+	if(!strncmp(type, "posz", len))
+		SetForwardDirection(ForwardDirection::PositiveZ);
+	else if(!strncmp(type, "negz", len))
+		SetForwardDirection(ForwardDirection::NegativeZ);
+	else if(!strncmp(type, "posx", len))
+		SetForwardDirection(ForwardDirection::PositiveX);
+	else if(!strncmp(type, "negx", len))
+		SetForwardDirection(ForwardDirection::NegativeX);
+	else
+		SetForwardDirection(ForwardDirection::PositiveZ);
 }
 
 void Object::SetPosition(vec3 &position) noexcept
@@ -108,30 +153,30 @@ void Object::SetForwardDirection(ForwardDirection dir) noexcept
 {
 	switch (dir)
 	{
-	case ForwardDirection::PositiveZ:
-	{
-		_forward = vec3(0.f, 0.f, 1.f);
-		_right = vec3(-1.f, 0.f, 0.f);
-	}
-	break;
-	case ForwardDirection::NegativeZ:
-	{
-		_forward = vec3(0.f, 0.f, -1.f);
-		_right = vec3(1.f, 0.f, 0.f);
-	}
-	break;
-	case ForwardDirection::PositiveX:
-	{
-		_forward = vec3(1.f, 0.f, 0.f);
-		_right = vec3(0.f, 0.f, 1.f);
-	}
-	break;
-	case ForwardDirection::NegativeX:
-	{
-		_forward = vec3(-1.f, 0.f, 0.f);
-		_right = vec3(0.f, 0.f, -1.f);
-	}
-	break;
+		case ForwardDirection::PositiveZ:
+		{
+			_forward = vec3(0.f, 0.f, 1.f);
+			_right = vec3(-1.f, 0.f, 0.f);
+		}
+		break;
+		case ForwardDirection::NegativeZ:
+		{
+			_forward = vec3(0.f, 0.f, -1.f);
+			_right = vec3(1.f, 0.f, 0.f);
+		}
+		break;
+		case ForwardDirection::PositiveX:
+		{
+			_forward = vec3(1.f, 0.f, 0.f);
+			_right = vec3(0.f, 0.f, 1.f);
+		}
+		break;
+		case ForwardDirection::NegativeX:
+		{
+				_forward = vec3(-1.f, 0.f, 0.f);
+			_right = vec3(0.f, 0.f, -1.f);
+		}
+		break;
 	}
 	
 	_objectForward = dir;

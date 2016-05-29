@@ -47,7 +47,7 @@ class Terrain :
 	public Object
 {
 public:
-	ENGINE_API Terrain() noexcept;
+	ENGINE_API Terrain(ObjectInitializer *initializer) noexcept;
 
 	ENGINE_API void SetCellSize(float cellSize) noexcept { _cellSize = cellSize; }
 	ENGINE_API void SetNumCells(unsigned short numCells) noexcept { _numCells = numCells; }

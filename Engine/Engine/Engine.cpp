@@ -352,13 +352,6 @@ bool Engine::_InitRenderer()
 		
 	_renderer->SetDebugLogFunction(Logger::LogRendererDebugMessage);
 
-	/*if (ret != ENGINE_OK)
-	{
-		Logger::Log(MODULE, LOG_CRITICAL, "Renderer initialization failed with %d", ret);
-		Platform::MessageBox("Fatal Error", "Failed to initialize renderer", MessageBoxButtons::OK, MessageBoxIcon::Error);
-		return false;
-	}*/
-
 	Logger::Log("Renderer", LOG_INFORMATION, "Renderer: %s", _renderer->GetName());
 	Logger::Log("Renderer", LOG_INFORMATION, "Version: %d.%d", _renderer->GetMajorVersion(), _renderer->GetMinorVersion());
 
@@ -885,15 +878,15 @@ void Engine::CleanUp() noexcept
 	_disposed = true;
 }
 
-Object *Engine::NewObject(const std::string &className)
+Object *Engine::NewObject(const std::string &className, ObjectInitializer *initializer)
 {
-	Object *obj = EngineClassFactory::NewObject(className);
+	Object *obj = EngineClassFactory::NewObject(className, initializer);
 
 	if (obj)
 		return obj;
 
 	if (_gameModule)
-		return _gameModule->NewObject(className);
+		return _gameModule->NewObject(className, initializer);
 
 	return nullptr;
 }

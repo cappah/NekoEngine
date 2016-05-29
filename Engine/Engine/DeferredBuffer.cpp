@@ -139,18 +139,20 @@ int DeferredBuffer::Initialize() noexcept
 
 	if (Engine::GetConfiguration().Renderer.SSAO)
 		_ssao = new SSAO(_fboWidth, _fboHeight);
+		
+	ObjectInitializer lsInitializer;
 
-	if((_lightSphere = Engine::NewObject("Object")) == nullptr)
+	if((_lightSphere = Engine::NewObject("Object", &lsInitializer)) == nullptr)
 	{
 		Release();
 		return ENGINE_FAIL;
 	}
 
-	ComponentInitializer initializer;
-	initializer.parent = _lightSphere;
-	initializer.arguments.insert(make_pair("mesh", "stm_light_sphere"));
+	ComponentInitializer mcInitializer;
+	mcInitializer.parent = _lightSphere;
+	mcInitializer.arguments.insert(make_pair("mesh", "stm_light_sphere"));
 
-	StaticMeshComponent *meshComponent = (StaticMeshComponent *)Engine::NewComponent("StaticMeshComponent", &initializer);
+	StaticMeshComponent *meshComponent = (StaticMeshComponent *)Engine::NewComponent("StaticMeshComponent", &mcInitializer);
 	if (!meshComponent)
 	{
 		Release();

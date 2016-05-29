@@ -35,7 +35,6 @@ Component=StaticMeshComponent=Mesh
 	material=mat_terrain
 EndComponent
 position=0.0, -200.0, 0.0
-opt=noheight_mtl:1
 EndObject
 
 # Skybox
@@ -236,7 +235,10 @@ scale=0.1, 0.1, 0.1
 position=550.0, 150.0, -600.0
 rotation=0.0, 90.0, 0.0
 color=0.0, 1.0, 0.0
-opt=lt_point;tr_linear;tr_speed:150;fwd:posz;tr_end:550.0, 150.0, 600.0;lt_attenuation:300.0, 350.0;lt_intensity:2.0
+type=point
+attenuation=300.0, 350.0
+intensity=2.0
+#opt=tr_linear;tr_speed:150;fwd:posz;tr_end:550.0, 150.0, 600.0
 EndObject
 
 Object=Light
@@ -249,7 +251,10 @@ scale=0.1, 0.1, 0.1
 position=550.0, 150.0, 600.0
 rotation=0.0, 90.0, 0.0
 color=1.0, 0.0, 0.0
-opt=lt_point;tr_linear;tr_speed:150;fwd:posz;tr_end:550.0, 150.0, -600.0;lt_attenuation:300.0, 350.0;lt_intensity:2.0
+type=point
+attenuation=300.0, 350.0
+intensity=2.0
+opt=tr_linear;tr_speed:150;fwd:posz;tr_end:550.0, 150.0, -600.0
 EndObject
 
 Object=Light
@@ -262,8 +267,10 @@ scale=0.1, 0.1, 0.1
 position=0.0, 150.0, 0.0
 rotation=0.0, 0.0, 0.0
 color=1.0, 1.0, 1.0
-opt=tr_linear;tr_speed:100.0;fwd:posz;tr_end:-4000.0, 150.0, -600.0;lt_point;lt_coords:50.0, -60.0, -600.0
-opt=lt_directional;lt_intensity:0.02;lt_direction:1.0, 0.0, 0.0
+type=directional
+direction=1.0, 0.0, 0.0
+intensity=0.2
+#opt=tr_linear;tr_speed:100.0;fwd:posz;tr_end:-4000.0, 150.0, -600.0;lt_point;lt_coords:50.0, -60.0, -600.0
 EndObject
 
 # Big light
@@ -277,7 +284,9 @@ scale=0.1, 0.1, 0.1
 position=0.0, 150.0, 0.0
 rotation=0.0, 0.0, 0.0
 color=1.0, 1.0, 1.0
-opt=lt_point;lt_attenuation:500.0, 550.0;lt_intensity:1.0
+type=point
+attenuation=500.0, 550.0
+intensity=1.0
 EndObject
 
 # Fire light
@@ -291,8 +300,10 @@ scale=0.1, 0.1, 0.1
 position=80.0, -15.0, -180.0
 rotation=0.0, 90.0, 0.0
 color=1.0, 0.5, 0.0
+type=point
+attenuation=50.0, 75.0
+intensity=5.0
 #opt=tr_linear;tr_speed:100.0;fwd:posz;tr_end:4000.0, 150.0, 600.0;lt_point;lt_coords:50.0, -60.0, -600.0;lt_attenuation:10.0, 150.0
-opt=lt_point;lt_attenuation:50.0, 75.0;lt_intensity:5.0
 EndObject
 
 #############

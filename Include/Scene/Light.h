@@ -56,13 +56,7 @@ class Light :
 {
 public:
 
-	Light() :
-		_type(LightType::Directional),
-		_direction(0.f, 0.f, 0.f),
-		_attenuation(0.f, 0.f),
-		_intensity(1.f),
-		_castShadows(false)
-	{ };
+	Light(ObjectInitializer *initializer);
 
 	LightType GetType() noexcept { return _type; }
 	glm::vec3& GetDirection() noexcept { return _direction; }

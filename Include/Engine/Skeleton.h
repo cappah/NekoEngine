@@ -71,7 +71,6 @@ public:
 	
 	ENGINE_API int Load();
 	ENGINE_API void Update(float deltaTime);
-	ENGINE_API void Draw(Renderer* r, size_t group);
 
 	ENGINE_API void TransformBones(double time);
 
@@ -85,7 +84,7 @@ private:
 	uint16_t _numNodes;
 	RBuffer *_buffer;
 	glm::dmat4 _globalInverseTransform;
-	TrMat _transforms[SH_MAX_BONES];
+	TrMat _transforms[SH_MAX_BONES], _prevTransforms[SH_MAX_BONES];
 	std::map<std::string, uint16_t> _boneMap;
 	AnimationClip *_animationClip;
 	

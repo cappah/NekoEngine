@@ -60,7 +60,6 @@ class TESTGAME_API TestGame :
 public:
 
 	virtual int Initialize() override;
-	virtual void LoadObjectOptionalArguments(Object *obj, const std::vector<char*> &args) override;
 	virtual void CleanUp() override;
 };
 

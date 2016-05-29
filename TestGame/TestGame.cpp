@@ -56,42 +56,6 @@ int TestGame::Initialize()
 	return ENGINE_OK;
 }
 
-void TestGame::LoadObjectOptionalArguments(Object *obj, const vector<char*> &args)
-{
-	MovingObject *mObj = dynamic_cast<MovingObject *>(obj);
-
-	if (mObj)
-	{
-		for (char* str : args)
-		{
-			if (strstr(str, "tr_none"))
-				mObj->SetTrajectory(TrajectoryType::NoTrajectory);
-			else if (strstr(str, "tr_linear"))
-				mObj->SetTrajectory(TrajectoryType::Linear);
-			else if (strstr(str, "tr_circular"))
-				mObj->SetTrajectory(TrajectoryType::Circular);
-			else if (strstr(str, "tr_radius"))
-			{
-				const char *pch = strchr(str, ':');
-				mObj->SetMovementRadius((float)atof(pch + 1));
-			}
-			else if (strstr(str, "tr_speed"))
-			{
-				const char *pch = strchr(str, ':');
-				mObj->SetMovementSpeed((float)atof(pch + 1));
-			}
-			else if (strstr(str, "tr_end"))
-			{
-				const char *pch = strchr(str, ':');
-				vec3 vec;
-
-				EngineUtils::ReadFloatArray(pch + 1, 3, &vec.x);
-				mObj->SetDestination(vec);
-			}
-		}
-	}
-}
-
 void TestGame::CleanUp()
 {
 	//

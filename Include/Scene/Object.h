@@ -50,6 +50,8 @@
 #include <Engine/Material.h>
 #include <Scene/ObjectComponent.h>
 
+#define OBJ_NO_MATERIAL	-1
+
 enum class ForwardDirection : unsigned short
 {
 	PositiveZ = 0,
@@ -73,12 +75,25 @@ typedef struct OBJECT_BLOCK
 	float padding1;
 } ObjectBlock;
 
-#define OBJ_NO_MATERIAL	-1
+typedef std::multimap<std::string, std::string> ArgumentMapType;
+typedef std::pair<ArgumentMapType::iterator, ArgumentMapType::iterator> ArgumentMapRangeType;
+	
+class ObjectInitializer
+{
+public:
+	int id;
+	std::string name;
+	glm::vec3 position;
+	glm::vec3 rotation;
+	glm::vec3 scale;
+	glm::vec3 color;
+	ArgumentMapType arguments;
+};
 
 class Object
 {
 public:
-	ENGINE_API Object() noexcept;
+	ENGINE_API Object(ObjectInitializer *initializer) noexcept;
 	 
 	ENGINE_API int GetId() noexcept { return _id; }
 

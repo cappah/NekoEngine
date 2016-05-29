@@ -65,21 +65,25 @@
 using namespace std;
 using namespace glm;
 
+typedef struct COMPONNENT_INITIALIZER_INFO
+{
+	string name;
+	string className;
+	ComponentInitializer initializer;
+} ComponentInitInfo;
+
 Object *Scene::_LoadObject(VFSFile *f, const string &className)
 {
 	char lineBuff[SCENE_LINE_BUFF];
 	memset(lineBuff, 0x0, SCENE_LINE_BUFF);
+	
+	ObjectInitializer initializer;
+	initializer.position = initializer.rotation = initializer.color = vec3(0.f);
+	initializer.scale = vec3(1.f);
 
-	Object *obj = nullptr;
+	vector<ComponentInitInfo> componentInitInfo;
+	
 	vec3 vec;
-
-	obj = Engine::NewObject(className);
-
-	if (!obj)
-	{
-		Logger::Log(SCENE_MODULE, LOG_CRITICAL, "NewObject() call failed for class %s", className.c_str());
-		return nullptr;
-	}
 
 	while (!f->EoF())
 	{
@@ -106,109 +110,89 @@ Object *Scene::_LoadObject(VFSFile *f, const string &className)
 		size_t len = strlen(split[0]);
 
 		if (!strncmp(split[0], "id", len))
-			obj->SetId(atoi(split[1]));
+			initializer.id = atoi(split[1]);
 		else if (!strncmp(split[0], "color", len))
-		{
-			EngineUtils::ReadFloatArray(split[1], 3, &vec.x);
-			obj->SetColor(vec);
-		}
+			EngineUtils::ReadFloatArray(split[1], 3, &initializer.color.x);
 		else if (!strncmp(split[0], "position", len))
-		{
-			EngineUtils::ReadFloatArray(split[1], 3, &vec.x);
-			obj->SetPosition(vec);
-		}
+			EngineUtils::ReadFloatArray(split[1], 3, &initializer.position.x);
 		else if (!strncmp(split[0], "rotation", len))
-		{
-			EngineUtils::ReadFloatArray(split[1], 3, &vec.x);
-			obj->SetRotation(vec);
-		}
+			EngineUtils::ReadFloatArray(split[1], 3, &initializer.rotation.x);
 		else if (!strncmp(split[0], "scale", len))
-		{
-			EngineUtils::ReadFloatArray(split[1], 3, &vec.x);
-			obj->SetScale(vec);
-		}
-		else if (!strncmp(split[0], "opt", len))
-		{
-			Light *l = dynamic_cast<Light *>(obj);
-
-			vector<char*> optSplit = EngineUtils::SplitString(split[1], ';');
-
-			for (char* opt : optSplit)
-			{
-				if (strstr(opt, "fwd"))
-				{
-					if (strstr(opt, "posz") != nullptr)
-						obj->SetForwardDirection(ForwardDirection::PositiveZ);
-					if (strstr(opt, "negz") != nullptr)
-						obj->SetForwardDirection(ForwardDirection::NegativeZ);
-					if (strstr(opt, "posx") != nullptr)
-						obj->SetForwardDirection(ForwardDirection::PositiveX);
-					if (strstr(opt, "negx") != nullptr)
-						obj->SetForwardDirection(ForwardDirection::NegativeX);
-				}
-				else if (l && strstr(opt, "lt_point"))
-					l->SetType(LightType::Point);
-				else if (l && strstr(opt, "lt_directional"))
-					l->SetType(LightType::Directional);
-				else if (l && strstr(opt, "lt_attenuation"))
-				{
-					const char *pch = strchr(opt, ':');
-					vec2 vec;
-
-					EngineUtils::ReadFloatArray(pch + 1, 2, &vec.x);
-					l->SetAttenuation(vec);
-				}
-				else if(l && strstr(opt, "lt_intensity"))
-				{
-					const char *pch = strchr(opt, ':');
-					l->SetIntensity((float)atof(pch + 1));
-				}
-				else if (l && strstr(opt, "lt_direction"))
-				{
-					const char *pch = strchr(opt, ':');
-					vec3 vec;
-
-					EngineUtils::ReadFloatArray(pch + 1, 3, &vec.x);
-					l->SetDirection(vec);
-				}
-			}
-
-			l = nullptr;
-
-			if(Engine::GetGameModule())
-				Engine::GetGameModule()->LoadObjectOptionalArguments(obj, optSplit);
-		
-			for (char* c : optSplit)
-				free(c);
-		}
+			EngineUtils::ReadFloatArray(split[1], 3, &initializer.scale.x);
 		else if (!strncmp(split[0], "Component", len))
 		{
-			ObjectComponent *comp = _LoadComponent(f, obj, split[1]);
+			ComponentInitInfo info;
+			info.name = split[2];
+			info.className = split[1];
 			
-			if(!comp)
-			{
-				Logger::Log(SCENE_MODULE, LOG_CRITICAL, "Failed to load component %s of type %s for object id %d", split[2], split[1], obj->GetId());
-				delete obj;
-				return nullptr;
-			}
+			_LoadComponent(f, &info);
 			
-			obj->AddComponent(split[2], comp);
+			componentInitInfo.push_back(info);
 		}
-		
-		Terrain *t = nullptr;
-
-		if((t = dynamic_cast<Terrain *>(obj)))
-		{
-			if (!strncmp(split[0], "numcells", len))
-				t->SetNumCells((unsigned short)atoi(split[1]));
-			else if (!strncmp(split[0], "cellsize", len))
-				t->SetCellSize((float)atof(split[1]));
-		}
+		else
+			initializer.arguments.insert(make_pair(split[0], split[1]));
 
 		for (char* c : split)
 			free(c);
 	}
-
+	
+	Object *obj = nullptr;
+	
+	obj = Engine::NewObject(className, &initializer);
+	
+	if (!obj)
+	{
+		Logger::Log(SCENE_MODULE, LOG_CRITICAL, "NewObject() call failed for class %s", className.c_str());
+		return nullptr;
+	}
+	
+	for(ComponentInitInfo &info : componentInitInfo)
+	{
+		info.initializer.parent = obj;
+		ObjectComponent *comp = Engine::NewComponent(info.className, &info.initializer);
+		
+		if (!comp || comp->Load() != ENGINE_OK)
+		{
+			Logger::Log(SCENE_MODULE, LOG_CRITICAL, "Failed to load component %s of type %s for object id %d", info.name.c_str(), info.className.c_str(), obj->GetId());
+			delete obj;
+			return nullptr;
+		}
+		
+		SkeletalMeshComponent *skcomp = dynamic_cast<SkeletalMeshComponent*>(comp);
+		if (skcomp)
+		{
+			if (Engine::GetRenderer()->HasCapability(RendererCapability::DrawBaseVertex))
+			{
+				skcomp->GetMesh()->SetVertexOffset(_sceneVertices.size());
+				skcomp->GetMesh()->SetIndexOffset(_sceneIndices.size());
+				
+				_AddVertices(skcomp->GetMesh()->GetVertices());
+				_AddIndices(skcomp->GetMesh()->GetIndices());
+			}
+			else
+				skcomp->GetMesh()->CreateBuffers(false);
+		}
+		else
+		{
+			StaticMeshComponent *stcomp = dynamic_cast<StaticMeshComponent*>(comp);
+			if (stcomp)
+			{
+				if (Engine::GetRenderer()->HasCapability(RendererCapability::DrawBaseVertex))
+				{
+					stcomp->GetMesh()->SetVertexOffset(_sceneVertices.size());
+					stcomp->GetMesh()->SetIndexOffset(_sceneIndices.size());
+					
+					_AddVertices(stcomp->GetMesh()->GetVertices());
+					_AddIndices(stcomp->GetMesh()->GetIndices());
+				}
+				else
+					stcomp->GetMesh()->CreateBuffers(false);
+			}
+		}
+		
+		obj->AddComponent(info.name.c_str(), comp);
+	}
+	
 	if (obj->Load() != ENGINE_OK)
 	{
 		Logger::Log(SCENE_MODULE, LOG_CRITICAL, "Failed to load object id %d", obj->GetId());
@@ -366,11 +350,8 @@ void Scene::_LoadSceneInfo(VFSFile *f)
 	DeferredBuffer::SetAmbientColor(_ambientColor, _ambientColorIntensity);
 }
 
-ObjectComponent *Scene::_LoadComponent(VFSFile *f, Object *parent, const std::string &className)
+void Scene::_LoadComponent(VFSFile *f, ComponentInitInfo *initInfo)
 {
-	ComponentInitializer initializer;
-	initializer.parent = parent;
-
 	char lineBuff[SCENE_LINE_BUFF];
 	memset(lineBuff, 0x0, SCENE_LINE_BUFF);
 
@@ -405,50 +386,11 @@ ObjectComponent *Scene::_LoadComponent(VFSFile *f, Object *parent, const std::st
 		// skip tabs
 		while (*ptr == '\t') ptr++;
 
-		initializer.arguments.insert(make_pair(ptr, split[1]));
+		initInfo->initializer.arguments.insert(make_pair(ptr, split[1]));
 
 		for (char* c : split)
 			free(c);
 	}
-
-	ObjectComponent *comp = Engine::NewComponent(className, &initializer);
-
-	if (!comp || comp->Load() != ENGINE_OK)
-		return nullptr;
-
-	SkeletalMeshComponent *skcomp = dynamic_cast<SkeletalMeshComponent*>(comp);
-	if (skcomp)
-	{
-		if (Engine::GetRenderer()->HasCapability(RendererCapability::DrawBaseVertex))
-		{
-			skcomp->GetMesh()->SetVertexOffset(_sceneVertices.size());
-			skcomp->GetMesh()->SetIndexOffset(_sceneIndices.size());
-
-			_AddVertices(skcomp->GetMesh()->GetVertices());
-			_AddIndices(skcomp->GetMesh()->GetIndices());
-		}
-		else
-			skcomp->GetMesh()->CreateBuffers(false);
-	}
-	else
-	{
-		StaticMeshComponent *stcomp = dynamic_cast<StaticMeshComponent*>(comp);
-		if (stcomp)
-		{
-			if (Engine::GetRenderer()->HasCapability(RendererCapability::DrawBaseVertex))
-			{
-				stcomp->GetMesh()->SetVertexOffset(_sceneVertices.size());
-				stcomp->GetMesh()->SetIndexOffset(_sceneIndices.size());
-				
-				_AddVertices(stcomp->GetMesh()->GetVertices());
-				_AddIndices(stcomp->GetMesh()->GetIndices());
-			}
-			else
-				stcomp->GetMesh()->CreateBuffers(false);
-		}
-	}
-
-	return comp;
 }
 
 size_t Scene::GetVertexCount() noexcept
