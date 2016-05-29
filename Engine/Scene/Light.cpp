@@ -65,19 +65,22 @@ Light::Light(ObjectInitializer *initializer)
 	const char *ptr = initializer->arguments.find("intensity")->second.c_str();
 	_intensity = ptr ? (float)atof(ptr) : 1.f;
 	
-	ptr = initializer->arguments.find("attenuation")->second.c_str();
-	if(ptr)
+	if((ptr = initializer->arguments.find("attenuation")->second.c_str()) != nullptr)
 		EngineUtils::ReadFloatArray(ptr, 2, &_attenuation.x);
 	else
 		_attenuation = vec2(0.f);
 	
-	ptr = initializer->arguments.find("direction")->second.c_str();
-	if(ptr)
+	if((ptr = initializer->arguments.find("direction")->second.c_str()) != nullptr)
 		EngineUtils::ReadFloatArray(ptr, 3, &_direction.x);
 	else
 		_direction = vec3(0.f);
 	
-	ptr = initializer->arguments.find("type")->second.c_str();
+	if((ptr = initializer->arguments.find("type")->second.c_str()) == nullptr)
+	{
+		_type = LightType::Directional;
+		return;
+	}
+	
 	size_t len = strlen(ptr);
 	
 	if(!strncmp(ptr, "directional", len))

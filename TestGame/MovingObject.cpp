@@ -55,14 +55,19 @@ MovingObject::MovingObject(ObjectInitializer *initializer) noexcept : Object(ini
 	_speed = 50.f;
 	
 	const char *ptr = initializer->arguments.find("trajectory")->second.c_str();
-	size_t len = strlen(ptr);
+	if(ptr)
+	{
+		size_t len = strlen(ptr);
 	
-	if (!strncmp(ptr, "none", len))
-		_trajectory = TrajectoryType::NoTrajectory;
-	else if (!strncmp(ptr, "linear", len))
-		_trajectory = TrajectoryType::Linear;
-	else if (!strncmp(ptr, "circular", len))
-		_trajectory = TrajectoryType::Circular;
+		if (!strncmp(ptr, "none", len))
+			_trajectory = TrajectoryType::NoTrajectory;
+		else if (!strncmp(ptr, "linear", len))
+			_trajectory = TrajectoryType::Linear;
+		else if (!strncmp(ptr, "circular", len))
+			_trajectory = TrajectoryType::Circular;
+		else
+			_trajectory = TrajectoryType::NoTrajectory;
+	}
 	else
 		_trajectory = TrajectoryType::NoTrajectory;
 	
