@@ -65,8 +65,8 @@ void Camera::UpdatePerspective() noexcept
 
 void Camera::Update(double deltaTime) noexcept
 {
-	float hAngle = _horizontalSensivity * _xDelta * deltaTime;
-	float vAngle = _verticalSensivity * _yDelta * deltaTime;
+	float hAngle = _horizontalSensivity * _xDelta * (float)deltaTime;
+	float vAngle = _verticalSensivity * _yDelta * (float)deltaTime;
 
 	_xDelta = 0.f;
 	_yDelta = 0.f;
@@ -90,7 +90,7 @@ void Camera::Update(double deltaTime) noexcept
 	if (Engine::GetKeyDown(KEY_LSHIFT))
 		speed = _fastTranslateSpeed;
 
-	float velocity = speed * deltaTime;
+	float velocity = speed * (float)deltaTime;
 
 	if (Engine::GetKeyDown('w'))
 		_position += _front * velocity * (_fps ? vec3(1.f, 0.f, 1.f) : vec3(1.f));
@@ -103,14 +103,14 @@ void Camera::Update(double deltaTime) noexcept
 		_position -= _right * velocity;
 
 	if (Engine::GetKeyDown(KEY_RIGHTARROW))
-		_rotation.y += _rotateSpeed * deltaTime;
+		_rotation.y += _rotateSpeed * (float)deltaTime;
 	else if (Engine::GetKeyDown(KEY_LEFTARROW))
-		_rotation.y -= _rotateSpeed * deltaTime;
+		_rotation.y -= _rotateSpeed * (float)deltaTime;
 
 	if (Engine::GetKeyDown(KEY_UPARROW))
-		_rotation.x -= _rotateSpeed * deltaTime;
+		_rotation.x -= _rotateSpeed * (float)deltaTime;
 	else if (Engine::GetKeyDown(KEY_DOWNARROW))
-		_rotation.x += _rotateSpeed * deltaTime;
+		_rotation.x += _rotateSpeed * (float)deltaTime;
 
 	if (_fps)
 		_rotation.x = clamp(_rotation.x, -60.f, 85.f);
