@@ -158,13 +158,13 @@ Component=StaticMeshComponent=Mesh
 	material=mat_skyreflect
 	material=mat_skyreflect
 EndComponent
-#Component=AudioSourceComponent=EngineAudio
-#	defaultclip=snd_engine
-#	loop=true
-#	playonload=true
-#	refdistance=600.0
-#	maxdistance=800.0
-#EndComponent
+Component=AudioSourceComponent=EngineAudio
+	defaultclip=snd_engine
+	loop=true
+	playonload=false
+	refdistance=600.0
+	maxdistance=800.0
+EndComponent
 position=550.0, 10.0, 150.0
 rotation=0.0, 180.0, 0.0
 scale=1.0, 1.0, 1.0
@@ -227,10 +227,6 @@ EndObject
 
 Object=Light
 id=100
-Component=StaticMeshComponent=Mesh
-	mesh=stm_bila
-	material=mat_bila
-EndComponent
 scale=0.1, 0.1, 0.1
 position=550.0, 150.0, -600.0
 rotation=0.0, 90.0, 0.0
@@ -238,15 +234,10 @@ color=0.0, 1.0, 0.0
 type=point
 attenuation=300.0, 350.0
 intensity=2.0
-#opt=tr_linear;tr_speed:150;fwd:posz;tr_end:550.0, 150.0, 600.0
 EndObject
 
 Object=Light
 id=101
-Component=StaticMeshComponent=Mesh
-	mesh=stm_bila
-	material=mat_bila
-EndComponent
 scale=0.1, 0.1, 0.1
 position=550.0, 150.0, 600.0
 rotation=0.0, 90.0, 0.0
@@ -254,15 +245,10 @@ color=1.0, 0.0, 0.0
 type=point
 attenuation=300.0, 350.0
 intensity=2.0
-opt=tr_linear;tr_speed:150;fwd:posz;tr_end:550.0, 150.0, -600.0
 EndObject
 
 Object=Light
 id=102
-Component=StaticMeshComponent=Mesh
-	mesh=stm_bila
-	material=mat_bila
-EndComponent
 scale=0.1, 0.1, 0.1
 position=0.0, 150.0, 0.0
 rotation=0.0, 0.0, 0.0
@@ -270,16 +256,11 @@ color=1.0, 1.0, 1.0
 type=directional
 direction=1.0, 0.0, 0.0
 intensity=0.2
-#opt=tr_linear;tr_speed:100.0;fwd:posz;tr_end:-4000.0, 150.0, -600.0;lt_point;lt_coords:50.0, -60.0, -600.0
 EndObject
 
 # Big light
 Object=Light
 id=103
-Component=StaticMeshComponent=Mesh
-	mesh=stm_bila
-	material=mat_bila
-EndComponent
 scale=0.1, 0.1, 0.1
 position=0.0, 150.0, 0.0
 rotation=0.0, 0.0, 0.0
@@ -292,10 +273,6 @@ EndObject
 # Fire light
 Object=Light
 id=104
-Component=StaticMeshComponent=Mesh
-	mesh=stm_bila
-	material=mat_bila
-EndComponent
 scale=0.1, 0.1, 0.1
 position=80.0, -15.0, -180.0
 rotation=0.0, 90.0, 0.0
@@ -303,7 +280,6 @@ color=1.0, 0.5, 0.0
 type=point
 attenuation=50.0, 75.0
 intensity=5.0
-#opt=tr_linear;tr_speed:100.0;fwd:posz;tr_end:4000.0, 150.0, 600.0;lt_point;lt_coords:50.0, -60.0, -600.0;lt_attenuation:10.0, 150.0
 EndObject
 
 #############
