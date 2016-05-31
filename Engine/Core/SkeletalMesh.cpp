@@ -94,11 +94,6 @@ int SkeletalMesh::Load()
 	return ENGINE_OK;
 }
 
-void SkeletalMesh::Update(float deltaTime)
-{
-	
-}
-
 void SkeletalMesh::Draw(Renderer* r, size_t group)
 {
 	StaticMesh::Draw(r, group);

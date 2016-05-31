@@ -55,7 +55,6 @@ public:
 	ENGINE_API Skeleton *CreateSkeleton();
 	
 	ENGINE_API virtual int Load() override;
-	ENGINE_API void Update(float deltaTime);
 	ENGINE_API virtual void Draw(Renderer* r, size_t group) override;
 
 	ENGINE_API virtual ~SkeletalMesh() noexcept;

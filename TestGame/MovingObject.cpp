@@ -122,11 +122,11 @@ void MovingObject::Update(double deltaTime) noexcept
 		else
 			_lastDistance = distance;
 
-		MoveForward(_speed * deltaTime);
+		MoveForward(_speed * (float)deltaTime);
 	}
 	else if (_trajectory == TrajectoryType::Circular)
 	{
-		_circularCounter += deltaTime;
+		_circularCounter += (float)deltaTime;
 
 		glm::vec3 pos = _position;
 		pos.x += cosf(_speed * _circularCounter) * _radius;
