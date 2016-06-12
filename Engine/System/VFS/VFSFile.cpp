@@ -97,7 +97,7 @@ int VFSFile::Open()
 		if (!_gzfp)
 			return ENGINE_FAIL;
 
-	#ifndef NE_PLATFORM_OPENBSD
+	#if !defined(NE_PLATFORM_OPENBSD) && !defined(NE_PLATFORM_SOLARIS)
 		gzbuffer(_gzfp, 131072); // 128 kB buffer
 	#endif
 	}
