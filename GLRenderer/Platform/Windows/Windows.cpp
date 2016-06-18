@@ -39,6 +39,8 @@
 #include "../../GLRenderer.h"
 #include <GL/wglext.h>
 
+using namespace std;
+
 PIXELFORMATDESCRIPTOR pfd =
 {
 	sizeof(PIXELFORMATDESCRIPTOR),

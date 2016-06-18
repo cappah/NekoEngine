@@ -45,6 +45,8 @@
 
 #include <OpenGL/gl3.h>
 
+using namespace std;
+
 bool GLRenderer::Initialize(PlatformWindowType hWnd, unordered_map<string, string> *args, bool debug)
 {
 	_hWnd = hWnd;

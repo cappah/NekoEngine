@@ -211,22 +211,22 @@
 #endif
 #endif
 #elif defined(sun) || defined(__sun)
-#define NE_PLATFORM_SOLARIS
+#define NE_PLATFORM_SUNOS
 #define NE_PLATFORM_X11
 #if defined(__sparc)
 #ifdef __LP64__
-#define NE_PLATFORM_SOLARIS_SPARC64
+#define NE_PLATFORM_SUNOS_SPARC64
 #define NE_ARCH_SPARC64
 #else
-#define NE_PLATFORM_SOLARIS_SPARC
+#define NE_PLATFORM_SUNOS_SPARC
 #define NE_ARCH_SPARC
 #endif
 #else
 #ifdef __LP64__
-#define NE_PLATFORM_SOLARIS_X8664
+#define NE_PLATFORM_SUNOS_X8664
 #define NE_ARCH_X8664
 #else
-#define NE_PLATFORM_SOLARIS_X86
+#define NE_PLATFORM_SUNOS_X86
 #define NE_ARCH_X86
 #endif
 #endif

@@ -130,15 +130,15 @@
 	#else
 		#define ENGINE_PLATFORM_STRING		"BB10 unknown"
 	#endif
-#elif defined(NE_PLATFORM_SOLARIS)
+#elif defined(NE_PLATFORM_SUNOS)
 	#if defined(NE_ARCH_SPARC64)
-		#define ENGINE_PLATFORM_STRING		"Solaris sparc64"
+		#define ENGINE_PLATFORM_STRING		"SunOS sparc64"
 	#elif defined(NE_ARCH_SPARC)
-		#define ENGINE_PLATFORM_STRING		"Solaris sparc"
+		#define ENGINE_PLATFORM_STRING		"SunOS sparc"
 	#elif defined(NE_ARCH_X86)
-		#define ENGINE_PLATFORM_STRING		"Solaris x86"
+		#define ENGINE_PLATFORM_STRING		"SunOS x86"
 	#elif defined(NE_ARCH_X8664)
-		#define ENGINE_PLATFORM_STRING		"Solaris x86_64"
+		#define ENGINE_PLATFORM_STRING		"SunOS x86_64"
 	#endif
 #elif defined(NE_PLATFORM_ANDROID)
 	#define ENGINE_PLATFORM_STRING			"Android"
