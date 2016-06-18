@@ -42,6 +42,14 @@
 
 #include <stdio.h>
 
+#ifndef GLX_CONTEXT_PROFILE_MASK_ARB
+#define GLX_CONTEXT_PROFILE_MASK_ARB		0x9126
+#endif
+
+#ifndef GLX_CONTEXT_CORE_PROFILE_BIT_ARB
+#define GLX_CONTEXT_CORE_PROFILE_BIT_ARB	0x1
+#endif
+
 static PFNGLXSWAPINTERVALEXTPROC glXSwapIntervalEXT = 0;
 
 bool GLRenderer::Initialize(PlatformWindowType hWnd, bool debug)

@@ -216,9 +216,9 @@ bool VFSFile::EoF()
 	if (_type == FileType::Loose)
 	{
 		if (_fp)
-			return (feof(_fp) == 1);
+			return (feof(_fp) >= 1);
 		else if (_gzfp)
-			return (gzeof(_gzfp) == 1);
+			return (gzeof(_gzfp) >= 1);
 		else
 			return true;
 	}
