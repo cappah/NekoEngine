@@ -102,9 +102,9 @@ GLShader::GLShader()
 	_vsNumBuffers = 0;
 	_fsNumBuffers = 0;
 
-	_haveExplicitUniforms = GLRenderer::HasExtension("GL_ARB_explicit_uniform_location") && GLRenderer::HasExtension("GL_ARB_direct_state_access");
-	_haveBindlessTexture = GLRenderer::HasExtension("GL_ARB_bindless_texture");
-	_haveSubroutines = _haveExplicitUniforms && GLRenderer::HasExtension("GL_ARB_shader_subroutine");
+	_haveExplicitUniforms = GLRenderer::GetConfiguration()->EnableExplicitUniforms && (GLRenderer::HasExtension("GL_ARB_explicit_uniform_location") && GLRenderer::HasExtension("GL_ARB_direct_state_access"));
+	_haveBindlessTexture = GLRenderer::GetConfiguration()->EnableBindlessTexture && GLRenderer::HasExtension("GL_ARB_bindless_texture");
+	_haveSubroutines = GLRenderer::GetConfiguration()->EnableSubroutines && (_haveExplicitUniforms && GLRenderer::HasExtension("GL_ARB_shader_subroutine"));
 }
 
 void GLShader::Enable()

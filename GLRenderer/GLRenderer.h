@@ -143,13 +143,20 @@ typedef struct SHADER_DEFINE
 	std::string value;
 } ShaderDefine;
 
+typedef struct GL_RENDERER_CONFIG
+{
+	bool EnableExplicitUniforms;	
+	bool EnableBindlessTexture;
+	bool EnableSubroutines;
+} GLRendererConfig;
+
 class GLRenderer :
 	public Renderer
 {
 public:
 	GLRenderer();
 
-	virtual bool Initialize(PlatformWindowType hWnd, bool debug = false) override;
+	virtual bool Initialize(PlatformWindowType hWnd, std::unordered_map<std::string, std::string> *args = nullptr, bool debug = false) override;
 
 	virtual void SetDebugLogFunction(RendererDebugLogProc debugLogFunction) override;
 
@@ -223,7 +230,8 @@ public:
 	static std::vector<ShaderDefine>& GetShaderDefines() { return _shaderDefines; }
 	static void SetActiveShader(class GLShader *shader) { _activeShader = shader; }
 	static bool HasExtension(const char* extension);
-	
+	static GLRendererConfig *GetConfiguration() { return &_configuration; }
+
 private:
 	RHI_GL_CTX _ctx;
 	RHI_DC _dc;
@@ -232,9 +240,11 @@ private:
 	static RFramebuffer* _boundFramebuffer;
 	static std::vector<ShaderDefine> _shaderDefines;
 	static class GLShader* _activeShader;
+	static GLRendererConfig _configuration;
 	
 	void _DestroyContext();
 	void _CheckExtensions();
+	void _ParseArguments(std::unordered_map<std::string, std::string> *args);
 };
 
 extern RendererDebugLogProc _debugLogFunc;

@@ -45,7 +45,7 @@
 
 #include <OpenGL/gl3.h>
 
-bool GLRenderer::Initialize(PlatformWindowType hWnd, bool debug)
+bool GLRenderer::Initialize(PlatformWindowType hWnd, unordered_map<string, string> *args, bool debug)
 {
 	_hWnd = hWnd;
 	
@@ -67,6 +67,8 @@ bool GLRenderer::Initialize(PlatformWindowType hWnd, bool debug)
 	[_ctx makeCurrentContext];
 	
 	[_ctx flushBuffer];
+
+	_ParseArguments(args);
 	
 	return true;
 }

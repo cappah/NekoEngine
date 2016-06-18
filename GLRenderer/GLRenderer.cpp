@@ -57,6 +57,8 @@
 #define GL_GPU_MEMORY_INFO_CURRENT_AVAILABLE_VIDMEM_NVX 0
 #endif
 
+using namespace std;
+
 static GLenum GL_DrawModes[2] =
 {
 	GL_TRIANGLES,
@@ -132,6 +134,7 @@ RendererDebugLogProc _debugLogFunc = nullptr;
 RFramebuffer* GLRenderer::_boundFramebuffer = nullptr;
 std::vector<ShaderDefine> GLRenderer::_shaderDefines;
 GLShader* GLRenderer::_activeShader;
+GLRendererConfig GLRenderer::_configuration = { true, true, true };
 
 GLRenderer::GLRenderer()
 {
@@ -492,6 +495,19 @@ bool GLRenderer::HasExtension(const char* extension)
 void GLRenderer::_CheckExtensions()
 {
 	_haveDSA = HasExtension("GL_ARB_direct_state_access");
+}
+
+void GLRenderer::_ParseArguments(unordered_map<string, string> *args)
+{
+	for(pair<string, string> kvp : *args)
+	{
+		if(!kvp.first.compare("bEnableSubroutines"))
+			_configuration.EnableSubroutines = kvp.second.compare("0");
+		else if(!kvp.first.compare("bEnableBindlessTexture"))
+			_configuration.EnableBindlessTexture = kvp.second.compare("0");
+		else if(!kvp.first.compare("bEnableExplicitUniforms"))
+			_configuration.EnableExplicitUniforms = kvp.second.compare("0");
+	}
 }
 
 GLRenderer::~GLRenderer()

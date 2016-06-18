@@ -46,6 +46,9 @@
 #include <stdint.h>
 #include <chrono>
 
+#include <string>
+#include <unordered_map>
+
 #ifndef NE_DEVICE_MOBILE
 #include <png.h>
 #endif
@@ -116,6 +119,7 @@ PlatformModuleType Engine::_rendererLibrary = nullptr;
 bool Engine::_haveMemoryInfo = false;
 bool Engine::_startup = true;
 static bool iniFileLoaded = false;
+static unordered_map<string, string> _rendererArguments;
 
 ObjectClassMapType *EngineClassFactory::_objectClassMap = nullptr;
 ComponentClassMapType *EngineClassFactory::_componentClassMap = nullptr;
@@ -172,6 +176,68 @@ void Engine::_ParseArgs(string cmdLine)
 	}
 }
 
+void Engine::_ReadEffectConfig(const char *file)
+{
+	if (_config.PostProcessor.Bloom)
+	{
+		Bloom *bloom = new Bloom();
+		bloom->SetOption("Step", Platform::GetConfigFloat("PostEffects.Bloom", "fStep", .3f, file));
+
+		PostProcessor::AddEffect(bloom);
+	}
+
+	if (_config.PostProcessor.SMAA)
+	{
+		SMAA *smaa = new SMAA();
+		PostProcessor::AddEffect(smaa);
+	}
+
+	if (_config.PostProcessor.FXAA)
+	{
+		FXAA *fxaa = new FXAA();
+		fxaa->SetOption("Subpix", Platform::GetConfigFloat("PostEffects.FXAA", "fSubpix", 1.f, file));
+		fxaa->SetOption("EdgeThreshold", Platform::GetConfigFloat("PostEffects.FXAA", "fEdgeThreshold", .063f, file));
+		fxaa->SetOption("EdgeThresholdMin", Platform::GetConfigFloat("PostEffects.FXAA", "fEdgeThresholdMin", 0.f, file));
+
+		PostProcessor::AddEffect(fxaa);
+	}
+}
+
+void Engine::_ReadRendererConfig(const char *file)
+{
+	char name[256], buff[INI_BUFF_SZ], optBuff[INI_BUFF_SZ];
+	bool end = false;
+	int i = 0, optI = 0;
+
+	memset(name, 0x0, 256);
+	memset(buff, 0x0, INI_BUFF_SZ);
+
+	snprintf(name, 256, "Renderer.%s", _rendererFile);
+	Platform::GetConfigSection(name, buff, INI_BUFF_SZ, file);
+
+	while(!end)
+	{
+		char c, *vptr, *val;
+
+		while((c = buff[i]) != 0x0)
+		{
+			optBuff[optI] = c;
+			++optI;
+			++i;
+		}
+
+		if(buff[i + 1] == 0x0)
+			end = true;
+
+		if((vptr = strchr(optBuff, '=')) == nullptr)
+			break;
+
+		*vptr++ = 0x0;
+
+		_rendererArguments.insert(make_pair(optBuff, vptr));
+	}
+}
+
 void Engine::_ReadINIFile(const char *file)
 {
 	char buff[INI_BUFF_SZ];
@@ -206,7 +272,7 @@ void Engine::_ReadINIFile(const char *file)
 
 	if(_rendererFile[0] == 0x0)
 	{
-		Platform::GetConfigString("Engine", "sRenderer", "GL4Renderer", buff, INI_BUFF_SZ, file);
+		Platform::GetConfigString("Engine", "sRenderer", "GLRenderer", buff, INI_BUFF_SZ, file);
 		memset(_rendererFile, 0x0, PATH_SIZE);
 		if (snprintf(_rendererFile, PATH_SIZE, "%s", buff) >= PATH_SIZE)
 		{ DIE("Failed to load configuration"); }
@@ -237,36 +303,11 @@ void Engine::_ReadINIFile(const char *file)
 
 	_ReadEffectConfig(file);
 
+	_ReadRendererConfig(file);
+
 	iniFileLoaded = true;
 	
 	memset(buff, 0x0, INI_BUFF_SZ);
-}
-
-void Engine::_ReadEffectConfig(const char *file)
-{
-	if (_config.PostProcessor.Bloom)
-	{
-		Bloom *bloom = new Bloom();
-		bloom->SetOption("Step", Platform::GetConfigFloat("PostEffects.Bloom", "fStep", .3f, file));
-
-		PostProcessor::AddEffect(bloom);
-	}
-
-	if (_config.PostProcessor.SMAA)
-	{
-		SMAA *smaa = new SMAA();
-		PostProcessor::AddEffect(smaa);
-	}
-
-	if (_config.PostProcessor.FXAA)
-	{
-		FXAA *fxaa = new FXAA();
-		fxaa->SetOption("Subpix", Platform::GetConfigFloat("PostEffects.FXAA", "fSubpix", 1.f, file));
-		fxaa->SetOption("EdgeThreshold", Platform::GetConfigFloat("PostEffects.FXAA", "fEdgeThreshold", .063f, file));
-		fxaa->SetOption("EdgeThresholdMin", Platform::GetConfigFloat("PostEffects.FXAA", "fEdgeThresholdMin", 0.f, file));
-
-		PostProcessor::AddEffect(fxaa);
-	}
 }
 
 void Engine::_InitializeQuadVAO()
@@ -338,9 +379,9 @@ bool Engine::_InitRenderer()
 	}
 
 #ifdef _DEBUG
-	int ret = _renderer->Initialize(_engineWindow, true);
+	int ret = _renderer->Initialize(_engineWindow, &_rendererArguments, true);
 #else
-	int ret = _renderer->Initialize(_engineWindow);
+	int ret = _renderer->Initialize(_engineWindow, &_rendererArguments);
 #endif
 
 	if (!ret)

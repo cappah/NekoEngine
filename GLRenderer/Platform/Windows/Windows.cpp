@@ -61,7 +61,7 @@ PIXELFORMATDESCRIPTOR pfd =
 
 static PFNWGLSWAPINTERVALEXTPROC wglSwapIntervalEXT = nullptr;
 
-bool GLRenderer::Initialize(PlatformWindowType hWnd, bool debug)
+bool GLRenderer::Initialize(PlatformWindowType hWnd, unordered_map<string, string> *args, bool debug)
 {
 	_dc = GetDC(hWnd);
 	HGLRC dummy;
@@ -164,6 +164,7 @@ bool GLRenderer::Initialize(PlatformWindowType hWnd, bool debug)
 	wglSwapIntervalEXT = (PFNWGLSWAPINTERVALEXTPROC)wglGetProcAddress("wglSwapIntervalEXT");
 
 	_CheckExtensions();
+	_ParseArguments(args);
 
 	return true;
 }

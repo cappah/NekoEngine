@@ -341,8 +341,9 @@ private:
 #endif
 
 	static void _ParseArgs(std::string cmdLine);
-	static void _ReadINIFile(const char *file);
 	static void _ReadEffectConfig(const char *file);
+	static void _ReadRendererConfig(const char *file);
+	static void _ReadINIFile(const char *file);
 	static void _InitializeQuadVAO();
 	static bool _InitRenderer();
 	static bool _InitSystem();

@@ -42,6 +42,8 @@
 
 #include <stdio.h>
 
+using namespace std;
+
 #ifndef GLX_CONTEXT_PROFILE_MASK_ARB
 #define GLX_CONTEXT_PROFILE_MASK_ARB		0x9126
 #endif
@@ -52,7 +54,7 @@
 
 static PFNGLXSWAPINTERVALEXTPROC glXSwapIntervalEXT = 0;
 
-bool GLRenderer::Initialize(PlatformWindowType hWnd, bool debug)
+bool GLRenderer::Initialize(PlatformWindowType hWnd, unordered_map<string, string> *args, bool debug)
 {
 	_dc = XOpenDisplay(NULL);
 	XSetWindowAttributes xattr;
@@ -184,6 +186,7 @@ bool GLRenderer::Initialize(PlatformWindowType hWnd, bool debug)
 	glXSwapIntervalEXT = (PFNGLXSWAPINTERVALEXTPROC)glXGetProcAddressARB((const GLubyte*)"glXSwapIntervalEXT");
 
 	_CheckExtensions();
+	_ParseArguments(args);
 
 	return true;
 }

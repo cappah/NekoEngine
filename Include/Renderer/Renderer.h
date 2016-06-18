@@ -41,6 +41,7 @@
 #include <stdint.h>
 
 #include <string>
+#include <unordered_map>
 
 #include <Platform/Platform.h>
 #include <Renderer/RBuffer.h>
@@ -177,7 +178,7 @@ public:
 	/**
 	 * Initialize the rendering context
 	 */
-	virtual bool Initialize(PlatformWindowType hWnd, bool debug = false) = 0;
+	virtual bool Initialize(PlatformWindowType hWnd, std::unordered_map<std::string, std::string> *args = nullptr, bool debug = false) = 0;
 
 	/**
 	 * Set a custom function for logging debug messages
@@ -404,4 +405,4 @@ public:
 	virtual uint64_t GetUsedVideoMemorySize() = 0;
 };
 
-typedef Renderer*(*CreateRendererProc)(void);
+typedef Renderer*(*CreateRendererProc)();
