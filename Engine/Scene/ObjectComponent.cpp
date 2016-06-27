@@ -40,3 +40,23 @@
 
 #include <Scene/Object.h>
 #include <Scene/ObjectComponent.h>
+
+#include <glm/gtc/matrix_transform.hpp>
+
+using namespace glm;
+
+void ObjectComponent::SetPosition(vec3 &position) noexcept
+{
+	_position = position;
+}
+
+void ObjectComponent::SetRotation(vec3 &rotation) noexcept
+{
+	_rotation = rotation;
+}
+
+void ObjectComponent::SetScale(vec3 &newScale) noexcept
+{
+	_scale = newScale;
+}
+

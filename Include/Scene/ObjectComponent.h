@@ -39,6 +39,7 @@
 #pragma once
 
 #include <map>
+#include <glm/glm.hpp>
 
 #include <Engine/Engine.h>
 
@@ -57,8 +58,17 @@ class ObjectComponent
 public:
 	ENGINE_API ObjectComponent(ComponentInitializer *initializer) : _parent(initializer->parent) { }
 
-	ENGINE_API class Object* GetParent() { return _parent; }
-	ENGINE_API void SetParent(class Object *obj) { _parent = obj; }
+	ENGINE_API virtual class Object *GetParent() noexcept { return _parent; }
+	ENGINE_API virtual glm::vec3 &GetPosition() noexcept { return _position; }
+	ENGINE_API virtual glm::vec3 &GetRotation() noexcept { return _rotation; }
+	ENGINE_API virtual glm::vec3 &GetScale() noexcept { return _scale; }
+	
+	ENGINE_API virtual void SetParent(class Object *obj) { _parent = obj; }
+	ENGINE_API virtual void SetPosition(glm::vec3& position) noexcept;
+	ENGINE_API virtual void SetRotation(glm::vec3& rotation) noexcept;
+	ENGINE_API virtual void SetScale(glm::vec3& scale) noexcept;
+
+	ENGINE_API virtual void UpdatePosition() noexcept { }
 
 	ENGINE_API virtual int Load() { return ENGINE_OK; }
 	ENGINE_API virtual int InitializeComponent() { return ENGINE_OK; }

@@ -115,7 +115,7 @@ bool Terrain::_GenerateTerrain() noexcept
 		}
 	}
     
-    ((StaticMeshComponent*)GetComponent("Mesh"))->GetMesh()->LoadDynamic(_terrainVertices, indices);
+	((StaticMeshComponent*)GetComponent("Mesh"))->GetMesh()->LoadDynamic(_terrainVertices, indices);
 
 	indices.clear();
 	
@@ -136,6 +136,8 @@ int Terrain::Load()
 	SetPosition(posVector);
 	_center = vec3(0.f, 0.f, 0.f);
 	SetForwardDirection(ForwardDirection::NegativeZ);
+
+	GetComponent("Mesh")->UpdatePosition();
 
 	return ENGINE_OK;
 }
@@ -214,7 +216,10 @@ void Terrain::Update(double deltaTime) noexcept
 	}
 
 	if (modified)
+	{
 		((StaticMeshComponent*)GetComponent("Mesh"))->GetMesh()->UpdateVertices(_terrainVertices);
+		GetComponent("Mesh")->UpdatePosition();
+	}
 }
 
 Terrain::~Terrain() noexcept

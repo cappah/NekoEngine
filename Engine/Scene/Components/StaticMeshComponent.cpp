@@ -42,6 +42,9 @@
 #include <Scene/Camera.h>
 #include <Engine/SceneManager.h>
 #include <Engine/ResourceManager.h>
+#include <glm/gtc/matrix_transform.hpp>
+
+using namespace glm;
 
 #define SMCOMPONENT_MODULE	"StaticMeshComponent"
 
@@ -60,6 +63,38 @@ StaticMeshComponent::StaticMeshComponent(ComponentInitializer *initializer)
 		_materialIds.push_back(ResourceManager::GetResourceID(it->second.c_str(), ResourceType::RES_MATERIAL));
 
 	_renderer = Engine::GetRenderer();
+
+	_matrixBlock.Model = _parent->GetModelMatrix();
+	_mmNeedsUpdate = false;
+}
+
+void StaticMeshComponent::SetPosition(vec3 &position) noexcept
+{
+	ObjectComponent::SetPosition(position);
+	_translationMatrix = translate(mat4(), _position);
+	_mmNeedsUpdate = true;
+}
+
+void StaticMeshComponent::SetRotation(vec3 &rotation) noexcept
+{
+	ObjectComponent::SetRotation(rotation);
+
+	mat4 rotXMatrix = rotate(mat4(), DEG2RAD(_rotation.x), vec3(1.f, 0.f, 0.f));
+	mat4 rotYMatrix = rotate(mat4(), DEG2RAD(_rotation.y), vec3(0.f, 1.f, 0.f));
+	mat4 rotZMatrix = rotate(mat4(), DEG2RAD(_rotation.z), vec3(0.f, 0.f, 1.f));
+
+	_rotationMatrix = rotZMatrix * rotXMatrix * rotYMatrix;
+//	SetForwardDirection(_objectForward);
+
+	_mmNeedsUpdate = true;
+}
+
+void StaticMeshComponent::SetScale(vec3 &newScale) noexcept
+{
+	ObjectComponent::SetScale(newScale);
+
+	_scaleMatrix = scale(mat4(), newScale);
+	_mmNeedsUpdate = true;
 }
 
 int StaticMeshComponent::Load()
@@ -87,15 +122,15 @@ int StaticMeshComponent::Load()
 	}
 	
 	if(!_mesh)
-    {
-        if(!strncmp(_meshId.c_str(), "generated", 9))
-        {
-            _mesh = new StaticMesh(nullptr);
-            noMaterial = true; // skip material size check
-        }
-        else
-            _mesh = (StaticMesh*)ResourceManager::GetResourceByName(_meshId.c_str(), ResourceType::RES_STATIC_MESH);
-    }
+	{
+		if(!strncmp(_meshId.c_str(), "generated", 9))
+		{
+			_mesh = new StaticMesh(nullptr);
+			noMaterial = true; // skip material size check
+		}
+		else
+			_mesh = (StaticMesh*)ResourceManager::GetResourceByName(_meshId.c_str(), ResourceType::RES_STATIC_MESH);
+	}
     
 	if (!_mesh)
 	{
@@ -136,13 +171,19 @@ void StaticMeshComponent::Draw(RShader *shader) noexcept
 	{
 		Camera *cam = SceneManager::GetActiveScene()->GetSceneCamera();
 
-		_matrixBlock.Model = _parent->GetModelMatrix();
+		if(_mmNeedsUpdate)
+		{
+			_matrixBlock.Model = (_translationMatrix * _rotationMatrix) * _scaleMatrix;
+			_matrixBlock.Model *= _parent->GetModelMatrix();
+			_mmNeedsUpdate = false;
+		}	
+
 		_matrixBlock.View = cam->GetView();
 		_matrixBlock.ModelViewProjection = (cam->GetProjectionMatrix() * cam->GetView()) * _matrixBlock.Model;
 		
 		shader->VSSetUniformBuffer(0, 0, sizeof(MatrixBlock), _matrixUbo);
 		_matrixUbo->UpdateData(0, sizeof(MatrixBlock), &_matrixBlock);
-        _parent->BindUniformBuffer(shader);
+		_parent->BindUniformBuffer(shader);
         
 		for (size_t i = 0; i < _materials.size(); i++)
 		{

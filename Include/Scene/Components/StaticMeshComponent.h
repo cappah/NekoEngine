@@ -57,6 +57,12 @@ public:
 
 	ENGINE_API StaticMesh *GetMesh() noexcept { return _mesh; }
 
+	ENGINE_API virtual void SetPosition(glm::vec3& position) noexcept override;
+	ENGINE_API virtual void SetRotation(glm::vec3& rotation) noexcept override;
+	ENGINE_API virtual void SetScale(glm::vec3& scale) noexcept override;
+
+	ENGINE_API virtual void UpdatePosition() noexcept override { _mmNeedsUpdate = true; }
+
 	ENGINE_API virtual int Load() override;
 	
 	ENGINE_API virtual void Draw(RShader *shader) noexcept override;
@@ -77,4 +83,5 @@ protected:
 	std::vector<Material*> _materials;
 	MatrixBlock _matrixBlock;
 	RBuffer *_matrixUbo;
+	bool _mmNeedsUpdate;
 };
