@@ -111,6 +111,9 @@ public:
 	ENGINE_API size_t GetVertexCount() noexcept { return 0; }
 	ENGINE_API size_t GetTriangleCount() noexcept { return 0; }
 	ENGINE_API glm::vec3& GetPosition() noexcept { return _position; }
+	ENGINE_API glm::vec3& GetRotation() noexcept { return _rotation; }
+	ENGINE_API glm::vec3& GetScale() noexcept { return _scale; }
+	ENGINE_API glm::vec3& GetColor() noexcept { return _objectBlock.ObjectColor; }
 	ENGINE_API glm::mat4& GetModelMatrix() noexcept { return _modelMatrix; }
 
 	ENGINE_API void BindUniformBuffer(RShader *shader) { shader->FSSetUniformBuffer(0, 0, sizeof(ObjectBlock), _objectUbo); }
@@ -137,6 +140,5 @@ protected:
 	ObjectBlock _objectBlock;
 	glm::mat4 _translationMatrix, _scaleMatrix, _rotationMatrix, _modelMatrix;
 
-	void _UpdateModelMatrix() noexcept { _modelMatrix = (_translationMatrix * _rotationMatrix) * _scaleMatrix; }
+	void _UpdateModelMatrix() noexcept { _modelMatrix = (_translationMatrix * _rotationMatrix) * _scaleMatrix; for(pair<std::string, ObjectComponent *> kvp : _components) kvp.second->UpdatePosition(); }
 };
-

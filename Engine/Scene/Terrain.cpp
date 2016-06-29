@@ -137,8 +137,6 @@ int Terrain::Load()
 	_center = vec3(0.f, 0.f, 0.f);
 	SetForwardDirection(ForwardDirection::NegativeZ);
 
-	GetComponent("Mesh")->UpdatePosition();
-
 	return ENGINE_OK;
 }
 
@@ -216,10 +214,7 @@ void Terrain::Update(double deltaTime) noexcept
 	}
 
 	if (modified)
-	{
 		((StaticMeshComponent*)GetComponent("Mesh"))->GetMesh()->UpdateVertices(_terrainVertices);
-		GetComponent("Mesh")->UpdatePosition();
-	}
 }
 
 Terrain::~Terrain() noexcept
