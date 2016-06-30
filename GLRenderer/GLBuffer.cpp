@@ -189,7 +189,6 @@ void GLBuffer::SetStorage(size_t size, void* data)
 	if (!_syncRanges)
 		SetNumBuffers(_numBuffers);
 
-	#pragma omp parallel for
 	for (int i = 0; i < _numBuffers; i++)
 	{
 		_syncRanges[i].offset = _size * i;
@@ -334,7 +333,6 @@ void GLBuffer_NoDSA::SetStorage(size_t size, void* data)
 		if (!_syncRanges)
 			SetNumBuffers(_numBuffers);
 
-#pragma omp parallel for
 		for (int i = 0; i < _numBuffers; i++)
 		{
 			_syncRanges[i].offset = _size * i;

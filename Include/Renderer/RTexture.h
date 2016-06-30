@@ -151,12 +151,12 @@ public:
 		_type(type),
 		_format(TextureFormat::RGB),
 		_compressedFormat(CompressedTextureFormat::RGB_S3TC_DXT1),
+		_compressed(false),
 		_mipLevels(1),
 		_samples(1),
 		_width(0),
 		_height(0),
-		_depth(0),
-		_compressed(false)
+		_depth(0)
 	{ }
 
 	virtual TextureType GetType() { return _type; }

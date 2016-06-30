@@ -57,7 +57,7 @@ typedef struct GL_UNIF_BUF
 	size_t offset;
 	size_t size;
 	uint32_t binding;
-	int32_t index;
+	uint32_t index;
 } GLUniformBuffer;
 
 typedef struct UNIFORM_INFO

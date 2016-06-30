@@ -652,15 +652,15 @@ void Scene::Update(double deltaTime) noexcept
 		_skybox->Update(deltaTime);
 
 	//#pragma omp parallel for
-	for (int i = 0; i < _objects.size(); i++)
+	for (size_t i = 0; i < _objects.size(); i++)
 		_objects[i]->Update(deltaTime);
 
 	//#pragma omp parallel for
-	for (int i = 0; i < _cameras.size(); i++)
+	for (size_t i = 0; i < _cameras.size(); i++)
 		_cameras[i]->Update(deltaTime);
 
 	//#pragma omp parallel for
-	for (int i = 0; i < _lights.size(); i++)
+	for (size_t i = 0; i < _lights.size(); i++)
 		_lights[i]->Update(deltaTime);
 }
 

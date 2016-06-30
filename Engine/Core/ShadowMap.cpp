@@ -76,7 +76,7 @@ void ShadowMap::Render()
 
 	Engine::BindQuadVAO();
 
-	for (int i = 0; i < s->GetNumLights(); i++)
+	for (size_t i = 0; i < s->GetNumLights(); i++)
 	{
 		Light *l = s->GetLight(i);
 		

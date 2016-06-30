@@ -117,10 +117,10 @@ int AssetLoader::LoadMesh(string& file,
 {
 	unsigned int offset = 0;
 	uint32_t indexBuff[3];
-	size_t indexCount = 0;
+	/*size_t indexCount = 0;
 	size_t vertexCount = 0;
 	size_t boneCount = 0;
-	size_t nodeCount = 0;
+	size_t nodeCount = 0;*/
 	char lineBuff[AL_LINE_BUFF];
 	memset(lineBuff, 0x0, AL_LINE_BUFF);
 
@@ -149,7 +149,7 @@ int AssetLoader::LoadMesh(string& file,
 			if (!ptr)
 				break;
 
-			vertexCount = atoi(++ptr);
+			//vertexCount = atoi(++ptr);
 		}
 		else if (strstr(lineBuff, "indices"))
 		{
@@ -157,7 +157,7 @@ int AssetLoader::LoadMesh(string& file,
 			if (!ptr)
 				break;
 
-			indexCount = atoi(++ptr);
+			//indexCount = atoi(++ptr);
 		}
 		else if (strstr(lineBuff, "bones"))
 		{
@@ -165,7 +165,7 @@ int AssetLoader::LoadMesh(string& file,
 			if (!ptr)
 				break;
 			
-			boneCount = atoi(++ptr);
+			//boneCount = atoi(++ptr);
 		}
 		else if (strstr(lineBuff, "git"))
 		{
@@ -181,7 +181,7 @@ int AssetLoader::LoadMesh(string& file,
 			if (!ptr)
 				break;
 			
-			nodeCount = atoi(++ptr);
+			//nodeCount = atoi(++ptr);
 		}
 		else if (strchr(lineBuff, '[')) // Vertex line
 			vertices.push_back(_ReadVertex(lineBuff));
@@ -413,7 +413,7 @@ int AssetLoader::LoadWAV(string &file, ALenum *format, ALvoid **data, ALsizei *s
 	if((*data = (ALvoid *)malloc(wave_data.sub_chunk_2_size)) == NULL)
 	{ ret = ENGINE_FAIL; goto exit; }
 
-	if(f->Read(*data, 1, wave_data.sub_chunk_2_size) != wave_data.sub_chunk_2_size)
+	if(f->Read(*data, 1, wave_data.sub_chunk_2_size) != (uint64_t)wave_data.sub_chunk_2_size)
 	{ ret = ENGINE_IO_FAIL; goto exit; }
 	
 	*size = wave_data.sub_chunk_2_size;

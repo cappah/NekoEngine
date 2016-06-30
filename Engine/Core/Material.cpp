@@ -235,7 +235,7 @@ int Material::Load()
 
 	f->Close();
 
-	for (int i = 0; i < _textureIds.size(); i++)
+	for (size_t i = 0; i < _textureIds.size(); i++)
 	{
 		Texture *tex = (Texture *)ResourceManager::GetResource(_textureIds[i], ResourceType::RES_TEXTURE);
 

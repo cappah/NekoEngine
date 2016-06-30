@@ -116,7 +116,7 @@ int Texture::Load()
 	}
 	
 	uint8_t *mem = (uint8_t*)calloc(size, sizeof(uint8_t));
-	if(file->Read(mem, sizeof(uint8_t), size) == ENGINE_FAIL)
+	if(file->Read(mem, sizeof(uint8_t), size) == 0)
 	{
 		file->Close();
 		free(mem);

@@ -163,14 +163,12 @@ PlatformWindowType Platform::CreateWindow(int width, int height, bool fullscreen
 	XWMHints hints;
 	XEvent xev;
 	Window win;
-	Screen *screen;
 
 	x_display = XOpenDisplay(NULL);
 	
 	if(!x_display)
 		return 0;
 
-	screen = XDefaultScreenOfDisplay(x_display);
 	root = DefaultRootWindow(x_display);
 
 	swa.event_mask  =  ExposureMask | PointerMotionMask | KeyPressMask | KeyReleaseMask | StructureNotifyMask;

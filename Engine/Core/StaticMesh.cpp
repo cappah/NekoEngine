@@ -63,11 +63,10 @@ StaticMesh::StaticMesh(MeshResource *res) noexcept :
 	_indexCount(0),
 	_vertexCount(0),
 	_triangleCount(0),
-	_vertexOffset(0),
-	_indexOffset(0),
-	_groupOffset(0),
 	_dynamic(false),
-	_hasOwnBuffer(false)
+	_hasOwnBuffer(false),
+	_vertexOffset(0),
+	_indexOffset(0)
 {	
 	_resourceInfo = res;
 	_groupOffset.push_back(0);

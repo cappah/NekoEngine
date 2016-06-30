@@ -56,8 +56,9 @@ SSAO::SSAO(int width, int height) :
 	_textures{ 0, 0 ,0 },
 	_fboWidth(width), _fboHeight(height),
 	_ssaoShader(0), _ssaoBlurShader(0),
+	_noiseSize(SSAO_MAX_NOISE),
 	_blurRadius(SSAO_BLUR_RADIUS_4),
-	_noiseSize(SSAO_MAX_NOISE)
+	_matrixUbo(nullptr), _dataUbo(nullptr), _blurUbo(nullptr)
 {
 	_dataBlock.KernelSize = SSAO_HIGH_SAMPLES;
 	_dataBlock.Radius = SSAO_HIGH_RADIUS;

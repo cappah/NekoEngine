@@ -301,7 +301,7 @@ void DeferredBuffer::RenderLighting() noexcept
 	_sceneLightUbo->UpdateData(0, sizeof(float) * 3, &cam->GetPosition().x);
 	_lightMatrixUbo->UpdateData(0, sizeof(mat4), (void *)value_ptr(mat4()));
 
-	for (int i = 0; i < s->GetNumLights(); i++)
+	for (size_t i = 0; i < s->GetNumLights(); i++)
 	{
 		Light *l = s->GetLight(i);
 		LightData data;

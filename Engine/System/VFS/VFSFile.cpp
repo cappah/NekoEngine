@@ -129,14 +129,14 @@ uint64_t VFSFile::Read(void *buffer, uint64_t size, uint64_t count)
 		else if(_gzfp)
 			return gzread(_gzfp, buffer, (unsigned int)(size * count));
 		else	
-			return ENGINE_FAIL;
+			return 0;
 	}
 	else
 	{
 	//	memcpy(buffer, (unsigned char*)_header.start + _offset, size * count);
 	}
 
-	return ENGINE_FAIL;
+	return 0;
 }
 
 char *VFSFile::Gets(char *str, int num)

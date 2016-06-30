@@ -96,7 +96,7 @@ void GLFramebuffer::Resize(int width, int height)
 	_width = width;
 	_height = height;
 
-	for (int i = 0; i < _colorTextures.size(); i++)
+	for (size_t i = 0; i < _colorTextures.size(); i++)
 	{
 		GLTexture *tex = _colorTextures[i];
 		tex->Resize2D(width, height);

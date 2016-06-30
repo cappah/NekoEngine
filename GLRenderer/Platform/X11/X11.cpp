@@ -57,7 +57,6 @@ static PFNGLXSWAPINTERVALEXTPROC glXSwapIntervalEXT = 0;
 bool GLRenderer::Initialize(PlatformWindowType hWnd, unordered_map<string, string> *args, bool debug)
 {
 	_dc = XOpenDisplay(NULL);
-	XSetWindowAttributes xattr;
 
 	static int visual_attribs[] =
 	{
@@ -129,8 +128,6 @@ bool GLRenderer::Initialize(PlatformWindowType hWnd, unordered_map<string, strin
 	GLXFBConfig bestFbc = fbc[best_fbc];
 
 	XFree(fbc);
-
-	const char *glxExts = glXQueryExtensionsString(_dc, DefaultScreen(_dc));
 
 	PFNGLXCREATECONTEXTATTRIBSARBPROC glXCreateContextAttribsARB = 0;
 	glXCreateContextAttribsARB = (PFNGLXCREATECONTEXTATTRIBSARBPROC)glXGetProcAddressARB((const GLubyte*)"glXCreateContextAttribsARB");

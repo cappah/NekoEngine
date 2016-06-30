@@ -202,7 +202,6 @@ bool GLTexture::_LoadTGATexture(char *tga, int bpp)
 		if (!cubemap)
 			return false;
 
-#pragma omp parallel for
 		for (int i = 0; i < size; i++)
 		{
 			int dstOffset = rowSize * i;

@@ -69,8 +69,8 @@ public:
 	ENGINE_API Material(MaterialResource* res) noexcept :
 		_blend(false),
 		_noCulling(false),
-		_subroutines{0, 0},
-		_materialUbo(nullptr)
+		_materialUbo(nullptr),
+		_subroutines{0, 0}
 	{
 		_resourceInfo = res;
 		memset(&_materialInfo, 0x0, sizeof(MaterialBlock));

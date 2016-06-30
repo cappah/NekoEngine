@@ -51,18 +51,21 @@
 using namespace glm;
 
 ENGINE_REGISTER_OBJECT_CLASS(Terrain)
+	std::vector<Vertex> _terrainVertices;
+	TextureParams _heightmapParams;
+	float _cellSize;
+	unsigned short _numCells;
+	float _uvStep;
 
 Terrain::Terrain(ObjectInitializer *initializer) noexcept : Object(initializer),
-	_uvStep(.05f),
-	_heightmapParams{TextureFilter::Trilinear, TextureFilter::Linear, TextureWrap::ClampToEdge, TextureWrap::ClampToEdge}
+	_heightmapParams{TextureFilter::Trilinear, TextureFilter::Linear, TextureWrap::ClampToEdge, TextureWrap::ClampToEdge},
+	_cellSize(20),
+	_numCells(4),
+	_uvStep(.05f)
 {
 	if(!initializer)
 	{
 		Logger::Log(TERRAIN_MODULE, LOG_WARNING, "No initializer supplied, using default values");
-		
-		_numCells = 4;
-		_cellSize = 20;
-		
 		return;
 	}
 	
