@@ -78,7 +78,6 @@ public:
 		_rotateSpeed(DEFAULT_ROTS),
 		_verticalSensivity(DEFAULT_VSENS), 
 		_horizontalSensivity(DEFAULT_HSENS), 
-		_zoom(0.f),
 		_near(.2f),
 		_far(1000.f),
 		_fov(45.f),
@@ -149,7 +148,6 @@ private:
 	float _rotateSpeed;
 	float _verticalSensivity;
 	float _horizontalSensivity;
-	float _zoom;
 
 	float _near;
 	float _far;

@@ -221,7 +221,7 @@ void Skeleton::_CalculateScaling(dvec3 &out, double time, const AnimationNode *n
 		return;
 	}
 	
-	uint16_t scaleIndex;
+	uint16_t scaleIndex = 0;
 	
 	for(uint16_t i = 0; i < numKeys - 1; ++i)
 	{
