@@ -217,7 +217,7 @@ void Engine::_ReadRendererConfig(const char *file)
 
 	while(!end)
 	{
-		char c, *vptr, *val;
+		char c, *vptr;
 
 		while((c = buff[i]) != 0x0)
 		{

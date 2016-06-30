@@ -62,20 +62,25 @@ Light::Light(ObjectInitializer *initializer)
 		return;
 	}
 	
-	const char *ptr = initializer->arguments.find("intensity")->second.c_str();
-	_intensity = ptr ? (float)atof(ptr) : 1.f;
+	ArgumentMapType::iterator it;
+	const char *ptr = nullptr;
+
+	if (((it = initializer->arguments.find("intensity")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
+		_intensity = (float)atof(ptr);
+	else
+		_intensity = 1.f;
 	
-	if((ptr = initializer->arguments.find("attenuation")->second.c_str()) != nullptr)
+	if (((it = initializer->arguments.find("attenuation")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
 		EngineUtils::ReadFloatArray(ptr, 2, &_attenuation.x);
 	else
 		_attenuation = vec2(0.f);
 	
-	if((ptr = initializer->arguments.find("direction")->second.c_str()) != nullptr)
+	if (((it = initializer->arguments.find("direction")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
 		EngineUtils::ReadFloatArray(ptr, 3, &_direction.x);
 	else
 		_direction = vec3(0.f);
 	
-	if((ptr = initializer->arguments.find("type")->second.c_str()) == nullptr)
+	if (((it = initializer->arguments.find("type")) == initializer->arguments.end()) || ((ptr = it->second.c_str()) == nullptr))
 	{
 		_type = LightType::Directional;
 		return;

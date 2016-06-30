@@ -100,7 +100,12 @@ Object::Object(ObjectInitializer *initializer) noexcept
 	
 	_id = initializer->id;
 	
-	const char *type = initializer->arguments.find("type")->second.c_str();
+	ArgumentMapType::iterator it = initializer->arguments.find("type");
+
+	if (it == initializer->arguments.end())
+		return;
+
+	const char *type = it->second.c_str();
 	if(!type)
 	{
 		SetForwardDirection(ForwardDirection::PositiveZ);
