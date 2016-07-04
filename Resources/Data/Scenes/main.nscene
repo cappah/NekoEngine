@@ -53,6 +53,14 @@ EndObject
 # Scene objects #
 #################
 
+# Game Controller
+Object=GameController
+id=9000
+position=0.0, 0.0, 0.0
+scale=1.0, 1.0, 1.0
+rotation=0.0, 0.0, 0.0
+EndObject
+
 # Front house
 Object
 id=2

@@ -40,6 +40,7 @@
 
 #include <glm/glm.hpp>
 
+#include "TestGame.h"
 #include <Scene/Object.h>
 
 enum class TrajectoryType : unsigned short

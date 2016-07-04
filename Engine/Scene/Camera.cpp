@@ -50,6 +50,7 @@
 #include <Engine/EngineUtils.h>
 #include <Engine/ResourceManager.h>
 #include <Engine/SoundManager.h>
+#include <Engine/Input.h>
 
 using namespace glm;
 
@@ -87,29 +88,29 @@ void Camera::Update(double deltaTime) noexcept
 
 	float speed = _translateSpeed;
 
-	if (Engine::GetKeyDown(KEY_LSHIFT))
+	if (Input::GetKeyDown(NE_KEY_LSHIFT))
 		speed = _fastTranslateSpeed;
 
 	float velocity = speed * (float)deltaTime;
 
-	if (Engine::GetKeyDown('w'))
+	if (Input::GetKeyDown(NE_KEY_W))
 		_position += _front * velocity * (_fps ? vec3(1.f, 0.f, 1.f) : vec3(1.f));
-	else if (Engine::GetKeyDown('s'))
+	else if (Input::GetKeyDown(NE_KEY_S))
 		_position -= _front * velocity * (_fps ? vec3(1.f, 0.f, 1.f) : vec3(1.f));
 
-	if (Engine::GetKeyDown('d'))
+	if (Input::GetKeyDown(NE_KEY_D))
 		_position += _right * velocity;
-	else if(Engine::GetKeyDown('a'))
+	else if(Input::GetKeyDown(NE_KEY_A))
 		_position -= _right * velocity;
 
-	if (Engine::GetKeyDown(KEY_RIGHTARROW))
+	if (Input::GetKeyDown(NE_KEY_RIGHT))
 		_rotation.y += _rotateSpeed * (float)deltaTime;
-	else if (Engine::GetKeyDown(KEY_LEFTARROW))
+	else if (Input::GetKeyDown(NE_KEY_LEFT))
 		_rotation.y -= _rotateSpeed * (float)deltaTime;
 
-	if (Engine::GetKeyDown(KEY_UPARROW))
+	if (Input::GetKeyDown(NE_KEY_UP))
 		_rotation.x -= _rotateSpeed * (float)deltaTime;
-	else if (Engine::GetKeyDown(KEY_DOWNARROW))
+	else if (Input::GetKeyDown(NE_KEY_DOWN))
 		_rotation.x += _rotateSpeed * (float)deltaTime;
 
 	if (_fps)

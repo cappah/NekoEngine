@@ -93,13 +93,6 @@
 #define ENGINE_LOAD_GS_FAIL		-16
 #define ENGINE_OUT_OF_RESOURCES	-17
 
-#define KEY_ESCAPE			0x1B
-#define KEY_LEFTARROW			0x25
-#define KEY_UPARROW			0x26
-#define KEY_RIGHTARROW			0x27
-#define KEY_DOWNARROW			0x28
-#define KEY_LSHIFT			0x10
-
 #define PATH_SIZE			1024
 
 #define RENDER_QUALITY_LOW		0
@@ -266,11 +259,6 @@ public:
 	static void Update(double deltaTime) noexcept;
 
 	/**
-	 * Called when a key is pressed or released.
-	 */
-	static void Key(int key, bool bIsPressed) noexcept;
-	
-	/**
 	 * Release all resources used by the Engine.
 	 * Must be called on program exit.
 	 */
@@ -278,8 +266,6 @@ public:
 
 	static void DrawString(glm::vec2 pos, glm::vec3 color, std::string text) noexcept;
 	static void DrawString(glm::vec2 pos, glm::vec3 color, const char *fmt, ...) noexcept;
-
-	static bool GetKeyDown(int key) noexcept;
 
 	static double GetTime() noexcept;
 
@@ -295,6 +281,8 @@ public:
 	static Renderer *GetRenderer() noexcept { return _renderer; }
 
 	static void SaveScreenshot() noexcept;
+
+	static void Exit() noexcept { Platform::Exit(); }
 
 #ifdef ENGINE_INTERNAL
 	/**
@@ -317,7 +305,6 @@ public:
 private:
 	static PlatformWindowType _engineWindow;
 	static Configuration _config;
-	static std::vector<int> *_pressedKeys;
 	static bool _disposed;
 	static bool _printStats;
 	static TextureFont *_engineFont;

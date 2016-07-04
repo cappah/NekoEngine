@@ -48,11 +48,20 @@
 #undef CreateWindow
 #undef MessageBox
 
+#ifdef ENGINE_INTERNAL
+	#define ENGINE_API	__declspec(dllexport)
+#else
+	#define ENGINE_API	__declspec(dllimport)
+#endif
+
 typedef HWND PlatformWindowType;
 typedef HDC PlatformDisplayType;
 typedef HMODULE PlatformModuleType;
+
 #elif defined(PLATFORM_X11)
 #include <X11/Xlib.h>
+
+#define ENGINE_API
 
 typedef Window PlatformWindowType;
 typedef Display* PlatformDisplayType;
@@ -60,11 +69,15 @@ typedef void* PlatformModuleType;
 #elif defined(NE_PLATFORM_MAC)
 #import <Cocoa/Cocoa.h>
 
+#define ENGINE_API
+
 typedef NSWindow* PlatformWindowType;
 typedef NSView* PlatformDisplayType;
 typedef void* PlatformModuleType;
 #elif defined(NE_PLATFORM_IOS)
 #import <UIKit/UIKit.h>
+
+#define ENGINE_API
 
 typedef UIWindow* PlatformWindowType;
 typedef UIView* PlatformDisplayType;

@@ -44,16 +44,6 @@
 #include <string>
 #include <map>
 
-#ifdef NE_PLATFORM_WINDOWS
-	#ifdef ENGINE_INTERNAL
-		#define ENGINE_API	__declspec(dllexport)
-	#else
-		#define ENGINE_API	__declspec(dllimport)
-	#endif
-#else
-	#define ENGINE_API
-#endif
-
 #define ENGINE_REGISTER_OBJECT_CLASS(x) static EngineClassFactoryRegisterObjectClass<x> regClass ## x(#x);
 #define ENGINE_REGISTER_COMPONENT_CLASS(x) static EngineClassFactoryRegisterComponentClass<x> regClass ## x(#x);
 

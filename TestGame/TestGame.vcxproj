@@ -12,12 +12,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DemoAnimatorComponent.h" />
+    <ClInclude Include="GameController.h" />
     <ClInclude Include="MovingObject.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="TestGame.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DemoAnimatorComponent.cpp" />
+    <ClCompile Include="GameController.cpp" />
     <ClCompile Include="MovingObject.cpp" />
     <ClCompile Include="TestGame.cpp" />
   </ItemGroup>

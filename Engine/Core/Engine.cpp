@@ -55,6 +55,7 @@
 
 #include <glm/glm.hpp>
 
+#include <Engine/Input.h>
 #include <Engine/Engine.h>
 #include <Engine/EngineUtils.h>
 #include <Engine/EngineClassFactory.h>
@@ -99,7 +100,6 @@ float quadVertices[] =
 
 PlatformWindowType Engine::_engineWindow;
 Configuration Engine::_config;
-vector<int>* Engine::_pressedKeys;
 bool Engine::_disposed = false;
 bool Engine::_printStats = true;
 TextureFont* Engine::_engineFont = nullptr;
@@ -405,6 +405,12 @@ bool Engine::_InitRenderer()
 
 bool Engine::_InitSystem()
 {
+	if (Input::Initialize() != ENGINE_OK)
+	{
+		Logger::Log(ENGINE_MODULE, LOG_CRITICAL, "Failed to initialize the input manager");
+		return false;
+	}
+
 	if (VFS::Initialize() != ENGINE_OK)
 	{
 		Logger::Log(ENGINE_MODULE, LOG_CRITICAL, "Failed to initialize the virtual file system");
@@ -548,8 +554,6 @@ int Engine::Initialize(string cmdLine, bool editor)
 
 	_renderer->SetClearColor(0.f, 0.f, 0.f, 1.f);
 	_renderer->Clear(R_CLEAR_COLOR);
-
-	_pressedKeys = new vector<int>();
 
 	_engineFont = (TextureFont *)ResourceManager::GetResource(0, ResourceType::RES_FONT);
 
@@ -796,50 +800,6 @@ void Engine::Update(double deltaTime) noexcept
 	SceneManager::UpdateScene(deltaTime);
 }
 
-void Engine::Key(int key, bool bIsPressed) noexcept
-{
-	int lowk = tolower(key);
-
-	if (bIsPressed)
-		_pressedKeys->push_back(lowk);
-	else
-		_pressedKeys->erase(remove(_pressedKeys->begin(), _pressedKeys->end(), lowk), _pressedKeys->end());
-
-	switch (lowk)
-	{
-	case KEY_ESCAPE:
-		Platform::Exit();
-		break;
-	case 'i':
-		if (!bIsPressed)
-			_printStats = !_printStats;
-		break;
-	case 'm':
-		if(!bIsPressed)
-			SceneManager::LoadNextScene();
-		break;
-	case 'l':
-		if (!bIsPressed)
-			SceneManager::GetActiveScene()->SetDrawLights(!SceneManager::GetActiveScene()->GetDrawLights());
-		break;
-	case 'p':
-		if (!bIsPressed)
-			SaveScreenshot();
-		break;
-	}
-}
-
-bool Engine::GetKeyDown(int key) noexcept
-{
-	int a = tolower(key);
-
-	for (int b : *_pressedKeys)
-		if (b == a)
-			return true;
-
-	return false;
-}
-
 double Engine::GetTime() noexcept
 {
 	high_resolution_clock::time_point time = high_resolution_clock::now();
@@ -890,10 +850,9 @@ void Engine::CleanUp() noexcept
 	SoundManager::Release();
 	ResourceManager::Release();
 	VFS::Release();
+	Input::Release();
 
-	delete _pressedKeys;
 	delete _gameModule;
-	_pressedKeys = nullptr;
 	_gameModule = nullptr;
 
 	if(_gameModuleLibrary)

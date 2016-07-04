@@ -40,6 +40,7 @@
 
 #include "DemoAnimatorComponent.h"
 #include <Engine/ResourceManager.h>
+#include <Engine/Input.h>
 
 REGISTER_COMPONENT_CLASS(DemoAnimatorComponent);
 
@@ -72,22 +73,22 @@ int DemoAnimatorComponent::Load()
 
 void DemoAnimatorComponent::Update(double deltaTime) noexcept
 {
-	if (Engine::GetKeyDown('j'))
+	if (Input::GetKeyDown(NE_KEY_J))
 	{
 		_defaultAnim = _clips[0];
 		_currentTime = 0.0;
 	}
-	else if (Engine::GetKeyDown('k'))
+	else if (Input::GetKeyDown(NE_KEY_K))
 	{
 		_defaultAnim = _clips[1];
 		_currentTime = 0.0;
 	}
-	else if (Engine::GetKeyDown('l'))
+	else if (Input::GetKeyDown(NE_KEY_L))
 	{
 		_defaultAnim = _clips[2];
 		_currentTime = 0.0;
 	}
-	else if (Engine::GetKeyDown('h'))
+	else if (Input::GetKeyDown(NE_KEY_H))
 	{
 		_defaultAnim = _initialAnim;
 		_currentTime = 0.0;

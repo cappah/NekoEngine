@@ -42,7 +42,6 @@
 
 #include <glm/glm.hpp>
 
-#include "TestGame.h"
 #include "MovingObject.h"
 
 using namespace std;

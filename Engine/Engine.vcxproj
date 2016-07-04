@@ -144,6 +144,8 @@
     <ClInclude Include="..\Include\Engine\EngineClassFactory.h" />
     <ClInclude Include="..\include\Engine\EngineUtils.h" />
     <ClInclude Include="..\include\Engine\GameModule.h" />
+    <ClInclude Include="..\Include\Engine\Input.h" />
+    <ClInclude Include="..\Include\Engine\Keycodes.h" />
     <ClInclude Include="..\include\Engine\LoadingScreen.h" />
     <ClInclude Include="..\include\Engine\Material.h" />
     <ClInclude Include="..\include\Engine\PostProcessor.h" />
@@ -269,6 +271,7 @@
     <ClCompile Include="Core\AnimationClip.cpp" />
     <ClCompile Include="Core\DeferredBuffer.cpp" />
     <ClCompile Include="Core\Engine.cpp" />
+    <ClCompile Include="Core\Input.cpp" />
     <ClCompile Include="Core\LoadingScreen.cpp" />
     <ClCompile Include="Core\Material.cpp" />
     <ClCompile Include="Core\PostProcessor.cpp" />
@@ -286,6 +289,7 @@
     <ClCompile Include="Core\TextureFont.cpp" />
     <ClCompile Include="Platform\Compat\reallocarray.cpp" />
     <ClCompile Include="Platform\shared.cpp" />
+    <ClCompile Include="Platform\Windows\PlatformInput.cpp" />
     <ClCompile Include="Platform\Windows\Windows.cpp" />
     <ClCompile Include="PostEffects\Effect.cpp" />
     <ClCompile Include="PostEffects\SMAA.cpp" />

@@ -40,6 +40,7 @@
 #define PLATFORM_INTERNAL
 
 #include <Engine/Engine.h>
+#include <Engine/Input.h>
 #include <Platform/Platform.h>
 
 #include "../Launcher/resource.h"
@@ -95,13 +96,13 @@ LRESULT CALLBACK EngineWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
 		break;
 		case WM_KEYDOWN:
 		{
-			Engine::Key((int)wParam, true);
+			Input::Key((int)wParam, true);
 			return 0;
 		}
 		break;
 		case WM_KEYUP:
 		{
-			Engine::Key((int)wParam, false);
+			Input::Key((int)wParam, false);
 			return 0;
 		}
 		break;
