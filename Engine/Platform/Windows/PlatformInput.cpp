@@ -123,7 +123,7 @@ void Input::_InitializeKeymap()
 	/* US standard keyboards only. Need a better solution */
 	_keymap.insert(make_pair(VK_OEM_1, NE_KEY_SEMICOLON));
 	_keymap.insert(make_pair(VK_OEM_2, NE_KEY_SLASH));
-	_keymap.insert(make_pair(VK_OEM_3, NE_KEY_TILDA));
+	_keymap.insert(make_pair(VK_OEM_3, NE_KEY_TILDE));
 	_keymap.insert(make_pair(VK_OEM_4, NE_KEY_LBRACKET));
 	_keymap.insert(make_pair(VK_OEM_5, NE_KEY_BKSLASH));
 	_keymap.insert(make_pair(VK_OEM_6, NE_KEY_RBRACKET));

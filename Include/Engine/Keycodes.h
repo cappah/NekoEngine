@@ -79,7 +79,7 @@
 #define NE_KEY_LEFT			0x26
 #define NE_KEY_RIGHT		0x27
 #define NE_KEY_SPACE		0x28
-#define NE_KEY_TILDA		0x29
+#define NE_KEY_TILDE		0x29
 #define NE_KEY_TAB			0x2A
 #define NE_KEY_CAPS			0x2B
 #define NE_KEY_RETURN		0x2C

@@ -47,6 +47,7 @@
 #include <X11/Xutil.h>
 #include <X11/keysymdef.h>
 #include <X11/cursorfont.h>
+#include <Engine/Input.h>
 #include <Engine/Engine.h>
 #include <Platform/Platform.h>
 
@@ -66,68 +67,31 @@ PlatformWindowType Platform::_activeWindow;
 
 bool UserInterrupt()
 {
-    XEvent xev;
-    KeySym key;
-    bool userInterrupt = false;
-    char text;
+	XEvent xev;
+	bool userInterrupt = false;
 
-    // Pump all messages from X server. Keypresses are directed to keyfunc (if defined)
-    while (XPending(x_display))
-    {
-        XNextEvent(x_display, &xev);
-        if (xev.type == KeyPress)
-        {
-            if (XLookupString(&xev.xkey, &text, 1, &key, 0) == 1)
-		Engine::Key(text, 1);
-	    else
-	    {
-		text = 0;
-
-		if(xev.xkey.keycode == KEYCODE_LEFT)
-			text = 37;	
-		else if(xev.xkey.keycode == KEYCODE_RIGHT)
-			text = 39;	
-		else if(xev.xkey.keycode == KEYCODE_UP)
-			text = 38;	
-		else if(xev.xkey.keycode == KEYCODE_DOWN)
-			text = 40;
-	
-		Engine::Key(text, 1);
-	    }
-        }
-	else if(xev.type == KeyRelease)
+	// Pump all messages from X server. Keypresses are directed to keyfunc (if defined)
+	while (XPending(x_display))
 	{
-            if (XLookupString(&xev.xkey, &text, 1, &key, 0) == 1)
-		Engine::Key(text, 0);
-	    else
-	    {
-		text = 0;
+		XNextEvent(x_display, &xev);
 
-		if(xev.xkey.keycode == KEYCODE_LEFT)
-			text = 37;	
-		else if(xev.xkey.keycode == KEYCODE_RIGHT)
-			text = 39;	
-		else if(xev.xkey.keycode == KEYCODE_UP)
-			text = 38;	
-		else if(xev.xkey.keycode == KEYCODE_DOWN)
-			text = 40;
-	
-		Engine::Key(text, 0);
-	    }
-	}
-	else if(xev.type == ConfigureNotify)
-	{
-		XConfigureEvent xce = xev.xconfigure;
+		if (xev.type == KeyPress)
+			Input::Key(XLookupKeysym(&xev.xkey, 0), 1);
+		else if(xev.type == KeyRelease)
+			Input::Key(XLookupKeysym(&xev.xkey, 0), 0);
+		else if(xev.type == ConfigureNotify)
+		{
+			XConfigureEvent xce = xev.xconfigure;
 
-		if (xce.width != Engine::GetConfiguration().Engine.ScreenWidth || xce.height != Engine::GetConfiguration().Engine.ScreenHeight)
-			Engine::ScreenResized(xce.width, xce.height);
+			if (xce.width != Engine::GetConfiguration().Engine.ScreenWidth || xce.height != Engine::GetConfiguration().Engine.ScreenHeight)
+				Engine::ScreenResized(xce.width, xce.height);
+		}
+
+		if (xev.type == DestroyNotify)
+			userInterrupt = true;
 	}
 
-        if (xev.type == DestroyNotify)
-            userInterrupt = true;
-    }
-
-    return userInterrupt;
+	return userInterrupt;
 }
 
 void HideCursor(Display *dpy, Window win)
