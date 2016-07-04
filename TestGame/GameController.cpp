@@ -69,6 +69,12 @@ void GameController::Update(double deltaTime) noexcept
 	if (Input::GetKeyDown(NE_KEY_ESCAPE))
 		Engine::Exit();
 
+	if (Input::GetKeyDown(NE_KEY_I))
+		Engine::DrawStats(true);
+
+	if (Input::GetKeyDown(NE_KEY_O))
+		Engine::DrawStats(false);
+
 	if (Input::GetKeyDown(NE_KEY_M))
 		SceneManager::LoadNextScene();
 
@@ -77,11 +83,4 @@ void GameController::Update(double deltaTime) noexcept
 
 	if (Input::GetKeyDown(NE_KEY_P))
 		Engine::SaveScreenshot();
-
-	/*
-	case 'i':
-	if (!bIsPressed)
-	_printStats = !_printStats;
-	break;
-*/
 }

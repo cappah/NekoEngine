@@ -264,6 +264,9 @@ public:
 	 */
 	static void CleanUp() noexcept;
 
+	static void DrawStats(bool draw) noexcept { _printStats = draw; }
+	static bool IsDrawingStats() noexcept { return _printStats; }
+
 	static void DrawString(glm::vec2 pos, glm::vec3 color, std::string text) noexcept;
 	static void DrawString(glm::vec2 pos, glm::vec3 color, const char *fmt, ...) noexcept;
 
@@ -327,6 +330,7 @@ private:
 	static bool _startup;
 #endif
 
+	static void _PrintStats();
 	static void _ParseArgs(std::string cmdLine);
 	static void _ReadEffectConfig(const char *file);
 	static void _ReadRendererConfig(const char *file);
