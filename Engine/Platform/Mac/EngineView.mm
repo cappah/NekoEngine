@@ -43,6 +43,7 @@
 
 #import "EngineView.h"
 
+#include <Engine/Input.h>
 #include <Engine/Engine.h>
 
 // Taken from:
@@ -78,22 +79,12 @@ CFStringRef createStringForKey(CGKeyCode keyCode)
 
 - (void)keyUp:(NSEvent *)theEvent
 {
-	CFStringRef cfKeyString = createStringForKey(theEvent.keyCode);
-	const char *keyString = [(__bridge NSString *)cfKeyString UTF8String];
-	
-	Engine::Key(keyString[0], false);
-	
-	CFRelease(cfKeyString);
+	Input::Key(theEvent.keyCode, false);
 }
 
 - (void)keyDown:(NSEvent *)theEvent
-{	
-	CFStringRef cfKeyString = createStringForKey(theEvent.keyCode);
-	const char *keyString = [(__bridge NSString *)cfKeyString UTF8String];
-	
-	Engine::Key(keyString[0], true);
-	
-	CFRelease(cfKeyString);
+{
+	Input::Key(theEvent.keyCode, true);
 }
 
 - (void)mouseUp:(NSEvent *)theEvent

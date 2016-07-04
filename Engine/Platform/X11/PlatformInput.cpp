@@ -3,7 +3,7 @@
  * PlatformInput.cpp
  * Author: Alexandru Naiman
  *
- * Windows platform input support
+ * X11 platform input support
  *
  * ----------------------------------------------------------------------------------
  *

@@ -103,7 +103,7 @@ public:
 	ENGINE_API size_t GetTriangleCount() noexcept;
 	ENGINE_API float GetAmbientIntensity() noexcept { return _ambientColorIntensity; }
 	ENGINE_API glm::vec3& GetAmbientColor() noexcept { return _ambientColor; }
-	ENGINE_API Light* GetLight(int i) { return _lights[i]; }
+	ENGINE_API Light* GetLight(size_t i) { return _lights[i]; }
 	ENGINE_API bool GetDrawLights() noexcept { return _drawLights; }
 	ENGINE_API size_t GetNumLights() noexcept { return _lights.size(); }
 	ENGINE_API const char* GetLoadingScreenTexture() noexcept { return _loadingScreenTexture.c_str(); }

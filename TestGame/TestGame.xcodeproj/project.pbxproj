@@ -17,6 +17,9 @@
 		127012071CC3141C001840A7 /* MovingObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 127012051CC3141C001840A7 /* MovingObject.h */; };
 		127012081CC3141C001840A7 /* TestGame.h in Headers */ = {isa = PBXBuildFile; fileRef = 127012061CC3141C001840A7 /* TestGame.h */; };
 		1270125E1CC31645001840A7 /* libEngine.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1270125B1CC31615001840A7 /* libEngine.dylib */; };
+		12C058981D2AF8FF0042023D /* GameController.h in Headers */ = {isa = PBXBuildFile; fileRef = 12C058971D2AF8FF0042023D /* GameController.h */; };
+		12C0589B1D2AF9020042023D /* GameController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12C0589A1D2AF9020042023D /* GameController.cpp */; };
+		12C0589C1D2AF9020042023D /* GameController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12C0589A1D2AF9020042023D /* GameController.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -122,6 +125,8 @@
 		1270124C1CC3143F001840A7 /* VFSArchive.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VFSArchive.h; sourceTree = "<group>"; };
 		1270124D1CC3143F001840A7 /* VFSFile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VFSFile.h; sourceTree = "<group>"; };
 		127012561CC31615001840A7 /* Engine.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Engine.xcodeproj; path = ../Engine/Engine.xcodeproj; sourceTree = "<group>"; };
+		12C058971D2AF8FF0042023D /* GameController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameController.h; sourceTree = "<group>"; };
+		12C0589A1D2AF9020042023D /* GameController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameController.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -173,6 +178,7 @@
 		127011FE1CC313F9001840A7 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				12C0589A1D2AF9020042023D /* GameController.cpp */,
 				127012011CC31417001840A7 /* MovingObject.cpp */,
 				127012021CC31417001840A7 /* TestGame.cpp */,
 				12615D681CF40C91006FB6DB /* DemoAnimatorComponent.cpp */,
@@ -192,6 +198,7 @@
 		127012001CC3140E001840A7 /* Include */ = {
 			isa = PBXGroup;
 			children = (
+				12C058971D2AF8FF0042023D /* GameController.h */,
 				127012051CC3141C001840A7 /* MovingObject.h */,
 				127012061CC3141C001840A7 /* TestGame.h */,
 				12615D651CF40C8D006FB6DB /* DemoAnimatorComponent.h */,
@@ -368,6 +375,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				12C058981D2AF8FF0042023D /* GameController.h in Headers */,
 				127012081CC3141C001840A7 /* TestGame.h in Headers */,
 				12615D661CF40C8D006FB6DB /* DemoAnimatorComponent.h in Headers */,
 				127012071CC3141C001840A7 /* MovingObject.h in Headers */,
@@ -477,6 +485,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				124A31CD1CDC253900472893 /* MovingObject.cpp in Sources */,
+				12C0589C1D2AF9020042023D /* GameController.cpp in Sources */,
 				124A31CE1CDC253900472893 /* TestGame.cpp in Sources */,
 				12615D6A1CF40C91006FB6DB /* DemoAnimatorComponent.cpp in Sources */,
 			);
@@ -487,6 +496,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				127012031CC31417001840A7 /* MovingObject.cpp in Sources */,
+				12C0589B1D2AF9020042023D /* GameController.cpp in Sources */,
 				127012041CC31417001840A7 /* TestGame.cpp in Sources */,
 				12615D691CF40C91006FB6DB /* DemoAnimatorComponent.cpp in Sources */,
 			);

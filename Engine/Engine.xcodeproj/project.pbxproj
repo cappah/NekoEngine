@@ -81,6 +81,11 @@
 		12B0CF601CEB4A9700E5D2FE /* StaticMeshComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12B0CF5C1CEB4A9700E5D2FE /* StaticMeshComponent.cpp */; };
 		12B0CF641CEB4AB400E5D2FE /* SkeletalMeshComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 12B0CF621CEB4AB400E5D2FE /* SkeletalMeshComponent.h */; };
 		12B0CF651CEB4AB400E5D2FE /* StaticMeshComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 12B0CF631CEB4AB400E5D2FE /* StaticMeshComponent.h */; };
+		12C0588F1D2AF4E90042023D /* Input.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12C0588E1D2AF4E90042023D /* Input.cpp */; };
+		12C058901D2AF4E90042023D /* Input.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12C0588E1D2AF4E90042023D /* Input.cpp */; };
+		12C058931D2AF5360042023D /* Input.h in Headers */ = {isa = PBXBuildFile; fileRef = 12C058911D2AF5360042023D /* Input.h */; };
+		12C058941D2AF5360042023D /* Keycodes.h in Headers */ = {isa = PBXBuildFile; fileRef = 12C058921D2AF5360042023D /* Keycodes.h */; };
+		12C058961D2AF55A0042023D /* PlatformInput.mm in Sources */ = {isa = PBXBuildFile; fileRef = 12C058951D2AF55A0042023D /* PlatformInput.mm */; };
 		12C560A21CFB57B200E25478 /* AnimationClip.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12C560901CFB57B200E25478 /* AnimationClip.cpp */; };
 		12C560A31CFB57B200E25478 /* AnimationClip.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12C560901CFB57B200E25478 /* AnimationClip.cpp */; };
 		12C560A41CFB57B200E25478 /* DeferredBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12C560911CFB57B200E25478 /* DeferredBuffer.cpp */; };
@@ -251,6 +256,10 @@
 		12B0CF5C1CEB4A9700E5D2FE /* StaticMeshComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = StaticMeshComponent.cpp; path = Scene/Components/StaticMeshComponent.cpp; sourceTree = SOURCE_ROOT; };
 		12B0CF621CEB4AB400E5D2FE /* SkeletalMeshComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SkeletalMeshComponent.h; path = Components/SkeletalMeshComponent.h; sourceTree = "<group>"; };
 		12B0CF631CEB4AB400E5D2FE /* StaticMeshComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StaticMeshComponent.h; path = Components/StaticMeshComponent.h; sourceTree = "<group>"; };
+		12C0588E1D2AF4E90042023D /* Input.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Input.cpp; path = Core/Input.cpp; sourceTree = SOURCE_ROOT; };
+		12C058911D2AF5360042023D /* Input.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Input.h; sourceTree = "<group>"; };
+		12C058921D2AF5360042023D /* Keycodes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Keycodes.h; sourceTree = "<group>"; };
+		12C058951D2AF55A0042023D /* PlatformInput.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PlatformInput.mm; path = Platform/Mac/PlatformInput.mm; sourceTree = SOURCE_ROOT; };
 		12C560901CFB57B200E25478 /* AnimationClip.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AnimationClip.cpp; path = Core/AnimationClip.cpp; sourceTree = SOURCE_ROOT; };
 		12C560911CFB57B200E25478 /* DeferredBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DeferredBuffer.cpp; path = Core/DeferredBuffer.cpp; sourceTree = SOURCE_ROOT; };
 		12C560921CFB57B200E25478 /* Engine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Engine.cpp; path = Core/Engine.cpp; sourceTree = SOURCE_ROOT; };
@@ -290,6 +299,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				12822BB71CC1DA4C00EE5D0A /* Carbon.framework in Frameworks */,
 				126DE7B01CC8673B00A9E5AB /* libz.dylib in Frameworks */,
 				126DE7B81CC86C6000A9E5AB /* libsqlite3.dylib in Frameworks */,
 				12822BAD1CC1B00500EE5D0A /* libvorbisfile.3.dylib in Frameworks */,
@@ -298,7 +308,6 @@
 				12822BA91CC1AF0E00EE5D0A /* libvorbis.0.dylib in Frameworks */,
 				12822B9F1CC1AED800EE5D0A /* OpenAL.framework in Frameworks */,
 				12822B9D1CC1AED300EE5D0A /* Cocoa.framework in Frameworks */,
-				12822BB71CC1DA4C00EE5D0A /* Carbon.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -369,6 +378,7 @@
 		12822B0A1CC1AD9F00EE5D0A /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				12C0588E1D2AF4E90042023D /* Input.cpp */,
 				12C560901CFB57B200E25478 /* AnimationClip.cpp */,
 				12C560911CFB57B200E25478 /* DeferredBuffer.cpp */,
 				12C560921CFB57B200E25478 /* Engine.cpp */,
@@ -406,6 +416,7 @@
 		12822B2A1CC1ADC200EE5D0A /* Mac */ = {
 			isa = PBXGroup;
 			children = (
+				12C058951D2AF55A0042023D /* PlatformInput.mm */,
 				12822BB81CC1DB9500EE5D0A /* EngineAppDelegate.h */,
 				12822BB91CC1DB9500EE5D0A /* EngineAppDelegate.mm */,
 				12822BB21CC1D84300EE5D0A /* EngineView.h */,
@@ -504,6 +515,8 @@
 		12822B5B1CC1AE4E00EE5D0A /* Engine */ = {
 			isa = PBXGroup;
 			children = (
+				12C058911D2AF5360042023D /* Input.h */,
+				12C058921D2AF5360042023D /* Keycodes.h */,
 				127DF8B11CCB14DA005F2693 /* AnimationClip.h */,
 				12ECE5D81CEFBE85004F3697 /* AnimationNode.h */,
 				1255C57B1CD24CF60036E1DA /* Bone.h */,
@@ -724,6 +737,8 @@
 				1296BBD41CDBB6B500D17488 /* PlatformDetect.h in Headers */,
 				12CE01721CC991B900F3D84B /* SkeletalMesh.h in Headers */,
 				1255C57C1CD24CF60036E1DA /* Bone.h in Headers */,
+				12C058931D2AF5360042023D /* Input.h in Headers */,
+				12C058941D2AF5360042023D /* Keycodes.h in Headers */,
 				12822BBA1CC1DB9500EE5D0A /* EngineAppDelegate.h in Headers */,
 				12ECE5E21CF110D2004F3697 /* AudioSourceComponent.h in Headers */,
 			);
@@ -851,6 +866,7 @@
 				1243C8931CDCE15A00BA692E /* EngineInputDelegate.mm in Sources */,
 				124A32001CDC264100472893 /* Terrain.cpp in Sources */,
 				124A31FD1CDC264100472893 /* ObjectComponent.cpp in Sources */,
+				12C058901D2AF4E90042023D /* Input.cpp in Sources */,
 				124A32031CDC264100472893 /* VFS.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -871,6 +887,7 @@
 				12822BB51CC1D84700EE5D0A /* EngineView.mm in Sources */,
 				12C560AE1CFB57B200E25478 /* ResourceDatabase.cpp in Sources */,
 				12822B541CC1AE2E00EE5D0A /* VFS.cpp in Sources */,
+				12C058961D2AF55A0042023D /* PlatformInput.mm in Sources */,
 				12822B381CC1AE0600EE5D0A /* SMAA.cpp in Sources */,
 				12822B311CC1ADDB00EE5D0A /* shared.cpp in Sources */,
 				12822B421CC1AE0E00EE5D0A /* Object.cpp in Sources */,
@@ -903,6 +920,7 @@
 				12822B4F1CC1AE2800EE5D0A /* Logger.cpp in Sources */,
 				12822BBB1CC1DB9500EE5D0A /* EngineAppDelegate.mm in Sources */,
 				12822B461CC1AE0E00EE5D0A /* Terrain.cpp in Sources */,
+				12C0588F1D2AF4E90042023D /* Input.cpp in Sources */,
 				12822B431CC1AE0E00EE5D0A /* ObjectComponent.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
