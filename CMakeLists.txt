@@ -25,6 +25,7 @@ file(GLOB RendererSourceFiles "GLRenderer/*.cpp"
 )
 
 set(OPENAL_LIB openal)
+set(BSD_LIB "")
 
 include_directories(/usr/local/include)
 include_directories(${PROJECT_SOURCE_DIR}/Include)
@@ -53,7 +54,7 @@ elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 	set(PLATFORM_UNIX ON)
 	set(PLATFORM_X11 ON)
 
-	set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -lbsd")
+	set(BSD_LIB bsd)
 elseif(${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD")
 	set(PLATFORM_UNIX ON)
 	set(PLATFORM_X11 ON)
@@ -107,7 +108,7 @@ add_library(Engine SHARED ${EngineSourceFiles} ${PlatformSourceFiles} ${SharedPl
 target_compile_options(Engine PRIVATE -std=c++11)
 target_compile_options(Engine PRIVATE -fPIC)
 target_compile_options(Engine PRIVATE -frtti)
-target_link_libraries(Engine ${PLATFORM_LIBS} ${OPENAL_LIB} z sqlite3 png vorbisfile)
+target_link_libraries(Engine ${PLATFORM_LIBS} ${OPENAL_LIB} z sqlite3 png vorbisfile ${BSD_LIB})
 
 # Launcher Executable
 add_executable(Launcher ${ExecutableSourceFile})
