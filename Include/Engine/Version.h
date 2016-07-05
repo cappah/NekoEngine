@@ -115,9 +115,9 @@
 	#endif
 #elif defined(NE_PLATFORM_MAC)
 	#if defined(NE_ARCH_X8664)
-		#define ENGINE_PLATFORM_STRING		"Mac OS X x86_64"
+		#define ENGINE_PLATFORM_STRING		"macOS x86_64"
 	#else
-		#define ENGINE_PLATFORM_STRING		"Mac OS X x86"
+		#define ENGINE_PLATFORM_STRING		"macOS x86"
 	#endif
 #elif defined(NE_PLATFORM_BB10)
 	#if defined(NE_ARCH_ARM)
