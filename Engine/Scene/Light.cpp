@@ -79,6 +79,11 @@ Light::Light(ObjectInitializer *initializer)
 		EngineUtils::ReadFloatArray(ptr, 3, &_direction.x);
 	else
 		_direction = vec3(0.f);
+
+	if (((it = initializer->arguments.find("shadows")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
+		_castShadows = true;
+	else
+		_castShadows = false;
 	
 	if (((it = initializer->arguments.find("type")) == initializer->arguments.end()) || ((ptr = it->second.c_str()) == nullptr))
 	{

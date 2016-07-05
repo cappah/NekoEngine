@@ -80,6 +80,7 @@ GLBuffer::GLBuffer(BufferType type)
 	_size = 0;
 	_totalSize = 0;
 	_currentBuffer = 0;
+	_id = 0;
 }
 
 GLBuffer::GLBuffer(BufferType type, bool dynamic, bool persistent)

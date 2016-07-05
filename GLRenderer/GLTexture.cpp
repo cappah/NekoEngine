@@ -140,6 +140,7 @@ GLenum GL_CubeFace[6] =
 GLTexture::GLTexture(TextureType type, bool create)
 	: RTexture(type)
 {
+	_id = 0;
 	_resident = false;
 	_handle = 0;
 	_fixedLocations = false;

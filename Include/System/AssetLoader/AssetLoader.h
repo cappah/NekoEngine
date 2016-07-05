@@ -221,6 +221,8 @@ private:
 				
 				for(int i = 0; i < t.numChildren; ++i)
 					t.childrenIds.push_back(children[i]);
+
+				free(children);
 			}
 				
 			memset(buff, 0x0, i_buff);

@@ -53,6 +53,7 @@ SkeletalMeshComponent::SkeletalMeshComponent(ComponentInitializer *initializer)
 {
 	_mesh = nullptr;
 	_animatorId = initializer->arguments.find("animator")->second;
+	_animator = nullptr;
 }
 
 int SkeletalMeshComponent::Load()

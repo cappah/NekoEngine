@@ -50,6 +50,8 @@ DemoAnimatorComponent::DemoAnimatorComponent(ComponentInitializer *initializer)
 	_clipIds[0] = initializer->arguments.find("clip0")->second;
 	_clipIds[1] = initializer->arguments.find("clip1")->second;
 	_clipIds[2] = initializer->arguments.find("clip2")->second;
+	_clips[0] = _clips[1] = _clips[2] = nullptr;
+	_initialAnim = nullptr;
 }
 
 int DemoAnimatorComponent::Load()

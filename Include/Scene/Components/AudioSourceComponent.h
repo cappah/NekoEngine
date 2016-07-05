@@ -56,7 +56,7 @@ public:
 
 	ENGINE_API virtual void Unload() override;
 
-	ENGINE_API virtual ~AudioSourceComponent() { }
+	ENGINE_API virtual ~AudioSourceComponent() { Unload(); }
 	
 protected:
 	std::string _defaultClipId;

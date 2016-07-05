@@ -64,8 +64,10 @@ StaticMeshComponent::StaticMeshComponent(ComponentInitializer *initializer)
 
 	_renderer = Engine::GetRenderer();
 
+	_matrixUbo = nullptr;
 	_matrixBlock.Model = _parent->GetModelMatrix();
 	_mmNeedsUpdate = false;
+	_blend = false;
 }
 
 void StaticMeshComponent::SetPosition(vec3 &position) noexcept

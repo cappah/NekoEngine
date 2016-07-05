@@ -92,6 +92,10 @@ Skeleton::Skeleton(vector<Bone> &bones, vector<TransformNode> &nodes, dmat4 &glo
 	}
 	
 	_globalInverseTransform = globalInverseTransform;
+
+	_buffer = nullptr;
+	_animationClip = nullptr;
+	_rootNode = nullptr;
 }
 
 void Skeleton::Bind(RShader *shader)

@@ -44,23 +44,23 @@
 #include "TestGame.h"
 #include "MovingObject.h"
 
+using namespace glm;
+
 REGISTER_OBJECT_CLASS(MovingObject);
 
 MovingObject::MovingObject(ObjectInitializer *initializer) noexcept : Object(initializer),
+	_startPosition(vec3(0.f)), _endPosition(vec3(0.f)),
+	_speed(50.f), _radius(10.f),
+	_trajectory(TrajectoryType::NoTrajectory),
 	_lastDistance(0.f),
 	_circularCounter(0.f)
 {
-	_startPosition = glm::vec3(0.f, 0.f, 0.f);
-	
-	_speed = 50.f;
-	
 	ArgumentMapType::iterator it = initializer->arguments.find("trajectory");
 	const char *ptr = nullptr;
 
 	if (it != initializer->arguments.end())
 	{
-		ptr = it->second.c_str();
-		if (ptr)
+		if((ptr = it->second.c_str()))
 		{
 			size_t len = strlen(ptr);
 
@@ -70,33 +70,17 @@ MovingObject::MovingObject(ObjectInitializer *initializer) noexcept : Object(ini
 				_trajectory = TrajectoryType::Linear;
 			else if (!strncmp(ptr, "circular", len))
 				_trajectory = TrajectoryType::Circular;
-			else
-				_trajectory = TrajectoryType::NoTrajectory;
 		}
-		else
-			_trajectory = TrajectoryType::NoTrajectory;
 	}
 	
-	if ((it = initializer->arguments.find("radius")) != initializer->arguments.end())
-	{
-		ptr = it->second.c_str();
-		_radius = ptr ? (float)atof(ptr) : 10.f;
-	}
+	if (((it = initializer->arguments.find("radius")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
+		_radius = (float)atof(ptr);
 
-	if ((it = initializer->arguments.find("speed")) != initializer->arguments.end())
-	{
-		ptr = it->second.c_str();
-		_speed = ptr ? (float)atof(ptr) : 50.f;
-	}
+	if (((it = initializer->arguments.find("speed")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
+		_speed = (float)atof(ptr);
 
-	if ((it = initializer->arguments.find("end")) != initializer->arguments.end())
-	{
-		ptr = it->second.c_str();
-		if (ptr)
-			EngineUtils::ReadFloatArray(ptr, 3, &_endPosition.x);
-		else
-			_endPosition = glm::vec3(0.f, 0.f, 0.f);
-	}
+	if (((it = initializer->arguments.find("end")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
+		EngineUtils::ReadFloatArray(ptr, 3, &_endPosition.x);
 }
 
 int MovingObject::Load()

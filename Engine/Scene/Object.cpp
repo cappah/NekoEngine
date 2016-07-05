@@ -93,6 +93,7 @@ Object::Object(ObjectInitializer *initializer) noexcept
 
 	_objectUbo = nullptr;
 	
+	SetForwardDirection(ForwardDirection::PositiveZ);
 	SetPosition(initializer->position);
 	SetRotation(initializer->rotation);
 	SetScale(initializer->scale);
@@ -107,10 +108,7 @@ Object::Object(ObjectInitializer *initializer) noexcept
 
 	const char *type = it->second.c_str();
 	if(!type)
-	{
-		SetForwardDirection(ForwardDirection::PositiveZ);
 		return;
-	}
 	
 	size_t len = strlen(type);
 	
