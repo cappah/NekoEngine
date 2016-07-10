@@ -48,19 +48,21 @@ EndObject
 # Player
 Object
 id=9001
-Component=CameraComponent=Camera
+Component=CameraComponent=FPSCamera
 	fov=45.0
 	near=1.0
 	far=10000.0
 	projection=perspective
-	position=0.0, 0.0, 0.0
+	position=-50.0, 47.0, -50.0
 	rotation=0.0, 0.0, 0.0
 	fog_color=0.207, 0.255, 0.349
 	view_distance=1200
 	fog_distance=3000
 	type=fps
 EndComponent
-position=-50.0, 47.0, -50.0
+Component=FPSControllerComponent=Controller
+EndComponent
+position=0.0, 0.0, 0.0
 scale=1.0, 1.0, 1.0
 rotation=0.0, -90.0, 0.0
 EndObject

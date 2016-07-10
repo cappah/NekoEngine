@@ -62,11 +62,6 @@ CameraComponent::CameraComponent(ComponentInitializer *initializer) : ObjectComp
 	_up(glm::vec3(0, 1, 0)),
 	_right(glm::vec3(0, 0, 0)),
 	_worldUp(glm::vec3(0, 1, 0)),
-	_translateSpeed(DEFAULT_TRANS),
-	_fastTranslateSpeed(DEFAULT_TRANS_F),
-	_rotateSpeed(DEFAULT_ROTS),
-	_verticalSensivity(DEFAULT_VSENS),
-	_horizontalSensivity(DEFAULT_HSENS),
 	_near(.2f),
 	_far(1000.f),
 	_fov(45.f),
@@ -74,10 +69,8 @@ CameraComponent::CameraComponent(ComponentInitializer *initializer) : ObjectComp
 	_fogDistance(1200.f),
 	_fogColor(glm::vec3(0, 0, 0)),
 	_projection(ProjectionType::Perspective),
-	_id(0),
 	_view(glm::mat4(0.f)),
-	_projectionMatrix(glm::mat4(0.f)),
-	_fps(false)
+	_projectionMatrix(glm::mat4(0.f))
 {
 	_UpdateView();
 
@@ -112,16 +105,6 @@ CameraComponent::CameraComponent(ComponentInitializer *initializer) : ObjectComp
 			_projection = ProjectionType::Ortographic;
 	}
 
-	if (((it = initializer->arguments.find("type")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
-	{
-		size_t len = strlen(ptr);
-
-		if (!strncmp(ptr, "fly", len))
-			_fps = false;
-		else if (!strncmp(ptr, "fps", len))
-			_fps = true;
-	}
-
 	_UpdateView();
 }
 
@@ -145,63 +128,7 @@ void CameraComponent::UpdatePerspective() noexcept
 
 void CameraComponent::Update(double deltaTime) noexcept
 {
-	float hAngle = _horizontalSensivity * Input::GetAxis(NE_MOUSE_X) * (float)deltaTime;
-	float vAngle = _verticalSensivity * Input::GetAxis(NE_MOUSE_Y) * (float)deltaTime;
-
-	// rotate
-	_rotation.x += RAD2DEG(vAngle);
-	_rotation.y -= RAD2DEG(hAngle);
-
-	/*	if (Engine::GetKeyDown('x'))
-	MoveUp(speed * _deltaTime);
-	else if (Engine::GetKeyDown('z'))
-	MoveUp(-speed * _deltaTime);
-
-	if (Engine::GetKeyDown('e'))
-	RotateZ(_rotateSpeed * _deltaTime);
-	else if (Engine::GetKeyDown('q'))
-	RotateZ(-_rotateSpeed * _deltaTime);*/
-
-	float speed = _translateSpeed;
-
-	if (Input::GetKeyDown(NE_KEY_LSHIFT))
-		speed = _fastTranslateSpeed;
-
-	float velocity = speed * (float)deltaTime;
-
-	vec3 pos = _parent->GetPosition();
-	vec3 rot = _parent->GetRotation();
-
-	if (Input::GetKeyDown(NE_KEY_W))
-		pos += _front * velocity * (_fps ? vec3(1.f, 0.f, 1.f) : vec3(1.f));
-	else if (Input::GetKeyDown(NE_KEY_S))
-		pos -= _front * velocity * (_fps ? vec3(1.f, 0.f, 1.f) : vec3(1.f));
-
-	if (Input::GetKeyDown(NE_KEY_D))
-		pos += _right * velocity;
-	else if (Input::GetKeyDown(NE_KEY_A))
-		pos -= _right * velocity;
-
-	if (Input::GetKeyDown(NE_KEY_RIGHT))
-		rot.y += _rotateSpeed * (float)deltaTime;
-	else if (Input::GetKeyDown(NE_KEY_LEFT))
-		rot.y -= _rotateSpeed * (float)deltaTime;
-
-	if (Input::GetKeyDown(NE_KEY_UP))
-		rot.x -= _rotateSpeed * (float)deltaTime;
-	else if (Input::GetKeyDown(NE_KEY_DOWN))
-		rot.x += _rotateSpeed * (float)deltaTime;
-
-	if (_fps)
-		rot.x = clamp(rot.x, -60.f, 85.f);
-
-	_parent->SetPosition(pos);
-	_parent->SetRotation(rot);
-
 	_UpdateView();
-
-	SoundManager::SetListenerPosition(pos.x, pos.y, pos.z);
-	SoundManager::SetListenerOrientation(_front.x, _front.y, _front.z);
 }
 
 void CameraComponent::_UpdateView() noexcept
@@ -220,4 +147,7 @@ void CameraComponent::_UpdateView() noexcept
 	_up = normalize(cross(_right, _front));
 
 	_view = lookAt(pos, pos + _front, _up);
+
+	SoundManager::SetListenerPosition(pos.x, pos.y, pos.z);
+	SoundManager::SetListenerOrientation(_front.x, _front.y, _front.z);
 }

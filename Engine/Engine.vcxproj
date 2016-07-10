@@ -190,6 +190,7 @@
     <ClInclude Include="..\Include\Scene\Components\AnimatorComponent.h" />
     <ClInclude Include="..\Include\Scene\Components\AudioSourceComponent.h" />
     <ClInclude Include="..\Include\Scene\Components\CameraComponent.h" />
+    <ClInclude Include="..\Include\Scene\Components\FPSControllerComponent.h" />
     <ClInclude Include="..\Include\Scene\Components\SkeletalMeshComponent.h" />
     <ClInclude Include="..\Include\Scene\Components\StaticMeshComponent.h" />
     <ClInclude Include="..\include\Scene\Light.h" />
@@ -299,6 +300,7 @@
     <ClCompile Include="Scene\Components\AnimatorComponent.cpp" />
     <ClCompile Include="Scene\Components\AudioSourceComponent.cpp" />
     <ClCompile Include="Scene\Components\CameraComponent.cpp" />
+    <ClCompile Include="Scene\Components\FPSControllerComponent.cpp" />
     <ClCompile Include="Scene\Components\SkeletalMeshComponent.cpp" />
     <ClCompile Include="Scene\Components\StaticMeshComponent.cpp" />
     <ClCompile Include="Scene\Light.cpp" />

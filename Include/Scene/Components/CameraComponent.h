@@ -3,7 +3,7 @@
  * CameraComponent.h
  * Author: Alexandru Naiman
  *
- * Fly / FPS camera
+ * Camera component
  *
  * -----------------------------------------------------------------------------
  *
@@ -51,31 +51,17 @@ enum class ProjectionType : unsigned short
 	Ortographic = 1
 };
 
-#ifdef NE_PLATFORM_IOS
-#define DEFAULT_VSENS	.75f
-#define DEFAULT_HSENS	.75f
-#define DEFAULT_TRANS	300.f
-#define DEFAULT_TRANS_F	175.f
-#define DEFAULT_ROTS	40.f
-#else
-#define DEFAULT_VSENS	25.0f
-#define DEFAULT_HSENS	25.0f
-#define DEFAULT_TRANS	250.f
-#define DEFAULT_TRANS_F	370.f
-#define DEFAULT_ROTS	40.f
-#endif
-
 class ENGINE_API CameraComponent : public ObjectComponent
 {
 public:
 	CameraComponent(ComponentInitializer *initializer);
 
-	int GetId() noexcept { return _id; }
 	glm::vec3& GetPosition() noexcept { return _position; }
 	glm::vec3& GetFogColor() noexcept { return _fogColor; }
+	glm::vec3& GetForward() noexcept { return _front; }
+	glm::vec3& GetRight() noexcept { return _right; }
 	glm::mat4& GetView() noexcept { return _view; }
 	glm::mat4& GetProjectionMatrix() noexcept { return _projectionMatrix; }
-	bool GetFPSCamera() { return _fps; }
 	float GetNear() noexcept { return _near; }
 	float GetFar() noexcept { return _far; }
 	float GetFOV() noexcept { return _fov; }
@@ -83,8 +69,6 @@ public:
 	float GetFogDistance() noexcept { return _fogDistance; }
 	ProjectionType GetProjection() noexcept { return _projection; }
 
-	void SetId(int id) noexcept { _id = id; }
-	void SetFPSCamera(bool fps) { _fps = fps; }
 	void SetNear(float Near) noexcept { _near = Near; }
 	void SetFar(float Far) noexcept { _far = Far; }
 	void SetFOV(float fov) noexcept { _fov = fov; }
@@ -92,8 +76,7 @@ public:
 	void SetViewDistance(float distance) noexcept { _viewDistance = distance; }
 	void SetFogDistance(float distance) noexcept { _fogDistance = distance; }
 	void SetProjection(ProjectionType projection) noexcept { _projection = projection; }
-	void SetHorizontalSensivity(float sensivity) noexcept { _horizontalSensivity = sensivity; }
-	void SetVerticalSensivity(float sensivity) noexcept { _verticalSensivity = sensivity; }
+	
 	void UpdatePerspective() noexcept;
 
 	virtual int Load() override;
@@ -116,11 +99,6 @@ protected:
 	glm::vec3 _right;
 	glm::vec3 _worldUp;
 
-	float _translateSpeed, _fastTranslateSpeed;
-	float _rotateSpeed;
-	float _verticalSensivity;
-	float _horizontalSensivity;
-
 	float _near;
 	float _far;
 	float _fov;
@@ -131,12 +109,8 @@ protected:
 
 	ProjectionType _projection;
 
-	int _id;
-
 	glm::mat4 _view;
 	glm::mat4 _projectionMatrix;
-
-	bool _fps;
 
 	void _UpdateView() noexcept;
 };
