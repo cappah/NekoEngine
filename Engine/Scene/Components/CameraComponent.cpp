@@ -70,8 +70,6 @@ CameraComponent::CameraComponent(ComponentInitializer *initializer) : ObjectComp
 	_near(.2f),
 	_far(1000.f),
 	_fov(45.f),
-	_xDelta(0.f),
-	_yDelta(0.f),
 	_viewDistance(1000.f),
 	_fogDistance(1200.f),
 	_fogColor(glm::vec3(0, 0, 0)),
@@ -147,11 +145,8 @@ void CameraComponent::UpdatePerspective() noexcept
 
 void CameraComponent::Update(double deltaTime) noexcept
 {
-	float hAngle = _horizontalSensivity * _xDelta * (float)deltaTime;
-	float vAngle = _verticalSensivity * _yDelta * (float)deltaTime;
-
-	_xDelta = 0.f;
-	_yDelta = 0.f;
+	float hAngle = _horizontalSensivity * Input::GetAxis(NE_MOUSE_X) * (float)deltaTime;
+	float vAngle = _verticalSensivity * Input::GetAxis(NE_MOUSE_Y) * (float)deltaTime;
 
 	// rotate
 	_rotation.x += RAD2DEG(vAngle);
@@ -174,32 +169,38 @@ void CameraComponent::Update(double deltaTime) noexcept
 
 	float velocity = speed * (float)deltaTime;
 
+	vec3 pos = _parent->GetPosition();
+	vec3 rot = _parent->GetRotation();
+
 	if (Input::GetKeyDown(NE_KEY_W))
-		_position += _front * velocity * (_fps ? vec3(1.f, 0.f, 1.f) : vec3(1.f));
+		pos += _front * velocity * (_fps ? vec3(1.f, 0.f, 1.f) : vec3(1.f));
 	else if (Input::GetKeyDown(NE_KEY_S))
-		_position -= _front * velocity * (_fps ? vec3(1.f, 0.f, 1.f) : vec3(1.f));
+		pos -= _front * velocity * (_fps ? vec3(1.f, 0.f, 1.f) : vec3(1.f));
 
 	if (Input::GetKeyDown(NE_KEY_D))
-		_position += _right * velocity;
+		pos += _right * velocity;
 	else if (Input::GetKeyDown(NE_KEY_A))
-		_position -= _right * velocity;
+		pos -= _right * velocity;
 
 	if (Input::GetKeyDown(NE_KEY_RIGHT))
-		_rotation.y += _rotateSpeed * (float)deltaTime;
+		rot.y += _rotateSpeed * (float)deltaTime;
 	else if (Input::GetKeyDown(NE_KEY_LEFT))
-		_rotation.y -= _rotateSpeed * (float)deltaTime;
+		rot.y -= _rotateSpeed * (float)deltaTime;
 
 	if (Input::GetKeyDown(NE_KEY_UP))
-		_rotation.x -= _rotateSpeed * (float)deltaTime;
+		rot.x -= _rotateSpeed * (float)deltaTime;
 	else if (Input::GetKeyDown(NE_KEY_DOWN))
-		_rotation.x += _rotateSpeed * (float)deltaTime;
+		rot.x += _rotateSpeed * (float)deltaTime;
 
 	if (_fps)
-		_rotation.x = clamp(_rotation.x, -60.f, 85.f);
+		rot.x = clamp(rot.x, -60.f, 85.f);
+
+	_parent->SetPosition(pos);
+	_parent->SetRotation(rot);
 
 	_UpdateView();
 
-	SoundManager::SetListenerPosition(_position.x, _position.y, _position.z);
+	SoundManager::SetListenerPosition(pos.x, pos.y, pos.z);
 	SoundManager::SetListenerOrientation(_front.x, _front.y, _front.z);
 }
 
@@ -207,13 +208,16 @@ void CameraComponent::_UpdateView() noexcept
 {
 	vec3 front;
 
-	front.x = cos(radians(_rotation.y)) * cos(radians(_rotation.x));
-	front.y = sin(radians(_rotation.x));
-	front.z = sin(radians(_rotation.y)) * cos(radians(_rotation.x));
+	vec3 pos = _parent->GetPosition() + _position;
+	vec3 rot = _parent->GetRotation() + _rotation;
+
+	front.x = cos(radians(rot.y)) * cos(radians(rot.x));
+	front.y = sin(radians(rot.x));
+	front.z = sin(radians(rot.y)) * cos(radians(rot.x));
 
 	_front = normalize(front);
 	_right = normalize(cross(_front, _worldUp));
 	_up = normalize(cross(_right, _front));
 
-	_view = lookAt(_position, _position + _front, _up);
+	_view = lookAt(pos, pos + _front, _up);
 }

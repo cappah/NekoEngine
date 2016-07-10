@@ -58,8 +58,8 @@ enum class ProjectionType : unsigned short
 #define DEFAULT_TRANS_F	175.f
 #define DEFAULT_ROTS	40.f
 #else
-#define DEFAULT_VSENS	.10f
-#define DEFAULT_HSENS	.10f
+#define DEFAULT_VSENS	25.0f
+#define DEFAULT_HSENS	25.0f
 #define DEFAULT_TRANS	250.f
 #define DEFAULT_TRANS_F	370.f
 #define DEFAULT_ROTS	40.f
@@ -94,7 +94,6 @@ public:
 	void SetProjection(ProjectionType projection) noexcept { _projection = projection; }
 	void SetHorizontalSensivity(float sensivity) noexcept { _horizontalSensivity = sensivity; }
 	void SetVerticalSensivity(float sensivity) noexcept { _verticalSensivity = sensivity; }
-	void SetRotationDelta(float x, float y) noexcept { _xDelta = x, _yDelta = y; }
 	void UpdatePerspective() noexcept;
 
 	virtual int Load() override;
@@ -125,8 +124,6 @@ protected:
 	float _near;
 	float _far;
 	float _fov;
-
-	float _xDelta, _yDelta;
 
 	float _viewDistance;
 	float _fogDistance;

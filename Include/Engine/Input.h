@@ -44,6 +44,12 @@
 #include <Engine/Keycodes.h>
 #include <Platform/Platform.h>
 
+#define NE_MOUSE_X		0
+#define NE_MOUSE_Y		1
+#define NE_JOY_LT		2
+#define NE_JOY_RT		3
+#define NE_JOY_TRIG		4
+
 class Input
 {
 public:
@@ -52,14 +58,21 @@ public:
 	ENGINE_API static bool GetKeyUp(uint8_t key) noexcept;
 	ENGINE_API static bool GetKeyDown(uint8_t key) noexcept;
 
+	ENGINE_API static float GetAxis(uint8_t axis) noexcept { return _axis[axis]; }
+
 	static void Release();
 
+#ifdef ENGINE_INTERNAL
 	// Internal functions
 	static void Key(int key, bool bIsPressed) noexcept;
+	static void Update() noexcept;
+#endif
 
 private:
 	static std::vector<uint8_t> _pressedKeys;
 	static std::unordered_map<int, uint8_t> _keymap;
+	static float _screenHalfWidth, _screenHalfHeight;
+	static float _axis[5];
 
 	// Platform-specific functions
 	static void _InitializeKeymap();

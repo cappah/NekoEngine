@@ -46,10 +46,15 @@ using namespace std;
 
 vector<uint8_t> Input::_pressedKeys;
 unordered_map<int, uint8_t> Input::_keymap;
+float Input::_screenHalfWidth = 0.f, Input::_screenHalfHeight = 0.f;
+float Input::_axis[5] = { 0.f, 0.f, 0.f, 0.f, 0.f };
 
 int Input::Initialize()
 {
 	_InitializeKeymap();
+
+	_screenHalfWidth = (float)Engine::GetScreenWidth() / 2.f;
+	_screenHalfHeight = (float)Engine::GetScreenHeight() / 2.f;
 
 	return ENGINE_OK;
 }
@@ -80,6 +85,26 @@ void Input::Key(int key, bool bIsPressed) noexcept
 		_pressedKeys.push_back(code);
 	else
 		_pressedKeys.erase(remove(_pressedKeys.begin(), _pressedKeys.end(), code), _pressedKeys.end());
+}
+
+void Input::Update() noexcept
+{
+	// Mouse
+	long x = 0, y = 0;
+	float xDelta = 0.f, yDelta = 0.f;
+
+	if (Platform::GetPointerPosition(x, y))
+	{
+		xDelta = _screenHalfWidth - x;
+		yDelta = _screenHalfHeight - y;
+
+		Platform::SetPointerPosition(_screenHalfWidth, _screenHalfHeight);
+	}
+	else if (!Platform::GetTouchMovementDelta(xDelta, yDelta))
+		return;
+
+	_axis[NE_MOUSE_X] = xDelta / _screenHalfWidth;
+	_axis[NE_MOUSE_Y] = yDelta / _screenHalfHeight;
 }
 
 void Input::Release()

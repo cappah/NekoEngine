@@ -733,19 +733,7 @@ void Engine::Update(double deltaTime) noexcept
 	if (!SceneManager::IsSceneLoaded())
 		return;
 
-	long x = 0, y = 0;
-	float xDelta = 0.f, yDelta = 0.f;
-
-	if(!_graphicsDebug && Platform::GetPointerPosition(x, y))
-	{
-		xDelta = (float)_config.Engine.ScreenWidth / 2.f - x;
-		yDelta = (float)_config.Engine.ScreenHeight / 2.f - y;
-
-		CameraManager::GetActiveCamera()->SetRotationDelta(xDelta, yDelta);
-		Platform::SetPointerPosition(_config.Engine.ScreenWidth / 2, _config.Engine.ScreenHeight / 2);
-	}
-	else if(Platform::GetTouchMovementDelta(xDelta, yDelta))
-		CameraManager::GetActiveCamera()->SetRotationDelta(xDelta, yDelta);
+	Input::Update();
 
 	SceneManager::UpdateScene(deltaTime);
 }
