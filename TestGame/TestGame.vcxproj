@@ -116,6 +116,7 @@
       <DataLevelLinking>false</DataLevelLinking>
       <UseShortEnums>true</UseShortEnums>
       <TreatWarningAsError>true</TreatWarningAsError>
+      <DisableSpecificWarnings>4251;4275</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

@@ -48,6 +48,8 @@ vector<uint8_t> Input::_pressedKeys;
 unordered_map<int, uint8_t> Input::_keymap;
 float Input::_screenHalfWidth = 0.f, Input::_screenHalfHeight = 0.f;
 float Input::_axis[5] = { 0.f, 0.f, 0.f, 0.f, 0.f };
+unordered_map<std::string, uint8_t> Input::_buttonMap;
+unordered_map<std::string, uint8_t> Input::_axisMap;
 
 int Input::Initialize()
 {
@@ -98,7 +100,7 @@ void Input::Update() noexcept
 		xDelta = _screenHalfWidth - x;
 		yDelta = _screenHalfHeight - y;
 
-		Platform::SetPointerPosition(_screenHalfWidth, _screenHalfHeight);
+		Platform::SetPointerPosition((long)_screenHalfWidth, (long)_screenHalfHeight);
 	}
 	else if (!Platform::GetTouchMovementDelta(xDelta, yDelta))
 		return;

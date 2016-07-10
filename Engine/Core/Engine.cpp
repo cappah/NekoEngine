@@ -205,6 +205,72 @@ void Engine::_ReadEffectConfig(const char *file)
 	}
 }
 
+void Engine::_ReadInputConfig(const char *file)
+{
+	char buff[INI_BUFF_SZ], optBuff[INI_BUFF_SZ];
+	bool end = false;
+	int i = 0, optI = 0;
+
+	memset(buff, 0x0, INI_BUFF_SZ);
+	memset(optBuff, 0x0, INI_BUFF_SZ);
+
+	end = Platform::GetConfigSection("Input.ButtonMapping", buff, INI_BUFF_SZ, file) == 0;
+	while (!end)
+	{
+		char c, *vptr;
+
+		while ((c = buff[i]) != 0x0)
+		{
+			optBuff[optI] = c;
+			++optI;
+			++i;
+		}
+
+		if (buff[++i] == 0x0)
+			end = true;
+
+		if ((vptr = strchr(optBuff, '=')) == nullptr)
+			break;
+
+		*vptr++ = 0x0;
+
+		Input::AddButtonMapping(optBuff, atoi(vptr));
+
+		memset(optBuff, 0x0, INI_BUFF_SZ);
+		optI = 0;
+	}
+
+	end = false;
+	i = 0;
+	memset(buff, 0x0, INI_BUFF_SZ);
+
+	end = Platform::GetConfigSection("Input.AxisMapping", buff, INI_BUFF_SZ, file) == 0;
+	while (!end)
+	{
+		char c, *vptr;
+
+		while ((c = buff[i]) != 0x0)
+		{
+			optBuff[optI] = c;
+			++optI;
+			++i;
+		}
+
+		if (buff[++i] == 0x0)
+			end = true;
+
+		if ((vptr = strchr(optBuff, '=')) == nullptr)
+			break;
+
+		*vptr++ = 0x0;
+
+		Input::AddAxisMapping(optBuff, atoi(vptr));
+
+		memset(optBuff, 0x0, INI_BUFF_SZ);
+		optI = 0;
+	}
+}
+
 void Engine::_ReadRendererConfig(const char *file)
 {
 	char name[256], buff[INI_BUFF_SZ], optBuff[INI_BUFF_SZ];
@@ -213,10 +279,9 @@ void Engine::_ReadRendererConfig(const char *file)
 
 	memset(name, 0x0, 256);
 	memset(buff, 0x0, INI_BUFF_SZ);
-
 	snprintf(name, 256, "Renderer.%s", _rendererFile);
-	Platform::GetConfigSection(name, buff, INI_BUFF_SZ, file);
 
+	end = Platform::GetConfigSection(name, buff, INI_BUFF_SZ, file) == 0;
 	while(!end)
 	{
 		char c, *vptr;
@@ -228,7 +293,7 @@ void Engine::_ReadRendererConfig(const char *file)
 			++i;
 		}
 
-		if(buff[i + 1] == 0x0)
+		if(buff[++i] == 0x0)
 			end = true;
 
 		if((vptr = strchr(optBuff, '=')) == nullptr)
@@ -237,6 +302,9 @@ void Engine::_ReadRendererConfig(const char *file)
 		*vptr++ = 0x0;
 
 		_rendererArguments.insert(make_pair(optBuff, vptr));
+
+		memset(optBuff, 0x0, INI_BUFF_SZ);
+		optI = 0;
 	}
 }
 
@@ -304,7 +372,7 @@ void Engine::_ReadINIFile(const char *file)
 	_config.PostProcessor.FXAA = Platform::GetConfigInt("PostProcessor", "bFXAA", 1, file) != 0;
 
 	_ReadEffectConfig(file);
-
+	_ReadInputConfig(file);
 	_ReadRendererConfig(file);
 
 	iniFileLoaded = true;

@@ -121,8 +121,9 @@
       <DataLevelLinking>true</DataLevelLinking>
       <UseShortEnums>true</UseShortEnums>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <DisableSpecificWarnings>4251</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4251;4275</DisableSpecificWarnings>
       <OpenMPSupport>true</OpenMPSupport>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
     </ClCompile>
     <Link>
       <AdditionalDependencies>libvorbisfile.lib;libpng16.lib;sqlite.lib;zlibstatic.lib;OpenAL32.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>

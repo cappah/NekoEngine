@@ -334,6 +334,7 @@ private:
 	static void _PrintStats();
 	static void _ParseArgs(std::string cmdLine);
 	static void _ReadEffectConfig(const char *file);
+	static void _ReadInputConfig(const char *file);
 	static void _ReadRendererConfig(const char *file);
 	static void _ReadINIFile(const char *file);
 	static void _InitializeQuadVAO();

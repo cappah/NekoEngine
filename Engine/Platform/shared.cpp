@@ -181,13 +181,14 @@ size_t Platform::GetConfigSection(const char *section, char *out, size_t size, c
 	assert(file);
 
 	if (!fp)
-		return -1;
+		return 0;
 
 	if(snprintf(sectionBuff, INI_LINE_BUFF, "[%s]", section) >= INI_LINE_BUFF)
 	{
 		fclose(fp);
-		return -1;
+		return 0;
 	}
+
 	size_t len = strlen(sectionBuff);
 
 	while (fgets(lineBuff, INI_LINE_BUFF, fp))
@@ -202,29 +203,26 @@ size_t Platform::GetConfigSection(const char *section, char *out, size_t size, c
 	if (!found)
 	{
 		fclose(fp);
-		return -1;
+		return 0;
 	}
 
 	while (fgets(lineBuff, INI_LINE_BUFF, fp))
 	{
 		strncpy((out + offset), lineBuff, size);
-		out[size - 1] = '\0';
+		out[size - 1] = 0x0;
 
-		char *ptr = strchr(out, '\r');
+		char *ptr = strchr((out + offset), '\r');
 		if (ptr)
-			*ptr = '\0';
+			*ptr = 0x0;
 
-		ptr = strchr(out, '\n');
+		ptr = strchr((out + offset), '\n');
 		if (ptr)
-			*ptr = '\0';
+			*ptr = 0x0;
 
-		offset = strlen(out);
-
-		fclose(fp);
-
-		return strlen(out);
+		char *pizdamatii = (out + offset);
+		offset += strlen(pizdamatii) + 1;
 	}
 
 	fclose(fp);
-	return -1;
+	return offset;
 }

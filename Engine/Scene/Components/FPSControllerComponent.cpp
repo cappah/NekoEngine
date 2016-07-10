@@ -101,14 +101,14 @@ void FPSControllerComponent::Update(double deltaTime) noexcept
 
 	CameraComponent *cam = (CameraComponent*)_parent->GetComponent("FPSCamera");
 
-	if (Input::GetKeyDown(NE_KEY_W))
+	if (Input::GetKeyDown(string("forward")))
 		pos += cam->GetForward() * velocity * vec3(1.f, 0.f, 1.f);
-	else if (Input::GetKeyDown(NE_KEY_S))
+	else if (Input::GetKeyDown(string("back")))
 		pos -= cam->GetForward() * velocity * vec3(1.f, 0.f, 1.f);
 
-	if (Input::GetKeyDown(NE_KEY_D))
+	if (Input::GetKeyDown(string("right")))
 		pos += cam->GetRight() * velocity;
-	else if (Input::GetKeyDown(NE_KEY_A))
+	else if (Input::GetKeyDown(string("left")))
 		pos -= cam->GetRight() * velocity;
 
 	if (Input::GetKeyDown(NE_KEY_RIGHT))

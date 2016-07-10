@@ -40,6 +40,7 @@
 #pragma once
 
 #include <vector>
+#include <string>
 #include <unordered_map>
 #include <Engine/Keycodes.h>
 #include <Platform/Platform.h>
@@ -55,10 +56,18 @@ class Input
 public:
 	static int Initialize();
 
+	ENGINE_API static void AddButtonMapping(std::string map, uint8_t button) { _buttonMap.insert(std::make_pair(map, button)); }
+	ENGINE_API static void AddAxisMapping(std::string map, uint8_t axis) { _axisMap.insert(std::make_pair(map, axis)); }
+
 	ENGINE_API static bool GetKeyUp(uint8_t key) noexcept;
 	ENGINE_API static bool GetKeyDown(uint8_t key) noexcept;
 
 	ENGINE_API static float GetAxis(uint8_t axis) noexcept { return _axis[axis]; }
+
+	ENGINE_API static bool GetKeyUp(std::string &key) noexcept { return GetKeyUp(_buttonMap[key]); }
+	ENGINE_API static bool GetKeyDown(std::string &key) noexcept { return GetKeyDown(_buttonMap[key]); }
+
+	ENGINE_API static float GetAxis(std::string &axis) noexcept { return GetAxis(_axisMap[axis]); }
 
 	static void Release();
 
@@ -73,6 +82,8 @@ private:
 	static std::unordered_map<int, uint8_t> _keymap;
 	static float _screenHalfWidth, _screenHalfHeight;
 	static float _axis[5];
+	static std::unordered_map<std::string, uint8_t> _buttonMap;
+	static std::unordered_map<std::string, uint8_t> _axisMap;
 
 	// Platform-specific functions
 	static void _InitializeKeymap();
