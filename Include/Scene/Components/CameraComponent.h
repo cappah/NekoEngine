@@ -56,7 +56,6 @@ class ENGINE_API CameraComponent : public ObjectComponent
 public:
 	CameraComponent(ComponentInitializer *initializer);
 
-	glm::vec3& GetPosition() noexcept { return _position; }
 	glm::vec3& GetFogColor() noexcept { return _fogColor; }
 	glm::vec3& GetForward() noexcept { return _front; }
 	glm::vec3& GetRight() noexcept { return _right; }

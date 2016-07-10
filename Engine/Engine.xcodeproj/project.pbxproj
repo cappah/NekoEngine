@@ -17,10 +17,8 @@
 		124A31F41CDC262D00472893 /* EngineAppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1296BB701CDB7EEA00D17488 /* EngineAppDelegate.mm */; };
 		124A31F51CDC263000472893 /* iOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1296BB731CDB7F3400D17488 /* iOS.mm */; };
 		124A31F61CDC263000472893 /* reallocarray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1279C0FF1CC91E7600E521AD /* reallocarray.cpp */; };
-		124A31F71CDC263000472893 /* shared.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B301CC1ADDB00EE5D0A /* shared.cpp */; };
 		124A31F81CDC263600472893 /* Effect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B351CC1AE0600EE5D0A /* Effect.cpp */; };
 		124A31F91CDC263600472893 /* SMAA.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B361CC1AE0600EE5D0A /* SMAA.cpp */; };
-		124A31FA1CDC264100472893 /* Camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B391CC1AE0E00EE5D0A /* Camera.cpp */; };
 		124A31FB1CDC264100472893 /* Light.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B3A1CC1AE0E00EE5D0A /* Light.cpp */; };
 		124A31FC1CDC264100472893 /* Object.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B3B1CC1AE0E00EE5D0A /* Object.cpp */; };
 		124A31FD1CDC264100472893 /* ObjectComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B3C1CC1AE0E00EE5D0A /* ObjectComponent.cpp */; };
@@ -47,10 +45,8 @@
 		12822B091CC1AD9C00EE5D0A /* AudioSource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B071CC1AD9C00EE5D0A /* AudioSource.cpp */; };
 		12822B2D1CC1ADD000EE5D0A /* UNIX.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B2C1CC1ADD000EE5D0A /* UNIX.cpp */; };
 		12822B2F1CC1ADD500EE5D0A /* Mac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 12822B2E1CC1ADD500EE5D0A /* Mac.mm */; };
-		12822B311CC1ADDB00EE5D0A /* shared.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B301CC1ADDB00EE5D0A /* shared.cpp */; };
 		12822B371CC1AE0600EE5D0A /* Effect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B351CC1AE0600EE5D0A /* Effect.cpp */; };
 		12822B381CC1AE0600EE5D0A /* SMAA.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B361CC1AE0600EE5D0A /* SMAA.cpp */; };
-		12822B401CC1AE0E00EE5D0A /* Camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B391CC1AE0E00EE5D0A /* Camera.cpp */; };
 		12822B411CC1AE0E00EE5D0A /* Light.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B3A1CC1AE0E00EE5D0A /* Light.cpp */; };
 		12822B421CC1AE0E00EE5D0A /* Object.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B3B1CC1AE0E00EE5D0A /* Object.cpp */; };
 		12822B431CC1AE0E00EE5D0A /* ObjectComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B3C1CC1AE0E00EE5D0A /* ObjectComponent.cpp */; };
@@ -128,6 +124,17 @@
 		12ECE5E21CF110D2004F3697 /* AudioSourceComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 12ECE5E11CF110D2004F3697 /* AudioSourceComponent.h */; };
 		12ECE5E41CF110F1004F3697 /* AudioSourceComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12ECE5E31CF110F1004F3697 /* AudioSourceComponent.cpp */; };
 		12ECE5E51CF110F1004F3697 /* AudioSourceComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12ECE5E31CF110F1004F3697 /* AudioSourceComponent.cpp */; };
+		12FABB101D32567200D88639 /* CameraComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 12FABB0E1D32567200D88639 /* CameraComponent.h */; };
+		12FABB111D32567200D88639 /* FPSControllerComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 12FABB0F1D32567200D88639 /* FPSControllerComponent.h */; };
+		12FABB131D3256A500D88639 /* shared.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12FABB121D3256A500D88639 /* shared.cpp */; };
+		12FABB141D3256A500D88639 /* shared.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12FABB121D3256A500D88639 /* shared.cpp */; };
+		12FABB171D3256B600D88639 /* CameraComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12FABB151D3256B600D88639 /* CameraComponent.cpp */; };
+		12FABB181D3256B600D88639 /* CameraComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12FABB151D3256B600D88639 /* CameraComponent.cpp */; };
+		12FABB191D3256B600D88639 /* FPSControllerComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12FABB161D3256B600D88639 /* FPSControllerComponent.cpp */; };
+		12FABB1A1D3256B600D88639 /* FPSControllerComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12FABB161D3256B600D88639 /* FPSControllerComponent.cpp */; };
+		12FABB1C1D3256C400D88639 /* CameraManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12FABB1B1D3256C400D88639 /* CameraManager.cpp */; };
+		12FABB1D1D3256C400D88639 /* CameraManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12FABB1B1D3256C400D88639 /* CameraManager.cpp */; };
+		12FABB1F1D3256D200D88639 /* CameraManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 12FABB1E1D3256D200D88639 /* CameraManager.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -165,10 +172,8 @@
 		12822B071CC1AD9C00EE5D0A /* AudioSource.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AudioSource.cpp; path = Audio/AudioSource.cpp; sourceTree = SOURCE_ROOT; };
 		12822B2C1CC1ADD000EE5D0A /* UNIX.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = UNIX.cpp; path = Platform/UNIX/UNIX.cpp; sourceTree = SOURCE_ROOT; };
 		12822B2E1CC1ADD500EE5D0A /* Mac.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Mac.mm; path = Platform/Mac/Mac.mm; sourceTree = SOURCE_ROOT; };
-		12822B301CC1ADDB00EE5D0A /* shared.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = shared.cpp; path = ../Platform/shared.cpp; sourceTree = "<group>"; };
 		12822B351CC1AE0600EE5D0A /* Effect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Effect.cpp; path = PostEffects/Effect.cpp; sourceTree = SOURCE_ROOT; };
 		12822B361CC1AE0600EE5D0A /* SMAA.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SMAA.cpp; path = PostEffects/SMAA.cpp; sourceTree = SOURCE_ROOT; };
-		12822B391CC1AE0E00EE5D0A /* Camera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Camera.cpp; path = Scene/Camera.cpp; sourceTree = SOURCE_ROOT; };
 		12822B3A1CC1AE0E00EE5D0A /* Light.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Light.cpp; path = Scene/Light.cpp; sourceTree = SOURCE_ROOT; };
 		12822B3B1CC1AE0E00EE5D0A /* Object.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Object.cpp; path = Scene/Object.cpp; sourceTree = SOURCE_ROOT; };
 		12822B3C1CC1AE0E00EE5D0A /* ObjectComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ObjectComponent.cpp; path = Scene/ObjectComponent.cpp; sourceTree = SOURCE_ROOT; };
@@ -224,7 +229,6 @@
 		12822B871CC1AE4E00EE5D0A /* ShaderResource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShaderResource.h; sourceTree = "<group>"; };
 		12822B881CC1AE4E00EE5D0A /* TextureFontResource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TextureFontResource.h; sourceTree = "<group>"; };
 		12822B891CC1AE4E00EE5D0A /* TextureResource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TextureResource.h; sourceTree = "<group>"; };
-		12822B8B1CC1AE4E00EE5D0A /* Camera.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Camera.h; sourceTree = "<group>"; };
 		12822B8C1CC1AE4E00EE5D0A /* Light.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Light.h; sourceTree = "<group>"; };
 		12822B8D1CC1AE4E00EE5D0A /* Object.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Object.h; sourceTree = "<group>"; };
 		12822B8E1CC1AE4E00EE5D0A /* ObjectComponent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ObjectComponent.h; sourceTree = "<group>"; };
@@ -283,6 +287,13 @@
 		12ECE5DF1CF0FFD1004F3697 /* TransformNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransformNode.h; sourceTree = "<group>"; };
 		12ECE5E11CF110D2004F3697 /* AudioSourceComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AudioSourceComponent.h; path = Components/AudioSourceComponent.h; sourceTree = "<group>"; };
 		12ECE5E31CF110F1004F3697 /* AudioSourceComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AudioSourceComponent.cpp; path = Scene/Components/AudioSourceComponent.cpp; sourceTree = SOURCE_ROOT; };
+		12FABB0E1D32567200D88639 /* CameraComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CameraComponent.h; path = Components/CameraComponent.h; sourceTree = "<group>"; };
+		12FABB0F1D32567200D88639 /* FPSControllerComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FPSControllerComponent.h; path = Components/FPSControllerComponent.h; sourceTree = "<group>"; };
+		12FABB121D3256A500D88639 /* shared.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = shared.cpp; path = Platform/shared.cpp; sourceTree = SOURCE_ROOT; };
+		12FABB151D3256B600D88639 /* CameraComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CameraComponent.cpp; path = Scene/Components/CameraComponent.cpp; sourceTree = SOURCE_ROOT; };
+		12FABB161D3256B600D88639 /* FPSControllerComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FPSControllerComponent.cpp; path = Scene/Components/FPSControllerComponent.cpp; sourceTree = SOURCE_ROOT; };
+		12FABB1B1D3256C400D88639 /* CameraManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CameraManager.cpp; path = Core/CameraManager.cpp; sourceTree = SOURCE_ROOT; };
+		12FABB1E1D3256D200D88639 /* CameraManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CameraManager.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -358,6 +369,7 @@
 				12822B051CC1AD9400EE5D0A /* Audio */,
 				12822B0A1CC1AD9F00EE5D0A /* Core */,
 				12822B291CC1ADB100EE5D0A /* Platform */,
+				12FABB121D3256A500D88639 /* shared.cpp */,
 				12822B341CC1ADF400EE5D0A /* PostEffects */,
 				12822B331CC1ADF000EE5D0A /* Scene */,
 				12822B321CC1ADE700EE5D0A /* System */,
@@ -378,6 +390,7 @@
 		12822B0A1CC1AD9F00EE5D0A /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				12FABB1B1D3256C400D88639 /* CameraManager.cpp */,
 				12C0588E1D2AF4E90042023D /* Input.cpp */,
 				12C560901CFB57B200E25478 /* AnimationClip.cpp */,
 				12C560911CFB57B200E25478 /* DeferredBuffer.cpp */,
@@ -408,7 +421,6 @@
 				12822B2A1CC1ADC200EE5D0A /* Mac */,
 				1296BB6E1CDB7EA700D17488 /* iOS */,
 				1279C0FC1CC91E4200E521AD /* Compat */,
-				12822B301CC1ADDB00EE5D0A /* shared.cpp */,
 			);
 			name = Platform;
 			sourceTree = "<group>";
@@ -448,7 +460,6 @@
 			isa = PBXGroup;
 			children = (
 				12B0CF5A1CEB4A8B00E5D2FE /* Components */,
-				12822B391CC1AE0E00EE5D0A /* Camera.cpp */,
 				12822B3A1CC1AE0E00EE5D0A /* Light.cpp */,
 				12822B3B1CC1AE0E00EE5D0A /* Object.cpp */,
 				12822B3C1CC1AE0E00EE5D0A /* ObjectComponent.cpp */,
@@ -515,6 +526,7 @@
 		12822B5B1CC1AE4E00EE5D0A /* Engine */ = {
 			isa = PBXGroup;
 			children = (
+				12FABB1E1D3256D200D88639 /* CameraManager.h */,
 				12C058911D2AF5360042023D /* Input.h */,
 				12C058921D2AF5360042023D /* Keycodes.h */,
 				127DF8B11CCB14DA005F2693 /* AnimationClip.h */,
@@ -616,7 +628,6 @@
 			isa = PBXGroup;
 			children = (
 				12B0CF611CEB4AA100E5D2FE /* Components */,
-				12822B8B1CC1AE4E00EE5D0A /* Camera.h */,
 				12822B8C1CC1AE4E00EE5D0A /* Light.h */,
 				12822B8D1CC1AE4E00EE5D0A /* Object.h */,
 				12822B8E1CC1AE4E00EE5D0A /* ObjectComponent.h */,
@@ -698,6 +709,8 @@
 		12B0CF5A1CEB4A8B00E5D2FE /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				12FABB151D3256B600D88639 /* CameraComponent.cpp */,
+				12FABB161D3256B600D88639 /* FPSControllerComponent.cpp */,
 				12150A1F1CEB875D0066A044 /* AnimatorComponent.cpp */,
 				12ECE5E31CF110F1004F3697 /* AudioSourceComponent.cpp */,
 				12B0CF5B1CEB4A9700E5D2FE /* SkeletalMeshComponent.cpp */,
@@ -709,6 +722,8 @@
 		12B0CF611CEB4AA100E5D2FE /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				12FABB0E1D32567200D88639 /* CameraComponent.h */,
+				12FABB0F1D32567200D88639 /* FPSControllerComponent.h */,
 				12150A241CEB87A10066A044 /* AnimatorComponent.h */,
 				12ECE5E11CF110D2004F3697 /* AudioSourceComponent.h */,
 				12B0CF621CEB4AB400E5D2FE /* SkeletalMeshComponent.h */,
@@ -727,16 +742,19 @@
 				12B0CF641CEB4AB400E5D2FE /* SkeletalMeshComponent.h in Headers */,
 				1279C0FE1CC91E5800E521AD /* Compat.h in Headers */,
 				127DF8B01CCB13AD005F2693 /* AnimationClipResource.h in Headers */,
+				12FABB111D32567200D88639 /* FPSControllerComponent.h in Headers */,
 				12ECE5D91CEFBE85004F3697 /* AnimationNode.h in Headers */,
 				12150A251CEB87A10066A044 /* AnimatorComponent.h in Headers */,
 				12822BB31CC1D84300EE5D0A /* EngineView.h in Headers */,
 				12B0CF651CEB4AB400E5D2FE /* StaticMeshComponent.h in Headers */,
 				12ECE5E01CF0FFD1004F3697 /* TransformNode.h in Headers */,
+				12FABB1F1D3256D200D88639 /* CameraManager.h in Headers */,
 				126DB02F1CE42C0600FB6B77 /* Skeleton.h in Headers */,
 				127DF8B21CCB14DA005F2693 /* AnimationClip.h in Headers */,
 				1296BBD41CDBB6B500D17488 /* PlatformDetect.h in Headers */,
 				12CE01721CC991B900F3D84B /* SkeletalMesh.h in Headers */,
 				1255C57C1CD24CF60036E1DA /* Bone.h in Headers */,
+				12FABB101D32567200D88639 /* CameraComponent.h in Headers */,
 				12C058931D2AF5360042023D /* Input.h in Headers */,
 				12C058941D2AF5360042023D /* Keycodes.h in Headers */,
 				12822BBA1CC1DB9500EE5D0A /* EngineAppDelegate.h in Headers */,
@@ -825,11 +843,12 @@
 				12C560B11CFB57B200E25478 /* ResourceManager.cpp in Sources */,
 				124A31F91CDC263600472893 /* SMAA.cpp in Sources */,
 				124A31E01CDC260E00472893 /* AudioClip.cpp in Sources */,
+				12FABB1A1D3256B600D88639 /* FPSControllerComponent.cpp in Sources */,
 				12C560B91CFB57B200E25478 /* SkeletalMesh.cpp in Sources */,
 				12C560A31CFB57B200E25478 /* AnimationClip.cpp in Sources */,
+				12FABB141D3256A500D88639 /* shared.cpp in Sources */,
 				12B0CF601CEB4A9700E5D2FE /* StaticMeshComponent.cpp in Sources */,
 				124A31FF1CDC264100472893 /* Skybox.cpp in Sources */,
-				124A31F71CDC263000472893 /* shared.cpp in Sources */,
 				124A31F81CDC263600472893 /* Effect.cpp in Sources */,
 				124A31FE1CDC264100472893 /* Scene.cpp in Sources */,
 				12C560AF1CFB57B200E25478 /* ResourceDatabase.cpp in Sources */,
@@ -843,6 +862,7 @@
 				12C560B51CFB57B200E25478 /* Shader.cpp in Sources */,
 				124A31F61CDC263000472893 /* reallocarray.cpp in Sources */,
 				12C560A91CFB57B200E25478 /* LoadingScreen.cpp in Sources */,
+				12FABB1D1D3256C400D88639 /* CameraManager.cpp in Sources */,
 				124A31FB1CDC264100472893 /* Light.cpp in Sources */,
 				12C560C31CFB57B200E25478 /* Texture.cpp in Sources */,
 				124A31F41CDC262D00472893 /* EngineAppDelegate.mm in Sources */,
@@ -850,8 +870,8 @@
 				12ECE5E51CF110F1004F3697 /* AudioSourceComponent.cpp in Sources */,
 				124A32011CDC264100472893 /* AssetLoader.cpp in Sources */,
 				12C560B71CFB57B200E25478 /* ShadowMap.cpp in Sources */,
+				12FABB181D3256B600D88639 /* CameraComponent.cpp in Sources */,
 				12C560BB1CFB57B200E25478 /* Skeleton.cpp in Sources */,
-				124A31FA1CDC264100472893 /* Camera.cpp in Sources */,
 				12C560C11CFB57B200E25478 /* StaticMesh.cpp in Sources */,
 				12C560AD1CFB57B200E25478 /* PostProcessor.cpp in Sources */,
 				12C560A71CFB57B200E25478 /* Engine.cpp in Sources */,
@@ -881,15 +901,14 @@
 				12C560B81CFB57B200E25478 /* SkeletalMesh.cpp in Sources */,
 				12C560A21CFB57B200E25478 /* AnimationClip.cpp in Sources */,
 				12822B561CC1AE2E00EE5D0A /* VFSFile.cpp in Sources */,
+				12FABB1C1D3256C400D88639 /* CameraManager.cpp in Sources */,
 				12822B2F1CC1ADD500EE5D0A /* Mac.mm in Sources */,
 				12822B441CC1AE0E00EE5D0A /* Scene.cpp in Sources */,
-				12822B401CC1AE0E00EE5D0A /* Camera.cpp in Sources */,
 				12822BB51CC1D84700EE5D0A /* EngineView.mm in Sources */,
 				12C560AE1CFB57B200E25478 /* ResourceDatabase.cpp in Sources */,
 				12822B541CC1AE2E00EE5D0A /* VFS.cpp in Sources */,
 				12C058961D2AF55A0042023D /* PlatformInput.mm in Sources */,
 				12822B381CC1AE0600EE5D0A /* SMAA.cpp in Sources */,
-				12822B311CC1ADDB00EE5D0A /* shared.cpp in Sources */,
 				12822B421CC1AE0E00EE5D0A /* Object.cpp in Sources */,
 				12C560B21CFB57B200E25478 /* SceneManager.cpp in Sources */,
 				12C560C41CFB57B200E25478 /* TextureFont.cpp in Sources */,
@@ -899,6 +918,7 @@
 				12C560A81CFB57B200E25478 /* LoadingScreen.cpp in Sources */,
 				12822B2D1CC1ADD000EE5D0A /* UNIX.cpp in Sources */,
 				12C560C21CFB57B200E25478 /* Texture.cpp in Sources */,
+				12FABB131D3256A500D88639 /* shared.cpp in Sources */,
 				1279C1001CC91E7600E521AD /* reallocarray.cpp in Sources */,
 				12822B551CC1AE2E00EE5D0A /* VFSArchive.cpp in Sources */,
 				12ECE5E41CF110F1004F3697 /* AudioSourceComponent.cpp in Sources */,
@@ -908,6 +928,7 @@
 				12822B411CC1AE0E00EE5D0A /* Light.cpp in Sources */,
 				12C560C01CFB57B200E25478 /* StaticMesh.cpp in Sources */,
 				12C560AC1CFB57B200E25478 /* PostProcessor.cpp in Sources */,
+				12FABB171D3256B600D88639 /* CameraComponent.cpp in Sources */,
 				12C560A61CFB57B200E25478 /* Engine.cpp in Sources */,
 				12822B371CC1AE0600EE5D0A /* Effect.cpp in Sources */,
 				12C560A41CFB57B200E25478 /* DeferredBuffer.cpp in Sources */,
@@ -918,6 +939,7 @@
 				12822B451CC1AE0E00EE5D0A /* Skybox.cpp in Sources */,
 				12822B4C1CC1AE2000EE5D0A /* ogg_callbacks.cpp in Sources */,
 				12822B4F1CC1AE2800EE5D0A /* Logger.cpp in Sources */,
+				12FABB191D3256B600D88639 /* FPSControllerComponent.cpp in Sources */,
 				12822BBB1CC1DB9500EE5D0A /* EngineAppDelegate.mm in Sources */,
 				12822B461CC1AE0E00EE5D0A /* Terrain.cpp in Sources */,
 				12C0588F1D2AF4E90042023D /* Input.cpp in Sources */,
