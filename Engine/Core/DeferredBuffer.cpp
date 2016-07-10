@@ -44,6 +44,7 @@
 
 #include <Engine/DeferredBuffer.h>
 #include <Engine/SceneManager.h>
+#include <Engine/CameraManager.h>
 #include <Engine/ResourceManager.h>
 #include <Scene/Components/StaticMeshComponent.h>
 
@@ -276,7 +277,7 @@ void DeferredBuffer::RenderLighting() noexcept
 {
 	Renderer* r = Engine::GetRenderer();
 	Scene *s = SceneManager::GetActiveScene();
-	Camera *cam = s->GetSceneCamera();
+	CameraComponent *cam = CameraManager::GetActiveCamera();
 	RShader *lightShader = _lightingShader->GetRShader();
 
 	if (Engine::GetConfiguration().Renderer.SSAO)

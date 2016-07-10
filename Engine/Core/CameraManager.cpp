@@ -1,9 +1,9 @@
 /* Neko Engine
  *
- * ObjectComponent.cpp
+ * CameraManager.cpp
  * Author: Alexandru Naiman
  *
- * ObjectComponent class implementation
+ * CameraManager class implementation
  *
  * -----------------------------------------------------------------------------
  *
@@ -39,44 +39,38 @@
 
 #define ENGINE_INTERNAL
 
-#include <Scene/Object.h>
-#include <Scene/ObjectComponent.h>
+#include <fstream>
 
-#include <glm/gtc/matrix_transform.hpp>
+#include <Engine/Engine.h>
+#include <Scene/Scene.h>
+#include <System/Logger.h>
+#include <Engine/EngineUtils.h>
+#include <Engine/CameraManager.h>
+#include <Engine/LoadingScreen.h>
+#include <System/VFS/VFS.h>
 
-using namespace glm;
+#define LINE_BUFF	1024
+#define CM_MODULE	"CameraManager"
 
-ObjectComponent::ObjectComponent(ComponentInitializer *initializer)
-	: _parent(initializer->parent),
-	_position(vec3(0.f)),
-	_rotation(vec3(0.f)),
-	_scale(vec3(1.f))
+using namespace std;
+
+vector<CameraComponent *> CameraManager::_cameras;
+CameraComponent *CameraManager::_activeCamera = nullptr;
+
+void CameraManager::UnloadCameras() noexcept
 {
-	ArgumentMapType::iterator it;
-	const char *ptr = nullptr;
+	for (CameraComponent *c : _cameras)
+	{
+		c->Unload();
+		delete c;
+	}
 
-	if (((it = initializer->arguments.find("position")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
-		EngineUtils::ReadFloatArray(ptr, 3, &_position.x);
-
-	if (((it = initializer->arguments.find("rotation")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
-		EngineUtils::ReadFloatArray(ptr, 3, &_rotation.x);
-
-	if (((it = initializer->arguments.find("scale")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
-		EngineUtils::ReadFloatArray(ptr, 3, &_scale.x);
+	_cameras.clear();
 }
 
-void ObjectComponent::SetPosition(vec3 &position) noexcept
+void CameraManager::Release() noexcept
 {
-	_position = position;
-}
+	UnloadCameras();
 
-void ObjectComponent::SetRotation(vec3 &rotation) noexcept
-{
-	_rotation = rotation;
+	Logger::Log(CM_MODULE, LOG_INFORMATION, "Released");
 }
-
-void ObjectComponent::SetScale(vec3 &newScale) noexcept
-{
-	_scale = newScale;
-}
-

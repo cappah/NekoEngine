@@ -57,7 +57,7 @@ public:
 class ObjectComponent
 {
 public:
-	ENGINE_API ObjectComponent(ComponentInitializer *initializer) : _parent(initializer->parent) { }
+	ENGINE_API ObjectComponent(ComponentInitializer *initializer);
 
 	ENGINE_API virtual class Object *GetParent() noexcept { return _parent; }
 	ENGINE_API virtual glm::vec3 &GetPosition() noexcept { return _position; }

@@ -51,6 +51,7 @@
 #include <Engine/SoundManager.h>
 #include <Engine/GameModule.h>
 #include <Engine/DeferredBuffer.h>
+#include <Engine/CameraManager.h>
 #include <Scene/Scene.h>
 #include <Scene/Object.h>
 #include <Scene/Terrain.h>
@@ -202,88 +203,6 @@ Object *Scene::_LoadObject(VFSFile *f, const string &className)
 	}
 
 	return obj;
-}
-
-Camera *Scene::_LoadCamera(VFSFile *f)
-{
-	char lineBuff[SCENE_LINE_BUFF];
-	memset(lineBuff, 0x0, SCENE_LINE_BUFF);
-
-	Camera *cam = new Camera();
-	vec3 pos = vec3(), rot = vec3(), vec;
-
-	while (!f->EoF())
-	{
-		memset(lineBuff, 0x0, SCENE_LINE_BUFF);
-		f->Gets(lineBuff, SCENE_LINE_BUFF);
-
-		if (lineBuff[0] == 0x0)
-			continue;
-
-		EngineUtils::RemoveComment(lineBuff);
-		EngineUtils::RemoveNewline(lineBuff);
-
-		if (lineBuff[0] == 0x0)
-			continue;
-
-		if (strstr(lineBuff, "EndCamera"))
-			break;
-
-		if (strstr(lineBuff, "default"))
-			_activeCamera = cam;
-		else if (strstr(lineBuff, "fps"))
-			cam->SetFPSCamera(true);
-
-		vector<char*> split = EngineUtils::SplitString(lineBuff, '=');
-
-		if (split.size() != 2)
-		{
-			for (char* c : split)
-				free(c);
-			continue;
-		}
-		
-		size_t len = strlen(split[0]);
-
-		if (!strncmp(split[0], "id", len))
-			cam->SetId(atoi(split[1]));
-		else if (!strncmp(split[0], "fov", len))
-			cam->SetFOV((float)atof(split[1]));
-		else if (!strncmp(split[0], "near", len))
-			cam->SetNear((float)atof(split[1]));
-		else if (!strncmp(split[0], "far", len))
-			cam->SetFar((float)atof(split[1]));
-		else if (!strncmp(split[0], "position", len))
-			EngineUtils::ReadFloatArray(split[1], 3, &pos.x);
-		else if (!strncmp(split[0], "rotation", len))
-			EngineUtils::ReadFloatArray(split[1], 3, &rot.x);
-		else if (!strncmp(split[0], "fog_color", len))
-		{
-			EngineUtils::ReadFloatArray(split[1], 3, &vec.x);
-			cam->SetFogColor(vec);
-		}
-		else if (!strncmp(split[0], "view_distance", len))
-			cam->SetViewDistance((float)atof(split[1]));
-		else if (!strncmp(split[0], "fog_distance", len))
-			cam->SetFogDistance((float)atof(split[1]));
-		else if (!strncmp(split[0], "projection", len))
-		{
-			size_t len = strlen(split[1]);
-			if (!strncmp(split[1], "perspective", len))
-				cam->SetProjection(ProjectionType::Perspective);
-			else if (!strncmp(split[1], "ortographics", len))
-				cam->SetProjection(ProjectionType::Ortographic);
-		}
-
-		for (char* c : split)
-			free(c);
-	}
-
-	cam->Initialize();
-	cam->SetPosition(pos);
-	cam->SetRotation(rot);
-
-	return cam;
 }
 
 void Scene::_LoadSceneInfo(VFSFile *f)
@@ -489,39 +408,21 @@ int Scene::Load()
 			for (char* c : split)
 				free(c);
 		}
-		else if (strstr(lineBuff, "Camera"))
-		{
-			Camera *cam = _LoadCamera(f);
-
-			if (!cam)
-			{
-				Logger::Log(SCENE_MODULE, LOG_CRITICAL, "Scene load failed for scene id=%d, camera load failed", _id);
-				f->Close();
-				return ENGINE_FAIL;
-			}
-
-			_cameras.push_back(cam);
-		}
 		else if (strstr(lineBuff, "SceneInfo"))
 			_LoadSceneInfo(f);
 	}
 
 	f->Close();
 
-	if (!_activeCamera)
+	if (!CameraManager::Count())
 	{
-		if(_cameras.size() > 0)
-			_activeCamera = _cameras[0];
-		else
-		{
-			Unload();
-			Logger::Log(SCENE_MODULE, LOG_CRITICAL, "Load failed for scene id=%d: no camera found", _id);
-			return ENGINE_NO_CAMERA;
-		}
+		Unload();
+		Logger::Log(SCENE_MODULE, LOG_CRITICAL, "Load failed for scene id=%d: no camera found", _id);
+		return ENGINE_NO_CAMERA;
 	}
 
-	DeferredBuffer::SetFogColor(_activeCamera->GetFogColor());
-	DeferredBuffer::SetFogProperties(_activeCamera->GetViewDistance(), _activeCamera->GetFogDistance());
+	DeferredBuffer::SetFogColor(CameraManager::GetActiveCamera()->GetFogColor());
+	DeferredBuffer::SetFogProperties(CameraManager::GetActiveCamera()->GetViewDistance(), CameraManager::GetActiveCamera()->GetFogDistance());
 
 	_loaded = true;
 
@@ -605,7 +506,7 @@ int Scene::Load()
 		_sceneIndices.clear();
 	}
 
-	Logger::Log(SCENE_MODULE, LOG_INFORMATION, "Scene %s, id=%d loaded with %d %s and %d %s", _name.c_str(), _id, _objects.size(), _objects.size() > 1 ? "objects" : "object", _cameras.size(), _cameras.size() > 1 ? "cameras" : "camera");
+	Logger::Log(SCENE_MODULE, LOG_INFORMATION, "Scene %s, id=%d loaded with %d %s and %d %s", _name.c_str(), _id, _objects.size(), _objects.size() > 1 ? "objects" : "object", CameraManager::Count(), CameraManager::Count() > 1 ? "cameras" : "camera");
 
 	return ENGINE_OK;
 }
@@ -618,7 +519,7 @@ void Scene::Draw(RShader* shader) noexcept
 	if(_sceneArrayBuffer) _sceneArrayBuffer->Bind();
 
 	for (Object *obj : _objects)
-		if (distance(_activeCamera->GetPosition(), obj->GetPosition()) < _activeCamera->GetFogDistance() + 600)
+		if (distance(CameraManager::GetActiveCamera()->GetPosition(), obj->GetPosition()) < CameraManager::GetActiveCamera()->GetFogDistance() + 600)
 			obj->Draw(shader);
 
 	if (_drawLights)
@@ -657,10 +558,6 @@ void Scene::Update(double deltaTime) noexcept
 		_objects[i]->Update(deltaTime);
 
 	//#pragma omp parallel for
-	for (size_t i = 0; i < _cameras.size(); i++)
-		_cameras[i]->Update(deltaTime);
-
-	//#pragma omp parallel for
 	for (size_t i = 0; i < _lights.size(); i++)
 		_lights[i]->Update(deltaTime);
 }
@@ -672,11 +569,6 @@ void Scene::Unload() noexcept
 
 	delete _terrain;
 	_terrain = nullptr;
-
-	for (Camera *cam : _cameras)
-		delete cam;
-	_cameras.clear();
-	_activeCamera = nullptr;
 
 	for (Object *obj : _objects)
 		delete obj;
@@ -703,19 +595,21 @@ void Scene::Unload() noexcept
 	
 	delete _sceneArrayBuffer;
 	_sceneArrayBuffer = nullptr;
+
+	CameraManager::UnloadCameras();
 	
 	_loaded = false;
 }
 
-void Scene::RenderForCamera(Camera *cam) noexcept
+void Scene::RenderForCamera(CameraComponent *cam) noexcept
 {
-	Camera *sceneCam = _activeCamera;
-	_activeCamera = cam;
+	CameraComponent *sceneCam = CameraManager::GetActiveCamera();
+	CameraManager::SetActiveCamera(cam);
 
 	Draw(nullptr);
 	DrawSkybox();
 
-	_activeCamera = sceneCam;
+	CameraManager::SetActiveCamera(sceneCam);
 }
 
 Scene::~Scene() noexcept

@@ -44,7 +44,7 @@
 #include <Engine/Engine.h>
 #include <Engine/Shader.h>
 #include <Renderer/Renderer.h>
-#include <Scene/Camera.h>
+#include <Scene/Components/CameraComponent.h>
 
 class ShadowMap
 {

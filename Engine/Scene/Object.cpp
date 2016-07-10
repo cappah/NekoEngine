@@ -47,6 +47,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include <Engine/Engine.h>
+#include <Engine/CameraManager.h>
 #include <Engine/ResourceManager.h>
 #include <Engine/SceneManager.h>
 #include <Scene/Object.h>
@@ -258,7 +259,7 @@ void Object::Draw(RShader* shader) noexcept
 	if (!_loaded)
 		return;
 
-	_objectUbo->UpdateData(0, sizeof(vec3), &SceneManager::GetActiveScene()->GetSceneCamera()->GetPosition().x);
+	_objectUbo->UpdateData(0, sizeof(vec3), &CameraManager::GetActiveCamera()->GetPosition().x);
 
 	for (pair<string, ObjectComponent*> kvp : _components)
 		kvp.second->Draw(shader);

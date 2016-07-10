@@ -42,6 +42,7 @@
 #include <glm/glm.hpp>
 
 #include <Engine/Engine.h>
+#include <Engine/CameraManager.h>
 #include <Engine/SceneManager.h>
 #include <System/Logger.h>
 #include <Scene/Terrain.h>
@@ -150,8 +151,8 @@ void Terrain::Update(double deltaTime) noexcept
 
 	static vec3 lastCamPos = vec3(0, 0, 0);
 	bool modified = false;
-	Camera *Cam = SceneManager::GetActiveScene()->GetSceneCamera();
-	vec3 camPos = Cam->GetPosition();
+	CameraComponent *cam = CameraManager::GetActiveCamera();
+	vec3 camPos = cam->GetPosition();
 
 	if ((camPos.x == lastCamPos.x) && (camPos.z == lastCamPos.z))
 		return; // stop moving if the camera stops

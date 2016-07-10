@@ -1,9 +1,9 @@
 /* Neko Engine
  *
- * ObjectComponent.cpp
+ * CameraManager.h
  * Author: Alexandru Naiman
  *
- * ObjectComponent class implementation
+ * CameraManager class definition
  *
  * -----------------------------------------------------------------------------
  *
@@ -37,46 +37,36 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#define ENGINE_INTERNAL
+#pragma once
 
-#include <Scene/Object.h>
-#include <Scene/ObjectComponent.h>
+#include <vector>
+#include <string>
 
-#include <glm/gtc/matrix_transform.hpp>
+#include <Engine/Engine.h>
+#include <Scene/Components/CameraComponent.h>
 
-using namespace glm;
-
-ObjectComponent::ObjectComponent(ComponentInitializer *initializer)
-	: _parent(initializer->parent),
-	_position(vec3(0.f)),
-	_rotation(vec3(0.f)),
-	_scale(vec3(1.f))
+class CameraManager
 {
-	ArgumentMapType::iterator it;
-	const char *ptr = nullptr;
+public:
+	ENGINE_API static CameraComponent* GetActiveCamera() noexcept
+	{
+		if (!_activeCamera)
+			_activeCamera = _cameras[0];
 
-	if (((it = initializer->arguments.find("position")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
-		EngineUtils::ReadFloatArray(ptr, 3, &_position.x);
+		return _activeCamera;
+	}
 
-	if (((it = initializer->arguments.find("rotation")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
-		EngineUtils::ReadFloatArray(ptr, 3, &_rotation.x);
+	ENGINE_API static void SetActiveCamera(CameraComponent *cam) noexcept { _activeCamera = cam; }
+	ENGINE_API static void SetActiveCameraId(int id) noexcept { _activeCamera = _cameras[id]; }
+	ENGINE_API static void AddCamera(CameraComponent *cam) noexcept { _cameras.push_back(cam); }
+	ENGINE_API static size_t Count() noexcept { return _cameras.size(); }
+	ENGINE_API static void UnloadCameras() noexcept;
 
-	if (((it = initializer->arguments.find("scale")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
-		EngineUtils::ReadFloatArray(ptr, 3, &_scale.x);
-}
+	ENGINE_API static void Release() noexcept;
 
-void ObjectComponent::SetPosition(vec3 &position) noexcept
-{
-	_position = position;
-}
+private:
+	static std::vector<CameraComponent *> _cameras;
+	static CameraComponent *_activeCamera;
 
-void ObjectComponent::SetRotation(vec3 &rotation) noexcept
-{
-	_rotation = rotation;
-}
-
-void ObjectComponent::SetScale(vec3 &newScale) noexcept
-{
-	_scale = newScale;
-}
-
+	CameraManager() { Release(); }
+};

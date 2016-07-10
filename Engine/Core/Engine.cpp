@@ -61,6 +61,7 @@
 #include <Engine/EngineUtils.h>
 #include <Engine/EngineClassFactory.h>
 #include <Engine/SceneManager.h>
+#include <Engine/CameraManager.h>
 #include <Engine/ResourceManager.h>
 #include <Engine/SoundManager.h>
 #include <Engine/PostProcessor.h>
@@ -740,11 +741,11 @@ void Engine::Update(double deltaTime) noexcept
 		xDelta = (float)_config.Engine.ScreenWidth / 2.f - x;
 		yDelta = (float)_config.Engine.ScreenHeight / 2.f - y;
 
-		SceneManager::GetActiveScene()->GetSceneCamera()->SetRotationDelta(xDelta, yDelta);
+		CameraManager::GetActiveCamera()->SetRotationDelta(xDelta, yDelta);
 		Platform::SetPointerPosition(_config.Engine.ScreenWidth / 2, _config.Engine.ScreenHeight / 2);
 	}
 	else if(Platform::GetTouchMovementDelta(xDelta, yDelta))
-		SceneManager::GetActiveScene()->GetSceneCamera()->SetRotationDelta(xDelta, yDelta);
+		CameraManager::GetActiveCamera()->SetRotationDelta(xDelta, yDelta);
 
 	SceneManager::UpdateScene(deltaTime);
 }
@@ -769,7 +770,7 @@ void Engine::ScreenResized(int width, int height) noexcept
 	PostProcessor::ScreenResized();
 
 	if(SceneManager::IsSceneLoaded())
-		SceneManager::GetActiveScene()->GetSceneCamera()->UpdatePerspective();
+		CameraManager::GetActiveCamera()->UpdatePerspective();
 
 	_renderer->SetViewport(0, 0, width, height);
 }

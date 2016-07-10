@@ -48,11 +48,11 @@
 
 #include <Engine/Engine.h>
 #include <Scene/Object.h>
-#include <Scene/Camera.h>
 #include <Scene/Light.h>
 #include <Engine/Shader.h>
 #include <Engine/LoadingScreen.h>
 #include <System/VFS/VFS.h>
+#include <Scene/Components/CameraComponent.h>
 
 class Scene
 {
@@ -63,7 +63,6 @@ public:
 		_loaded(false),
 		_sceneFile(file),
 		_name("Unnamed Scene"),
-		_activeCamera(nullptr),
 		_bgMusicVolume(1.f),
 		_ambientColor(0.f, 0.f, 0.f),
 		_ambientColorIntensity(.2f),
@@ -82,7 +81,6 @@ public:
 		_loaded(false),
 		_sceneFile(file),
 		_name("Unnamed Scene"),
-		_activeCamera(nullptr),
 		_bgMusicVolume(1.f),
 		_ambientColor(0.f, 0.f, 0.f),
 		_ambientColorIntensity(.2f),
@@ -98,7 +96,6 @@ public:
 	ENGINE_API int GetId() noexcept { return _id; }
 	ENGINE_API bool IsLoaded() noexcept { return _loaded; }
 	ENGINE_API std::string& GetName() noexcept { return _name; }
-	ENGINE_API Camera* GetSceneCamera() noexcept { return _activeCamera; }
 	ENGINE_API size_t GetObjectCount() noexcept { return _objects.size(); }
 	ENGINE_API size_t GetVertexCount() noexcept;
 	ENGINE_API size_t GetTriangleCount() noexcept;
@@ -118,7 +115,7 @@ public:
 	ENGINE_API void Update(double deltaTime) noexcept;
 	ENGINE_API void Unload() noexcept;
 
-	ENGINE_API void RenderForCamera(Camera *cam) noexcept;
+	ENGINE_API void RenderForCamera(CameraComponent *cam) noexcept;
 
 	ENGINE_API ~Scene() noexcept;
 
@@ -126,9 +123,7 @@ private:
 	int _id, _bgMusic;
 	bool _loaded;
 	std::string _sceneFile, _name;
-	Camera *_activeCamera;
 	std::vector<Object *> _objects;
-	std::vector<Camera *> _cameras;
 	std::vector<Light *> _lights;
 	float _bgMusicVolume;
 	glm::vec3 _ambientColor;
@@ -144,7 +139,6 @@ private:
 	RArrayBuffer *_sceneArrayBuffer;
 
 	Object *_LoadObject(VFSFile *f, const std::string &className);
-	Camera *_LoadCamera(VFSFile *f);
 	void _LoadSceneInfo(VFSFile *f);
 	void _LoadComponent(VFSFile *f, struct COMPONNENT_INITIALIZER_INFO *initInfo);
 

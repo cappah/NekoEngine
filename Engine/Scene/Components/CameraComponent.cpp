@@ -1,6 +1,6 @@
 /* Neko Engine
  *
- * Camera.cpp
+ * CameraComponent.cpp
  * Author: Alexandru Naiman
  *
  * Camera implementation
@@ -37,7 +37,6 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 #define ENGINE_INTERNAL
 
 #define _USE_MATH_DEFINES
@@ -45,27 +44,108 @@
 
 #include <glm/glm.hpp>
 
-#include <Scene/Camera.h>
+#include <Scene/Components/CameraComponent.h>
 #include <Engine/Engine.h>
 #include <Engine/DeferredBuffer.h>
 #include <Engine/EngineUtils.h>
 #include <Engine/ResourceManager.h>
 #include <Engine/SoundManager.h>
 #include <Engine/Input.h>
+#include <Engine/CameraManager.h>
 
 using namespace glm;
 
-void Camera::Initialize() noexcept
+ENGINE_REGISTER_COMPONENT_CLASS(CameraComponent);
+
+CameraComponent::CameraComponent(ComponentInitializer *initializer) : ObjectComponent(initializer),
+	_front(glm::vec3(0, 0, 1)),
+	_up(glm::vec3(0, 1, 0)),
+	_right(glm::vec3(0, 0, 0)),
+	_worldUp(glm::vec3(0, 1, 0)),
+	_translateSpeed(DEFAULT_TRANS),
+	_fastTranslateSpeed(DEFAULT_TRANS_F),
+	_rotateSpeed(DEFAULT_ROTS),
+	_verticalSensivity(DEFAULT_VSENS),
+	_horizontalSensivity(DEFAULT_HSENS),
+	_near(.2f),
+	_far(1000.f),
+	_fov(45.f),
+	_xDelta(0.f),
+	_yDelta(0.f),
+	_viewDistance(1000.f),
+	_fogDistance(1200.f),
+	_fogColor(glm::vec3(0, 0, 0)),
+	_projection(ProjectionType::Perspective),
+	_id(0),
+	_view(glm::mat4(0.f)),
+	_projectionMatrix(glm::mat4(0.f)),
+	_fps(false)
 {
-	UpdatePerspective();
+	_UpdateView();
+
+	ArgumentMapType::iterator it;
+	const char *ptr = nullptr;
+
+	if (((it = initializer->arguments.find("fov")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
+		_fov = (float)atof(ptr);
+
+	if (((it = initializer->arguments.find("near")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
+		_near = (float)atof(ptr);
+
+	if (((it = initializer->arguments.find("far")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
+		_far = (float)atof(ptr);
+
+	if (((it = initializer->arguments.find("view_distance")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
+		_viewDistance = (float)atof(ptr);
+
+	if (((it = initializer->arguments.find("fog_distance")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
+		_fogDistance = (float)atof(ptr);
+
+	if (((it = initializer->arguments.find("fog_color")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
+		EngineUtils::ReadFloatArray(ptr, 3, &_fogColor.x);
+
+	if (((it = initializer->arguments.find("projection")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
+	{
+		size_t len = strlen(ptr);
+
+		if (!strncmp(ptr, "perspective", len))
+			_projection = ProjectionType::Perspective;
+		else if (!strncmp(ptr, "ortographics", len))
+			_projection = ProjectionType::Ortographic;
+	}
+
+	if (((it = initializer->arguments.find("type")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
+	{
+		size_t len = strlen(ptr);
+
+		if (!strncmp(ptr, "fly", len))
+			_fps = false;
+		else if (!strncmp(ptr, "fps", len))
+			_fps = true;
+	}
+
+	_UpdateView();
 }
 
-void Camera::UpdatePerspective() noexcept
+int CameraComponent::Load()
+{
+	int ret = ObjectComponent::Load();
+	if (ret != ENGINE_OK)
+		return ret;
+
+	UpdatePerspective();
+
+	CameraManager::AddCamera(this);
+
+	return ENGINE_OK;
+}
+
+void CameraComponent::UpdatePerspective() noexcept
 {
 	_projectionMatrix = perspective(_fov, (float)DeferredBuffer::GetWidth() / (float)DeferredBuffer::GetHeight(), _near, _far);
 }
 
-void Camera::Update(double deltaTime) noexcept
+void CameraComponent::Update(double deltaTime) noexcept
 {
 	float hAngle = _horizontalSensivity * _xDelta * (float)deltaTime;
 	float vAngle = _verticalSensivity * _yDelta * (float)deltaTime;
@@ -77,15 +157,15 @@ void Camera::Update(double deltaTime) noexcept
 	_rotation.x += RAD2DEG(vAngle);
 	_rotation.y -= RAD2DEG(hAngle);
 
-/*	if (Engine::GetKeyDown('x'))
-		MoveUp(speed * _deltaTime);
+	/*	if (Engine::GetKeyDown('x'))
+	MoveUp(speed * _deltaTime);
 	else if (Engine::GetKeyDown('z'))
-		MoveUp(-speed * _deltaTime);
+	MoveUp(-speed * _deltaTime);
 
 	if (Engine::GetKeyDown('e'))
-		RotateZ(_rotateSpeed * _deltaTime);
+	RotateZ(_rotateSpeed * _deltaTime);
 	else if (Engine::GetKeyDown('q'))
-		RotateZ(-_rotateSpeed * _deltaTime);*/
+	RotateZ(-_rotateSpeed * _deltaTime);*/
 
 	float speed = _translateSpeed;
 
@@ -101,7 +181,7 @@ void Camera::Update(double deltaTime) noexcept
 
 	if (Input::GetKeyDown(NE_KEY_D))
 		_position += _right * velocity;
-	else if(Input::GetKeyDown(NE_KEY_A))
+	else if (Input::GetKeyDown(NE_KEY_A))
 		_position -= _right * velocity;
 
 	if (Input::GetKeyDown(NE_KEY_RIGHT))
@@ -123,7 +203,7 @@ void Camera::Update(double deltaTime) noexcept
 	SoundManager::SetListenerOrientation(_front.x, _front.y, _front.z);
 }
 
-void Camera::_UpdateView() noexcept
+void CameraComponent::_UpdateView() noexcept
 {
 	vec3 front;
 
@@ -136,8 +216,4 @@ void Camera::_UpdateView() noexcept
 	_up = normalize(cross(_right, _front));
 
 	_view = lookAt(_position, _position + _front, _up);
-}
-
-Camera::~Camera() noexcept
-{
 }

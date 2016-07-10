@@ -1,6 +1,6 @@
 /* Neko Engine
  *
- * Camera.h
+ * CameraComponent.h
  * Author: Alexandru Naiman
  *
  * Fly / FPS camera
@@ -40,6 +40,7 @@
 #pragma once
 
 #include <Engine/Engine.h>
+#include <Scene/ObjectComponent.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -64,35 +65,10 @@ enum class ProjectionType : unsigned short
 #define DEFAULT_ROTS	40.f
 #endif
 
-class ENGINE_API Camera
+class ENGINE_API CameraComponent : public ObjectComponent
 {
 public:
-	Camera() noexcept :
-		_position(glm::vec3(0, 0, 0)),
-		_front(glm::vec3(0, 0, 1)),
-		_up(glm::vec3(0, 1, 0)),
-		_right(glm::vec3(0, 0, 0)),
-		_worldUp(glm::vec3(0, 1, 0)),
-		_rotation(glm::vec3(0, 0, 0)),
-		_translateSpeed(DEFAULT_TRANS),
-		_fastTranslateSpeed(DEFAULT_TRANS_F),
-		_rotateSpeed(DEFAULT_ROTS),
-		_verticalSensivity(DEFAULT_VSENS), 
-		_horizontalSensivity(DEFAULT_HSENS), 
-		_near(.2f),
-		_far(1000.f),
-		_fov(45.f),
-		_xDelta(0.f),
-		_yDelta(0.f),
-		_viewDistance(1000.f),
-		_fogDistance(1200.f),
-		_fogColor(glm::vec3(0, 0, 0)),
-		_projection(ProjectionType::Perspective),
-		_id(0),
-		_view(glm::mat4(0.f)),
-		_projectionMatrix(glm::mat4(0.f)),
-		_fps(false)
-	{ _UpdateView(); }
+	CameraComponent(ComponentInitializer *initializer);
 
 	int GetId() noexcept { return _id; }
 	glm::vec3& GetPosition() noexcept { return _position; }
@@ -108,8 +84,6 @@ public:
 	ProjectionType GetProjection() noexcept { return _projection; }
 
 	void SetId(int id) noexcept { _id = id; }
-	void SetPosition(glm::vec3& pos) { _position = pos; }
-	void SetRotation(glm::vec3& rot) { _rotation = rot; }
 	void SetFPSCamera(bool fps) { _fps = fps; }
 	void SetNear(float Near) noexcept { _near = Near; }
 	void SetFar(float Far) noexcept { _far = Far; }
@@ -123,9 +97,9 @@ public:
 	void SetRotationDelta(float x, float y) noexcept { _xDelta = x, _yDelta = y; }
 	void UpdatePerspective() noexcept;
 
-	void Initialize() noexcept;
+	virtual int Load() override;
 
-	void Update(double deltaTime) noexcept;
+	virtual void Update(double deltaTime) noexcept override;
 
 	void MoveForward(float distance) noexcept { _position += _front * distance; }
 	void MoveRight(float distance) noexcept { _position += _right * distance; }
@@ -135,16 +109,14 @@ public:
 	void RotateY(float angle) noexcept { _rotation.y += angle; }
 	void RotateZ(float angle) noexcept { _rotation.z += angle; }
 
-	~Camera() noexcept;
+	~CameraComponent() noexcept { Unload(); }
 
-private:
-	glm::vec3 _position;
+protected:
 	glm::vec3 _front;
 	glm::vec3 _up;
 	glm::vec3 _right;
 	glm::vec3 _worldUp;
-	glm::vec3 _rotation;
-	
+
 	float _translateSpeed, _fastTranslateSpeed;
 	float _rotateSpeed;
 	float _verticalSensivity;

@@ -58,6 +58,10 @@ using namespace glm;
 
 Skeleton::Skeleton(vector<Bone> &bones, vector<TransformNode> &nodes, dmat4 &globalInverseTransform) noexcept
 {
+	_buffer = nullptr;
+	_animationClip = nullptr;
+	_rootNode = nullptr;
+
 	_numBones = (unsigned int)bones.size();
 	_numNodes = (unsigned int)nodes.size();
 	
@@ -93,10 +97,6 @@ Skeleton::Skeleton(vector<Bone> &bones, vector<TransformNode> &nodes, dmat4 &glo
 	}
 	
 	_globalInverseTransform = globalInverseTransform;
-
-	_buffer = nullptr;
-	_animationClip = nullptr;
-	_rootNode = nullptr;
 }
 
 void Skeleton::Bind(RShader *shader)

@@ -215,9 +215,6 @@
     <ClInclude Include="..\include\Scene\Terrain.h">
       <Filter>Include\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\Scene\Camera.h">
-      <Filter>Include\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\Scene\Light.h">
       <Filter>Include\Scene</Filter>
     </ClInclude>
@@ -328,6 +325,12 @@
     </ClInclude>
     <ClInclude Include="..\Include\Platform\PlatformDetect.h">
       <Filter>Include\Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Scene\Components\CameraComponent.h">
+      <Filter>Include\Scene\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Engine\CameraManager.h">
+      <Filter>Include\Engine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -524,9 +527,6 @@
     <ClCompile Include="Scene\Terrain.cpp">
       <Filter>Source\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Scene\Camera.cpp">
-      <Filter>Source\Scene</Filter>
-    </ClCompile>
     <ClCompile Include="Scene\Light.cpp">
       <Filter>Source\Scene</Filter>
     </ClCompile>
@@ -631,6 +631,12 @@
     </ClCompile>
     <ClCompile Include="Platform\Windows\PlatformInput.cpp">
       <Filter>Source\Platform\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Components\CameraComponent.cpp">
+      <Filter>Source\Scene\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\CameraManager.cpp">
+      <Filter>Source\Core</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

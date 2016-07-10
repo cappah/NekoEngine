@@ -40,8 +40,9 @@
 #define ENGINE_INTERNAL
 
 #include <Scene/Components/StaticMeshComponent.h>
-#include <Scene/Camera.h>
+#include <Scene/Components/CameraComponent.h>
 #include <Engine/SceneManager.h>
+#include <Engine/CameraManager.h>
 #include <Engine/ResourceManager.h>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -172,7 +173,7 @@ void StaticMeshComponent::Draw(RShader *shader) noexcept
 		_mesh->Draw(_renderer, 0);
 	else
 	{
-		Camera *cam = SceneManager::GetActiveScene()->GetSceneCamera();
+		CameraComponent *cam = CameraManager::GetActiveCamera();
 
 		if(_mmNeedsUpdate)
 		{

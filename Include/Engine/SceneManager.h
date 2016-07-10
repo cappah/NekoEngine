@@ -3,7 +3,7 @@
  * SceneManager.h
  * Author: Alexandru Naiman
  *
- * Scene Manager class definition
+ * SceneManager class definition
  *
  * -----------------------------------------------------------------------------
  *

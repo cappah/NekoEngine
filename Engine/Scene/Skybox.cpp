@@ -43,6 +43,7 @@
 
 #include <Engine/Engine.h>
 #include <Engine/SceneManager.h>
+#include <Engine/CameraManager.h>
 #include <Engine/ResourceManager.h>
 #include <Scene/Skybox.h>
 
@@ -87,8 +88,7 @@ void Skybox::Update(double deltaTime) noexcept
 {
 	Object::Update(deltaTime);
 
-	Camera *cam = SceneManager::GetActiveScene()->GetSceneCamera();
-	vec3 pos = cam->GetPosition();
+	vec3 pos = CameraManager::GetActiveCamera()->GetPosition();
 	pos.y = _position.y;
 	SetPosition(pos);
 }

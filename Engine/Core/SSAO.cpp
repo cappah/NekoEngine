@@ -47,6 +47,7 @@
 #include <Engine/DeferredBuffer.h>
 #include <Engine/SceneManager.h>
 #include <Engine/ResourceManager.h>
+#include <Engine/CameraManager.h>
 #include <Platform/Compat.h>
 
 using namespace std;
@@ -173,8 +174,8 @@ void SSAO::Render() noexcept
 	shader->SetTexture(U_TEXTURE1, DeferredBuffer::GetNormalTexture());
 	shader->SetTexture(U_TEXTURE2, _textures[SSAO_TEX_NOISE]);
 
-	_matrixBlock.Projection = SceneManager::GetActiveScene()->GetSceneCamera()->GetProjectionMatrix();
-	_matrixBlock.View = SceneManager::GetActiveScene()->GetSceneCamera()->GetView();
+	_matrixBlock.Projection = CameraManager::GetActiveCamera()->GetProjectionMatrix();
+	_matrixBlock.View = CameraManager::GetActiveCamera()->GetView();
 	_matrixBlock.InverseView = inverse(_matrixBlock.View);
 	_matrixUbo->UpdateData(0, sizeof(SSAOMatrixBlock), &_matrixBlock);
 

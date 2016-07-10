@@ -41,7 +41,7 @@
 
 #include <Scene/Components/SkeletalMeshComponent.h>
 #include <Scene/Components/AnimatorComponent.h>
-#include <Scene/Camera.h>
+#include <Scene/Components/CameraComponent.h>
 #include <Engine/SceneManager.h>
 #include <Engine/ResourceManager.h>
 
