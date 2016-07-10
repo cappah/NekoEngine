@@ -503,11 +503,11 @@ void GLRenderer::_ParseArguments(unordered_map<string, string> *args)
 	for(pair<string, string> kvp : *args)
 	{
 		if(!kvp.first.compare("bEnableSubroutines"))
-			_configuration.EnableSubroutines = kvp.second.compare("0");
+			_configuration.EnableSubroutines = kvp.second.compare("0") ? true : false;
 		else if(!kvp.first.compare("bEnableBindlessTexture"))
-			_configuration.EnableBindlessTexture = kvp.second.compare("0");
+			_configuration.EnableBindlessTexture = kvp.second.compare("0") ? true : false;
 		else if(!kvp.first.compare("bEnableExplicitUniforms"))
-			_configuration.EnableExplicitUniforms = kvp.second.compare("0");
+			_configuration.EnableExplicitUniforms = kvp.second.compare("0") ? true : false;
 	}
 }
 
