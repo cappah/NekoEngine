@@ -64,10 +64,10 @@ public:
 
 	ENGINE_API static float GetAxis(uint8_t axis) noexcept { return _axis[axis]; }
 
-	ENGINE_API static bool GetKeyUp(std::string &key) noexcept { return GetKeyUp(_buttonMap[key]); }
-	ENGINE_API static bool GetKeyDown(std::string &key) noexcept { return GetKeyDown(_buttonMap[key]); }
+	ENGINE_API static bool GetKeyUp(std::string key) noexcept { return GetKeyUp(_buttonMap[key]); }
+	ENGINE_API static bool GetKeyDown(std::string key) noexcept { return GetKeyDown(_buttonMap[key]); }
 
-	ENGINE_API static float GetAxis(std::string &axis) noexcept { return GetAxis(_axisMap[axis]); }
+	ENGINE_API static float GetAxis(std::string axis) noexcept { return GetAxis(_axisMap[axis]); }
 
 	static void Release();
 

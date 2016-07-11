@@ -208,7 +208,7 @@ size_t Platform::GetConfigSection(const char *section, char *out, size_t size, c
 
 	while (fgets(lineBuff, INI_LINE_BUFF, fp))
 	{
-		strncpy((out + offset), lineBuff, size);
+		strncpy((out + offset), lineBuff, size - offset);
 		out[size - 1] = 0x0;
 
 		char *ptr = strchr((out + offset), '\r');
@@ -219,8 +219,7 @@ size_t Platform::GetConfigSection(const char *section, char *out, size_t size, c
 		if (ptr)
 			*ptr = 0x0;
 
-		char *pizdamatii = (out + offset);
-		offset += strlen(pizdamatii) + 1;
+		offset += strlen((out + offset)) + 1;
 	}
 
 	fclose(fp);

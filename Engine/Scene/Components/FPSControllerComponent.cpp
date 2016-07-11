@@ -83,8 +83,8 @@ void FPSControllerComponent::Update(double deltaTime) noexcept
 {
 	ObjectComponent::Update(deltaTime);
 
-	float hAngle = _horizontalSensivity * Input::GetAxis(NE_MOUSE_X) * (float)deltaTime;
-	float vAngle = _verticalSensivity * Input::GetAxis(NE_MOUSE_Y) * (float)deltaTime;
+	float hAngle = _horizontalSensivity * Input::GetAxis("horizontal") * (float)deltaTime;
+	float vAngle = _verticalSensivity * Input::GetAxis("vertical") * (float)deltaTime;
 
 	vec3 pos = _parent->GetPosition();
 	vec3 rot = _parent->GetRotation();
@@ -94,31 +94,31 @@ void FPSControllerComponent::Update(double deltaTime) noexcept
 
 	float speed = _moveSpeed;
 
-	if (Input::GetKeyDown(NE_KEY_LSHIFT))
+	if (Input::GetKeyDown("sprint"))
 		speed = _sprintSpeed;
 
 	float velocity = speed * (float)deltaTime;
 
 	CameraComponent *cam = (CameraComponent*)_parent->GetComponent("FPSCamera");
 
-	if (Input::GetKeyDown(string("forward")))
+	if (Input::GetKeyDown("forward"))
 		pos += cam->GetForward() * velocity * vec3(1.f, 0.f, 1.f);
-	else if (Input::GetKeyDown(string("back")))
+	else if (Input::GetKeyDown("back"))
 		pos -= cam->GetForward() * velocity * vec3(1.f, 0.f, 1.f);
 
-	if (Input::GetKeyDown(string("right")))
+	if (Input::GetKeyDown("right"))
 		pos += cam->GetRight() * velocity;
-	else if (Input::GetKeyDown(string("left")))
+	else if (Input::GetKeyDown("left"))
 		pos -= cam->GetRight() * velocity;
 
-	if (Input::GetKeyDown(NE_KEY_RIGHT))
+	if (Input::GetKeyDown("rot_right"))
 		rot.y += _rotateSpeed * (float)deltaTime;
-	else if (Input::GetKeyDown(NE_KEY_LEFT))
+	else if (Input::GetKeyDown("rot_left"))
 		rot.y -= _rotateSpeed * (float)deltaTime;
 
-	if (Input::GetKeyDown(NE_KEY_UP))
+	if (Input::GetKeyDown("rot_up"))
 		rot.x -= _rotateSpeed * (float)deltaTime;
-	else if (Input::GetKeyDown(NE_KEY_DOWN))
+	else if (Input::GetKeyDown("rot_down"))
 		rot.x += _rotateSpeed * (float)deltaTime;
 
 	rot.x = clamp(rot.x, -60.f, 85.f);
