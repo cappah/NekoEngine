@@ -50,6 +50,8 @@
 
 #import <GLKit/GLKit.h>
 
+using namespace std;
+
 static GLenum GL_DrawModes[2] =
 {
     GL_TRIANGLES,
@@ -540,7 +542,7 @@ IGLRenderer::~IGLRenderer()
 
 // Platform
 
-bool IGLRenderer::Initialize(PlatformWindowType hWnd, bool debug)
+bool IGLRenderer::Initialize(PlatformWindowType hWnd, unordered_map<string, string> *args, bool debug)
 {
 	_window = hWnd;
 	

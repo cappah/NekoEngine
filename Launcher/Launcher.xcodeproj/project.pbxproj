@@ -8,11 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		120718C01CCFD0BA001A1EEA /* Engine_Low.ini in Resources */ = {isa = PBXBuildFile; fileRef = 120718BF1CCFD0BA001A1EEA /* Engine_Low.ini */; };
+		122A3AC01D338B7B0047786A /* ogg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 122A3ABA1D338B340047786A /* ogg.framework */; };
+		122A3AC11D338B7B0047786A /* vorbis.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 122A3ABB1D338B340047786A /* vorbis.framework */; };
 		124A32081CDC267D00472893 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 124A32071CDC267D00472893 /* libz.tbd */; };
 		124A320A1CDC268100472893 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 124A32091CDC268100472893 /* libsqlite3.tbd */; };
 		124A320C1CDC268800472893 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 124A320B1CDC268800472893 /* OpenAL.framework */; };
-		124A320F1CDC26CF00472893 /* Ogg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 124A320E1CDC26CF00472893 /* Ogg.framework */; };
-		124A32111CDC26D600472893 /* Vorbis.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 124A32101CDC26D600472893 /* Vorbis.framework */; };
 		124A32511CDC299500472893 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 124A32501CDC299500472893 /* OpenGLES.framework */; };
 		124A32521CDC29A400472893 /* libiOSGLESRenderer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 124A324D1CDC298200472893 /* libiOSGLESRenderer.a */; };
 		1296BC3D1CDC132C00D17488 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1296BC3C1CDC132C00D17488 /* main.m */; };
@@ -137,11 +137,11 @@
 
 /* Begin PBXFileReference section */
 		120718BF1CCFD0BA001A1EEA /* Engine_Low.ini */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Engine_Low.ini; path = ../../Resources/Engine_Low.ini; sourceTree = "<group>"; };
+		122A3ABA1D338B340047786A /* ogg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ogg.framework; path = Frameworks/ogg.framework; sourceTree = "<group>"; };
+		122A3ABB1D338B340047786A /* vorbis.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = vorbis.framework; path = Frameworks/vorbis.framework; sourceTree = "<group>"; };
 		124A32071CDC267D00472893 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/usr/lib/libz.tbd; sourceTree = DEVELOPER_DIR; };
 		124A32091CDC268100472893 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/usr/lib/libsqlite3.tbd; sourceTree = DEVELOPER_DIR; };
 		124A320B1CDC268800472893 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/System/Library/Frameworks/OpenAL.framework; sourceTree = DEVELOPER_DIR; };
-		124A320E1CDC26CF00472893 /* Ogg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Ogg.framework; path = Frameworks/Ogg.framework; sourceTree = "<group>"; };
-		124A32101CDC26D600472893 /* Vorbis.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Vorbis.framework; path = Frameworks/Vorbis.framework; sourceTree = "<group>"; };
 		124A32481CDC298100472893 /* iOSGLESRenderer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = iOSGLESRenderer.xcodeproj; path = ../iOSGLESRenderer/iOSGLESRenderer.xcodeproj; sourceTree = "<group>"; };
 		124A32501CDC299500472893 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/System/Library/Frameworks/OpenGLES.framework; sourceTree = DEVELOPER_DIR; };
 		1270119A1CC31326001840A7 /* launcher.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = launcher.mm; path = Mac/launcher.mm; sourceTree = "<group>"; };
@@ -170,13 +170,13 @@
 			files = (
 				124A32521CDC29A400472893 /* libiOSGLESRenderer.a in Frameworks */,
 				124A32511CDC299500472893 /* OpenGLES.framework in Frameworks */,
-				124A320F1CDC26CF00472893 /* Ogg.framework in Frameworks */,
 				124A320C1CDC268800472893 /* OpenAL.framework in Frameworks */,
 				124A320A1CDC268100472893 /* libsqlite3.tbd in Frameworks */,
 				124A32081CDC267D00472893 /* libz.tbd in Frameworks */,
+				122A3AC01D338B7B0047786A /* ogg.framework in Frameworks */,
+				122A3AC11D338B7B0047786A /* vorbis.framework in Frameworks */,
 				1296BD871CDC1E1A00D17488 /* libTestGame_iOS.a in Frameworks */,
 				1296BC551CDC145600D17488 /* libEngine_iOS.a in Frameworks */,
-				124A32111CDC26D600472893 /* Vorbis.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -194,9 +194,9 @@
 		124A320D1CDC26AE00472893 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				122A3ABA1D338B340047786A /* ogg.framework */,
+				122A3ABB1D338B340047786A /* vorbis.framework */,
 				124A32501CDC299500472893 /* OpenGLES.framework */,
-				124A32101CDC26D600472893 /* Vorbis.framework */,
-				124A320E1CDC26CF00472893 /* Ogg.framework */,
 				124A320B1CDC268800472893 /* OpenAL.framework */,
 				124A32091CDC268100472893 /* libsqlite3.tbd */,
 				124A32071CDC267D00472893 /* libz.tbd */,

@@ -10,6 +10,8 @@
 		12150A201CEB875D0066A044 /* AnimatorComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12150A1F1CEB875D0066A044 /* AnimatorComponent.cpp */; };
 		12150A211CEB875D0066A044 /* AnimatorComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12150A1F1CEB875D0066A044 /* AnimatorComponent.cpp */; };
 		12150A251CEB87A10066A044 /* AnimatorComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 12150A241CEB87A10066A044 /* AnimatorComponent.h */; };
+		122A3AB81D338A470047786A /* ogg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 122A3AB61D338A470047786A /* ogg.framework */; };
+		122A3AB91D338A470047786A /* vorbis.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 122A3AB71D338A470047786A /* vorbis.framework */; };
 		1243C8931CDCE15A00BA692E /* EngineInputDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1243C8921CDCE15A00BA692E /* EngineInputDelegate.mm */; };
 		124A31E01CDC260E00472893 /* AudioClip.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B061CC1AD9C00EE5D0A /* AudioClip.cpp */; };
 		124A31E11CDC260E00472893 /* AudioSource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B071CC1AD9C00EE5D0A /* AudioSource.cpp */; };
@@ -31,8 +33,6 @@
 		124A32041CDC264100472893 /* VFSArchive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B521CC1AE2E00EE5D0A /* VFSArchive.cpp */; };
 		124A32051CDC264100472893 /* VFSFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B531CC1AE2E00EE5D0A /* VFSFile.cpp */; };
 		124A32061CDC264100472893 /* Logger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B4D1CC1AE2800EE5D0A /* Logger.cpp */; };
-		124A32151CDC270B00472893 /* Ogg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 124A32131CDC270B00472893 /* Ogg.framework */; };
-		124A32161CDC270B00472893 /* Vorbis.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 124A32141CDC270B00472893 /* Vorbis.framework */; };
 		1255C57C1CD24CF60036E1DA /* Bone.h in Headers */ = {isa = PBXBuildFile; fileRef = 1255C57B1CD24CF60036E1DA /* Bone.h */; };
 		126DB02F1CE42C0600FB6B77 /* Skeleton.h in Headers */ = {isa = PBXBuildFile; fileRef = 126DB02E1CE42C0600FB6B77 /* Skeleton.h */; };
 		126DE7B01CC8673B00A9E5AB /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 126DE7AF1CC8673B00A9E5AB /* libz.dylib */; };
@@ -152,11 +152,11 @@
 /* Begin PBXFileReference section */
 		12150A1F1CEB875D0066A044 /* AnimatorComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AnimatorComponent.cpp; path = Scene/Components/AnimatorComponent.cpp; sourceTree = SOURCE_ROOT; };
 		12150A241CEB87A10066A044 /* AnimatorComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AnimatorComponent.h; path = Components/AnimatorComponent.h; sourceTree = "<group>"; };
+		122A3AB61D338A470047786A /* ogg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ogg.framework; path = "../Launcher/Launcher-iOS/Frameworks/ogg.framework"; sourceTree = "<group>"; };
+		122A3AB71D338A470047786A /* vorbis.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = vorbis.framework; path = "../Launcher/Launcher-iOS/Frameworks/vorbis.framework"; sourceTree = "<group>"; };
 		1243C8911CDCE15A00BA692E /* EngineInputDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EngineInputDelegate.h; path = Platform/iOS/EngineInputDelegate.h; sourceTree = SOURCE_ROOT; };
 		1243C8921CDCE15A00BA692E /* EngineInputDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = EngineInputDelegate.mm; path = Platform/iOS/EngineInputDelegate.mm; sourceTree = SOURCE_ROOT; };
 		124A31D31CDC258C00472893 /* libEngine_iOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libEngine_iOS.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		124A32131CDC270B00472893 /* Ogg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Ogg.framework; path = "../Launcher/Launcher-iOS/Frameworks/Ogg.framework"; sourceTree = "<group>"; };
-		124A32141CDC270B00472893 /* Vorbis.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Vorbis.framework; path = "../Launcher/Launcher-iOS/Frameworks/Vorbis.framework"; sourceTree = "<group>"; };
 		1255C57B1CD24CF60036E1DA /* Bone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bone.h; sourceTree = "<group>"; };
 		126DB02E1CE42C0600FB6B77 /* Skeleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Skeleton.h; sourceTree = "<group>"; };
 		126DE7AD1CC8673600A9E5AB /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
@@ -301,8 +301,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				124A32151CDC270B00472893 /* Ogg.framework in Frameworks */,
-				124A32161CDC270B00472893 /* Vorbis.framework in Frameworks */,
+				122A3AB81D338A470047786A /* ogg.framework in Frameworks */,
+				122A3AB91D338A470047786A /* vorbis.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -328,8 +328,8 @@
 		124A32121CDC26FD00472893 /* Frameworks_iOS */ = {
 			isa = PBXGroup;
 			children = (
-				124A32131CDC270B00472893 /* Ogg.framework */,
-				124A32141CDC270B00472893 /* Vorbis.framework */,
+				122A3AB61D338A470047786A /* ogg.framework */,
+				122A3AB71D338A470047786A /* vorbis.framework */,
 			);
 			name = Frameworks_iOS;
 			sourceTree = "<group>";
@@ -369,7 +369,6 @@
 				12822B051CC1AD9400EE5D0A /* Audio */,
 				12822B0A1CC1AD9F00EE5D0A /* Core */,
 				12822B291CC1ADB100EE5D0A /* Platform */,
-				12FABB121D3256A500D88639 /* shared.cpp */,
 				12822B341CC1ADF400EE5D0A /* PostEffects */,
 				12822B331CC1ADF000EE5D0A /* Scene */,
 				12822B321CC1ADE700EE5D0A /* System */,
@@ -421,6 +420,7 @@
 				12822B2A1CC1ADC200EE5D0A /* Mac */,
 				1296BB6E1CDB7EA700D17488 /* iOS */,
 				1279C0FC1CC91E4200E521AD /* Compat */,
+				12FABB121D3256A500D88639 /* shared.cpp */,
 			);
 			name = Platform;
 			sourceTree = "<group>";

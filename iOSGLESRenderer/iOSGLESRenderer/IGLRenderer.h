@@ -57,7 +57,7 @@ fprintf(stderr, "FATAL ERROR: %s\n", #x); \
 exit(-1);
 
 #import <Foundation/Foundation.h>
-#import <UiKit/UiKit.h>
+#import <UIKit/UIKit.h>
 #include <Renderer/Renderer.h>
 #include <Platform/Platform.h>
 #include <string>
@@ -118,7 +118,7 @@ class IGLRenderer : public Renderer
 public:
     IGLRenderer();
     
-    virtual bool Initialize(PlatformWindowType hWnd, bool debug = false) override;
+    virtual bool Initialize(PlatformWindowType hWnd, std::unordered_map<std::string, std::string> *args = nullptr, bool debug = false) override;
     
     virtual void SetDebugLogFunction(RendererDebugLogProc debugLogFunction) override;
     

@@ -41,6 +41,7 @@
 #define PLATFORM_INTERNAL
 
 #include <Engine/Engine.h>
+#include <Engine/Input.h>
 #include <Platform/Platform.h>
 
 #import <Foundation/Foundation.h>
@@ -176,3 +177,6 @@ int Platform::MainLoop()
 void Platform::CleanUp()
 {
 }
+
+// Unused
+void Input::_InitializeKeymap() { }
