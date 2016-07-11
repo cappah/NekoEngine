@@ -38,7 +38,26 @@ InstallDepsAptGet()
 {
 	echo "Attempting to install dependencies using apt-get"
 
-	PACKAGES="build-essential cmake libsqlite3-dev libpng-dev libx11-dev libopenal-dev libvorbis-dev libgl1-mesa-dev libbsd-dev"
+	# Travis uses an ancient version of ubuntu that has an incomplete libbsd
+	VER=`lsb_release -r | awk '{print $2}'`
+	
+	if [ "$VER" = "14.04" ]; then
+		PACKAGES="build-essential cmake libsqlite3-dev libpng-dev libx11-dev libopenal-dev libvorbis-dev libgl1-mesa-dev"
+
+		# Manually install libbsd
+		echo "Ubuntu 14.04 detected, installing libbsd from source. Please upgrade your OS"
+		wget --no-check-certificate https://libbsd.freedesktop.org/releases/libbsd-0.8.3.tar.xz;
+		tar xf libbsd-0.8.3.tar.xz;
+		cd libbsd-0.8.3;
+		./configure --prefix=/usr;
+		make;
+		sudo make install;
+		cd ..;
+		echo "Done"
+	else
+		PACKAGES="build-essential cmake libsqlite3-dev libpng-dev libx11-dev libopenal-dev libvorbis-dev libgl1-mesa-dev libbsd-dev"
+	fi
+
 
 	if ! type sudo 2> /dev/null; then
 		su -c "apt-get -y install $PACKAGES"		
