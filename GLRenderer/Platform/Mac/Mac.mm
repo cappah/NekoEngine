@@ -66,6 +66,9 @@ bool GLRenderer::Initialize(PlatformWindowType hWnd, unordered_map<string, strin
 	NSOpenGLPixelFormat *pf = [[NSOpenGLPixelFormat alloc] initWithAttributes:attribs];
 	
 	_ctx = [[NSOpenGLContext alloc] initWithFormat:pf shareContext:nil];
+    if(!_ctx)
+        return false;
+    
 	[_ctx setView:_hWnd.contentView];
 	[_ctx makeCurrentContext];
 	
