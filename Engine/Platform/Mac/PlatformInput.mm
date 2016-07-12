@@ -48,6 +48,11 @@
 
 using namespace std;
 
+bool Input::SetControllerVibration(int n, float left, float right)
+{
+	return false;
+}
+
 void Input::_InitializeKeymap()
 {
 	_keymap.insert(make_pair(kVK_ANSI_0, NE_KEY_0));
@@ -164,4 +169,14 @@ void Input::_InitializeKeymap()
 	_keymap.insert(make_pair(kVK_ANSI_KeypadDivide, NE_KEY_NUM_DIVIDE));
 	_keymap.insert(make_pair(kVK_ANSI_KeypadMultiply, NE_KEY_NUM_MULT));
 	_keymap.insert(make_pair(kVK_ANSI_KeypadDecimal, NE_KEY_NUM_DECIMAL));
+}
+
+int Input::_GetControllerCount()
+{
+	return 0;
+}
+
+bool Input::_GetControllerState(int n, ControllerState *state)
+{
+	return false;
 }

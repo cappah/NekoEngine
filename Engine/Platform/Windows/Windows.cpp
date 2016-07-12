@@ -277,56 +277,6 @@ bool Platform::EnterFullscreen(int width, int height)
 	return true;
 }
 
-bool Platform::CapturePointer()
-{
-	ShowCursor(FALSE);
-	SetCapture(_activeWindow);
-
-	return true;
-}
-
-void Platform::ReleasePointer()
-{
-	ReleaseCapture();
-	ShowCursor(TRUE);
-}
-
-bool Platform::GetPointerPosition(long& x, long& y)
-{
-	POINT pt;
-	bool ret;
-
-	ret = GetCursorPos(&pt) == TRUE ? true : false;
-	ret &= ScreenToClient(_activeWindow, &pt) == TRUE ? true : false;
-
-	if (ret)
-	{
-		x = pt.x;
-		y = pt.y;
-	}
-
-	return ret;
-}
-
-bool Platform::SetPointerPosition(long x, long y)
-{
-	POINT pt;
-	bool ret;
-
-	pt.x = x;
-	pt.y = y;
-
-	ret = ClientToScreen(_activeWindow, &pt) == TRUE ? true : false;
-	ret &= SetCursorPos(pt.x, pt.y) == TRUE ? true : false;
-
-	return ret;
-}
-
-bool Platform::GetTouchMovementDelta(float &x, float &y)
-{
-	return false;
-}
-
 MessageBoxResult Platform::MessageBox(const char* title, const char* message, MessageBoxButtons buttons, MessageBoxIcon icon)
 {
 	UINT x, type = 0;

@@ -153,3 +153,19 @@
 #define NE_KEY_NUM_DECIMAL	0x6F
 #define NE_KEY_NUM_DIVIDE	0x70
 #define NE_KEY_NUM_MULT		0x71
+
+// Gamepad buttons
+#define NE_GPAD_A			0x72
+#define NE_GPAD_B			0x73
+#define NE_GPAD_X			0x74
+#define NE_GPAD_Y			0x75
+#define NE_GPAD_LSHOULDER	0x76
+#define NE_GPAD_RSHOULDER	0x77
+#define NE_GPAD_LTHUMB		0x78
+#define NE_GPAD_RTHUMB		0x79
+#define NE_GPAD_BACK		0x7A
+#define NE_GPAD_START		0x7B
+#define NE_GPAD_D_RIGHT		0x7C
+#define NE_GPAD_D_LEFT		0x7D
+#define NE_GPAD_D_UP		0x7E
+#define NE_GPAD_D_DOWN		0x7F

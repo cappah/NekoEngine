@@ -48,6 +48,11 @@
 
 using namespace std;
 
+bool Input::SetControllerVibration(int n, float left, float right)
+{
+	return false;
+}
+
 void Input::_InitializeKeymap()
 {
 	setlocale(LC_CTYPE, "");
@@ -170,4 +175,14 @@ void Input::_InitializeKeymap()
 	_keymap.insert(make_pair(XK_KP_Divide, NE_KEY_NUM_DIVIDE));
 	_keymap.insert(make_pair(XK_KP_Multiply, NE_KEY_NUM_MULT));
 	_keymap.insert(make_pair(XK_KP_Decimal, NE_KEY_NUM_DECIMAL));
+}
+
+int Input::_GetControllerCount()
+{
+	return 0;
+}
+
+bool Input::_GetControllerState(int n, ControllerState *state)
+{
+	return false;
 }

@@ -44,7 +44,24 @@
 #include <Engine/Input.h>
 #include <Platform/Platform.h>
 
+#include <Xinput.h>
+
 using namespace std;
+
+DWORD _xiLastPacket[4] = { 0, 0, 0, 0 };
+
+bool Input::SetControllerVibration(int n, float left, float right)
+{
+	XINPUT_VIBRATION vibration;
+
+	left = left > 1.f ? 1.f : left;
+	right = right > 1.f ? 1.f : right;
+
+	vibration.wLeftMotorSpeed = (WORD)(left * 65535);
+	vibration.wRightMotorSpeed = (WORD)(right * 65535);
+
+	return XInputSetState(n, &vibration) == ERROR_SUCCESS;
+}
 
 void Input::_InitializeKeymap()
 {
@@ -172,4 +189,157 @@ void Input::_InitializeKeymap()
 	_keymap.insert(make_pair(VK_DIVIDE, NE_KEY_NUM_DIVIDE));
 	_keymap.insert(make_pair(VK_MULTIPLY, NE_KEY_NUM_MULT));
 	_keymap.insert(make_pair(VK_DECIMAL, NE_KEY_NUM_DECIMAL));
+}
+
+int Input::_GetControllerCount()
+{
+	XINPUT_STATE xistate;
+	int num = 0;
+
+	for (DWORD i = 0; i < XUSER_MAX_COUNT; ++i)
+		if (XInputGetState(i, &xistate) == ERROR_SUCCESS)
+			num++;
+
+	return num;
+}
+
+bool Input::_GetControllerState(int n, ControllerState *state)
+{
+	XINPUT_STATE xistate;
+
+	if (XInputGetState(n, &xistate) != ERROR_SUCCESS)
+		return false;
+
+	// Controller state has not changed
+	if (_xiLastPacket[n] == xistate.dwPacketNumber)
+		return true;
+
+	if ((xistate.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_UP) == XINPUT_GAMEPAD_DPAD_UP)
+		Key(NE_GPAD_D_UP, true);
+	else
+		Key(NE_GPAD_D_UP, true);
+	
+	if ((xistate.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_DOWN) == XINPUT_GAMEPAD_DPAD_DOWN)
+		Key(NE_GPAD_D_DOWN, true);
+	else
+		Key(NE_GPAD_D_DOWN, true);
+
+	if ((xistate.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT) == XINPUT_GAMEPAD_DPAD_LEFT)
+		Key(NE_GPAD_D_LEFT, true);
+	else
+		Key(NE_GPAD_D_LEFT, true);
+
+	if ((xistate.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT) == XINPUT_GAMEPAD_DPAD_RIGHT)
+		Key(NE_GPAD_D_RIGHT, true);
+	else
+		Key(NE_GPAD_D_RIGHT, true);
+
+	if ((xistate.Gamepad.wButtons & XINPUT_GAMEPAD_START) == XINPUT_GAMEPAD_START)
+		Key(NE_GPAD_START, true);
+	else
+		Key(NE_GPAD_START, true);
+
+	if ((xistate.Gamepad.wButtons & XINPUT_GAMEPAD_BACK) == XINPUT_GAMEPAD_BACK)
+		Key(NE_GPAD_BACK, true);
+	else
+		Key(NE_GPAD_BACK, true);
+
+	if ((xistate.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_THUMB) == XINPUT_GAMEPAD_LEFT_THUMB)
+		Key(NE_GPAD_LTHUMB, true);
+	else
+		Key(NE_GPAD_LTHUMB, true);
+
+	if ((xistate.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_THUMB) == XINPUT_GAMEPAD_RIGHT_THUMB)
+		Key(NE_GPAD_RTHUMB, true);
+	else
+		Key(NE_GPAD_RTHUMB, true);
+
+	if ((xistate.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER) == XINPUT_GAMEPAD_LEFT_SHOULDER)
+		Key(NE_GPAD_LSHOULDER, true);
+	else
+		Key(NE_GPAD_LSHOULDER, true);
+
+	if ((xistate.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) == XINPUT_GAMEPAD_RIGHT_SHOULDER)
+		Key(NE_GPAD_RSHOULDER, true);
+	else
+		Key(NE_GPAD_RSHOULDER, true);
+
+	if ((xistate.Gamepad.wButtons & XINPUT_GAMEPAD_A) == XINPUT_GAMEPAD_A)
+		Key(NE_GPAD_A, true);
+	else
+		Key(NE_GPAD_A, true);
+
+	if ((xistate.Gamepad.wButtons & XINPUT_GAMEPAD_B) == XINPUT_GAMEPAD_B)
+		Key(NE_GPAD_B, true);
+	else
+		Key(NE_GPAD_B, true);
+
+	if ((xistate.Gamepad.wButtons & XINPUT_GAMEPAD_X) == XINPUT_GAMEPAD_X)
+		Key(NE_GPAD_X, true);
+	else
+		Key(NE_GPAD_X, true);
+
+	if ((xistate.Gamepad.wButtons & XINPUT_GAMEPAD_Y) == XINPUT_GAMEPAD_Y)
+		Key(NE_GPAD_Y, true);
+	else
+		Key(NE_GPAD_Y, true);
+
+	state->left_x = (float)xistate.Gamepad.sThumbLX / 32767.0f;
+	state->left_y = (float)xistate.Gamepad.sThumbLY / 32767.0f;
+	state->left_trigger = (float)xistate.Gamepad.bLeftTrigger / 255.0f;
+	state->right_x = (float)xistate.Gamepad.sThumbRX / 32767.0f;
+	state->right_y = (float)xistate.Gamepad.sThumbRY / 32767.0f;
+	state->right_trigger = (float)xistate.Gamepad.bRightTrigger / 255.0f;
+
+	return true;
+}
+
+bool Platform::CapturePointer()
+{
+	ShowCursor(FALSE);
+	SetCapture(_activeWindow);
+
+	return true;
+}
+
+void Platform::ReleasePointer()
+{
+	ReleaseCapture();
+	ShowCursor(TRUE);
+}
+
+bool Platform::GetPointerPosition(long& x, long& y)
+{
+	POINT pt;
+	bool ret;
+
+	ret = GetCursorPos(&pt) == TRUE ? true : false;
+	ret &= ScreenToClient(_activeWindow, &pt) == TRUE ? true : false;
+
+	if (ret)
+	{
+		x = pt.x;
+		y = pt.y;
+	}
+
+	return ret;
+}
+
+bool Platform::SetPointerPosition(long x, long y)
+{
+	POINT pt;
+	bool ret;
+
+	pt.x = x;
+	pt.y = y;
+
+	ret = ClientToScreen(_activeWindow, &pt) == TRUE ? true : false;
+	ret &= SetCursorPos(pt.x, pt.y) == TRUE ? true : false;
+
+	return ret;
+}
+
+bool Platform::GetTouchMovementDelta(float &x, float &y)
+{
+	return false;
 }

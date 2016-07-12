@@ -50,6 +50,8 @@ float Input::_screenHalfWidth = 0.f, Input::_screenHalfHeight = 0.f;
 float Input::_axis[5] = { 0.f, 0.f, 0.f, 0.f, 0.f };
 unordered_map<std::string, uint8_t> Input::_buttonMap;
 unordered_map<std::string, uint8_t> Input::_axisMap;
+int Input::_connectedControllers = 0;
+ControllerState Input::_controllerState[NE_MAX_CONTROLLERS];
 
 int Input::Initialize()
 {
@@ -57,6 +59,8 @@ int Input::Initialize()
 
 	_screenHalfWidth = (float)Engine::GetScreenWidth() / 2.f;
 	_screenHalfHeight = (float)Engine::GetScreenHeight() / 2.f;
+
+	_connectedControllers = _GetControllerCount();
 
 	return ENGINE_OK;
 }
@@ -91,6 +95,10 @@ void Input::Key(int key, bool bIsPressed) noexcept
 
 void Input::Update() noexcept
 {
+	// Controllers
+	for (int i = 0; i < _connectedControllers; ++i)
+		_GetControllerState(i, &_controllerState[i]);
+
 	// Mouse
 	long x = 0, y = 0;
 	float xDelta = 0.f, yDelta = 0.f;

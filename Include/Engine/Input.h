@@ -45,11 +45,25 @@
 #include <Engine/Keycodes.h>
 #include <Platform/Platform.h>
 
-#define NE_MOUSE_X		0
-#define NE_MOUSE_Y		1
-#define NE_JOY_LT		2
-#define NE_JOY_RT		3
-#define NE_JOY_TRIG		4
+#define NE_MOUSE_X			0
+#define NE_MOUSE_Y			1
+#define NE_JOY_LT			2
+#define NE_JOY_RT			3
+#define NE_JOY_TRIG			4
+
+#ifdef ENGINE_INTERNAL
+#define NE_MAX_CONTROLLERS	4
+
+typedef struct CTRL_STATE
+{
+	float left_x;
+	float left_y;
+	float left_trigger;
+	float right_x;
+	float right_y;
+	float right_trigger;
+} ControllerState;
+#endif
 
 class Input
 {
@@ -69,6 +83,8 @@ public:
 
 	ENGINE_API static float GetAxis(std::string axis) noexcept { return GetAxis(_axisMap[axis]); }
 
+	ENGINE_API static int GetConnectedControllerCount() noexcept { return _connectedControllers; }
+
 	static void Release();
 
 #ifdef ENGINE_INTERNAL
@@ -77,6 +93,9 @@ public:
 	static void Update() noexcept;
 #endif
 
+	// Platform-specific functions
+	ENGINE_API static bool SetControllerVibration(int n, float left, float right);
+
 private:
 	static std::vector<uint8_t> _pressedKeys;
 	static std::unordered_map<int, uint8_t> _keymap;
@@ -84,7 +103,14 @@ private:
 	static float _axis[5];
 	static std::unordered_map<std::string, uint8_t> _buttonMap;
 	static std::unordered_map<std::string, uint8_t> _axisMap;
+	static int _connectedControllers;
+	
+#ifdef ENGINE_INTERNAL
+	static ControllerState _controllerState[NE_MAX_CONTROLLERS];
 
-	// Platform-specific functions
+	// Platform-specific internal functions
 	static void _InitializeKeymap();
+	static int _GetControllerCount();
+	static bool _GetControllerState(int n, ControllerState *state);
+#endif
 };
