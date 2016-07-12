@@ -108,6 +108,24 @@ InstallDepsYum()
 	echo "Dependencies installed."
 }
 
+InstallDepsEquo()
+{
+	echo "Attempting to install dependencies using equo"
+	PACKAGES="gcc make cmake sqlite libpng libX11 openal libvorbis libogg libGLw libbsd"
+
+	if ! type sudo 2> /dev/null; then
+		su -c "equo install $PACKAGES"		
+	else
+		sudo equo install $PACKAGES
+	fi
+
+	if [ $? -ne 0 ]; then
+		InstallDepsFail
+	fi
+
+	echo "Dependencies installed."
+}
+
 ######################
 # Generate functions #
 ######################
@@ -171,6 +189,8 @@ case $OS in
 			InstallDepsDnf
 		elif type yum 2> /dev/null; then
 			InstallDepsYum
+		elif type equo 2> /dev/null; then
+			InstallDepsEquo
 		else
 			echo "ERROR: Unknown distribution. You will have to install the dependencies manually."
 			exit;
