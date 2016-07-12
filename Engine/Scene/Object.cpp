@@ -283,7 +283,8 @@ void Object::Unload() noexcept
 	
 	for(pair<string, ObjectComponent*> kvp : _components)
 		kvp.second->Unload();
-	
+	_components.clear();
+
 	_loaded = false;
 }
 

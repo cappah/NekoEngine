@@ -60,13 +60,10 @@ public:
 	ENGINE_API static void SetActiveCameraId(int id) noexcept { _activeCamera = _cameras[id]; }
 	ENGINE_API static void AddCamera(CameraComponent *cam) noexcept { _cameras.push_back(cam); }
 	ENGINE_API static size_t Count() noexcept { return _cameras.size(); }
-	ENGINE_API static void UnloadCameras() noexcept;
-
-	ENGINE_API static void Release() noexcept;
 
 private:
 	static std::vector<CameraComponent *> _cameras;
 	static CameraComponent *_activeCamera;
 
-	CameraManager() { Release(); }
+	CameraManager() { _cameras.clear(); }
 };

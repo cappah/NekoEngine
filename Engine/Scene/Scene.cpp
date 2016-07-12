@@ -595,8 +595,6 @@ void Scene::Unload() noexcept
 	
 	delete _sceneArrayBuffer;
 	_sceneArrayBuffer = nullptr;
-
-	CameraManager::UnloadCameras();
 	
 	_loaded = false;
 }

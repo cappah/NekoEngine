@@ -56,21 +56,3 @@ using namespace std;
 
 vector<CameraComponent *> CameraManager::_cameras;
 CameraComponent *CameraManager::_activeCamera = nullptr;
-
-void CameraManager::UnloadCameras() noexcept
-{
-	for (CameraComponent *c : _cameras)
-	{
-		c->Unload();
-		delete c;
-	}
-
-	_cameras.clear();
-}
-
-void CameraManager::Release() noexcept
-{
-	UnloadCameras();
-
-	Logger::Log(CM_MODULE, LOG_INFORMATION, "Released");
-}

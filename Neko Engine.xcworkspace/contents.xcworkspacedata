@@ -84,7 +84,7 @@
                location = "group:main.nscene">
             </FileRef>
             <FileRef
-               location = "group:reflect.nscene">
+               location = "group:/Users/racetrack/Projects/NekoEngine/Resources/Data/Scenes/ios.nscene">
             </FileRef>
             <FileRef
                location = "group:scene.nscene">

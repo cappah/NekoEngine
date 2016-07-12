@@ -90,7 +90,7 @@ public:
 	void RotateY(float angle) noexcept { _rotation.y += angle; }
 	void RotateZ(float angle) noexcept { _rotation.z += angle; }
 
-	~CameraComponent() noexcept { Unload(); }
+	~CameraComponent() noexcept { }
 
 protected:
 	glm::vec3 _front;

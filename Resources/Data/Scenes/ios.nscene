@@ -1,11 +1,11 @@
 NSCENE1 
 SceneInfo
-name=Main
-#bgmusic=1
-#bgmusicvol=1.0
+name=Main_iOS
+#bgmusic=bg_meat_grinder
+#bgmusicvol=0.2
 gamemodule=TestGame
 ambcolor=0.02, 0.02, 0.02
-ambintensity=1.00
+ambintensity=0.2
 EndSceneInfo
 
 # Skybox
@@ -36,16 +36,16 @@ EndObject
 Object
 id=9001
 Component=CameraComponent=FPSCamera
-    fov=45.0
-    near=1.0
-    far=10000.0
-    projection=perspective
-    position=0, 147.0, -50.0
-    rotation=0.0, 0.0, 0.0
-    fog_color=0.207, 0.255, 0.349
-    view_distance=1200
-    fog_distance=3000
-    type=fps
+	fov=45.0
+	near=1.0
+	far=10000.0
+	projection=perspective
+	position=-50.0, 47.0, -50.0
+	rotation=0.0, 0.0, 0.0
+	fog_color=0.207, 0.255, 0.349
+	view_distance=1200
+	fog_distance=3000
+	type=fps
 EndComponent
 Component=FPSControllerComponent=Controller
 EndComponent
@@ -54,34 +54,37 @@ scale=1.0, 1.0, 1.0
 rotation=0.0, -90.0, 0.0
 EndObject
 
+# Sophia
 Object
-id=2
+id=5
 Component=SkeletalMeshComponent=Mesh
 	mesh=skm_sophia
 	material=mat_sophia
+	animator=Animator
 EndComponent
 Component=AnimatorComponent=Animator
-	defaultanim=ac_sophia_idle
+	defaultanim=ac_sophia_samba
 	targetmesh=Mesh
 EndComponent
-position=0.0, 0.0, -155.0
+position=-58, 0.0, -180.0
 rotation=0.0, 0.0, 0.0
-scale=1.0, 1.0, 1.0
+scale=0.45, 0.45, 0.45
 EndObject
 
-################
-# Scene lights #
-################
+##########
+# Lights #
+##########
 
+# Big light
 Object=Light
 id=100
 scale=0.1, 0.1, 0.1
-position=100.0, 0.0, -155.0
-rotation=0.0, 90.0, 0.0
-color=1.0, 1.0, 1.0
+position=0.0, 150.0, 0.0
+rotation=0.0, 0.0, 0.0
+color=1.0, 0.0, 0.4
 type=point
-attenuation=300.0, 350.0
-intensity=2.0
+attenuation=500.0, 550.0
+intensity=1.0
 EndObject
 
 #############
