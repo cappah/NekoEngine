@@ -30,9 +30,8 @@
 	args.append([[[NSBundle mainBundle] resourcePath] UTF8String]);
 	args.append("/Engine_Low.ini --log=");
 	
-	NSArray *urls = [[NSFileManager defaultManager] URLsForDirectory:NSLibraryDirectory inDomains:NSUserDomainMask];
-	NSURL *logUrl = [[urls lastObject] URLByAppendingPathComponent:@"Logs"];
-	logUrl = [logUrl URLByAppendingPathComponent:@"NekoEngine.log"];
+	NSArray *urls = [[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask];
+	NSURL *logUrl = [[urls lastObject] URLByAppendingPathComponent:@"NekoEngine.log"];
 	args.append([[logUrl path] UTF8String]);
 	
 	if (Engine::Initialize(args, false) != ENGINE_OK)
