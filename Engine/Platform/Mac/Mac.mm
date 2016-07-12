@@ -137,43 +137,6 @@ bool Platform::EnterFullscreen(int width, int height)
 	return true;
 }
 
-bool Platform::CapturePointer()
-{
-	[NSCursor hide];
-	return true;
-}
-
-void Platform::ReleasePointer()
-{
-	[NSCursor unhide];
-}
-
-bool Platform::GetPointerPosition(long& x, long& y)
-{
-	NSPoint position = [_activeWindow mouseLocationOutsideOfEventStream];
-	
-	x = position.x;
-	y = _engineView.frame.size.height - position.y - 1;
-
-	return true;
-}
-
-bool Platform::SetPointerPosition(long x, long y)
-{
-	NSRect globalPosition = [_activeWindow convertRectToScreen:NSMakeRect(x, _engineView.frame.size.height - y - 1, 0, 0)];
-	
-	CGAssociateMouseAndMouseCursorPosition(false);
-	CGWarpMouseCursorPosition(CGPointMake(globalPosition.origin.x, CGDisplayBounds(CGMainDisplayID()).size.height - globalPosition.origin.y));
-	CGAssociateMouseAndMouseCursorPosition(true);
-	
-	return true;
-}
-
-bool Platform::GetTouchMovementDelta(float &x, float &y)
-{
-	return false;
-}
-
 MessageBoxResult Platform::MessageBox(const char* title, const char* message, MessageBoxButtons buttons, MessageBoxIcon icon)
 {
 	NSAlert *alert = [[NSAlert alloc] init];

@@ -179,4 +179,7 @@ void Platform::CleanUp()
 }
 
 // Unused
+bool Input::SetControllerVibration(int n, float left, float right) { return false; }
 void Input::_InitializeKeymap() { }
+int Input::_GetControllerCount() { return 0; }
+bool Input::_GetControllerState(int n, ControllerState *state) { return false; }
