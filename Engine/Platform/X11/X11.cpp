@@ -47,7 +47,6 @@
 #include <X11/Xatom.h>
 #include <X11/Xutil.h>
 #include <X11/keysymdef.h>
-#include <X11/cursorfont.h>
 #include <Engine/Input.h>
 #include <Engine/Engine.h>
 #include <Platform/Platform.h>
@@ -55,16 +54,9 @@
 #include "x11_icon.h"
 #include "MessageBoxX11.h"
 
-#define	None		0
-
-#define KEYCODE_UP	111
-#define KEYCODE_LEFT	113
-#define KEYCODE_RIGHT	114
-#define KEYCODE_DOWN	116
-
-static Display* x_display;
-static bool _pointerCaptured = false;
+Display* x_display;
 PlatformWindowType Platform::_activeWindow;
+extern bool _pointerCaptured;
 
 bool UserInterrupt()
 {
@@ -93,29 +85,6 @@ bool UserInterrupt()
 	}
 
 	return userInterrupt;
-}
-
-void HideCursor(Display *dpy, Window win)
-{
-	Cursor cur;
-	Pixmap cursorBitmap;
-	XColor black;
-	static char cursorData[] = { 0, 0, 0, 0, 0, 0, 0, 0 };
-	black.red = black.green = black.blue = 0;
-
-	cursorBitmap = XCreateBitmapFromData(dpy, win, cursorData, 8, 8);
-	cur = XCreatePixmapCursor(dpy, cursorBitmap, cursorBitmap, &black, &black, 0, 0);
-
-	XDefineCursor(dpy, win, cur);
-	XFreeCursor(dpy, cur);
-	XFreePixmap(dpy, cursorBitmap);
-}
-
-void ShowCursor(Display *dpy, Window win)
-{
-	Cursor cur = XCreateFontCursor(dpy, XC_left_ptr);
-	XDefineCursor(dpy, win, cur);
-	XFreeCursor(dpy, cur);
 }
 
 PlatformWindowType Platform::CreateWindow(int width, int height, bool fullscreen)
@@ -187,61 +156,6 @@ void Platform::SetWindowTitle(PlatformWindowType hWnd, const char* title)
 }
 
 bool Platform::EnterFullscreen(int width, int height)
-{
-	return false;
-}
-
-bool Platform::CapturePointer()
-{
-	if(!x_display)
-		return false;
-
-	HideCursor(x_display, _activeWindow);
-	
-	XSetInputFocus(x_display, _activeWindow, RevertToPointerRoot, CurrentTime);
-	XGrabPointer(x_display, _activeWindow, False, ButtonPressMask | ButtonReleaseMask | PointerMotionMask, GrabModeAsync, GrabModeAsync, _activeWindow, None, CurrentTime);	
-
-	XFlush(x_display);
-	_pointerCaptured = true;
-
-	return true;
-}
-
-void Platform::ReleasePointer()
-{
-	if(!x_display)
-		return;
-
-	XUngrabPointer(x_display, CurrentTime);
-
-	ShowCursor(x_display, _activeWindow);
-
-	XFlush(x_display);
-	_pointerCaptured = false;
-}
-
-bool Platform::GetPointerPosition(long& x, long& y)
-{
-	Window retWindow;
-	int root_x, root_y, win_x, win_y;
-	unsigned int mask;
-
-	bool ret = XQueryPointer(x_display, _activeWindow, &retWindow, &retWindow, &root_x, &root_y, &win_x, &win_y, &mask);
-
-	x = win_x;
-	y = win_y;
-
-	return ret;
-}
-
-bool Platform::SetPointerPosition(long x, long y)
-{
-	bool ret = XWarpPointer(x_display, None, _activeWindow, 0, 0, 0, 0, (int)x, (int)y);
-	XFlush(x_display);
-	return ret;
-}
-
-bool Platform::GetTouchMovementDelta(float &x, float &y)
 {
 	return false;
 }
