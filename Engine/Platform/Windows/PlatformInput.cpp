@@ -50,6 +50,30 @@ using namespace std;
 
 DWORD _xiLastPacket[4] = { 0, 0, 0, 0 };
 
+static inline void _xiDeadzone(float &x, float &y, float max, float deadzone)
+{
+	float magnitude = sqrt(x*x + y*y);
+
+	float normX = x / magnitude;
+	float normY = y / magnitude;
+
+	float normMagnitude = 0.f;
+
+	if (magnitude > deadzone)
+	{
+		if (magnitude > max) magnitude = max;
+
+		magnitude -= deadzone;
+
+		normMagnitude = magnitude / (max - deadzone);
+	}
+	else
+		normMagnitude = 0.f;
+
+	x = normX * normMagnitude;
+	y = normY * normMagnitude;
+}
+
 bool Input::SetControllerVibration(int n, float left, float right)
 {
 	XINPUT_VIBRATION vibration;
@@ -215,81 +239,91 @@ bool Input::_GetControllerState(int n, ControllerState *state)
 		return true;
 
 	if ((xistate.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_UP) == XINPUT_GAMEPAD_DPAD_UP)
-		Key(NE_GPAD_D_UP, true);
+		_pressedKeys.push_back(NE_GPAD_D_UP);
 	else
-		Key(NE_GPAD_D_UP, true);
+		_pressedKeys.erase(remove(_pressedKeys.begin(), _pressedKeys.end(), NE_GPAD_D_UP), _pressedKeys.end());
 	
 	if ((xistate.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_DOWN) == XINPUT_GAMEPAD_DPAD_DOWN)
-		Key(NE_GPAD_D_DOWN, true);
+		_pressedKeys.push_back(NE_GPAD_D_DOWN);
 	else
-		Key(NE_GPAD_D_DOWN, true);
+		_pressedKeys.erase(remove(_pressedKeys.begin(), _pressedKeys.end(), NE_GPAD_D_DOWN), _pressedKeys.end());
 
 	if ((xistate.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT) == XINPUT_GAMEPAD_DPAD_LEFT)
-		Key(NE_GPAD_D_LEFT, true);
+		_pressedKeys.push_back(NE_GPAD_D_LEFT);
 	else
-		Key(NE_GPAD_D_LEFT, true);
+		_pressedKeys.erase(remove(_pressedKeys.begin(), _pressedKeys.end(), NE_GPAD_D_LEFT), _pressedKeys.end());
 
 	if ((xistate.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT) == XINPUT_GAMEPAD_DPAD_RIGHT)
-		Key(NE_GPAD_D_RIGHT, true);
+		_pressedKeys.push_back(NE_GPAD_D_RIGHT);
 	else
-		Key(NE_GPAD_D_RIGHT, true);
+		_pressedKeys.erase(remove(_pressedKeys.begin(), _pressedKeys.end(), NE_GPAD_D_RIGHT), _pressedKeys.end());
 
 	if ((xistate.Gamepad.wButtons & XINPUT_GAMEPAD_START) == XINPUT_GAMEPAD_START)
-		Key(NE_GPAD_START, true);
+		_pressedKeys.push_back(NE_GPAD_START);
 	else
-		Key(NE_GPAD_START, true);
+		_pressedKeys.erase(remove(_pressedKeys.begin(), _pressedKeys.end(), NE_GPAD_START), _pressedKeys.end());
 
 	if ((xistate.Gamepad.wButtons & XINPUT_GAMEPAD_BACK) == XINPUT_GAMEPAD_BACK)
-		Key(NE_GPAD_BACK, true);
+		_pressedKeys.push_back(NE_GPAD_BACK);
 	else
-		Key(NE_GPAD_BACK, true);
+		_pressedKeys.erase(remove(_pressedKeys.begin(), _pressedKeys.end(), NE_GPAD_BACK), _pressedKeys.end());
 
 	if ((xistate.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_THUMB) == XINPUT_GAMEPAD_LEFT_THUMB)
-		Key(NE_GPAD_LTHUMB, true);
+		_pressedKeys.push_back(NE_GPAD_LTHUMB);
 	else
-		Key(NE_GPAD_LTHUMB, true);
+		_pressedKeys.erase(remove(_pressedKeys.begin(), _pressedKeys.end(), NE_GPAD_LTHUMB), _pressedKeys.end());
 
 	if ((xistate.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_THUMB) == XINPUT_GAMEPAD_RIGHT_THUMB)
-		Key(NE_GPAD_RTHUMB, true);
+		_pressedKeys.push_back(NE_GPAD_RTHUMB);
 	else
-		Key(NE_GPAD_RTHUMB, true);
+		_pressedKeys.erase(remove(_pressedKeys.begin(), _pressedKeys.end(), NE_GPAD_RTHUMB), _pressedKeys.end());
 
 	if ((xistate.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER) == XINPUT_GAMEPAD_LEFT_SHOULDER)
-		Key(NE_GPAD_LSHOULDER, true);
+		_pressedKeys.push_back(NE_GPAD_LSHOULDER);
 	else
-		Key(NE_GPAD_LSHOULDER, true);
+		_pressedKeys.erase(remove(_pressedKeys.begin(), _pressedKeys.end(), NE_GPAD_LSHOULDER), _pressedKeys.end());
 
 	if ((xistate.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) == XINPUT_GAMEPAD_RIGHT_SHOULDER)
-		Key(NE_GPAD_RSHOULDER, true);
+		_pressedKeys.push_back(NE_GPAD_RSHOULDER);
 	else
-		Key(NE_GPAD_RSHOULDER, true);
+		_pressedKeys.erase(remove(_pressedKeys.begin(), _pressedKeys.end(), NE_GPAD_RSHOULDER), _pressedKeys.end());
 
 	if ((xistate.Gamepad.wButtons & XINPUT_GAMEPAD_A) == XINPUT_GAMEPAD_A)
-		Key(NE_GPAD_A, true);
+		_pressedKeys.push_back(NE_GPAD_A);
 	else
-		Key(NE_GPAD_A, true);
+		_pressedKeys.erase(remove(_pressedKeys.begin(), _pressedKeys.end(), NE_GPAD_A), _pressedKeys.end());
 
 	if ((xistate.Gamepad.wButtons & XINPUT_GAMEPAD_B) == XINPUT_GAMEPAD_B)
-		Key(NE_GPAD_B, true);
+		_pressedKeys.push_back(NE_GPAD_B);
 	else
-		Key(NE_GPAD_B, true);
+		_pressedKeys.erase(remove(_pressedKeys.begin(), _pressedKeys.end(), NE_GPAD_B), _pressedKeys.end());
 
 	if ((xistate.Gamepad.wButtons & XINPUT_GAMEPAD_X) == XINPUT_GAMEPAD_X)
-		Key(NE_GPAD_X, true);
+		_pressedKeys.push_back(NE_GPAD_X);
 	else
-		Key(NE_GPAD_X, true);
+		_pressedKeys.erase(remove(_pressedKeys.begin(), _pressedKeys.end(), NE_GPAD_X), _pressedKeys.end());
 
 	if ((xistate.Gamepad.wButtons & XINPUT_GAMEPAD_Y) == XINPUT_GAMEPAD_Y)
-		Key(NE_GPAD_Y, true);
+		_pressedKeys.push_back(NE_GPAD_Y);
 	else
-		Key(NE_GPAD_Y, true);
+		_pressedKeys.erase(remove(_pressedKeys.begin(), _pressedKeys.end(), NE_GPAD_Y), _pressedKeys.end());
 
-	state->left_x = (float)xistate.Gamepad.sThumbLX / 32767.0f;
-	state->left_y = (float)xistate.Gamepad.sThumbLY / 32767.0f;
-	state->left_trigger = (float)xistate.Gamepad.bLeftTrigger / 255.0f;
-	state->right_x = (float)xistate.Gamepad.sThumbRX / 32767.0f;
-	state->right_y = (float)xistate.Gamepad.sThumbRY / 32767.0f;
-	state->right_trigger = (float)xistate.Gamepad.bRightTrigger / 255.0f;
+	state->left_x = (float)xistate.Gamepad.sThumbLX;
+	state->left_y = (float)xistate.Gamepad.sThumbLY;
+	state->left_trigger = (float)xistate.Gamepad.bLeftTrigger;
+	state->right_x = (float)xistate.Gamepad.sThumbRX;
+	state->right_y = (float)xistate.Gamepad.sThumbRY;
+	state->right_trigger = (float)xistate.Gamepad.bRightTrigger;
+
+	_xiDeadzone(state->left_x, state->left_y, 32767.f, XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
+	_xiDeadzone(state->right_x, state->right_y, 32767.f, XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE);
+	_xiDeadzone(state->left_trigger, state->right_trigger, 255.f, XINPUT_GAMEPAD_TRIGGER_THRESHOLD);
+
+/*	_deadzone(state->left_x, state->left_y, .1f);
+	_deadzone(state->right_x, state->right_y, .1f);
+	_deadzone(state->left_trigger, state->right_trigger, .1f);*/
+
+	_xiLastPacket[n] = xistate.dwPacketNumber;
 
 	return true;
 }

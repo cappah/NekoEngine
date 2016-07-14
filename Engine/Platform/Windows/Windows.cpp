@@ -75,6 +75,20 @@ PIXELFORMATDESCRIPTOR pfd =
 	0, 0, 0
 };
 
+static inline WPARAM _win32MapKeys(WPARAM vk, LPARAM lParam)
+{
+	UINT scan = (lParam & 0x00FF0000) >> 16;
+	int ext = (lParam & 0x01000000) != 0;
+
+	switch (vk)
+	{
+		case VK_SHIFT: return MapVirtualKey(scan, MAPVK_VSC_TO_VK_EX);
+		case VK_CONTROL: return ext ? VK_RCONTROL : VK_LCONTROL;
+		case VK_MENU: return ext ? VK_RMENU : VK_LMENU;
+		default: return vk;
+	}
+}
+
 LRESULT CALLBACK EngineWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	LRESULT lRet = 0;
@@ -97,13 +111,13 @@ LRESULT CALLBACK EngineWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
 		break;
 		case WM_KEYDOWN:
 		{
-			Input::Key((int)wParam, true);
+			Input::Key((int)_win32MapKeys(wParam, lParam), true);
 			return 0;
 		}
 		break;
 		case WM_KEYUP:
 		{
-			Input::Key((int)wParam, false);
+			Input::Key((int)_win32MapKeys(wParam, lParam), false);
 			return 0;
 		}
 		break;

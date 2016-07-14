@@ -45,11 +45,36 @@
 #include <Engine/Keycodes.h>
 #include <Platform/Platform.h>
 
-#define NE_MOUSE_X			0
-#define NE_MOUSE_Y			1
-#define NE_JOY_LT			2
-#define NE_JOY_RT			3
-#define NE_JOY_TRIG			4
+#define NE_MOUSE_X			0x00
+#define NE_MOUSE_Y			0x01
+
+#define NE_GPAD0_LX			0x02
+#define NE_GPAD0_LY			0x03
+#define NE_GPAD0_RX			0x04
+#define NE_GPAD0_RY			0x05
+#define NE_GPAD0_TL			0x06
+#define NE_GPAD0_TR			0x07
+
+#define NE_GPAD1_LX			0x12
+#define NE_GPAD1_LY			0x13
+#define NE_GPAD1_RX			0x14
+#define NE_GPAD1_RY			0x15
+#define NE_GPAD1_TL			0x16
+#define NE_GPAD1_TR			0x17
+
+#define NE_GPAD2_LX			0x22
+#define NE_GPAD2_LY			0x23
+#define NE_GPAD2_RX			0x24
+#define NE_GPAD2_RY			0x25
+#define NE_GPAD2_TL			0x26
+#define NE_GPAD2_TR			0x27
+
+#define NE_GPAD3_LX			0x32
+#define NE_GPAD3_LY			0x33
+#define NE_GPAD3_RX			0x34
+#define NE_GPAD3_RY			0x35
+#define NE_GPAD3_TL			0x36
+#define NE_GPAD_TR			0x37
 
 #ifdef ENGINE_INTERNAL
 #define NE_MAX_CONTROLLERS	4
@@ -76,7 +101,7 @@ public:
 	ENGINE_API static bool GetKeyUp(uint8_t key) noexcept;
 	ENGINE_API static bool GetKeyDown(uint8_t key) noexcept;
 
-	ENGINE_API static float GetAxis(uint8_t axis) noexcept { return _axis[axis]; }
+	ENGINE_API static float GetAxis(uint8_t axis) noexcept;
 
 	ENGINE_API static bool GetKeyUp(std::string key) noexcept { return GetKeyUp(_buttonMap[key]); }
 	ENGINE_API static bool GetKeyDown(std::string key) noexcept { return GetKeyDown(_buttonMap[key]); }
@@ -89,7 +114,7 @@ public:
 
 #ifdef ENGINE_INTERNAL
 	// Internal functions
-	static void Key(int key, bool bIsPressed) noexcept;
+	static void Key(int key, bool isPressed) noexcept;
 	static void Update() noexcept;
 #endif
 
@@ -100,7 +125,7 @@ private:
 	static std::vector<uint8_t> _pressedKeys;
 	static std::unordered_map<int, uint8_t> _keymap;
 	static float _screenHalfWidth, _screenHalfHeight;
-	static float _axis[5];
+	static float _mouseAxis[2];
 	static std::unordered_map<std::string, uint8_t> _buttonMap;
 	static std::unordered_map<std::string, uint8_t> _axisMap;
 	static int _connectedControllers;
@@ -112,5 +137,21 @@ private:
 	static void _InitializeKeymap();
 	static int _GetControllerCount();
 	static bool _GetControllerState(int n, ControllerState *state);
+
+	static inline void _deadzone(float &x, float &y, float deadzone)
+	{
+		float magnitude = sqrt(x*x + y*y);
+
+		if (magnitude < deadzone)
+		{
+			x = 0;
+			y = 0;
+		}
+		else
+		{
+			x = (x / magnitude) * ((magnitude - deadzone) / (1.f - deadzone));
+			y = (y / magnitude) * ((magnitude - deadzone) / (1.f - deadzone));
+		}
+	}
 #endif
 };

@@ -47,7 +47,7 @@ using namespace std;
 vector<uint8_t> Input::_pressedKeys;
 unordered_map<int, uint8_t> Input::_keymap;
 float Input::_screenHalfWidth = 0.f, Input::_screenHalfHeight = 0.f;
-float Input::_axis[5] = { 0.f, 0.f, 0.f, 0.f, 0.f };
+float Input::_mouseAxis[2] = { 0.f, 0.f };
 unordered_map<std::string, uint8_t> Input::_buttonMap;
 unordered_map<std::string, uint8_t> Input::_axisMap;
 int Input::_connectedControllers = 0;
@@ -83,11 +83,34 @@ bool Input::GetKeyDown(uint8_t key) noexcept
 	return false;
 }
 
-void Input::Key(int key, bool bIsPressed) noexcept
+float Input::GetAxis(uint8_t axis) noexcept
+{
+	if (axis <= 0x01)
+		return _mouseAxis[axis];
+
+	uint8_t id = 0;
+	while (axis >= 0x10)
+	{
+		axis -= 0x10;
+		id++;
+	}
+
+	switch (axis)
+	{
+		case NE_GPAD0_LX: return _controllerState[id].left_x;
+		case NE_GPAD0_LY: return _controllerState[id].left_y;
+		case NE_GPAD0_RX: return _controllerState[id].right_x;
+		case NE_GPAD0_RY: return _controllerState[id].right_y;
+		case NE_GPAD0_TL: return _controllerState[id].left_trigger;
+		case NE_GPAD0_TR: return _controllerState[id].right_trigger;
+	}
+}
+
+void Input::Key(int key, bool isPressed) noexcept
 {
 	int code = _keymap[key];
 
-	if (bIsPressed)
+	if (isPressed)
 		_pressedKeys.push_back(code);
 	else
 		_pressedKeys.erase(remove(_pressedKeys.begin(), _pressedKeys.end(), code), _pressedKeys.end());
@@ -113,8 +136,8 @@ void Input::Update() noexcept
 	else if (!Platform::GetTouchMovementDelta(xDelta, yDelta))
 		return;
 
-	_axis[NE_MOUSE_X] = xDelta / _screenHalfWidth;
-	_axis[NE_MOUSE_Y] = yDelta / _screenHalfHeight;
+	_mouseAxis[NE_MOUSE_X] = -(xDelta / _screenHalfWidth);
+	_mouseAxis[NE_MOUSE_Y] = yDelta / _screenHalfHeight;
 }
 
 void Input::Release()

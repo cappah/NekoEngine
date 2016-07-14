@@ -83,14 +83,14 @@ void FPSControllerComponent::Update(double deltaTime) noexcept
 {
 	ObjectComponent::Update(deltaTime);
 
-	float hAngle = _horizontalSensivity * Input::GetAxis("horizontal") * (float)deltaTime;
 	float vAngle = _verticalSensivity * Input::GetAxis("vertical") * (float)deltaTime;
+	float hAngle = _horizontalSensivity * Input::GetAxis("horizontal") * (float)deltaTime;
 
 	vec3 pos = _parent->GetPosition();
 	vec3 rot = _parent->GetRotation();
 
 	rot.x += RAD2DEG(vAngle);
-	rot.y -= RAD2DEG(hAngle);
+	rot.y += RAD2DEG(hAngle);
 
 	float speed = _moveSpeed;
 
