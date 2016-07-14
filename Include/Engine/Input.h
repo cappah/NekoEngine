@@ -39,6 +39,7 @@
 
 #pragma once
 
+#include <math.h>
 #include <vector>
 #include <string>
 #include <unordered_map>
