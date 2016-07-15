@@ -103,6 +103,7 @@ float Input::GetAxis(uint8_t axis) noexcept
 		case NE_GPAD0_RY: return _controllerState[id].right_y;
 		case NE_GPAD0_TL: return _controllerState[id].left_trigger;
 		case NE_GPAD0_TR: return _controllerState[id].right_trigger;
+		default: return 0.f;
 	}
 }
 
