@@ -53,6 +53,38 @@ using namespace std;
 #define GLX_CONTEXT_CORE_PROFILE_BIT_ARB	0x1
 #endif
 
+// Declarations missing from Solaris 10
+
+#ifndef PFNGLXSWAPINTERVALEXTPROC
+typedef void (*PFNGLXSWAPINTERVALEXTPROC)(Display *dpy, GLXDrawable drawable, int interval);
+#endif
+
+#ifndef PFNGLXCHOOSEFBCONFIGPROC
+typedef GLXFBConfig *(*PFNGLXCHOOSEFBCONFIGPROC)(Display *dpy, int screen, const int *attrib_list, int *nelements);
+#endif
+
+#ifndef PFNGLXGETVISUALFROMFBCONFIGPROC
+typedef XVisualInfo *(*PFNGLXGETVISUALFROMFBCONFIGPROC)(Display *dpy, GLXFBConfig config);
+#endif
+
+#ifndef PFNGLXGETFBCONFIGATTRIBPROC
+typedef int (*PFNGLXGETFBCONFIGATTRIBPROC)(Display *dpy, GLXFBConfig config, int attribute, int *value);
+#endif
+
+#ifndef PFNGLXCREATECONTEXTATTRIBSARBPROC
+typedef GLXContext (*PFNGLXCREATECONTEXTATTRIBSARBPROC)(Display *dpy, GLXFBConfig config, GLXContext share_context, Bool direct, const int *attrib_list);
+#endif
+
+#ifndef GLX_SAMPLE_BUFFERS
+#define GLX_SAMPLE_BUFFERS	100000
+#endif
+
+#ifndef GLX_SAMPLES
+#define GLX_SAMPLES		100001
+#endif
+
+// End
+
 static PFNGLXSWAPINTERVALEXTPROC glXSwapIntervalEXT = 0;
 
 bool GLRenderer::Initialize(PlatformWindowType hWnd, unordered_map<string, string> *args, bool debug)
@@ -131,7 +163,7 @@ bool GLRenderer::Initialize(PlatformWindowType hWnd, unordered_map<string, strin
 	XFree(fbc);
 
 	PFNGLXCREATECONTEXTATTRIBSARBPROC glXCreateContextAttribsARB = 0;
-	glXCreateContextAttribsARB = (PFNGLXCREATECONTEXTATTRIBSARBPROC)glXGetProcAddressARB((const GLubyte*)"glXCreateContextAttribsARB");
+	glXCreateContextAttribsARB = (PFNGLXCREATECONTEXTATTRIBSARBPROC)glXGetProcAddress((const GLubyte*)"glXCreateContextAttribsARB");
 
 	if (!glXCreateContextAttribsARB)
 	{
@@ -181,7 +213,7 @@ bool GLRenderer::Initialize(PlatformWindowType hWnd, unordered_map<string, strin
 			glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 	}
 
-	glXSwapIntervalEXT = (PFNGLXSWAPINTERVALEXTPROC)glXGetProcAddressARB((const GLubyte*)"glXSwapIntervalEXT");
+	glXSwapIntervalEXT = (PFNGLXSWAPINTERVALEXTPROC)glXGetProcAddress((const GLubyte*)"glXSwapIntervalEXT");
 
 	_CheckExtensions();
 	_ParseArguments(args);
