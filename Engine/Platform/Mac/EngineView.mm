@@ -47,33 +47,6 @@
 #include <Engine/Input.h>
 #include <Engine/Engine.h>
 
-// Taken from:
-// http://stackoverflow.com/questions/1918841/how-to-convert-ascii-character-to-cgkeycode/1971027#1971027
-CFStringRef createStringForKey(CGKeyCode keyCode)
-{
-	TISInputSourceRef currentKeyboard = TISCopyCurrentKeyboardInputSource();
-	CFDataRef layoutData = (CFDataRef)TISGetInputSourceProperty(currentKeyboard, kTISPropertyUnicodeKeyLayoutData);
-	const UCKeyboardLayout *keyboardLayout = (const UCKeyboardLayout *)CFDataGetBytePtr(layoutData);
-	
-	UInt32 keysDown = 0;
-	UniChar chars[4];
-	UniCharCount realLength;
-	
-	UCKeyTranslate(keyboardLayout,
-				   keyCode,
-				   kUCKeyActionDisplay,
-				   0,
-				   LMGetKbdType(),
-				   kUCKeyTranslateNoDeadKeysBit,
-				   &keysDown,
-				   sizeof(chars) / sizeof(chars[0]),
-				   &realLength,
-				   chars);
-	CFRelease(currentKeyboard);
-	
-	return CFStringCreateWithCharacters(kCFAllocatorDefault, chars, 1);
-}
-
 @implementation EngineView
 
 @synthesize mouseLocation;
@@ -86,6 +59,25 @@ CFStringRef createStringForKey(CGKeyCode keyCode)
 - (void)keyDown:(NSEvent *)theEvent
 {
 	Input::Key(theEvent.keyCode, true);
+}
+
+- (void)flagsChanged:(NSEvent *)theEvent
+{
+	bool pressed = false;
+	
+	if((theEvent.modifierFlags & NSShiftKeyMask) == NSShiftKeyMask)
+		pressed = true;
+	
+	if((theEvent.modifierFlags & NSCommandKeyMask) == NSCommandKeyMask)
+		pressed = true;
+	
+	if((theEvent.modifierFlags & NSAlternateKeyMask) == NSAlternateKeyMask)
+		pressed = true;
+	
+	if((theEvent.modifierFlags & NSControlKeyMask) == NSControlKeyMask)
+		pressed = true;
+	
+	Input::Key(theEvent.keyCode, pressed);
 }
 
 - (void)mouseUp:(NSEvent *)theEvent
