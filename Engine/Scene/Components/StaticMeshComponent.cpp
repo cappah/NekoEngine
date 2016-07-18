@@ -72,20 +72,20 @@ StaticMeshComponent::StaticMeshComponent(ComponentInitializer *initializer)
 	_blend = false;
 }
 
-void StaticMeshComponent::SetPosition(vec3 &position) noexcept
+void StaticMeshComponent::SetLocalPosition(vec3 &position) noexcept
 {
-	ObjectComponent::SetPosition(position);
-	_translationMatrix = translate(mat4(), _position);
+	ObjectComponent::SetLocalPosition(position);
+	_translationMatrix = translate(mat4(), _localPosition);
 	_mmNeedsUpdate = true;
 }
 
-void StaticMeshComponent::SetRotation(vec3 &rotation) noexcept
+void StaticMeshComponent::SetLocalRotation(vec3 &rotation) noexcept
 {
-	ObjectComponent::SetRotation(rotation);
+	ObjectComponent::SetLocalRotation(rotation);
 
-	mat4 rotXMatrix = rotate(mat4(), DEG2RAD(_rotation.x), vec3(1.f, 0.f, 0.f));
-	mat4 rotYMatrix = rotate(mat4(), DEG2RAD(_rotation.y), vec3(0.f, 1.f, 0.f));
-	mat4 rotZMatrix = rotate(mat4(), DEG2RAD(_rotation.z), vec3(0.f, 0.f, 1.f));
+	mat4 rotXMatrix = rotate(mat4(), DEG2RAD(_localRotation.x), vec3(1.f, 0.f, 0.f));
+	mat4 rotYMatrix = rotate(mat4(), DEG2RAD(_localRotation.y), vec3(0.f, 1.f, 0.f));
+	mat4 rotZMatrix = rotate(mat4(), DEG2RAD(_localRotation.z), vec3(0.f, 0.f, 1.f));
 
 	_rotationMatrix = rotZMatrix * rotXMatrix * rotYMatrix;
 //	SetForwardDirection(_objectForward);
@@ -93,9 +93,9 @@ void StaticMeshComponent::SetRotation(vec3 &rotation) noexcept
 	_mmNeedsUpdate = true;
 }
 
-void StaticMeshComponent::SetScale(vec3 &newScale) noexcept
+void StaticMeshComponent::SetLocalScale(vec3 &newScale) noexcept
 {
-	ObjectComponent::SetScale(newScale);
+	ObjectComponent::SetLocalScale(newScale);
 
 	_scaleMatrix = scale(mat4(), newScale);
 	_mmNeedsUpdate = true;

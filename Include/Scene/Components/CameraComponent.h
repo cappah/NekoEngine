@@ -76,19 +76,18 @@ public:
 	void SetFogDistance(float distance) noexcept { _fogDistance = distance; }
 	void SetProjection(ProjectionType projection) noexcept { _projection = projection; }
 	
+	virtual void UpdatePosition() noexcept override { ObjectComponent::UpdatePosition(); _UpdateView(); }
 	void UpdatePerspective() noexcept;
 
 	virtual int Load() override;
 
-	virtual void Update(double deltaTime) noexcept override;
+	void MoveForward(float distance) noexcept { _localPosition += _front * distance; }
+	void MoveRight(float distance) noexcept { _localPosition += _right * distance; }
+	void MoveUp(float distance) noexcept { _localPosition += _up * distance; }
 
-	void MoveForward(float distance) noexcept { _position += _front * distance; }
-	void MoveRight(float distance) noexcept { _position += _right * distance; }
-	void MoveUp(float distance) noexcept { _position += _up * distance; }
-
-	void RotateX(float angle) noexcept { _rotation.x += angle; }
-	void RotateY(float angle) noexcept { _rotation.y += angle; }
-	void RotateZ(float angle) noexcept { _rotation.z += angle; }
+	void RotateX(float angle) noexcept { _localRotation.x += angle; }
+	void RotateY(float angle) noexcept { _localRotation.y += angle; }
+	void RotateZ(float angle) noexcept { _localRotation.z += angle; }
 
 	~CameraComponent() noexcept { }
 

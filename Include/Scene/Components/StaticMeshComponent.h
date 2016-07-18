@@ -58,11 +58,11 @@ public:
 
 	ENGINE_API StaticMesh *GetMesh() noexcept { return _mesh; }
 
-	ENGINE_API virtual void SetPosition(glm::vec3& position) noexcept override;
-	ENGINE_API virtual void SetRotation(glm::vec3& rotation) noexcept override;
-	ENGINE_API virtual void SetScale(glm::vec3& scale) noexcept override;
+	ENGINE_API virtual void SetLocalPosition(glm::vec3& position) noexcept override;
+	ENGINE_API virtual void SetLocalRotation(glm::vec3& rotation) noexcept override;
+	ENGINE_API virtual void SetLocalScale(glm::vec3& scale) noexcept override;
 
-	ENGINE_API virtual void UpdatePosition() noexcept override { _mmNeedsUpdate = true; }
+	ENGINE_API virtual void UpdatePosition() noexcept override { ObjectComponent::UpdatePosition(); _mmNeedsUpdate = true; }
 
 	ENGINE_API virtual int Load() override;
 	
@@ -78,7 +78,6 @@ protected:
 	StaticMesh *_mesh;
 	bool _loaded, _blend;
 	Renderer* _renderer;
-	glm::vec3 _position, _rotation, _scale;
 	glm::mat4 _translationMatrix, _scaleMatrix, _rotationMatrix;
 	std::vector<int> _materialIds;
 	std::vector<Material*> _materials;

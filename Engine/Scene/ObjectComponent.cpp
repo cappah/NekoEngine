@@ -48,6 +48,9 @@ using namespace glm;
 
 ObjectComponent::ObjectComponent(ComponentInitializer *initializer)
 	: _parent(initializer->parent),
+	_localPosition(vec3(0.f)),
+	_localRotation(vec3(0.f)),
+	_localScale(vec3(1.f)),
 	_position(vec3(0.f)),
 	_rotation(vec3(0.f)),
 	_scale(vec3(1.f))
@@ -56,27 +59,36 @@ ObjectComponent::ObjectComponent(ComponentInitializer *initializer)
 	const char *ptr = nullptr;
 
 	if (((it = initializer->arguments.find("position")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
-		EngineUtils::ReadFloatArray(ptr, 3, &_position.x);
+		EngineUtils::ReadFloatArray(ptr, 3, &_localPosition.x);
 
 	if (((it = initializer->arguments.find("rotation")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
-		EngineUtils::ReadFloatArray(ptr, 3, &_rotation.x);
+		EngineUtils::ReadFloatArray(ptr, 3, &_localRotation.x);
 
 	if (((it = initializer->arguments.find("scale")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
-		EngineUtils::ReadFloatArray(ptr, 3, &_scale.x);
+		EngineUtils::ReadFloatArray(ptr, 3, &_localScale.x);
 }
 
-void ObjectComponent::SetPosition(vec3 &position) noexcept
+void ObjectComponent::SetLocalPosition(vec3 &position) noexcept
 {
-	_position = position;
+	_localPosition = position;
+	_position = _parent->GetPosition() + _localPosition;
 }
 
-void ObjectComponent::SetRotation(vec3 &rotation) noexcept
+void ObjectComponent::SetLocalRotation(vec3 &rotation) noexcept
 {
-	_rotation = rotation;
+	_localRotation = rotation;
+	_rotation = _parent->GetRotation() + _localRotation;
 }
 
-void ObjectComponent::SetScale(vec3 &newScale) noexcept
+void ObjectComponent::SetLocalScale(vec3 &newScale) noexcept
 {
-	_scale = newScale;
+	_localScale = newScale;
+	_scale = _parent->GetScale() + _localScale;
 }
 
+void ObjectComponent::UpdatePosition() noexcept
+{
+	_position = _parent->GetPosition() + _localPosition;
+	_rotation = _parent->GetRotation() + _localRotation;
+	_scale = _parent->GetScale() + _localScale;
+}

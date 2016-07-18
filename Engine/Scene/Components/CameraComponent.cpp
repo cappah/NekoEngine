@@ -126,17 +126,12 @@ void CameraComponent::UpdatePerspective() noexcept
 	_projectionMatrix = perspective(_fov, (float)DeferredBuffer::GetWidth() / (float)DeferredBuffer::GetHeight(), _near, _far);
 }
 
-void CameraComponent::Update(double deltaTime) noexcept
-{
-	_UpdateView();
-}
-
 void CameraComponent::_UpdateView() noexcept
 {
 	vec3 front;
 
-	vec3 pos = _parent->GetPosition() + _position;
-	vec3 rot = _parent->GetRotation() + _rotation;
+	vec3 pos = _parent->GetPosition() + _localPosition;
+	vec3 rot = _parent->GetRotation() + _localRotation;
 
 	front.x = cos(radians(rot.y)) * cos(radians(rot.x));
 	front.y = sin(radians(rot.x));

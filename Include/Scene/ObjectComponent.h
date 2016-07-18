@@ -60,16 +60,19 @@ public:
 	ENGINE_API ObjectComponent(ComponentInitializer *initializer);
 
 	ENGINE_API virtual class Object *GetParent() noexcept { return _parent; }
+	ENGINE_API virtual glm::vec3 &GetLocalPosition() noexcept { return _localPosition; }
+	ENGINE_API virtual glm::vec3 &GetLocalRotation() noexcept { return _localRotation; }
+	ENGINE_API virtual glm::vec3 &GetLocalScale() noexcept { return _localScale; }
 	ENGINE_API virtual glm::vec3 &GetPosition() noexcept { return _position; }
 	ENGINE_API virtual glm::vec3 &GetRotation() noexcept { return _rotation; }
 	ENGINE_API virtual glm::vec3 &GetScale() noexcept { return _scale; }
 	
 	ENGINE_API virtual void SetParent(class Object *obj) { _parent = obj; }
-	ENGINE_API virtual void SetPosition(glm::vec3& position) noexcept;
-	ENGINE_API virtual void SetRotation(glm::vec3& rotation) noexcept;
-	ENGINE_API virtual void SetScale(glm::vec3& scale) noexcept;
+	ENGINE_API virtual void SetLocalPosition(glm::vec3& position) noexcept;
+	ENGINE_API virtual void SetLocalRotation(glm::vec3& rotation) noexcept;
+	ENGINE_API virtual void SetLocalScale(glm::vec3& scale) noexcept;
 
-	ENGINE_API virtual void UpdatePosition() noexcept { }
+	ENGINE_API virtual void UpdatePosition() noexcept;
 
 	ENGINE_API virtual int Load() { return ENGINE_OK; }
 	ENGINE_API virtual int InitializeComponent() { return ENGINE_OK; }
@@ -83,5 +86,6 @@ public:
 
 protected:
 	class Object* _parent;
+	glm::vec3 _localPosition, _localRotation, _localScale;
 	glm::vec3 _position, _rotation, _scale;
 };

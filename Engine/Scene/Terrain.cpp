@@ -220,6 +220,8 @@ void Terrain::Update(double deltaTime) noexcept
 
 	if (modified)
 		((StaticMeshComponent*)GetComponent("Mesh"))->GetMesh()->UpdateVertices(_terrainVertices);
+
+	lastCamPos = camPos;
 }
 
 Terrain::~Terrain() noexcept
