@@ -282,7 +282,10 @@ void Object::Unload() noexcept
 	delete _objectUbo;
 	
 	for(pair<string, ObjectComponent*> kvp : _components)
+	{
 		kvp.second->Unload();
+		delete kvp.second;
+	}
 	_components.clear();
 
 	_loaded = false;

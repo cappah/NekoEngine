@@ -56,21 +56,26 @@ using namespace glm;
 SkeletalMesh::SkeletalMesh(MeshResource *res) noexcept :
 	StaticMesh(res)
 {
+	_skel = nullptr;
+
 	if(res->meshType != MeshType::Skeletal)
 	{ DIE("Attempt to load static mesh as skeletal !"); }
 }
 
-Skeleton *SkeletalMesh::CreateSkeleton()
+Skeleton *SkeletalMesh::GetSkeleton()
 {
-	Skeleton *skel = new Skeleton(_bones, _nodes, _globalInverseTransform);
-	
-	if(skel->Load() != ENGINE_OK)
+	if(!_skel)
 	{
-		Logger::Log(SK_MESH_MODULE, LOG_CRITICAL, "Failed to load skeleton for mesh id=%s", _resourceInfo->name.c_str());
-		return nullptr;
-	}
+		_skel = new Skeleton(_bones, _nodes, _globalInverseTransform);
 	
-	return skel;
+		if(_skel->Load() != ENGINE_OK)
+		{
+			Logger::Log(SK_MESH_MODULE, LOG_CRITICAL, "Failed to load skeleton for mesh id=%s", _resourceInfo->name.c_str());
+			return nullptr;
+		}
+	}
+
+	return _skel;
 }
 
 int SkeletalMesh::Load()
@@ -102,5 +107,5 @@ void SkeletalMesh::Draw(Renderer* r, size_t group)
 
 SkeletalMesh::~SkeletalMesh() noexcept
 {
-	
+	delete _skel;
 }

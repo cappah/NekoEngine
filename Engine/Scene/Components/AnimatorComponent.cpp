@@ -79,7 +79,7 @@ int AnimatorComponent::Load()
 	if(!mesh)
 		return ENGINE_INVALID_ARGS;
 	
-	_skeleton = mesh->CreateSkeleton();
+	_skeleton = mesh->GetSkeleton();
 	if(!_skeleton)
 		return ENGINE_FAIL;
 	

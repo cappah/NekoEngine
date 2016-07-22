@@ -151,5 +151,4 @@ void SkeletalMeshComponent::Unload()
 SkeletalMeshComponent::~SkeletalMeshComponent()
 {
 	Unload();
-
 }

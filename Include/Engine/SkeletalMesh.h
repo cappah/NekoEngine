@@ -53,7 +53,7 @@ class SkeletalMesh : public StaticMesh
 public:
 	ENGINE_API SkeletalMesh(MeshResource *res) noexcept;
 	
-	ENGINE_API Skeleton *CreateSkeleton();
+	ENGINE_API Skeleton *GetSkeleton();
 	
 	ENGINE_API virtual int Load() override;
 	ENGINE_API virtual void Draw(Renderer* r, size_t group) override;
@@ -64,4 +64,5 @@ private:
 	glm::dmat4 _globalInverseTransform;
 	vector<Bone> _bones;
 	vector<TransformNode> _nodes;
+	Skeleton *_skel;
 };

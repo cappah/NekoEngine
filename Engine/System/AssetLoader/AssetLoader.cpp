@@ -528,6 +528,7 @@ int AssetLoader::LoadOGG(string &file, ALenum *format, unsigned char **data, ALs
 	*size = (int)dataUsed;
 
 	f->Close();
+	free(buff);
 
 	return ENGINE_OK;
 }

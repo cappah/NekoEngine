@@ -176,6 +176,10 @@ int Material::Load()
 				_materialInfo.Bloom = 1.f;
 			if (strstr(lineBuff, "nodiscard"))
 				_materialInfo.NoDiscard = 1.f;
+
+			for(char *p : split)
+				free(p);
+
 			continue;
 		}
 
@@ -218,7 +222,11 @@ int Material::Load()
 			_LoadTexture(split[1], &id, &minFilter, &magFilter, &wrapS, &wrapT);
 
 			if (id == -1)
+			{
+				for(char *p : split)
+					free(p);
 				continue;
+			}
 
 			_textureIds.push_back(id);
 			_textureParams.push_back(

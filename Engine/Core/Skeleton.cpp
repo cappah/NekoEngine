@@ -296,5 +296,5 @@ void Skeleton::_TransformHierarchy(double time, const TransformNode *node, dmat4
 
 Skeleton::~Skeleton() noexcept
 {
-	//
+	delete _buffer;
 }

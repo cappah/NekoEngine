@@ -228,7 +228,7 @@ void StaticMeshComponent::Unload()
 	_materials.clear();
 	_materialIds.clear();
 
-	if (_mesh != nullptr)
+	if (_mesh)
 	{
 		if (_mesh->GetResourceInfo() != nullptr)
 			ResourceManager::UnloadResource(_mesh->GetResourceInfo()->id,
