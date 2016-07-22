@@ -233,6 +233,5 @@ void GLRenderer::SwapBuffers()
 
 void GLRenderer::_DestroyContext()
 {
-	glXMakeCurrent(NULL, 0, 0);
 	glXDestroyContext(_dc, _ctx);
 }
