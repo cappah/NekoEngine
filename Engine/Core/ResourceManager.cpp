@@ -293,6 +293,13 @@ int ResourceManager::UnloadResource(int id, ResourceType type) noexcept
 	return ENGINE_OK;
 }
 
+int ResourceManager::UnloadResourceByName(const char *name, ResourceType type) noexcept
+{
+	int id = GetResourceID(name, type);
+
+	return UnloadResource(id, type);
+}
+
 int ResourceManager::GetResourceID(const char* name, ResourceType type)
 {
 	if (name == nullptr)

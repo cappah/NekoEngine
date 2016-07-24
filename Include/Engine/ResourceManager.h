@@ -69,6 +69,7 @@ public:
 	ENGINE_API static Resource* GetResourceByName(const char* name, ResourceType type);
 	ENGINE_API static int GetResourceID(const char* name, ResourceType type);
 	ENGINE_API static int UnloadResource(int id, ResourceType type) noexcept;
+	ENGINE_API static int UnloadResourceByName(const char* name, ResourceType type) noexcept;
 
 	ENGINE_API static size_t LoadedStaticMeshes() noexcept { return _loadedResources[ResourceType::RES_STATIC_MESH]; }
 	ENGINE_API static size_t LoadedSkeletalMeshes() noexcept { return _loadedResources[ResourceType::RES_SKELETAL_MESH]; }
