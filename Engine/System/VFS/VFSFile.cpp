@@ -219,9 +219,9 @@ char *VFSFile::Gets(char *str, int num)
 		else
 			return nullptr;
 	}
-	else if (_type == FileType::Packed)
+	else
 	{
-		char c, *ptr = nullptr;
+		char c = 0x0, *ptr = nullptr;
 
 		for (ptr = str, num--; num > 0; num--)
 		{
@@ -312,7 +312,7 @@ bool VFSFile::EoF()
 		else
 			return true;
 	}
-	else if (_type == FileType::Packed)
+	else
 	{
 		uint64_t size = _compressed ? (_decompressing ? _header.size : _uncompressedSize) : _header.size;
 		return (_offset == size);
@@ -368,7 +368,7 @@ int VFSFile::_Decompress()
 
 	do
 	{
-		zstm.avail_in = Read(in_buff, 1, VFS_FILE_DECOMPRESS_BUFF_SIZE);
+		zstm.avail_in = (uint)Read(in_buff, 1, VFS_FILE_DECOMPRESS_BUFF_SIZE);
 		zstm.next_in = in_buff;
 
 		if (zstm.avail_in == 0)
@@ -403,6 +403,7 @@ int VFSFile::_Decompress()
 
 				if (!_fileData)
 				{
+                    free(temp);
 					Logger::Log(VFS_FILE_MODULE, LOG_CRITICAL, "reallocarray() failed");
 					ret = ENGINE_OUT_OF_RESOURCES;
 					goto exit;

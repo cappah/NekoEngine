@@ -42,6 +42,7 @@
 #include <string>
 #include <vector>
 #include <stdint.h>
+#include <stdlib.h>
 
 #include <System/VFS/VFSFile.h>
 

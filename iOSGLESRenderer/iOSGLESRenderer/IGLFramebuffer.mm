@@ -90,7 +90,7 @@ void IGLFramebuffer::Resize(int width, int height)
 	_height = height;
 	
 	GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, _id));
-	for (GLFramebufferAttachmentInfo &info : _attachmentInfo)
+	for (IGLFramebufferAttachmentInfo &info : _attachmentInfo)
 	{
 		if (info.tex->GetWidth() != width || info.tex->GetHeight() != height)
 			info.tex->Resize2D(width, height);
@@ -128,14 +128,14 @@ void IGLFramebuffer::AttachDepthTexture(class RTexture* texture)
 {
 	GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, _id));
 	GL_CHECK(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, ((IGLTexture *)texture)->GetId(), 0));
-	_attachmentInfo.push_back({ GL_Attachments[(int)attachment], IGLTexture *)texture });
+	_attachmentInfo.push_back({ GL_DEPTH_ATTACHMENT, (IGLTexture *)texture });
 }
 
 void IGLFramebuffer::AttachDepthStencilTexture(class RTexture* texture)
 {
 	GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, _id));
 	GL_CHECK(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, ((IGLTexture *)texture)->GetId(), 0));
-	_attachmentInfo.push_back({ GL_Attachments[(int)attachment], (IGLTexture *)texture });
+	_attachmentInfo.push_back({ GL_DEPTH_STENCIL_ATTACHMENT, (IGLTexture *)texture });
 }
 
 void IGLFramebuffer::CreateDepthBuffer()

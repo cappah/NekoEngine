@@ -90,7 +90,7 @@ private:
 	class VFSArchive *_archive;
 	bool _compressed;
 	uint8_t *_fileData;
-	uint32_t _uncompressedSize;
+	uint64_t _uncompressedSize;
 	bool _decompressing;
 
 	int _Decompress();

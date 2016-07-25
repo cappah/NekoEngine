@@ -199,7 +199,7 @@ void IGLBuffer::NextBuffer()
 
 void IGLBuffer::BindUniform(int index, uint64_t offset, uint64_t size)
 {
-    GL_CHECK(glBindBufferRange(_target, index, _id, offset, size));
+    GL_CHECK(glBindBufferRange(_target, index, _id, (GLintptr)offset, (GLintptr)size));
 }
 
 IGLBuffer::~IGLBuffer()

@@ -116,7 +116,7 @@ int Texture::Load()
 		return ENGINE_FAIL;
 	}
 	
-	uint8_t *mem = (uint8_t*)calloc(size, sizeof(uint8_t));
+	uint8_t *mem = (uint8_t*)calloc((size_t)size, sizeof(uint8_t));
 	if(file->Read(mem, sizeof(uint8_t), size) == 0)
 	{
 		file->Close();
@@ -131,7 +131,7 @@ int Texture::Load()
 		return ENGINE_OUT_OF_RESOURCES;
 	}
 
-	if (!_texture->LoadFromMemory(format, mem, size))
+	if (!_texture->LoadFromMemory(format, mem, (size_t)size))
 	{
 		file->Close();
 		free(mem);
