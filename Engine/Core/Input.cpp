@@ -52,8 +52,9 @@ unordered_map<std::string, uint8_t> Input::_buttonMap;
 unordered_map<std::string, uint8_t> Input::_axisMap;
 int Input::_connectedControllers = 0;
 ControllerState Input::_controllerState[NE_MAX_CONTROLLERS];
+bool Input::_captureMouse = false;
 
-int Input::Initialize()
+int Input::Initialize(bool captureMouse)
 {
 	_InitializeKeymap();
 
@@ -61,6 +62,8 @@ int Input::Initialize()
 	_screenHalfHeight = (float)Engine::GetScreenHeight() / 2.f;
 
 	_connectedControllers = _GetControllerCount();
+
+	_captureMouse = captureMouse;
 
 	return ENGINE_OK;
 }
@@ -127,7 +130,7 @@ void Input::Update() noexcept
 	long x = 0, y = 0;
 	float xDelta = 0.f, yDelta = 0.f;
 
-	if (Platform::GetPointerPosition(x, y))
+	if (_captureMouse && Platform::GetPointerPosition(x, y))
 	{
 		xDelta = _screenHalfWidth - x;
 		yDelta = _screenHalfHeight - y;

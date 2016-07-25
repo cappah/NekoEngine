@@ -475,7 +475,7 @@ bool Engine::_InitRenderer()
 
 bool Engine::_InitSystem()
 {
-	if (Input::Initialize() != ENGINE_OK)
+	if (Input::Initialize(!_graphicsDebug) != ENGINE_OK)
 	{
 		Logger::Log(ENGINE_MODULE, LOG_CRITICAL, "Failed to initialize the input manager");
 		return false;

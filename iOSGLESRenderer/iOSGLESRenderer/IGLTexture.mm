@@ -519,12 +519,14 @@ void IGLTexture::SetWrapR(TextureWrap wrap)
 void IGLTexture::Resize1D(int width)
 {
     _Destroy();
+	GL_CHECK(glGenTextures(1, &_id));
     SetStorage1D(_mipLevels, _sizedFormat, width);
 }
 
 void IGLTexture::Resize2D(int width, int height)
 {
     _Destroy();
+	GL_CHECK(glGenTextures(1, &_id));
     
     if (_type == TextureType::Tex2D)
         SetStorage2D(_mipLevels, _sizedFormat, width, height);
@@ -535,12 +537,14 @@ void IGLTexture::Resize2D(int width, int height)
 void IGLTexture::Resize3D(int width, int height, int depth)
 {
     _Destroy();
+	GL_CHECK(glGenTextures(1, &_id));
     SetStorage3D(_mipLevels, _sizedFormat, width, height, depth);
 }
 
 void IGLTexture::ResizeCubemap(int width, int height)
 {
     _Destroy();
+	GL_CHECK(glGenTextures(1, &_id));
     SetStorageCube(_mipLevels, _sizedFormat, width, height);
 }
 

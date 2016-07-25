@@ -98,11 +98,12 @@ void GLFramebuffer::Resize(int width, int height)
 	_width = width;
 	_height = height;
 
-	for (size_t i = 0; i < _colorTextures.size(); i++)
+	for (GLFramebufferAttachmentInfo &info : _attachmentInfo)
 	{
-		GLTexture *tex = _colorTextures[i];
-		tex->Resize2D(width, height);
-		AttachTexture((DrawAttachment)(i + 1), tex);
+		if(info.tex->GetWidth() != width || info.tex->GetHeight() != height)
+			info.tex->Resize2D(width, height);
+
+		GL_CHECK(glNamedFramebufferTexture(_id, info.attachment, info.tex->GetId(), 0));
 	}
 
 	if (_rbos[RBO_DEPTH] != 0)
@@ -127,16 +128,19 @@ void GLFramebuffer::Resize(int width, int height)
 void GLFramebuffer::AttachTexture(DrawAttachment attachment, class RTexture* texture)
 {
 	GL_CHECK(glNamedFramebufferTexture(_id, GL_Attachments[(int)attachment], ((GLTexture *)texture)->GetId(), 0));
+	_attachmentInfo.push_back({ GL_Attachments[(int)attachment], (GLTexture *)texture });
 }
 
 void GLFramebuffer::AttachDepthTexture(class RTexture* texture)
 {
 	GL_CHECK(glNamedFramebufferTexture(_id, GL_DEPTH_ATTACHMENT, ((GLTexture *)texture)->GetId(), 0));
+	_attachmentInfo.push_back({ GL_DEPTH_ATTACHMENT, (GLTexture *)texture });
 }
 
 void GLFramebuffer::AttachDepthStencilTexture(class RTexture* texture)
 {
 	GL_CHECK(glNamedFramebufferTexture(_id, GL_DEPTH_STENCIL_ATTACHMENT, ((GLTexture *)texture)->GetId(), 0));
+	_attachmentInfo.push_back({ GL_DEPTH_STENCIL_ATTACHMENT, (GLTexture *)texture });
 }
 
 void GLFramebuffer::CreateDepthBuffer()
@@ -281,22 +285,59 @@ GLFramebuffer_NoDSA::GLFramebuffer_NoDSA(int width, int height)
 	GL_CHECK(glGenFramebuffers(1, &_id));
 }
 
+void GLFramebuffer_NoDSA::Resize(int width, int height)
+{
+	_width = width;
+	_height = height;
+
+	GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, _id));
+	for (GLFramebufferAttachmentInfo &info : _attachmentInfo)
+	{
+		if (info.tex->GetWidth() != width || info.tex->GetHeight() != height)
+			info.tex->Resize2D(width, height);
+		
+		GL_CHECK(glFramebufferTexture(GL_FRAMEBUFFER, info.attachment, info.tex->GetId(), 0));
+	}
+
+	if (_rbos[RBO_DEPTH] != 0)
+	{
+		GL_CHECK(glDeleteBuffers(1, &_rbos[RBO_DEPTH]));
+		CreateDepthBuffer();
+	}
+
+	if (_rbos[RBO_STENCIL] != 0)
+	{
+		GL_CHECK(glDeleteBuffers(1, &_rbos[RBO_STENCIL]));
+		CreateStencilBuffer();
+	}
+
+	if (_rbos[RBO_DEPTH_STENCIL] != 0)
+	{
+		GL_CHECK(glDeleteBuffers(1, &_rbos[RBO_DEPTH_STENCIL]));
+		CreateDepthStencilBuffer();
+	}
+}
+
+
 void GLFramebuffer_NoDSA::AttachTexture(DrawAttachment attachment, class RTexture* texture)
 {
 	GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, _id));
 	GL_CHECK(glFramebufferTexture(GL_FRAMEBUFFER, GL_Attachments[(int)attachment], ((GLTexture *)texture)->GetId(), 0));
+	_attachmentInfo.push_back({ GL_Attachments[(int)attachment], (GLTexture *)texture });
 }
 
 void GLFramebuffer_NoDSA::AttachDepthTexture(class RTexture* texture)
 {
 	GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, _id));
 	GL_CHECK(glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, ((GLTexture *)texture)->GetId(), 0));
+	_attachmentInfo.push_back({ GL_DEPTH_ATTACHMENT, (GLTexture *)texture });
 }
 
 void GLFramebuffer_NoDSA::AttachDepthStencilTexture(class RTexture* texture)
 {
 	GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, _id));
 	GL_CHECK(glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, ((GLTexture *)texture)->GetId(), 0));
+	_attachmentInfo.push_back({ GL_DEPTH_STENCIL_ATTACHMENT, (GLTexture *)texture });
 }
 
 void GLFramebuffer_NoDSA::CreateDepthBuffer()

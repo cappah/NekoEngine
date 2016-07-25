@@ -494,29 +494,38 @@ void GLTexture::SetWrapR(TextureWrap wrap)
 void GLTexture::Resize1D(int width)
 {
 	_Destroy();
+	GL_CHECK(glCreateTextures(GL_TexTarget[(int)_type], 1, &_id));
 	SetStorage1D(_mipLevels, _sizedFormat, width);
+	MakeResident();
 }
 
 void GLTexture::Resize2D(int width, int height)
 {
 	_Destroy();
+	GL_CHECK(glCreateTextures(GL_TexTarget[(int)_type], 1, &_id));
 
 	if (_type == TextureType::Tex2D)
 		SetStorage2D(_mipLevels, _sizedFormat, width, height);
 	else
 		SetStorage2DMS(_samples, width, height, _sizedFormat, _fixedLocations);
+
+	MakeResident();
 }
 
 void GLTexture::Resize3D(int width, int height, int depth)
 {
 	_Destroy();
+	GL_CHECK(glCreateTextures(GL_TexTarget[(int)_type], 1, &_id));
 	SetStorage3D(_mipLevels, _sizedFormat, width, height, depth);
+	MakeResident();
 }
 
 void GLTexture::ResizeCubemap(int width, int height)
 {
 	_Destroy();
+	GL_CHECK(glCreateTextures(GL_TexTarget[(int)_type], 1, &_id));
 	SetStorageCube(_mipLevels, _sizedFormat, width, height);
+	MakeResident();
 }
 
 void GLTexture::GenerateMipmaps()
@@ -664,12 +673,14 @@ void GLTexture_NoDSA::SetWrapR(TextureWrap wrap)
 void GLTexture_NoDSA::Resize1D(int width)
 {
 	_Destroy();
+	GL_CHECK(glGenTextures(1, &_id));
 	SetStorage1D(_mipLevels, _sizedFormat, width);
 }
 
 void GLTexture_NoDSA::Resize2D(int width, int height)
 {
 	_Destroy();
+	GL_CHECK(glGenTextures(1, &_id));
 
 	if (_type == TextureType::Tex2D)
 		SetStorage2D(_mipLevels, _sizedFormat, width, height);
@@ -680,12 +691,14 @@ void GLTexture_NoDSA::Resize2D(int width, int height)
 void GLTexture_NoDSA::Resize3D(int width, int height, int depth)
 {
 	_Destroy();
+	GL_CHECK(glGenTextures(1, &_id));
 	SetStorage3D(_mipLevels, _sizedFormat, width, height, depth);
 }
 
 void GLTexture_NoDSA::ResizeCubemap(int width, int height)
 {
 	_Destroy();
+	GL_CHECK(glGenTextures(1, &_id));
 	SetStorageCube(_mipLevels, _sizedFormat, width, height);
 }
 

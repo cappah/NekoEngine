@@ -48,6 +48,12 @@
 #include <OpenGLES/ES3/gl.h>
 #include <vector>
 
+typedef struct IGL_FRAMEBUFFER_ATTACHMENT_INFO
+{
+	GLenum attachment;
+	class IGLTexture *tex;
+} IGLFramebufferAttachmentInfo;
+
 class IGLFramebuffer : public RFramebuffer
 {
 public:
@@ -86,7 +92,7 @@ public:
 private:
     GLuint _id;
     GLenum _lastTarget;
-    std::vector<class IGLTexture *> _colorTextures;
+	std::vector<IGLFramebufferAttachmentInfo> _attachmentInfo;
     GLuint _rbos[3];
 };
 

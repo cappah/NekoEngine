@@ -54,6 +54,12 @@
 #define RBO_STENCIL			1
 #define RBO_DEPTH_STENCIL	2
 
+typedef struct GL_FRAMEBUFFER_ATTACHMENT_INFO
+{
+	GLenum attachment;
+	class GLTexture *tex;
+} GLFramebufferAttachmentInfo;
+
 class GLFramebuffer :
 	public RFramebuffer
 {
@@ -93,7 +99,7 @@ public:
 protected:
 	GLuint _id;
 	GLenum _lastTarget;
-	std::vector<class GLTexture *> _colorTextures;
+	std::vector<GLFramebufferAttachmentInfo> _attachmentInfo;
 	GLuint _rbos[3];
 };
 
@@ -102,6 +108,8 @@ class GLFramebuffer_NoDSA :
 {
 public:
 	GLFramebuffer_NoDSA(int width, int height);
+
+	virtual void Resize(int width, int height) override;
 	
 	virtual void AttachTexture(DrawAttachment attachment, class RTexture* texture) override;
 	virtual void AttachDepthTexture(class RTexture* texture) override;

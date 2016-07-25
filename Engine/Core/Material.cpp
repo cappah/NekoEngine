@@ -39,8 +39,6 @@
 
 #define ENGINE_INTERNAL
 
-#include <zlib.h>
-
 #include <Engine/Engine.h>
 #include <Engine/Material.h>
 #include <Engine/ResourceManager.h>

@@ -45,7 +45,7 @@
 #include <Engine/AnimationClip.h>
 #include <System/AssetLoader/AssetLoader.h>
 
-#define AC_MODULE	"AnimationClip"
+#define AC_MODULE		"AnimationClip"
 #define AC_LINE_BUFF	1024
 
 using namespace std;

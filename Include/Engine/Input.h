@@ -94,7 +94,7 @@ typedef struct CTRL_STATE
 class Input
 {
 public:
-	static int Initialize();
+	static int Initialize(bool captureMouse);
 
 	ENGINE_API static void AddButtonMapping(std::string map, uint8_t button) { _buttonMap.insert(std::make_pair(map, button)); }
 	ENGINE_API static void AddAxisMapping(std::string map, uint8_t axis) { _axisMap.insert(std::make_pair(map, axis)); }
@@ -130,6 +130,7 @@ private:
 	static std::unordered_map<std::string, uint8_t> _buttonMap;
 	static std::unordered_map<std::string, uint8_t> _axisMap;
 	static int _connectedControllers;
+	static bool _captureMouse;
 	
 #ifdef ENGINE_INTERNAL
 	static ControllerState _controllerState[NE_MAX_CONTROLLERS];
