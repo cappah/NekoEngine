@@ -411,13 +411,13 @@ int VFSFile::_Decompress()
 			}
 
 			memmove(_fileData + dataWritten, out_buff, dataSize);
-			dataWritten += dataSize;
-			_fileData[dataWritten - 1] = 0x0;
+            dataWritten += dataSize;
 		}
 		while (zstm.avail_out == 0);
 	}
 	while (zret != Z_STREAM_END);
-
+    
+	_fileData[dataWritten] = 0x0;
 	_uncompressedSize = dataWritten;
 
 	ret = ENGINE_OK;

@@ -547,15 +547,16 @@ void Scene::DrawSkybox() noexcept
 
 void Scene::Update(double deltaTime) noexcept
 {
-	if(_terrain)
+	if(_terrain && (!Engine::IsPaused() || _terrain->GetUpdateWhilePaused()))
 		_terrain->Update(deltaTime);
 	
-	if(_skybox)
+	if(_skybox && (!Engine::IsPaused() || _skybox->GetUpdateWhilePaused()))
 		_skybox->Update(deltaTime);
 
 	//#pragma omp parallel for
 	for (size_t i = 0; i < _objects.size(); i++)
-		_objects[i]->Update(deltaTime);
+		if(!Engine::IsPaused() || _objects[i]->GetUpdateWhilePaused())
+			_objects[i]->Update(deltaTime);
 
 	//#pragma omp parallel for
 	for (size_t i = 0; i < _lights.size(); i++)

@@ -244,6 +244,9 @@ public:
 	 */
 	static int Run();
 
+	static void Pause(bool pause);
+	static bool IsPaused() { return _paused; }
+	
 	/**
 	 * Run one frame
 	 */
@@ -314,6 +317,7 @@ private:
 	static TextureFont *_engineFont;
 	static GameModule *_gameModule;
 	static Renderer *_renderer;
+	static bool _paused;
 
 #ifdef ENGINE_INTERNAL
 	static int _nFrames;

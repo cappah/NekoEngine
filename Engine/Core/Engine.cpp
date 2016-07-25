@@ -122,6 +122,7 @@ Renderer* Engine::_renderer = nullptr;
 PlatformModuleType Engine::_rendererLibrary = nullptr;
 bool Engine::_haveMemoryInfo = false;
 bool Engine::_startup = true;
+bool Engine::_paused = false;
 static bool iniFileLoaded = false;
 static unordered_map<string, string> _rendererArguments;
 static char _vfsArchiveList[VFS_ARCHIVE_LIST_SIZE];
@@ -717,6 +718,13 @@ int Engine::Run()
 	return Platform::MainLoop();
 }
 
+void Engine::Pause(bool pause)
+{
+	_paused = pause;
+	
+	// TODO: let objects know the game was paused
+}
+
 void Engine::DrawString(vec2 pos, vec3 color, string text) noexcept
 {
 	_engineFont->Draw(text, pos, color);
@@ -748,7 +756,21 @@ void Engine::Frame() noexcept
 		lastTime = curTime;
 	}
 
-	Draw();
+	if(!_paused) Draw();
+		
+	if (_engineFont)
+	{
+		if (_printStats)
+			_PrintStats();
+			
+			_engineFont->Render();
+			}
+	
+	_renderer->SwapBuffers();
+	
+#ifdef _DEBUG
+	Logger::Flush();
+#endif
 
 	/*else VSYNC ?
 	{
@@ -798,20 +820,6 @@ void Engine::Draw() noexcept
 
 	_renderer->EnableFaceCulling(false);
 	_renderer->EnableDepthTest(false);
-
-	if (_engineFont)
-	{
-		if (_printStats)
-			_PrintStats();
-
-		_engineFont->Render();
-	}
-
-	_renderer->SwapBuffers();
-
-#ifdef _DEBUG
-	Logger::Flush();
-#endif
 }
 
 void Engine::Update(double deltaTime) noexcept

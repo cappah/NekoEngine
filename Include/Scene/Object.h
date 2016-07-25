@@ -97,6 +97,7 @@ public:
 	ENGINE_API Object(ObjectInitializer *initializer) noexcept;
 	 
 	ENGINE_API int GetId() noexcept { return _id; }
+	ENGINE_API bool GetUpdateWhilePaused() noexcept { return _updateWhilePaused; }
 
 	ENGINE_API void SetId(int id) noexcept { _id = id; }
 	ENGINE_API void SetPosition(glm::vec3& position) noexcept;
@@ -104,6 +105,7 @@ public:
 	ENGINE_API void SetScale(glm::vec3& scale) noexcept;
 	ENGINE_API void SetColor(glm::vec3& color) noexcept { _objectBlock.ObjectColor = color; }
 	ENGINE_API void SetForwardDirection(ForwardDirection dir) noexcept;
+	ENGINE_API void SetUpdateWhilePaused(bool update) { _updateWhilePaused = update; }
 
 	ENGINE_API void LookAt(glm::vec3& point) noexcept;
 	ENGINE_API void MoveForward(float distance) noexcept;
@@ -140,6 +142,7 @@ protected:
 	RBuffer *_objectUbo;
 	ObjectBlock _objectBlock;
 	glm::mat4 _translationMatrix, _scaleMatrix, _rotationMatrix, _modelMatrix;
+	bool _updateWhilePaused;
 
 	void _UpdateModelMatrix() noexcept { _modelMatrix = (_translationMatrix * _rotationMatrix) * _scaleMatrix; for(pair<std::string, ObjectComponent *> kvp : _components) kvp.second->UpdatePosition(); }
 };
