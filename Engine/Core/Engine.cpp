@@ -86,6 +86,8 @@
 #define OGL_CTX_REQ_MAJOR	4
 #define OGL_CTX_REQ_MINOR	5
 
+#define VFS_ARCHIVE_LIST_SIZE	4096
+
 #define ENGINE_MODULE "Engine"
 
 using namespace std;
@@ -122,6 +124,7 @@ bool Engine::_haveMemoryInfo = false;
 bool Engine::_startup = true;
 static bool iniFileLoaded = false;
 static unordered_map<string, string> _rendererArguments;
+static char _vfsArchiveList[VFS_ARCHIVE_LIST_SIZE];
 
 ObjectClassMapType *EngineClassFactory::_objectClassMap = nullptr;
 ComponentClassMapType *EngineClassFactory::_componentClassMap = nullptr;
@@ -348,6 +351,9 @@ void Engine::_ReadINIFile(const char *file)
 		{ DIE("Failed to load configuration"); }
 		memset(buff, 0x0, INI_BUFF_SZ);
 	}
+
+	memset(_vfsArchiveList, 0x0, VFS_ARCHIVE_LIST_SIZE);
+	Platform::GetConfigString("Engine", "sArchiveFiles", "", _vfsArchiveList, VFS_ARCHIVE_LIST_SIZE, file);
 	
 	_config.Engine.ScreenWidth = (int)Platform::GetConfigInt("Engine", "iWidth", 1280, file);
 	_config.Engine.ScreenHeight = (int)Platform::GetConfigInt("Engine", "iHeight", 720, file);
@@ -485,6 +491,18 @@ bool Engine::_InitSystem()
 	{
 		Logger::Log(ENGINE_MODULE, LOG_CRITICAL, "Failed to initialize the virtual file system");
 		return false;
+	}
+
+	vector<char*> vfsArchives = EngineUtils::SplitString(_vfsArchiveList, ';');
+
+	for (const char *archive : vfsArchives)
+	{
+		char buff[VFS_MAX_FILE_NAME];
+		memset(buff, 0x0, VFS_MAX_FILE_NAME);
+		if (snprintf(buff, VFS_MAX_FILE_NAME, "%s/%s", Engine::GetConfiguration().Engine.DataDirectory, archive) >= VFS_MAX_FILE_NAME)
+			return false;
+
+		VFS::LoadArchive(buff);
 	}
 	
 	if (ResourceManager::Initialize() != ENGINE_OK)

@@ -133,7 +133,7 @@ int VFS::Initialize()
 	return ENGINE_OK;
 }
 
-int VFS::LoadArchive(string &path)
+int VFS::LoadArchive(string path)
 {
 	int ret = ENGINE_FAIL;
 	VFSArchive *archive = new VFSArchive(path);

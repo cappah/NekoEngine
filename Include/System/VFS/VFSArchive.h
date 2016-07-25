@@ -52,18 +52,24 @@ typedef struct VFS_ARCHIVE_HEADER
 {
 	int32_t magic;
 	int32_t version;
-	uint64_t num_files;
+	uint32_t num_files;
 } VFSArchiveHeader;
 
 class VFSArchive
 {
 public:
-	VFSArchive(std::string& path);
+	VFSArchive(std::string &path);
 	
 	int Load();
 	void Unload();
+
+	int MakeResident();
+	void MakeNonResident() { free(_data); _data = nullptr; }
+	bool IsResident() { return _data ? true : false; }
 	
 	VFSFile* Open(std::string& path);
+
+	uint64_t Read(void *buffer, uint64_t offset, uint64_t size, uint64_t count);
 
 	~VFSArchive();
 
@@ -71,5 +77,8 @@ private:
 	VFSArchiveHeader _header;
 	std::string _path;
 	std::vector<VFSFile> _files;
+	FILE *_fp;
+	uint8_t *_data;
+	uint64_t _dataSize;
 };
 

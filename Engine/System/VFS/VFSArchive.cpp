@@ -49,17 +49,102 @@ using namespace std;
 VFSArchive::VFSArchive(string &path)
 {
 	_path = path;
+	_data = nullptr;
+	_fp = nullptr;
+	_dataSize = 0;
 	memset(&_header, 0x0, sizeof(VFSArchiveHeader));
 }
 
 int VFSArchive::Load()
 {
+	_fp = fopen(_path.c_str(), "rb");
+	if (!_fp)
+		return ENGINE_IO_FAIL;
+
+	if(fread(&_header, sizeof(VFSArchiveHeader), 1, _fp) != 1)
+	{
+		Logger::Log(VFS_AR_MODULE, LOG_CRITICAL, "failed to read archive header from %s", _path.c_str());
+		return ENGINE_IO_FAIL;
+	}
+
+	if(_header.magic != VFS_MAGIC)
+	{
+		Logger::Log(VFS_AR_MODULE, LOG_CRITICAL, "%s is not a NekoEngine archive file", _path.c_str());
+		return ENGINE_IO_FAIL;
+	}
+
+	if(_header.version != VFS_AR_VERSION)
+	{
+		Logger::Log(VFS_AR_MODULE, LOG_CRITICAL, "Archive version missmatch for %s", _path.c_str());
+		return ENGINE_IO_FAIL;
+	}
+
+	_files.reserve(_header.num_files);
+
+	vector<VFSFileHeader> fileHeaders(_header.num_files);
+	if(fread(fileHeaders.data(), sizeof(VFSFileHeader), _header.num_files, _fp) != _header.num_files)
+	{
+		Logger::Log(VFS_AR_MODULE, LOG_CRITICAL, "failed to read archive header from %s", _path.c_str());
+		return ENGINE_IO_FAIL;
+	}
+
+	for (VFSFileHeader &fileHeader : fileHeaders)
+	{
+		VFSFile f(this);
+
+		f.GetHeader().start = fileHeader.start;
+		f.GetHeader().size = fileHeader.size;
+		_dataSize += fileHeader.size;
+
+		if (snprintf(f.GetHeader().name, VFS_MAX_FILE_NAME, "%s", fileHeader.name) >= VFS_MAX_FILE_NAME)
+		{
+			Logger::Log(VFS_AR_MODULE, LOG_CRITICAL, "snprintf() call failed");
+			return ENGINE_FAIL;
+		}
+
+		_files.push_back(f);
+	}
+
 	return ENGINE_OK;
 }
 
 void VFSArchive::Unload()
 {
-	//
+	for (VFSFile &file : _files)
+		file.Close();
+	_files.clear();
+
+	free(_data);
+
+	if (_fp) fclose(_fp);
+}
+
+int VFSArchive::MakeResident()
+{
+	if (_data)
+		return ENGINE_OK;
+
+	if ((_data = (uint8_t *)calloc(1, _dataSize)) == nullptr)
+	{
+		Logger::Log(VFS_AR_MODULE, LOG_CRITICAL, "Failed to allocate memory for the archive");
+		return ENGINE_OUT_OF_RESOURCES;
+	}
+
+	if (fseek(_fp, (long)sizeof(VFSArchiveHeader) + (long)sizeof(VFSFileHeader) * _header.num_files, SEEK_SET))
+	{
+		free(_data);
+		_data = nullptr;
+		return ENGINE_IO_FAIL;
+	}
+
+	if (fread(_data, _dataSize, 1, _fp) != 1)
+	{
+		free(_data);
+		_data = nullptr;
+		return ENGINE_IO_FAIL;
+	}
+
+	return ENGINE_OK;
 }
 
 VFSFile *VFSArchive::Open(string &path)
@@ -79,11 +164,26 @@ VFSFile *VFSArchive::Open(string &path)
 	return nullptr;
 }
 
+uint64_t VFSArchive::Read(void *buffer, uint64_t offset, uint64_t size, uint64_t count)
+{
+	if (_data)
+	{
+		memcpy(buffer, (_data + offset), size * count);
+		return count;
+	}
+
+	// Archive is not resident
+	if(fseek(_fp, (long)sizeof(VFSArchiveHeader) + (long)sizeof(VFSFileHeader) * _header.num_files + (long)offset, SEEK_SET))
+		Logger::Log(VFS_AR_MODULE, LOG_CRITICAL, "Failed to read archive file %s", _path.c_str());
+
+	size_t ret = fread(buffer, size, count, _fp);
+	if (!ret)
+		Logger::Log(VFS_AR_MODULE, LOG_CRITICAL, "Failed to read archive file %s", _path.c_str());
+
+	return ret;
+}
+
 VFSArchive::~VFSArchive()
 {
-	for (VFSFile &file : _files)
-	{
-		if (file.IsOpen())
-			Logger::Log(VFS_AR_MODULE, LOG_WARNING, "Archive closed with open files");
-	}
+	Unload();
 }

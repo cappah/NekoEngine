@@ -44,6 +44,7 @@
 
 #include <Engine/Engine.h>
 #include <System/VFS/VFSFile.h>
+#include <System/VFS/VFSArchive.h>
 
 #define BUFF_SIZE	2048
 #define VFS_FILE_MODULE	"VFS_File"
@@ -56,6 +57,18 @@ VFSFile::VFSFile(FileType type)
 	_fp = nullptr;
 	_gzfp = nullptr;
 	_offset = 0;
+	_archive = nullptr;
+}
+
+VFSFile::VFSFile(VFSArchive *archive)
+{
+	memset(&_header, 0x0, sizeof(VFSFileHeader));
+	_type = FileType::Packed;
+	_references = 0;
+	_fp = nullptr;
+	_gzfp = nullptr;
+	_offset = 0;
+	_archive = archive;
 }
 
 int VFSFile::Open()
@@ -127,14 +140,20 @@ uint64_t VFSFile::Read(void *buffer, uint64_t size, uint64_t count)
 
 			return ret;
 		}
-		else if(_gzfp)
+		else if (_gzfp)
 			return gzread(_gzfp, buffer, (unsigned int)(size * count));
-		else	
+		else
 			return 0;
 	}
 	else
 	{
-	//	memcpy(buffer, (unsigned char*)_header.start + _offset, size * count);
+		if (_offset >= _header.size)
+			return EOF;
+
+		uint64_t read = _archive->Read(buffer, _header.start + _offset, size, count);
+		_offset += read * size;
+
+		return read;
 	}
 
 	return 0;
@@ -151,9 +170,30 @@ char *VFSFile::Gets(char *str, int num)
 		else
 			return nullptr;
 	}
-	else
+	else if (_type == FileType::Packed)
 	{
-		return nullptr;
+		char c, *ptr = nullptr;
+
+		for (ptr = str, num--; num > 0; num--)
+		{
+			if (Read(&c, 1, 1) != 1)
+				return nullptr;
+
+			if (c == EOF)
+				break;
+
+			*ptr++ = c;
+
+			if (c == '\n')
+				break;
+		}
+
+		*ptr = 0x0;
+
+		if (ptr == str || c == EOF)
+			return nullptr;
+
+		return ptr;
 	}
 }
 

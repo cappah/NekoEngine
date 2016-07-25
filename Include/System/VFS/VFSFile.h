@@ -65,7 +65,7 @@ class VFSFile
 
 public:
 	VFSFile(FileType type);
-	VFSFile(FileType type, unsigned char* archive);
+	VFSFile(class VFSArchive *archive);
 
 	VFSFileHeader& GetHeader() { return _header; }
 	FILE* GetNativeHandle() { return _fp; }
@@ -87,6 +87,7 @@ private:
 	FileType _type;
 	unsigned int _references;
 	uint64_t _offset;
+	class VFSArchive *_archive;
 
 	// Only for loose files
 	FILE* _fp;
