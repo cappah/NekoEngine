@@ -8,6 +8,13 @@
 
 /* Begin PBXBuildFile section */
 		120718C01CCFD0BA001A1EEA /* Engine_Low.ini in Resources */ = {isa = PBXBuildFile; fileRef = 120718BF1CCFD0BA001A1EEA /* Engine_Low.ini */; };
+		121976861D469C7400CCDD12 /* core.nar in CopyFiles */ = {isa = PBXBuildFile; fileRef = 121976851D469C7400CCDD12 /* core.nar */; };
+		1219768B1D469CCC00CCDD12 /* resources.db in CopyFiles */ = {isa = PBXBuildFile; fileRef = 121976881D469CCC00CCDD12 /* resources.db */; };
+		1219768C1D469CCC00CCDD12 /* Shaders in CopyFiles */ = {isa = PBXBuildFile; fileRef = 121976891D469CCC00CCDD12 /* Shaders */; };
+		1219768D1D469CCC00CCDD12 /* Sounds in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1219768A1D469CCC00CCDD12 /* Sounds */; };
+		1219768F1D469D3900CCDD12 /* scenes.cfg in Resources */ = {isa = PBXBuildFile; fileRef = 1219768E1D469D3900CCDD12 /* scenes.cfg */; };
+		121976901D469D4400CCDD12 /* scenes.cfg in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1219768E1D469D3900CCDD12 /* scenes.cfg */; };
+		121976921D469D8400CCDD12 /* Engine_Low.ini in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1296BD001CDC1B0700D17488 /* Engine_Low.ini */; };
 		122A3AC01D338B7B0047786A /* ogg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 122A3ABA1D338B340047786A /* ogg.framework */; };
 		122A3AC11D338B7B0047786A /* vorbis.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 122A3ABB1D338B340047786A /* vorbis.framework */; };
 		124A32081CDC267D00472893 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 124A32071CDC267D00472893 /* libz.tbd */; };
@@ -21,7 +28,6 @@
 		1296BC4B1CDC132C00D17488 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1296BC491CDC132C00D17488 /* LaunchScreen.storyboard */; };
 		1296BC551CDC145600D17488 /* libEngine_iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1296BC511CDC132C00D17488 /* libEngine_iOS.a */; };
 		1296BD011CDC1B0700D17488 /* Engine_Low.ini in Resources */ = {isa = PBXBuildFile; fileRef = 1296BD001CDC1B0700D17488 /* Engine_Low.ini */; };
-		1296BD6C1CDC1B7D00D17488 /* Data in Resources */ = {isa = PBXBuildFile; fileRef = 12B748541CC6EFE200825D36 /* Data */; };
 		1296BD871CDC1E1A00D17488 /* libTestGame_iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1296BD861CDC1E1700D17488 /* libTestGame_iOS.a */; };
 		12A15FB61CD4460F00BEDD06 /* libGLRenderer.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 12A15FB31CD445FE00BEDD06 /* libGLRenderer.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		12B748301CC6E7C600825D36 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 12B7482F1CC6E7C600825D36 /* Assets.xcassets */; };
@@ -29,7 +35,6 @@
 		12B7483B1CC6E81B00825D36 /* libEngine.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 127012531CC315FD001840A7 /* libEngine.dylib */; };
 		12B7483D1CC6E97200825D36 /* libEngine.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 127012531CC315FD001840A7 /* libEngine.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		12B748531CC6EA4E00825D36 /* libTestGame.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 12B7484F1CC6EA4000825D36 /* libTestGame.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		12B748551CC6EFE200825D36 /* Data in Resources */ = {isa = PBXBuildFile; fileRef = 12B748541CC6EFE200825D36 /* Data */; };
 		12B748571CC6F52100825D36 /* Engine.ini in Resources */ = {isa = PBXBuildFile; fileRef = 12B748561CC6F52100825D36 /* Engine.ini */; };
 /* End PBXBuildFile section */
 
@@ -121,6 +126,30 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		121976841D469C5D00CCDD12 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Data;
+			dstSubfolderSpec = 7;
+			files = (
+				1219768B1D469CCC00CCDD12 /* resources.db in CopyFiles */,
+				1219768C1D469CCC00CCDD12 /* Shaders in CopyFiles */,
+				1219768D1D469CCC00CCDD12 /* Sounds in CopyFiles */,
+				121976861D469C7400CCDD12 /* core.nar in CopyFiles */,
+				121976901D469D4400CCDD12 /* scenes.cfg in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		121976911D469D7800CCDD12 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 7;
+			files = (
+				121976921D469D8400CCDD12 /* Engine_Low.ini in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		12B7483C1CC6E95500825D36 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -137,6 +166,11 @@
 
 /* Begin PBXFileReference section */
 		120718BF1CCFD0BA001A1EEA /* Engine_Low.ini */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Engine_Low.ini; path = ../../Resources/Engine_Low.ini; sourceTree = "<group>"; };
+		121976851D469C7400CCDD12 /* core.nar */ = {isa = PBXFileReference; lastKnownFileType = file; name = core.nar; path = ../Resources/Data/core.nar; sourceTree = "<group>"; };
+		121976881D469CCC00CCDD12 /* resources.db */ = {isa = PBXFileReference; lastKnownFileType = file; name = resources.db; path = ../Resources/Data/resources.db; sourceTree = "<group>"; };
+		121976891D469CCC00CCDD12 /* Shaders */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Shaders; path = ../Resources/Data/Shaders; sourceTree = "<group>"; };
+		1219768A1D469CCC00CCDD12 /* Sounds */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Sounds; path = ../Resources/Data/Sounds; sourceTree = "<group>"; };
+		1219768E1D469D3900CCDD12 /* scenes.cfg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = scenes.cfg; sourceTree = "<group>"; };
 		122A3ABA1D338B340047786A /* ogg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ogg.framework; path = Frameworks/ogg.framework; sourceTree = "<group>"; };
 		122A3ABB1D338B340047786A /* vorbis.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = vorbis.framework; path = Frameworks/vorbis.framework; sourceTree = "<group>"; };
 		124A32071CDC267D00472893 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/usr/lib/libz.tbd; sourceTree = DEVELOPER_DIR; };
@@ -159,7 +193,6 @@
 		12B7482F1CC6E7C600825D36 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		12B748341CC6E7C600825D36 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		12B7484A1CC6EA4000825D36 /* TestGame.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = TestGame.xcodeproj; path = ../TestGame/TestGame.xcodeproj; sourceTree = "<group>"; };
-		12B748541CC6EFE200825D36 /* Data */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Data; path = ../../Resources/Data; sourceTree = "<group>"; };
 		12B748561CC6F52100825D36 /* Engine.ini */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Engine.ini; path = ../../Resources/Engine.ini; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -191,6 +224,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		121976871D469C8900CCDD12 /* iOS Data */ = {
+			isa = PBXGroup;
+			children = (
+				121976881D469CCC00CCDD12 /* resources.db */,
+				121976891D469CCC00CCDD12 /* Shaders */,
+				1219768A1D469CCC00CCDD12 /* Sounds */,
+				121976851D469C7400CCDD12 /* core.nar */,
+			);
+			name = "iOS Data";
+			sourceTree = "<group>";
+		};
 		124A320D1CDC26AE00472893 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -223,6 +267,7 @@
 				12B748281CC6E7C600825D36 /* Launcher */,
 				1296BC3A1CDC132C00D17488 /* Launcher-iOS */,
 				1270118F1CC312F3001840A7 /* Products */,
+				121976871D469C8900CCDD12 /* iOS Data */,
 			);
 			sourceTree = "<group>";
 		};
@@ -262,6 +307,7 @@
 				1296BC471CDC132C00D17488 /* Assets.xcassets */,
 				1296BC491CDC132C00D17488 /* LaunchScreen.storyboard */,
 				1296BC4C1CDC132C00D17488 /* Info.plist */,
+				1219768E1D469D3900CCDD12 /* scenes.cfg */,
 				1296BC3B1CDC132C00D17488 /* Supporting Files */,
 			);
 			path = "Launcher-iOS";
@@ -288,7 +334,6 @@
 			children = (
 				12B7482F1CC6E7C600825D36 /* Assets.xcassets */,
 				12B748341CC6E7C600825D36 /* Info.plist */,
-				12B748541CC6EFE200825D36 /* Data */,
 				12B748561CC6F52100825D36 /* Engine.ini */,
 				120718BF1CCFD0BA001A1EEA /* Engine_Low.ini */,
 			);
@@ -314,6 +359,8 @@
 				1296BC351CDC132C00D17488 /* Sources */,
 				1296BC361CDC132C00D17488 /* Frameworks */,
 				1296BC371CDC132C00D17488 /* Resources */,
+				121976841D469C5D00CCDD12 /* CopyFiles */,
+				121976911D469D7800CCDD12 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -454,9 +501,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				1296BC4B1CDC132C00D17488 /* LaunchScreen.storyboard in Resources */,
+				1219768F1D469D3900CCDD12 /* scenes.cfg in Resources */,
 				1296BC481CDC132C00D17488 /* Assets.xcassets in Resources */,
 				1296BD011CDC1B0700D17488 /* Engine_Low.ini in Resources */,
-				1296BD6C1CDC1B7D00D17488 /* Data in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -465,7 +512,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				12B748571CC6F52100825D36 /* Engine.ini in Resources */,
-				12B748551CC6EFE200825D36 /* Data in Resources */,
 				12B748301CC6E7C600825D36 /* Assets.xcassets in Resources */,
 				120718C01CCFD0BA001A1EEA /* Engine_Low.ini in Resources */,
 			);

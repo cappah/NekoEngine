@@ -3,7 +3,7 @@
  * FPSControllerComponent.cpp
  * Author: Alexandru Naiman
  *
- * AudioSource component class implementation
+ * FPSControllerComponent component class implementation
  *
  * -----------------------------------------------------------------------------
  *

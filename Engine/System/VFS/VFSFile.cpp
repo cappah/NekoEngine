@@ -368,7 +368,7 @@ int VFSFile::_Decompress()
 
 	do
 	{
-		zstm.avail_in = (uint)Read(in_buff, 1, VFS_FILE_DECOMPRESS_BUFF_SIZE);
+		zstm.avail_in = (uint32_t)Read(in_buff, 1, VFS_FILE_DECOMPRESS_BUFF_SIZE);
 		zstm.next_in = in_buff;
 
 		if (zstm.avail_in == 0)
@@ -412,7 +412,7 @@ int VFSFile::_Decompress()
 
 			memmove(_fileData + dataWritten, out_buff, dataSize);
 			dataWritten += dataSize;
-			_fileData[dataWritten] = 0x0;
+			_fileData[dataWritten - 1] = 0x0;
 		}
 		while (zstm.avail_out == 0);
 	}
