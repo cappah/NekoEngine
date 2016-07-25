@@ -88,6 +88,12 @@ private:
 	unsigned int _references;
 	uint64_t _offset;
 	class VFSArchive *_archive;
+	bool _compressed;
+	uint8_t *_fileData;
+	uint32_t _uncompressedSize;
+	bool _decompressing;
+
+	int _Decompress();
 
 	// Only for loose files
 	FILE* _fp;

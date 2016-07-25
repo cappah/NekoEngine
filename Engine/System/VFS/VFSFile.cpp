@@ -43,11 +43,13 @@
 #include <string.h>
 
 #include <Engine/Engine.h>
+#include <Platform/Compat.h>
 #include <System/VFS/VFSFile.h>
 #include <System/VFS/VFSArchive.h>
 
-#define BUFF_SIZE	2048
-#define VFS_FILE_MODULE	"VFS_File"
+#define BUFF_SIZE						2048
+#define VFS_FILE_DECOMPRESS_BUFF_SIZE	524288
+#define VFS_FILE_MODULE					"VFS_File"
 
 VFSFile::VFSFile(FileType type)
 {
@@ -58,6 +60,10 @@ VFSFile::VFSFile(FileType type)
 	_gzfp = nullptr;
 	_offset = 0;
 	_archive = nullptr;
+	_fileData = nullptr;
+	_compressed = false;
+	_uncompressedSize = 0;
+	_decompressing = false;
 }
 
 VFSFile::VFSFile(VFSArchive *archive)
@@ -69,6 +75,10 @@ VFSFile::VFSFile(VFSArchive *archive)
 	_gzfp = nullptr;
 	_offset = 0;
 	_archive = archive;
+	_fileData = nullptr;
+	_compressed = false;
+	_uncompressedSize = 0;
+	_decompressing = false;
 }
 
 int VFSFile::Open()
@@ -106,6 +116,8 @@ int VFSFile::Open()
 		fclose(_fp);
 		_fp = nullptr;
 
+		_compressed = true;
+
 		_gzfp = gzopen(buff, "rb");
 
 		if (!_gzfp)
@@ -114,6 +126,21 @@ int VFSFile::Open()
 	#if !defined(NE_PLATFORM_OPENBSD) && !defined(NE_PLATFORM_SUNOS)
 		gzbuffer(_gzfp, 131072); // 128 kB buffer
 	#endif
+	}
+	else if(_type == FileType::Packed)
+	{
+		char hdr[2];
+		
+		if (Read(hdr, 1, 2) != 2)
+			return ENGINE_FAIL;
+
+		Seek(0, SEEK_SET);
+
+		if (hdr[0] == 0x1F)
+		{
+			_Decompress();
+			_compressed = true;
+		}
 	}
 
 	_references++;
@@ -145,14 +172,36 @@ uint64_t VFSFile::Read(void *buffer, uint64_t size, uint64_t count)
 		else
 			return 0;
 	}
-	else
+	else if(_type == FileType::Packed)
 	{
-		if (_offset >= _header.size)
-			return EOF;
+		uint64_t read = 0;
+		if (_compressed && !_decompressing)
+		{
+			if (!_fileData)
+				if (_Decompress() != ENGINE_OK)
+					return 0;
 
-		uint64_t read = _archive->Read(buffer, _header.start + _offset, size, count);
+			if (_offset >= _uncompressedSize)
+				return EOF;
+
+			while (_offset + size * count > _uncompressedSize)
+				count--;
+
+			memcpy(buffer, (_fileData + _offset), size * count);
+			read = count;
+		}
+		else
+		{
+			if (_offset >= _header.size)
+				return EOF;
+
+			while (_offset + size * count > _header.size)
+				count--;
+
+			read = _archive->Read(buffer, _header.start + _offset, size, count);
+		}
+
 		_offset += read * size;
-
 		return read;
 	}
 
@@ -263,8 +312,11 @@ bool VFSFile::EoF()
 		else
 			return true;
 	}
-	else
-		return (_offset == _header.size);
+	else if (_type == FileType::Packed)
+	{
+		uint64_t size = _compressed ? (_decompressing ? _header.size : _uncompressedSize) : _header.size;
+		return (_offset == size);
+	}
 }
 
 void VFSFile::Close()
@@ -278,9 +330,111 @@ void VFSFile::Close()
 		else if(_gzfp)
 			gzclose(_gzfp);
 	}
+	else if (!_references)
+	{
+		free(_fileData);
+		_fileData = nullptr;
+	}
 
 	_fp = nullptr;
 	_gzfp = nullptr;
+}
+
+int VFSFile::_Decompress()
+{
+	uint8_t *in_buff = nullptr, *out_buff = nullptr;
+	z_stream zstm = { 0 };
+	size_t dataBuffSize = VFS_FILE_DECOMPRESS_BUFF_SIZE, dataWritten = 0;
+	int ret = ENGINE_FAIL;
+
+	if (_fileData)
+		return ENGINE_OK;
+
+	_decompressing = true;
+	
+	in_buff = (uint8_t *)malloc(VFS_FILE_DECOMPRESS_BUFF_SIZE);
+	out_buff = (uint8_t *)malloc(VFS_FILE_DECOMPRESS_BUFF_SIZE);
+
+	zstm.zalloc = Z_NULL;
+	zstm.zfree = Z_NULL;
+	zstm.opaque = Z_NULL;
+
+	_fileData = (uint8_t *)reallocarray(_fileData, 1, dataBuffSize);
+
+	int zret = -1;
+
+	if ((zret = inflateInit2(&zstm, (15 + 32))) != Z_OK)
+		goto exit;
+
+	do
+	{
+		zstm.avail_in = Read(in_buff, 1, VFS_FILE_DECOMPRESS_BUFF_SIZE);
+		zstm.next_in = in_buff;
+
+		if (zstm.avail_in == 0)
+			break;
+
+		do
+		{
+			memset(out_buff, 0x0, VFS_FILE_DECOMPRESS_BUFF_SIZE);
+
+			zstm.avail_out = VFS_FILE_DECOMPRESS_BUFF_SIZE;
+			zstm.next_out = out_buff;
+
+			zret = inflate(&zstm, Z_NO_FLUSH);
+
+			switch (zret)
+			{
+				case Z_STREAM_ERROR:
+				case Z_NEED_DICT:
+				case Z_DATA_ERROR:
+				case Z_MEM_ERROR:
+					goto exit;					
+			}
+
+			size_t dataSize = (VFS_FILE_DECOMPRESS_BUFF_SIZE - zstm.avail_out);
+
+			if (dataBuffSize < dataWritten + dataSize)
+			{
+				uint8_t *temp = _fileData;
+				dataBuffSize += VFS_FILE_DECOMPRESS_BUFF_SIZE;
+
+				_fileData = (uint8_t *)reallocarray(_fileData, 1, dataBuffSize);
+
+				if (!_fileData)
+				{
+					Logger::Log(VFS_FILE_MODULE, LOG_CRITICAL, "reallocarray() failed");
+					ret = ENGINE_OUT_OF_RESOURCES;
+					goto exit;
+				}
+			}
+
+			memmove(_fileData + dataWritten, out_buff, dataSize);
+			dataWritten += dataSize;
+			_fileData[dataWritten] = 0x0;
+		}
+		while (zstm.avail_out == 0);
+	}
+	while (zret != Z_STREAM_END);
+
+	_uncompressedSize = dataWritten;
+
+	ret = ENGINE_OK;
+
+exit:
+	Seek(0, SEEK_SET);
+
+	free(in_buff);
+	free(out_buff);
+	
+	if(ret != ENGINE_OK)
+		free(_fileData);
+
+	inflateEnd(&zstm);
+	
+	_decompressing = false;
+
+	return ret;
 }
 
 VFSFile::~VFSFile()
@@ -292,4 +446,6 @@ VFSFile::~VFSFile()
 		fclose(_fp);
 	else if (_gzfp)
 		gzclose(_gzfp);
+
+	free(_fileData);
 }

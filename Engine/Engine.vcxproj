@@ -222,8 +222,8 @@
     <None Include="..\Resources\Data\Materials\terrain.nmtl" />
     <None Include="..\Resources\Data\Materials\w_girl.nmtl" />
     <None Include="..\Resources\Data\scenes.cfg" />
+    <None Include="..\Resources\Data\Scenes\ios.nscene" />
     <None Include="..\Resources\Data\Scenes\main.nscene" />
-    <None Include="..\Resources\Data\Scenes\reflect.nscene" />
     <None Include="..\Resources\Data\Scenes\scene.nscene" />
     <None Include="..\Resources\Data\Shaders\depthmap.frag" />
     <None Include="..\Resources\Data\Shaders\depthmap.vert" />
