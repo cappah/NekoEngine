@@ -130,6 +130,15 @@
 	[_context presentRenderbuffer:GL_RENDERBUFFER];
 }
 
+- (void)updateDrawable
+{
+	glDeleteFramebuffers(1, &_defaultFbo);
+	glDeleteRenderbuffers(1, &_colorBuffer);
+	glDeleteRenderbuffers(1, &_depthBuffer);
+	
+	[self createBuffers];
+}
+
 - (void)dealloc
 {
 	glDeleteFramebuffers(1, &_defaultFbo);

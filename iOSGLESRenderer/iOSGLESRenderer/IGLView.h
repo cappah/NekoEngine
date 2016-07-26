@@ -49,5 +49,6 @@
 - (bool) createBuffers;
 - (void) bindDrawable;
 - (void) swapBuffers;
+- (void) updateDrawable;
 
 @end

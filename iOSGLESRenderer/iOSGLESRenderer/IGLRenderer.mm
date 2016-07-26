@@ -561,6 +561,11 @@ void IGLRenderer::SetSwapInterval(int swapInterval)
 	//
 }
 
+void IGLRenderer::ScreenResized()
+{
+	[_view updateDrawable];
+}
+
 void IGLRenderer::SwapBuffers()
 {
 	[_view swapBuffers];

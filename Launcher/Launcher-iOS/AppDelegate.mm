@@ -14,6 +14,8 @@
 
 @end
 
+static UIDeviceOrientation _lastOrientation;
+
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -40,6 +42,11 @@
 		Platform::MessageBox("Fatal error", "Failed to initialize engine", MessageBoxButtons::OK, MessageBoxIcon::Error);
 		return false;
 	}
+	
+	_lastOrientation = [[UIDevice currentDevice] orientation];
+	
+	[[NSNotificationCenter defaultCenter] addObserver: self selector:   @selector(deviceOrientationDidChange:) name: UIDeviceOrientationDidChangeNotification object: nil];
+	[[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
 	
 	Engine::Run();
 	
@@ -69,6 +76,44 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application {
 	// Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+- (void)deviceOrientationDidChange:(NSNotification *)notification
+{
+	UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
+	
+	switch(orientation)
+	{
+		case UIDeviceOrientationPortrait:
+		case UIDeviceOrientationPortraitUpsideDown:
+		{
+			if(_lastOrientation == UIDeviceOrientationPortrait)
+				return;
+			
+			_lastOrientation = UIDeviceOrientationPortrait;
+		}
+		break;
+		case UIDeviceOrientationLandscapeLeft:
+		case UIDeviceOrientationLandscapeRight:
+		{
+			if(_lastOrientation == UIDeviceOrientationLandscapeLeft)
+				return;
+			
+			_lastOrientation = UIDeviceOrientationLandscapeLeft;
+		}
+		break;
+		default:
+			return;
+	}
+	
+	CGRect bounds = [[UIScreen mainScreen] bounds];
+	Engine::ScreenResized(bounds.size.width, bounds.size.height);
+}
+
+- (void)dealloc
+{
+	[[NSNotificationCenter defaultCenter] removeObserver: self];
+	[[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
 }
 
 @end
