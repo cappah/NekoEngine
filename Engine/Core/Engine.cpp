@@ -763,8 +763,8 @@ void Engine::Frame() noexcept
 		if (_printStats)
 			_PrintStats();
 			
-			_engineFont->Render();
-			}
+		_engineFont->Render();
+	}
 	
 	_renderer->SwapBuffers();
 	

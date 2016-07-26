@@ -51,8 +51,8 @@
 
 typedef struct VFS_ARCHIVE_HEADER
 {
-	int32_t magic;
-	int32_t version;
+	uint32_t magic;
+	uint32_t version;
 	uint32_t num_files;
 } VFSArchiveHeader;
 
