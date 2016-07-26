@@ -207,7 +207,8 @@ public:
 	virtual void SetSwapInterval(int swapInterval) override;
 
 	virtual void ReadPixels(int x, int y, int width, int height, TextureFormat format, TextureInternalType type, void* data) override;
-
+	
+	virtual void ScreenResized() override;
 	virtual void SwapBuffers() override;
 
 	virtual bool HasCapability(RendererCapability cap) override;

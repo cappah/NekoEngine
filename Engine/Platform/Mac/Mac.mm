@@ -47,7 +47,7 @@
 #import <AppKit/AppKit.h>
 
 #import "EngineView.h"
-#import "EngineAppDelegate.h"
+#import "EngineDelegate.h"
 
 @interface EngineApp : NSObject
 
@@ -66,7 +66,7 @@
 
 static EngineApp *_engineApp;
 static EngineView *_engineView;
-static EngineAppDelegate *_engineAppDelegate;
+static EngineDelegate *_engineDelegate;
 
 PlatformWindowType Platform::_activeWindow = nullptr;
 
@@ -80,9 +80,9 @@ PlatformWindowType Platform::CreateWindow(int width, int height, bool fullscreen
 	[NSApplication sharedApplication];
 	[NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
 	
-	if((_engineAppDelegate = [[EngineAppDelegate alloc] init]) == nil)
+	if((_engineDelegate = [[EngineDelegate alloc] init]) == nil)
 	{ DIE("Failed to initialize EngineAppDelegate"); }
-	[[NSApplication sharedApplication] setDelegate:_engineAppDelegate];
+	[[NSApplication sharedApplication] setDelegate:_engineDelegate];
 	
 	if((menuBar = [[NSMenu alloc] init]) == nil)
 	{ DIE("Failed to create menu"); }
@@ -107,9 +107,13 @@ PlatformWindowType Platform::CreateWindow(int width, int height, bool fullscreen
 	[hWnd setTitle:@"NekoEngine"];
 	[hWnd setCollectionBehavior:[hWnd collectionBehavior] | NSWindowCollectionBehaviorFullScreenPrimary];
 	[hWnd makeKeyAndOrderFront:nil];
+	[hWnd setDelegate:_engineDelegate];
 	
 	if((_engineView = [[EngineView alloc] initWithFrame:((NSView *)hWnd.contentView).frame]) == nil)
 	{ DIE("Failed to initialize EngineView"); }
+	[_engineView setAutoresizingMask: NSViewWidthSizable | NSViewHeightSizable];
+	[_engineView setAutoresizesSubviews:YES];
+	
 	[hWnd setContentView:_engineView];
 	[hWnd setInitialFirstResponder:_engineView];
 	[hWnd makeFirstResponder:_engineView];

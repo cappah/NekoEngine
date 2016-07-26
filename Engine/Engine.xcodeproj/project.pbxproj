@@ -68,8 +68,8 @@
 		12822BB31CC1D84300EE5D0A /* EngineView.h in Headers */ = {isa = PBXBuildFile; fileRef = 12822BB21CC1D84300EE5D0A /* EngineView.h */; };
 		12822BB51CC1D84700EE5D0A /* EngineView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 12822BB41CC1D84700EE5D0A /* EngineView.mm */; };
 		12822BB71CC1DA4C00EE5D0A /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12822BB61CC1DA4C00EE5D0A /* Carbon.framework */; };
-		12822BBA1CC1DB9500EE5D0A /* EngineAppDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 12822BB81CC1DB9500EE5D0A /* EngineAppDelegate.h */; };
-		12822BBB1CC1DB9500EE5D0A /* EngineAppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 12822BB91CC1DB9500EE5D0A /* EngineAppDelegate.mm */; };
+		12822BBA1CC1DB9500EE5D0A /* EngineDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 12822BB81CC1DB9500EE5D0A /* EngineDelegate.h */; };
+		12822BBB1CC1DB9500EE5D0A /* EngineDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 12822BB91CC1DB9500EE5D0A /* EngineDelegate.mm */; };
 		1296BBD41CDBB6B500D17488 /* PlatformDetect.h in Headers */ = {isa = PBXBuildFile; fileRef = 1296BBD31CDBB6B500D17488 /* PlatformDetect.h */; };
 		12B0CF5D1CEB4A9700E5D2FE /* SkeletalMeshComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12B0CF5B1CEB4A9700E5D2FE /* SkeletalMeshComponent.cpp */; };
 		12B0CF5E1CEB4A9700E5D2FE /* SkeletalMeshComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12B0CF5B1CEB4A9700E5D2FE /* SkeletalMeshComponent.cpp */; };
@@ -250,8 +250,8 @@
 		12822BB21CC1D84300EE5D0A /* EngineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EngineView.h; path = Platform/Mac/EngineView.h; sourceTree = SOURCE_ROOT; };
 		12822BB41CC1D84700EE5D0A /* EngineView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = EngineView.mm; path = Platform/Mac/EngineView.mm; sourceTree = SOURCE_ROOT; };
 		12822BB61CC1DA4C00EE5D0A /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
-		12822BB81CC1DB9500EE5D0A /* EngineAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EngineAppDelegate.h; path = Platform/Mac/EngineAppDelegate.h; sourceTree = SOURCE_ROOT; };
-		12822BB91CC1DB9500EE5D0A /* EngineAppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = EngineAppDelegate.mm; path = Platform/Mac/EngineAppDelegate.mm; sourceTree = SOURCE_ROOT; };
+		12822BB81CC1DB9500EE5D0A /* EngineDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EngineDelegate.h; path = Platform/Mac/EngineDelegate.h; sourceTree = SOURCE_ROOT; };
+		12822BB91CC1DB9500EE5D0A /* EngineDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = EngineDelegate.mm; path = Platform/Mac/EngineDelegate.mm; sourceTree = SOURCE_ROOT; };
 		1296BB6F1CDB7EEA00D17488 /* EngineAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EngineAppDelegate.h; path = Platform/iOS/EngineAppDelegate.h; sourceTree = SOURCE_ROOT; };
 		1296BB701CDB7EEA00D17488 /* EngineAppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = EngineAppDelegate.mm; path = Platform/iOS/EngineAppDelegate.mm; sourceTree = SOURCE_ROOT; };
 		1296BB731CDB7F3400D17488 /* iOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = iOS.mm; path = Platform/iOS/iOS.mm; sourceTree = SOURCE_ROOT; };
@@ -429,10 +429,10 @@
 			isa = PBXGroup;
 			children = (
 				12C058951D2AF55A0042023D /* PlatformInput.mm */,
-				12822BB81CC1DB9500EE5D0A /* EngineAppDelegate.h */,
-				12822BB91CC1DB9500EE5D0A /* EngineAppDelegate.mm */,
 				12822BB21CC1D84300EE5D0A /* EngineView.h */,
 				12822BB41CC1D84700EE5D0A /* EngineView.mm */,
+				12822BB81CC1DB9500EE5D0A /* EngineDelegate.h */,
+				12822BB91CC1DB9500EE5D0A /* EngineDelegate.mm */,
 				12822B2E1CC1ADD500EE5D0A /* Mac.mm */,
 			);
 			name = Mac;
@@ -757,7 +757,7 @@
 				12FABB101D32567200D88639 /* CameraComponent.h in Headers */,
 				12C058931D2AF5360042023D /* Input.h in Headers */,
 				12C058941D2AF5360042023D /* Keycodes.h in Headers */,
-				12822BBA1CC1DB9500EE5D0A /* EngineAppDelegate.h in Headers */,
+				12822BBA1CC1DB9500EE5D0A /* EngineDelegate.h in Headers */,
 				12ECE5E21CF110D2004F3697 /* AudioSourceComponent.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -940,7 +940,7 @@
 				12822B4C1CC1AE2000EE5D0A /* ogg_callbacks.cpp in Sources */,
 				12822B4F1CC1AE2800EE5D0A /* Logger.cpp in Sources */,
 				12FABB191D3256B600D88639 /* FPSControllerComponent.cpp in Sources */,
-				12822BBB1CC1DB9500EE5D0A /* EngineAppDelegate.mm in Sources */,
+				12822BBB1CC1DB9500EE5D0A /* EngineDelegate.mm in Sources */,
 				12822B461CC1AE0E00EE5D0A /* Terrain.cpp in Sources */,
 				12C0588F1D2AF4E90042023D /* Input.cpp in Sources */,
 				12822B431CC1AE0E00EE5D0A /* ObjectComponent.cpp in Sources */,

@@ -855,6 +855,7 @@ void Engine::ScreenResized(int width, int height) noexcept
 		CameraManager::GetActiveCamera()->UpdatePerspective();
 
 	_renderer->SetViewport(0, 0, width, height);
+	_renderer->ScreenResized();
 }
 
 void Engine::CleanUp() noexcept

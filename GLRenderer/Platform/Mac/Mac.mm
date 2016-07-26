@@ -84,6 +84,11 @@ void GLRenderer::SetSwapInterval(int swapInterval)
 	//
 }
 
+void GLRenderer::ScreenResized()
+{
+	[_ctx update];
+}
+
 void GLRenderer::SwapBuffers()
 {
 	[_ctx flushBuffer];

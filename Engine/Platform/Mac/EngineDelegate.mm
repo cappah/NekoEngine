@@ -1,6 +1,6 @@
 /* Neko Engine
  *
- * EngineAppDelegate.h
+ * EngineDelegate.mm
  * Author: Alexandru Naiman
  *
  * macOS platform support
@@ -37,11 +37,41 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#pragma once
+#define ENGINE_INTERNAL
+#define PLATFORM_INTERNAL
 
-#import <Foundation/Foundation.h>
-#import <AppKit/AppKit.h>
+#import "EngineDelegate.h"
 
-@interface EngineAppDelegate : NSObject <NSApplicationDelegate>
+#include <Engine/Engine.h>
+
+@implementation EngineDelegate 
+
+- (void)applicationDidFinishLaunching:(NSNotification *)aNotification
+{
+	// Insert code here to initialize your application
+}
+
+- (void)applicationWillTerminate:(NSNotification *)aNotification
+{
+	Engine::CleanUp();
+}
+
+- (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)sender
+{
+	return true;
+}
+
+- (void)applicationDidChangeOcclusionState:(NSNotification *)notification
+{
+	// pause when hidden ?
+	// https://developer.apple.com/library/mac/documentation/Cocoa/Reference/ApplicationKit/Classes/NSApplication_Class/index.html#//apple_ref/c/data/NSApplicationDidChangeOcclusionStateNotification
+}
+
+- (void)windowDidResize:(NSNotification *)notification
+{
+	NSWindow *window = Platform::GetActiveWindow();
+	CGSize size = window.contentView.frame.size;
+	Engine::ScreenResized(size.width, size.height);
+}
 
 @end

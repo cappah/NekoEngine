@@ -226,6 +226,11 @@ void GLRenderer::SetSwapInterval(int swapInterval)
 	glXSwapIntervalEXT(_dc, _hWnd, swapInterval);
 }
 
+void GLRenderer::ScreenResized()
+{
+	// not used on this platform
+}
+
 void GLRenderer::SwapBuffers()
 {
 	glXSwapBuffers(_dc, _hWnd);

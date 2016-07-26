@@ -177,6 +177,11 @@ void GLRenderer::SetSwapInterval(int swapInterval)
 	wglSwapIntervalEXT(swapInterval);
 }
 
+void GLRenderer::ScreenResized()
+{
+	// not used on this platform
+}
+
 void GLRenderer::SwapBuffers()
 {
 	::SwapBuffers(_dc);

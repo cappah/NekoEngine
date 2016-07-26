@@ -106,12 +106,8 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "--game=libTestGame.dylib"
-            isEnabled = "NO">
-         </CommandLineArgument>
-         <CommandLineArgument
-            argument = "--renderer=libMacGLRenderer.dylib"
-            isEnabled = "NO">
+            argument = "--gfxdbg"
+            isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>
       <AdditionalOptions>

@@ -132,6 +132,7 @@ public:
 	static const char* GetVersion();
 	
 	static void SetActiveWindow(PlatformWindowType hWnd) { _activeWindow = hWnd; }
+	static PlatformWindowType GetActiveWindow() { return _activeWindow; }
 
 	static PlatformWindowType CreateWindow(int width, int height, bool fullscreen);
 	static void SetWindowTitle(PlatformWindowType hWnd, const char* title);	

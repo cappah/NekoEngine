@@ -56,7 +56,7 @@
 #undef Always
 #endif
 
-#define RENDERER_API_VERSION	0x0022
+#define RENDERER_API_VERSION	0x0023
 
 #define R_CLEAR_COLOR			1
 #define R_CLEAR_DEPTH			2
@@ -343,6 +343,11 @@ public:
 	 */
 	virtual void ReadPixels(int x, int y, int width, int height, TextureFormat format, TextureInternalType type, void* data) = 0;
 
+	/**
+	 * Call this function when the drawable size changes
+	 */
+	virtual void ScreenResized() = 0;
+	
 	/**
 	 * Swap the front & back buffers
 	 */
