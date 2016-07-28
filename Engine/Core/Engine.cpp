@@ -135,7 +135,7 @@ ComponentClassMapType *EngineClassFactory::_componentClassMap = nullptr;
 extern "C" Renderer *createRenderer();
 extern "C" GameModule *createGameModule();
 #endif
-
+NFont *nfnt;
 void Engine::_ParseArgs(string cmdLine)
 {
 	vector<char*> args = EngineUtils::SplitString(cmdLine.c_str(), ' ');
@@ -708,7 +708,7 @@ int Engine::Initialize(string cmdLine, bool editor)
 
 	_prevTime = high_resolution_clock::now();
 
-	NFont *nfnt = (NFont*)ResourceManager::GetResourceByName("fnt_aller", ResourceType::RES_FONT);
+	nfnt = (NFont*)ResourceManager::GetResourceByName("fnt_aller", ResourceType::RES_FONT);
 	if (!nfnt)
 		Platform::MessageBox("Error", "Failed to load font", MessageBoxButtons::OK, MessageBoxIcon::Error);
 
@@ -738,7 +738,7 @@ void Engine::Pause(bool pause)
 
 void Engine::DrawString(vec2 pos, vec3 color, string text) noexcept
 {
-	_engineFont->Draw(text, pos, color);
+	nfnt->Draw(text, pos, color);
 }
 
 void Engine::DrawString(vec2 pos, vec3 color, const char *fmt, ...) noexcept
@@ -751,7 +751,7 @@ void Engine::DrawString(vec2 pos, vec3 color, const char *fmt, ...) noexcept
 	vsnprintf(buff, FONT_BUFF, fmt, args);
 	va_end(args);
 
-	_engineFont->Draw(buff, pos, color);
+	nfnt->Draw(buff, pos, color);
 }
 
 void Engine::Frame() noexcept
@@ -769,12 +769,12 @@ void Engine::Frame() noexcept
 
 	if(!_paused) Draw();
 		
-	if (_engineFont)
+	if (nfnt)
 	{
 		if (_printStats)
 			_PrintStats();
 			
-		_engineFont->Render();
+		nfnt->Render();
 	}
 	
 	_renderer->SwapBuffers();

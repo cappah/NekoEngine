@@ -43,13 +43,18 @@
 
 #include <Engine/Engine.h>
 #include <Engine/Vertex.h>
+#include <Engine/Shader.h>
 #include <Engine/Texture.h>
 #include <Engine/NFont.h>
 #include <System/VFS/VFS.h>
+#include <Engine/ResourceManager.h>
 
 #define NFONT_MODULE	"NFont"
 
 using namespace std;
+using namespace glm;
+
+static Shader *shader = nullptr;
 
 NFont::NFont(FontResource *res)
 {
@@ -64,6 +69,9 @@ NFont::NFont(FontResource *res)
 	_vertexBuffer = nullptr;
 	_indexBuffer = nullptr;
 	_arrayBuffer = nullptr;
+
+	if (!shader)
+		shader = (Shader *)ResourceManager::GetResourceByName("sh_font", ResourceType::RES_SHADER);
 }
 
 int NFont::Load()
@@ -73,7 +81,7 @@ int NFont::Load()
 	VFSFile *file = nullptr;
 	uint64_t size = 0;
 	uint8_t *mem = nullptr;
-	uint32_t x = 0;
+	uint32_t x = 0, vboSize = 0, iboSize = 0, maxChars = 0;
 
 	if ((file = VFS::Open(GetResourceInfo()->filePath)) == nullptr)
 	{
@@ -106,7 +114,7 @@ int NFont::Load()
 		return ENGINE_FAIL;
 	}
 
-	if (FT_New_Memory_Face(Engine::GetFTLibrary(), mem, size, 0, &face))
+	if (FT_New_Memory_Face(Engine::GetFTLibrary(), mem, (FT_Long)size, 0, &face))
 	{
 		file->Close();
 		free(mem);
@@ -116,7 +124,7 @@ int NFont::Load()
 
 	glyph = face->glyph;
 
-	FT_Set_Pixel_Sizes(face, 0, 15);
+	FT_Set_Pixel_Sizes(face, 0, 64);
 
 	for (int i = NFONT_START_CHAR; i < NFONT_NUM_CHARS; ++i)
 	{
@@ -127,29 +135,76 @@ int NFont::Load()
 		}
 
 		_texWidth += glyph->bitmap.width;
-		_texHeight = max(_texHeight, glyph->bitmap.rows);
+		_texHeight = std::max(_texHeight, glyph->bitmap.rows);
 	}
 
 	if ((_texture = Engine::GetRenderer()->CreateTexture(TextureType::Tex2D)) == nullptr)
 	{ DIE("Out of resources"); }
 	_texture->SetStorage2D(1, TextureSizedFormat::R_8U, _texWidth, _texHeight);
 
+	_texture->SetWrapS(TextureWrap::ClampToEdge);
+	_texture->SetWrapT(TextureWrap::ClampToEdge);
+
+	_texture->SetMinFilter(TextureFilter::Linear);
+	_texture->SetMagFilter(TextureFilter::Linear);
+
 	for (int i = NFONT_START_CHAR; i < NFONT_NUM_CHARS; ++i)
 	{
 		if (FT_Load_Char(face, i, FT_LOAD_RENDER)) continue;
+		
 		_texture->SetSubImage2D(0, x, 0, glyph->bitmap.width, glyph->bitmap.rows, TextureFormat::RED, TextureInternalType::UnsignedByte, glyph->bitmap.buffer);
+		
+		_characterInfo[i - NFONT_START_CHAR].x = (float)(glyph->advance.x >> 6);
+		_characterInfo[i - NFONT_START_CHAR].y = (float)(glyph->advance.y >> 6);
+		_characterInfo[i - NFONT_START_CHAR].width = (float)glyph->bitmap.width;
+		_characterInfo[i - NFONT_START_CHAR].height = (float)glyph->bitmap.rows;
+		_characterInfo[i - NFONT_START_CHAR].left = (float)glyph->bitmap_left;
+		_characterInfo[i - NFONT_START_CHAR].top = (float)glyph->bitmap_top;
+		_characterInfo[i - NFONT_START_CHAR].offset = (float)x / _texWidth;
+
 		x += glyph->bitmap.width;
 	}
 
-	/*if ((_vertexBuffer = Engine::GetRenderer()->CreateBuffer(BufferType::Vertex, false, true)) == nullptr)
+	maxChars = (int)((1.f / (((float)_texWidth / (float)NFONT_NUM_CHARS) * (1.f / Engine::GetScreenWidth()))) * (1.f / (_texHeight * (1.f / Engine::GetScreenHeight()))));
+
+	vboSize = maxChars * 4;
+	iboSize = maxChars * 6;
+
+	if ((_vertexBuffer = Engine::GetRenderer()->CreateBuffer(BufferType::Vertex, false, true)) == nullptr)
 	{ DIE("Out of resources"); }
 	_vertexBuffer->SetNumBuffers(1);
-	//_vertexBuffer->SetStorage(sizeof(Vertex) * vboSize, nullptr);
+	_vertexBuffer->SetStorage(sizeof(Vertex) * vboSize, nullptr);
 
 	if ((_indexBuffer = Engine::GetRenderer()->CreateBuffer(BufferType::Index, false, true)) == nullptr)
 	{ DIE("Out of resources"); }
 	_indexBuffer->SetNumBuffers(1);
-	//_indexBuffer->SetStorage(sizeof(uint32_t) * iboSize, nullptr);*/
+	_indexBuffer->SetStorage(sizeof(uint32_t) * iboSize, nullptr);
+
+	BufferAttribute attrib;
+	attrib.index = SHADER_POSITION_ATTRIBUTE;
+	attrib.size = 3;
+	attrib.type = BufferDataType::Float;
+	attrib.normalize = false;
+	attrib.stride = sizeof(Vertex);
+	attrib.ptr = (void *)VERTEX_POSITION_OFFSET;
+	_vertexBuffer->AddAttribute(attrib);
+
+	attrib.index = SHADER_COLOR_ATTRIBUTE;
+	attrib.ptr = (void *)VERTEX_COLOR_OFFSET;
+	_vertexBuffer->AddAttribute(attrib);
+
+	attrib.index = SHADER_UV_ATTRIBUTE;
+	attrib.size = 2;
+	attrib.ptr = (void *)VERTEX_UV_OFFSET;
+	_vertexBuffer->AddAttribute(attrib);
+
+	if ((_arrayBuffer = Engine::GetRenderer()->CreateArrayBuffer()) == nullptr)
+	{
+		DIE("Out of resources");
+	}
+	_arrayBuffer->SetVertexBuffer(_vertexBuffer);
+	_arrayBuffer->SetIndexBuffer(_indexBuffer);
+	_arrayBuffer->CommitBuffers();
 
 	FT_Done_Face(face);
 	free(mem);
@@ -159,22 +214,103 @@ int NFont::Load()
 	return ENGINE_OK;
 }
 
-void NFont::Draw(std::string text, glm::vec2& pos) noexcept
+void NFont::Draw(string text, vec2 &pos, vec3 &color) noexcept
 {
-	//
-}
+	unsigned int vertexCount = (unsigned int)_vertices.size();
+	float sWidth = 1.f / (float)Engine::GetScreenWidth(), sHeight = 1.f / (float)Engine::GetScreenHeight();
 
-void NFont::Draw(std::string text, glm::vec2& pos, glm::vec3& color) noexcept
-{
-	//
+	for (unsigned int i = 0; i < text.length(); i++)
+	{
+		NFontCharacterInfo &info = _characterInfo[text[i]];
+
+		float x = pos.x + info.left * sWidth;
+		float y = -pos.y - info.top * sHeight;
+		float w = info.width * sWidth;
+		float h = info.height * sHeight;
+
+		pos.x += info.x * sWidth;
+		pos.y += info.y * sHeight;
+
+		Vertex v;
+		v.color = color;
+
+		v.pos = vec3(x, y, 0);
+		v.uv = vec2(info.offset, 0);
+		_vertices.push_back(v);
+
+		v.pos = vec3(x, y + h, 0);
+		v.uv = vec2(info.offset, info.height / _texHeight);
+		_vertices.push_back(v);
+
+		v.pos = vec3(x + w, y + h, 0);
+		v.uv = vec2(info.offset + (info.width / _texWidth), info.height / _texHeight);
+		_vertices.push_back(v);
+
+		v.pos = vec3(x + w, y, 0);
+		v.uv = vec2(info.offset + (info.width / _texWidth), 0);
+		_vertices.push_back(v);
+
+		unsigned int indexOffset = (4 * i) + vertexCount;
+		_indices.push_back(indexOffset);
+		_indices.push_back(1 + indexOffset);
+		_indices.push_back(2 + indexOffset);
+		_indices.push_back(indexOffset);
+		_indices.push_back(2 + indexOffset);
+		_indices.push_back(3 + indexOffset);
+
+		/*nextX += _charWidth;
+		if (nextX > 1.f)
+		{
+			nextX = 0.f;
+			nextY += _charHeight;
+		}*/
+	}
 }
 
 void NFont::Render()
 {
-	//
+	Renderer *r = Engine::GetRenderer();
+
+	r->EnableDepthTest(false);
+	r->EnableBlend(true);
+	r->SetBlendFunc(BlendFactor::SrcAlpha, BlendFactor::OneMinusSrcAlpha);
+
+	shader->Enable();
+
+	_vertexBuffer->BeginUpdate();
+	_indexBuffer->BeginUpdate();
+
+	_vertexBuffer->UpdateData(0, (sizeof(Vertex) * _vertices.size()), _vertices.data());
+	_indexBuffer->UpdateData(0, (sizeof(uint32_t) * _indices.size()), _indices.data());
+
+	_vertexBuffer->EndUpdate();
+	_indexBuffer->EndUpdate();
+
+	_arrayBuffer->Bind();
+
+	r->DrawElements(PolygonMode::Triangles, (int32_t)_indices.size(), ElementType::UnsignedInt, 0);
+
+	shader->Disable();
+
+	r->EnableDepthTest(true);
+	r->EnableBlend(false);
+
+	_arrayBuffer->Unbind();
+
+	_vertices.clear();
+	_indices.clear();
+
+	_vertexBuffer->NextBuffer();
+	_indexBuffer->NextBuffer();
 }
 
 NFont::~NFont()
 {
-	//
+	_vertices.clear();
+	_indices.clear();
+
+	delete _texture;
+	delete _vertexBuffer;
+	delete _indexBuffer;
+	delete _arrayBuffer;
 }

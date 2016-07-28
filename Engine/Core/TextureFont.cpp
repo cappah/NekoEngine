@@ -244,11 +244,6 @@ void TextureFont::Draw(string text, vec2 &pos) noexcept
 
 void TextureFont::Draw(string text, vec2 &pos, vec3 &color) noexcept
 {
-	_GenerateVertices(text, pos, color);
-}
-
-void TextureFont::_GenerateVertices(string &text, vec2 &pos, vec3 &color) noexcept
-{
 	float nextX = -pos.x - .99f, nextY = -pos.y + (1.f - _charHeight);
 	unsigned int vertexCount = (unsigned int)_vertices.size();
 
@@ -327,7 +322,6 @@ void TextureFont::Render()
 
 	_vertexBuffer->NextBuffer();
 	_indexBuffer->NextBuffer();
-
 }
 
 TextureFont::~TextureFont() noexcept

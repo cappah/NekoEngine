@@ -88,7 +88,5 @@ private:
 	RBuffer* _vertexBuffer;
 	RBuffer* _indexBuffer;
 	RArrayBuffer* _arrayBuffer;
-
-	void _GenerateVertices(std::string& text, glm::vec2& pos, glm::vec3& color) noexcept;
 };
 
