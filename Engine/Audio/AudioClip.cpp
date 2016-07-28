@@ -57,8 +57,7 @@ int AudioClip::Load()
 	ALvoid *data = nullptr;
 	int ret = ENGINE_FAIL;
 
-	string path("/");
-	path.append(GetResourceInfo()->filePath);
+	string path(GetResourceInfo()->filePath);
 
 	if (path.substr(path.find_last_of(".") + 1) == "ogg")
 		ret = AssetLoader::LoadOGG(path, &format, (unsigned char **)&data, &size, &freq);

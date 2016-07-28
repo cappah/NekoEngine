@@ -62,17 +62,14 @@ int AnimationClip::Load()
 {
 	char lineBuff[AC_LINE_BUFF];
 	memset(lineBuff, 0x0, AC_LINE_BUFF);
-
-	string path("/");
-	path.append(GetResourceInfo()->filePath);
 	
-	if(AssetLoader::LoadAnimation(path, _name, &_duration, &_ticksPerSecond, _channels) != ENGINE_OK)
+	if(AssetLoader::LoadAnimation(GetResourceInfo()->filePath, _name, &_duration, &_ticksPerSecond, _channels) != ENGINE_OK)
 	{
 		Logger::Log(AC_MODULE, LOG_CRITICAL, "Failed to load animation id=%s", _resourceInfo->name.c_str());
 		return ENGINE_FAIL;
 	}
 
-	Logger::Log(AC_MODULE, LOG_DEBUG, "Loaded animation clip id %s from %s", _resourceInfo->name.c_str(), path.c_str());
+	Logger::Log(AC_MODULE, LOG_DEBUG, "Loaded animation clip id %s from %s", _resourceInfo->name.c_str(), GetResourceInfo()->filePath.c_str());
 
 	return ENGINE_OK;
 }

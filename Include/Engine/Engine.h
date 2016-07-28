@@ -49,6 +49,9 @@
 		#include <AL/al.h>
 		#include <AL/alc.h>
 	#endif
+
+	#include <ft2build.h>
+	#include FT_FREETYPE_H
 #endif
 
 #ifdef NE_PLATFORM_WINDOWS
@@ -108,18 +111,6 @@
 #define RENDER_TEX_Q_HIGH		2
 
 #ifdef _DEBUG
-/**
- * Check glGetError() log a critical message and close the program if an error has occured
- */
-#define GL_CHECK(x)																														\
-	x;																																			\
-	if(GLenum err = glGetError())																												\
-	{																																			\
-		Logger::Log("OpenGL", LOG_CRITICAL, "%s call from %s, line %d returned 0x%x. Shutting down.", #x, __FILE__, __LINE__, err);				\
-		Platform::MessageBox("Fatal Error", "OpenGL call failed. Please check the log file for details.\nThe program will now exit.", MessageBoxButtons::OK, MessageBoxIcon::Error); \
-		exit(-1);																																\
-	}
-
 /**
  * Check alGetError() and log a warning message if an error has occured
  */
@@ -298,6 +289,8 @@ public:
 	static Configuration &GetConfiguration() noexcept { return _config; }
 	
 	static void BindQuadVAO() noexcept { _quadVAO->Bind(); };
+
+	static FT_Library &GetFTLibrary() noexcept { return _ftLibrary; }
 	
 	/**
 	 * Swap buffers
@@ -333,6 +326,7 @@ private:
 	static std::chrono::high_resolution_clock::time_point _prevTime;
 	static bool _haveMemoryInfo;
 	static bool _startup;
+	static FT_Library _ftLibrary;
 #endif
 
 	static void _PrintStats();

@@ -79,11 +79,8 @@ Skeleton *SkeletalMesh::GetSkeleton()
 }
 
 int SkeletalMesh::Load()
-{
-	string path("/");
-	path.append(GetResourceInfo()->filePath);
-	
-	if (AssetLoader::LoadMesh(path, MeshType::Skeletal, _vertices, _indices, _groupOffset, _groupCount, &_bones, &_nodes, &_globalInverseTransform) != ENGINE_OK)
+{	
+	if (AssetLoader::LoadMesh(GetResourceInfo()->filePath, MeshType::Skeletal, _vertices, _indices, _groupOffset, _groupCount, &_bones, &_nodes, &_globalInverseTransform) != ENGINE_OK)
 	{
 		Logger::Log(SK_MESH_MODULE, LOG_CRITICAL, "Failed to load mesh id=%s", _resourceInfo->name.c_str());
 		return ENGINE_FAIL;
@@ -95,7 +92,7 @@ int SkeletalMesh::Load()
 	
 	_CalculateTangents();
 
-	Logger::Log(SK_MESH_MODULE, LOG_DEBUG, "Loaded mesh id %d from %s, %d vertices, %d indices", _resourceInfo->id, path.c_str(), _vertexCount, _indexCount);
+	Logger::Log(SK_MESH_MODULE, LOG_DEBUG, "Loaded mesh id %d from %s, %d vertices, %d indices", _resourceInfo->id, GetResourceInfo()->filePath.c_str(), _vertexCount, _indexCount);
 	
 	return ENGINE_OK;
 }

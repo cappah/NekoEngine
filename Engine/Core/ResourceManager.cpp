@@ -226,7 +226,7 @@ Resource* ResourceManager::_LoadResourceInternal(ResourceInfo *ri)
 			res = new AudioClip((AudioClipResource *)ri);
 		break;
 		case ResourceType::RES_FONT:
-			res = new TextureFont((TextureFontResource *)ri);
+			res = new NFont((FontResource *)ri);
 		break;
 		case ResourceType::RES_MATERIAL:
 			res = new Material((MaterialResource *)ri);
@@ -234,6 +234,9 @@ Resource* ResourceManager::_LoadResourceInternal(ResourceInfo *ri)
 		case ResourceType::RES_ANIMCLIP:
 			res = new AnimationClip((AnimationClipResource *)ri);
 		break;
+		case ResourceType::RES_TEXFONT:
+			res = new TextureFont((TextureFontResource *)ri);
+			break;
 		default:
 		{
 			Logger::Log(RM_MODULE, LOG_WARNING, "Invalid resource type requested = %d", (int)ri->type);

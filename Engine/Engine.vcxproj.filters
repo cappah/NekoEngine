@@ -335,6 +335,12 @@
     <ClInclude Include="..\Include\Scene\Components\FPSControllerComponent.h">
       <Filter>Include\Scene\Components</Filter>
     </ClInclude>
+    <ClInclude Include="..\Include\Engine\NFont.h">
+      <Filter>Include\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Resource\FontResource.h">
+      <Filter>Include\Resource</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Resources\Data\scenes.cfg">
@@ -643,6 +649,9 @@
     </ClCompile>
     <ClCompile Include="Scene\Components\FPSControllerComponent.cpp">
       <Filter>Source\Scene\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\NFont.cpp">
+      <Filter>Source\Core</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

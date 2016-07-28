@@ -122,10 +122,7 @@ int Material::Load()
 	char lineBuff[LINE_BUFF];
 	memset(lineBuff, 0x0, LINE_BUFF);
 
-	string path("/");
-	path.append(GetResourceInfo()->filePath);
-
-	VFSFile *f = VFS::Open(path);
+	VFSFile *f = VFS::Open(GetResourceInfo()->filePath);
 	if(!f)
 	{
 		Logger::Log(MAT_MODULE, LOG_CRITICAL, "Failed to open material file for %s", _resourceInfo->name.c_str());

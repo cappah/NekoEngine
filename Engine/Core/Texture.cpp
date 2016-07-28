@@ -64,8 +64,7 @@ int Texture::Load()
 	TextureType type = GetResourceInfo()->textureType == TextureResourceType::TEXTURE_2D ? TextureType::Tex2D : TextureType::TexCubemap;
 	TextureFileFormat format = TextureFileFormat::DDS;
 	
-	string path("/");
-	path.append(GetResourceInfo()->filePath);
+	string path(GetResourceInfo()->filePath);
 	path.append(".dds");
 	
 	VFSFile *file = nullptr;
@@ -105,6 +104,7 @@ int Texture::Load()
 	if(file->Seek(0, SEEK_END) == ENGINE_FAIL)
 	{
 		file->Close();
+		Logger::Log(TEX_MODULE, LOG_CRITICAL, "Seek failed for file [%].", GetResourceInfo()->filePath.c_str());
 		return ENGINE_FAIL;
 	}
 	
@@ -113,6 +113,7 @@ int Texture::Load()
 	if(file->Seek(0, SEEK_SET) == ENGINE_FAIL)
 	{
 		file->Close();
+		Logger::Log(TEX_MODULE, LOG_CRITICAL, "Seek failed for file [%].", GetResourceInfo()->filePath.c_str());
 		return ENGINE_FAIL;
 	}
 	
@@ -121,6 +122,7 @@ int Texture::Load()
 	{
 		file->Close();
 		free(mem);
+		Logger::Log(TEX_MODULE, LOG_CRITICAL, "Failed to read file [%].", GetResourceInfo()->filePath.c_str());
 		return ENGINE_FAIL;
 	}
 
@@ -128,6 +130,7 @@ int Texture::Load()
 	{
 		file->Close();
 		free(mem);
+		Logger::Log(TEX_MODULE, LOG_CRITICAL, "Failed to create texture.");
 		return ENGINE_OUT_OF_RESOURCES;
 	}
 
@@ -135,6 +138,7 @@ int Texture::Load()
 	{
 		file->Close();
 		free(mem);
+		Logger::Log(TEX_MODULE, LOG_CRITICAL, "Failed to load texture id %s.", GetResourceInfo()->name.c_str());
 		return ENGINE_FAIL;
 	}
 	

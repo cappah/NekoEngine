@@ -1,6 +1,7 @@
 /* Neko Engine
  *
- * TextureFontResource.h
+ * 
+ Resource.h
  * Author: Alexandru Naiman
  *
  * TextureFontResource definition
@@ -51,5 +52,5 @@ struct TextureFontResource : public ResourceInfo
 	TextureFontResource() :
 		textureId(0),
 		shaderId(0)
-	{ type = ResourceType::RES_FONT; }
+	{ type = ResourceType::RES_TEXFONT; }
 };

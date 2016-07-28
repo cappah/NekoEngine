@@ -388,6 +388,24 @@ void GLTexture::SetImage3D(int level, int width, int height, int depth, TextureF
 	GL_CHECK(glTextureSubImage3D(_id, level, 0, 0, 0, width, height, depth, GL_TexFormat[(int)format], GL_TexType[(int)type], data));
 }
 
+void GLTexture::SetSubImage1D(int level, int x, int width, TextureFormat format, TextureInternalType type, const void* data)
+{
+	_format = format;
+	GL_CHECK(glTextureSubImage1D(_id, level, x, width, GL_TexFormat[(int)format], GL_TexType[(int)type], data));
+}
+
+void GLTexture::SetSubImage2D(int level, int x, int y, int width, int height, TextureFormat format, TextureInternalType type, const void* data)
+{
+	_format = format;
+	GL_CHECK(glTextureSubImage2D(_id, level, x, y, width, height, GL_TexFormat[(int)format], GL_TexType[(int)type], data));
+}
+
+void GLTexture::SetSubImage3D(int level, int x, int y, int z, int width, int height, int depth, TextureFormat format, TextureInternalType type, const void* data)
+{
+	_format = format;
+	GL_CHECK(glTextureSubImage3D(_id, level, x, y, z, width, height, depth, GL_TexFormat[(int)format], GL_TexType[(int)type], data));
+}
+
 void GLTexture::SetImageCube(int level, int width, int height, TextureFormat format, TextureInternalType type,
 	const void *posX, const void *negX, const void *posY, const void *negY, const void *posZ, const void *negZ)
 {
@@ -631,6 +649,30 @@ void GLTexture_NoDSA::SetImage3D(int level, int width, int height, int depth, Te
 	GL_CHECK(glBindTexture(GL_TexTarget[(int)_type], _id));
 	GL_CHECK(glTexSubImage3D(GL_TexTarget[(int)_type], level, 0, 0, 0, width, height, depth, GL_TexFormat[(int)format], GL_TexType[(int)type], data));
 	
+	_format = format;
+}
+
+void GLTexture_NoDSA::SetSubImage1D(int level, int x, int width, TextureFormat format, TextureInternalType type, const void* data)
+{
+	GL_CHECK(glBindTexture(GL_TexTarget[(int)_type], _id));
+	GL_CHECK(glTexSubImage1D(GL_TexTarget[(int)_type], level, x, width, GL_TexFormat[(int)format], GL_TexType[(int)type], data));
+
+	_format = format;
+}
+
+void GLTexture_NoDSA::SetSubImage2D(int level, int x, int y, int width, int height, TextureFormat format, TextureInternalType type, const void* data)
+{
+	GL_CHECK(glBindTexture(GL_TexTarget[(int)_type], _id));
+	GL_CHECK(glTexSubImage2D(GL_TexTarget[(int)_type], level, x, y, width, height, GL_TexFormat[(int)format], GL_TexType[(int)type], data));
+
+	_format = format;
+}
+
+void GLTexture_NoDSA::SetSubImage3D(int level, int x, int y, int z, int width, int height, int depth, TextureFormat format, TextureInternalType type, const void* data)
+{
+	GL_CHECK(glBindTexture(GL_TexTarget[(int)_type], _id));
+	GL_CHECK(glTexSubImage3D(GL_TexTarget[(int)_type], level, x, y, z, width, height, depth, GL_TexFormat[(int)format], GL_TexType[(int)type], data));
+
 	_format = format;
 }
 

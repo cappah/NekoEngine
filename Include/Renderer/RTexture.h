@@ -214,6 +214,21 @@ public:
 	virtual void SetImage3D(int level, int width, int height, int depth, TextureFormat format, TextureInternalType type, const void* data) = 0;
 
 	/**
+	* Set partial image data for a one-dimensional texture
+	*/
+	virtual void SetSubImage1D(int level, int x, int width, TextureFormat format, TextureInternalType type, const void* data) = 0;
+
+	/**
+	* Set partial image data for a two-dimensional texture
+	*/
+	virtual void SetSubImage2D(int level, int x, int y, int width, int height, TextureFormat format, TextureInternalType type, const void* data) = 0;
+
+	/**
+	* Set parital image data for a three-dimensional texture
+	*/
+	virtual void SetSubImage3D(int level, int x, int y, int z, int width, int height, int depth, TextureFormat format, TextureInternalType type, const void* data) = 0;
+
+	/**
 	 * Set image data for a cubemap texture
 	 */
 	virtual void SetImageCube(int level, int width, int height, TextureFormat format, TextureInternalType type,

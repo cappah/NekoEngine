@@ -83,7 +83,7 @@
       <DisableSpecificWarnings>4251</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>Xinput9_1_0.lib;libvorbisfile.lib;libpng16d.lib;sqlited.lib;zlibstatic.lib;OpenAL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>freetype.lib;Xinput9_1_0.lib;libvorbisfile.lib;libpng16d.lib;sqlited.lib;zlibstatic.lib;OpenAL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
@@ -126,7 +126,7 @@
       <WholeProgramOptimization>true</WholeProgramOptimization>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>Xinput9_1_0.lib;libvorbisfile.lib;libpng16.lib;sqlite.lib;zlibstatic.lib;OpenAL32.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>freetype.lib;Xinput9_1_0.lib;libvorbisfile.lib;libpng16.lib;sqlite.lib;zlibstatic.lib;OpenAL32.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>No</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
@@ -150,6 +150,7 @@
     <ClInclude Include="..\Include\Engine\Keycodes.h" />
     <ClInclude Include="..\include\Engine\LoadingScreen.h" />
     <ClInclude Include="..\include\Engine\Material.h" />
+    <ClInclude Include="..\Include\Engine\NFont.h" />
     <ClInclude Include="..\include\Engine\PostProcessor.h" />
     <ClInclude Include="..\include\Engine\ResourceDatabase.h" />
     <ClInclude Include="..\include\Engine\ResourceManager.h" />
@@ -183,6 +184,7 @@
     <ClInclude Include="..\include\Resource\AudioClipResource.h" />
     <ClInclude Include="..\include\Resource\MaterialResource.h" />
     <ClInclude Include="..\Include\Resource\MeshResource.h" />
+    <ClInclude Include="..\Include\Resource\FontResource.h" />
     <ClInclude Include="..\include\Resource\Resource.h" />
     <ClInclude Include="..\include\Resource\ResourceInfo.h" />
     <ClInclude Include="..\include\Resource\ShaderResource.h" />
@@ -279,6 +281,7 @@
     <ClCompile Include="Core\Input.cpp" />
     <ClCompile Include="Core\LoadingScreen.cpp" />
     <ClCompile Include="Core\Material.cpp" />
+    <ClCompile Include="Core\NFont.cpp" />
     <ClCompile Include="Core\PostProcessor.cpp" />
     <ClCompile Include="Core\ResourceDatabase.cpp" />
     <ClCompile Include="Core\ResourceManager.cpp" />

@@ -47,9 +47,10 @@
 #include <Resource/TextureResource.h>
 #include <Resource/ShaderResource.h>
 #include <Resource/AudioClipResource.h>
-#include <Resource/TextureFontResource.h>
+#include <Resource/FontResource.h>
 #include <Resource/MaterialResource.h>
 #include <Resource/AnimationClipResource.h>
+#include <Resource/TextureFontResource.h>
 
 using namespace std;
 
@@ -62,7 +63,8 @@ char resource_to_table_map[10][40] =
 	{ 'a', 'u', 'd', 'i', 'o', 'c', 'l', 'i', 'p', 's', 0x0 },
 	{ 'f', 'o', 'n', 't', 's', 0x0 },
 	{ 'm', 'a', 't', 'e', 'r', 'i', 'a', 'l', 's', 0x0 },
-	{ 'a', 'n', 'i', 'm', 'c', 'l', 'i', 'p', 's', 0x0 }
+	{ 'a', 'n', 'i', 'm', 'c', 'l', 'i', 'p', 's', 0x0 },
+	{ 't', 'e', 'x', 'f', 'o', 'n', 't', 's', 0x0 }
 };
 
 bool ResourceDatabase::Open(const char *file) noexcept
@@ -191,16 +193,17 @@ bool ResourceDatabase::GetResources(vector<ResourceInfo *> &vec)
 			{
 				while (sqlite3_step(stmt) == SQLITE_ROW)
 				{
-					TextureFontResource *res = new TextureFontResource();
+					FontResource *res = new FontResource();
 					res->id = sqlite3_column_int(stmt, 0);
-					res->textureId = sqlite3_column_int(stmt, 1);
-					res->shaderId = sqlite3_column_int(stmt, 2);
-					const unsigned char *ptr = sqlite3_column_text(stmt, 3);
-					if (ptr)
-						res->comment = (const char *)ptr;
-					ptr = sqlite3_column_text(stmt, 4);
+					const unsigned char *ptr = sqlite3_column_text(stmt, 1);
 					if (ptr)
 						res->name = (const char *)ptr;
+					ptr = sqlite3_column_text(stmt, 2);
+					if (ptr)
+						res->filePath = (const char *)ptr;
+					ptr = sqlite3_column_text(stmt, 3);
+					if (ptr)
+						res->comment = (const char *)ptr;
 					vec.push_back(res);
 				}
 			}
@@ -233,6 +236,24 @@ bool ResourceDatabase::GetResources(vector<ResourceInfo *> &vec)
 					if (ptr)
 						res->comment = (const char *)ptr;
 					ptr = sqlite3_column_text(stmt, 3);
+					if (ptr)
+						res->name = (const char *)ptr;
+					vec.push_back(res);
+				}
+			}
+			break;
+			case ResourceType::RES_TEXFONT:
+			{
+				while (sqlite3_step(stmt) == SQLITE_ROW)
+				{
+					TextureFontResource *res = new TextureFontResource();
+					res->id = sqlite3_column_int(stmt, 0);
+					res->textureId = sqlite3_column_int(stmt, 1);
+					res->shaderId = sqlite3_column_int(stmt, 2);
+					const unsigned char *ptr = sqlite3_column_text(stmt, 3);
+					if (ptr)
+						res->comment = (const char *)ptr;
+					ptr = sqlite3_column_text(stmt, 4);
 					if (ptr)
 						res->name = (const char *)ptr;
 					vec.push_back(res);
@@ -273,6 +294,9 @@ bool ResourceDatabase::_CheckDatabase() noexcept
 		return false;
 
 	if (!_TableExists("animclips"))
+		return false;
+
+	if (!_TableExists("texfonts"))
 		return false;
 	
 	return true;

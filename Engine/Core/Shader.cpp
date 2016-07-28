@@ -58,29 +58,18 @@ using namespace std;
 
 int Shader::Load()
 {
-	string path("/");
-	path.append(GetResourceInfo()->vsFilePath);
-
 	if((_shader = Engine::GetRenderer()->CreateShader()) == nullptr)
 		return ENGINE_OUT_OF_RESOURCES;
 	
-	if (!_CompileShader(ShaderType::Vertex, path))
+	if (!_CompileShader(ShaderType::Vertex, GetResourceInfo()->vsFilePath))
 		return ENGINE_LOAD_VS_FAIL;
 
-	path = "/";
-	path.append(GetResourceInfo()->fsFilePath);
-
-	if (!_CompileShader(ShaderType::Fragment, path))
+	if (!_CompileShader(ShaderType::Fragment, GetResourceInfo()->fsFilePath))
 		return ENGINE_LOAD_FS_FAIL;
 
 	if (GetResourceInfo()->gsFilePath.length() > 0)
-	{
-		path = "/";
-		path.append(GetResourceInfo()->gsFilePath);
-
-		if (!_CompileShader(ShaderType::Geometry, path))
+		if (!_CompileShader(ShaderType::Geometry, GetResourceInfo()->gsFilePath))
 			return ENGINE_LOAD_GS_FAIL;
-	}
 
 	if (!_shader->Link())
 		return ENGINE_LOAD_SHADER_FAIL;

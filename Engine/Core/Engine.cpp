@@ -123,6 +123,7 @@ PlatformModuleType Engine::_rendererLibrary = nullptr;
 bool Engine::_haveMemoryInfo = false;
 bool Engine::_startup = true;
 bool Engine::_paused = false;
+FT_Library Engine::_ftLibrary = nullptr;
 static bool iniFileLoaded = false;
 static unordered_map<string, string> _rendererArguments;
 static char _vfsArchiveList[VFS_ARCHIVE_LIST_SIZE];
@@ -482,6 +483,12 @@ bool Engine::_InitRenderer()
 
 bool Engine::_InitSystem()
 {
+	if (FT_Init_FreeType(&_ftLibrary))
+	{
+		Logger::Log(ENGINE_MODULE, LOG_CRITICAL, "Failed to initialize the FreeType library");
+		return false;
+	}
+
 	if (Input::Initialize(!_graphicsDebug) != ENGINE_OK)
 	{
 		Logger::Log(ENGINE_MODULE, LOG_CRITICAL, "Failed to initialize the input manager");
@@ -644,7 +651,7 @@ int Engine::Initialize(string cmdLine, bool editor)
 	_renderer->SetClearColor(0.f, 0.f, 0.f, 1.f);
 	_renderer->Clear(R_CLEAR_COLOR);
 
-	_engineFont = (TextureFont *)ResourceManager::GetResource(0, ResourceType::RES_FONT);
+	_engineFont = (TextureFont *)ResourceManager::GetResource(0, ResourceType::RES_TEXFONT);
 
 	Logger::Log(ENGINE_MODULE, LOG_INFORMATION, "Engine startup complete");
 
@@ -700,6 +707,10 @@ int Engine::Initialize(string cmdLine, bool editor)
 	}
 
 	_prevTime = high_resolution_clock::now();
+
+	NFont *nfnt = (NFont*)ResourceManager::GetResourceByName("fnt_aller", ResourceType::RES_FONT);
+	if (!nfnt)
+		Platform::MessageBox("Error", "Failed to load font", MessageBoxButtons::OK, MessageBoxIcon::Error);
 
 	_startup = false;
 
@@ -873,7 +884,7 @@ void Engine::CleanUp() noexcept
 
 	if (_engineFont)
 	{
-		ResourceManager::UnloadResource(0, ResourceType::RES_FONT);
+		ResourceManager::UnloadResource(0, ResourceType::RES_TEXFONT);
 		_engineFont = nullptr;
 	}
 
@@ -903,6 +914,8 @@ void Engine::CleanUp() noexcept
 	_rendererLibrary = nullptr;
 
 	EngineClassFactory::CleanUp();
+
+	FT_Done_FreeType(_ftLibrary);
 
 	Logger::Log(ENGINE_MODULE, LOG_INFORMATION, "Shutdown complete");
 
