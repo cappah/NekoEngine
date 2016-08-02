@@ -128,6 +128,26 @@ static GLenum GL_FrontFace[2] =
 	GL_CCW
 };
 
+static GLenum GL_PixelStoreParameter[16] =
+{
+	GL_PACK_SWAP_BYTES,
+	GL_PACK_LSB_FIRST,
+	GL_PACK_ROW_LENGTH,
+	GL_PACK_IMAGE_HEIGHT,
+	GL_PACK_SKIP_PIXELS,
+	GL_PACK_SKIP_ROWS,
+	GL_PACK_SKIP_IMAGES,
+	GL_PACK_ALIGNMENT,
+	GL_UNPACK_SWAP_BYTES,
+	GL_UNPACK_LSB_FIRST,
+	GL_UNPACK_ROW_LENGTH,
+	GL_UNPACK_IMAGE_HEIGHT,
+	GL_UNPACK_SKIP_PIXELS,
+	GL_UNPACK_SKIP_ROWS,
+	GL_UNPACK_SKIP_IMAGES,
+	GL_UNPACK_ALIGNMENT
+};
+
 extern GLenum GL_TexFormat[];
 extern GLenum GL_TexType[];
 
@@ -384,6 +404,11 @@ void GLRenderer::SetMinSampleShading(int32_t samples)
 void GLRenderer::ReadPixels(int x, int y, int width, int height, TextureFormat format, TextureInternalType type, void* data)
 {
 	GL_CHECK(glReadPixels(x, y, width, height, GL_TexFormat[(int)format], GL_TexType[(int)type], data));
+}
+
+void GLRenderer::SetPixelStore(PixelStoreParameter param, int value)
+{
+	GL_CHECK(glPixelStorei(GL_PixelStoreParameter[(int)param], value));
 }
 
 bool GLRenderer::HasCapability(RendererCapability cap)

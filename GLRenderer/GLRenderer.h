@@ -56,8 +56,8 @@
 #define RENDERER_VERSION_MAJOR		0
 #define RENDERER_VERSION_MINOR		3
 #define RENDERER_VERSION_REVISION	0
-#define RENDERER_VERSION_BUILD		81
-#define RENDERER_VERSION_STRING		"0.3.0.81"
+#define RENDERER_VERSION_BUILD		82
+#define RENDERER_VERSION_STRING		"0.3.0.82"
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <Windows.h>
@@ -207,6 +207,7 @@ public:
 	virtual void SetSwapInterval(int swapInterval) override;
 
 	virtual void ReadPixels(int x, int y, int width, int height, TextureFormat format, TextureInternalType type, void* data) override;
+	virtual void SetPixelStore(PixelStoreParameter param, int value) override;
 	
 	virtual void ScreenResized() override;
 	virtual void SwapBuffers() override;

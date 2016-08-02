@@ -56,7 +56,7 @@
 #undef Always
 #endif
 
-#define RENDERER_API_VERSION	0x0024
+#define RENDERER_API_VERSION	0x0025
 
 #define R_CLEAR_COLOR			1
 #define R_CLEAR_DEPTH			2
@@ -164,6 +164,26 @@ enum class TextureFileFormat : uint8_t
 	WIC,
 	PNG,
 	JPG
+};
+
+enum class PixelStoreParameter : uint8_t
+{
+	PackSwapBytes = 0,
+	PackLSBFirst,
+	PackRowLength,
+	PackImageHeight,
+	PackSkipPixels,
+	PackSkipRows,
+	PackSkipImages,
+	PackAlignment,
+	UnpackSwapBytes,
+	UnpackLSBFirst,
+	UnpackRowLength,
+	UnpackImageHeight,
+	UnpackSkipPixels,
+	UnpackSkipRows,
+	UnpackSkipImages,
+	UnpackAlignment	
 };
 
 class Renderer
@@ -342,6 +362,11 @@ public:
 	 * Read a block of pixels from the framebuffer
 	 */
 	virtual void ReadPixels(int x, int y, int width, int height, TextureFormat format, TextureInternalType type, void* data) = 0;
+
+	/**
+	 * Set pixel storage mode
+	 */
+	virtual void SetPixelStore(PixelStoreParameter param, int value) = 0;
 
 	/**
 	 * Call this function when the drawable size changes

@@ -124,7 +124,7 @@ int NFont::Load()
 
 	glyph = face->glyph;
 
-	FT_Set_Pixel_Sizes(face, 0, 64);
+	FT_Set_Pixel_Sizes(face, 0, 62);
 
 	for (int i = NFONT_START_CHAR; i < NFONT_NUM_CHARS; ++i)
 	{
@@ -136,7 +136,13 @@ int NFont::Load()
 
 		_texWidth += glyph->bitmap.width;
 		_texHeight = std::max(_texHeight, glyph->bitmap.rows);
+
+		Logger::Log(NFONT_MODULE, LOG_DEBUG, "Adding glyph for character %c, size %dx%d", (char)i, glyph->bitmap.width, glyph->bitmap.rows);
 	}
+
+	Engine::GetRenderer()->SetPixelStore(PixelStoreParameter::UnpackAlignment, 1);
+
+	Logger::Log(NFONT_MODULE, LOG_DEBUG, "Creating font texture with size %dx%d", _texWidth, _texHeight);
 
 	if ((_texture = Engine::GetRenderer()->CreateTexture(TextureType::Tex2D)) == nullptr)
 	{ DIE("Out of resources"); }

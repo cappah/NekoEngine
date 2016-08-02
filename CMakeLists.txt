@@ -30,6 +30,8 @@ set(BSD_LIB "")
 include_directories(/usr/local/include)
 include_directories(${PROJECT_SOURCE_DIR}/Include)
 include_directories(${PROJECT_SOURCE_DIR}/3rdparty/include_all)
+include_directories(/usr/include/freetype2)
+include_directories(/usr/local/include/freetype2)
 link_directories(/usr/local/lib)
 
 if(NOT MSVC)
@@ -108,7 +110,7 @@ add_library(Engine SHARED ${EngineSourceFiles} ${PlatformSourceFiles} ${SharedPl
 target_compile_options(Engine PRIVATE -std=c++11)
 target_compile_options(Engine PRIVATE -fPIC)
 target_compile_options(Engine PRIVATE -frtti)
-target_link_libraries(Engine ${PLATFORM_LIBS} ${OPENAL_LIB} z sqlite3 png vorbisfile ${BSD_LIB})
+target_link_libraries(Engine ${PLATFORM_LIBS} ${OPENAL_LIB} z sqlite3 png vorbisfile freetype ${BSD_LIB})
 
 # Launcher Executable
 add_executable(Launcher ${ExecutableSourceFile})
