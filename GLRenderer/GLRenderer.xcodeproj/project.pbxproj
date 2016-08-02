@@ -381,6 +381,7 @@
 				HEADER_SEARCH_PATHS = (
 					/usr/local/include,
 					"\"$(SRCROOT)/../Include\"",
+					/usr/local/include/freetype2,
 				);
 				INSTALL_PATH = "@rpath";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
@@ -410,6 +411,7 @@
 				HEADER_SEARCH_PATHS = (
 					/usr/local/include,
 					"\"$(SRCROOT)/../Include\"",
+					/usr/local/include/freetype2,
 				);
 				INSTALL_PATH = "@rpath";
 				LLVM_LTO = YES;

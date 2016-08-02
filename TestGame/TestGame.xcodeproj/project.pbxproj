@@ -651,6 +651,7 @@
 					/usr/local/include,
 					"\"$(SRCROOT)/../Include\"",
 					"\"$(SRCROOT)/../3rdparty/include_all\"",
+					/usr/local/include/freetype2,
 				);
 				INSTALL_PATH = "@rpath";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
@@ -676,6 +677,7 @@
 					/usr/local/include,
 					"\"$(SRCROOT)/../Include\"",
 					"\"$(SRCROOT)/../3rdparty/include_all\"",
+					/usr/local/include/freetype2,
 				);
 				INSTALL_PATH = "@rpath";
 				LLVM_LTO = YES;

@@ -267,7 +267,7 @@ case $OS in
 		fi
 
 		brew update;
-		brew install libpng libvorbis;
+		brew install libpng libvorbis freetype;
 
 		if [ $? -ne 0 ]; then
 			InstallDepsFail

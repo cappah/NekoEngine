@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		121482B31D51461E00F804C3 /* libfreetype.6.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 121482B21D51461E00F804C3 /* libfreetype.6.dylib */; };
+		121482B51D51465000F804C3 /* NFont.h in Headers */ = {isa = PBXBuildFile; fileRef = 121482B41D51465000F804C3 /* NFont.h */; };
+		121482B71D51466B00F804C3 /* NFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 121482B61D51466B00F804C3 /* NFont.cpp */; };
+		121482B81D51466B00F804C3 /* NFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 121482B61D51466B00F804C3 /* NFont.cpp */; };
 		12150A201CEB875D0066A044 /* AnimatorComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12150A1F1CEB875D0066A044 /* AnimatorComponent.cpp */; };
 		12150A211CEB875D0066A044 /* AnimatorComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12150A1F1CEB875D0066A044 /* AnimatorComponent.cpp */; };
 		12150A251CEB87A10066A044 /* AnimatorComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 12150A241CEB87A10066A044 /* AnimatorComponent.h */; };
@@ -150,6 +154,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		121482B21D51461E00F804C3 /* libfreetype.6.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfreetype.6.dylib; path = ../../../../../usr/local/Cellar/freetype/2.6.3/lib/libfreetype.6.dylib; sourceTree = "<group>"; };
+		121482B41D51465000F804C3 /* NFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NFont.h; sourceTree = "<group>"; };
+		121482B61D51466B00F804C3 /* NFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NFont.cpp; path = Core/NFont.cpp; sourceTree = SOURCE_ROOT; };
 		12150A1F1CEB875D0066A044 /* AnimatorComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AnimatorComponent.cpp; path = Scene/Components/AnimatorComponent.cpp; sourceTree = SOURCE_ROOT; };
 		12150A241CEB87A10066A044 /* AnimatorComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AnimatorComponent.h; path = Components/AnimatorComponent.h; sourceTree = "<group>"; };
 		122A3AB61D338A470047786A /* ogg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ogg.framework; path = "../Launcher/Launcher-iOS/Frameworks/ogg.framework"; sourceTree = "<group>"; };
@@ -310,6 +317,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				121482B31D51461E00F804C3 /* libfreetype.6.dylib in Frameworks */,
 				12822BB71CC1DA4C00EE5D0A /* Carbon.framework in Frameworks */,
 				126DE7B01CC8673B00A9E5AB /* libz.dylib in Frameworks */,
 				126DE7B81CC86C6000A9E5AB /* libsqlite3.dylib in Frameworks */,
@@ -389,6 +397,7 @@
 		12822B0A1CC1AD9F00EE5D0A /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				121482B61D51466B00F804C3 /* NFont.cpp */,
 				12FABB1B1D3256C400D88639 /* CameraManager.cpp */,
 				12C0588E1D2AF4E90042023D /* Input.cpp */,
 				12C560901CFB57B200E25478 /* AnimationClip.cpp */,
@@ -526,6 +535,7 @@
 		12822B5B1CC1AE4E00EE5D0A /* Engine */ = {
 			isa = PBXGroup;
 			children = (
+				121482B41D51465000F804C3 /* NFont.h */,
 				12FABB1E1D3256D200D88639 /* CameraManager.h */,
 				12C058911D2AF5360042023D /* Input.h */,
 				12C058921D2AF5360042023D /* Keycodes.h */,
@@ -685,6 +695,7 @@
 		12822BAF1CC1B01F00EE5D0A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				121482B21D51461E00F804C3 /* libfreetype.6.dylib */,
 				126DE7AF1CC8673B00A9E5AB /* libz.dylib */,
 				126DE7AD1CC8673600A9E5AB /* libsqlite3.dylib */,
 				12822BB61CC1DA4C00EE5D0A /* Carbon.framework */,
@@ -742,6 +753,7 @@
 				12B0CF641CEB4AB400E5D2FE /* SkeletalMeshComponent.h in Headers */,
 				1279C0FE1CC91E5800E521AD /* Compat.h in Headers */,
 				127DF8B01CCB13AD005F2693 /* AnimationClipResource.h in Headers */,
+				121482B51D51465000F804C3 /* NFont.h in Headers */,
 				12FABB111D32567200D88639 /* FPSControllerComponent.h in Headers */,
 				12ECE5D91CEFBE85004F3697 /* AnimationNode.h in Headers */,
 				12150A251CEB87A10066A044 /* AnimatorComponent.h in Headers */,
@@ -887,6 +899,7 @@
 				124A32001CDC264100472893 /* Terrain.cpp in Sources */,
 				124A31FD1CDC264100472893 /* ObjectComponent.cpp in Sources */,
 				12C058901D2AF4E90042023D /* Input.cpp in Sources */,
+				121482B81D51466B00F804C3 /* NFont.cpp in Sources */,
 				124A32031CDC264100472893 /* VFS.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -914,6 +927,7 @@
 				12C560C41CFB57B200E25478 /* TextureFont.cpp in Sources */,
 				12C560AA1CFB57B200E25478 /* Material.cpp in Sources */,
 				12C560B41CFB57B200E25478 /* Shader.cpp in Sources */,
+				121482B71D51466B00F804C3 /* NFont.cpp in Sources */,
 				12822B4B1CC1AE2000EE5D0A /* AssetLoader.cpp in Sources */,
 				12C560A81CFB57B200E25478 /* LoadingScreen.cpp in Sources */,
 				12822B2D1CC1ADD000EE5D0A /* UNIX.cpp in Sources */,
@@ -1115,11 +1129,15 @@
 					/usr/local/include,
 					"\"$(SRCROOT)/../Include\"",
 					"\"$(SRCROOT)/../3rdparty/include_all\"",
+					/usr/local/include/freetype2,
 				);
 				INSTALL_PATH = "@rpath";
 				LD_DYLIB_INSTALL_NAME = "$(DYLIB_INSTALL_NAME_BASE:standardizepath)/$(EXECUTABLE_PATH)";
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Libraries/ @executable_path";
-				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				LIBRARY_SEARCH_PATHS = (
+					/usr/local/lib,
+					/usr/local/Cellar/freetype/2.6.3/lib,
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1149,11 +1167,15 @@
 					/usr/local/include,
 					"\"$(SRCROOT)/../Include\"",
 					"\"$(SRCROOT)/../3rdparty/include_all\"",
+					/usr/local/include/freetype2,
 				);
 				INSTALL_PATH = "@rpath";
 				LD_DYLIB_INSTALL_NAME = "$(DYLIB_INSTALL_NAME_BASE:standardizepath)/$(EXECUTABLE_PATH)";
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Libraries/ @executable_path";
-				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				LIBRARY_SEARCH_PATHS = (
+					/usr/local/lib,
+					/usr/local/Cellar/freetype/2.6.3/lib,
+				);
 				LLVM_LTO = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				PRODUCT_NAME = "$(TARGET_NAME)";
