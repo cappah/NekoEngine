@@ -19,7 +19,7 @@ InstallDepsPacman()
 {
 	echo "Attempting to install dependencies using pacman"
 
-	PACKAGES="gcc make cmake sqlite openal libpng zlib libvorbis libx11 libbsd mesa-libgl"
+	PACKAGES="gcc make cmake sqlite openal libpng zlib libvorbis libx11 libbsd mesa-libgl freetype2"
 
 	if ! type sudo 2> /dev/null; then
 		su -c "pacman --noconfirm -Syy $PACKAGES"		
@@ -42,7 +42,7 @@ InstallDepsAptGet()
 	VER=`lsb_release -r | awk '{print $2}'`
 	
 	if [ "$VER" = "14.04" ]; then
-		PACKAGES="build-essential cmake libsqlite3-dev libpng-dev libx11-dev libopenal-dev libvorbis-dev libgl1-mesa-dev"
+		PACKAGES="build-essential cmake libsqlite3-dev libpng-dev libx11-dev libopenal-dev libvorbis-dev libgl1-mesa-dev libfreetype6-dev"
 
 		# Manually install libbsd
 		echo "Ubuntu 14.04 detected, installing libbsd from source. Please upgrade your OS"
@@ -75,7 +75,7 @@ InstallDepsAptGet()
 InstallDepsDnf()
 {
 	echo "Attempting to install dependencies using dnf"
-	PACKAGES="gcc gcc-c++ make cmake sqlite-devel libpng-devel libX11-devel openal-devel libvorbis-devel mesa-libGL-devel libbsd-devel"
+	PACKAGES="gcc gcc-c++ make cmake sqlite-devel libpng-devel libX11-devel openal-devel libvorbis-devel mesa-libGL-devel libbsd-devel freetype-devel"
 
 	if ! type sudo 2> /dev/null; then
 		su -c "dnf -y install $PACKAGES"		
@@ -93,7 +93,7 @@ InstallDepsDnf()
 InstallDepsYum()
 {
 	echo "Attempting to install dependencies using yum"
-	PACKAGES="gcc gcc-c++ make cmake sqlite-devel libpng-devel libX11-devel openal-devel libvorbis-devel mesa-libGL-devel libbsd-devel"
+	PACKAGES="gcc gcc-c++ make cmake sqlite-devel libpng-devel libX11-devel openal-devel libvorbis-devel mesa-libGL-devel libbsd-devel freetype-devel"
 
 	if ! type sudo 2> /dev/null; then
 		su -c "yum -y install $PACKAGES"		
@@ -111,7 +111,7 @@ InstallDepsYum()
 InstallDepsEquo()
 {
 	echo "Attempting to install dependencies using equo"
-	PACKAGES="gcc make cmake sqlite libpng libX11 openal libvorbis libogg libGLw libbsd"
+	PACKAGES="gcc make cmake sqlite libpng libX11 openal libvorbis libogg libGLw libbsd freetype"
 
 	if ! type sudo 2> /dev/null; then
 		su -c "equo install $PACKAGES"		
@@ -201,7 +201,7 @@ case $OS in
 	;;
 	'FreeBSD')
 		echo "Attempting to install dependencies using pkg"
-		sudo pkg install -y llvm38 gmake cmake sqlite3 png libX11 openal-soft libvorbis libGL;
+		sudo pkg install -y llvm38 gmake cmake sqlite3 png libX11 openal-soft libvorbis libGL freetype2;
 
 		if [ $? -ne 0 ]; then
 			InstallDepsFail
@@ -279,7 +279,7 @@ case $OS in
 	;;
 	'OpenBSD')
 		echo "Attempting to install dependencies using pkg"
-		sudo pkg_add gcc g++ gmake cmake png openal libvorbis;
+		sudo pkg_add gcc g++ gmake cmake png openal libvorbis freetype;
 
 		if [ $? -ne 0 ]; then
 			InstallDepsFail
