@@ -34,8 +34,8 @@ http://www.turbosquid.com/FullPreview/Index.cfm/ID/464428
 
 Font:
 
-Aller
-http://www.1001fonts.com/aller-font.html
+Hack
+http://www.sourcefoundry.org/hack
 
 ----------------------------------------------------------------------------
 

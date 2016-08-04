@@ -57,8 +57,6 @@
 using namespace std;
 using namespace glm;
 
-static Shader *shader = nullptr;
-
 NFont::NFont(FontResource *res)
 {
 	_resourceInfo = res;
@@ -72,13 +70,43 @@ NFont::NFont(FontResource *res)
 	_vertexBuffer = nullptr;
 	_indexBuffer = nullptr;
 	_arrayBuffer = nullptr;
-	_pixelSize = 20;
-
-	if (!shader)
-		shader = (Shader *)ResourceManager::GetResourceByName("sh_font", ResourceType::RES_SHADER);
+	_pixelSize = 16;
 }
 
 int NFont::Load()
+{
+	int ret = ENGINE_FAIL;
+
+	if ((_shader = (Shader *)ResourceManager::GetResourceByName("sh_font", ResourceType::RES_SHADER)) == nullptr)
+	{
+		Logger::Log(NFONT_MODULE, LOG_CRITICAL, "Failed to load font shader");
+		return ENGINE_FAIL;
+	}
+
+	if ((ret = _BuildAtlas()) != ENGINE_OK)
+		return ret;
+	
+	if ((_arrayBuffer = Engine::GetRenderer()->CreateArrayBuffer()) == nullptr)
+	{ DIE("Out of resources"); }
+	_arrayBuffer->SetVertexBuffer(_vertexBuffer);
+	_arrayBuffer->SetIndexBuffer(_indexBuffer);
+	_arrayBuffer->CommitBuffers();
+
+	_projection = ortho(0.f, (float)Engine::GetScreenWidth(), 0.f, (float)Engine::GetScreenHeight());
+
+	_uniformBuffer = Engine::GetRenderer()->CreateBuffer(BufferType::Uniform, true, false);
+	_uniformBuffer->SetNumBuffers(1);
+	_uniformBuffer->SetStorage(sizeof(mat4), value_ptr(_projection));
+
+	_shader->GetRShader()->VSUniformBlockBinding(0, "DataBlock");
+	_shader->GetRShader()->VSSetUniformBuffer(0, 0, sizeof(mat4), _uniformBuffer);
+
+	Logger::Log(NFONT_MODULE, LOG_DEBUG, "Loaded font %s [%d] from %s", GetResourceInfo()->name.c_str(), _resourceInfo->id, GetResourceInfo()->filePath.c_str());
+
+	return ENGINE_OK;
+}
+
+int NFont::_BuildAtlas()
 {
 	FT_Face face;
 	FT_GlyphSlot glyph;
@@ -144,8 +172,6 @@ int NFont::Load()
 		Logger::Log(NFONT_MODULE, LOG_DEBUG, "Adding glyph for character %c, size %dx%d", (char)i, glyph->bitmap.width, glyph->bitmap.rows);
 	}
 
-	Engine::GetRenderer()->SetPixelStore(PixelStoreParameter::UnpackAlignment, 1);
-
 	Logger::Log(NFONT_MODULE, LOG_DEBUG, "Creating font texture with size %dx%d", _texWidth, _texHeight);
 
 	if ((_texture = Engine::GetRenderer()->CreateTexture(TextureType::Tex2D)) == nullptr)
@@ -158,12 +184,14 @@ int NFont::Load()
 	_texture->SetMinFilter(TextureFilter::Linear);
 	_texture->SetMagFilter(TextureFilter::Linear);
 
+	Engine::GetRenderer()->SetPixelStore(PixelStoreParameter::UnpackAlignment, 1);
+
 	for (int i = 0; i < NFONT_NUM_CHARS; ++i)
 	{
 		if (FT_Load_Char(face, i, FT_LOAD_RENDER)) continue;
-		
+
 		_texture->SetSubImage2D(0, x, 0, glyph->bitmap.width, glyph->bitmap.rows, TextureFormat::RED, TextureInternalType::UnsignedByte, glyph->bitmap.buffer);
-		
+
 		_characterInfo[i].size = ivec2(glyph->bitmap.width, glyph->bitmap.rows);
 		_characterInfo[i].bearing = ivec2(glyph->bitmap_left, glyph->bitmap_top);
 		_characterInfo[i].advance = glyph->advance.x >> 6;
@@ -171,6 +199,8 @@ int NFont::Load()
 
 		x += glyph->bitmap.width;
 	}
+
+	Engine::GetRenderer()->SetPixelStore(PixelStoreParameter::UnpackAlignment, 4);
 
 	maxChars = (int)((1.f / (((float)_texWidth / (float)NFONT_NUM_CHARS) * (1.f / Engine::GetScreenWidth()))) * (1.f / (_texHeight * (1.f / Engine::GetScreenHeight()))));
 
@@ -205,25 +235,39 @@ int NFont::Load()
 	attrib.ptr = (void *)VERTEX_UV_OFFSET;
 	_vertexBuffer->AddAttribute(attrib);
 
-	if ((_arrayBuffer = Engine::GetRenderer()->CreateArrayBuffer()) == nullptr)
-	{ DIE("Out of resources"); }
+	FT_Done_Face(face);
+	free(mem);
+
+	return ENGINE_OK;
+}
+
+int NFont::SetPixelSize(int pixelSize)
+{
+	RTexture *oldTexture = _texture;
+	RBuffer *oldVertexBuffer = _vertexBuffer, *oldIndexBuffer = _indexBuffer;
+
+	_texture = nullptr;
+	_vertexBuffer = _indexBuffer = nullptr;
+
+	_pixelSize = pixelSize;
+
+	int ret = _BuildAtlas();
+
+	if (ret != ENGINE_OK)
+	{
+		delete _texture; _texture = oldTexture;
+		delete _vertexBuffer; _vertexBuffer = oldVertexBuffer;
+		delete _indexBuffer; _indexBuffer = oldIndexBuffer;
+		return ret;
+	}
+
 	_arrayBuffer->SetVertexBuffer(_vertexBuffer);
 	_arrayBuffer->SetIndexBuffer(_indexBuffer);
 	_arrayBuffer->CommitBuffers();
 
-	_projection = ortho(0.f, (float)Engine::GetScreenWidth(), 0.f, (float)Engine::GetScreenHeight());
-
-	_uniformBuffer = Engine::GetRenderer()->CreateBuffer(BufferType::Uniform, true, false);
-	_uniformBuffer->SetNumBuffers(1);
-	_uniformBuffer->SetStorage(sizeof(mat4), value_ptr(_projection));
-
-	shader->GetRShader()->VSUniformBlockBinding(0, "DataBlock");
-	shader->GetRShader()->VSSetUniformBuffer(0, 0, sizeof(mat4), _uniformBuffer);
-
-	FT_Done_Face(face);
-	free(mem);
-
-	Logger::Log(NFONT_MODULE, LOG_DEBUG, "Loaded font %s [%d] from %s", GetResourceInfo()->name.c_str(), _resourceInfo->id, GetResourceInfo()->filePath.c_str());
+	delete oldTexture;
+	delete oldVertexBuffer;
+	delete oldIndexBuffer;
 
 	return ENGINE_OK;
 }
@@ -231,7 +275,7 @@ int NFont::Load()
 void NFont::Draw(string text, vec2 &pos, vec3 &color) noexcept
 {
 	unsigned int vertexCount = (unsigned int)_vertices.size();
-	int offset = Engine::GetScreenHeight() - _texHeight + 5.5f;
+	int offset = Engine::GetScreenHeight() - _texHeight + 4.f;
 
 	for (unsigned int i = 0; i < text.length(); i++)
 	{
@@ -281,9 +325,9 @@ void NFont::Render()
 	r->EnableBlend(true);
 	r->SetBlendFunc(BlendFactor::SrcAlpha, BlendFactor::OneMinusSrcAlpha);
 
-	shader->Enable();
-	shader->GetRShader()->BindUniformBuffers();
-	shader->GetRShader()->SetTexture(U_TEXTURE0, _texture);
+	_shader->Enable();
+	_shader->GetRShader()->BindUniformBuffers();
+	_shader->GetRShader()->SetTexture(U_TEXTURE0, _texture);
 
 	_vertexBuffer->BeginUpdate();
 	_indexBuffer->BeginUpdate();
@@ -298,7 +342,7 @@ void NFont::Render()
 
 	r->DrawElements(PolygonMode::Triangles, (int32_t)_indices.size(), ElementType::UnsignedInt, 0);
 
-	shader->Disable();
+	_shader->Disable();
 
 	r->EnableDepthTest(true);
 	r->EnableBlend(false);
@@ -317,8 +361,11 @@ NFont::~NFont()
 	_vertices.clear();
 	_indices.clear();
 
+	ResourceManager::UnloadResourceByName("sh_font", ResourceType::RES_SHADER);
+
 	delete _texture;
 	delete _vertexBuffer;
 	delete _indexBuffer;
 	delete _arrayBuffer;
+	delete _uniformBuffer;
 }

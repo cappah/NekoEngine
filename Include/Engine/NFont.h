@@ -64,7 +64,7 @@ public:
 	ENGINE_API FontResource* GetResourceInfo() noexcept { return (FontResource*)_resourceInfo; }
 	ENGINE_API int GetCharacterHeight() noexcept { return _texHeight; }
 
-	ENGINE_API void SetPixelSize(int size) noexcept { _pixelSize = size; }
+	ENGINE_API int SetPixelSize(int size);
 
 	ENGINE_API virtual int Load() override;
 
@@ -88,5 +88,8 @@ private:
 	RBuffer *_indexBuffer;
 	RBuffer *_uniformBuffer;
 	RArrayBuffer *_arrayBuffer;
+	Shader *_shader;
 	int _pixelSize;
+
+	int _BuildAtlas();
 };
