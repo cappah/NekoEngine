@@ -319,6 +319,11 @@ bool GLTexture::LoadFromMemory(TextureFileFormat format, const uint8_t* mem, siz
 	return false;
 }
 
+void GLTexture::GetImage(int level, TextureFormat format, TextureInternalType type, size_t size, void *buff)
+{
+	GL_CHECK(glGetTextureImage(_id, level, GL_TexFormat[(int)format], GL_TexType[(int)type], (GLsizei)size, buff));
+}
+
 void GLTexture::SetStorage1D(int levels, TextureSizedFormat format, int width)
 {
 	GL_CHECK(glTextureStorage1D(_id, levels, GL_TexFormatSized[(int)format], width));
@@ -570,6 +575,12 @@ GLTexture_NoDSA::GLTexture_NoDSA(TextureType type)
 	: GLTexture(type, false)
 {
 	GL_CHECK(glGenTextures(1, &_id));
+}
+
+void GLTexture_NoDSA::GetImage(int level, TextureFormat format, TextureInternalType type, size_t size, void *buff)
+{
+	GL_CHECK(glBindTexture(GL_TexTarget[(int)_type], _id));
+	GL_CHECK(glGetnTexImage(GL_TexTarget[(int)_type], level, GL_TexFormat[(int)format], GL_TexType[(int)type], (GLsizei)size, buff));
 }
 
 void GLTexture_NoDSA::SetStorage1D(int levels, TextureSizedFormat format, int width)

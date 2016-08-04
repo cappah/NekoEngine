@@ -7,5 +7,5 @@ layout(location = U_TEXTURE0) uniform TEXTURE_2D u_texture;
 
 void main()
 {
-	o_FragColor = texture(GET_TEX_2D(u_texture), v_uv) + vec4(v_color, 0.0);
+	o_FragColor = vec4(v_color, texture(GET_TEX_2D(u_texture), v_uv).r);
 }

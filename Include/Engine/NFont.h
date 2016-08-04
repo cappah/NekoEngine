@@ -50,8 +50,9 @@
 
 typedef struct NFONT_CHARACTER_INFO
 {
-	float x, y;
-	float width, height, left, top;
+	glm::ivec2 size;
+	glm::ivec2 bearing;
+	unsigned int advance;
 	float offset;
 } NFontCharacterInfo;
 
@@ -61,8 +62,9 @@ public:
 	ENGINE_API NFont(FontResource *res);
 
 	ENGINE_API FontResource* GetResourceInfo() noexcept { return (FontResource*)_resourceInfo; }
-
 	ENGINE_API int GetCharacterHeight() noexcept { return _texHeight; }
+
+	ENGINE_API void SetPixelSize(int size) noexcept { _pixelSize = size; }
 
 	ENGINE_API virtual int Load() override;
 
@@ -75,6 +77,7 @@ public:
 private:
 	std::vector<Vertex> _vertices;
 	std::vector<uint32_t> _indices;
+	glm::mat4 _projection;
 	NFontCharacterInfo _characterInfo[NFONT_NUM_CHARS];
 	size_t _vboSize;
 	size_t _iboSize;
@@ -83,5 +86,7 @@ private:
 	RTexture *_texture;
 	RBuffer *_vertexBuffer;
 	RBuffer *_indexBuffer;
+	RBuffer *_uniformBuffer;
 	RArrayBuffer *_arrayBuffer;
+	int _pixelSize;
 };

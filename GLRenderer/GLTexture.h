@@ -64,6 +64,8 @@ public:
 	bool IsResident() { return _resident; }
 	void MakeResident();
 
+	virtual void GetImage(int level, TextureFormat format, TextureInternalType type, size_t size, void *buff) override;
+
 	virtual bool LoadFromFile(const char* file) override;
 	virtual bool LoadFromMemory(TextureFileFormat format, const uint8_t* mem, size_t size) override;
 
@@ -123,6 +125,8 @@ class GLTexture_NoDSA :
 public:
 	GLTexture_NoDSA(TextureType type);
 	
+	virtual void GetImage(int level, TextureFormat format, TextureInternalType type, size_t size, void *buff) override;
+
 	virtual void SetStorage1D(int levels, TextureSizedFormat format, int width) override;
 	virtual void SetStorage2D(int levels, TextureSizedFormat format, int width, int height) override;
 	virtual void SetStorage3D(int levels, TextureSizedFormat format, int width, int height, int depth) override;

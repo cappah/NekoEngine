@@ -174,6 +174,11 @@ public:
 	virtual bool LoadFromMemory(TextureFileFormat format, const uint8_t* mem, size_t size) = 0;
 
 	/**
+	* Get image data from the texture object
+	*/
+	virtual void GetImage(int level, TextureFormat format, TextureInternalType type, size_t size, void *buff) = 0;
+
+	/**
 	 * Initialize storage for a one-dimensional texture
 	 */
 	virtual void SetStorage1D(int levels, TextureSizedFormat format, int width) = 0;

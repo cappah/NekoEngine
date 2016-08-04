@@ -525,6 +525,9 @@ void GLRenderer::_CheckExtensions()
 
 void GLRenderer::_ParseArguments(unordered_map<string, string> *args)
 {
+	if (!args)
+		return;
+
 	for(pair<string, string> kvp : *args)
 	{
 		if(!kvp.first.compare("bEnableSubroutines"))

@@ -1106,7 +1106,7 @@ void Engine::_PrintStats()
 	_frameTime = (esGetTime() - _lastFrameTime) * 1000;
 	_lastFrameTime = esGetTime();*/
 
-	float charHeight = _engineFont->GetCharacterHeight();
+	float charHeight = nfnt->GetCharacterHeight();
 
 	DrawString(vec2(0.f, 0.f), vec3(1.f, 1.f, 1.f), "FPS:       %d (%.02f ms)", _fps, _frameTime);
 
@@ -1140,8 +1140,8 @@ void Engine::_PrintStats()
 	}
 
 #ifdef _DEBUG
-	DrawString(vec2(0.f, 2.f - charHeight), vec3(1.f, 1.f, 1.f), "Version: %s [%s] [Debug]", ENGINE_VERSION_STRING, ENGINE_PLATFORM_STRING);
+	DrawString(vec2(0.f, _config.Engine.ScreenHeight - charHeight), vec3(1.f, 1.f, 1.f), "Version: %s [%s] [Debug]", ENGINE_VERSION_STRING, ENGINE_PLATFORM_STRING);
 #else
-	DrawString(vec2(0.f, 2.f - charHeight), vec3(1.f, 1.f, 1.f), "Version: %s [%s]", ENGINE_VERSION_STRING, ENGINE_PLATFORM_STRING);
+	DrawString(vec2(0.f, _config.Engine.ScreenHeight - charHeight), vec3(1.f, 1.f, 1.f), "Version: %s [%s]", ENGINE_VERSION_STRING, ENGINE_PLATFORM_STRING);
 #endif
 }
