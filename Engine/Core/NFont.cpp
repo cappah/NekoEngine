@@ -168,11 +168,9 @@ int NFont::_BuildAtlas()
 
 		_texWidth += glyph->bitmap.width;
 		_texHeight = std::max(_texHeight, glyph->bitmap.rows);
-
-		Logger::Log(NFONT_MODULE, LOG_DEBUG, "Adding glyph for character %c, size %dx%d", (char)i, glyph->bitmap.width, glyph->bitmap.rows);
 	}
 
-	Logger::Log(NFONT_MODULE, LOG_DEBUG, "Creating font texture with size %dx%d", _texWidth, _texHeight);
+	Logger::Log(NFONT_MODULE, LOG_DEBUG, "Creating font texture atlas with size %dx%d", _texWidth, _texHeight);
 
 	if ((_texture = Engine::GetRenderer()->CreateTexture(TextureType::Tex2D)) == nullptr)
 	{ DIE("Out of resources"); }
@@ -194,7 +192,7 @@ int NFont::_BuildAtlas()
 
 		_characterInfo[i].size = ivec2(glyph->bitmap.width, glyph->bitmap.rows);
 		_characterInfo[i].bearing = ivec2(glyph->bitmap_left, glyph->bitmap_top);
-		_characterInfo[i].advance = glyph->advance.x >> 6;
+		_characterInfo[i].advance = (unsigned int)glyph->advance.x >> 6;
 		_characterInfo[i].offset = (float)x / _texWidth;
 
 		x += glyph->bitmap.width;
@@ -279,7 +277,7 @@ void NFont::Draw(string text, vec2 &pos, vec3 &color) noexcept
 
 	for (unsigned int i = 0; i < text.length(); i++)
 	{
-		NFontCharacterInfo &info = _characterInfo[text[i]];
+		NFontCharacterInfo &info = _characterInfo[(int)text[i]];
 
 		float x = pos.x + info.bearing.x;
 		float y = (offset - pos.y) - (info.size.y - info.bearing.y);

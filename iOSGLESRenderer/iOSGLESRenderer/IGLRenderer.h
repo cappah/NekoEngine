@@ -168,6 +168,7 @@ public:
     virtual void SetSwapInterval(int swapInterval) override;
     
     virtual void ReadPixels(int x, int y, int width, int height, TextureFormat format, TextureInternalType type, void* data) override;
+	virtual void SetPixelStore(PixelStoreParameter param, int value) override;
 	
 	virtual void ScreenResized() override;
     virtual void SwapBuffers() override;

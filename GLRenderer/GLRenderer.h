@@ -284,6 +284,8 @@ void DebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsiz
 #define glTextureParameteri(x, y, z)
 #define glGenerateTextureMipmap(x)
 #define glMakeTextureHandleNonResidentARB(x)
+#define glGetTextureImage(a, b, c, d, e, f)
+#define glGetnTexImage(a, b, c, d, e, f) 	glGetTexImage(a, b, c, d, f)
 
 #define glCreateFramebuffers(x, y)
 #define glNamedFramebufferTexture(x, y, z, w)

@@ -120,6 +120,26 @@ static GLenum GL_FrontFace[2] =
     GL_CCW
 };
 
+static GLenum GL_PixelStoreParameter[16] =
+{
+	0,
+	0,
+	GL_PACK_ROW_LENGTH,
+	0,
+	GL_PACK_SKIP_PIXELS,
+	GL_PACK_SKIP_ROWS,
+	0,
+	GL_PACK_ALIGNMENT,
+	0,
+	0,
+	GL_UNPACK_ROW_LENGTH,
+	GL_UNPACK_IMAGE_HEIGHT,
+	GL_UNPACK_SKIP_PIXELS,
+	GL_UNPACK_SKIP_ROWS,
+	GL_UNPACK_SKIP_IMAGES,
+	GL_UNPACK_ALIGNMENT
+};
+
 extern GLenum GL_TexFormat[];
 extern GLenum GL_TexType[];
 
@@ -448,6 +468,11 @@ void IGLRenderer::SetMinSampleShading(int32_t samples)
 void IGLRenderer::ReadPixels(int x, int y, int width, int height, TextureFormat format, TextureInternalType type, void* data)
 {
     GL_CHECK(glReadPixels(x, y, width, height, GL_TexFormat[(int)format], GL_TexType[(int)type], data));
+}
+
+void IGLRenderer::SetPixelStore(PixelStoreParameter param, int value)
+{
+	GL_CHECK(glPixelStorei(GL_PixelStoreParameter[(int)param], value));
 }
 
 bool IGLRenderer::HasCapability(RendererCapability cap)

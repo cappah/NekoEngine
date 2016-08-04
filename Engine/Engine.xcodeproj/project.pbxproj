@@ -120,8 +120,6 @@
 		12C560C11CFB57B200E25478 /* StaticMesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12C5609F1CFB57B200E25478 /* StaticMesh.cpp */; };
 		12C560C21CFB57B200E25478 /* Texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12C560A01CFB57B200E25478 /* Texture.cpp */; };
 		12C560C31CFB57B200E25478 /* Texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12C560A01CFB57B200E25478 /* Texture.cpp */; };
-		12C560C41CFB57B200E25478 /* TextureFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12C560A11CFB57B200E25478 /* TextureFont.cpp */; };
-		12C560C51CFB57B200E25478 /* TextureFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12C560A11CFB57B200E25478 /* TextureFont.cpp */; };
 		12CE01721CC991B900F3D84B /* SkeletalMesh.h in Headers */ = {isa = PBXBuildFile; fileRef = 12CE01711CC991B900F3D84B /* SkeletalMesh.h */; };
 		12ECE5D91CEFBE85004F3697 /* AnimationNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 12ECE5D81CEFBE85004F3697 /* AnimationNode.h */; };
 		12ECE5E01CF0FFD1004F3697 /* TransformNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 12ECE5DF1CF0FFD1004F3697 /* TransformNode.h */; };
@@ -212,7 +210,6 @@
 		12822B6A1CC1AE4E00EE5D0A /* SoundManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SoundManager.h; sourceTree = "<group>"; };
 		12822B6B1CC1AE4E00EE5D0A /* SSAO.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SSAO.h; sourceTree = "<group>"; };
 		12822B6C1CC1AE4E00EE5D0A /* Texture.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Texture.h; sourceTree = "<group>"; };
-		12822B6D1CC1AE4E00EE5D0A /* TextureFont.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TextureFont.h; sourceTree = "<group>"; };
 		12822B6E1CC1AE4E00EE5D0A /* Version.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Version.h; sourceTree = "<group>"; };
 		12822B6F1CC1AE4E00EE5D0A /* Vertex.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Vertex.h; sourceTree = "<group>"; };
 		12822B711CC1AE4E00EE5D0A /* Platform.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Platform.h; sourceTree = "<group>"; };
@@ -234,7 +231,6 @@
 		12822B851CC1AE4E00EE5D0A /* Resource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Resource.h; sourceTree = "<group>"; };
 		12822B861CC1AE4E00EE5D0A /* ResourceInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ResourceInfo.h; sourceTree = "<group>"; };
 		12822B871CC1AE4E00EE5D0A /* ShaderResource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShaderResource.h; sourceTree = "<group>"; };
-		12822B881CC1AE4E00EE5D0A /* TextureFontResource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TextureFontResource.h; sourceTree = "<group>"; };
 		12822B891CC1AE4E00EE5D0A /* TextureResource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TextureResource.h; sourceTree = "<group>"; };
 		12822B8C1CC1AE4E00EE5D0A /* Light.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Light.h; sourceTree = "<group>"; };
 		12822B8D1CC1AE4E00EE5D0A /* Object.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Object.h; sourceTree = "<group>"; };
@@ -288,7 +284,6 @@
 		12C5609E1CFB57B200E25478 /* SSAO.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SSAO.cpp; path = Core/SSAO.cpp; sourceTree = SOURCE_ROOT; };
 		12C5609F1CFB57B200E25478 /* StaticMesh.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = StaticMesh.cpp; path = Core/StaticMesh.cpp; sourceTree = SOURCE_ROOT; };
 		12C560A01CFB57B200E25478 /* Texture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Texture.cpp; path = Core/Texture.cpp; sourceTree = SOURCE_ROOT; };
-		12C560A11CFB57B200E25478 /* TextureFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TextureFont.cpp; path = Core/TextureFont.cpp; sourceTree = SOURCE_ROOT; };
 		12CE01711CC991B900F3D84B /* SkeletalMesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkeletalMesh.h; sourceTree = "<group>"; };
 		12ECE5D81CEFBE85004F3697 /* AnimationNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnimationNode.h; sourceTree = "<group>"; };
 		12ECE5DF1CF0FFD1004F3697 /* TransformNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransformNode.h; sourceTree = "<group>"; };
@@ -417,7 +412,6 @@
 				12C5609E1CFB57B200E25478 /* SSAO.cpp */,
 				12C5609F1CFB57B200E25478 /* StaticMesh.cpp */,
 				12C560A01CFB57B200E25478 /* Texture.cpp */,
-				12C560A11CFB57B200E25478 /* TextureFont.cpp */,
 			);
 			name = Core;
 			sourceTree = "<group>";
@@ -561,7 +555,6 @@
 				12822B6A1CC1AE4E00EE5D0A /* SoundManager.h */,
 				12822B6B1CC1AE4E00EE5D0A /* SSAO.h */,
 				12822B6C1CC1AE4E00EE5D0A /* Texture.h */,
-				12822B6D1CC1AE4E00EE5D0A /* TextureFont.h */,
 				12822B6E1CC1AE4E00EE5D0A /* Version.h */,
 				12822B6F1CC1AE4E00EE5D0A /* Vertex.h */,
 				12ECE5DF1CF0FFD1004F3697 /* TransformNode.h */,
@@ -627,7 +620,6 @@
 				12822B851CC1AE4E00EE5D0A /* Resource.h */,
 				12822B861CC1AE4E00EE5D0A /* ResourceInfo.h */,
 				12822B871CC1AE4E00EE5D0A /* ShaderResource.h */,
-				12822B881CC1AE4E00EE5D0A /* TextureFontResource.h */,
 				12822B891CC1AE4E00EE5D0A /* TextureResource.h */,
 			);
 			name = Resource;
@@ -869,7 +861,6 @@
 				124A31FC1CDC264100472893 /* Object.cpp in Sources */,
 				124A31F51CDC263000472893 /* iOS.mm in Sources */,
 				12C560B31CFB57B200E25478 /* SceneManager.cpp in Sources */,
-				12C560C51CFB57B200E25478 /* TextureFont.cpp in Sources */,
 				12C560AB1CFB57B200E25478 /* Material.cpp in Sources */,
 				12C560B51CFB57B200E25478 /* Shader.cpp in Sources */,
 				124A31F61CDC263000472893 /* reallocarray.cpp in Sources */,
@@ -924,7 +915,6 @@
 				12822B381CC1AE0600EE5D0A /* SMAA.cpp in Sources */,
 				12822B421CC1AE0E00EE5D0A /* Object.cpp in Sources */,
 				12C560B21CFB57B200E25478 /* SceneManager.cpp in Sources */,
-				12C560C41CFB57B200E25478 /* TextureFont.cpp in Sources */,
 				12C560AA1CFB57B200E25478 /* Material.cpp in Sources */,
 				12C560B41CFB57B200E25478 /* Shader.cpp in Sources */,
 				121482B71D51466B00F804C3 /* NFont.cpp in Sources */,

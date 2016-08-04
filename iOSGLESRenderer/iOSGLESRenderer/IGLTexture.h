@@ -64,6 +64,8 @@ public:
     
     virtual bool LoadFromFile(const char* file) override;
     virtual bool LoadFromMemory(TextureFileFormat format, const uint8_t* mem, size_t size) override;
+	
+	virtual void GetImage(int level, TextureFormat format, TextureInternalType type, size_t size, void *buff) override;
     
     virtual void SetStorage1D(int levels, TextureSizedFormat format, int width) override;
     virtual void SetStorage2D(int levels, TextureSizedFormat format, int width, int height) override;
@@ -74,6 +76,9 @@ public:
     virtual void SetImage1D(int level, int width, TextureFormat format, TextureInternalType type, const void* data) override;
     virtual void SetImage2D(int level, int width, int height, TextureFormat format, TextureInternalType type, const void* data) override;
     virtual void SetImage3D(int level, int width, int height, int depth, TextureFormat format, TextureInternalType type, const void* data) override;
+	virtual void SetSubImage1D(int level, int x, int width, TextureFormat format, TextureInternalType type, const void* data) override;
+	virtual void SetSubImage2D(int level, int x, int y, int width, int height, TextureFormat format, TextureInternalType type, const void* data) override;
+	virtual void SetSubImage3D(int level, int x, int y, int z, int width, int height, int depth, TextureFormat format, TextureInternalType type, const void* data) override;
     virtual void SetImageCube(int level, int width, int height, TextureFormat format, TextureInternalType type,
                               const void *posX, const void *negX, const void *posY, const void *negY, const void *posZ, const void *negZ) override;
     virtual void SetImageCubeFace(CubeFace face, int level, int width, int height, TextureFormat format, TextureInternalType type, const void *data) override;

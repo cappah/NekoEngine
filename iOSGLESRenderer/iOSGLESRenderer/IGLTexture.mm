@@ -325,6 +325,11 @@ bool IGLTexture::LoadFromMemory(TextureFileFormat format, const uint8_t* mem, si
 	return false;
 }
 
+void IGLTexture::GetImage(int level, TextureFormat format, TextureInternalType type, size_t size, void *buff)
+{
+	// Unsupported in GL|ES
+}
+
 void IGLTexture::SetStorage1D(int levels, TextureSizedFormat format, int width)
 {
 	/*GL_CHECK(glBindTexture(GL_TexTarget[(int)_type], _id));
@@ -401,6 +406,27 @@ void IGLTexture::SetImage3D(int level, int width, int height, int depth, Texture
 {
 	GL_CHECK(glBindTexture(GL_TexTarget[(int)_type], _id));
 	GL_CHECK(glTexSubImage3D(GL_TexTarget[(int)_type], level, 0, 0, 0, width, height, depth, GL_TexFormat[(int)format], GL_TexType[(int)type], data));
+	
+	_format = format;
+}
+
+void IGLTexture::SetSubImage1D(int level, int x, int width, TextureFormat format, TextureInternalType type, const void* data)
+{
+	// Unsupported
+}
+
+void IGLTexture::SetSubImage2D(int level, int x, int y, int width, int height, TextureFormat format, TextureInternalType type, const void* data)
+{
+	GL_CHECK(glBindTexture(GL_TexTarget[(int)_type], _id));
+	GL_CHECK(glTexSubImage2D(GL_TexTarget[(int)_type], level, x, y, width, height, GL_TexFormat[(int)format], GL_TexType[(int)type], data));
+	
+	_format = format;
+}
+
+void IGLTexture::SetSubImage3D(int level, int x, int y, int z, int width, int height, int depth, TextureFormat format, TextureInternalType type, const void* data)
+{
+	GL_CHECK(glBindTexture(GL_TexTarget[(int)_type], _id));
+	GL_CHECK(glTexSubImage3D(GL_TexTarget[(int)_type], level, x, y, z, width, height, depth, GL_TexFormat[(int)format], GL_TexType[(int)type], data));
 	
 	_format = format;
 }
