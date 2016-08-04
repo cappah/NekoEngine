@@ -51,7 +51,6 @@ enum class ResourceType : unsigned
 	RES_FONT,
 	RES_MATERIAL,
 	RES_ANIMCLIP,
-	RES_TEXFONT,
 	RES_END
 };
 

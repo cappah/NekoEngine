@@ -66,7 +66,6 @@
 #include <Engine/SoundManager.h>
 #include <Engine/PostProcessor.h>
 #include <Engine/GameModule.h>
-#include <Engine/TextureFont.h>
 #include <Engine/DeferredBuffer.h>
 #include <System/Logger.h>
 #include <PostEffects/Effect.h>
@@ -106,7 +105,7 @@ PlatformWindowType Engine::_engineWindow;
 Configuration Engine::_config;
 bool Engine::_disposed = false;
 bool Engine::_printStats = false;
-TextureFont* Engine::_engineFont = nullptr;
+NFont* Engine::_engineFont = nullptr;
 int Engine::_nFrames = 0;
 double Engine::_lastTime = 0.f;
 int Engine::_fps = 0;
@@ -135,7 +134,7 @@ ComponentClassMapType *EngineClassFactory::_componentClassMap = nullptr;
 extern "C" Renderer *createRenderer();
 extern "C" GameModule *createGameModule();
 #endif
-NFont *nfnt;
+
 void Engine::_ParseArgs(string cmdLine)
 {
 	vector<char*> args = EngineUtils::SplitString(cmdLine.c_str(), ' ');
@@ -651,7 +650,7 @@ int Engine::Initialize(string cmdLine, bool editor)
 	_renderer->SetClearColor(0.f, 0.f, 0.f, 1.f);
 	_renderer->Clear(R_CLEAR_COLOR);
 
-	_engineFont = (TextureFont *)ResourceManager::GetResource(0, ResourceType::RES_TEXFONT);
+	_engineFont = (NFont*)ResourceManager::GetResourceByName("fnt_system", ResourceType::RES_FONT);
 
 	Logger::Log(ENGINE_MODULE, LOG_INFORMATION, "Engine startup complete");
 
@@ -707,11 +706,6 @@ int Engine::Initialize(string cmdLine, bool editor)
 	}
 
 	_prevTime = high_resolution_clock::now();
-
-	nfnt = (NFont*)ResourceManager::GetResourceByName("fnt_aller", ResourceType::RES_FONT);
-	if (!nfnt)
-		Platform::MessageBox("Error", "Failed to load font", MessageBoxButtons::OK, MessageBoxIcon::Error);
-
 	_startup = false;
 
 	return ENGINE_OK;
@@ -738,7 +732,7 @@ void Engine::Pause(bool pause)
 
 void Engine::DrawString(vec2 pos, vec3 color, string text) noexcept
 {
-	nfnt->Draw(text, pos, color);
+	_engineFont->Draw(text, pos, color);
 }
 
 void Engine::DrawString(vec2 pos, vec3 color, const char *fmt, ...) noexcept
@@ -751,7 +745,7 @@ void Engine::DrawString(vec2 pos, vec3 color, const char *fmt, ...) noexcept
 	vsnprintf(buff, FONT_BUFF, fmt, args);
 	va_end(args);
 
-	nfnt->Draw(buff, pos, color);
+	_engineFont->Draw(buff, pos, color);
 }
 
 void Engine::Frame() noexcept
@@ -769,12 +763,12 @@ void Engine::Frame() noexcept
 
 	if(!_paused) Draw();
 		
-	if (nfnt)
+	if (_engineFont)
 	{
 		if (_printStats)
 			_PrintStats();
 			
-		nfnt->Render();
+		_engineFont->Render();
 	}
 	
 	_renderer->SwapBuffers();
@@ -884,7 +878,7 @@ void Engine::CleanUp() noexcept
 
 	if (_engineFont)
 	{
-		ResourceManager::UnloadResource(0, ResourceType::RES_TEXFONT);
+		ResourceManager::UnloadResourceByName("fnt_system", ResourceType::RES_FONT);
 		_engineFont = nullptr;
 	}
 
@@ -1106,7 +1100,7 @@ void Engine::_PrintStats()
 	_frameTime = (esGetTime() - _lastFrameTime) * 1000;
 	_lastFrameTime = esGetTime();*/
 
-	float charHeight = nfnt->GetCharacterHeight();
+	float charHeight = (float)_engineFont->GetCharacterHeight();
 
 	DrawString(vec2(0.f, 0.f), vec3(1.f, 1.f, 1.f), "FPS:       %d (%.02f ms)", _fps, _frameTime);
 

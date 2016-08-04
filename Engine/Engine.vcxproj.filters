@@ -143,9 +143,6 @@
     <ClInclude Include="..\include\Engine\Texture.h">
       <Filter>Include\Engine</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\Engine\TextureFont.h">
-      <Filter>Include\Engine</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\Engine\Version.h">
       <Filter>Include\Engine</Filter>
     </ClInclude>
@@ -189,9 +186,6 @@
       <Filter>Include\Resource</Filter>
     </ClInclude>
     <ClInclude Include="..\include\Resource\ShaderResource.h">
-      <Filter>Include\Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\Resource\TextureFontResource.h">
       <Filter>Include\Resource</Filter>
     </ClInclude>
     <ClInclude Include="..\include\Resource\TextureResource.h">
@@ -594,9 +588,6 @@
       <Filter>Source\Core</Filter>
     </ClCompile>
     <ClCompile Include="Core\Texture.cpp">
-      <Filter>Source\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\TextureFont.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>
     <ClCompile Include="Core\AnimationClip.cpp">

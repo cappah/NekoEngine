@@ -216,7 +216,7 @@ struct Configuration
 };
 
 class GameModule;
-class TextureFont;
+class NFont;
 
 /**
  * Neko Engine
@@ -307,7 +307,7 @@ private:
 	static Configuration _config;
 	static bool _disposed;
 	static bool _printStats;
-	static TextureFont *_engineFont;
+	static NFont *_engineFont;
 	static GameModule *_gameModule;
 	static Renderer *_renderer;
 	static bool _paused;

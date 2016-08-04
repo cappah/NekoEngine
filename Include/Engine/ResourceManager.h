@@ -51,7 +51,6 @@
 #include <Resource/FontResource.h>
 #include <Resource/MaterialResource.h>
 #include <Resource/AnimationClipResource.h>
-#include <Resource/TextureFontResource.h>
 
 #include <Engine/StaticMesh.h>
 #include <Engine/SkeletalMesh.h>
@@ -61,7 +60,6 @@
 #include <Engine/NFont.h>
 #include <Engine/Material.h>
 #include <Engine/AnimationClip.h>
-#include <Engine/TextureFont.h>
 
 class ResourceManager
 {

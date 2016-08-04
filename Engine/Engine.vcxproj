@@ -163,7 +163,6 @@
     <ClInclude Include="..\Include\Engine\SSAO.h" />
     <ClInclude Include="..\Include\Engine\StaticMesh.h" />
     <ClInclude Include="..\include\Engine\Texture.h" />
-    <ClInclude Include="..\include\Engine\TextureFont.h" />
     <ClInclude Include="..\include\Engine\Version.h" />
     <ClInclude Include="..\include\Engine\Vertex.h" />
     <ClInclude Include="..\Include\Platform\Compat.h" />
@@ -188,7 +187,6 @@
     <ClInclude Include="..\include\Resource\Resource.h" />
     <ClInclude Include="..\include\Resource\ResourceInfo.h" />
     <ClInclude Include="..\include\Resource\ShaderResource.h" />
-    <ClInclude Include="..\include\Resource\TextureFontResource.h" />
     <ClInclude Include="..\include\Resource\TextureResource.h" />
     <ClInclude Include="..\Include\Scene\Components\AnimatorComponent.h" />
     <ClInclude Include="..\Include\Scene\Components\AudioSourceComponent.h" />
@@ -294,7 +292,6 @@
     <ClCompile Include="Core\SSAO.cpp" />
     <ClCompile Include="Core\StaticMesh.cpp" />
     <ClCompile Include="Core\Texture.cpp" />
-    <ClCompile Include="Core\TextureFont.cpp" />
     <ClCompile Include="Platform\Compat\reallocarray.cpp" />
     <ClCompile Include="Platform\shared.cpp" />
     <ClCompile Include="Platform\Windows\PlatformInput.cpp" />
