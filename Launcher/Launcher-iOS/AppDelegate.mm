@@ -30,7 +30,7 @@ static UIDeviceOrientation _lastOrientation;
 	args.append([[[NSBundle mainBundle] resourcePath] UTF8String]);
 	args.append("/Data --ini=");
 	args.append([[[NSBundle mainBundle] resourcePath] UTF8String]);
-	args.append("/Engine_Low.ini --log=");
+	args.append("/Engine_iOS.ini --log=");
 	
 	NSArray *urls = [[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask];
 	NSURL *logUrl = [[urls lastObject] URLByAppendingPathComponent:@"NekoEngine.log"];
@@ -47,6 +47,9 @@ static UIDeviceOrientation _lastOrientation;
 	
 	[[NSNotificationCenter defaultCenter] addObserver: self selector:   @selector(deviceOrientationDidChange:) name: UIDeviceOrientationDidChangeNotification object: nil];
 	[[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+	
+	[[UIApplication sharedApplication] setIdleTimerDisabled:true];
+	//[[UIApplication sharedApplication] setIdleTimerDisabled:false];
 	
 	Engine::Run();
 	
@@ -74,8 +77,9 @@ static UIDeviceOrientation _lastOrientation;
 	// Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
 }
 
-- (void)applicationWillTerminate:(UIApplication *)application {
-	// Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+- (void)applicationWillTerminate:(UIApplication *)application
+{
+	[[UIApplication sharedApplication] setIdleTimerDisabled:false];
 }
 
 - (void)deviceOrientationDidChange:(NSNotification *)notification

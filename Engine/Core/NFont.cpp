@@ -239,6 +239,15 @@ int NFont::_BuildAtlas()
 	return ENGINE_OK;
 }
 
+void NFont::ScreenResized(int width, int height)
+{
+	_projection = ortho(0.f, (float)width, 0.f, (float)height);
+	
+	_uniformBuffer->BeginUpdate();
+	_uniformBuffer->UpdateData(0, sizeof(mat4), value_ptr(_projection));
+	_uniformBuffer->EndUpdate();
+}
+
 int NFont::SetPixelSize(int pixelSize)
 {
 	RTexture *oldTexture = _texture;

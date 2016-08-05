@@ -67,6 +67,8 @@ public:
 	ENGINE_API int SetPixelSize(int size);
 
 	ENGINE_API virtual int Load() override;
+	
+	ENGINE_API void ScreenResized(int width, int height);
 
 	ENGINE_API void Draw(std::string text, glm::vec2& pos) noexcept { glm::vec3 white(1.f, 1.f, 1.f); Draw(text, pos, white); }
 	ENGINE_API void Draw(std::string text, glm::vec2& pos, glm::vec3& color) noexcept;

@@ -392,7 +392,6 @@
 		12822B0A1CC1AD9F00EE5D0A /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				121482B61D51466B00F804C3 /* NFont.cpp */,
 				12FABB1B1D3256C400D88639 /* CameraManager.cpp */,
 				12C0588E1D2AF4E90042023D /* Input.cpp */,
 				12C560901CFB57B200E25478 /* AnimationClip.cpp */,
@@ -400,6 +399,7 @@
 				12C560921CFB57B200E25478 /* Engine.cpp */,
 				12C560931CFB57B200E25478 /* LoadingScreen.cpp */,
 				12C560941CFB57B200E25478 /* Material.cpp */,
+				121482B61D51466B00F804C3 /* NFont.cpp */,
 				12C560951CFB57B200E25478 /* PostProcessor.cpp */,
 				12C560961CFB57B200E25478 /* ResourceDatabase.cpp */,
 				12C560971CFB57B200E25478 /* ResourceManager.cpp */,
@@ -529,7 +529,6 @@
 		12822B5B1CC1AE4E00EE5D0A /* Engine */ = {
 			isa = PBXGroup;
 			children = (
-				121482B41D51465000F804C3 /* NFont.h */,
 				12FABB1E1D3256D200D88639 /* CameraManager.h */,
 				12C058911D2AF5360042023D /* Input.h */,
 				12C058921D2AF5360042023D /* Keycodes.h */,
@@ -543,6 +542,7 @@
 				12822B601CC1AE4E00EE5D0A /* GameModule.h */,
 				12822B611CC1AE4E00EE5D0A /* LoadingScreen.h */,
 				12822B621CC1AE4E00EE5D0A /* Material.h */,
+				121482B41D51465000F804C3 /* NFont.h */,
 				12822B631CC1AE4E00EE5D0A /* StaticMesh.h */,
 				12822B641CC1AE4E00EE5D0A /* PostProcessor.h */,
 				12822B651CC1AE4E00EE5D0A /* ResourceDatabase.h */,
