@@ -31,6 +31,9 @@
 		1296BD011CDC1B0700D17488 /* Engine_Low.ini in Resources */ = {isa = PBXBuildFile; fileRef = 1296BD001CDC1B0700D17488 /* Engine_Low.ini */; };
 		1296BD871CDC1E1A00D17488 /* libTestGame_iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1296BD861CDC1E1700D17488 /* libTestGame_iOS.a */; };
 		12A15FB61CD4460F00BEDD06 /* libGLRenderer.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 12A15FB31CD445FE00BEDD06 /* libGLRenderer.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		12A9BAAC1D54F037001B363A /* libfreetype.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 12A9BAAB1D54F037001B363A /* libfreetype.a */; };
+		12A9BAAE1D54F691001B363A /* Fonts in Resources */ = {isa = PBXBuildFile; fileRef = 12A9BAAD1D54F691001B363A /* Fonts */; };
+		12A9BAAF1D54F6A4001B363A /* Fonts in CopyFiles */ = {isa = PBXBuildFile; fileRef = 12A9BAAD1D54F691001B363A /* Fonts */; };
 		12B748301CC6E7C600825D36 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 12B7482F1CC6E7C600825D36 /* Assets.xcassets */; };
 		12B748381CC6E80100825D36 /* launcher.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1270119A1CC31326001840A7 /* launcher.mm */; };
 		12B7483B1CC6E81B00825D36 /* libEngine.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 127012531CC315FD001840A7 /* libEngine.dylib */; };
@@ -133,6 +136,7 @@
 			dstPath = Data;
 			dstSubfolderSpec = 7;
 			files = (
+				12A9BAAF1D54F6A4001B363A /* Fonts in CopyFiles */,
 				1219768B1D469CCC00CCDD12 /* resources.db in CopyFiles */,
 				1219768C1D469CCC00CCDD12 /* Shaders in CopyFiles */,
 				1219768D1D469CCC00CCDD12 /* Sounds in CopyFiles */,
@@ -191,6 +195,8 @@
 		1296BC4C1CDC132C00D17488 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1296BD001CDC1B0700D17488 /* Engine_Low.ini */ = {isa = PBXFileReference; lastKnownFileType = text; name = Engine_Low.ini; path = ../../Resources/Engine_Low.ini; sourceTree = "<group>"; };
 		12A15FAE1CD445FE00BEDD06 /* GLRenderer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GLRenderer.xcodeproj; path = ../GLRenderer/GLRenderer.xcodeproj; sourceTree = "<group>"; };
+		12A9BAAB1D54F037001B363A /* libfreetype.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libfreetype.a; path = Frameworks/freetype/libfreetype.a; sourceTree = "<group>"; };
+		12A9BAAD1D54F691001B363A /* Fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Fonts; path = ../Resources/Data/Fonts; sourceTree = "<group>"; };
 		12B748271CC6E7C600825D36 /* Launcher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Launcher.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		12B7482F1CC6E7C600825D36 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		12B748341CC6E7C600825D36 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -210,6 +216,7 @@
 				124A32081CDC267D00472893 /* libz.tbd in Frameworks */,
 				122A3AC01D338B7B0047786A /* ogg.framework in Frameworks */,
 				122A3AC11D338B7B0047786A /* vorbis.framework in Frameworks */,
+				12A9BAAC1D54F037001B363A /* libfreetype.a in Frameworks */,
 				1296BD871CDC1E1A00D17488 /* libTestGame_iOS.a in Frameworks */,
 				1296BC551CDC145600D17488 /* libEngine_iOS.a in Frameworks */,
 			);
@@ -230,6 +237,7 @@
 			isa = PBXGroup;
 			children = (
 				121976881D469CCC00CCDD12 /* resources.db */,
+				12A9BAAD1D54F691001B363A /* Fonts */,
 				121976891D469CCC00CCDD12 /* Shaders */,
 				1219768A1D469CCC00CCDD12 /* Sounds */,
 				121976851D469C7400CCDD12 /* core.nar */,
@@ -240,6 +248,7 @@
 		124A320D1CDC26AE00472893 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				12A9BAAA1D54F02C001B363A /* freetype */,
 				122A3ABA1D338B340047786A /* ogg.framework */,
 				122A3ABB1D338B340047786A /* vorbis.framework */,
 				124A32501CDC299500472893 /* OpenGLES.framework */,
@@ -330,6 +339,14 @@
 				12A15FB31CD445FE00BEDD06 /* libGLRenderer.dylib */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		12A9BAAA1D54F02C001B363A /* freetype */ = {
+			isa = PBXGroup;
+			children = (
+				12A9BAAB1D54F037001B363A /* libfreetype.a */,
+			);
+			name = freetype;
 			sourceTree = "<group>";
 		};
 		12B748281CC6E7C600825D36 /* Launcher */ = {
@@ -503,6 +520,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				12A9BAAE1D54F691001B363A /* Fonts in Resources */,
 				1296BC4B1CDC132C00D17488 /* LaunchScreen.storyboard in Resources */,
 				1219768F1D469D3900CCDD12 /* scenes.cfg in Resources */,
 				1296BC481CDC132C00D17488 /* Assets.xcassets in Resources */,
@@ -696,10 +714,15 @@
 				HEADER_SEARCH_PATHS = (
 					"\"$(SRCROOT)/../Include\"",
 					"\"$(SRCROOT)/../3rdparty/include_all\"",
+					"\"$(PROJECT_DIR)/Launcher-iOS/Frameworks/freetype/include\"",
 				);
 				INFOPLIST_FILE = "Launcher-iOS/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Launcher-iOS/Frameworks/freetype",
+				);
 				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.anaiman.Launcher-iOS";
 				PRODUCT_NAME = NekoEngine;
@@ -737,10 +760,15 @@
 				HEADER_SEARCH_PATHS = (
 					"\"$(SRCROOT)/../Include\"",
 					"\"$(SRCROOT)/../3rdparty/include_all\"",
+					"\"$(PROJECT_DIR)/Launcher-iOS/Frameworks/freetype/include\"",
 				);
 				INFOPLIST_FILE = "Launcher-iOS/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Launcher-iOS/Frameworks/freetype",
+				);
 				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.anaiman.Launcher-iOS";
 				PRODUCT_NAME = NekoEngine;

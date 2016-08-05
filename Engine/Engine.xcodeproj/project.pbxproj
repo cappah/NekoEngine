@@ -971,6 +971,7 @@
 				HEADER_SEARCH_PATHS = (
 					"\"$(SRCROOT)/../Include\"",
 					"\"$(SRCROOT)/../3rdparty/include_all\"",
+					"\"$(SRCROOT)/../Launcher/Launcher-iOS/Frameworks/freetype/include\"",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LLVM_LTO = YES;
@@ -1000,6 +1001,7 @@
 				HEADER_SEARCH_PATHS = (
 					"\"$(SRCROOT)/../Include\"",
 					"\"$(SRCROOT)/../3rdparty/include_all\"",
+					"\"$(SRCROOT)/../Launcher/Launcher-iOS/Frameworks/freetype/include\"",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LLVM_LTO = YES;
