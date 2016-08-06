@@ -65,6 +65,12 @@ const char* Platform::GetMachineName()
 	return uname_data.nodename;
 }
 
+const char* Platform::GetMachineArchitecture()
+{
+	uname(&uname_data);
+	return uname_data.machine;
+}
+
 const char* Platform::GetVersion()
 {
 	uname(&uname_data);

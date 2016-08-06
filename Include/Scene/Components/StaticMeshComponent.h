@@ -57,6 +57,8 @@ public:
 	ENGINE_API StaticMeshComponent(ComponentInitializer *initializer);
 
 	ENGINE_API StaticMesh *GetMesh() noexcept { return _mesh; }
+	ENGINE_API virtual size_t GetVertexCount() noexcept override { return _mesh->GetVertexCount(); }
+	ENGINE_API virtual size_t GetTriangleCount() noexcept override { return _mesh->GetTriangleCount(); }
 
 	ENGINE_API virtual void SetLocalPosition(glm::vec3& position) noexcept override;
 	ENGINE_API virtual void SetLocalRotation(glm::vec3& rotation) noexcept override;

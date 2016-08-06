@@ -170,6 +170,21 @@ const char* Platform::GetMachineName()
 	return _machineName;
 }
 
+const char* Platform::GetMachineArchitecture()
+{
+	SYSTEM_INFO sysInfo;
+	GetSystemInfo(&sysInfo);
+	
+	switch(sysInfo.wProcessorArchitecture)
+	{
+		case PROCESSOR_ARCHITECTURE_AMD64: return "x86_64";
+		case PROCESSOR_ARCHITECTURE_ARM: return "arm";
+		case PROCESSOR_ARCHITECTURE_IA64: return "ia64";
+		case PROCESSOR_ARCHITECTURE_INTEL: return "x86";
+		default: return "Unknown";
+	}
+}
+
 const char* Platform::GetVersion()
 {
 	if (_version[0] != 0)

@@ -66,6 +66,8 @@ public:
 	ENGINE_API virtual glm::vec3 &GetPosition() noexcept { return _position; }
 	ENGINE_API virtual glm::vec3 &GetRotation() noexcept { return _rotation; }
 	ENGINE_API virtual glm::vec3 &GetScale() noexcept { return _scale; }
+	ENGINE_API virtual size_t GetVertexCount() noexcept { return 0; }
+	ENGINE_API virtual size_t GetTriangleCount() noexcept { return 0; }
 	
 	ENGINE_API virtual void SetParent(class Object *obj) { _parent = obj; }
 	ENGINE_API virtual void SetLocalPosition(glm::vec3& position) noexcept;

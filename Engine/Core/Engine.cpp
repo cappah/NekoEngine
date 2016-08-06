@@ -616,6 +616,7 @@ int Engine::Initialize(string cmdLine, bool editor)
 	Logger::Log(ENGINE_MODULE, LOG_INFORMATION, "Platform: %s", Platform::GetName());
 	Logger::Log(ENGINE_MODULE, LOG_INFORMATION, "Platform version: %s", Platform::GetVersion());
 	Logger::Log(ENGINE_MODULE, LOG_INFORMATION, "Machine name: %s", Platform::GetMachineName());
+	Logger::Log(ENGINE_MODULE, LOG_INFORMATION, "Architecture: %s", Platform::GetMachineArchitecture());
 
 #ifndef EDITOR
 	_engineWindow = Platform::CreateWindow(_config.Engine.ScreenWidth, _config.Engine.ScreenHeight, _config.Engine.Fullscreen);

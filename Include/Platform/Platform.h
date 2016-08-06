@@ -129,6 +129,7 @@ public:
 	// Platform specific
 	static const char* GetName();
 	static const char* GetMachineName();
+	static const char* GetMachineArchitecture();
 	static const char* GetVersion();
 	
 	static void SetActiveWindow(PlatformWindowType hWnd) { _activeWindow = hWnd; }

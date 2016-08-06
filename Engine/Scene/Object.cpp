@@ -233,6 +233,22 @@ void Object::MoveRight(float distance) noexcept
 	SetPosition(_position);
 }
 
+size_t Object::GetVertexCount() noexcept
+{
+	size_t ret = 0;
+	for(pair<string, ObjectComponent*> kvp : _components)
+		ret += kvp.second->GetVertexCount();
+	return ret;
+}
+
+size_t Object::GetTriangleCount() noexcept
+{
+	size_t ret = 0;
+	for(pair<string, ObjectComponent*> kvp : _components)
+		ret += kvp.second->GetTriangleCount();
+	return ret;
+}
+
 int Object::Load()
 {
 	if((_objectUbo = _renderer->CreateBuffer(BufferType::Uniform, true, false)) == nullptr)

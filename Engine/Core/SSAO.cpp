@@ -215,13 +215,13 @@ bool SSAO::_GenerateTextures()
 {
 	if((_textures[SSAO_TEX_COLOR] = Engine::GetRenderer()->CreateTexture(TextureType::Tex2D)) == nullptr)
 		return false;
-	_textures[SSAO_TEX_COLOR]->SetStorage2D(1, TextureSizedFormat::R_32F, _fboWidth, _fboHeight);
+	_textures[SSAO_TEX_COLOR]->SetStorage2D(1, TextureSizedFormat::R_8U, _fboWidth, _fboHeight);
 	_textures[SSAO_TEX_COLOR]->SetMinFilter(TextureFilter::Linear);
 	_textures[SSAO_TEX_COLOR]->SetMagFilter(TextureFilter::Linear);
 
 	if((_textures[SSAO_TEX_BLUR] = Engine::GetRenderer()->CreateTexture(TextureType::Tex2D)) == nullptr)
 		return false;
-	_textures[SSAO_TEX_BLUR]->SetStorage2D(1, TextureSizedFormat::R_32F, _fboWidth, _fboHeight);
+	_textures[SSAO_TEX_BLUR]->SetStorage2D(1, TextureSizedFormat::R_8U, _fboWidth, _fboHeight);
 	_textures[SSAO_TEX_BLUR]->SetMinFilter(TextureFilter::Linear);
 	_textures[SSAO_TEX_BLUR]->SetMagFilter(TextureFilter::Linear);
 	
