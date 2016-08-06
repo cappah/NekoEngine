@@ -48,6 +48,14 @@ vector<uint8_t> Input::_pressedKeys;
 unordered_map<int, uint8_t> Input::_keymap;
 float Input::_screenHalfWidth = 0.f, Input::_screenHalfHeight = 0.f;
 float Input::_mouseAxis[2] = { 0.f, 0.f };
+float Input::_sensivity[26] = 
+{
+	0.f, 0.f,
+	0.f, 0.f, 0.f, 0.f, 0.f, 0.f,
+	0.f, 0.f, 0.f, 0.f, 0.f, 0.f,
+	0.f, 0.f, 0.f, 0.f, 0.f, 0.f,
+	0.f, 0.f, 0.f, 0.f, 0.f, 0.f
+};
 unordered_map<std::string, uint8_t> Input::_buttonMap;
 unordered_map<std::string, uint8_t> Input::_axisMap;
 int Input::_connectedControllers = 0;
@@ -66,6 +74,24 @@ int Input::Initialize(bool captureMouse)
 	_captureMouse = captureMouse;
 
 	return ENGINE_OK;
+}
+
+void Input::SetAxisSensivity(uint8_t axis, float sensivity)
+{
+	if (axis <= 0x07)
+	{
+		_sensivity[axis] = sensivity;
+		return;
+	}
+	
+	uint8_t id = 0;
+	while (axis >= 0x10)
+	{
+		axis -= 0x10;
+		id++;
+	}
+	
+	_sensivity[axis + id * 6] = sensivity;
 }
 
 bool Input::GetKeyUp(uint8_t key) noexcept
@@ -89,7 +115,7 @@ bool Input::GetKeyDown(uint8_t key) noexcept
 float Input::GetAxis(uint8_t axis) noexcept
 {
 	if (axis <= 0x01)
-		return _mouseAxis[axis];
+		return _mouseAxis[axis] * _sensivity[axis];
 
 	uint8_t id = 0;
 	while (axis >= 0x10)
@@ -97,15 +123,17 @@ float Input::GetAxis(uint8_t axis) noexcept
 		axis -= 0x10;
 		id++;
 	}
+	
+	int sensivityOffset =  id * 6;
 
 	switch (axis)
 	{
-		case NE_GPAD0_LX: return _controllerState[id].left_x;
-		case NE_GPAD0_LY: return _controllerState[id].left_y;
-		case NE_GPAD0_RX: return _controllerState[id].right_x;
-		case NE_GPAD0_RY: return _controllerState[id].right_y;
-		case NE_GPAD0_TL: return _controllerState[id].left_trigger;
-		case NE_GPAD0_TR: return _controllerState[id].right_trigger;
+		case NE_GPAD0_LX: return _controllerState[id].left_x * _sensivity[2 + sensivityOffset];
+		case NE_GPAD0_LY: return _controllerState[id].left_y * _sensivity[3 + sensivityOffset];
+		case NE_GPAD0_RX: return _controllerState[id].right_x * _sensivity[4 + sensivityOffset];
+		case NE_GPAD0_RY: return _controllerState[id].right_y * _sensivity[5 + sensivityOffset];
+		case NE_GPAD0_TL: return _controllerState[id].left_trigger * _sensivity[6 + sensivityOffset];
+		case NE_GPAD0_TR: return _controllerState[id].right_trigger * _sensivity[7 + sensivityOffset];
 		default: return 0.f;
 	}
 }

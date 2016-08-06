@@ -98,6 +98,7 @@ public:
 
 	ENGINE_API static void AddButtonMapping(std::string map, uint8_t button) { _buttonMap.insert(std::make_pair(map, button)); }
 	ENGINE_API static void AddAxisMapping(std::string map, uint8_t axis) { _axisMap.insert(std::make_pair(map, axis)); }
+	ENGINE_API static void SetAxisSensivity(uint8_t axis, float horizontal);
 
 	ENGINE_API static bool GetKeyUp(uint8_t key) noexcept;
 	ENGINE_API static bool GetKeyDown(uint8_t key) noexcept;
@@ -127,6 +128,7 @@ private:
 	static std::unordered_map<int, uint8_t> _keymap;
 	static float _screenHalfWidth, _screenHalfHeight;
 	static float _mouseAxis[2];
+	static float _sensivity[26];
 	static std::unordered_map<std::string, uint8_t> _buttonMap;
 	static std::unordered_map<std::string, uint8_t> _axisMap;
 	static int _connectedControllers;

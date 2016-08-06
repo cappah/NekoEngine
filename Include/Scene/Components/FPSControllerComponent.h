@@ -46,19 +46,11 @@
 #include <Engine/AnimationClip.h>
 #include <Engine/Skeleton.h>
 
-#ifdef NE_PLATFORM_IOS
-#define DEFAULT_VSENS		.75f
-#define DEFAULT_HSENS		.75f
-#define DEFAULT_MOVE_SPD	300.f
-#define DEFAULT_SPRINT_SPD	175.f
-#define DEFAULT_ROTS		40.f
-#else
 #define DEFAULT_VSENS		25.0f
 #define DEFAULT_HSENS		25.0f
 #define DEFAULT_MOVE_SPD	250.f
 #define DEFAULT_SPRINT_SPD	370.f
 #define DEFAULT_ROTS		40.f
-#endif
 
 class FPSControllerComponent : public ObjectComponent
 {

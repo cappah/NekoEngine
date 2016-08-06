@@ -251,7 +251,7 @@ void Engine::_ReadInputConfig(const char *file)
 	end = Platform::GetConfigSection("Input.AxisMapping", buff, INI_BUFF_SZ, file) == 0;
 	while (!end)
 	{
-		char c, *vptr;
+		char c, *axis_ptr, *sens_ptr;
 
 		while ((c = buff[i]) != 0x0)
 		{
@@ -263,12 +263,17 @@ void Engine::_ReadInputConfig(const char *file)
 		if (buff[++i] == 0x0)
 			end = true;
 
-		if ((vptr = strchr(optBuff, '=')) == nullptr)
+		if ((axis_ptr = strchr(optBuff, '=')) == nullptr)
+			break;
+		
+		if((sens_ptr = strchr(axis_ptr, ';')) == nullptr)
 			break;
 
-		*vptr++ = 0x0;
+		*axis_ptr++ = 0x0;
+		*sens_ptr++ = 0x0;
 
-		Input::AddAxisMapping(optBuff, atoi(vptr));
+		Input::AddAxisMapping(optBuff, atoi(axis_ptr));
+		Input::SetAxisSensivity(atoi(axis_ptr), atof(sens_ptr));
 
 		memset(optBuff, 0x0, INI_BUFF_SZ);
 		optI = 0;
