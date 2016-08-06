@@ -113,7 +113,7 @@ void inline create_directory(const char *dir)
 #ifdef _WIN32
 	_mkdir(dir);
 #else
-	mkdir(dir, 0x777);
+	mkdir(dir, 0777);
 #endif
 }
 
@@ -325,7 +325,7 @@ int inline extract_archive(const char *archive_file, const char *out_dir)
 
 int main(int argc, char *argv[])
 {
-    printf("NekoEngine Archive Tool\nVersion: 0.3.0\n(C) 2016 Alexandru Naiman. All rights reserved.\n\n");
+    printf("NekoEngine Archive Tool\nVersion: 0.3.0a\n(C) 2016 Alexandru Naiman. All rights reserved.\n\n");
 	if (argc < 3)
 		usage(argv[0]);
 
