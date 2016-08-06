@@ -284,7 +284,7 @@ int NFont::SetPixelSize(int pixelSize)
 void NFont::Draw(string text, vec2 &pos, vec3 &color) noexcept
 {
 	unsigned int vertexCount = (unsigned int)_vertices.size();
-	int offset = Engine::GetScreenHeight() - _texHeight + 4.f;
+	int offset = Engine::GetScreenHeight() - (int)_texHeight + 4;
 
 	for (unsigned int i = 0; i < text.length(); i++)
 	{
@@ -292,8 +292,8 @@ void NFont::Draw(string text, vec2 &pos, vec3 &color) noexcept
 
 		float x = pos.x + info.bearing.x;
 		float y = (offset - pos.y) - (info.size.y - info.bearing.y);
-		float w = info.size.x;
-		float h = info.size.y;
+		float w = (float)info.size.x;
+		float h = (float)info.size.y;
 
 		Vertex v;
 		v.color = color;
