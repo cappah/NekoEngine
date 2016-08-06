@@ -78,6 +78,12 @@ int VFSArchive::Load()
 		Logger::Log(VFS_AR_MODULE, LOG_CRITICAL, "Archive version missmatch for %s", _path.c_str());
 		return ENGINE_IO_FAIL;
 	}
+	
+	if(_header.num_files <= 0 || _header.num_files > VFS_MAX_FILES)
+	{
+		Logger::Log(VFS_AR_MODULE, LOG_CRITICAL, "Invalid number of files for %s", _path.c_str());
+		return ENGINE_FAIL;
+	}
 
 	_files.reserve(_header.num_files);
 

@@ -53,6 +53,7 @@
 
 #define VFS_MAGIC			0xB16B00B5
 #define VFS_AR_VERSION		0x00000001
+#define VFS_MAX_FILES		10000
 
 #define VFS_MAX_FILE_NAME		1024
 #define VFS_MAX_DIR_NAME		1024
@@ -198,6 +199,12 @@ int inline create_archive(const char *root_dir, const char *archive_file)
 			fprintf(stderr, "failed to open directory: %s", info.path.c_str());
 			return -1;
 		}
+	}
+	
+	if(fileHeaders.size() > VFS_MAX_FILES)
+	{
+		fprintf(stderr, "the maximum number of files supported by a VFS acrhive is %d. You are trying to create an archive with %lu files\n", VFS_MAX_FILES, fileHeaders.size());
+		return -1;
 	}
 
 	// Create archive

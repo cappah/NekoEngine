@@ -69,7 +69,9 @@ NFont::NFont(FontResource *res)
 	_texture = nullptr;
 	_vertexBuffer = nullptr;
 	_indexBuffer = nullptr;
+	_uniformBuffer = nullptr;
 	_arrayBuffer = nullptr;
+	_shader = nullptr;
 	_pixelSize = 16;
 }
 

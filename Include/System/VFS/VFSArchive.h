@@ -48,6 +48,7 @@
 
 #define VFS_MAGIC			0xB16B00B5
 #define VFS_AR_VERSION		0x00000001
+#define VFS_MAX_FILES		10000
 
 typedef struct VFS_ARCHIVE_HEADER
 {

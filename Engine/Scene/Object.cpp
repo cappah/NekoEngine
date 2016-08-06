@@ -88,6 +88,7 @@ Object::Object(ObjectInitializer *initializer) noexcept
 	_scaleMatrix = mat4();
 	_modelMatrix = mat4();
 	_loaded = false;
+	_updateWhilePaused = false;
 	
 	_renderer = Engine::GetRenderer();
 
