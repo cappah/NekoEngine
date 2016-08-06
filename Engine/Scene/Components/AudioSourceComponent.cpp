@@ -112,7 +112,6 @@ void AudioSourceComponent::Unload()
 		ResourceManager::UnloadResourceByName(_defaultClipId.c_str(), ResourceType::RES_AUDIOCLIP);
 	_defaultClip = nullptr;
 
-	if (_src)
-		delete _src;
+	delete _src;
 	_src = nullptr;
 }

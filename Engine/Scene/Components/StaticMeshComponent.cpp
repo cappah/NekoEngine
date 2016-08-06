@@ -231,7 +231,7 @@ void StaticMeshComponent::Unload()
 	if (_mesh)
 	{
 		if (_mesh->GetResourceInfo() != nullptr)
-			ResourceManager::UnloadResource(_mesh->GetResourceInfo()->id,
+			ResourceManager::UnloadResourceByName(_meshId.c_str(),
 			_mesh->GetResourceInfo()->meshType == MeshType::Static ?
 			ResourceType::RES_STATIC_MESH : ResourceType::RES_SKELETAL_MESH);
 		else

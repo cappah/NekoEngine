@@ -179,7 +179,7 @@ void Object::SetForwardDirection(ForwardDirection dir) noexcept
 		break;
 		case ForwardDirection::NegativeX:
 		{
-				_forward = vec3(-1.f, 0.f, 0.f);
+			_forward = vec3(-1.f, 0.f, 0.f);
 			_right = vec3(0.f, 0.f, -1.f);
 		}
 		break;

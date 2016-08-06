@@ -44,6 +44,8 @@
 
 using namespace std;
 
+#define INPUT_MODULE	"Input"
+
 vector<uint8_t> Input::_pressedKeys;
 unordered_map<int, uint8_t> Input::_keymap;
 float Input::_screenHalfWidth = 0.f, Input::_screenHalfHeight = 0.f;
@@ -72,6 +74,8 @@ int Input::Initialize(bool captureMouse)
 	_connectedControllers = _GetControllerCount();
 
 	_captureMouse = captureMouse;
+	
+	Logger::Log(INPUT_MODULE, LOG_INFORMATION, "Initialized");
 
 	return ENGINE_OK;
 }
@@ -174,4 +178,5 @@ void Input::Update() noexcept
 
 void Input::Release()
 {
+	Logger::Log(INPUT_MODULE, LOG_INFORMATION, "Released");
 }

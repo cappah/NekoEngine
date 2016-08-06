@@ -519,7 +519,7 @@ bool DeferredBuffer::_AttachTextures() noexcept
 	
 	if (_fbos[GB_FBO_GEOMETRY]->CheckStatus() != FramebufferStatus::Complete)
 	{
-		Logger::Log(DR_MODULE, LOG_WARNING, "Failed to create geometry framebuffer");
+		Logger::Log(DR_MODULE, LOG_CRITICAL, "Failed to create geometry framebuffer");
 		return false;
 	}
 
@@ -529,7 +529,7 @@ bool DeferredBuffer::_AttachTextures() noexcept
 
 	if (_fbos[GB_FBO_LIGHT]->CheckStatus() != FramebufferStatus::Complete)
 	{
-		Logger::Log(DR_MODULE, LOG_WARNING, "Failed to create light framebuffer");
+		Logger::Log(DR_MODULE, LOG_CRITICAL, "Failed to create light framebuffer");
 		return false;
 	}
 
@@ -537,7 +537,7 @@ bool DeferredBuffer::_AttachTextures() noexcept
 
 	if (_fbos[GB_FBO_BRIGHT]->CheckStatus() != FramebufferStatus::Complete)
 	{
-		Logger::Log(DR_MODULE, LOG_WARNING, "Failed to create brightness framebuffer");
+		Logger::Log(DR_MODULE, LOG_CRITICAL, "Failed to create brightness framebuffer");
 		return false;
 	}
 
@@ -546,7 +546,7 @@ bool DeferredBuffer::_AttachTextures() noexcept
 
 	if (_fbos[GB_FBO_LIGHT_ACCUM]->CheckStatus() != FramebufferStatus::Complete)
 	{
-		Logger::Log(DR_MODULE, LOG_WARNING, "Failed to create light acummulation framebuffer");
+		Logger::Log(DR_MODULE, LOG_CRITICAL, "Failed to create light acummulation framebuffer");
 		return false;
 	}
 
@@ -594,21 +594,27 @@ void DeferredBuffer::Release() noexcept
 {
 	_DeleteTextures();
 
-	delete _fbos[GB_FBO_GEOMETRY];
-	delete _fbos[GB_FBO_LIGHT];
-	delete _fbos[GB_FBO_BRIGHT];
-	delete _fbos[GB_FBO_LIGHT_ACCUM];
+	ResourceManager::UnloadResourceByName("sh_geometry", ResourceType::RES_SHADER);
+	ResourceManager::UnloadResourceByName("sh_lighting", ResourceType::RES_SHADER);
+	
+	delete _fbos[GB_FBO_GEOMETRY]; _fbos[GB_FBO_GEOMETRY] = nullptr;
+	delete _fbos[GB_FBO_LIGHT]; _fbos[GB_FBO_LIGHT] = nullptr;
+	delete _fbos[GB_FBO_BRIGHT]; _fbos[GB_FBO_BRIGHT] = nullptr;
+	delete _fbos[GB_FBO_LIGHT_ACCUM]; _fbos[GB_FBO_LIGHT_ACCUM] = nullptr;
 
-	delete _shadow;
-	delete _ssao;
+	delete _shadow; _shadow = nullptr;
+	delete _ssao; _ssao = nullptr;
 
 	if (_lightSphere)
 	{
 		_lightSphere->Unload();
 		delete _lightSphere;
+		_lightSphere = nullptr;
 	}
 	
-	delete _lightMatrixUbo;
-	delete _sceneLightUbo;
-	delete _lightUbo;
+	delete _lightMatrixUbo; _lightMatrixUbo = nullptr;
+	delete _sceneLightUbo; _sceneLightUbo = nullptr;
+	delete _lightUbo; _lightUbo = nullptr;
+	
+	Logger::Log(DR_MODULE, LOG_INFORMATION, "Released");
 }

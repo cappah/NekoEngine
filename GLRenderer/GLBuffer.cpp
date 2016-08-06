@@ -277,6 +277,7 @@ GLBuffer::~GLBuffer()
 	GL_CHECK(glDeleteBuffers(1, &_id));
 
 	free(_syncRanges);
+	_syncRanges = nullptr;
 }
 
 // Non-DSA variants

@@ -53,6 +53,8 @@
 using namespace std;
 using namespace glm;
 
+#define SSAO_MODULE	"SSAO"
+
 SSAO::SSAO(int width, int height) :
 	_fbos{ 0, 0 },
 	_textures{ 0, 0 ,0 },
@@ -233,14 +235,14 @@ bool SSAO::_AttachTextures()
 	_fbos[SSAO_FBO_0]->AttachTexture(DrawAttachment::Color0, _textures[SSAO_TEX_COLOR]);
 	if (_fbos[SSAO_FBO_0]->CheckStatus() != FramebufferStatus::Complete)
 	{
-		Logger::Log("OpenGL", LOG_WARNING, "glCheckNamedFramebufferStatus call from %s, line %d returned", __FILE__, __LINE__);
+		Logger::Log(SSAO_MODULE, LOG_CRITICAL, "First framebuffer incomplete");
 		return false;
 	}
 
 	_fbos[SSAO_FBO_1]->AttachTexture(DrawAttachment::Color0, _textures[SSAO_TEX_BLUR]);
 	if (_fbos[SSAO_FBO_1]->CheckStatus() != FramebufferStatus::Complete)
 	{
-		Logger::Log("OpenGL", LOG_WARNING, "glCheckNamedFramebufferStatus call from %s, line %d returned", __FILE__, __LINE__);
+		Logger::Log(SSAO_MODULE, LOG_CRITICAL, "Second framebuffer incomplete");
 		return false;
 	}
 
@@ -259,6 +261,10 @@ void SSAO::_DeleteTextures(bool noise)
 SSAO::~SSAO()
 {
 	_DeleteTextures(true);
+	
+	ResourceManager::UnloadResourceByName("sh_ssao", ResourceType::RES_SHADER);
+	ResourceManager::UnloadResourceByName("sh_ssao_blur", ResourceType::RES_SHADER);
+	
 	delete _fbos[SSAO_FBO_0];
 	delete _fbos[SSAO_FBO_1];
 	delete _matrixUbo;

@@ -507,7 +507,7 @@ bool Engine::_InitSystem()
 
 	vector<char*> vfsArchives = EngineUtils::SplitString(_vfsArchiveList, ';');
 
-	for (const char *archive : vfsArchives)
+	for (char *archive : vfsArchives)
 	{
 		char buff[VFS_MAX_FILE_NAME];
 		memset(buff, 0x0, VFS_MAX_FILE_NAME);
@@ -515,6 +515,8 @@ bool Engine::_InitSystem()
 			return false;
 
 		VFS::LoadArchive(buff);
+		
+		free(archive);
 	}
 	
 	if (ResourceManager::Initialize() != ENGINE_OK)
@@ -872,61 +874,6 @@ void Engine::ScreenResized(int width, int height) noexcept
 	_renderer->ScreenResized();
 }
 
-void Engine::CleanUp() noexcept
-{
-	if (_disposed)
-		return;
-
-	Logger::Log(ENGINE_MODULE, LOG_INFORMATION, "Shuting down...");
-
-	if(!_graphicsDebug)
-		Platform::ReleasePointer();
-
-	if(_gameModule)
-		_gameModule->CleanUp();
-
-	if (_engineFont)
-	{
-		ResourceManager::UnloadResourceByName("fnt_system", ResourceType::RES_FONT);
-		_engineFont = nullptr;
-	}
-
-	DeferredBuffer::Release();
-	PostProcessor::Release();
-	SceneManager::Release();
-	SoundManager::Release();
-	ResourceManager::Release();
-	VFS::Release();
-	Input::Release();
-
-	delete _gameModule;
-	_gameModule = nullptr;
-
-	if(_gameModuleLibrary)
-		Platform::ReleaseModule(_gameModuleLibrary);
-	_gameModuleLibrary = nullptr;
-
-	delete _quadVBO;
-	delete _quadVAO;
-
-	delete _renderer;
-	_renderer = nullptr;
-	
-	if(_rendererLibrary)
-		Platform::ReleaseModule(_rendererLibrary);
-	_rendererLibrary = nullptr;
-
-	EngineClassFactory::CleanUp();
-
-	FT_Done_FreeType(_ftLibrary);
-
-	Logger::Log(ENGINE_MODULE, LOG_INFORMATION, "Shutdown complete");
-
-	Platform::CleanUp();
-
-	_disposed = true;
-}
-
 Object *Engine::NewObject(const std::string &className, ObjectInitializer *initializer)
 {
 	Object *obj = EngineClassFactory::NewObject(className, initializer);
@@ -1147,4 +1094,57 @@ void Engine::_PrintStats()
 #else
 	DrawString(vec2(0.f, _config.Engine.ScreenHeight - charHeight), vec3(1.f, 1.f, 1.f), "Version: %s [%s]", ENGINE_VERSION_STRING, ENGINE_PLATFORM_STRING);
 #endif
+}
+
+void Engine::CleanUp() noexcept
+{
+	if (_disposed)
+		return;
+
+	Logger::Log(ENGINE_MODULE, LOG_INFORMATION, "Shuting down...");
+
+	if(!_graphicsDebug)
+		Platform::ReleasePointer();
+
+	if(_gameModule)
+		_gameModule->CleanUp();
+
+	if (_engineFont)
+	{
+		ResourceManager::UnloadResourceByName("fnt_system", ResourceType::RES_FONT);
+		_engineFont = nullptr;
+	}
+
+	DeferredBuffer::Release();
+	PostProcessor::Release();
+	SceneManager::Release();
+	SoundManager::Release();
+	ResourceManager::Release();
+	VFS::Release();
+	Input::Release();
+
+	delete _gameModule; _gameModule = nullptr;
+
+	if(_gameModuleLibrary)
+		Platform::ReleaseModule(_gameModuleLibrary);
+	_gameModuleLibrary = nullptr;
+
+	delete _quadVAO; _quadVAO = nullptr;
+	delete _quadVBO; _quadVBO = nullptr;
+
+	delete _renderer; _renderer = nullptr;
+	
+	if(_rendererLibrary)
+		Platform::ReleaseModule(_rendererLibrary);
+	_rendererLibrary = nullptr;
+
+	EngineClassFactory::CleanUp();
+
+	FT_Done_FreeType(_ftLibrary);
+
+	Logger::Log(ENGINE_MODULE, LOG_INFORMATION, "Shutdown complete");
+
+	Platform::CleanUp();
+
+	_disposed = true;
 }

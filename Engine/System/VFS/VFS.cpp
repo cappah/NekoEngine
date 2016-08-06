@@ -129,6 +129,8 @@ int VFS::Initialize()
 			}
 		}
 	}
+	
+	Logger::Log(VFS_MODULE, LOG_INFORMATION, "Initialized");
 
 	return ENGINE_OK;
 }
@@ -183,4 +185,6 @@ void VFS::Release()
 	for (VFSArchive *archive : _archives)
 		delete archive;
 	_archives.clear();
+	
+	Logger::Log(VFS_MODULE, LOG_INFORMATION, "Released");
 }

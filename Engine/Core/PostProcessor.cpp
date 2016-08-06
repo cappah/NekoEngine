@@ -113,7 +113,7 @@ bool PostProcessor::_AttachTextures() noexcept
 	
 	if (_fbos[FBO_DRAW]->CheckStatus() != FramebufferStatus::Complete)
 	{
-		Logger::Log("OpenGL", LOG_WARNING, "glCheckNamedFramebufferStatus call from %s, line %d returned", __FILE__, __LINE__);
+		Logger::Log(PP_MODULE, LOG_CRITICAL, "Draw framebuffer incomplete");
 		return false;
 	}
 
@@ -122,7 +122,7 @@ bool PostProcessor::_AttachTextures() noexcept
 
 	if (_fbos[FBO_0]->CheckStatus() != FramebufferStatus::Complete)
 	{
-		Logger::Log("OpenGL", LOG_WARNING, "glCheckNamedFramebufferStatus call from %s, line %d returned", __FILE__, __LINE__);
+		Logger::Log(PP_MODULE, LOG_CRITICAL, "First framebuffer incomplete");
 		return false;
 	}
 
@@ -131,7 +131,7 @@ bool PostProcessor::_AttachTextures() noexcept
 
 	if (_fbos[FBO_1]->CheckStatus() != FramebufferStatus::Complete)
 	{
-		Logger::Log("OpenGL", LOG_WARNING, "glCheckNamedFramebufferStatus call from %s, line %d returned", __FILE__, __LINE__);
+		Logger::Log(PP_MODULE, LOG_CRITICAL, "Second framebuffer incomplete");
 		return false;
 	}
 
@@ -139,7 +139,7 @@ bool PostProcessor::_AttachTextures() noexcept
 
 	if (_fbos[FBO_BRIGHT]->CheckStatus() != FramebufferStatus::Complete)
 	{
-		Logger::Log("OpenGL", LOG_WARNING, "glCheckNamedFramebufferStatus call from %s, line %d returned", __FILE__, __LINE__);
+		Logger::Log(PP_MODULE, LOG_CRITICAL, "Brightness framebuffer incomplete");
 		return false;
 	}
 
@@ -147,7 +147,7 @@ bool PostProcessor::_AttachTextures() noexcept
 
 	if (_fbos[FBO_COLOR]->CheckStatus() != FramebufferStatus::Complete)
 	{
-		Logger::Log("OpenGL", LOG_WARNING, "glCheckNamedFramebufferStatus call from %s, line %d returned", __FILE__, __LINE__);
+		Logger::Log(PP_MODULE, LOG_CRITICAL, "Color framebuffer incomplete");
 		return false;
 	}
 
@@ -303,20 +303,20 @@ void PostProcessor::Release() noexcept
 {
 	_DeleteTextures();
 
-	delete _fbos[FBO_0];
-	delete _fbos[FBO_1];
-	delete _fbos[FBO_DRAW];
-	delete _fbos[FBO_BRIGHT];
-	delete _fbos[FBO_COLOR];
+	delete _fbos[FBO_0]; _fbos[FBO_0] = nullptr;
+	delete _fbos[FBO_1]; _fbos[FBO_1] = nullptr;
+	delete _fbos[FBO_DRAW]; _fbos[FBO_DRAW] = nullptr;
+	delete _fbos[FBO_BRIGHT]; _fbos[FBO_BRIGHT] = nullptr;
+	delete _fbos[FBO_COLOR]; _fbos[FBO_COLOR] = nullptr;
 
 	for (Effect *e : _effects)
 		delete e;
 
-	if (_shader)
-	{
-		ResourceManager::UnloadResource(_shader->GetResourceInfo()->id, ResourceType::RES_SHADER);
-		_shader = nullptr;
-	}
-	
+	ResourceManager::UnloadResourceByName("sh_pp_quad", ResourceType::RES_SHADER);
+	_shader = nullptr;
+
 	delete _ppUbo;
+	_ppUbo = nullptr;
+	
+	Logger::Log(PP_MODULE, LOG_INFORMATION, "Released");
 }
