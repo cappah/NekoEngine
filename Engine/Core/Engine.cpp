@@ -273,7 +273,7 @@ void Engine::_ReadInputConfig(const char *file)
 		*sens_ptr++ = 0x0;
 
 		Input::AddAxisMapping(optBuff, atoi(axis_ptr));
-		Input::SetAxisSensivity(atoi(axis_ptr), atof(sens_ptr));
+		Input::SetAxisSensivity(atoi(axis_ptr), (float)atof(sens_ptr));
 
 		memset(optBuff, 0x0, INI_BUFF_SZ);
 		optI = 0;
