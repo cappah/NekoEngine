@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * AnimationClip.h
  * Author: Alexandru Naiman

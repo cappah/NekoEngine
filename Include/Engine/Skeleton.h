@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * Skeleton.h
  * Author: Alexandru Naiman

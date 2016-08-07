@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * PlatformInput.cpp
  * Author: Alexandru Naiman

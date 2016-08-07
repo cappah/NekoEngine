@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * VFS.cpp
  * Author: Alexandru Naiman

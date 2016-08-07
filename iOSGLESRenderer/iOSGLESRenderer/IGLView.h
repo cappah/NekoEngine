@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * IGLView.h
  * Author: Alexandru Naiman

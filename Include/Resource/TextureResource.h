@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * TextureResource.h
  * Author: Alexandru Naiman

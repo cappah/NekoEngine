@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * SMAA.cpp
  * Author: Alexandru Naiman

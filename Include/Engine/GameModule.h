@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * GameModule.h
  * Author: Alexandru Naiman

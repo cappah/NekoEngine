@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * MovingObject.cpp
  * Author: Alexandru Naiman

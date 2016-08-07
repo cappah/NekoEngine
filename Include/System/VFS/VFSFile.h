@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * VFSFile.h
  * Author: Alexandru Naiman

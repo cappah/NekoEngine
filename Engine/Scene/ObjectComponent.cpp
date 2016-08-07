@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * ObjectComponent.cpp
  * Author: Alexandru Naiman

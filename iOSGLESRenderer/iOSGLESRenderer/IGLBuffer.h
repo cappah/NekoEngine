@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * IGLBuffer.h
  * Author: Alexandru Naiman

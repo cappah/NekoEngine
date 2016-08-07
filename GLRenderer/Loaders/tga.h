@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * tga.h
  * Author: Alexandru Naiman

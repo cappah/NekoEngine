@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * Platform.h
  * Author: Alexandru Naiman

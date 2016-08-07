@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * shared.cpp
  * Author: Alexandru Naiman

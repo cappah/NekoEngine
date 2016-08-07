@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * Skeleton.cpp
  * Author: Alexandru Naiman

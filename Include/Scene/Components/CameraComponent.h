@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * CameraComponent.h
  * Author: Alexandru Naiman

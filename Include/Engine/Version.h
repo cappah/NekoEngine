@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * Version.h
  * Author: Alexandru Naiman

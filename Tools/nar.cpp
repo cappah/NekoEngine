@@ -1,4 +1,4 @@
-/* Neko Engine Archive Tool
+/* NekoEngine Archive Tool
  *
  * nar.cpp
  * Author: Alexandru Naiman

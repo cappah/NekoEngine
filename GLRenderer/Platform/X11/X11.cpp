@@ -1,9 +1,9 @@
-/* Neko Engine
+/* NekoEngine
  *
  * X11.cpp
  * Author: Alexandru Naiman
  *
- * OpenGL 4.5 Renderer Implementation - UNIX / X11 platform support
+ * OpenGL 4 Renderer Implementation - UNIX / X11 platform support
  *
  * -----------------------------------------------------------------------------
  *

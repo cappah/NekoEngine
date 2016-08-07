@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * StaticMeshComponent.cpp
  * Author: Alexandru Naiman

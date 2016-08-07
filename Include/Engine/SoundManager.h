@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * SoundManager.h
  * Author: Alexandru Naiman

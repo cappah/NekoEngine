@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * IGLRenderer.mm
  * Author: Alexandru Naiman

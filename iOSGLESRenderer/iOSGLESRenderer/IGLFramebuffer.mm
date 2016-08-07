@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * IGLFramebuffer.mm
  * Author: Alexandru Naiman

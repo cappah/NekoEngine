@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * ogg_callbacks.h
  * Author: Alexandru Naiman

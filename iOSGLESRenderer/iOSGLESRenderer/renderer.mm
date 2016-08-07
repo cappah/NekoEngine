@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * renderer.mm
  * Author: Alexandru Naiman

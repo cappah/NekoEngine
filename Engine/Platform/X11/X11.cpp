@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * X11.cpp
  * Author: Alexandru Naiman

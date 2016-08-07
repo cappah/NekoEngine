@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * RFramebuffer.h
  * Author: Alexandru Naiman

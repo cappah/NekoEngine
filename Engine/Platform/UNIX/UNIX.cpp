@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * UNIX.cpp
  * Author: Alexandru Naiman

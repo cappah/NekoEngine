@@ -1,9 +1,9 @@
-/* Neko Engine
+/* NekoEngine
  *
  * renderer.cpp
  * Author: Alexandru Naiman
  *
- * OpenGL Renderer Implementation
+ * OpenGL 4 Renderer Implementation
  *
  * -----------------------------------------------------------------------------
  *

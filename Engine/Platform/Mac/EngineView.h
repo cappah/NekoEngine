@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * EngineView.h
  * Author: Alexandru Naiman

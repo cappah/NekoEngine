@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * EngineView.mm
  * Author: Alexandru Naiman

@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * PlatformInput.mm
  * Author: Alexandru Naiman

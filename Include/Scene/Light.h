@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * Light.h
  * Author: Alexandru Naiman

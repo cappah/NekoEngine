@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * StaticMesh.h
  * Author: Alexandru Naiman

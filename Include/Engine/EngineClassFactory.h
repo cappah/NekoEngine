@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * EngineClassFactory.h
  * Author: Alexandru Naiman

@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * Resource.h
  * Author: Alexandru Naiman

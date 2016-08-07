@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * Keycodes.h
  * Author: Alexandru Naiman

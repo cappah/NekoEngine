@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * launcher.cpp
  * Author: Alexandru Naiman

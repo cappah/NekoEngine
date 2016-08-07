@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * Object.h
  * Author: Alexandru Naiman

@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * NFont.cpp
  * Author: Alexandru Naiman

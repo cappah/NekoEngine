@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * Engine.cpp
  * Author: Alexandru Naiman
@@ -617,9 +617,9 @@ int Engine::Initialize(string cmdLine, bool editor)
 	Logger::Initialize(_config.Engine.LogFile, LOG_ALL);
 
 	if (!editor)
-		Logger::Log(ENGINE_MODULE, LOG_INFORMATION, "Neko Engine v%s starting up...", ENGINE_VERSION_STRING);
+		Logger::Log(ENGINE_MODULE, LOG_INFORMATION, "NekoEngine v%s starting up...", ENGINE_VERSION_STRING);
 	else
-		Logger::Log(ENGINE_MODULE, LOG_INFORMATION, "Neko Editor v%s starting up...", ENGINE_VERSION_STRING);
+		Logger::Log(ENGINE_MODULE, LOG_INFORMATION, "NekoEditor v%s starting up...", ENGINE_VERSION_STRING);
 	Logger::Log(ENGINE_MODULE, LOG_INFORMATION, "Platform: %s", Platform::GetName());
 	Logger::Log(ENGINE_MODULE, LOG_INFORMATION, "Platform version: %s", Platform::GetVersion());
 	Logger::Log(ENGINE_MODULE, LOG_INFORMATION, "Machine name: %s", Platform::GetMachineName());
@@ -682,7 +682,7 @@ int Engine::Initialize(string cmdLine, bool editor)
 	alVersion = alVersion.substr(0, alVersion.find_first_of('.') + 2);
 	alVersion.append("]");
 
-	string title = "Neko Engine v";
+	string title = "NekoEngine v";
 	title.append(ENGINE_VERSION_STRING);
 	title.append(glVersion);
 	title.append(alVersion);
@@ -951,7 +951,6 @@ void Engine::SaveScreenshot() noexcept
 	}
 
 	FILE *fp = fopen(file, "wb");
-
 	if (!fp)
 	{
 		Logger::Log(ENGINE_MODULE, LOG_WARNING, "Failed to open file for writing");

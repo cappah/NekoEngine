@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * ShaderResource.h
  * Author: Alexandru Naiman

@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * main.cpp
  * Author: Alexandru Naiman

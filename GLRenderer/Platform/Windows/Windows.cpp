@@ -1,9 +1,9 @@
-/* Neko Engine
+/* NekoEngine
  *
  * Windows.cpp
  * Author: Alexandru Naiman
  *
- * OpenGL 4.5 Renderer Implementation - Windows platform support
+ * OpenGL 4 Renderer Implementation - Windows platform support
  *
  * -----------------------------------------------------------------------------
  *

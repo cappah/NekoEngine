@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * SceneManager.h
  * Author: Alexandru Naiman

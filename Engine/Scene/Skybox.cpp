@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * Skybox.cpp
  * Author: Alexandru Naiman

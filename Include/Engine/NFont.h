@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * NFont.h
  * Author: Alexandru Naiman

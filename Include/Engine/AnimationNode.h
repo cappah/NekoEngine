@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * AnimationNode.h
  * Author: Alexandru Naiman

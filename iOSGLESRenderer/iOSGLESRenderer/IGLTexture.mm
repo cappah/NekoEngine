@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * IGLTexture.mm
  * Author: Alexandru Naiman

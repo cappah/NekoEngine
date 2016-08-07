@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * Mac.mm
  * Author: Alexandru Naiman

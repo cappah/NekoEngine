@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * Engine.h
  * Author: Alexandru Naiman

@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * Vertex.h
  * Author: Alexandru Naiman

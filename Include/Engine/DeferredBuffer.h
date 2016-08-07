@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * DeferredRenderer.h
  * Author: Alexandru Naiman

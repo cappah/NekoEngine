@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * Terrain.cpp
  * Author: Alexandru Naiman

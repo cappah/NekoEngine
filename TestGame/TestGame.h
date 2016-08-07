@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * TestGame.h
  * Author: Alexandru Naiman

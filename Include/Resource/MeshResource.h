@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * MeshResource.h
  * Author: Alexandru Naiman

@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * SSAO.h
  * Author: Alexandru Naiman

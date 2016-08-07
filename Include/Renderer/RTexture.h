@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * RTexture.h
  * Author: Alexandru Naiman

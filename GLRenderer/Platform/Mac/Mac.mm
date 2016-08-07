@@ -1,9 +1,9 @@
-/* Neko Engine
+/* NekoEngine
  *
  * MGLRenderer.mm
  * Author: Alexandru Naiman
  *
- * MacOS X OpenGL Renderer Implementation
+ * OpenGL 4 Renderer Implementation - macOS Platform Support
  *
  * -----------------------------------------------------------------------------
  *

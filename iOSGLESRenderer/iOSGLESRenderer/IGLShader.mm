@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * IGLShader.mm
  * Author: Alexandru Naiman

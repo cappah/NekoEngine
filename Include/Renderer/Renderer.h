@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * Renderer.h
  * Author: Alexandru Naiman

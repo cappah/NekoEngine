@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * Texture.cpp
  * Author: Alexandru Naiman

@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * Material.cpp
  * Author: Alexandru Naiman

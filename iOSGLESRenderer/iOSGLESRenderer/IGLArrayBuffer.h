@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * IGLArrayBuffer.h
  * Author: Alexandru Naiman

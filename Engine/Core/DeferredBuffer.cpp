@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * DeferredBuffer.cpp
  * Author: Alexandru Naiman

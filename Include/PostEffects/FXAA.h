@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * FXAA.h
  * Author: Alexandru Naiman

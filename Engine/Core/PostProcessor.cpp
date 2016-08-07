@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * PostProcessor.cpp
  * Author: Alexandru Naiman

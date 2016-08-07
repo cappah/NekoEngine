@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * iOS.mm
  * Author: Alexandru Naiman

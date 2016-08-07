@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * PlatformDetect.h
  * Author: Alexandru Naiman

@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * AudioSource.h
  * Author: Alexandru Naiman

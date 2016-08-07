@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * editorglwidget.cpp
  * Author: Alexandru Naiman

@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * Logger.cpp
  * Author: Alexandru Naiman

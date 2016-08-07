@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * LoadingScreen.h
  * Author: Alexandru Naiman

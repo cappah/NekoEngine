@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * Bloom.h
  * Author: Alexandru Naiman

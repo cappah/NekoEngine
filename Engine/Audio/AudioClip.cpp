@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * AudioClip.cpp
  * Author: Alexandru Naiman

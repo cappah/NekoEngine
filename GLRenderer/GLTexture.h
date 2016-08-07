@@ -1,9 +1,9 @@
-/* Neko Engine
+/* NekoEngine
  *
  * GLTexture.h
  * Author: Alexandru Naiman
  *
- * OpenGL Renderer Implementation
+ * OpenGL 4 Renderer Implementation
  *
  * -----------------------------------------------------------------------------
  *

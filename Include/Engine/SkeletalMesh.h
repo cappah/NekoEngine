@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * SkeletalMesh.h
  * Author: Alexandru Naiman

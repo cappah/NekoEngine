@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * GameController.cpp
  * Author: Alexandru Naiman

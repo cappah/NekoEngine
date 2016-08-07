@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * Bone.h
  * Author: Alexandru Naiman

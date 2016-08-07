@@ -1,5 +1,5 @@
 =begin
-Neko Engine unity build system
+NekoEngine unity build system
 Version: 0.3.0.1
 =end
 

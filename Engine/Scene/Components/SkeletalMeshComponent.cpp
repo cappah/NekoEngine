@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * SkeletalMeshComponent.cpp
  * Author: Alexandru Naiman

@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * AssetLoader.cpp
  * Author: Alexandru Naiman

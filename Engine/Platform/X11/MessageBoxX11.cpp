@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * MessageBoxX11.cpp
  * Author: Alexandru Naiman

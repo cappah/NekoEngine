@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * Material.h
  * Author: Alexandru Naiman

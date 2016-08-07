@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * Input.h
  * Author: Alexandru Naiman

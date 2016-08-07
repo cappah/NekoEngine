@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * RArrayBuffer.h
  * Author: Alexandru Naiman

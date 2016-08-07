@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * RShader.h
  * Author: Alexandru Naiman

@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * Effect.h
  * Author: Alexandru Naiman

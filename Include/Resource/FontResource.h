@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * FontResource.h
  * Author: Alexandru Naiman

@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * RBuffer.h
  * Author: Alexandru Naiman

@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * AnimatorComponent.h
  * Author: Alexandru Naiman

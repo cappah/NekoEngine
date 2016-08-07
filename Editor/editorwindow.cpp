@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * editorwindow.cpp
  * Author: Alexandru Naiman

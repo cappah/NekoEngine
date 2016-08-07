@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * IGLTexture.h
  * Author: Alexandru Naiman

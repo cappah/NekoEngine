@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * ShadowMap.h
  * Author: Alexandru Naiman

@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * ResourceManager.h
  * Author: Alexandru Naiman

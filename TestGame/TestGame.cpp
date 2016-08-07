@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * TestGame.cpp
  * Author: Alexandru Naiman

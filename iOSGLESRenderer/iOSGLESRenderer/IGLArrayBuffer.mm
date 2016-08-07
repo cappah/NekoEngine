@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * IGLArrayBuffer.mm
  * Author: Alexandru Naiman

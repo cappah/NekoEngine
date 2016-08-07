@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * Windows.cpp
  * Author: Alexandru Naiman

@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * EngineInputDelegate.mm
  * Author: Alexandru Naiman

@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * obj2zfg.cpp
  * Author: Alexandru Naiman

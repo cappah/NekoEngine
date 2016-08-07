@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * Scene.cpp
  * Author: Alexandru Naiman

@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * FPSControllerComponent.cpp
  * Author: Alexandru Naiman

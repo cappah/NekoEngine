@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * Terrain.h
  * Author: Alexandru Naiman

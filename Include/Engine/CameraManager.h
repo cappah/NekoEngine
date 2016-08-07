@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * CameraManager.h
  * Author: Alexandru Naiman
