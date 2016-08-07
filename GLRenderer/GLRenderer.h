@@ -56,8 +56,8 @@
 #define RENDERER_VERSION_MAJOR		0
 #define RENDERER_VERSION_MINOR		3
 #define RENDERER_VERSION_REVISION	0
-#define RENDERER_VERSION_BUILD		83
-#define RENDERER_VERSION_STRING		"0.3.0.83"
+#define RENDERER_VERSION_BUILD		84
+#define RENDERER_VERSION_STRING		"0.3.0.84"
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <Windows.h>
@@ -97,7 +97,7 @@ typedef NSView*		RHI_DC;
 			else \
 			{ \
 				fprintf(stderr, "%s call from %s, line %d returned 0x%x. Shutting down.", #x, __FILE__, __LINE__, err);				\
-				getchar(); \
+				(void)getchar(); \
 				exit(-1); \
 			} \
 		}

@@ -280,7 +280,7 @@ void CDDSImage::create_textureCubemap(unsigned int format, unsigned int componen
 bool CDDSImage::load(string filename, bool flipImage)
 {
 	assert(filename.length() != 0);
-
+	
 	// clear any previously loaded images
 	clear();
 
@@ -330,14 +330,14 @@ bool CDDSImage::load(string filename, bool flipImage)
 		fclose(fp);
 		return false;
 	}
-
+	
 	// default to flat texture type (1D, 2D, or rectangle)
 	m_type = TextureFlat;
 
 	// check if image is a cubemap
 	if (ddsh.dwCaps2 & DDSF_CUBEMAP)
 		m_type = TextureCubemap;
-
+	
 	// check if image is a volume texture
 	if ((ddsh.dwCaps2 & DDSF_VOLUME) && (ddsh.dwDepth > 0))
 		m_type = Texture3D;

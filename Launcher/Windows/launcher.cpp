@@ -68,7 +68,15 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	}
 #endif
 
-	if (Engine::Initialize(lpCmdLine, false) != ENGINE_OK)
+	try
+	{
+		if (Engine::Initialize(lpCmdLine, false) != ENGINE_OK)
+		{
+			MessageBoxA(HWND_DESKTOP, "Failed to initialize engine. The application will now exit.", "Fatal error", MB_ICONERROR | MB_OK);
+			return -1;
+		}
+	}
+	catch (...)
 	{
 		MessageBoxA(HWND_DESKTOP, "Failed to initialize engine. The application will now exit.", "Fatal error", MB_ICONERROR | MB_OK);
 		return -1;
