@@ -43,4 +43,4 @@ before_script:
 script:
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd build; fi
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cmake .. && make; fi
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then xcodebuild -workspace "Neko Engine.xcworkspace" -scheme NekoEngine -configuration Debug; fi
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then xcodebuild -workspace NekoEngine.xcworkspace -scheme NekoEngine -configuration Debug; fi
