@@ -129,7 +129,7 @@ typedef NSView*		RHI_DC;
 		else \
 		{ \
 			fprintf(stderr, "FATAL ERROR: %s\n", #x); \
-			getchar(); \
+			(void)getchar(); \
 			exit(-1); \
 		} 
 #else
