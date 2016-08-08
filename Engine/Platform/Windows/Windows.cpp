@@ -89,6 +89,28 @@ static inline WPARAM _win32MapKeys(WPARAM vk, LPARAM lParam)
 	}
 }
 
+int _win32Rand()
+{
+	HCRYPTPROV hCtx;
+	int ret;
+
+	if (!CryptAcquireContext(&hCtx, NULL, NULL, PROV_RSA_FULL, 0))
+	{
+		if (GetLastError() == NTE_BAD_KEYSET)
+		{
+			if (!CryptAcquireContext(&hCtx, NULL, NULL, PROV_RSA_FULL, CRYPT_NEWKEYSET))
+			{ DIE("CryptAcquireContext failed"); }
+		}
+		else
+		{ DIE("CryptAcquireContext failed"); }
+	}
+
+	if(!CryptGenRandom(hCtx, sizeof(int), (BYTE *)&ret))
+	{ DIE("CryptGenRandom failed"); }
+
+	return ret;
+}
+
 LRESULT CALLBACK EngineWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	LRESULT lRet = 0;

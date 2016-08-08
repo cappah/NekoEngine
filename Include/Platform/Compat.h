@@ -56,7 +56,10 @@ void ENGINE_API *reallocarray(void *optr, size_t nmemb, size_t size);
 	#include <bsd/stdlib.h>
 	#define NE_RANDOM() (arc4random() % ((unsigned)RAND_MAX + 1))
 	#define NE_SRANDOM(x)
-//#elif defined(NE_PLATFORM_WIN32) || defined(NE_PLATFORM_WIN64)
+#elif defined(NE_PLATFORM_WIN32) || defined(NE_PLATFORM_WIN64)
+	int _win32Rand();
+	#define NE_RANDOM() (_win32Rand() % ((unsigned)RAND_MAX + 1))
+	#define NE_SRANDOM(x)
 #else
 	#define NE_RANDOM() rand()
 	#define NE_SRANDOM(x) srand(x)
