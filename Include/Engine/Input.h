@@ -43,6 +43,7 @@
 #include <vector>
 #include <string>
 #include <unordered_map>
+#include <Engine/Engine.h>
 #include <Engine/Keycodes.h>
 #include <Platform/Platform.h>
 

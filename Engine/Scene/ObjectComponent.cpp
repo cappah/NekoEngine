@@ -37,8 +37,6 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#define ENGINE_INTERNAL
-
 #include <Scene/Object.h>
 #include <Scene/ObjectComponent.h>
 

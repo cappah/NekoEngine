@@ -37,8 +37,6 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#define ENGINE_INTERNAL
-
 #include <dirent.h>
 #include <sys/stat.h>
 #include <stack>

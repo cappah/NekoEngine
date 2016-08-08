@@ -95,3 +95,5 @@ private:
 
 	int _BuildAtlas();
 };
+
+template class ENGINE_API NArray<NFont>;

@@ -37,8 +37,6 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#define ENGINE_INTERNAL
-
 #include <Scene/Components/AudioSourceComponent.h>
 #include <Engine/ResourceManager.h>
 #include <Scene/Object.h>

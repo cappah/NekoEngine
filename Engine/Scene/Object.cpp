@@ -37,8 +37,6 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#define ENGINE_INTERNAL
-
 #define _USE_MATH_DEFINES
 #include <math.h>
 #include <vector>

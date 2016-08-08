@@ -144,3 +144,4 @@ private:
 	inline bool _AppendSourceString(char** dst, char* src, size_t* size);
 };
 
+template class ENGINE_API NArray<Shader>;

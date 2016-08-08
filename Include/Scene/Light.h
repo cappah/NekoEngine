@@ -82,3 +82,4 @@ private:
 	bool _castShadows;
 };
 
+template ENGINE_API class NArray<Light>;

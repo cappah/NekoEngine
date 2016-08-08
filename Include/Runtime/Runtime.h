@@ -1,9 +1,9 @@
 /* NekoEngine
  *
- * Effect.h
+ * Runtime.h
  * Author: Alexandru Naiman
  *
- * Post-Processing effect
+ * NekoEngine Runtime
  *
  * -----------------------------------------------------------------------------
  *
@@ -39,34 +39,5 @@
 
 #pragma once
 
-#include <string>
-#include <unordered_map>
-#include <glm/glm.hpp>
-
-#include <Engine/Engine.h>
-#include <Engine/Shader.h>
-
-class Effect
-{
-public:
-
-	ENGINE_API Effect(const char* name) noexcept;
-
-	ENGINE_API const char* GetName() noexcept { return _name; }
-	ENGINE_API void SetOption(std::string option, float value);
-
-	ENGINE_API virtual int Load(RBuffer *sharedUbo);
-	ENGINE_API virtual void Apply();
-
-	ENGINE_API virtual ~Effect();
-
-protected:
-	const char* _name;
-	std::vector<int> _shaderIds;
-	std::vector<Shader*> _shaders;
-	std::unordered_map<std::string, float*> _options;
-	glm::vec4 _effectData;
-	RBuffer *_effectUbo;
-};
-
-template class ENGINE_API NArray<Effect>;
+#include <Runtime/NArray.h>
+#include <Runtime/NString.h>

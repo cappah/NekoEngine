@@ -37,8 +37,6 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#define ENGINE_INTERNAL
-
 #include <Platform/PlatformDetect.h>
 
 #include <time.h>
@@ -668,33 +666,23 @@ int Engine::Initialize(string cmdLine, bool editor)
 	// make sure the log queue gets written
 	::atexit(Logger::Flush);
 
-	stringstream stm;
-	stm << " [" << _renderer->GetName() << " " << _renderer->GetMajorVersion() << "." << _renderer->GetMinorVersion() << "]";
-    
-	string glVersion = stm.str();
-
-	string alVersion(alVersionStr);
-	if (alVersion.find("OpenAL") != string::npos)
+	NString alVersion(alVersionStr);
+	if (alVersion.Find("OpenAL") != NString::NotFound)
 		alVersion = " [";
 	else
 		alVersion = " [OpenAL ";
-	alVersion.append(alVersionStr);
-	alVersion = alVersion.substr(0, alVersion.find_first_of('.') + 2);
-	alVersion.append("]");
+	alVersion.Append(alVersionStr);
+	alVersion = alVersion.Substring(0, alVersion.FindFirst('.') + 2);
 
-	string title = "NekoEngine v";
-	title.append(ENGINE_VERSION_STRING);
-	title.append(glVersion);
-	title.append(alVersion);
-	title.append(" [");
-	title.append(ENGINE_PLATFORM_STRING);
-	title.append("]");
+	NString title = NString::StringWithFormat(256, "NekoEngine v%s [%s %d.%d] %s] [%s]",
+		ENGINE_VERSION_STRING, _renderer->GetName(), _renderer->GetMajorVersion(), _renderer->GetMinorVersion(),
+		*alVersion, ENGINE_PLATFORM_STRING);
 
 #ifdef _DEBUG
-	title.append(" [Debug]");
+	title.Append(" [Debug]");
 #endif
 
-	Platform::SetWindowTitle(_engineWindow, title.c_str());
+	Platform::SetWindowTitle(_engineWindow, *title);
 
 	if (!_graphicsDebug)
 	{

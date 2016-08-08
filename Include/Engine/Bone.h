@@ -43,6 +43,8 @@
 #include <vector>
 #include <glm/glm.hpp>
 
+#include <Engine/Engine.h>
+
 struct Bone
 {
 	Bone() :
@@ -53,3 +55,5 @@ struct Bone
 	std::string name;
 	glm::dmat4 offset;
 };
+
+template class ENGINE_API NArray<Bone>;

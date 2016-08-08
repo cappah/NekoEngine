@@ -43,6 +43,8 @@
 #include <stdint.h>
 #include <zlib.h>
 
+#include <Runtime/Runtime.h>
+
 enum class FileType : unsigned
 {
 	Loose = 0,
@@ -100,3 +102,4 @@ private:
 	gzFile _gzfp;
 };
 
+//template ENGINE_API class NArray<VFSFile>;

@@ -66,3 +66,5 @@ private:
 	vector<TransformNode> _nodes;
 	Skeleton *_skel;
 };
+
+template class ENGINE_API NArray<SkeletalMesh>;

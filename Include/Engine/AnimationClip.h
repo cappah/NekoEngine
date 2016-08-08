@@ -45,6 +45,7 @@
 #include <glm/glm.hpp>
 
 #include <Engine/Vertex.h>
+#include <Runtime/Runtime.h>
 #include <Resource/Resource.h>
 #include <Engine/AnimationNode.h>
 #include <Resource/AnimationClipResource.h>
@@ -71,3 +72,5 @@ protected:
 	double _ticksPerSecond;
 	std::vector<AnimationNode> _channels;
 };
+
+template class ENGINE_API NArray<AnimationClip>;

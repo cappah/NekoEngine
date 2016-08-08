@@ -72,6 +72,7 @@
 
 #include <glm/glm.hpp>
 
+#include <Runtime/Runtime.h>
 #include <Renderer/Renderer.h>
 #include <Engine/EngineUtils.h>
 #include <Engine/Version.h>
@@ -340,3 +341,23 @@ private:
 	static bool _InitSystem();
 	static bool _InitGame();
 };
+
+// Base types
+template class ENGINE_API NArray<char>;
+template class ENGINE_API NArray<short>;
+template class ENGINE_API NArray<int>;
+template class ENGINE_API NArray<unsigned int>;
+template class ENGINE_API NArray<long>;
+template class ENGINE_API NArray<unsigned long>;
+template class ENGINE_API NArray<long long>;
+template class ENGINE_API NArray<unsigned long long>;
+template class ENGINE_API NArray<float>;
+template class ENGINE_API NArray<double>;
+
+// Runtime types
+template class ENGINE_API NArray<NString>;
+
+// Engine types
+template class ENGINE_API NArray<Vertex>;
+
+template class ENGINE_API NArray<std::string>;

@@ -44,6 +44,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+#include <Runtime/Runtime.h>
 #include <System/VFS/VFSFile.h>
 
 #define VFS_MAGIC			0xB16B00B5
@@ -84,3 +85,4 @@ private:
 	uint64_t _dataSize;
 };
 
+//template ENGINE_API class NArray<VFSArchive>;

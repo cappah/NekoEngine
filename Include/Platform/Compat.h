@@ -39,13 +39,13 @@
 
 #pragma once
 
-#include <Engine/Engine.h>
+#include <Platform/Platform.h>
 
 #include <stddef.h>
 #include <stdint.h>
 
 #if !defined(NE_PLATFORM_OPENBSD) && !defined(NE_PLATFORM_LINUX)
-void ENGINE_API *reallocarray(void *optr, size_t nmemb, size_t size);
+void PLATFORM_API *reallocarray(void *optr, size_t nmemb, size_t size);
 #endif
 
 #if defined(NE_PLATFORM_MAC) || defined(NE_PLATFORM_IOS) || defined(NE_PLATFORM_OPENBSD) || defined(NE_PLATFORM_FREEBSD)

@@ -111,6 +111,9 @@
     <Filter Include="Source\Core">
       <UniqueIdentifier>{88e30b42-c75e-4e9c-8198-5e7cc155b077}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Include\Runtime">
+      <UniqueIdentifier>{38b5af03-b708-4896-8c68-1cf67528d755}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Resources\Data\Shaders\include\SMAA.h">
@@ -334,6 +337,15 @@
     </ClInclude>
     <ClInclude Include="..\Include\Resource\FontResource.h">
       <Filter>Include\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Runtime\NArray.h">
+      <Filter>Include\Runtime</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Runtime\NString.h">
+      <Filter>Include\Runtime</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Runtime\Runtime.h">
+      <Filter>Include\Runtime</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

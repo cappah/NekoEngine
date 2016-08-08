@@ -102,3 +102,5 @@ protected:
 
 	void _CalculateTangents();
 };
+
+template class ENGINE_API NArray<StaticMesh>;

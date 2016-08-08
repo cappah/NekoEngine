@@ -47,6 +47,7 @@
 	#include <AL/al.h>
 #endif
 
+#include <Runtime/Runtime.h>
 #include <Resource/Resource.h>
 #include <Resource/AudioClipResource.h>
 
@@ -67,3 +68,4 @@ private:
 	ALuint _buffer;
 };
 
+template class ENGINE_API NArray<AudioClip>;

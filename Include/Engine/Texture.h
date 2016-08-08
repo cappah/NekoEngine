@@ -69,3 +69,5 @@ private:
 	int _id;
 	bool _parametersSet;
 };
+
+template class ENGINE_API NArray<Texture>;

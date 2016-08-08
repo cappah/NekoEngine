@@ -73,7 +73,7 @@ public:
 		_sceneVertexBuffer(nullptr),
 		_sceneIndexBuffer(nullptr),
 		_sceneArrayBuffer(nullptr)
-		{ };
+	{ };
 
 	ENGINE_API Scene(int id, std::string file, const char* ls_texture) noexcept :
 		_id(id),
@@ -91,7 +91,7 @@ public:
 		_sceneVertexBuffer(nullptr),
 		_sceneIndexBuffer(nullptr),
 		_sceneArrayBuffer(nullptr)
-		{ };
+	{ };
 
 	ENGINE_API int GetId() noexcept { return _id; }
 	ENGINE_API bool IsLoaded() noexcept { return _loaded; }
@@ -147,3 +147,5 @@ private:
 	uint64_t _GetVertexOffset() { return _sceneVertices.size(); }
 	uint64_t _GetIndexOffset() { return _sceneIndices.size(); }
 };
+
+template ENGINE_API class NArray<Scene>;

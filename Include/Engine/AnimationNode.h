@@ -65,3 +65,7 @@ struct AnimationNode
 	std::vector<QuatKey> rotationKeys;
 	std::vector<VectorKey> scalingKeys;
 };
+
+template class ENGINE_API NArray<VectorKey>;
+template class ENGINE_API NArray<QuatKey>;
+template class ENGINE_API NArray<AnimationNode>;

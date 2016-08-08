@@ -17,6 +17,8 @@
 
 #if !defined(NE_PLATFORM_OPENBSD) && !defined(NE_PLATFORM_LINUX)
 
+#include <Platform/Compat.h>
+
 #include <sys/types.h>
 #include <errno.h>
 #include <stdint.h>

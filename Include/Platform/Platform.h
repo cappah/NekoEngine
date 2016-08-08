@@ -49,10 +49,14 @@
 #undef CreateWindow
 #undef MessageBox
 
-#ifdef ENGINE_INTERNAL
-	#define ENGINE_API	__declspec(dllexport)
+#ifdef NE_PLATFORM_WINDOWS
+	#ifdef PLATFORM_INTERNAL
+		#define PLATFORM_API	__declspec(dllexport)
+	#else
+		#define PLATFORM_API	__declspec(dllimport)
+	#endif
 #else
-	#define ENGINE_API	__declspec(dllimport)
+	#define PLATFORM_API
 #endif
 
 typedef HWND PlatformWindowType;

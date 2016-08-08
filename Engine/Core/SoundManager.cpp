@@ -37,8 +37,6 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#define ENGINE_INTERNAL
-
 #include <Engine/SoundManager.h>
 #include <Engine/ResourceManager.h>
 #include <Engine/Engine.h>

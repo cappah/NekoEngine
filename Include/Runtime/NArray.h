@@ -1,9 +1,9 @@
 /* NekoEngine
  *
- * Effect.h
+ * NArray.h
  * Author: Alexandru Naiman
  *
- * Post-Processing effect
+ * NekoEngine Runtime
  *
  * -----------------------------------------------------------------------------
  *
@@ -39,34 +39,102 @@
 
 #pragma once
 
-#include <string>
-#include <unordered_map>
-#include <glm/glm.hpp>
+#include <stdlib.h>
+#include <stdint.h>
 
-#include <Engine/Engine.h>
-#include <Engine/Shader.h>
+#define NARRAY_DEFAULT_INCREMENT	20
 
-class Effect
+template<class T>
+class NArray
 {
 public:
+	NArray(size_t size = 10) :
+		_data(nullptr),
+		_count(0),
+		_size(size)
+	{
+		//_data = new T[_size];
+	}
 
-	ENGINE_API Effect(const char* name) noexcept;
+	NArray(const NArray &other)
+	{
+		_count = other._count;
+		_size = other._size;
+		_data = other._data;
+	}
 
-	ENGINE_API const char* GetName() noexcept { return _name; }
-	ENGINE_API void SetOption(std::string option, float value);
+	NArray(NArray &&other)
+	{
+		_count = other._count;
+		_size = other._size;
+		_data = other._data;
 
-	ENGINE_API virtual int Load(RBuffer *sharedUbo);
-	ENGINE_API virtual void Apply();
+		other._count = other._size = 0;
+		other._data = nullptr;
+	}
 
-	ENGINE_API virtual ~Effect();
+	T* begin() { return &_data[0]; }
+	T* end() { return &_data[_count]; }
 
-protected:
-	const char* _name;
-	std::vector<int> _shaderIds;
-	std::vector<Shader*> _shaders;
-	std::unordered_map<std::string, float*> _options;
-	glm::vec4 _effectData;
-	RBuffer *_effectUbo;
+	size_t Count() { return _count; }
+	size_t Size() { return _size; }
+
+	void Add(T &item)
+	{
+		if (_count == _size)
+			if (!Resize(_size + NARRAY_DEFAULT_INCREMENT))
+				return;
+
+		_data[_count++] = item;
+	}
+
+	void Insert(uint32_t index, T &item)
+	{
+		//
+	}
+
+	void Remove(uint32_t index)
+	{
+		if (index == --_count)
+			return;
+
+		for (uint32_t i = index + 1; i <= _count; ++i)
+			_data[i - 1] = _data[i];
+	}
+
+	bool Resize(size_t size)
+	{
+		/*if (_size == size)
+			return true;
+
+		T* ptr = _data;
+		if ((_data = new T[size]) == nullptr)
+		{
+			_data = ptr;
+			return false;
+		}
+
+		_size = size;
+
+		if (_size < _count)
+			_count = _size;
+
+		for (size_t i = 0; i < _count; ++i)
+			_data[i] = std::move(ptr[i]);
+
+		delete[] ptr;
+
+		return true;*/
+		return false;
+	}
+
+	virtual ~NArray()
+	{
+		_count = _size = 0;
+		delete[] _data;
+	}
+
+private:
+	T* _data;
+	size_t _count, _size;
 };
-
-template class ENGINE_API NArray<Effect>;

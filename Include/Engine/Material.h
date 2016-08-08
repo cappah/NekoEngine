@@ -107,3 +107,5 @@ private:
 
 	void _LoadTexture(const char* name, int* id, TextureFilter* minFilter, TextureFilter* magFilter, TextureWrap* wrapS, TextureWrap* wrapT);
 };
+
+template class ENGINE_API NArray<Material>;

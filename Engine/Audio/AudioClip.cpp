@@ -37,13 +37,11 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#define ENGINE_INTERNAL
-
 #include <string>
 #include <cstring>
 
-#include <Audio/AudioClip.h>
 #include <Engine/Engine.h>
+#include <Audio/AudioClip.h>
 #include <System/AssetLoader/AssetLoader.h>
 
 #define AC_MODULE	"AudioClip"

@@ -94,6 +94,7 @@ public:
 class Object
 {
 public:
+	ENGINE_API Object() noexcept;
 	ENGINE_API Object(ObjectInitializer *initializer) noexcept;
 	 
 	ENGINE_API int GetId() noexcept { return _id; }
@@ -146,3 +147,5 @@ protected:
 
 	void _UpdateModelMatrix() noexcept { _modelMatrix = (_translationMatrix * _rotationMatrix) * _scaleMatrix; for(pair<std::string, ObjectComponent *> kvp : _components) kvp.second->UpdatePosition(); }
 };
+
+template ENGINE_API class NArray<Object>;

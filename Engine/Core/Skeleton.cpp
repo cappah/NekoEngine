@@ -37,8 +37,6 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#define ENGINE_INTERNAL
-
 #include <Engine/Skeleton.h>
 #include <Engine/Vertex.h>
 #include <Engine/Engine.h>

@@ -52,10 +52,10 @@ void CleanUp()
 
 int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
-	atexit(CleanUp);
-	
 	try
 	{
+		atexit(CleanUp);
+
 #ifdef _DEBUG
 		if (!IsDebuggerPresent())
 		{
@@ -74,14 +74,12 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 			MessageBoxA(HWND_DESKTOP, "Failed to initialize engine. The application will now exit.", "Fatal error", MB_ICONERROR | MB_OK);
 			return -1;
 		}
+
+		return Engine::Run();
 	}
 	catch (...)
 	{
-		MessageBoxA(HWND_DESKTOP, "Failed to initialize engine. The application will now exit.", "Fatal error", MB_ICONERROR | MB_OK);
+		MessageBoxA(HWND_DESKTOP, "Runtime exception. The application will now exit.", "Fatal error", MB_ICONERROR | MB_OK);
 		return -1;
 	}
-
-	Engine::Run();
-
-	return 0;
 }

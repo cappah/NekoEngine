@@ -37,8 +37,6 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#define ENGINE_INTERNAL
-
 #include <Scene/Components/SkeletalMeshComponent.h>
 #include <Scene/Components/AnimatorComponent.h>
 #include <Scene/Components/CameraComponent.h>
