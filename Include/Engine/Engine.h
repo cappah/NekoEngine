@@ -263,7 +263,7 @@ public:
 	static void DrawStats(bool draw) noexcept { _printStats = draw; }
 	static bool IsDrawingStats() noexcept { return _printStats; }
 
-	static void DrawString(glm::vec2 pos, glm::vec3 color, std::string text) noexcept;
+	static void DrawString(glm::vec2 pos, glm::vec3 color, NString text) noexcept;
 	static void DrawString(glm::vec2 pos, glm::vec3 color, const char *fmt, ...) noexcept;
 
 	static double GetTime() noexcept;

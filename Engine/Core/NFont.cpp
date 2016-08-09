@@ -279,12 +279,12 @@ int NFont::SetPixelSize(int pixelSize)
 	return ENGINE_OK;
 }
 
-void NFont::Draw(string text, vec2 &pos, vec3 &color) noexcept
+void NFont::Draw(NString text, vec2 &pos, vec3 &color) noexcept
 {
-	unsigned int vertexCount = (unsigned int)_vertices.size();
+	unsigned int vertexCount = (unsigned int)_vertices.Count();
 	int offset = Engine::GetScreenHeight() - (int)_texHeight + 4;
 
-	for (unsigned int i = 0; i < text.length(); i++)
+	for (unsigned int i = 0; i < text.Length(); i++)
 	{
 		NFontCharacterInfo &info = _characterInfo[(int)text[i]];
 
@@ -298,27 +298,27 @@ void NFont::Draw(string text, vec2 &pos, vec3 &color) noexcept
 
 		v.pos = vec3(x, y, 0.f);
 		v.uv = vec2(info.offset, (float)info.size.y / (float)_texHeight);
-		_vertices.push_back(v);
+		_vertices.Add(v);
 
 		v.pos = vec3(x, y + h, 0.f);
 		v.uv = vec2(info.offset, 0.f);
-		_vertices.push_back(v);
+		_vertices.Add(v);
 
 		v.pos = vec3(x + w, y + h, 0.f);
 		v.uv = vec2(info.offset + ((float)info.size.x / (float)_texWidth), 0.f);
-		_vertices.push_back(v);
+		_vertices.Add(v);
 
 		v.pos = vec3(x + w, y, 0);
 		v.uv = vec2(info.offset + ((float)info.size.x / (float)_texWidth), (float)info.size.y / (float)_texHeight);
-		_vertices.push_back(v);
+		_vertices.Add(v);
 
 		unsigned int indexOffset = (4 * i) + vertexCount;
-		_indices.push_back(indexOffset);
-		_indices.push_back(1 + indexOffset);
-		_indices.push_back(2 + indexOffset);
-		_indices.push_back(indexOffset);
-		_indices.push_back(2 + indexOffset);
-		_indices.push_back(3 + indexOffset);
+		_indices.Add(indexOffset);
+		_indices.Add(1 + indexOffset);
+		_indices.Add(2 + indexOffset);
+		_indices.Add(indexOffset);
+		_indices.Add(2 + indexOffset);
+		_indices.Add(3 + indexOffset);
 
 		pos.x += info.advance;
 	}
@@ -339,15 +339,15 @@ void NFont::Render()
 	_vertexBuffer->BeginUpdate();
 	_indexBuffer->BeginUpdate();
 
-	_vertexBuffer->UpdateData(0, (sizeof(Vertex) * _vertices.size()), _vertices.data());
-	_indexBuffer->UpdateData(0, (sizeof(uint32_t) * _indices.size()), _indices.data());
+	_vertexBuffer->UpdateData(0, (sizeof(Vertex) * _vertices.Count()), *_vertices);
+	_indexBuffer->UpdateData(0, (sizeof(uint32_t) * _indices.Count()), *_indices);
 
 	_vertexBuffer->EndUpdate();
 	_indexBuffer->EndUpdate();
 
 	_arrayBuffer->Bind();
 
-	r->DrawElements(PolygonMode::Triangles, (int32_t)_indices.size(), ElementType::UnsignedInt, 0);
+	r->DrawElements(PolygonMode::Triangles, (int32_t)_indices.Count(), ElementType::UnsignedInt, 0);
 
 	_shader->Disable();
 
@@ -356,8 +356,8 @@ void NFont::Render()
 
 	_arrayBuffer->Unbind();
 
-	_vertices.clear();
-	_indices.clear();
+	_vertices.Clear();
+	_indices.Clear();
 
 	_vertexBuffer->NextBuffer();
 	_indexBuffer->NextBuffer();
@@ -365,8 +365,8 @@ void NFont::Render()
 
 NFont::~NFont()
 {
-	_vertices.clear();
-	_indices.clear();
+	_vertices.Clear();
+	_indices.Clear();
 
 	ResourceManager::UnloadResourceByName("sh_font", ResourceType::RES_SHADER);
 

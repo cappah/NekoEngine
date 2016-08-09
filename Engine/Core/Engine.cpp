@@ -726,7 +726,7 @@ void Engine::Pause(bool pause)
 	// TODO: let objects know the game was paused
 }
 
-void Engine::DrawString(vec2 pos, vec3 color, string text) noexcept
+void Engine::DrawString(vec2 pos, vec3 color, NString text) noexcept
 {
 	_engineFont->Draw(text, pos, color);
 }

@@ -81,7 +81,7 @@ public:
 	size_t Count() { return _count; }
 	size_t Size() { return _size; }
 
-	void Add(T &item)
+	void Add(const T &item)
 	{
 		if (_count == _size)
 			if (!Resize(_size + NARRAY_DEFAULT_INCREMENT))
@@ -129,6 +129,10 @@ public:
 	void Clear()
 	{
 		_count = _size = 0;
+
+		for (size_t i = 0; i < _count; ++i)
+			((T*)_data)[i].~T();
+
 		free(_data);
 		_data = nullptr;
 	}
@@ -139,6 +143,7 @@ public:
 	}
 
 	T &operator [](size_t i) { return ((T*)_data)[i]; }
+	T *operator *() { return (T*)_data; }
 
 private:
 	uint8_t *_data;

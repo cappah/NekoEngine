@@ -42,6 +42,7 @@
 #include <glm/glm.hpp>
 
 #include <Engine/Engine.h>
+#include <Runtime/Runtime.h>
 #include <Resource/Resource.h>
 #include <Resource/FontResource.h>
 
@@ -70,15 +71,15 @@ public:
 	
 	ENGINE_API void ScreenResized(int width, int height);
 
-	ENGINE_API void Draw(std::string text, glm::vec2& pos) noexcept { glm::vec3 white(1.f, 1.f, 1.f); Draw(text, pos, white); }
-	ENGINE_API void Draw(std::string text, glm::vec2& pos, glm::vec3& color) noexcept;
+	ENGINE_API void Draw(NString text, glm::vec2& pos) noexcept { glm::vec3 white(1.f, 1.f, 1.f); Draw(text, pos, white); }
+	ENGINE_API void Draw(NString text, glm::vec2& pos, glm::vec3& color) noexcept;
 	ENGINE_API void Render();
 
 	ENGINE_API virtual ~NFont();
 
 private:
-	std::vector<Vertex> _vertices;
-	std::vector<uint32_t> _indices;
+	NArray<Vertex> _vertices;
+	NArray<uint32_t> _indices;
 	glm::mat4 _projection;
 	NFontCharacterInfo _characterInfo[NFONT_NUM_CHARS];
 	size_t _vboSize;
@@ -96,4 +97,4 @@ private:
 	int _BuildAtlas();
 };
 
-template class ENGINE_API NArray<NFont>;
+template class ENGINE_API NArray<NFont*>;
