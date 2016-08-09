@@ -30,9 +30,7 @@
 		1296BD871CDC1E1A00D17488 /* libTestGame_iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1296BD861CDC1E1700D17488 /* libTestGame_iOS.a */; };
 		12A15FB61CD4460F00BEDD06 /* libGLRenderer.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 12A15FB31CD445FE00BEDD06 /* libGLRenderer.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		12A9BAAC1D54F037001B363A /* libfreetype.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 12A9BAAB1D54F037001B363A /* libfreetype.a */; };
-		12A9BAAE1D54F691001B363A /* Fonts in Resources */ = {isa = PBXBuildFile; fileRef = 12A9BAAD1D54F691001B363A /* Fonts */; };
 		12A9BAB11D54FEDE001B363A /* Engine_iOS.ini in Resources */ = {isa = PBXBuildFile; fileRef = 12A9BAB01D54FEDE001B363A /* Engine_iOS.ini */; };
-		12A9BAB21D54FF00001B363A /* Engine_iOS.ini in CopyFiles */ = {isa = PBXBuildFile; fileRef = 12A9BAB01D54FEDE001B363A /* Engine_iOS.ini */; };
 		12B748301CC6E7C600825D36 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 12B7482F1CC6E7C600825D36 /* Assets.xcassets */; };
 		12B748381CC6E80100825D36 /* launcher.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1270119A1CC31326001840A7 /* launcher.mm */; };
 		12B7483B1CC6E81B00825D36 /* libEngine.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 127012531CC315FD001840A7 /* libEngine.dylib */; };
@@ -143,14 +141,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		121976911D469D7800CCDD12 /* CopyFiles */ = {
+		121976911D469D7800CCDD12 /* Copy Files */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 7;
 			files = (
-				12A9BAB21D54FF00001B363A /* Engine_iOS.ini in CopyFiles */,
 			);
+			name = "Copy Files";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		12B7483C1CC6E95500825D36 /* CopyFiles */ = {
@@ -378,7 +376,7 @@
 				1296BC361CDC132C00D17488 /* Frameworks */,
 				1296BC371CDC132C00D17488 /* Resources */,
 				121976841D469C5D00CCDD12 /* CopyFiles */,
-				121976911D469D7800CCDD12 /* CopyFiles */,
+				121976911D469D7800CCDD12 /* Copy Files */,
 			);
 			buildRules = (
 			);
@@ -518,7 +516,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				12A9BAAE1D54F691001B363A /* Fonts in Resources */,
 				1296BC4B1CDC132C00D17488 /* LaunchScreen.storyboard in Resources */,
 				1219768F1D469D3900CCDD12 /* scenes.cfg in Resources */,
 				12A9BAB11D54FEDE001B363A /* Engine_iOS.ini in Resources */,
