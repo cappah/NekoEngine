@@ -31,7 +31,6 @@
 		12A15FB61CD4460F00BEDD06 /* libGLRenderer.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 12A15FB31CD445FE00BEDD06 /* libGLRenderer.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		12A9BAAC1D54F037001B363A /* libfreetype.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 12A9BAAB1D54F037001B363A /* libfreetype.a */; };
 		12A9BAAE1D54F691001B363A /* Fonts in Resources */ = {isa = PBXBuildFile; fileRef = 12A9BAAD1D54F691001B363A /* Fonts */; };
-		12A9BAAF1D54F6A4001B363A /* Fonts in CopyFiles */ = {isa = PBXBuildFile; fileRef = 12A9BAAD1D54F691001B363A /* Fonts */; };
 		12A9BAB11D54FEDE001B363A /* Engine_iOS.ini in Resources */ = {isa = PBXBuildFile; fileRef = 12A9BAB01D54FEDE001B363A /* Engine_iOS.ini */; };
 		12A9BAB21D54FF00001B363A /* Engine_iOS.ini in CopyFiles */ = {isa = PBXBuildFile; fileRef = 12A9BAB01D54FEDE001B363A /* Engine_iOS.ini */; };
 		12B748301CC6E7C600825D36 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 12B7482F1CC6E7C600825D36 /* Assets.xcassets */; };
@@ -136,7 +135,6 @@
 			dstPath = Data;
 			dstSubfolderSpec = 7;
 			files = (
-				12A9BAAF1D54F6A4001B363A /* Fonts in CopyFiles */,
 				1219768B1D469CCC00CCDD12 /* resources.db in CopyFiles */,
 				1219768C1D469CCC00CCDD12 /* Shaders in CopyFiles */,
 				1219768D1D469CCC00CCDD12 /* Sounds in CopyFiles */,
