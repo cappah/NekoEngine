@@ -5,6 +5,7 @@ NekoEngine
 |---|---|
 |**Linux, OS X**  |[![Build Status](https://travis-ci.org/nalexandru/NekoEngine.svg?branch=master)](https://travis-ci.org/nalexandru/NekoEngine)|
 |**Windows**      |[![Build status](https://ci.appveyor.com/api/projects/status/843uw7e81ruf7qaa?svg=true)](https://ci.appveyor.com/project/nalexandru/nekoengine)|
+|**iOS**          |[![BuddyBuild](https://dashboard.buddybuild.com/api/statusImage?appID=57aa25ff1974660100d4e139&branch=master&build=latest)](https://dashboard.buddybuild.com/apps/57aa25ff1974660100d4e139/build/latest)
 
 Cross-platform 3D Game Engine
 
