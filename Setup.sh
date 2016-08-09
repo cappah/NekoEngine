@@ -58,6 +58,7 @@ InstallDepsAptGet()
 		wget --no-check-certificate http://www.cmake.org/files/v3.6/cmake-3.6.1-Linux-x86_64.tar.gz;
 		tar zxf cmake-3.6.1-Linux-x86_64.tar.gz;
 		sudo cp -r cmake-3.6.1-Linux-x86_64/* /usr;
+		cd $DIR;
 		echo "Done"
 	else
 		PACKAGES="build-essential cmake libsqlite3-dev libpng-dev libx11-dev libopenal-dev libvorbis-dev libgl1-mesa-dev libbsd-dev"
