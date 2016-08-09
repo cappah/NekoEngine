@@ -587,7 +587,8 @@
 					"\"$(SRCROOT)/../Include\"",
 					"\"$(SRCROOT)/../3rdparty/include_all\"",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
@@ -630,7 +631,8 @@
 					"\"$(SRCROOT)/../Include\"",
 					"\"$(SRCROOT)/../3rdparty/include_all\"",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
 			};
