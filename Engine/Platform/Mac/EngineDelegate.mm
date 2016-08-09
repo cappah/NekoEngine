@@ -37,9 +37,6 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#define ENGINE_INTERNAL
-#define PLATFORM_INTERNAL
-
 #import "EngineDelegate.h"
 
 #include <Engine/Engine.h>
