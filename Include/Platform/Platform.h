@@ -43,12 +43,6 @@
 
 #include <stddef.h>
 
-#ifdef _WIN32
-#include <Windows.h>
-
-#undef CreateWindow
-#undef MessageBox
-
 #ifdef NE_PLATFORM_WINDOWS
 	#ifdef PLATFORM_INTERNAL
 		#define PLATFORM_API	__declspec(dllexport)
@@ -58,6 +52,12 @@
 #else
 	#define PLATFORM_API
 #endif
+
+#ifdef _WIN32
+#include <Windows.h>
+
+#undef CreateWindow
+#undef MessageBox
 
 typedef HWND PlatformWindowType;
 typedef HDC PlatformDisplayType;

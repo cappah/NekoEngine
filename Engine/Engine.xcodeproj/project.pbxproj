@@ -120,6 +120,9 @@
 		12C560C11CFB57B200E25478 /* StaticMesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12C5609F1CFB57B200E25478 /* StaticMesh.cpp */; };
 		12C560C21CFB57B200E25478 /* Texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12C560A01CFB57B200E25478 /* Texture.cpp */; };
 		12C560C31CFB57B200E25478 /* Texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12C560A01CFB57B200E25478 /* Texture.cpp */; };
+		12C8E5D21D59DA76002DD5EE /* NArray.h in Headers */ = {isa = PBXBuildFile; fileRef = 12C8E5CF1D59DA76002DD5EE /* NArray.h */; };
+		12C8E5D31D59DA76002DD5EE /* NString.h in Headers */ = {isa = PBXBuildFile; fileRef = 12C8E5D01D59DA76002DD5EE /* NString.h */; };
+		12C8E5D41D59DA76002DD5EE /* Runtime.h in Headers */ = {isa = PBXBuildFile; fileRef = 12C8E5D11D59DA76002DD5EE /* Runtime.h */; };
 		12CE01721CC991B900F3D84B /* SkeletalMesh.h in Headers */ = {isa = PBXBuildFile; fileRef = 12CE01711CC991B900F3D84B /* SkeletalMesh.h */; };
 		12ECE5D91CEFBE85004F3697 /* AnimationNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 12ECE5D81CEFBE85004F3697 /* AnimationNode.h */; };
 		12ECE5E01CF0FFD1004F3697 /* TransformNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 12ECE5DF1CF0FFD1004F3697 /* TransformNode.h */; };
@@ -284,6 +287,9 @@
 		12C5609E1CFB57B200E25478 /* SSAO.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SSAO.cpp; path = Core/SSAO.cpp; sourceTree = SOURCE_ROOT; };
 		12C5609F1CFB57B200E25478 /* StaticMesh.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = StaticMesh.cpp; path = Core/StaticMesh.cpp; sourceTree = SOURCE_ROOT; };
 		12C560A01CFB57B200E25478 /* Texture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Texture.cpp; path = Core/Texture.cpp; sourceTree = SOURCE_ROOT; };
+		12C8E5CF1D59DA76002DD5EE /* NArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NArray.h; path = ../Include/Runtime/NArray.h; sourceTree = "<group>"; };
+		12C8E5D01D59DA76002DD5EE /* NString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NString.h; path = ../Include/Runtime/NString.h; sourceTree = "<group>"; };
+		12C8E5D11D59DA76002DD5EE /* Runtime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Runtime.h; path = ../Include/Runtime/Runtime.h; sourceTree = "<group>"; };
 		12CE01711CC991B900F3D84B /* SkeletalMesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkeletalMesh.h; sourceTree = "<group>"; };
 		12ECE5D81CEFBE85004F3697 /* AnimationNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnimationNode.h; sourceTree = "<group>"; };
 		12ECE5DF1CF0FFD1004F3697 /* TransformNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransformNode.h; sourceTree = "<group>"; };
@@ -510,6 +516,7 @@
 				12822B721CC1AE4E00EE5D0A /* PostEffects */,
 				12822B7A1CC1AE4E00EE5D0A /* Renderer */,
 				12822B811CC1AE4E00EE5D0A /* Resource */,
+				12C8E5CE1D59DA57002DD5EE /* Runtime */,
 				12822B8A1CC1AE4E00EE5D0A /* Scene */,
 				12822B921CC1AE4E00EE5D0A /* System */,
 			);
@@ -735,6 +742,16 @@
 			name = Components;
 			sourceTree = "<group>";
 		};
+		12C8E5CE1D59DA57002DD5EE /* Runtime */ = {
+			isa = PBXGroup;
+			children = (
+				12C8E5CF1D59DA76002DD5EE /* NArray.h */,
+				12C8E5D01D59DA76002DD5EE /* NString.h */,
+				12C8E5D11D59DA76002DD5EE /* Runtime.h */,
+			);
+			name = Runtime;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -752,6 +769,7 @@
 				12822BB31CC1D84300EE5D0A /* EngineView.h in Headers */,
 				12B0CF651CEB4AB400E5D2FE /* StaticMeshComponent.h in Headers */,
 				12ECE5E01CF0FFD1004F3697 /* TransformNode.h in Headers */,
+				12C8E5D31D59DA76002DD5EE /* NString.h in Headers */,
 				12FABB1F1D3256D200D88639 /* CameraManager.h in Headers */,
 				126DB02F1CE42C0600FB6B77 /* Skeleton.h in Headers */,
 				127DF8B21CCB14DA005F2693 /* AnimationClip.h in Headers */,
@@ -760,9 +778,11 @@
 				1255C57C1CD24CF60036E1DA /* Bone.h in Headers */,
 				12FABB101D32567200D88639 /* CameraComponent.h in Headers */,
 				12C058931D2AF5360042023D /* Input.h in Headers */,
+				12C8E5D41D59DA76002DD5EE /* Runtime.h in Headers */,
 				12C058941D2AF5360042023D /* Keycodes.h in Headers */,
 				12822BBA1CC1DB9500EE5D0A /* EngineDelegate.h in Headers */,
 				12ECE5E21CF110D2004F3697 /* AudioSourceComponent.h in Headers */,
+				12C8E5D21D59DA76002DD5EE /* NArray.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -967,6 +987,12 @@
 				GCC_C_LANGUAGE_STANDARD = c11;
 				GCC_FAST_MATH = YES;
 				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+					PLATFORM_INTERNAL,
+					ENGINE_INTERNAL,
+				);
 				GCC_UNROLL_LOOPS = YES;
 				HEADER_SEARCH_PATHS = (
 					"\"$(SRCROOT)/../Include\"",
@@ -997,6 +1023,10 @@
 				GCC_FAST_MATH = YES;
 				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
 				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					PLATFORM_INTERNAL,
+					ENGINE_INTERNAL,
+				);
 				GCC_UNROLL_LOOPS = YES;
 				HEADER_SEARCH_PATHS = (
 					"\"$(SRCROOT)/../Include\"",
@@ -1114,6 +1144,8 @@
 					"DEBUG=1",
 					"$(inherited)",
 					_DEBUG,
+					PLATFORM_INTERNAL,
+					ENGINE_INTERNAL,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_UNROLL_LOOPS = YES;
@@ -1153,6 +1185,10 @@
 				GCC_FAST_MATH = YES;
 				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
 				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					PLATFORM_INTERNAL,
+					ENGINE_INTERNAL,
+				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_UNROLL_LOOPS = YES;
 				HEADER_SEARCH_PATHS = (
