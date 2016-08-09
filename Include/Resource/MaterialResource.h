@@ -39,12 +39,11 @@
 
 #pragma once
 
-#include <string>
-
+#include <Runtime/Runtime.h>
 #include <Resource/ResourceInfo.h>
 
 struct MaterialResource : public ResourceInfo
 {
 	MaterialResource() { type = ResourceType::RES_MATERIAL; }
-	std::string filePath;
+	NString filePath;
 };

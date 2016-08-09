@@ -101,7 +101,7 @@ int NFont::Load()
 	_shader->GetRShader()->VSUniformBlockBinding(0, "DataBlock");
 	_shader->GetRShader()->VSSetUniformBuffer(0, 0, sizeof(mat4), _uniformBuffer);
 
-	Logger::Log(NFONT_MODULE, LOG_DEBUG, "Loaded font %s [%d] from %s", GetResourceInfo()->name.c_str(), _resourceInfo->id, GetResourceInfo()->filePath.c_str());
+	Logger::Log(NFONT_MODULE, LOG_DEBUG, "Loaded font %s [%d] from %s", GetResourceInfo()->name.c_str(), _resourceInfo->id, *GetResourceInfo()->filePath);
 
 	return ENGINE_OK;
 }
@@ -117,14 +117,14 @@ int NFont::_BuildAtlas()
 
 	if ((file = VFS::Open(GetResourceInfo()->filePath)) == nullptr)
 	{
-		Logger::Log(NFONT_MODULE, LOG_CRITICAL, "Failed to open file for font id %d, file name [%s].", GetResourceInfo()->id, GetResourceInfo()->filePath.c_str());
+		Logger::Log(NFONT_MODULE, LOG_CRITICAL, "Failed to open file for font id %d, file name [%s].", GetResourceInfo()->id, *GetResourceInfo()->filePath);
 		return ENGINE_FAIL;
 	}
 
 	if (file->Seek(0, SEEK_END) == ENGINE_FAIL)
 	{
 		file->Close();
-		Logger::Log(NFONT_MODULE, LOG_CRITICAL, "Seek failed for file [%].", GetResourceInfo()->filePath.c_str());
+		Logger::Log(NFONT_MODULE, LOG_CRITICAL, "Seek failed for file [%].", *GetResourceInfo()->filePath);
 		return ENGINE_FAIL;
 	}
 
@@ -133,7 +133,7 @@ int NFont::_BuildAtlas()
 	if (file->Seek(0, SEEK_SET) == ENGINE_FAIL)
 	{
 		file->Close();
-		Logger::Log(NFONT_MODULE, LOG_CRITICAL, "Seek failed for file [%].", GetResourceInfo()->filePath.c_str());
+		Logger::Log(NFONT_MODULE, LOG_CRITICAL, "Seek failed for file [%].", *GetResourceInfo()->filePath);
 		return ENGINE_FAIL;
 	}
 
@@ -142,7 +142,7 @@ int NFont::_BuildAtlas()
 	{
 		file->Close();
 		free(mem);
-		Logger::Log(NFONT_MODULE, LOG_CRITICAL, "Failed to read file [%].", GetResourceInfo()->filePath.c_str());
+		Logger::Log(NFONT_MODULE, LOG_CRITICAL, "Failed to read file [%].", *GetResourceInfo()->filePath);
 		return ENGINE_FAIL;
 	}
 

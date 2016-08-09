@@ -269,7 +269,13 @@ public:
 
 	NString &operator +=(NString other) { Append(other); return *this; }
 
-	bool operator ==(NString const &other) { return !strncmp(_str, other._str, _length); }
+	bool operator ==(NString const &other)
+	{
+		if (!_length || !other._length)
+			return false;
+
+		return !strncmp(_str, other._str, _length);
+	}
 	bool operator !=(NString const &other) { return strncmp(_str, other._str, _length) != 0 ? true : false; }
 
 	char &operator [](size_t i) { return _str[i]; }

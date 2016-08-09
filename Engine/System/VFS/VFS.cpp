@@ -55,8 +55,8 @@ using namespace std;
 
 typedef struct DIR_INFO
 {
-	string path;
-	string prefix;
+	NString path;
+	NString prefix;
 } DirInfo;
 
 vector<VFSFile> VFS::_looseFiles;
@@ -80,17 +80,17 @@ int VFS::Initialize()
 			DirInfo info = directories.top();
 			directories.pop();
 
-			if ((dir = opendir(info.path.c_str())) != NULL)
+			if ((dir = opendir(*info.path)) != NULL)
 			{
 				while ((ent = readdir(dir)) != NULL)
 				{
-					string path = info.path;
-					path.append("/");
-					path.append(ent->d_name);
+					NString path = info.path;
+					path.Append("/");
+					path.Append(ent->d_name);
 					
-					if (stat(path.c_str(), &st) < 0)
+					if (stat(*path, &st) < 0)
 					{
-						Logger::Log(VFS_MODULE, LOG_CRITICAL, "File %s does not exist", path.c_str());
+						Logger::Log(VFS_MODULE, LOG_CRITICAL, "File %s does not exist", *path);
 						closedir(dir);
 						return ENGINE_FAIL;
 					}
@@ -100,15 +100,15 @@ int VFS::Initialize()
 						if (!strncmp(ent->d_name, ".", 1) || !strncmp(ent->d_name, "..", 2))
 							continue;
 
-						string prefix = info.prefix;
-						prefix.append("/");
-						prefix.append(ent->d_name);
+						NString prefix = info.prefix;
+						prefix.Append("/");
+						prefix.Append(ent->d_name);
 
 						directories.push({ path, prefix });
 					}
 					else if (S_ISREG(st.st_mode))
 					{
-						if (snprintf(f.GetHeader().name, VFS_MAX_FILE_NAME, "%s/%s", info.prefix.c_str(), ent->d_name) >= VFS_MAX_FILE_NAME)
+						if (snprintf(f.GetHeader().name, VFS_MAX_FILE_NAME, "%s/%s", *info.prefix, ent->d_name) >= VFS_MAX_FILE_NAME)
 						{
 							Logger::Log(VFS_MODULE, LOG_CRITICAL, "snprintf() call failed");
 							closedir(dir);
@@ -122,7 +122,7 @@ int VFS::Initialize()
 			}
 			else
 			{ 
-				Logger::Log(VFS_MODULE, LOG_CRITICAL, "Failed to open directory: %s", info.path.c_str());
+				Logger::Log(VFS_MODULE, LOG_CRITICAL, "Failed to open directory: %s", *info.path);
 				DIE("Failed to open directory");
 			}
 		}
@@ -133,7 +133,7 @@ int VFS::Initialize()
 	return ENGINE_OK;
 }
 
-int VFS::LoadArchive(string path)
+int VFS::LoadArchive(NString path)
 {
 	int ret = ENGINE_FAIL;
 	VFSArchive *archive = new VFSArchive(path);
@@ -149,16 +149,15 @@ int VFS::LoadArchive(string path)
 	return ENGINE_OK;
 }
 
-VFSFile *VFS::Open(string &path)
+VFSFile *VFS::Open(NString &path)
 {
 	if (Engine::GetConfiguration().Engine.LoadLooseFiles)
 	{
-		const char *str = path.c_str();
-		size_t len = strlen(str);
+		size_t len = strlen(*path);
 
 		for (VFSFile &file : _looseFiles)
 		{
-			if (!strncmp(str, file.GetHeader().name, len))
+			if (!strncmp(*path, file.GetHeader().name, len))
 			{
 				if (file.Open() != ENGINE_OK)
 					return nullptr;

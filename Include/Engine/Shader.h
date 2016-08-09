@@ -39,6 +39,7 @@
 
 #pragma once
 
+#include <Runtime/Runtime.h>
 #include <Renderer/Renderer.h>
 #include <Resource/Resource.h>
 #include <Resource/ShaderResource.h>
@@ -137,7 +138,7 @@ private:
 	RShader* _shader;
 	std::string _includePath;
 
-	int _CompileShader(ShaderType type, std::string& file);
+	int _CompileShader(ShaderType type, NString &file);
 
 	bool _IncludeFile(char* file, char** source, size_t* sourceSize);
 

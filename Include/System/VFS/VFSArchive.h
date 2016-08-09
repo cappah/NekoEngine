@@ -61,7 +61,7 @@ typedef struct VFS_ARCHIVE_HEADER
 class VFSArchive
 {
 public:
-	VFSArchive(std::string &path);
+	VFSArchive(NString &path);
 	
 	int Load();
 	void Unload();
@@ -70,7 +70,7 @@ public:
 	void MakeNonResident() { free(_data); _data = nullptr; }
 	bool IsResident() { return _data ? true : false; }
 	
-	VFSFile* Open(std::string& path);
+	VFSFile* Open(NString &path);
 
 	uint64_t Read(void *buffer, uint64_t offset, uint64_t size, uint64_t count);
 
@@ -78,7 +78,7 @@ public:
 
 private:
 	VFSArchiveHeader _header;
-	std::string _path;
+	NString _path;
 	std::vector<VFSFile> _files;
 	FILE *_fp;
 	uint8_t *_data;

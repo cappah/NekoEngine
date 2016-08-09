@@ -39,8 +39,7 @@
 
 #pragma once
 
-#include <string>
-
+#include <Runtime/Runtime.h>
 #include <Resource/ResourceInfo.h>
 
 enum class TextureResourceType : unsigned
@@ -51,7 +50,7 @@ enum class TextureResourceType : unsigned
 
 struct TextureResource : public ResourceInfo
 {
-	std::string filePath;
+	NString filePath;
 	TextureResourceType textureType;
 	TextureResource() :
 		filePath(""),

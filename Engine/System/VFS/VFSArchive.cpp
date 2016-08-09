@@ -44,7 +44,7 @@
 
 using namespace std;
 
-VFSArchive::VFSArchive(string &path)
+VFSArchive::VFSArchive(NString &path)
 {
 	_path = path;
 	_data = nullptr;
@@ -55,31 +55,31 @@ VFSArchive::VFSArchive(string &path)
 
 int VFSArchive::Load()
 {
-	_fp = fopen(_path.c_str(), "rb");
+	_fp = fopen(*_path, "rb");
 	if (!_fp)
 		return ENGINE_IO_FAIL;
 
 	if(fread(&_header, sizeof(VFSArchiveHeader), 1, _fp) != 1)
 	{
-		Logger::Log(VFS_AR_MODULE, LOG_CRITICAL, "failed to read archive header from %s", _path.c_str());
+		Logger::Log(VFS_AR_MODULE, LOG_CRITICAL, "failed to read archive header from %s", *_path);
 		return ENGINE_IO_FAIL;
 	}
 
 	if(_header.magic != VFS_MAGIC)
 	{
-		Logger::Log(VFS_AR_MODULE, LOG_CRITICAL, "%s is not a NekoEngine archive file", _path.c_str());
+		Logger::Log(VFS_AR_MODULE, LOG_CRITICAL, "%s is not a NekoEngine archive file", *_path);
 		return ENGINE_IO_FAIL;
 	}
 
 	if(_header.version != VFS_AR_VERSION)
 	{
-		Logger::Log(VFS_AR_MODULE, LOG_CRITICAL, "Archive version missmatch for %s", _path.c_str());
+		Logger::Log(VFS_AR_MODULE, LOG_CRITICAL, "Archive version missmatch for %s", *_path);
 		return ENGINE_IO_FAIL;
 	}
 	
 	if(_header.num_files <= 0 || _header.num_files > VFS_MAX_FILES)
 	{
-		Logger::Log(VFS_AR_MODULE, LOG_CRITICAL, "Invalid number of files for %s", _path.c_str());
+		Logger::Log(VFS_AR_MODULE, LOG_CRITICAL, "Invalid number of files for %s", *_path);
 		return ENGINE_FAIL;
 	}
 
@@ -88,7 +88,7 @@ int VFSArchive::Load()
 	vector<VFSFileHeader> fileHeaders(_header.num_files);
 	if(fread(fileHeaders.data(), sizeof(VFSFileHeader), _header.num_files, _fp) != _header.num_files)
 	{
-		Logger::Log(VFS_AR_MODULE, LOG_CRITICAL, "failed to read archive header from %s", _path.c_str());
+		Logger::Log(VFS_AR_MODULE, LOG_CRITICAL, "failed to read archive header from %s", *_path);
 		return ENGINE_IO_FAIL;
 	}
 
@@ -151,14 +151,13 @@ int VFSArchive::MakeResident()
 	return ENGINE_OK;
 }
 
-VFSFile *VFSArchive::Open(string &path)
+VFSFile *VFSArchive::Open(NString &path)
 {
-	const char *str = path.c_str();
-	size_t len = strlen(str);
+	size_t len = strlen(*path);
 
 	for (VFSFile &file : _files)
 	{
-		if (!strncmp(str, file.GetHeader().name, len))
+		if (!strncmp(*path, file.GetHeader().name, len))
 		{
 			file.Open();
 			return &file;
@@ -178,11 +177,11 @@ uint64_t VFSArchive::Read(void *buffer, uint64_t offset, uint64_t size, uint64_t
 
 	// Archive is not resident
 	if(fseek(_fp, (long)sizeof(VFSArchiveHeader) + (long)sizeof(VFSFileHeader) * _header.num_files + (long)offset, SEEK_SET))
-		Logger::Log(VFS_AR_MODULE, LOG_CRITICAL, "Failed to read archive file %s", _path.c_str());
+		Logger::Log(VFS_AR_MODULE, LOG_CRITICAL, "Failed to read archive file %s", *_path);
 
 	size_t ret = fread(buffer, size, count, _fp);
 	if (!ret)
-		Logger::Log(VFS_AR_MODULE, LOG_CRITICAL, "Failed to read archive file %s", _path.c_str());
+		Logger::Log(VFS_AR_MODULE, LOG_CRITICAL, "Failed to read archive file %s", *_path);
 
 	return ret;
 }

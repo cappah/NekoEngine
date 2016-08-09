@@ -65,7 +65,7 @@ int Shader::Load()
 	if (!_CompileShader(ShaderType::Fragment, GetResourceInfo()->fsFilePath))
 		return ENGINE_LOAD_FS_FAIL;
 
-	if (GetResourceInfo()->gsFilePath.length() > 0)
+	if (GetResourceInfo()->gsFilePath.Length() > 0)
 		if (!_CompileShader(ShaderType::Geometry, GetResourceInfo()->gsFilePath))
 			return ENGINE_LOAD_GS_FAIL;
 
@@ -85,7 +85,7 @@ void Shader::Disable() noexcept
 	_shader->Disable();
 }
 
-int Shader::_CompileShader(ShaderType type, string &file)
+int Shader::_CompileShader(ShaderType type, NString &file)
 {
 	size_t sourceSize = SHADER_BUFF;
 	char *source = nullptr, lineBuff[SHADER_LINE_BUFF];	
@@ -94,7 +94,7 @@ int Shader::_CompileShader(ShaderType type, string &file)
 	VFSFile *f = VFS::Open(file);
 	if (!f)
 	{
-		Logger::Log(SHADER_MODULE, LOG_CRITICAL, "Failed to open source file: %s", file.c_str());
+		Logger::Log(SHADER_MODULE, LOG_CRITICAL, "Failed to open source file: %s", *file);
 		return ENGINE_IO_FAIL;
 	}
 
@@ -125,7 +125,7 @@ int Shader::_CompileShader(ShaderType type, string &file)
 			{
 				f->Close();
 				free(source);
-				Logger::Log(SHADER_MODULE, LOG_CRITICAL, "Error compiling shader <%s>:\nIncluded file %s not found\n", file.c_str(), str);
+				Logger::Log(SHADER_MODULE, LOG_CRITICAL, "Error compiling shader <%s>:\nIncluded file %s not found\n", *file, str);
 				return false;
 			}
 		}
@@ -137,7 +137,7 @@ int Shader::_CompileShader(ShaderType type, string &file)
 
 	if (!_shader->LoadFromSource(type, 1, (const char**)&source, NULL))
 	{
-		Logger::Log(SHADER_MODULE, LOG_CRITICAL, "Error compiling shader <%s>:\ns\n", file.c_str()/*, infoLog*/);
+		Logger::Log(SHADER_MODULE, LOG_CRITICAL, "Error compiling shader <%s>:\ns\n", *file/*, infoLog*/);
 		free(source);
 		return false;
 	}
@@ -256,9 +256,9 @@ bool Shader::_IncludeFile(char* file, char** source, size_t* sourceSize)
 	VFSFile *f;
 	char lineBuff[SHADER_LINE_BUFF];
 	memset(lineBuff, 0x0, SHADER_LINE_BUFF);
-	string path = _includePath;
-	path.append("/");
-	path.append(file);
+	NString path = _includePath;
+	path.Append("/");
+	path.Append(file);
 
 	memset(lineBuff, 0x0, SHADER_LINE_BUFF);
 

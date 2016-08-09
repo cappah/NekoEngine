@@ -62,8 +62,8 @@ int Texture::Load()
 	TextureType type = GetResourceInfo()->textureType == TextureResourceType::TEXTURE_2D ? TextureType::Tex2D : TextureType::TexCubemap;
 	TextureFileFormat format = TextureFileFormat::DDS;
 	
-	string path(GetResourceInfo()->filePath);
-	path.append(".dds");
+	NString path(GetResourceInfo()->filePath);
+	path.Append(".dds");
 	
 	VFSFile *file = nullptr;
 	
@@ -72,9 +72,9 @@ int Texture::Load()
 	
 	if (!file && Engine::GetRenderer()->IsTextureFormatSupported(TextureFileFormat::KTX))
 	{
-		path[path.length() - 3] = 'k';
-		path[path.length() - 2] = 't';
-		path[path.length() - 1] = 'x';
+		path[path.Length() - 3] = 'k';
+		path[path.Length() - 2] = 't';
+		path[path.Length() - 1] = 'x';
 		
 		file = VFS::Open(path);
 		format = TextureFileFormat::KTX;
@@ -82,9 +82,9 @@ int Texture::Load()
 	
 	if (!file)
 	{
-		path[path.length() - 3] = 't';
-		path[path.length() - 2] = 'g';
-		path[path.length() - 1] = 'a';
+		path[path.Length() - 3] = 't';
+		path[path.Length() - 2] = 'g';
+		path[path.Length() - 1] = 'a';
 
 		file = VFS::Open(path);
 		format = TextureFileFormat::TGA;
@@ -94,7 +94,7 @@ int Texture::Load()
 			if(file)
 				file->Close();
 			
-			Logger::Log(TEX_MODULE, LOG_CRITICAL, "Failed to load texture id %d, file name [%s]. Reason: unsupported texture format.", GetResourceInfo()->id, GetResourceInfo()->filePath.c_str());
+			Logger::Log(TEX_MODULE, LOG_CRITICAL, "Failed to load texture id %d, file name [%s]. Reason: unsupported texture format.", GetResourceInfo()->id, *GetResourceInfo()->filePath);
 			return ENGINE_FAIL;
 		}
 	}
@@ -102,7 +102,7 @@ int Texture::Load()
 	if(file->Seek(0, SEEK_END) == ENGINE_FAIL)
 	{
 		file->Close();
-		Logger::Log(TEX_MODULE, LOG_CRITICAL, "Seek failed for file [%].", GetResourceInfo()->filePath.c_str());
+		Logger::Log(TEX_MODULE, LOG_CRITICAL, "Seek failed for file [%].", *GetResourceInfo()->filePath);
 		return ENGINE_FAIL;
 	}
 	
@@ -111,7 +111,7 @@ int Texture::Load()
 	if(file->Seek(0, SEEK_SET) == ENGINE_FAIL)
 	{
 		file->Close();
-		Logger::Log(TEX_MODULE, LOG_CRITICAL, "Seek failed for file [%].", GetResourceInfo()->filePath.c_str());
+		Logger::Log(TEX_MODULE, LOG_CRITICAL, "Seek failed for file [%].", *GetResourceInfo()->filePath);
 		return ENGINE_FAIL;
 	}
 	
@@ -120,7 +120,7 @@ int Texture::Load()
 	{
 		file->Close();
 		free(mem);
-		Logger::Log(TEX_MODULE, LOG_CRITICAL, "Failed to read file [%].", GetResourceInfo()->filePath.c_str());
+		Logger::Log(TEX_MODULE, LOG_CRITICAL, "Failed to read file [%].", *GetResourceInfo()->filePath);
 		return ENGINE_FAIL;
 	}
 
@@ -145,7 +145,7 @@ int Texture::Load()
 	if (Engine::GetConfiguration().Renderer.Mipmaps)
 		_texture->GenerateMipmaps();
 
-	Logger::Log(TEX_MODULE, LOG_DEBUG, "Loaded texture id %d from %s, size %dx%d", _resourceInfo->id, path.c_str(), _texture->GetWidth(), _texture->GetHeight());
+	Logger::Log(TEX_MODULE, LOG_DEBUG, "Loaded texture id %d from %s, size %dx%d", _resourceInfo->id, *path, _texture->GetWidth(), _texture->GetHeight());
 
 	return ENGINE_OK;
 }

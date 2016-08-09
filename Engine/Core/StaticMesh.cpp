@@ -85,7 +85,7 @@ int StaticMesh::Load()
 
 	_CalculateTangents();
 
-	Logger::Log(MESH_MODULE, LOG_DEBUG, "Loaded mesh id %d from %s, %d vertices, %d indices", _resourceInfo->id, GetResourceInfo()->filePath.c_str(), _vertexCount, _indexCount);
+	Logger::Log(MESH_MODULE, LOG_DEBUG, "Loaded mesh id %d from %s, %d vertices, %d indices", _resourceInfo->id, *GetResourceInfo()->filePath, _vertexCount, _indexCount);
 
 	return ENGINE_OK;
 }

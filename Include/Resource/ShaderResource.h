@@ -39,15 +39,14 @@
 
 #pragma once
 
-#include <string>
-
+#include <Runtime/Runtime.h>
 #include <Resource/ResourceInfo.h>
 
 struct ShaderResource : public ResourceInfo
 {
-	std::string vsFilePath;
-	std::string fsFilePath;
-	std::string gsFilePath;
+	NString vsFilePath;
+	NString fsFilePath;
+	NString gsFilePath;
 	int numTextures;
 
 	ShaderResource() :

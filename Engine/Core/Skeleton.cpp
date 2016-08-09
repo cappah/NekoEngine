@@ -72,7 +72,7 @@ Skeleton::Skeleton(vector<Bone> &bones, vector<TransformNode> &nodes, dmat4 &glo
 	for (unsigned int i = 0; i < _numBones; i++)
 	{
 		_bones[i] = bones[i];
-		_boneMap.insert(make_pair(_bones[i].name, i));
+		_boneMap.insert(make_pair(_bones[i].name.c_str(), i));
 	}
 	
 	_nodes.reserve(_numNodes);
@@ -255,7 +255,7 @@ void Skeleton::_TransformHierarchy(double time, const TransformNode *node, dmat4
 	
 	for(uint i = 0; i < _animationClip->GetChannels().size(); ++i)
 	{
-		if(!_animationClip->GetChannels()[i].name.compare(node->name))
+		if(*_animationClip->GetChannels()[i].name && !strncmp(*_animationClip->GetChannels()[i].name, node->name.c_str(), node->name.length()))
 		{
 			animNode = &_animationClip->GetChannels()[i];
 			break;
@@ -280,7 +280,7 @@ void Skeleton::_TransformHierarchy(double time, const TransformNode *node, dmat4
 	}
 	
 	dmat4 globalTransform = parentTransform * nodeTransform;
-	
+
 	if(_boneMap.find(node->name) != _boneMap.end())
 	{
 		uint16_t index = _boneMap[node->name];

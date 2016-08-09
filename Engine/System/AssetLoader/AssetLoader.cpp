@@ -104,7 +104,7 @@ typedef struct WAVE_DATA
 
 using namespace glm;
 
-int AssetLoader::LoadMesh(string& file,
+int AssetLoader::LoadMesh(NString &file,
 						  MeshType type,
 						  vector<Vertex> &vertices,
 						  vector<uint32_t> &indices,
@@ -126,7 +126,7 @@ int AssetLoader::LoadMesh(string& file,
 	VFSFile *f = VFS::Open(file);
 	if(!f)
 	{
-		Logger::Log(AL_MODULE, LOG_CRITICAL, "Failed to open mesh file %s", file.c_str());
+		Logger::Log(AL_MODULE, LOG_CRITICAL, "Failed to open mesh file %s", *file);
 		return ENGINE_IO_FAIL;
 	}
 
@@ -229,11 +229,11 @@ int AssetLoader::LoadMesh(string& file,
 	return ENGINE_OK;
 }
 
-int AssetLoader::LoadAnimation(std::string &file,
+int AssetLoader::LoadAnimation(NString &file,
 						 std::string &name,
 						 double *duration,
 						 double *ticksPerSecond,
-						 std::vector<AnimationNode> &channels)
+						 vector<AnimationNode> &channels)
 {
 	char lineBuff[AL_LINE_BUFF], *pch = nullptr;
 	VectorKey vk;
@@ -244,7 +244,7 @@ int AssetLoader::LoadAnimation(std::string &file,
 	VFSFile *f = VFS::Open(file);
 	if(!f)
 	{
-		Logger::Log(AL_MODULE, LOG_CRITICAL, "Failed to open animation file %s", file.c_str());
+		Logger::Log(AL_MODULE, LOG_CRITICAL, "Failed to open animation file %s", *file);
 		return ENGINE_IO_FAIL;
 	}
 	
@@ -346,7 +346,7 @@ int AssetLoader::LoadAnimation(std::string &file,
 	return ENGINE_OK;
 }
 
-int AssetLoader::LoadWAV(string &file, ALenum *format, ALvoid **data, ALsizei *size, ALsizei *freq)
+int AssetLoader::LoadWAV(NString &file, ALenum *format, ALvoid **data, ALsizei *size, ALsizei *freq)
 {
 	wave_fmt_t wave_fmt;
 	riff_hdr_t riff_hdr;
@@ -452,7 +452,7 @@ exit:
 	return ret;
 }
 
-int AssetLoader::LoadOGG(string &file, ALenum *format, unsigned char **data, ALsizei *size, ALsizei *freq)
+int AssetLoader::LoadOGG(NString &file, ALenum *format, unsigned char **data, ALsizei *size, ALsizei *freq)
 {
 	int bitStream;
 	long bytes;

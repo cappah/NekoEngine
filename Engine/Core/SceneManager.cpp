@@ -62,7 +62,7 @@ int SceneManager::Initialize()
 	return _ReadConfigFile("/scenes.cfg");
 }
 
-int SceneManager::_ReadConfigFile(string file)
+int SceneManager::_ReadConfigFile(NString file)
 {
 	char lineBuff[LINE_BUFF];
 	memset(lineBuff, 0x0, LINE_BUFF);

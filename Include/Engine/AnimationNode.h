@@ -60,7 +60,7 @@ struct QuatKey
 
 struct AnimationNode
 {
-	std::string name;	
+	NString name;	
 	std::vector<VectorKey> positionKeys;
 	std::vector<QuatKey> rotationKeys;
 	std::vector<VectorKey> scalingKeys;

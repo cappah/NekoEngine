@@ -142,7 +142,7 @@ public:
 		Clear();
 	}
 
-	T &operator [](size_t i) { return ((T*)_data)[i]; }
+	T &operator [](const size_t i) { return ((T*)_data)[i]; }
 	T *operator *() { return (T*)_data; }
 
 private:

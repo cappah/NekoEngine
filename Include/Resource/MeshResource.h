@@ -39,9 +39,8 @@
 
 #pragma once
 
+#include <Runtime/Runtime.h>
 #include <Resource/ResourceInfo.h>
-
-#include <string>
 
 enum MeshType
 {
@@ -52,6 +51,6 @@ enum MeshType
 struct MeshResource : public ResourceInfo
 {
 	MeshResource() { type = ResourceType::RES_STATIC_MESH; meshType = MeshType::Static; }
-	std::string filePath;
+	NString filePath;
 	MeshType meshType;
 };

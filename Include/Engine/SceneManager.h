@@ -42,6 +42,7 @@
 #include <vector>
 #include <string>
 
+#include <Runtime/Runtime.h>
 #include <Engine/Engine.h>
 #include <Engine/LoadingScreen.h>
 #include <Scene/Scene.h>
@@ -69,7 +70,7 @@ private:
 
 	static LoadingScreen *_loadingScreen;
 
-	static int _ReadConfigFile(std::string configFile);
+	static int _ReadConfigFile(NString configFile);
 	static void _UnloadScene() noexcept;
 	static void _UnloadScenes() noexcept;
 

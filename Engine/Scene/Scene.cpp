@@ -50,6 +50,7 @@
 #include <Engine/GameModule.h>
 #include <Engine/DeferredBuffer.h>
 #include <Engine/CameraManager.h>
+#include <Runtime/Runtime.h>
 #include <Scene/Scene.h>
 #include <Scene/Object.h>
 #include <Scene/Terrain.h>
@@ -336,8 +337,8 @@ int Scene::Load()
 	char lineBuff[SCENE_LINE_BUFF];
 	memset(lineBuff, 0x0, SCENE_LINE_BUFF);
 
-	string path("/");
-	path.append(_sceneFile);
+	NString path("/");
+	path.Append(_sceneFile);
 
 	VFSFile *f = VFS::Open(path);
 	if (!f)

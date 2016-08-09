@@ -37,12 +37,11 @@
 
 #pragma once
 
+#include <Runtime/Runtime.h>
 #include <Resource/ResourceInfo.h>
-
-#include <string>
 
 struct AudioClipResource : public ResourceInfo
 {
 	AudioClipResource() { type = ResourceType::RES_AUDIOCLIP; }
-	std::string filePath;
+	NString filePath;
 };

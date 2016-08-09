@@ -39,8 +39,8 @@
 
 #pragma once
 
-#include <string>
 #include <vector>
+#include <string>
 #include <glm/glm.hpp>
 
 struct TransformNode

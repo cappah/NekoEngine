@@ -55,11 +55,11 @@ int AudioClip::Load()
 	ALvoid *data = nullptr;
 	int ret = ENGINE_FAIL;
 
-	string path(GetResourceInfo()->filePath);
+	NString path(GetResourceInfo()->filePath);
 
-	if (path.substr(path.find_last_of(".") + 1) == "ogg")
+	if (path.Substring(path.FindLast('.') + 1) == "ogg")
 		ret = AssetLoader::LoadOGG(path, &format, (unsigned char **)&data, &size, &freq);
-	else if (path.substr(path.find_last_of(".") + 1) == "wav")
+	else if (path.Substring(path.FindLast('.') + 1) == "wav")
 		ret = AssetLoader::LoadWAV(path, &format, &data, &size, &freq);
 
 	if (ret != ENGINE_OK)
@@ -70,7 +70,7 @@ int AudioClip::Load()
 
 	free(data); data = nullptr;
 
-	Logger::Log(AC_MODULE, LOG_DEBUG, "Loaded clip id %d from %s, size %ld kB, frequency %ld Hz, format 0x%x", _resourceInfo->id, path.c_str(), size / 1024, freq, format);
+	Logger::Log(AC_MODULE, LOG_DEBUG, "Loaded clip id %d from %s, size %ld kB, frequency %ld Hz, format 0x%x", _resourceInfo->id, *path, size / 1024, freq, format);
 
 	return ENGINE_OK;
 }

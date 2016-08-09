@@ -45,6 +45,7 @@
 #include <Engine/Bone.h>
 #include <Engine/Vertex.h>
 #include <Engine/Engine.h>
+#include <Runtime/Runtime.h>
 #include <Renderer/Renderer.h>
 #include <Engine/TransformNode.h>
 #include <Engine/AnimationClip.h>
@@ -54,7 +55,7 @@ class AssetLoader
 {
 public:
 	// Mesh
-	static int LoadMesh(std::string &file, MeshType type,
+	static int LoadMesh(NString &file, MeshType type,
 						std::vector<Vertex> &vertices,
 						std::vector<uint32_t> &indices,
 						std::vector<uint32_t> &groupOffset,
@@ -63,15 +64,15 @@ public:
 						std::vector<TransformNode> *nodes = nullptr,
 						glm::dmat4 *globalInverseTransform = nullptr);
 	
-	static int LoadAnimation(std::string &file,
+	static int LoadAnimation(NString &file,
 							 std::string &name,
 							 double *duration,
 							 double *ticksPerSecond,
 							 std::vector<AnimationNode> &channels);
 	
 	// Sound
-	static int LoadWAV(std::string &file, ALenum *format, ALvoid **data, ALsizei *size, ALsizei *freq);
-	static int LoadOGG(std::string &file, ALenum *format, unsigned char **data, ALsizei *size, ALsizei *freq);
+	static int LoadWAV(NString &file, ALenum *format, ALvoid **data, ALsizei *size, ALsizei *freq);
+	static int LoadOGG(NString &file, ALenum *format, unsigned char **data, ALsizei *size, ALsizei *freq);
 
 private:
 

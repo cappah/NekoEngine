@@ -50,9 +50,9 @@ class VFS
 public:
 	static int Initialize();
 	
-	static int LoadArchive(std::string path);
+	static int LoadArchive(NString path);
 
-	static VFSFile* Open(std::string &path);
+	static VFSFile* Open(NString &path);
 
 	static void Release();
 

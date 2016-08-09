@@ -39,13 +39,12 @@
 
 #pragma once
 
-#include <string>
-
+#include <Runtime/Runtime.h>
 #include <Resource/ResourceInfo.h>
 
 struct FontResource : public ResourceInfo
 {
-	std::string filePath;
+	NString filePath;
 
 	FontResource() { type = ResourceType::RES_FONT; }
 };
