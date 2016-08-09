@@ -32,9 +32,6 @@ matrix:
     osx_image: xcode7.3
 
 before_install:
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then wget --no-check-certificate http://www.cmake.org/files/v3.6/cmake-3.6.0-Linux-x86_64.tar.gz; fi
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then tar xf cmake-3.6.0-Linux-x86_64.tar.gz; fi
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo cp -r cmake-3.6.0-Linux-x86_64/* /usr; fi
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get -qq update; fi
 
 before_script:
@@ -43,4 +40,4 @@ before_script:
 script:
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd build; fi
 - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cmake .. && make; fi
-- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then xcodebuild -workspace NekoEngine.xcworkspace -scheme NekoEngine -configuration Debug; fi
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then xcodebuild -workspace NekoEngine.xcworkspace -scheme NekoEngine_Travis -configuration Debug; fi

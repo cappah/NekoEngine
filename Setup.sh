@@ -42,10 +42,12 @@ InstallDepsAptGet()
 	VER=`lsb_release -r | awk '{print $2}'`
 	
 	if [ "$VER" = "14.04" ]; then
-		PACKAGES="build-essential cmake libsqlite3-dev libpng-dev libx11-dev libopenal-dev libvorbis-dev libgl1-mesa-dev libfreetype6-dev"
+		PACKAGES="build-essential libsqlite3-dev libpng-dev libx11-dev libopenal-dev libvorbis-dev libgl1-mesa-dev libfreetype6-dev"
 
-		# Manually install libbsd
-		echo "Ubuntu 14.04 detected, installing libbsd from source. Please upgrade your OS"
+		# Manually install libbsd & cmake
+		echo "Ubuntu 14.04 detected, installing libbsd from source & cmake from binary tarball. Please upgrade your OS"
+		DIR=$(pwd);
+		cd /tmp;
 		wget --no-check-certificate https://libbsd.freedesktop.org/releases/libbsd-0.8.3.tar.xz;
 		tar xf libbsd-0.8.3.tar.xz;
 		cd libbsd-0.8.3;
@@ -53,6 +55,9 @@ InstallDepsAptGet()
 		make;
 		sudo make install;
 		cd ..;
+		wget --no-check-certificate http://www.cmake.org/files/v3.6/cmake-3.6.1-Linux-x86_64.tar.gz;
+		tar zxf cmake-3.6.1-Linux-x86_64.tar.gz;
+		sudo cp -r cmake-3.6.1-Linux-x86_64/* /usr;
 		echo "Done"
 	else
 		PACKAGES="build-essential cmake libsqlite3-dev libpng-dev libx11-dev libopenal-dev libvorbis-dev libgl1-mesa-dev libbsd-dev"
