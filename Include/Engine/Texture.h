@@ -71,3 +71,4 @@ private:
 };
 
 template class ENGINE_API NArray<Texture>;
+template class ENGINE_API NArray<TextureParams>;

@@ -61,4 +61,4 @@ protected:
 	int _refCount;
 };
 
-template class ENGINE_API NArray<Resource>;
+template class ENGINE_API NArray<Resource*>;

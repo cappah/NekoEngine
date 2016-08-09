@@ -221,14 +221,16 @@ int Material::Load()
 				continue;
 			}
 
-			_textureIds.push_back(id);
-			_textureParams.push_back(
+			_textureIds.Add(id);
+
+			TextureParams texParams =
 			{
 				minFilter,
 				magFilter,
 				wrapS,
 				wrapT
-			});
+			};
+			_textureParams.Add(texParams);
 		}
 		
 		for(char* p : split)
@@ -237,7 +239,7 @@ int Material::Load()
 
 	f->Close();
 
-	for (size_t i = 0; i < _textureIds.size(); i++)
+	for (size_t i = 0; i < _textureIds.Count(); i++)
 	{
 		Texture *tex = (Texture *)ResourceManager::GetResource(_textureIds[i], ResourceType::RES_TEXTURE);
 
@@ -249,7 +251,7 @@ int Material::Load()
 		}
 
 		tex->SetParameters(_textureParams[i]);
-		_textures.push_back(tex);
+		_textures.Add(tex);
 	}
 
 	if (_materialInfo.MaterialType == SH_NM || _materialInfo.MaterialType == SH_NM_SPEC)
@@ -286,7 +288,7 @@ void Material::Enable(RShader* shader)
 	shader->FSSetUniformBuffer(1, 0, sizeof(MaterialBlock), _materialUbo);
 	shader->VSSetUniformBuffer(1, 0, sizeof(MaterialBlock), _materialUbo);
 
-	for (unsigned int i = 0; i < _textures.size(); i++)
+	for (unsigned int i = 0; i < _textures.Count(); i++)
 	{
 		if(_textures[i]->GetResourceInfo()->textureType == TextureResourceType::TEXTURE_CUBEMAP)
 			shader->SetTexture(U_TEXTURE_CUBE, _textures[i]->GetRTexture());
@@ -302,9 +304,9 @@ void Material::Unload()
 	for (Texture *t : _textures)
 		ResourceManager::UnloadResource(t->GetResourceId(), ResourceType::RES_TEXTURE);
 
-	_textures.clear();
-	_textureParams.clear();
-	_textureIds.clear();
+	_textures.Clear();
+	_textureParams.Clear();
+	_textureIds.Clear();
 	
 	delete _materialUbo;
 }

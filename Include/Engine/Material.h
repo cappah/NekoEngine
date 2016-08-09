@@ -88,7 +88,7 @@ public:
 
 	ENGINE_API void Enable(RShader* shader);
 
-	ENGINE_API void AddTextureId(int id, TextureParams params) noexcept { _textureIds.push_back(id); _textureParams.push_back(params); }
+	ENGINE_API void AddTextureId(int id, TextureParams params) noexcept { _textureIds.Add(id); _textureParams.Add(params); }
 
 	ENGINE_API void Unload();
 
@@ -97,9 +97,9 @@ public:
 private:
 	bool _blend;
 	bool _noCulling;
-	std::vector<int> _textureIds;
-	std::vector<Texture*> _textures;
-	std::vector<TextureParams> _textureParams;
+	NArray<int> _textureIds;
+	NArray<Texture*> _textures;
+	NArray<TextureParams> _textureParams;
 	RBuffer *_materialUbo;
 	MaterialBlock _materialInfo;
 
@@ -108,4 +108,4 @@ private:
 	void _LoadTexture(const char* name, int* id, TextureFilter* minFilter, TextureFilter* magFilter, TextureWrap* wrapS, TextureWrap* wrapT);
 };
 
-template class ENGINE_API NArray<Material>;
+template class ENGINE_API NArray<Material*>;

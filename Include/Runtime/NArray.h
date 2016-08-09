@@ -53,14 +53,16 @@ public:
 		_count(0),
 		_size(size)
 	{
-		//_data = new T[_size];
+		_data = (uint8_t *)realloc(nullptr, sizeof(T) * _size);
 	}
 
 	NArray(const NArray &other)
 	{
 		_count = other._count;
 		_size = other._size;
-		_data = other._data;
+		
+		for(size_t i = 0; i < _count; ++i)
+			new (_data + sizeof(T) * _count++)T(((T*)other._data)[i]);
 	}
 
 	NArray(NArray &&other)
@@ -73,8 +75,8 @@ public:
 		other._data = nullptr;
 	}
 
-	T* begin() { return &_data[0]; }
-	T* end() { return &_data[_count]; }
+	T* begin() { return &((T*)_data)[0]; }
+	T* end() { return &((T*)_data)[_count]; }
 
 	size_t Count() { return _count; }
 	size_t Size() { return _size; }
@@ -85,7 +87,7 @@ public:
 			if (!Resize(_size + NARRAY_DEFAULT_INCREMENT))
 				return;
 
-		_data[_count++] = item;
+		new (_data + sizeof(T) * _count++)T(item);
 	}
 
 	void Insert(uint32_t index, T &item)
@@ -98,19 +100,21 @@ public:
 		if (index == --_count)
 			return;
 
+		((T*)_data)[index].~T();
+
 		for (uint32_t i = index + 1; i <= _count; ++i)
-			_data[i - 1] = _data[i];
+			((T*)_data)[i - 1] = ((T*)_data)[i];
 	}
 
 	bool Resize(size_t size)
 	{
-		/*if (_size == size)
+		if (_size == size)
 			return true;
 
-		T* ptr = _data;
-		if ((_data = new T[size]) == nullptr)
+		T* ptr = (T*)_data;
+		if ((_data = (uint8_t *)realloc(_data, sizeof(T) * size)) == nullptr)
 		{
-			_data = ptr;
+			_data = (uint8_t *)ptr;
 			return false;
 		}
 
@@ -119,22 +123,24 @@ public:
 		if (_size < _count)
 			_count = _size;
 
-		for (size_t i = 0; i < _count; ++i)
-			_data[i] = std::move(ptr[i]);
+		return true;
+	}
 
-		delete[] ptr;
-
-		return true;*/
-		return false;
+	void Clear()
+	{
+		_count = _size = 0;
+		free(_data);
+		_data = nullptr;
 	}
 
 	virtual ~NArray()
 	{
-		_count = _size = 0;
-		delete[] _data;
+		Clear();
 	}
 
+	T &operator [](size_t i) { return ((T*)_data)[i]; }
+
 private:
-	T* _data;
+	uint8_t *_data;
 	size_t _count, _size;
 };
