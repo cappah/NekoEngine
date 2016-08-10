@@ -90,7 +90,7 @@ bool GLESRenderer::Initialize(PlatformWindowType hWnd, unordered_map<string, str
 
     if(!eglBindAPI(EGL_OPENGL_ES_API))
     {
-        fprintf(stderr, "eglBindAPI failed with 0x%s\n", eglGetError());
+        fprintf(stderr, "eglBindAPI failed with 0x%x\n", eglGetError());
         return false;
     }
 
