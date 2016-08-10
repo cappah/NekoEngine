@@ -25,16 +25,10 @@
          <Group
             location = "group:Animations"
             name = "Animations">
-            <FileRef
-               location = "group:sophia_idle.nanim">
-            </FileRef>
          </Group>
          <Group
             location = "group:Fonts"
             name = "Fonts">
-            <FileRef
-               location = "group:Aller_Rg.ttf">
-            </FileRef>
          </Group>
          <Group
             location = "group:Materials"
@@ -62,16 +56,10 @@
                location = "group:skyreflect.nmtl">
             </FileRef>
             <FileRef
-               location = "group:skysphere.nmtl">
-            </FileRef>
-            <FileRef
                location = "group:terrain.nmtl">
             </FileRef>
             <FileRef
                location = "group:w_girl.nmtl">
-            </FileRef>
-            <FileRef
-               location = "group:sophia.nmtl">
             </FileRef>
          </Group>
          <FileRef
@@ -208,40 +196,10 @@
          <Group
             location = "group:../SkeletalMeshes"
             name = "SkeletalMeshes">
-            <FileRef
-               location = "group:sophia.nmesh">
-            </FileRef>
          </Group>
          <Group
             location = "group:../StaticMeshes"
             name = "StaticMeshes">
-            <FileRef
-               location = "group:arissa.nmesh">
-            </FileRef>
-            <FileRef
-               location = "group:bila.nmesh">
-            </FileRef>
-            <FileRef
-               location = "group:house.nmesh">
-            </FileRef>
-            <FileRef
-               location = "group:light_sphere.nmesh">
-            </FileRef>
-            <FileRef
-               location = "group:m_house.nmesh">
-            </FileRef>
-            <FileRef
-               location = "group:muscle_car.nmesh">
-            </FileRef>
-            <FileRef
-               location = "group:nyra.nmesh">
-            </FileRef>
-            <FileRef
-               location = "group:skysphere.nmesh">
-            </FileRef>
-            <FileRef
-               location = "group:w_girl.nmesh">
-            </FileRef>
          </Group>
          <Group
             location = "group:Sounds"
@@ -253,9 +211,6 @@
          <Group
             location = "group:Textures"
             name = "Textures">
-            <FileRef
-               location = "group:blank.tga">
-            </FileRef>
             <FileRef
                location = "group:dirt.dds">
             </FileRef>
@@ -276,9 +231,6 @@
             </FileRef>
             <FileRef
                location = "group:house_s.tga">
-            </FileRef>
-            <FileRef
-               location = "group:load_screen.dds">
             </FileRef>
             <FileRef
                location = "group:m_house_d.dds">
@@ -324,9 +276,6 @@
                location = "group:rock.dds">
             </FileRef>
             <FileRef
-               location = "group:sky.tga">
-            </FileRef>
-            <FileRef
                location = "group:terrain_blend_map.dds">
             </FileRef>
             <FileRef
@@ -334,9 +283,6 @@
             </FileRef>
             <FileRef
                location = "group:water_n.dds">
-            </FileRef>
-            <FileRef
-               location = "group:sophia.tga">
             </FileRef>
          </Group>
       </Group>

@@ -192,6 +192,7 @@ public:
     static std::vector<ShaderDefine>& GetShaderDefines() { return _shaderDefines; }
 	static void SetActiveShader(class GLESShader *shader) { _activeShader = shader; }
 	static void MakeCurrent();
+	static bool HasExtension(const char* extension);
     
 private:
     PlatformWindowType _window;
@@ -199,8 +200,7 @@ private:
     static RFramebuffer* _boundFramebuffer;
     static std::vector<ShaderDefine> _shaderDefines;
 	RendererState _state;
-    
-    bool _HasExtension(const char* extension);
+	
     void _DestroyContext();
 };
 
@@ -210,4 +210,17 @@ void LogDebugOutput(GLenum source, GLenum type, GLuint id, GLenum severity, cons
 void DebugCallbackAMD(GLuint id, GLenum category, GLenum severity, GLsizei length, const GLchar* message, GLvoid* userParam);
 void DebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const GLvoid* userParam);
 
-#endif /* IGLRenderer_h */
+#endif /* GLESRenderer_h */
+
+/*
+ * These functions and constants do not exist in Apple's OpenGL implementation
+ */
+#ifdef __APPLE__
+
+#define glBufferStorageEXT(x, y, z, w)
+
+#define GL_MAP_PERSISTENT_BIT	0
+#define GL_MAP_COHERENT_BIT		0
+#define GL_DYNAMIC_STORAGE_BIT	0
+
+#endif

@@ -47,6 +47,8 @@
 #ifdef __APPLE__
 #include <OpenGLES/ES3/glext.h>
 #else
+#include <GLES3/gl31.h>
+#include <GLES3/gl32.h>
 #include <GLES3/gl2ext.h>
 #endif
 
@@ -142,6 +144,7 @@ static GLenum GL_PixelStoreParameter[16] =
 
 extern GLenum GL_TexFormat[];
 extern GLenum GL_TexType[];
+static int _verMajor = -1, _verMinor = -1;
 
 RFramebuffer* GLESRenderer::_boundFramebuffer = nullptr;
 std::vector<ShaderDefine> GLESRenderer::_shaderDefines;
@@ -164,16 +167,16 @@ const char* GLESRenderer::GetName()
 
 int GLESRenderer::GetMajorVersion()
 {
-    GLint ver;
-    GL_CHECK(glGetIntegerv(GL_MAJOR_VERSION, &ver));
-    return ver;
+    if(_verMajor < 0)
+	{ GL_CHECK(glGetIntegerv(GL_MAJOR_VERSION, &_verMajor)); }
+    return _verMajor;
 }
 
 int GLESRenderer::GetMinorVersion()
 {
-    GLint ver;
-    GL_CHECK(glGetIntegerv(GL_MINOR_VERSION, &ver));
-    return ver;
+    if(_verMinor < 0)
+	{ GL_CHECK(glGetIntegerv(GL_MINOR_VERSION, &_verMinor)); }
+    return _verMinor;
 }
 
 void GLESRenderer::SetClearColor(float r, float g, float b, float a)
@@ -469,7 +472,13 @@ void GLESRenderer::SetPixelStore(PixelStoreParameter param, int value)
 }
 
 bool GLESRenderer::HasCapability(RendererCapability cap)
-{    
+{
+	if(_verMajor < 0)
+	{ GL_CHECK(glGetIntegerv(GL_MAJOR_VERSION, &_verMajor)); }
+	
+	if(_verMinor < 0)
+	{ GL_CHECK(glGetIntegerv(GL_MINOR_VERSION, &_verMinor)); }
+	
     switch (cap)
     {
         case RendererCapability::AnisotropicFiltering:
@@ -479,7 +488,7 @@ bool GLESRenderer::HasCapability(RendererCapability cap)
         case RendererCapability::PerSampleShading:
 			return true;
 		case RendererCapability::DrawBaseVertex:
-			return false;
+			return ((_verMajor == 3) && (_verMinor == 2)) || _verMajor >= 4;
         case RendererCapability::MemoryInformation:
             return false;
         default:
@@ -539,7 +548,7 @@ uint64_t GLESRenderer::GetUsedVideoMemorySize()
     return 0;
 }
 
-bool GLESRenderer::_HasExtension(const char* extension)
+bool GLESRenderer::HasExtension(const char* extension)
 {
     int numExtensions;
     

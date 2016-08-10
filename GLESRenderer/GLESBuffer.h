@@ -83,6 +83,7 @@ private:
     GLuint _id;
     GLenum _target;
     size_t _size, _totalSize;
+	bool _haveBufferStorage;
     int _numBuffers, _currentBuffer;
     GLSyncRange *_syncRanges;
 };

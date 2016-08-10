@@ -76,8 +76,18 @@ GLenum GL_AttribTypes[10]
 
 GLESBuffer::GLESBuffer(BufferType type, bool dynamic, bool persistent) : RBuffer(type)
 {
-    _dynamic = (dynamic || persistent);
-	_persistent = false;
+	_haveBufferStorage = GLESRenderer::HasExtension("GL_EXT_buffer_storage");
+	if (_haveBufferStorage)
+	{
+		_dynamic = dynamic;
+		_persistent = persistent;
+	}
+	else
+	{
+		_dynamic = (dynamic || persistent);
+		_persistent = false;
+	}
+	
     _numBuffers = 1;
     _syncRanges = nullptr;
     _target = GL_BufferTargets[(int)type];
@@ -133,68 +143,142 @@ void GLESBuffer::Unbind()
     GL_CHECK(glBindBuffer(_target, 0));
 }
 
-uint8_t* GLESBuffer::GetData()
+uint8_t *GLESBuffer::GetData()
 {
-    // MacOS does not support GL_ARB_buffer_storage, required for persistent buffers
-    return nullptr;
+	if (!_persistent)
+		return nullptr;
+	
+	return (_data + _size * _currentBuffer);
 }
 
 int GLESBuffer::GetCurrentBuffer()
 {
-    // MacOS does not support GL_ARB_buffer_storage, required for persistent buffers
-    return 0;
+	return _currentBuffer;
 }
 
 uint64_t GLESBuffer::GetOffset()
 {
-    // MacOS does not support GL_ARB_buffer_storage, required for persistent buffers
-    return 0;
+    return _syncRanges[_currentBuffer].offset;
 }
 
 void GLESBuffer::SetStorage(size_t size, void* data)
 {
-    int flags = _dynamic ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW;
-    _size = size;
+	int flags = 0;
+	
+	_size = size;
 	
 	GLint buff;
 	GL_CHECK(glGetIntegerv(GL_GetBufferTargets[(int)_type], &buff));
+	GL_CHECK(glBindBuffer(_target, _id));
 	
-    GL_CHECK(glBindBuffer(_target, _id));
-    GL_CHECK(glBufferData(_target, size, data, flags));
-	GL_CHECK(glBindBuffer(_target, buff));
+	if (_haveBufferStorage)
+	{
+		if (_persistent)
+			flags = GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_COHERENT_BIT;
+		else if (_dynamic)
+			flags = GL_DYNAMIC_STORAGE_BIT;
+		
+		if (!_persistent)
+		{
+			_totalSize = size;
+			GL_CHECK(glBufferStorageEXT(_target, _size, data, flags));
+			return;
+		}
+		
+		if (!_syncRanges)
+			SetNumBuffers(_numBuffers);
+		
+		for (int i = 0; i < _numBuffers; i++)
+		{
+			_syncRanges[i].offset = _size * i;
+			_syncRanges[i].sync = 0;
+		}
+		
+		_totalSize = _size * _numBuffers;
+		GL_CHECK(glBufferStorageEXT(_target, _totalSize, data, flags));
+		GL_CHECK(_data = (uint8_t*)glMapBufferRange(_target, 0, _totalSize, flags));
+		
+		_currentBuffer = 0;
+		
+		GL_CHECK(glBindBuffer(_target, buff));
+	}
+	else
+	{
+		flags = _dynamic ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW;
+		
+		GL_CHECK(glBufferData(_target, size, data, flags));
+		GL_CHECK(glBindBuffer(_target, buff));
+	}
 }
 
 void GLESBuffer::UpdateData(size_t offset, size_t size, void* data)
 {
-	if(!_dynamic)
-		return;
-	
-	GLint buff;
-	GL_CHECK(glGetIntegerv(GL_GetBufferTargets[(int)_type], &buff));
-	
-    GL_CHECK(glBindBuffer(_target, _id));
-	GL_CHECK(glBufferSubData(_target, offset, size, data));
-	GL_CHECK(glBindBuffer(_target, buff));
+	if (_persistent)
+		memcpy(GetData() + offset, data, size);
+	else
+	{
+		if(!_dynamic)
+			return;
+		
+		GLint buff;
+		GL_CHECK(glGetIntegerv(GL_GetBufferTargets[(int)_type], &buff));
+		
+		GL_CHECK(glBindBuffer(_target, _id));
+		GL_CHECK(glBufferSubData(_target, offset, size, data));
+		GL_CHECK(glBindBuffer(_target, buff));
+	}
 }
 
 void GLESBuffer::SetNumBuffers(int n)
 {
-    // MacOS does not support GL_ARB_buffer_storage, required for persistent buffers
+	if (_syncRanges)
+	{
+		GLSyncRange *oldRanges = _syncRanges;
+		
+		_syncRanges = (GLSyncRange*)calloc(n, sizeof(GLSyncRange));
+		if(!_syncRanges)
+		{ DIE("Reallocation failed"); }
+		memcpy(_syncRanges, oldRanges, sizeof(GLSyncRange) * n);
+		
+		free(oldRanges);
+	}
+	else
+		_syncRanges = (GLSyncRange*)calloc(n, sizeof(GLSyncRange));
+	
+	_numBuffers = n;
 }
 
 void GLESBuffer::BeginUpdate()
 {
-    // MacOS does not support GL_ARB_buffer_storage, required for persistent buffers
+	if (!_persistent)
+		return;
+	
+	if (_syncRanges[_currentBuffer].sync)
+	{
+		while (true)
+		{
+			GL_CHECK(GLenum wait = glClientWaitSync(_syncRanges[_currentBuffer].sync, GL_SYNC_FLUSH_COMMANDS_BIT, 1));
+			if (wait == GL_ALREADY_SIGNALED || wait == GL_CONDITION_SATISFIED)
+				return;
+		}
+	}
 }
 
 void GLESBuffer::EndUpdate()
 {
-    // MacOS does not support GL_ARB_buffer_storage, required for persistent buffers
+	if (!_persistent)
+		return;
+	
+	if (_syncRanges[_currentBuffer].sync)
+	{ GL_CHECK(glDeleteSync(_syncRanges[_currentBuffer].sync)); }
+	
+	GL_CHECK(_syncRanges[_currentBuffer].sync = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0));
 }
 
 void GLESBuffer::NextBuffer()
 {
-    // MacOS does not support GL_ARB_buffer_storage, required for persistent buffers
+	if(_persistent)
+		_currentBuffer = (_currentBuffer + 1) % _numBuffers;
 }
 
 void GLESBuffer::BindUniform(int index, uint64_t offset, uint64_t size)
@@ -204,5 +288,16 @@ void GLESBuffer::BindUniform(int index, uint64_t offset, uint64_t size)
 
 GLESBuffer::~GLESBuffer()
 {
+	if (_persistent)
+	{
+		GL_CHECK(glBindBuffer(_target, _id));
+		GL_CHECK(glUnmapBuffer(_target));
+		GL_CHECK(glBindBuffer(_target, 0));
+	}
+	
     GL_CHECK(glDeleteBuffers(1, &_id));
+	
+	free(_syncRanges);
+	_syncRanges = nullptr;
+	_persistent = false;
 }

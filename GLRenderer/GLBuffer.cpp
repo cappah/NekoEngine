@@ -377,10 +377,12 @@ void GLBuffer_NoDSA::UpdateData(size_t offset, size_t size, void* data)
 
 GLBuffer_NoDSA::~GLBuffer_NoDSA()
 {
-	GL_CHECK(glBindBuffer(_target, _id));
-	
 	if (_persistent)
-	{ GL_CHECK(glUnmapBuffer(_target)); }
+	{
+		GL_CHECK(glBindBuffer(_target, _id));
+		GL_CHECK(glUnmapBuffer(_target));
+		GL_CHECK(glBindBuffer(_target, 0));
+	}
 	
 	GL_CHECK(glDeleteBuffers(1, &_id));
 	
