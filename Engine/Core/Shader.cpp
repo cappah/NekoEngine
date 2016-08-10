@@ -58,7 +58,7 @@ int Shader::Load()
 {
 	if((_shader = Engine::GetRenderer()->CreateShader()) == nullptr)
 		return ENGINE_OUT_OF_RESOURCES;
-
+	
 	if (!_CompileShader(ShaderType::Vertex, GetResourceInfo()->vsFilePath))
 		return ENGINE_LOAD_VS_FAIL;
 
@@ -88,9 +88,9 @@ void Shader::Disable() noexcept
 int Shader::_CompileShader(ShaderType type, NString &file)
 {
 	size_t sourceSize = SHADER_BUFF;
-	char *source = nullptr, lineBuff[SHADER_LINE_BUFF];
+	char *source = nullptr, lineBuff[SHADER_LINE_BUFF];	
 	memset(lineBuff, 0x0, SHADER_LINE_BUFF);
-
+	
 	VFSFile *f = VFS::Open(file);
 	if (!f)
 	{
@@ -100,7 +100,7 @@ int Shader::_CompileShader(ShaderType type, NString &file)
 
 	if ((source = (char *)calloc(sourceSize, sizeof(char))) == nullptr)
 	{ DIE("Memory allocation failed"); }
-
+	
 	while (f->Gets(lineBuff, SHADER_LINE_BUFF) != 0)
 	{
 		char *str = nullptr;
@@ -148,18 +148,18 @@ int Shader::_CompileShader(ShaderType type, NString &file)
 
 void Shader::SetDefines(Renderer *r)
 {
-	char buff[SHADER_LINE_BUFF], int_buff[10];
-
+	char buff[SHADER_LINE_BUFF];
+	
 	// Vertex attributes
-	r->AddShaderDefine("SHADER_POSITION_ATTRIBUTE", itoa(SHADER_POSITION_ATTRIBUTE, int_buff, 10));
-	r->AddShaderDefine("SHADER_NORMAL_ATTRIBUTE", itoa(SHADER_NORMAL_ATTRIBUTE, int_buff, 10));
-	r->AddShaderDefine("SHADER_COLOR_ATTRIBUTE", itoa(SHADER_COLOR_ATTRIBUTE, int_buff, 10));
-	r->AddShaderDefine("SHADER_TANGENT_ATTRIBUTE", itoa(SHADER_TANGENT_ATTRIBUTE, int_buff, 10));
-	r->AddShaderDefine("SHADER_UV_ATTRIBUTE", itoa(SHADER_UV_ATTRIBUTE, int_buff, 10));
-	r->AddShaderDefine("SHADER_TERRAINUV_ATTRIBUTE", itoa(SHADER_TERRAINUV_ATTRIBUTE, int_buff, 10));
-	r->AddShaderDefine("SHADER_INDEX_ATTRIBUTE", itoa(SHADER_INDEX_ATTRIBUTE, int_buff, 10));
-	r->AddShaderDefine("SHADER_WEIGHT_ATTRIBUTE", itoa(SHADER_WEIGHT_ATTRIBUTE, int_buff, 10));
-	r->AddShaderDefine("SHADER_NUMBONES_ATTRIBUTE", itoa(SHADER_NUMBONES_ATTRIBUTE, int_buff, 10));
+	r->AddShaderDefine("SHADER_POSITION_ATTRIBUTE", to_string(SHADER_POSITION_ATTRIBUTE));
+	r->AddShaderDefine("SHADER_NORMAL_ATTRIBUTE", to_string(SHADER_NORMAL_ATTRIBUTE));
+	r->AddShaderDefine("SHADER_COLOR_ATTRIBUTE", to_string(SHADER_COLOR_ATTRIBUTE));
+	r->AddShaderDefine("SHADER_TANGENT_ATTRIBUTE", to_string(SHADER_TANGENT_ATTRIBUTE));
+	r->AddShaderDefine("SHADER_UV_ATTRIBUTE", to_string(SHADER_UV_ATTRIBUTE));
+	r->AddShaderDefine("SHADER_TERRAINUV_ATTRIBUTE", to_string(SHADER_TERRAINUV_ATTRIBUTE));
+	r->AddShaderDefine("SHADER_INDEX_ATTRIBUTE", to_string(SHADER_INDEX_ATTRIBUTE));
+	r->AddShaderDefine("SHADER_WEIGHT_ATTRIBUTE", to_string(SHADER_WEIGHT_ATTRIBUTE));
+	r->AddShaderDefine("SHADER_NUMBONES_ATTRIBUTE", to_string(SHADER_NUMBONES_ATTRIBUTE));
 
 	// Textures
 	for (int i = 0; i < 10; i++)
@@ -167,72 +167,72 @@ void Shader::SetDefines(Renderer *r)
 		memset(buff, 0x0, SHADER_LINE_BUFF);
 		if(snprintf(buff, SHADER_LINE_BUFF, "U_TEXTURE%d", i) >= SHADER_LINE_BUFF)
 		{ DIE("Failed to create shader defines"); }
-		r->AddShaderDefine(buff, itoa(U_TEXTURE0 + i, int_buff, 10));
+		r->AddShaderDefine(buff, to_string(U_TEXTURE0 + i));
 	}
-	r->AddShaderDefine("U_TEXTURE_CUBE", itoa(U_TEXTURE_CUBE, int_buff, 10));
+	r->AddShaderDefine("U_TEXTURE_CUBE", to_string(U_TEXTURE_CUBE));
 
 	// Lighting
-	r->AddShaderDefine("LT_AMBIENTAL", itoa(LT_AMBIENTAL, int_buff, 10));
-	r->AddShaderDefine("LT_DIRECTIONAL", itoa(LT_DIRECTIONAL, int_buff, 10));
-	r->AddShaderDefine("LT_POINT", itoa(LT_POINT, int_buff, 10));
-	r->AddShaderDefine("LT_SPOT", itoa(LT_SPOT, int_buff, 10));
+	r->AddShaderDefine("LT_AMBIENTAL", to_string(LT_AMBIENTAL));
+	r->AddShaderDefine("LT_DIRECTIONAL", to_string(LT_DIRECTIONAL));
+	r->AddShaderDefine("LT_POINT", to_string(LT_POINT));
+	r->AddShaderDefine("LT_SPOT", to_string(LT_SPOT));
 
 	// Geometry shader
-	r->AddShaderDefine("U_SHADER_TYPE", itoa(U_SHADER_TYPE, int_buff, 10));
-	r->AddShaderDefine("U_SHADER_SUB", itoa(U_SHADER_SUB, int_buff, 10));
+	r->AddShaderDefine("U_SHADER_TYPE", to_string(U_SHADER_TYPE));
+	r->AddShaderDefine("U_SHADER_SUB", to_string(U_SHADER_SUB));
 
 	// SSAO shader
-	r->AddShaderDefine("SSAO_MAX_SAMPLES", itoa(SSAO_MAX_SAMPLES, int_buff, 10));
+	r->AddShaderDefine("SSAO_MAX_SAMPLES", to_string(SSAO_MAX_SAMPLES));
 
 	// Shader types
 	memset(buff, 0x0, SHADER_LINE_BUFF);
 	if(snprintf(buff, SHADER_LINE_BUFF, "%d.0", SH_NM_SPEC) >= SHADER_LINE_BUFF)
 	{ DIE("Failed to create shader defines"); }
 	r->AddShaderDefine("SH_NM_SPEC", buff);
-
+	
 	memset(buff, 0x0, SHADER_LINE_BUFF);
 	if(snprintf(buff, SHADER_LINE_BUFF, "%d.0", SH_NM) >= SHADER_LINE_BUFF)
 	{ DIE("Failed to create shader defines"); }
 	r->AddShaderDefine("SH_NM", buff);
-
+	
 	memset(buff, 0x0, SHADER_LINE_BUFF);
 	if(snprintf(buff, SHADER_LINE_BUFF, "%d.0", SH_SPEC) >= SHADER_LINE_BUFF)
 	{ DIE("Failed to create shader defines"); }
 	r->AddShaderDefine("SH_SPEC", buff);
-
+	
 	memset(buff, 0x0, SHADER_LINE_BUFF);
 	if(snprintf(buff, SHADER_LINE_BUFF, "%d.0", SH_TERRAIN) >= SHADER_LINE_BUFF)
 	{ DIE("Failed to create shader defines"); }
 	r->AddShaderDefine("SH_TERRAIN", buff);
-
+	
 	memset(buff, 0x0, SHADER_LINE_BUFF);
 	if(snprintf(buff, SHADER_LINE_BUFF, "%d.0", SH_UNLIT) >= SHADER_LINE_BUFF)
 	{ DIE("Failed to create shader defines"); }
 	r->AddShaderDefine("SH_UNLIT", buff);
-
+	
 	memset(buff, 0x0, SHADER_LINE_BUFF);
 	if(snprintf(buff, SHADER_LINE_BUFF, "%d.0", SH_LIT) >= SHADER_LINE_BUFF)
 	{ DIE("Failed to create shader defines"); }
 	r->AddShaderDefine("SH_LIT", buff);
-
+	
 	memset(buff, 0x0, SHADER_LINE_BUFF);
 	if(snprintf(buff, SHADER_LINE_BUFF, "%d.0", SH_SKYBOX) >= SHADER_LINE_BUFF)
 	{ DIE("Failed to create shader defines"); }
 	r->AddShaderDefine("SH_SKYBOX", buff);
-
+	
 	memset(buff, 0x0, SHADER_LINE_BUFF);
 	if(snprintf(buff, SHADER_LINE_BUFF, "%d.0", SH_SKYREFLECT) >= SHADER_LINE_BUFF)
 	{ DIE("Failed to create shader defines"); }
 	r->AddShaderDefine("SH_SKYREFLECT", buff);
-
+	
 	// Subroutines
-	r->AddShaderDefine("SH_SUB_C_SPEC_MAP", itoa(SH_SUB_C_SPEC_MAP, int_buff, 10));
-	r->AddShaderDefine("SH_SUB_C_SPEC_ARG", itoa(SH_SUB_C_SPEC_ARG, int_buff, 10));
-	r->AddShaderDefine("SH_SUB_C_TERRAIN", itoa(SH_SUB_C_TERRAIN, int_buff, 10));
-	r->AddShaderDefine("SH_SUB_C_SKYBOX", itoa(SH_SUB_C_SKYBOX, int_buff, 10));
-	r->AddShaderDefine("SH_SUB_C_SKYREFLECT", itoa(SH_SUB_C_SKYREFLECT, int_buff, 10));
-	r->AddShaderDefine("SH_SUB_N_MAP", itoa(SH_SUB_N_MAP, int_buff, 10));
-	r->AddShaderDefine("SH_SUB_N_ARG", itoa(SH_SUB_N_ARG, int_buff, 10));
+	r->AddShaderDefine("SH_SUB_C_SPEC_MAP", to_string(SH_SUB_C_SPEC_MAP));
+	r->AddShaderDefine("SH_SUB_C_SPEC_ARG", to_string(SH_SUB_C_SPEC_ARG));
+	r->AddShaderDefine("SH_SUB_C_TERRAIN", to_string(SH_SUB_C_TERRAIN));
+	r->AddShaderDefine("SH_SUB_C_SKYBOX", to_string(SH_SUB_C_SKYBOX));
+	r->AddShaderDefine("SH_SUB_C_SKYREFLECT", to_string(SH_SUB_C_SKYREFLECT));
+	r->AddShaderDefine("SH_SUB_N_MAP", to_string(SH_SUB_N_MAP));
+	r->AddShaderDefine("SH_SUB_N_ARG", to_string(SH_SUB_N_ARG));
 
 	// Output
 	r->AddShaderDefine("O_FRAGCOLOR", "0");
@@ -243,9 +243,9 @@ void Shader::SetDefines(Renderer *r)
 	r->AddShaderDefine("O_COLORSPECULAR", "2");
 	r->AddShaderDefine("O_MATERIALINFO", "3");
 	r->AddShaderDefine("O_VIEWNORMAL", "4");
-
-	r->AddShaderDefine("SH_MAX_BONES", itoa(SH_MAX_BONES, int_buff, 10));
-
+	
+	r->AddShaderDefine("SH_MAX_BONES", to_string(SH_MAX_BONES));
+	
 #ifdef _DEBUG
 	r->AddShaderDefine("_DEBUG", "1");
 #endif

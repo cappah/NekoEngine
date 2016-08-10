@@ -50,9 +50,22 @@ void PLATFORM_API *reallocarray(void *optr, size_t nmemb, size_t size);
 #endif
 
 #if defined(NE_PLATFORM_BB10)
+#include <string>
+#include <sstream>
+
 #ifndef SIZE_MAX
 #define SIZE_MAX        (~(size_t)0)
 #endif
+
+namespace std
+{
+	template < typename T > std::string to_string(const T& n)
+	{
+		std::ostringstream ss;
+		ss << n;
+		return ss.str();
+	}
+}
 #endif
 
 #if defined(NE_PLATFORM_MAC) || defined(NE_PLATFORM_IOS) || defined(NE_PLATFORM_OPENBSD) || defined(NE_PLATFORM_FREEBSD)
