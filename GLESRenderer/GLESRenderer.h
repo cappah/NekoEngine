@@ -216,8 +216,6 @@ void LogDebugOutput(GLenum source, GLenum type, GLuint id, GLenum severity, cons
 void DebugCallbackAMD(GLuint id, GLenum category, GLenum severity, GLsizei length, const GLchar* message, GLvoid* userParam);
 void DebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const GLvoid* userParam);
 
-#endif /* GLESRenderer_h */
-
 /*
  * These functions and constants do not exist in Apple's OpenGL implementation
  */
@@ -225,8 +223,10 @@ void DebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsiz
 
 #define glBufferStorageEXT(x, y, z, w)
 
-#define GL_MAP_PERSISTENT_BIT	0
-#define GL_MAP_COHERENT_BIT		0
-#define GL_DYNAMIC_STORAGE_BIT	0
+#define GL_MAP_PERSISTENT_BIT_EXT	0
+#define GL_MAP_COHERENT_BIT_EXT		0
+#define GL_DYNAMIC_STORAGE_BIT_EXT	0
 
 #endif
+
+#endif /* GLESRenderer_h */
