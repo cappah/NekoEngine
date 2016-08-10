@@ -1,9 +1,9 @@
 /* NekoEngine
  *
- * IGLBuffer.h
+ * GLESArrayBuffer.h
  * Author: Alexandru Naiman
  *
- * iOS OpenGL|ES Renderer Implementation
+ * OpenGL|ES 3 Renderer Implementation
  *
  * -----------------------------------------------------------------------------
  *
@@ -37,49 +37,26 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef IGLBuffer_h
-#define IGLBuffer_h
+#ifndef GLESArrayBuffer_h
+#define GLESArrayBuffer_h
 
-#include <Renderer/RBuffer.h>
+#include <Renderer/RArrayBuffer.h>
 #include <OpenGLES/ES3/gl.h>
 
-typedef struct SYNC_RANGE
-{
-    size_t offset;
-    GLsync sync;
-} GLSyncRange;
-
-class IGLBuffer : public RBuffer
+class GLESArrayBuffer : public RArrayBuffer
 {
 public:
-    IGLBuffer(BufferType type, bool dynamic, bool persistent);
+    GLESArrayBuffer();
     
-    virtual void Bind(int location) override;
+    virtual void Bind() override;
     virtual void Unbind() override;
     
-    virtual uint8_t* GetData() override;
-    virtual int GetCurrentBuffer() override;
-    virtual uint64_t GetOffset() override;
+    virtual void CommitBuffers() override;
     
-    virtual void SetStorage(size_t size, void* data) override;
-    virtual void UpdateData(size_t offset, size_t size, void* data) override;
-    
-    virtual void SetNumBuffers(int n) override;
-    
-    virtual void BeginUpdate() override;
-    virtual void EndUpdate() override;
-    virtual void NextBuffer() override;
-    
-    void BindUniform(int index, uint64_t offset, uint64_t size);
-    
-    virtual ~IGLBuffer();
+    virtual ~GLESArrayBuffer();
     
 private:
-    GLuint _id;
-    GLenum _target;
-    size_t _size, _totalSize;
-    int _numBuffers, _currentBuffer;
-    GLSyncRange *_syncRanges;
+    GLuint _vao;
 };
 
-#endif /* IGLBuffer_h */
+#endif /* GLESArrayBuffer_h */

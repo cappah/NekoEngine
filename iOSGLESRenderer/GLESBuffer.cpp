@@ -1,9 +1,9 @@
 /* NekoEngine
  *
- * IGLBuffer.mm
+ * GLESBuffer.cpp
  * Author: Alexandru Naiman
  *
- * iOS OpenGL|ES Renderer Implementation
+ * OpenGL|ES 3 Renderer Implementation
  *
  * -----------------------------------------------------------------------------
  *
@@ -37,8 +37,8 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "IGLBuffer.h"
-#include "IGLRenderer.h"
+#include "GLESBuffer.h"
+#include "GLESRenderer.h"
 
 #include <Platform/Platform.h>
 
@@ -74,7 +74,7 @@ GLenum GL_AttribTypes[10]
     GL_FIXED
 };
 
-IGLBuffer::IGLBuffer(BufferType type, bool dynamic, bool persistent) : RBuffer(type)
+GLESBuffer::GLESBuffer(BufferType type, bool dynamic, bool persistent) : RBuffer(type)
 {
     _dynamic = (dynamic || persistent);
 	_persistent = false;
@@ -85,7 +85,7 @@ IGLBuffer::IGLBuffer(BufferType type, bool dynamic, bool persistent) : RBuffer(t
     GL_CHECK(glGenBuffers(1, &_id));
 }
 
-void IGLBuffer::Bind(int location)
+void GLESBuffer::Bind(int location)
 {
 	_target = GL_BufferTargets[location];
 	
@@ -128,30 +128,30 @@ void IGLBuffer::Bind(int location)
     }
 }
 
-void IGLBuffer::Unbind()
+void GLESBuffer::Unbind()
 {
     GL_CHECK(glBindBuffer(_target, 0));
 }
 
-uint8_t* IGLBuffer::GetData()
+uint8_t* GLESBuffer::GetData()
 {
     // MacOS does not support GL_ARB_buffer_storage, required for persistent buffers
     return nullptr;
 }
 
-int IGLBuffer::GetCurrentBuffer()
+int GLESBuffer::GetCurrentBuffer()
 {
     // MacOS does not support GL_ARB_buffer_storage, required for persistent buffers
     return 0;
 }
 
-uint64_t IGLBuffer::GetOffset()
+uint64_t GLESBuffer::GetOffset()
 {
     // MacOS does not support GL_ARB_buffer_storage, required for persistent buffers
     return 0;
 }
 
-void IGLBuffer::SetStorage(size_t size, void* data)
+void GLESBuffer::SetStorage(size_t size, void* data)
 {
     int flags = _dynamic ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW;
     _size = size;
@@ -164,7 +164,7 @@ void IGLBuffer::SetStorage(size_t size, void* data)
 	GL_CHECK(glBindBuffer(_target, buff));
 }
 
-void IGLBuffer::UpdateData(size_t offset, size_t size, void* data)
+void GLESBuffer::UpdateData(size_t offset, size_t size, void* data)
 {
 	if(!_dynamic)
 		return;
@@ -177,32 +177,32 @@ void IGLBuffer::UpdateData(size_t offset, size_t size, void* data)
 	GL_CHECK(glBindBuffer(_target, buff));
 }
 
-void IGLBuffer::SetNumBuffers(int n)
+void GLESBuffer::SetNumBuffers(int n)
 {
     // MacOS does not support GL_ARB_buffer_storage, required for persistent buffers
 }
 
-void IGLBuffer::BeginUpdate()
+void GLESBuffer::BeginUpdate()
 {
     // MacOS does not support GL_ARB_buffer_storage, required for persistent buffers
 }
 
-void IGLBuffer::EndUpdate()
+void GLESBuffer::EndUpdate()
 {
     // MacOS does not support GL_ARB_buffer_storage, required for persistent buffers
 }
 
-void IGLBuffer::NextBuffer()
+void GLESBuffer::NextBuffer()
 {
     // MacOS does not support GL_ARB_buffer_storage, required for persistent buffers
 }
 
-void IGLBuffer::BindUniform(int index, uint64_t offset, uint64_t size)
+void GLESBuffer::BindUniform(int index, uint64_t offset, uint64_t size)
 {
     GL_CHECK(glBindBufferRange(_target, index, _id, (GLintptr)offset, (GLintptr)size));
 }
 
-IGLBuffer::~IGLBuffer()
+GLESBuffer::~GLESBuffer()
 {
     GL_CHECK(glDeleteBuffers(1, &_id));
 }

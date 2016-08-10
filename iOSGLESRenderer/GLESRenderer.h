@@ -1,9 +1,9 @@
 /* NekoEngine
  *
- * IGLRenderer.h
+ * GLESRenderer.h
  * Author: Alexandru Naiman
  *
- * iOS OpenGL|ES Renderer Implementation
+ * OpenGL|ES 3 Renderer Implementation
  *
  * -----------------------------------------------------------------------------
  *
@@ -37,8 +37,8 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef IGLRenderer_h
-#define IGLRenderer_h
+#ifndef GLESRenderer_h
+#define GLESRenderer_h
 
 #ifdef _DEBUG
 #define GL_CHECK(x)\
@@ -113,10 +113,10 @@ typedef struct RENDERER_STATE
 	
 } RendererState;
 
-class IGLRenderer : public Renderer
+class GLESRenderer : public Renderer
 {
 public:
-    IGLRenderer();
+    GLESRenderer();
     
     virtual bool Initialize(PlatformWindowType hWnd, std::unordered_map<std::string, std::string> *args = nullptr, bool debug = false) override;
     
@@ -187,17 +187,17 @@ public:
     virtual uint64_t GetVideoMemorySize() override;
     virtual uint64_t GetUsedVideoMemorySize() override;
     
-    virtual ~IGLRenderer();
+    virtual ~GLESRenderer();
     
     // Internal functions
     static void SetBoundFramebuffer(RFramebuffer* fbo) { _boundFramebuffer = fbo; }
     static std::vector<ShaderDefine>& GetShaderDefines() { return _shaderDefines; }
-	static void SetActiveShader(class IGLShader *shader) { _activeShader = shader; }
+	static void SetActiveShader(class GLESShader *shader) { _activeShader = shader; }
 	static void MakeCurrent();
     
 private:
     UIWindow *_window;
-	static class IGLShader* _activeShader;
+	static class GLESShader* _activeShader;
     static RFramebuffer* _boundFramebuffer;
     static std::vector<ShaderDefine> _shaderDefines;
 	RendererState _state;

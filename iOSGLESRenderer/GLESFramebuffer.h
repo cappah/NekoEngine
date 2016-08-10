@@ -1,9 +1,9 @@
 /* NekoEngine
  *
- * IGLShader.h
+ * GLESFramebuffer.h
  * Author: Alexandru Naiman
  *
- * iOS OpenGL|ES Renderer Implementation
+ * OpenGL|ES 3 Renderer Implementation
  *
  * -----------------------------------------------------------------------------
  *
@@ -37,8 +37,8 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef IGLFramebuffer_h
-#define IGLFramebuffer_h
+#ifndef GLESFramebuffer_h
+#define GLESFramebuffer_h
 
 #define RBO_DEPTH			0
 #define RBO_STENCIL			1
@@ -48,16 +48,16 @@
 #include <OpenGLES/ES3/gl.h>
 #include <vector>
 
-typedef struct IGL_FRAMEBUFFER_ATTACHMENT_INFO
+typedef struct GLES_FRAMEBUFFER_ATTACHMENT_INFO
 {
 	GLenum attachment;
-	class IGLTexture *tex;
-} IGLFramebufferAttachmentInfo;
+	class GLESTexture *tex;
+} GLESFramebufferAttachmentInfo;
 
-class IGLFramebuffer : public RFramebuffer
+class GLESFramebuffer : public RFramebuffer
 {
 public:
-    IGLFramebuffer(int width, int height);
+    GLESFramebuffer(int width, int height);
     
     GLuint GetId() { return _id; }
     
@@ -87,13 +87,13 @@ public:
     virtual void SetDrawBuffer(DrawAttachment attachment) override;
     virtual void SetDrawBuffers(int32_t n, DrawAttachment* buffers) override;
     
-    virtual ~IGLFramebuffer();
+    virtual ~GLESFramebuffer();
     
 private:
     GLuint _id;
     GLenum _lastTarget;
-	std::vector<IGLFramebufferAttachmentInfo> _attachmentInfo;
+	std::vector<GLESFramebufferAttachmentInfo> _attachmentInfo;
     GLuint _rbos[3];
 };
 
-#endif /* IGLFramebuffer_h */
+#endif /* GLESFramebuffer_h */

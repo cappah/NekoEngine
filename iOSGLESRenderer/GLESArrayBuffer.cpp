@@ -1,9 +1,9 @@
 /* NekoEngine
  *
- * renderer.mm
+ * GLArrayBuffer.cpp
  * Author: Alexandru Naiman
  *
- * iOS OpenGL|ES Renderer Implementation
+ * OpenGL|ES 3 Renderer Implementation
  *
  * -----------------------------------------------------------------------------
  *
@@ -37,14 +37,42 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "IGLRenderer.h"
+#include "GLESArrayBuffer.h"
+#include "GLESRenderer.h"
 
-extern "C" Renderer* createRenderer()
+GLESArrayBuffer::GLESArrayBuffer() : RArrayBuffer()
 {
-    return (Renderer *)new IGLRenderer();
+    _vertexBuffer = nullptr;
+    _indexBuffer = nullptr;
+    GL_CHECK(glGenVertexArrays(1, &_vao));
 }
 
-extern "C" unsigned int getRendererAPIVersion()
+void GLESArrayBuffer::Bind()
 {
-    return RENDERER_API_VERSION;
+    GL_CHECK(glBindVertexArray(_vao));
+}
+
+void GLESArrayBuffer::Unbind()
+{
+    GL_CHECK(glBindVertexArray(0));
+}
+
+void GLESArrayBuffer::CommitBuffers()
+{
+    Bind();
+    
+    _vertexBuffer->Bind(R_VERTEX_BUFFER);
+    if(_indexBuffer)
+        _indexBuffer->Bind(R_INDEX_BUFFER);
+    
+    Unbind();
+    
+    _vertexBuffer->Unbind();
+    if(_indexBuffer)
+        _indexBuffer->Unbind();
+}
+
+GLESArrayBuffer::~GLESArrayBuffer()
+{
+    GL_CHECK(glDeleteVertexArrays(1, &_vao));
 }

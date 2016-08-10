@@ -1,9 +1,9 @@
 /* NekoEngine
  *
- * IGLRenderer.mm
+ * GLESRenderer.cpp
  * Author: Alexandru Naiman
  *
- * iOS OpenGL|ES Renderer Implementation
+ * OpenGL|ES 3 Renderer Implementation
  *
  * -----------------------------------------------------------------------------
  *
@@ -37,12 +37,12 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "IGLRenderer.h"
-#include "IGLArrayBuffer.h"
-#include "IGLBuffer.h"
-#include "IGLFramebuffer.h"
-#include "IGLShader.h"
-#include "IGLTexture.h"
+#include "GLESRenderer.h"
+#include "GLESArrayBuffer.h"
+#include "GLESBuffer.h"
+#include "GLESFramebuffer.h"
+#include "GLESShader.h"
+#include "GLESTexture.h"
 
 #import "IGLView.h"
 
@@ -143,41 +143,41 @@ static GLenum GL_PixelStoreParameter[16] =
 extern GLenum GL_TexFormat[];
 extern GLenum GL_TexType[];
 
-RFramebuffer* IGLRenderer::_boundFramebuffer = nullptr;
-std::vector<ShaderDefine> IGLRenderer::_shaderDefines;
-IGLShader* IGLRenderer::_activeShader;
+RFramebuffer* GLESRenderer::_boundFramebuffer = nullptr;
+std::vector<ShaderDefine> GLESRenderer::_shaderDefines;
+GLESShader* GLESRenderer::_activeShader;
 static IGLView *_view;
 
-IGLRenderer::IGLRenderer()
+GLESRenderer::GLESRenderer()
 {
 	memset(&_state, 0x0, sizeof(RendererState));
 }
 
-void IGLRenderer::SetDebugLogFunction(RendererDebugLogProc debugLog)
+void GLESRenderer::SetDebugLogFunction(RendererDebugLogProc debugLog)
 {
     //_debugLogFunc = debugLog;
 }
 
-const char* IGLRenderer::GetName()
+const char* GLESRenderer::GetName()
 {
     return "OpenGL|ES";
 }
 
-int IGLRenderer::GetMajorVersion()
+int GLESRenderer::GetMajorVersion()
 {
     GLint ver;
     GL_CHECK(glGetIntegerv(GL_MAJOR_VERSION, &ver));
     return ver;
 }
 
-int IGLRenderer::GetMinorVersion()
+int GLESRenderer::GetMinorVersion()
 {
     GLint ver;
     GL_CHECK(glGetIntegerv(GL_MINOR_VERSION, &ver));
     return ver;
 }
 
-void IGLRenderer::SetClearColor(float r, float g, float b, float a)
+void GLESRenderer::SetClearColor(float r, float g, float b, float a)
 {
 	if((_state.ClearColor.r == r) &&
 	   (_state.ClearColor.g == g) &&
@@ -193,7 +193,7 @@ void IGLRenderer::SetClearColor(float r, float g, float b, float a)
     GL_CHECK(glClearColor(r, g, b, a));
 }
 
-void IGLRenderer::SetViewport(int x, int y, int width, int height)
+void GLESRenderer::SetViewport(int x, int y, int width, int height)
 {
 	if((_state.Viewport.x == x) &&
 	   (_state.Viewport.y == y) &&
@@ -209,7 +209,7 @@ void IGLRenderer::SetViewport(int x, int y, int width, int height)
     GL_CHECK(glViewport(x, y, width, height));
 }
 
-void IGLRenderer::EnableDepthTest(bool enable)
+void GLESRenderer::EnableDepthTest(bool enable)
 {
 	if (enable == _state.DepthTest)
 		return;
@@ -222,7 +222,7 @@ void IGLRenderer::EnableDepthTest(bool enable)
     { GL_CHECK(glDisable(GL_DEPTH_TEST)); }
 }
 
-void IGLRenderer::SetDepthFunc(TestFunc func)
+void GLESRenderer::SetDepthFunc(TestFunc func)
 {
 	if(_state.DepthFunc == func)
 		return;
@@ -232,17 +232,17 @@ void IGLRenderer::SetDepthFunc(TestFunc func)
     GL_CHECK(glDepthFunc(GL_TestFunc[(int)func]));
 }
 
-void IGLRenderer::SetDepthRange(double n, double f)
+void GLESRenderer::SetDepthRange(double n, double f)
 {
     GL_CHECK(glDepthRangef(n, f));
 }
 
-void IGLRenderer::SetDepthRangef(float n, float f)
+void GLESRenderer::SetDepthRangef(float n, float f)
 {
     GL_CHECK(glDepthRangef(n, f));
 }
 
-void IGLRenderer::SetDepthMask(bool mask)
+void GLESRenderer::SetDepthMask(bool mask)
 {
 	if(_state.DepthMask == mask)
 		return;
@@ -252,7 +252,7 @@ void IGLRenderer::SetDepthMask(bool mask)
     GL_CHECK(glDepthMask(mask ? GL_TRUE : GL_FALSE));
 }
 
-void IGLRenderer::EnableStencilTest(bool enable)
+void GLESRenderer::EnableStencilTest(bool enable)
 {
 	if (enable == _state.StencilTest)
 		return;
@@ -265,7 +265,7 @@ void IGLRenderer::EnableStencilTest(bool enable)
     { GL_CHECK(glDisable(GL_STENCIL_TEST)); }
 }
 
-void IGLRenderer::SetStencilFunc(TestFunc func, int ref, unsigned int mask)
+void GLESRenderer::SetStencilFunc(TestFunc func, int ref, unsigned int mask)
 {
 	if((_state.StencilFunc.F == func) &&
 	   (_state.StencilFunc.Ref == ref) &&
@@ -279,22 +279,22 @@ void IGLRenderer::SetStencilFunc(TestFunc func, int ref, unsigned int mask)
     GL_CHECK(glStencilFunc(GL_TestFunc[(int)func], ref, mask));
 }
 
-void IGLRenderer::SetStencilFuncSeparate(PolygonFace face, TestFunc func, int ref, unsigned int mask)
+void GLESRenderer::SetStencilFuncSeparate(PolygonFace face, TestFunc func, int ref, unsigned int mask)
 {
     GL_CHECK(glStencilFuncSeparate(GL_PolygonFace[(int)face], GL_TestFunc[(int)func], ref, mask));
 }
 
-void IGLRenderer::SetStencilOp(TestOp sfail, TestOp dpfail, TestOp dppass)
+void GLESRenderer::SetStencilOp(TestOp sfail, TestOp dpfail, TestOp dppass)
 {
     GL_CHECK(glStencilOp(GL_TestOp[(int)sfail], GL_TestOp[(int)dpfail], GL_TestOp[(int)dppass]));
 }
 
-void IGLRenderer::SetStencilOpSeparate(PolygonFace face, TestOp sfail, TestOp dpfail, TestOp dppass)
+void GLESRenderer::SetStencilOpSeparate(PolygonFace face, TestOp sfail, TestOp dpfail, TestOp dppass)
 {
     GL_CHECK(glStencilOpSeparate(GL_PolygonFace[(int)face], GL_TestOp[(int)sfail], GL_TestOp[(int)dpfail], GL_TestOp[(int)dppass]));
 }
 
-void IGLRenderer::EnableBlend(bool enable)
+void GLESRenderer::EnableBlend(bool enable)
 {
 	if (enable == _state.Blend)
 		return;
@@ -307,7 +307,7 @@ void IGLRenderer::EnableBlend(bool enable)
     { GL_CHECK(glDisable(GL_BLEND)); }
 }
 
-void IGLRenderer::SetBlendFunc(BlendFactor src, BlendFactor dst)
+void GLESRenderer::SetBlendFunc(BlendFactor src, BlendFactor dst)
 {
 	if((_state.BlendFunc.src == src) &&
 	   (_state.BlendFunc.dst) == dst)
@@ -319,27 +319,27 @@ void IGLRenderer::SetBlendFunc(BlendFactor src, BlendFactor dst)
     GL_CHECK(glBlendFunc(GL_BlendFactor[(int)src], GL_BlendFactor[(int)dst]));
 }
 
-void IGLRenderer::SetBlendFuncSeparate(BlendFactor srcColor, BlendFactor dstColor, BlendFactor srcAlpha, BlendFactor dstAlpha)
+void GLESRenderer::SetBlendFuncSeparate(BlendFactor srcColor, BlendFactor dstColor, BlendFactor srcAlpha, BlendFactor dstAlpha)
 {
     GL_CHECK(glBlendFuncSeparate(GL_BlendFactor[(int)srcColor], GL_BlendFactor[(int)dstColor], GL_BlendFactor[(int)srcAlpha], GL_BlendFactor[(int)dstAlpha]));
 }
 
-void IGLRenderer::SetBlendColor(float r, float g, float b, float a)
+void GLESRenderer::SetBlendColor(float r, float g, float b, float a)
 {
     GL_CHECK(glBlendColor(r, g, b, a));
 }
 
-void IGLRenderer::SetBlendEquation(BlendEquation eq)
+void GLESRenderer::SetBlendEquation(BlendEquation eq)
 {
     GL_CHECK(glBlendEquation(GL_BlendEquation[(int)eq]));
 }
 
-void IGLRenderer::SetBlendEquationSeparate(BlendEquation color, BlendEquation alpha)
+void GLESRenderer::SetBlendEquationSeparate(BlendEquation color, BlendEquation alpha)
 {
     GL_CHECK(glBlendEquationSeparate(GL_BlendEquation[(int)color], GL_BlendEquation[(int)alpha]));
 }
 
-void IGLRenderer::SetStencilMask(unsigned int mask)
+void GLESRenderer::SetStencilMask(unsigned int mask)
 {
 	if(_state.StencilMask == mask)
 		return;
@@ -349,12 +349,12 @@ void IGLRenderer::SetStencilMask(unsigned int mask)
     GL_CHECK(glStencilMask(mask));
 }
 
-void IGLRenderer::SetStencilMaskSeparate(PolygonFace face, unsigned int mask)
+void GLESRenderer::SetStencilMaskSeparate(PolygonFace face, unsigned int mask)
 {
     GL_CHECK(glStencilMaskSeparate(GL_PolygonFace[(int)face], mask));
 }
 
-void IGLRenderer::EnableFaceCulling(bool enable)
+void GLESRenderer::EnableFaceCulling(bool enable)
 {
     if (enable)
     { GL_CHECK(glEnable(GL_CULL_FACE)); }
@@ -362,17 +362,17 @@ void IGLRenderer::EnableFaceCulling(bool enable)
     { GL_CHECK(glDisable(GL_CULL_FACE)); }
 }
 
-void IGLRenderer::SetFaceCulling(PolygonFace face)
+void GLESRenderer::SetFaceCulling(PolygonFace face)
 {
     GL_CHECK(glCullFace(GL_PolygonFace[(int)face]));
 }
 
-void IGLRenderer::SetFrontFace(FrontFace face)
+void GLESRenderer::SetFrontFace(FrontFace face)
 {
     GL_CHECK(glFrontFace(GL_FrontFace[(int)face]));
 }
 
-void IGLRenderer::SetColorMask(bool r, bool g, bool b, bool a)
+void GLESRenderer::SetColorMask(bool r, bool g, bool b, bool a)
 {
     GL_CHECK(glColorMask(r ? GL_TRUE : GL_FALSE,
                          g ? GL_TRUE : GL_FALSE,
@@ -380,7 +380,7 @@ void IGLRenderer::SetColorMask(bool r, bool g, bool b, bool a)
                          a ? GL_TRUE : GL_FALSE));
 }
 
-void IGLRenderer::DrawArrays(PolygonMode mode, int32_t first, int32_t count)
+void GLESRenderer::DrawArrays(PolygonMode mode, int32_t first, int32_t count)
 {
 #ifdef _DEBUG
 	if(!_activeShader->Validate())
@@ -397,7 +397,7 @@ void IGLRenderer::DrawArrays(PolygonMode mode, int32_t first, int32_t count)
     GL_CHECK(glDrawArrays(GL_DrawModes[(int)mode], first, (GLsizei)count));
 }
 
-void IGLRenderer::DrawElements(PolygonMode mode, int32_t count, ElementType type, const void *indices)
+void GLESRenderer::DrawElements(PolygonMode mode, int32_t count, ElementType type, const void *indices)
 {
 #ifdef _DEBUG
 	if(!_activeShader->Validate())
@@ -414,7 +414,7 @@ void IGLRenderer::DrawElements(PolygonMode mode, int32_t count, ElementType type
     GL_CHECK(glDrawElements(GL_DrawModes[(int)mode], (GLsizei)count, GL_ElementType[(int)type], indices));
 }
 
-void IGLRenderer::DrawElementsBaseVertex(PolygonMode mode, int32_t count, ElementType type, const void *indices, int32_t baseVertex)
+void GLESRenderer::DrawElementsBaseVertex(PolygonMode mode, int32_t count, ElementType type, const void *indices, int32_t baseVertex)
 {
 #ifndef NE_PLATFORM_IOS
 #ifdef _DEBUG
@@ -433,7 +433,7 @@ void IGLRenderer::DrawElementsBaseVertex(PolygonMode mode, int32_t count, Elemen
 #endif
 }
 
-void IGLRenderer::Clear(uint32_t mask)
+void GLESRenderer::Clear(uint32_t mask)
 {
     GLbitfield glMask = 0;
     
@@ -449,33 +449,33 @@ void IGLRenderer::Clear(uint32_t mask)
     GL_CHECK(glClear(glMask));
 }
 
-void IGLRenderer::BindDefaultFramebuffer()
+void GLESRenderer::BindDefaultFramebuffer()
 {
 	[_view bindDrawable];
 	_boundFramebuffer = nullptr;
 }
 
-RFramebuffer* IGLRenderer::GetBoundFramebuffer()
+RFramebuffer* GLESRenderer::GetBoundFramebuffer()
 {
     return _boundFramebuffer;
 }
 
-void IGLRenderer::SetMinSampleShading(int32_t samples)
+void GLESRenderer::SetMinSampleShading(int32_t samples)
 {
     //GL_CHECK(glMinSampleShading((GLfloat)samples));
 }
 
-void IGLRenderer::ReadPixels(int x, int y, int width, int height, TextureFormat format, TextureInternalType type, void* data)
+void GLESRenderer::ReadPixels(int x, int y, int width, int height, TextureFormat format, TextureInternalType type, void* data)
 {
     GL_CHECK(glReadPixels(x, y, width, height, GL_TexFormat[(int)format], GL_TexType[(int)type], data));
 }
 
-void IGLRenderer::SetPixelStore(PixelStoreParameter param, int value)
+void GLESRenderer::SetPixelStore(PixelStoreParameter param, int value)
 {
 	GL_CHECK(glPixelStorei(GL_PixelStoreParameter[(int)param], value));
 }
 
-bool IGLRenderer::HasCapability(RendererCapability cap)
+bool GLESRenderer::HasCapability(RendererCapability cap)
 {    
     switch (cap)
     {
@@ -494,38 +494,38 @@ bool IGLRenderer::HasCapability(RendererCapability cap)
     }
 }
 
-RBuffer* IGLRenderer::CreateBuffer(BufferType type, bool dynamic, bool persistent)
+RBuffer* GLESRenderer::CreateBuffer(BufferType type, bool dynamic, bool persistent)
 {
-    return (RBuffer *)new IGLBuffer(type, dynamic, persistent);
+    return (RBuffer *)new GLESBuffer(type, dynamic, persistent);
 }
 
-RShader* IGLRenderer::CreateShader()
+RShader* GLESRenderer::CreateShader()
 {
-    return (RShader *)new IGLShader();
+    return (RShader *)new GLESShader();
 }
 
-RTexture* IGLRenderer::CreateTexture(TextureType type)
+RTexture* GLESRenderer::CreateTexture(TextureType type)
 {
-    return (RTexture *)new IGLTexture(type);
+    return (RTexture *)new GLESTexture(type);
 }
 
-RFramebuffer* IGLRenderer::CreateFramebuffer(int width, int height)
+RFramebuffer* GLESRenderer::CreateFramebuffer(int width, int height)
 {
-    return (RFramebuffer *)new IGLFramebuffer(width, height);
+    return (RFramebuffer *)new GLESFramebuffer(width, height);
 }
 
-RArrayBuffer* IGLRenderer::CreateArrayBuffer()
+RArrayBuffer* GLESRenderer::CreateArrayBuffer()
 {
-    return (RArrayBuffer *)new IGLArrayBuffer();
+    return (RArrayBuffer *)new GLESArrayBuffer();
 }
 
-void IGLRenderer::AddShaderDefine(std::string name, std::string value)
+void GLESRenderer::AddShaderDefine(std::string name, std::string value)
 {
     ShaderDefine d{name, value};
     _shaderDefines.push_back(d);
 }
 
-bool IGLRenderer::IsTextureFormatSupported(TextureFileFormat format)
+bool GLESRenderer::IsTextureFormatSupported(TextureFileFormat format)
 {
     switch (format)
     {
@@ -536,17 +536,17 @@ bool IGLRenderer::IsTextureFormatSupported(TextureFileFormat format)
     }
 }
 
-uint64_t IGLRenderer::GetVideoMemorySize()
+uint64_t GLESRenderer::GetVideoMemorySize()
 {
     return 0;
 }
 
-uint64_t IGLRenderer::GetUsedVideoMemorySize()
+uint64_t GLESRenderer::GetUsedVideoMemorySize()
 {
     return 0;
 }
 
-bool IGLRenderer::_HasExtension(const char* extension)
+bool GLESRenderer::_HasExtension(const char* extension)
 {
     int numExtensions;
     
@@ -560,14 +560,14 @@ bool IGLRenderer::_HasExtension(const char* extension)
     return false;
 }
 
-IGLRenderer::~IGLRenderer()
+GLESRenderer::~GLESRenderer()
 {
     _DestroyContext();
 }
 
 // Platform
 
-bool IGLRenderer::Initialize(PlatformWindowType hWnd, unordered_map<string, string> *args, bool debug)
+bool GLESRenderer::Initialize(PlatformWindowType hWnd, unordered_map<string, string> *args, bool debug)
 {
 	_window = hWnd;
 	
@@ -581,27 +581,27 @@ bool IGLRenderer::Initialize(PlatformWindowType hWnd, unordered_map<string, stri
 	return true;
 }
 
-void IGLRenderer::SetSwapInterval(int swapInterval)
+void GLESRenderer::SetSwapInterval(int swapInterval)
 {
 	//
 }
 
-void IGLRenderer::ScreenResized()
+void GLESRenderer::ScreenResized()
 {
 	[_view updateDrawable];
 }
 
-void IGLRenderer::SwapBuffers()
+void GLESRenderer::SwapBuffers()
 {
 	[_view swapBuffers];
 }
 
-void IGLRenderer::_DestroyContext()
+void GLESRenderer::_DestroyContext()
 {
 	//
 }
 
-void IGLRenderer::MakeCurrent()
+void GLESRenderer::MakeCurrent()
 {
 	//[EAGLContext setCurrentContext:_ctx];
 }

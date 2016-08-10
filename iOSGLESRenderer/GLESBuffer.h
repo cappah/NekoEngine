@@ -1,9 +1,9 @@
 /* NekoEngine
  *
- * IGLArrayBuffer.mm
+ * GLESBuffer.h
  * Author: Alexandru Naiman
  *
- * iOS OpenGL|ES Renderer Implementation
+ * OpenGL|ES 3 Renderer Implementation
  *
  * -----------------------------------------------------------------------------
  *
@@ -37,42 +37,49 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "IGLArrayBuffer.h"
-#include "IGLRenderer.h"
+#ifndef GLESBuffer_h
+#define GLESBuffer_h
 
-IGLArrayBuffer::IGLArrayBuffer() : RArrayBuffer()
-{
-    _vertexBuffer = nullptr;
-    _indexBuffer = nullptr;
-    GL_CHECK(glGenVertexArrays(1, &_vao));
-}
+#include <Renderer/RBuffer.h>
+#include <OpenGLES/ES3/gl.h>
 
-void IGLArrayBuffer::Bind()
+typedef struct SYNC_RANGE
 {
-    GL_CHECK(glBindVertexArray(_vao));
-}
+    size_t offset;
+    GLsync sync;
+} GLSyncRange;
 
-void IGLArrayBuffer::Unbind()
+class GLESBuffer : public RBuffer
 {
-    GL_CHECK(glBindVertexArray(0));
-}
-
-void IGLArrayBuffer::CommitBuffers()
-{
-    Bind();
+public:
+    GLESBuffer(BufferType type, bool dynamic, bool persistent);
     
-    _vertexBuffer->Bind(R_VERTEX_BUFFER);
-    if(_indexBuffer)
-        _indexBuffer->Bind(R_INDEX_BUFFER);
+    virtual void Bind(int location) override;
+    virtual void Unbind() override;
     
-    Unbind();
+    virtual uint8_t* GetData() override;
+    virtual int GetCurrentBuffer() override;
+    virtual uint64_t GetOffset() override;
     
-    _vertexBuffer->Unbind();
-    if(_indexBuffer)
-        _indexBuffer->Unbind();
-}
+    virtual void SetStorage(size_t size, void* data) override;
+    virtual void UpdateData(size_t offset, size_t size, void* data) override;
+    
+    virtual void SetNumBuffers(int n) override;
+    
+    virtual void BeginUpdate() override;
+    virtual void EndUpdate() override;
+    virtual void NextBuffer() override;
+    
+    void BindUniform(int index, uint64_t offset, uint64_t size);
+    
+    virtual ~GLESBuffer();
+    
+private:
+    GLuint _id;
+    GLenum _target;
+    size_t _size, _totalSize;
+    int _numBuffers, _currentBuffer;
+    GLSyncRange *_syncRanges;
+};
 
-IGLArrayBuffer::~IGLArrayBuffer()
-{
-    GL_CHECK(glDeleteVertexArrays(1, &_vao));
-}
+#endif /* GLESBuffer_h */

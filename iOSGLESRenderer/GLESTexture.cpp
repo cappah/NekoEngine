@@ -1,9 +1,9 @@
 /* NekoEngine
  *
- * IGLTexture.mm
+ * GLESTexture.cpp
  * Author: Alexandru Naiman
  *
- * iOS OpenGL|ES Renderer Implementation
+ * OpenGL|ES 3 Renderer Implementation
  *
  * -----------------------------------------------------------------------------
  *
@@ -37,14 +37,14 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "IGLTexture.h"
+#include "GLESTexture.h"
 
 #include <stdlib.h>
 #include <string.h>
 
 #include <OpenGLES/ES3/glext.h>
 
-#include "IGLRenderer.h"
+#include "GLESRenderer.h"
 
 #ifdef NE_PLATFORM_IOS
 #define GL_TEXTURE_1D 0
@@ -153,18 +153,18 @@ GLenum GL_CubeFace[6] =
     GL_TEXTURE_CUBE_MAP_NEGATIVE_Z
 };
 
-IGLTexture::IGLTexture(TextureType type)
-: RTexture(type)
+GLESTexture::GLESTexture(TextureType type)
+	: RTexture(type)
 {
     GL_CHECK(glGenTextures(1, &_id));
 }
 
-void IGLTexture::Bind()
+void GLESTexture::Bind()
 {
 	GL_CHECK(glBindTexture(GL_TexTarget[(int)_type], _id));
 }
 
-bool IGLTexture::_LoadTGATexture(char *tga, int bpp)
+bool GLESTexture::_LoadTGATexture(char *tga, int bpp)
 {
 	int levelSize = _width;
 	int levels = 0;
@@ -227,7 +227,7 @@ bool IGLTexture::_LoadTGATexture(char *tga, int bpp)
 }
 
 #ifndef NE_PLATFORM_IOS
-bool IGLTexture::_LoadDDSTexture(class nv_dds::CDDSImage& image)
+bool GLESTexture::_LoadDDSTexture(class nv_dds::CDDSImage& image)
 {
 	bool ret = false;
 	
@@ -266,7 +266,7 @@ bool IGLTexture::_LoadDDSTexture(class nv_dds::CDDSImage& image)
 }
 #endif
 
-bool IGLTexture::LoadFromFile(const char* file)
+bool GLESTexture::LoadFromFile(const char* file)
 {
 	const char *ext = strrchr(file, '.');
 	
@@ -298,7 +298,7 @@ bool IGLTexture::LoadFromFile(const char* file)
 	return false;
 }
 
-bool IGLTexture::LoadFromMemory(TextureFileFormat format, const uint8_t* mem, size_t size)
+bool GLESTexture::LoadFromMemory(TextureFileFormat format, const uint8_t* mem, size_t size)
 {
 	if (format == TextureFileFormat::TGA)
 	{
@@ -325,12 +325,12 @@ bool IGLTexture::LoadFromMemory(TextureFileFormat format, const uint8_t* mem, si
 	return false;
 }
 
-void IGLTexture::GetImage(int level, TextureFormat format, TextureInternalType type, size_t size, void *buff)
+void GLESTexture::GetImage(int level, TextureFormat format, TextureInternalType type, size_t size, void *buff)
 {
 	// Unsupported in GL|ES
 }
 
-void IGLTexture::SetStorage1D(int levels, TextureSizedFormat format, int width)
+void GLESTexture::SetStorage1D(int levels, TextureSizedFormat format, int width)
 {
 	/*GL_CHECK(glBindTexture(GL_TexTarget[(int)_type], _id));
 	GL_CHECK(glTexStorage1D(GL_TexTarget[(int)_type], levels, GL_TexFormatSized[(int)format], width));
@@ -340,7 +340,7 @@ void IGLTexture::SetStorage1D(int levels, TextureSizedFormat format, int width)
 	_sizedFormat = format;*/
 }
 
-void IGLTexture::SetStorage2D(int levels, TextureSizedFormat format, int width, int height)
+void GLESTexture::SetStorage2D(int levels, TextureSizedFormat format, int width, int height)
 {
 	GL_CHECK(glBindTexture(GL_TexTarget[(int)_type], _id));
 	GL_CHECK(glTexStorage2D(GL_TexTarget[(int)_type], levels, GL_TexFormatSized[(int)format], width, height));
@@ -351,7 +351,7 @@ void IGLTexture::SetStorage2D(int levels, TextureSizedFormat format, int width, 
 	_sizedFormat = format;
 }
 
-void IGLTexture::SetStorage3D(int levels, TextureSizedFormat format, int width, int height, int depth)
+void GLESTexture::SetStorage3D(int levels, TextureSizedFormat format, int width, int height, int depth)
 {
 	GL_CHECK(glBindTexture(GL_TexTarget[(int)_type], _id));
 	GL_CHECK(glTexStorage3D(GL_TexTarget[(int)_type], levels, GL_TexFormatSized[(int)format], width, height, depth));
@@ -363,7 +363,7 @@ void IGLTexture::SetStorage3D(int levels, TextureSizedFormat format, int width, 
 	_sizedFormat = format;
 }
 
-void IGLTexture::SetStorage2DMS(int samples, int width, int height, TextureSizedFormat format, bool fixedSampleLocations)
+void GLESTexture::SetStorage2DMS(int samples, int width, int height, TextureSizedFormat format, bool fixedSampleLocations)
 {
 	/*GL_CHECK(glBindTexture(GL_TexTarget[(int)_type], _id));
 	GL_CHECK(glTexImage2DMultisample(GL_TexTarget[(int)_type], samples, GL_TexFormatSized[(int)format], width, height, fixedSampleLocations));
@@ -375,7 +375,7 @@ void IGLTexture::SetStorage2DMS(int samples, int width, int height, TextureSized
 	_fixedLocations = fixedSampleLocations;*/
 }
 
-void IGLTexture::SetStorageCube(int levels, TextureSizedFormat format, int width, int height)
+void GLESTexture::SetStorageCube(int levels, TextureSizedFormat format, int width, int height)
 {
 	GL_CHECK(glBindTexture(GL_TexTarget[(int)_type], _id));
 	GL_CHECK(glTexStorage2D(GL_TexTarget[(int)_type], levels, GL_TexFormatSized[(int)format], width, height));
@@ -386,7 +386,7 @@ void IGLTexture::SetStorageCube(int levels, TextureSizedFormat format, int width
 	_sizedFormat = format;
 }
 
-void IGLTexture::SetImage1D(int level, int width, TextureFormat format, TextureInternalType type, const void* data)
+void GLESTexture::SetImage1D(int level, int width, TextureFormat format, TextureInternalType type, const void* data)
 {
 	/*GL_CHECK(glBindTexture(GL_TexTarget[(int)_type], _id));
 	GL_CHECK(glTexSubImage1D(GL_TexTarget[(int)_type], level, 0, width, GL_TexFormat[(int)format], GL_TexType[(int)type], data));
@@ -394,7 +394,7 @@ void IGLTexture::SetImage1D(int level, int width, TextureFormat format, TextureI
 	_format = format;*/
 }
 
-void IGLTexture::SetImage2D(int level, int width, int height, TextureFormat format, TextureInternalType type, const void* data)
+void GLESTexture::SetImage2D(int level, int width, int height, TextureFormat format, TextureInternalType type, const void* data)
 {
 	GL_CHECK(glBindTexture(GL_TexTarget[(int)_type], _id));
 	GL_CHECK(glTexSubImage2D(GL_TexTarget[(int)_type], level, 0, 0, width, height, GL_TexFormat[(int)format], GL_TexType[(int)type], data));
@@ -402,7 +402,7 @@ void IGLTexture::SetImage2D(int level, int width, int height, TextureFormat form
 	_format = format;
 }
 
-void IGLTexture::SetImage3D(int level, int width, int height, int depth, TextureFormat format, TextureInternalType type, const void* data)
+void GLESTexture::SetImage3D(int level, int width, int height, int depth, TextureFormat format, TextureInternalType type, const void* data)
 {
 	GL_CHECK(glBindTexture(GL_TexTarget[(int)_type], _id));
 	GL_CHECK(glTexSubImage3D(GL_TexTarget[(int)_type], level, 0, 0, 0, width, height, depth, GL_TexFormat[(int)format], GL_TexType[(int)type], data));
@@ -410,12 +410,12 @@ void IGLTexture::SetImage3D(int level, int width, int height, int depth, Texture
 	_format = format;
 }
 
-void IGLTexture::SetSubImage1D(int level, int x, int width, TextureFormat format, TextureInternalType type, const void* data)
+void GLESTexture::SetSubImage1D(int level, int x, int width, TextureFormat format, TextureInternalType type, const void* data)
 {
 	// Unsupported
 }
 
-void IGLTexture::SetSubImage2D(int level, int x, int y, int width, int height, TextureFormat format, TextureInternalType type, const void* data)
+void GLESTexture::SetSubImage2D(int level, int x, int y, int width, int height, TextureFormat format, TextureInternalType type, const void* data)
 {
 	GL_CHECK(glBindTexture(GL_TexTarget[(int)_type], _id));
 	GL_CHECK(glTexSubImage2D(GL_TexTarget[(int)_type], level, x, y, width, height, GL_TexFormat[(int)format], GL_TexType[(int)type], data));
@@ -423,7 +423,7 @@ void IGLTexture::SetSubImage2D(int level, int x, int y, int width, int height, T
 	_format = format;
 }
 
-void IGLTexture::SetSubImage3D(int level, int x, int y, int z, int width, int height, int depth, TextureFormat format, TextureInternalType type, const void* data)
+void GLESTexture::SetSubImage3D(int level, int x, int y, int z, int width, int height, int depth, TextureFormat format, TextureInternalType type, const void* data)
 {
 	GL_CHECK(glBindTexture(GL_TexTarget[(int)_type], _id));
 	GL_CHECK(glTexSubImage3D(GL_TexTarget[(int)_type], level, x, y, z, width, height, depth, GL_TexFormat[(int)format], GL_TexType[(int)type], data));
@@ -431,7 +431,7 @@ void IGLTexture::SetSubImage3D(int level, int x, int y, int z, int width, int he
 	_format = format;
 }
 
-void IGLTexture::SetImageCube(int level, int width, int height, TextureFormat format, TextureInternalType type,
+void GLESTexture::SetImageCube(int level, int width, int height, TextureFormat format, TextureInternalType type,
                               const void *posX, const void *negX, const void *posY, const void *negY, const void *posZ, const void *negZ)
 {
 	GL_CHECK(glBindTexture(GL_TexTarget[(int)_type], _id));
@@ -446,7 +446,7 @@ void IGLTexture::SetImageCube(int level, int width, int height, TextureFormat fo
 	_format = format;
 }
 
-void IGLTexture::SetImageCubeFace(CubeFace face, int level, int width, int height, TextureFormat format, TextureInternalType type, const void *data)
+void GLESTexture::SetImageCubeFace(CubeFace face, int level, int width, int height, TextureFormat format, TextureInternalType type, const void *data)
 {
 	GL_CHECK(glBindTexture(GL_TexTarget[(int)_type], _id));
 	GL_CHECK(glTexSubImage2D(GL_CubeFace[(int)face], level, 0, 0, width, height, GL_TexFormat[(int)format], GL_TexType[(int)type], data));
@@ -454,7 +454,7 @@ void IGLTexture::SetImageCubeFace(CubeFace face, int level, int width, int heigh
 	_format = format;
 }
 
-void IGLTexture::SetCompressedImage1D(int level, int width, CompressedTextureFormat format, int size, const void* data)
+void GLESTexture::SetCompressedImage1D(int level, int width, CompressedTextureFormat format, int size, const void* data)
 {
 	/*GL_CHECK(glBindTexture(GL_TexTarget[(int)_type], _id));
 	GL_CHECK(glCompressedTexSubImage1D(GL_TexTarget[(int)_type], level, 0, width, GL_CompressedTexFormat[(int)format], size, data));
@@ -463,7 +463,7 @@ void IGLTexture::SetCompressedImage1D(int level, int width, CompressedTextureFor
 	_compressedFormat = format;*/
 }
 
-void IGLTexture::SetCompressedImage2D(int level, int width, int height, CompressedTextureFormat format, int size, const void* data)
+void GLESTexture::SetCompressedImage2D(int level, int width, int height, CompressedTextureFormat format, int size, const void* data)
 {
 	GL_CHECK(glBindTexture(GL_TexTarget[(int)_type], _id));
 	GL_CHECK(glCompressedTexImage2D(GL_TEXTURE_2D, level, GL_CompressedTexFormat[(int)format], width, height, 0, size, data));
@@ -472,7 +472,7 @@ void IGLTexture::SetCompressedImage2D(int level, int width, int height, Compress
 	_compressedFormat = format;
 }
 
-void IGLTexture::SetCompressedImage3D(int level, int width, int height, int depth, CompressedTextureFormat format, int size, const void* data)
+void GLESTexture::SetCompressedImage3D(int level, int width, int height, int depth, CompressedTextureFormat format, int size, const void* data)
 {
 	GL_CHECK(glBindTexture(GL_TexTarget[(int)_type], _id));
     GL_CHECK(glCompressedTexImage3D(GL_TexTarget[(int)_type], level, GL_CompressedTexFormat[(int)format], width, height, depth, 0, size, data));
@@ -481,7 +481,7 @@ void IGLTexture::SetCompressedImage3D(int level, int width, int height, int dept
 	_compressedFormat = format;
 }
 
-void IGLTexture::SetCompressedImageCube(int level, int width, int height, CompressedTextureFormat format, int size,
+void GLESTexture::SetCompressedImageCube(int level, int width, int height, CompressedTextureFormat format, int size,
                                         const void *posX, const void *negX, const void *posY, const void *negY, const void *posZ, const void *negZ)
 {
 	GL_CHECK(glBindTexture(GL_TexTarget[(int)_type], _id));
@@ -497,7 +497,7 @@ void IGLTexture::SetCompressedImageCube(int level, int width, int height, Compre
 	_compressedFormat = format;
 }
 
-void IGLTexture::SetCompressedImageCubeFace(CubeFace face, int level, int width, int height, CompressedTextureFormat format, int size, const void *data)
+void GLESTexture::SetCompressedImageCubeFace(CubeFace face, int level, int width, int height, CompressedTextureFormat format, int size, const void *data)
 {
 	/*GL_CHECK(glBindTexture(GL_TexTarget[(int)_type], _id));
 	GL_CHECK(glCompressedTexSubImage1D(GL_CubeFace[(int)face], level, 0, width, GL_CompressedTexFormat[(int)format], size, data));
@@ -506,50 +506,50 @@ void IGLTexture::SetCompressedImageCubeFace(CubeFace face, int level, int width,
 	_compressedFormat = format;*/
 }
 
-void IGLTexture::SetMinFilter(TextureFilter filter)
+void GLESTexture::SetMinFilter(TextureFilter filter)
 {
 	GL_CHECK(glBindTexture(GL_TexTarget[(int)_type], _id));
     GL_CHECK(glTexParameteri(GL_TexTarget[(int)_type], GL_TEXTURE_MIN_FILTER, GL_TexFilter[(int)filter]));
 }
 
-void IGLTexture::SetMagFilter(TextureFilter filter)
+void GLESTexture::SetMagFilter(TextureFilter filter)
 {
 	GL_CHECK(glBindTexture(GL_TexTarget[(int)_type], _id));
     GL_CHECK(glTexParameteri(GL_TexTarget[(int)_type], GL_TEXTURE_MAG_FILTER, GL_TexFilter[(int)filter]));
 }
 
-void IGLTexture::SetAnisotropic(int aniso)
+void GLESTexture::SetAnisotropic(int aniso)
 {
 	GL_CHECK(glBindTexture(GL_TexTarget[(int)_type], _id));
     GL_CHECK(glTexParameteri(GL_TexTarget[(int)_type], GL_TEXTURE_MAX_ANISOTROPY_EXT, aniso));
 }
 
-void IGLTexture::SetWrapS(TextureWrap wrap)
+void GLESTexture::SetWrapS(TextureWrap wrap)
 {
 	GL_CHECK(glBindTexture(GL_TexTarget[(int)_type], _id));
     GL_CHECK(glTexParameteri(GL_TexTarget[(int)_type], GL_TEXTURE_WRAP_S, GL_TexWrap[(int)wrap]));
 }
 
-void IGLTexture::SetWrapT(TextureWrap wrap)
+void GLESTexture::SetWrapT(TextureWrap wrap)
 {
 	GL_CHECK(glBindTexture(GL_TexTarget[(int)_type], _id));
     GL_CHECK(glTexParameteri(GL_TexTarget[(int)_type], GL_TEXTURE_WRAP_T, GL_TexWrap[(int)wrap]));
 }
 
-void IGLTexture::SetWrapR(TextureWrap wrap)
+void GLESTexture::SetWrapR(TextureWrap wrap)
 {
 	GL_CHECK(glBindTexture(GL_TexTarget[(int)_type], _id));
 	GL_CHECK(glTexParameteri(GL_TexTarget[(int)_type], GL_TEXTURE_WRAP_R, GL_TexWrap[(int)wrap]));
 }
 
-void IGLTexture::Resize1D(int width)
+void GLESTexture::Resize1D(int width)
 {
     _Destroy();
 	GL_CHECK(glGenTextures(1, &_id));
     SetStorage1D(_mipLevels, _sizedFormat, width);
 }
 
-void IGLTexture::Resize2D(int width, int height)
+void GLESTexture::Resize2D(int width, int height)
 {
     _Destroy();
 	GL_CHECK(glGenTextures(1, &_id));
@@ -560,32 +560,32 @@ void IGLTexture::Resize2D(int width, int height)
         SetStorage2DMS(_samples, width, height, _sizedFormat, _fixedLocations);
 }
 
-void IGLTexture::Resize3D(int width, int height, int depth)
+void GLESTexture::Resize3D(int width, int height, int depth)
 {
     _Destroy();
 	GL_CHECK(glGenTextures(1, &_id));
     SetStorage3D(_mipLevels, _sizedFormat, width, height, depth);
 }
 
-void IGLTexture::ResizeCubemap(int width, int height)
+void GLESTexture::ResizeCubemap(int width, int height)
 {
     _Destroy();
 	GL_CHECK(glGenTextures(1, &_id));
     SetStorageCube(_mipLevels, _sizedFormat, width, height);
 }
 
-void IGLTexture::GenerateMipmaps()
+void GLESTexture::GenerateMipmaps()
 {
     GL_CHECK(glBindTexture(GL_TexTarget[(int)_type], _id));
     GL_CHECK(glGenerateMipmap(GL_TexTarget[(int)_type]));
 }
 
-void IGLTexture::_Destroy()
+void GLESTexture::_Destroy()
 {
     GL_CHECK(glDeleteTextures(1, &_id));
 }
 
-IGLTexture::~IGLTexture()
+GLESTexture::~GLESTexture()
 {
     _Destroy();
 }

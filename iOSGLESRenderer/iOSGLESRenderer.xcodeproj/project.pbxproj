@@ -7,16 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		124A32341CDC288500472893 /* IGLArrayBuffer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 124A32331CDC288500472893 /* IGLArrayBuffer.mm */; };
-		124A32361CDC288900472893 /* IGLBuffer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 124A32351CDC288900472893 /* IGLBuffer.mm */; };
-		124A32381CDC288C00472893 /* IGLFramebuffer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 124A32371CDC288C00472893 /* IGLFramebuffer.mm */; };
-		124A323A1CDC288F00472893 /* IGLRenderer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 124A32391CDC288F00472893 /* IGLRenderer.mm */; };
-		124A323C1CDC289200472893 /* IGLShader.mm in Sources */ = {isa = PBXBuildFile; fileRef = 124A323B1CDC289200472893 /* IGLShader.mm */; };
-		124A323E1CDC289600472893 /* IGLTexture.mm in Sources */ = {isa = PBXBuildFile; fileRef = 124A323D1CDC289600472893 /* IGLTexture.mm */; };
-		124A32401CDC289900472893 /* IGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 124A323F1CDC289900472893 /* IGLView.mm */; };
-		124A32421CDC289D00472893 /* renderer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 124A32411CDC289D00472893 /* renderer.mm */; };
 		124A32471CDC293500472893 /* tga.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 124A32451CDC293500472893 /* tga.cpp */; };
 		126220981D33865400E10E08 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 126220971D33865400E10E08 /* UIKit.framework */; };
+		12F96E7B1D5B8BEC002B4B5C /* GLESArrayBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12F96E741D5B8BEC002B4B5C /* GLESArrayBuffer.cpp */; };
+		12F96E7C1D5B8BEC002B4B5C /* GLESBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12F96E751D5B8BEC002B4B5C /* GLESBuffer.cpp */; };
+		12F96E7D1D5B8BEC002B4B5C /* GLESFramebuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12F96E761D5B8BEC002B4B5C /* GLESFramebuffer.cpp */; };
+		12F96E7E1D5B8BEC002B4B5C /* GLESRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12F96E771D5B8BEC002B4B5C /* GLESRenderer.cpp */; };
+		12F96E7F1D5B8BEC002B4B5C /* GLESShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12F96E781D5B8BEC002B4B5C /* GLESShader.cpp */; };
+		12F96E801D5B8BEC002B4B5C /* GLESTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12F96E791D5B8BEC002B4B5C /* GLESTexture.cpp */; };
+		12F96E811D5B8BEC002B4B5C /* renderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12F96E7A1D5B8BEC002B4B5C /* renderer.cpp */; };
+		12F96E831D5B8BFA002B4B5C /* IGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 12F96E821D5B8BFA002B4B5C /* IGLView.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -33,24 +33,24 @@
 
 /* Begin PBXFileReference section */
 		124A32201CDC283900472893 /* libiOSGLESRenderer.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libiOSGLESRenderer.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		124A322C1CDC286B00472893 /* IGLArrayBuffer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = IGLArrayBuffer.h; path = iOSGLESRenderer/IGLArrayBuffer.h; sourceTree = "<group>"; };
-		124A322D1CDC286E00472893 /* IGLBuffer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = IGLBuffer.h; path = iOSGLESRenderer/IGLBuffer.h; sourceTree = "<group>"; };
-		124A322E1CDC287200472893 /* IGLFramebuffer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = IGLFramebuffer.h; path = iOSGLESRenderer/IGLFramebuffer.h; sourceTree = "<group>"; };
-		124A322F1CDC287700472893 /* IGLRenderer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = IGLRenderer.h; path = iOSGLESRenderer/IGLRenderer.h; sourceTree = "<group>"; };
-		124A32301CDC287A00472893 /* IGLShader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = IGLShader.h; path = iOSGLESRenderer/IGLShader.h; sourceTree = "<group>"; };
-		124A32311CDC287D00472893 /* IGLTexture.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = IGLTexture.h; path = iOSGLESRenderer/IGLTexture.h; sourceTree = "<group>"; };
-		124A32321CDC288100472893 /* IGLView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = IGLView.h; path = iOSGLESRenderer/IGLView.h; sourceTree = "<group>"; };
-		124A32331CDC288500472893 /* IGLArrayBuffer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = IGLArrayBuffer.mm; sourceTree = "<group>"; };
-		124A32351CDC288900472893 /* IGLBuffer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = IGLBuffer.mm; sourceTree = "<group>"; };
-		124A32371CDC288C00472893 /* IGLFramebuffer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = IGLFramebuffer.mm; sourceTree = "<group>"; };
-		124A32391CDC288F00472893 /* IGLRenderer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = IGLRenderer.mm; sourceTree = "<group>"; };
-		124A323B1CDC289200472893 /* IGLShader.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = IGLShader.mm; sourceTree = "<group>"; };
-		124A323D1CDC289600472893 /* IGLTexture.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = IGLTexture.mm; sourceTree = "<group>"; };
-		124A323F1CDC289900472893 /* IGLView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = IGLView.mm; sourceTree = "<group>"; };
-		124A32411CDC289D00472893 /* renderer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = renderer.mm; sourceTree = "<group>"; };
 		124A32451CDC293500472893 /* tga.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tga.cpp; path = ../../GLRenderer/Loaders/tga.cpp; sourceTree = "<group>"; };
 		124A32461CDC293500472893 /* tga.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tga.h; path = ../../GLRenderer/Loaders/tga.h; sourceTree = "<group>"; };
 		126220971D33865400E10E08 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		12F96E741D5B8BEC002B4B5C /* GLESArrayBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESArrayBuffer.cpp; path = ../GLESArrayBuffer.cpp; sourceTree = "<group>"; };
+		12F96E751D5B8BEC002B4B5C /* GLESBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESBuffer.cpp; path = ../GLESBuffer.cpp; sourceTree = "<group>"; };
+		12F96E761D5B8BEC002B4B5C /* GLESFramebuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESFramebuffer.cpp; path = ../GLESFramebuffer.cpp; sourceTree = "<group>"; };
+		12F96E771D5B8BEC002B4B5C /* GLESRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESRenderer.cpp; path = ../GLESRenderer.cpp; sourceTree = "<group>"; };
+		12F96E781D5B8BEC002B4B5C /* GLESShader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESShader.cpp; path = ../GLESShader.cpp; sourceTree = "<group>"; };
+		12F96E791D5B8BEC002B4B5C /* GLESTexture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESTexture.cpp; path = ../GLESTexture.cpp; sourceTree = "<group>"; };
+		12F96E7A1D5B8BEC002B4B5C /* renderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = renderer.cpp; path = ../renderer.cpp; sourceTree = "<group>"; };
+		12F96E821D5B8BFA002B4B5C /* IGLView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = IGLView.mm; path = Platform/iOS/IGLView.mm; sourceTree = SOURCE_ROOT; };
+		12F96E841D5B8C18002B4B5C /* IGLView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = IGLView.h; path = Platform/iOS/IGLView.h; sourceTree = "<group>"; };
+		12F96E851D5B8C30002B4B5C /* GLESArrayBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLESArrayBuffer.h; sourceTree = "<group>"; };
+		12F96E861D5B8C30002B4B5C /* GLESBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLESBuffer.h; sourceTree = "<group>"; };
+		12F96E871D5B8C30002B4B5C /* GLESFramebuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLESFramebuffer.h; sourceTree = "<group>"; };
+		12F96E881D5B8C30002B4B5C /* GLESRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLESRenderer.h; sourceTree = "<group>"; };
+		12F96E891D5B8C30002B4B5C /* GLESShader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLESShader.h; sourceTree = "<group>"; };
+		12F96E8A1D5B8C30002B4B5C /* GLESTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLESTexture.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,7 +69,7 @@
 			isa = PBXGroup;
 			children = (
 				124A32431CDC28D500472893 /* Include */,
-				124A32221CDC283900472893 /* iOSGLESRenderer */,
+				124A32221CDC283900472893 /* GLESRenderer */,
 				126220991D33867500E10E08 /* Frameworks */,
 				124A32211CDC283900472893 /* Products */,
 			);
@@ -83,32 +83,33 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		124A32221CDC283900472893 /* iOSGLESRenderer */ = {
+		124A32221CDC283900472893 /* GLESRenderer */ = {
 			isa = PBXGroup;
 			children = (
+				12F96E561D5B8A77002B4B5C /* Platform */,
 				124A32441CDC292400472893 /* Loaders */,
-				124A32331CDC288500472893 /* IGLArrayBuffer.mm */,
-				124A32351CDC288900472893 /* IGLBuffer.mm */,
-				124A32371CDC288C00472893 /* IGLFramebuffer.mm */,
-				124A32391CDC288F00472893 /* IGLRenderer.mm */,
-				124A323B1CDC289200472893 /* IGLShader.mm */,
-				124A323D1CDC289600472893 /* IGLTexture.mm */,
-				124A323F1CDC289900472893 /* IGLView.mm */,
-				124A32411CDC289D00472893 /* renderer.mm */,
+				12F96E741D5B8BEC002B4B5C /* GLESArrayBuffer.cpp */,
+				12F96E751D5B8BEC002B4B5C /* GLESBuffer.cpp */,
+				12F96E761D5B8BEC002B4B5C /* GLESFramebuffer.cpp */,
+				12F96E771D5B8BEC002B4B5C /* GLESRenderer.cpp */,
+				12F96E781D5B8BEC002B4B5C /* GLESShader.cpp */,
+				12F96E791D5B8BEC002B4B5C /* GLESTexture.cpp */,
+				12F96E7A1D5B8BEC002B4B5C /* renderer.cpp */,
 			);
+			name = GLESRenderer;
 			path = iOSGLESRenderer;
 			sourceTree = "<group>";
 		};
 		124A32431CDC28D500472893 /* Include */ = {
 			isa = PBXGroup;
 			children = (
-				124A322C1CDC286B00472893 /* IGLArrayBuffer.h */,
-				124A322D1CDC286E00472893 /* IGLBuffer.h */,
-				124A322E1CDC287200472893 /* IGLFramebuffer.h */,
-				124A322F1CDC287700472893 /* IGLRenderer.h */,
-				124A32301CDC287A00472893 /* IGLShader.h */,
-				124A32311CDC287D00472893 /* IGLTexture.h */,
-				124A32321CDC288100472893 /* IGLView.h */,
+				12F96E581D5B8ACB002B4B5C /* Platform */,
+				12F96E851D5B8C30002B4B5C /* GLESArrayBuffer.h */,
+				12F96E861D5B8C30002B4B5C /* GLESBuffer.h */,
+				12F96E871D5B8C30002B4B5C /* GLESFramebuffer.h */,
+				12F96E881D5B8C30002B4B5C /* GLESRenderer.h */,
+				12F96E891D5B8C30002B4B5C /* GLESShader.h */,
+				12F96E8A1D5B8C30002B4B5C /* GLESTexture.h */,
 			);
 			name = Include;
 			sourceTree = "<group>";
@@ -128,6 +129,38 @@
 				126220971D33865400E10E08 /* UIKit.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		12F96E561D5B8A77002B4B5C /* Platform */ = {
+			isa = PBXGroup;
+			children = (
+				12F96E571D5B8A84002B4B5C /* iOS */,
+			);
+			name = Platform;
+			sourceTree = "<group>";
+		};
+		12F96E571D5B8A84002B4B5C /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				12F96E821D5B8BFA002B4B5C /* IGLView.mm */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
+		12F96E581D5B8ACB002B4B5C /* Platform */ = {
+			isa = PBXGroup;
+			children = (
+				12F96E591D5B8AD0002B4B5C /* iOS */,
+			);
+			name = Platform;
+			sourceTree = "<group>";
+		};
+		12F96E591D5B8AD0002B4B5C /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				12F96E841D5B8C18002B4B5C /* IGLView.h */,
+			);
+			name = iOS;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -187,15 +220,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				124A323E1CDC289600472893 /* IGLTexture.mm in Sources */,
-				124A32361CDC288900472893 /* IGLBuffer.mm in Sources */,
-				124A32421CDC289D00472893 /* renderer.mm in Sources */,
+				12F96E831D5B8BFA002B4B5C /* IGLView.mm in Sources */,
+				12F96E7C1D5B8BEC002B4B5C /* GLESBuffer.cpp in Sources */,
 				124A32471CDC293500472893 /* tga.cpp in Sources */,
-				124A323A1CDC288F00472893 /* IGLRenderer.mm in Sources */,
-				124A32341CDC288500472893 /* IGLArrayBuffer.mm in Sources */,
-				124A323C1CDC289200472893 /* IGLShader.mm in Sources */,
-				124A32401CDC289900472893 /* IGLView.mm in Sources */,
-				124A32381CDC288C00472893 /* IGLFramebuffer.mm in Sources */,
+				12F96E7F1D5B8BEC002B4B5C /* GLESShader.cpp in Sources */,
+				12F96E7D1D5B8BEC002B4B5C /* GLESFramebuffer.cpp in Sources */,
+				12F96E811D5B8BEC002B4B5C /* renderer.cpp in Sources */,
+				12F96E801D5B8BEC002B4B5C /* GLESTexture.cpp in Sources */,
+				12F96E7E1D5B8BEC002B4B5C /* GLESRenderer.cpp in Sources */,
+				12F96E7B1D5B8BEC002B4B5C /* GLESArrayBuffer.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

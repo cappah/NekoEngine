@@ -1,9 +1,9 @@
 /* NekoEngine
  *
- * IGLFramebuffer.mm
+ * GLESFramebuffer.cpp
  * Author: Alexandru Naiman
  *
- * iOS OpenGL|ES Renderer Implementation
+ * OpenGL|ES 3 Renderer Implementation
  *
  * -----------------------------------------------------------------------------
  *
@@ -37,9 +37,9 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "IGLFramebuffer.h"
-#include "IGLRenderer.h"
-#include "IGLTexture.h"
+#include "GLESFramebuffer.h"
+#include "GLESRenderer.h"
+#include "GLESTexture.h"
 
 GLenum GL_FramebufferTarget[2]
 {
@@ -64,33 +64,33 @@ GLenum GL_Attachments[11]
 
 extern GLenum GL_TexFilter[];
 
-IGLFramebuffer::IGLFramebuffer(int width, int height)
-: RFramebuffer(width, height)
+GLESFramebuffer::GLESFramebuffer(int width, int height)
+	: RFramebuffer(width, height)
 {
 	GL_CHECK(glGenFramebuffers(1, &_id));
 	memset(_rbos, 0x0, sizeof(GLuint) * 3);
 }
 
-void IGLFramebuffer::Bind(int location)
+void GLESFramebuffer::Bind(int location)
 {
 	_lastTarget = GL_FramebufferTarget[location];
 	GL_CHECK(glBindFramebuffer(_lastTarget, _id));	
 //	GL_CHECK(glViewport(0, 0, _width, _height));
-	IGLRenderer::SetBoundFramebuffer(this);
+	GLESRenderer::SetBoundFramebuffer(this);
 }
 
-void IGLFramebuffer::Unbind()
+void GLESFramebuffer::Unbind()
 {
-	IGLRenderer::SetBoundFramebuffer(nullptr);
+	GLESRenderer::SetBoundFramebuffer(nullptr);
 }
 
-void IGLFramebuffer::Resize(int width, int height)
+void GLESFramebuffer::Resize(int width, int height)
 {
 	_width = width;
 	_height = height;
 	
 	GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, _id));
-	for (IGLFramebufferAttachmentInfo &info : _attachmentInfo)
+	for (GLESFramebufferAttachmentInfo &info : _attachmentInfo)
 	{
 		if (info.tex->GetWidth() != width || info.tex->GetHeight() != height)
 			info.tex->Resize2D(width, height);
@@ -117,28 +117,28 @@ void IGLFramebuffer::Resize(int width, int height)
 	}
 }
 
-void IGLFramebuffer::AttachTexture(DrawAttachment attachment, class RTexture* texture)
+void GLESFramebuffer::AttachTexture(DrawAttachment attachment, class RTexture* texture)
 {
 	GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, _id));
-	GL_CHECK(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_Attachments[(int)attachment], GL_TEXTURE_2D, ((IGLTexture *)texture)->GetId(), 0));
-	_attachmentInfo.push_back({ GL_Attachments[(int)attachment], (IGLTexture *)texture });
+	GL_CHECK(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_Attachments[(int)attachment], GL_TEXTURE_2D, ((GLESTexture *)texture)->GetId(), 0));
+	_attachmentInfo.push_back({ GL_Attachments[(int)attachment], (GLESTexture *)texture });
 }
 
-void IGLFramebuffer::AttachDepthTexture(class RTexture* texture)
+void GLESFramebuffer::AttachDepthTexture(class RTexture* texture)
 {
 	GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, _id));
-	GL_CHECK(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, ((IGLTexture *)texture)->GetId(), 0));
-	_attachmentInfo.push_back({ GL_DEPTH_ATTACHMENT, (IGLTexture *)texture });
+	GL_CHECK(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, ((GLESTexture *)texture)->GetId(), 0));
+	_attachmentInfo.push_back({ GL_DEPTH_ATTACHMENT, (GLESTexture *)texture });
 }
 
-void IGLFramebuffer::AttachDepthStencilTexture(class RTexture* texture)
+void GLESFramebuffer::AttachDepthStencilTexture(class RTexture* texture)
 {
 	GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, _id));
-	GL_CHECK(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, ((IGLTexture *)texture)->GetId(), 0));
-	_attachmentInfo.push_back({ GL_DEPTH_STENCIL_ATTACHMENT, (IGLTexture *)texture });
+	GL_CHECK(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, ((GLESTexture *)texture)->GetId(), 0));
+	_attachmentInfo.push_back({ GL_DEPTH_STENCIL_ATTACHMENT, (GLESTexture *)texture });
 }
 
-void IGLFramebuffer::CreateDepthBuffer()
+void GLESFramebuffer::CreateDepthBuffer()
 {
 	GL_CHECK(glGenRenderbuffers(1, &_rbos[RBO_DEPTH]));
 	GL_CHECK(glBindRenderbuffer(GL_RENDERBUFFER, _rbos[RBO_DEPTH]));
@@ -147,7 +147,7 @@ void IGLFramebuffer::CreateDepthBuffer()
 	GL_CHECK(glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, _rbos[RBO_DEPTH]));
 }
 
-void IGLFramebuffer::CreateMultisampledDepthBuffer(int samples)
+void GLESFramebuffer::CreateMultisampledDepthBuffer(int samples)
 {
 	GL_CHECK(glGenRenderbuffers(1, &_rbos[RBO_DEPTH]));
 	GL_CHECK(glBindRenderbuffer(GL_RENDERBUFFER, _rbos[RBO_DEPTH]));
@@ -156,7 +156,7 @@ void IGLFramebuffer::CreateMultisampledDepthBuffer(int samples)
 	GL_CHECK(glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, _rbos[RBO_DEPTH]));
 }
 
-void IGLFramebuffer::CreateStencilBuffer()
+void GLESFramebuffer::CreateStencilBuffer()
 {
 	GL_CHECK(glGenRenderbuffers(1, &_rbos[RBO_STENCIL]));
 	GL_CHECK(glBindRenderbuffer(GL_RENDERBUFFER, _rbos[RBO_STENCIL]));
@@ -165,7 +165,7 @@ void IGLFramebuffer::CreateStencilBuffer()
 	GL_CHECK(glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, _rbos[RBO_STENCIL]));
 }
 
-void IGLFramebuffer::CreateMultisampledStencilBuffer(int samples)
+void GLESFramebuffer::CreateMultisampledStencilBuffer(int samples)
 {
 	GL_CHECK(glGenRenderbuffers(1, &_rbos[RBO_STENCIL]));
 	GL_CHECK(glBindRenderbuffer(GL_RENDERBUFFER, _rbos[RBO_STENCIL]));
@@ -174,7 +174,7 @@ void IGLFramebuffer::CreateMultisampledStencilBuffer(int samples)
 	GL_CHECK(glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, _rbos[RBO_STENCIL]));
 }
 
-void IGLFramebuffer::CreateDepthStencilBuffer()
+void GLESFramebuffer::CreateDepthStencilBuffer()
 {
 	GL_CHECK(glGenRenderbuffers(1, &_rbos[RBO_DEPTH_STENCIL]));
 	GL_CHECK(glBindRenderbuffer(GL_RENDERBUFFER, _rbos[RBO_DEPTH_STENCIL]));
@@ -183,7 +183,7 @@ void IGLFramebuffer::CreateDepthStencilBuffer()
 	GL_CHECK(glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, _rbos[RBO_DEPTH_STENCIL]));
 }
 
-void IGLFramebuffer::CreateMultisampledDepthStencilBuffer(int samples)
+void GLESFramebuffer::CreateMultisampledDepthStencilBuffer(int samples)
 {
 	GL_CHECK(glGenRenderbuffers(1, &_rbos[RBO_DEPTH_STENCIL]));
 	GL_CHECK(glBindRenderbuffer(GL_RENDERBUFFER, _rbos[RBO_DEPTH_STENCIL]));
@@ -192,7 +192,7 @@ void IGLFramebuffer::CreateMultisampledDepthStencilBuffer(int samples)
 	GL_CHECK(glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, _rbos[RBO_DEPTH_STENCIL]));
 }
 
-FramebufferStatus IGLFramebuffer::CheckStatus()
+FramebufferStatus GLESFramebuffer::CheckStatus()
 {
 	GLenum status;
 	GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, _id));
@@ -213,13 +213,13 @@ FramebufferStatus IGLFramebuffer::CheckStatus()
 	return FramebufferStatus::Unsupported;
 }
 
-void IGLFramebuffer::Blit(RFramebuffer* dest, int srcX0, int srcY0, int srcX1, int srcY1, int dstX0, int dstY0, int dstX1, int dstY1)
+void GLESFramebuffer::Blit(RFramebuffer* dest, int srcX0, int srcY0, int srcX1, int srcY1, int dstX0, int dstY0, int dstX1, int dstY1)
 {
 	GLuint destFbo = 0;
 	
 	if (dest != R_DEFAULT_FRAMEBUFFER)
 	{
-		IGLFramebuffer *d = (IGLFramebuffer *)dest;
+		GLESFramebuffer *d = (GLESFramebuffer *)dest;
 		destFbo = d->GetId();
 	}
 	
@@ -229,13 +229,13 @@ void IGLFramebuffer::Blit(RFramebuffer* dest, int srcX0, int srcY0, int srcX1, i
 	GL_CHECK(glBlitFramebuffer(srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT, GL_NEAREST));
 }
 
-void IGLFramebuffer::CopyColor(RFramebuffer* dest, TextureFilter filter)
+void GLESFramebuffer::CopyColor(RFramebuffer* dest, TextureFilter filter)
 {
 	GLuint destFbo = 0;
 	
 	if (dest != R_DEFAULT_FRAMEBUFFER)
 	{
-		IGLFramebuffer *d = (IGLFramebuffer *)dest;
+		GLESFramebuffer *d = (GLESFramebuffer *)dest;
 		destFbo = d->GetId();
 	}
 	
@@ -245,13 +245,13 @@ void IGLFramebuffer::CopyColor(RFramebuffer* dest, TextureFilter filter)
 	GL_CHECK(glBlitFramebuffer(0, 0, _width, _height, 0, 0, _width, _height, GL_COLOR_BUFFER_BIT, GL_TexFilter[(int)filter]));
 }
 
-void IGLFramebuffer::CopyDepth(RFramebuffer* dest)
+void GLESFramebuffer::CopyDepth(RFramebuffer* dest)
 {
 	GLuint destFbo = 0;
 	
 	if (dest != R_DEFAULT_FRAMEBUFFER)
 	{
-		IGLFramebuffer *d = (IGLFramebuffer *)dest;
+		GLESFramebuffer *d = (GLESFramebuffer *)dest;
 		destFbo = d->GetId();
 	}
 	
@@ -261,13 +261,13 @@ void IGLFramebuffer::CopyDepth(RFramebuffer* dest)
 	GL_CHECK(glBlitFramebuffer(0, 0, _width, _height, 0, 0, _width, _height, GL_DEPTH_BUFFER_BIT, GL_NEAREST));
 }
 
-void IGLFramebuffer::CopyStencil(RFramebuffer* dest)
+void GLESFramebuffer::CopyStencil(RFramebuffer* dest)
 {
 	GLuint destFbo = 0;
 	
 	if (dest != R_DEFAULT_FRAMEBUFFER)
 	{
-		IGLFramebuffer *d = (IGLFramebuffer *)dest;
+		GLESFramebuffer *d = (GLESFramebuffer *)dest;
 		destFbo = d->GetId();
 	}
 	
@@ -277,13 +277,13 @@ void IGLFramebuffer::CopyStencil(RFramebuffer* dest)
 	GL_CHECK(glBlitFramebuffer(0, 0, _width, _height, 0, 0, _width, _height, GL_STENCIL_BUFFER_BIT, GL_NEAREST));
 }
 
-void IGLFramebuffer::SetDrawBuffer(DrawAttachment attachment)
+void GLESFramebuffer::SetDrawBuffer(DrawAttachment attachment)
 {
 	GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, _id));
 	GL_CHECK(glDrawBuffers(1, &GL_Attachments[(int)attachment]));
 }
 
-void IGLFramebuffer::SetDrawBuffers(int32_t n, DrawAttachment* buffers)
+void GLESFramebuffer::SetDrawBuffers(int32_t n, DrawAttachment* buffers)
 {
 	GLenum drawBuffers[11];
 	
@@ -294,7 +294,7 @@ void IGLFramebuffer::SetDrawBuffers(int32_t n, DrawAttachment* buffers)
 	GL_CHECK(glDrawBuffers(n, drawBuffers));
 }
 
-IGLFramebuffer::~IGLFramebuffer()
+GLESFramebuffer::~GLESFramebuffer()
 {
 	GL_CHECK(glDeleteFramebuffers(1, &_id));
 }

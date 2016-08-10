@@ -1,9 +1,9 @@
 /* NekoEngine
  *
- * IGLTexture.h
+ * GLESTexture.h
  * Author: Alexandru Naiman
  *
- * iOS OpenGL|ES Renderer Implementation
+ * OpenGL|ES 3 Renderer Implementation
  *
  * -----------------------------------------------------------------------------
  *
@@ -37,8 +37,8 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef IGLTexture_h
-#define IGLTexture_h
+#ifndef GLESTexture_h
+#define GLESTexture_h
 
 #include <Renderer/RTexture.h>
 #include <OpenGLES/ES3/gl.h>
@@ -50,10 +50,10 @@
 #include <Loaders/nv_dds.h>
 #endif
 
-class IGLTexture : public RTexture
+class GLESTexture : public RTexture
 {
 public:
-    IGLTexture(TextureType type);
+    GLESTexture(TextureType type);
 	
 	void Bind();
 	
@@ -104,7 +104,7 @@ public:
     
     virtual void GenerateMipmaps() override;
     
-    virtual ~IGLTexture();
+    virtual ~GLESTexture();
 	
 private:
     GLuint _id;
@@ -119,4 +119,4 @@ private:
 #endif
 };
 
-#endif /* IGLTexture_h */
+#endif /* GLESTexture_h */

@@ -1,6 +1,6 @@
 /* NekoEngine
  *
- * IGLShader.mm
+ * GLESShader.cpp
  * Author: Alexandru Naiman
  *
  * iOS OpenGL|ES Renderer Implementation
@@ -37,9 +37,9 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "IGLShader.h"
-#include "IGLTexture.h"
-#include "IGLRenderer.h"
+#include "GLESShader.h"
+#include "GLESTexture.h"
+#include "GLESRenderer.h"
 
 #include <OpenGLES/ES3/gl.h>
 #include <OpenGLES/ES3/glext.h>
@@ -75,8 +75,8 @@ static inline void str_remove(char *str, const char *toRemove)
 	memmove(str, copyFrom, 1 + strlen(copyFrom));
 }
 
-IGLShader::IGLShader()
-: RShader()
+GLESShader::GLESShader()
+	: RShader()
 {
 	_shaders[0] = -1;
 	_shaders[1] = -1;
@@ -97,19 +97,19 @@ IGLShader::IGLShader()
 	_nextBinding = 0;
 }
 
-void IGLShader::Enable()
+void GLESShader::Enable()
 {	
 	GL_CHECK(glUseProgram(_program));
-	IGLRenderer::SetActiveShader(this);
+	GLESRenderer::SetActiveShader(this);
 }
 
-void IGLShader::Disable()
+void GLESShader::Disable()
 {
 	GL_CHECK(glUseProgram(0));
-	IGLRenderer::SetActiveShader(nullptr);
+	GLESRenderer::SetActiveShader(nullptr);
 }
 
-void IGLShader::BindUniformBuffers()
+void GLESShader::BindUniformBuffers()
 {
 	for (int i = 0; i < 10; ++i)
 		if ((_vsBuffers[i].index != GL_INVALID_INDEX) && _vsBuffers[i].ubo)
@@ -120,7 +120,7 @@ void IGLShader::BindUniformBuffers()
 			_fsBuffers[i].ubo->BindUniform(_fsBuffers[i].binding, _fsBuffers[i].offset, _fsBuffers[i].size);
 }
 
-void IGLShader::VSUniformBlockBinding(int location, const char *name)
+void GLESShader::VSUniformBlockBinding(int location, const char *name)
 {
 	_vsBuffers[location].binding = _nextBinding++;
 	GL_CHECK(_vsBuffers[location].index = glGetUniformBlockIndex(_program, name));
@@ -135,7 +135,7 @@ void IGLShader::VSUniformBlockBinding(int location, const char *name)
 	GL_CHECK(glUniformBlockBinding(_program, _vsBuffers[location].index, _vsBuffers[location].binding));
 }
 
-void IGLShader::FSUniformBlockBinding(int location, const char *name)
+void GLESShader::FSUniformBlockBinding(int location, const char *name)
 {
 	_fsBuffers[location].binding = _nextBinding++;
 	GL_CHECK(_fsBuffers[location].index = glGetUniformBlockIndex(_program, name));
@@ -150,31 +150,31 @@ void IGLShader::FSUniformBlockBinding(int location, const char *name)
 	GL_CHECK(glUniformBlockBinding(_program, _fsBuffers[location].index, _fsBuffers[location].binding));
 }
 
-void IGLShader::VSSetUniformBuffer(int location, uint64_t offset, uint64_t size, RBuffer *buf)
+void GLESShader::VSSetUniformBuffer(int location, uint64_t offset, uint64_t size, RBuffer *buf)
 {
 	_vsBuffers[location].offset = offset;
 	_vsBuffers[location].size = size;
-	_vsBuffers[location].ubo = (IGLBuffer*)buf;
+	_vsBuffers[location].ubo = (GLESBuffer*)buf;
 }
 
-void IGLShader::FSSetUniformBuffer(int location, uint64_t offset, uint64_t size, RBuffer *buf)
+void GLESShader::FSSetUniformBuffer(int location, uint64_t offset, uint64_t size, RBuffer *buf)
 {
 	_fsBuffers[location].offset = offset;
 	_fsBuffers[location].size = size;
-	_fsBuffers[location].ubo = (IGLBuffer*)buf;
+	_fsBuffers[location].ubo = (GLESBuffer*)buf;
 }
 
-void IGLShader::SetTexture(unsigned int location, RTexture *tex)
+void GLESShader::SetTexture(unsigned int location, RTexture *tex)
 {
-	_textures[location] = (IGLTexture*)tex;
+	_textures[location] = (GLESTexture*)tex;
 }
 
-void IGLShader::SetSubroutines(ShaderType type, int count, const unsigned int *indices)
+void GLESShader::SetSubroutines(ShaderType type, int count, const unsigned int *indices)
 {
 	//GL_CHECK(glUniformSubroutinesuiv(GL_ShaderType[(int)type], count, indices));
 }
 
-bool IGLShader::LoadFromSource(ShaderType type, int count, const char **source, int *length)
+bool GLESShader::LoadFromSource(ShaderType type, int count, const char **source, int *length)
 {
 	GLint compiled;
 	
@@ -222,7 +222,7 @@ bool IGLShader::LoadFromSource(ShaderType type, int count, const char **source, 
 	
 	char defines[8192] { 0 };
 	
-	for (ShaderDefine &define : IGLRenderer::GetShaderDefines())
+	for (ShaderDefine &define : GLESRenderer::GetShaderDefines())
     {
 		if (snprintf(defines + strlen(defines), 8192, "#define %s %s\n", define.name.c_str(), define.value.c_str()) >= 8192)
         {
@@ -276,17 +276,17 @@ bool IGLShader::LoadFromSource(ShaderType type, int count, const char **source, 
 	return true;
 }
 
-bool IGLShader::LoadFromStageBinary(ShaderType type, const char *file)
+bool GLESShader::LoadFromStageBinary(ShaderType type, const char *file)
 {
 	return false;
 }
 
-bool IGLShader::LoadFromBinary(const char *file)
+bool GLESShader::LoadFromBinary(const char *file)
 {
 	return false;
 }
 
-bool IGLShader::Link()
+bool GLESShader::Link()
 {
 	GLint linked;
 	
@@ -338,7 +338,7 @@ bool IGLShader::Link()
 		
 		if(ptr)
 		{
-			for (ShaderDefine &define : IGLRenderer::GetShaderDefines())
+			for (ShaderDefine &define : GLESRenderer::GetShaderDefines())
 			{
 				if(!info.location.compare(define.name))
 					location = atoi(define.value.c_str());
@@ -352,11 +352,11 @@ bool IGLShader::Link()
 	return true;
 }
 
-void IGLShader::EnableTextures()
+void GLESShader::EnableTextures()
 {
 	int i = 0;
 	
-	for (std::pair<unsigned int, IGLTexture*> kvp : _textures)
+	for (std::pair<unsigned int, GLESTexture*> kvp : _textures)
 	{
 		GL_CHECK(glActiveTexture(GL_TEXTURE0+i));
 		kvp.second->Bind();
@@ -365,7 +365,7 @@ void IGLShader::EnableTextures()
 	}
 }
 
-IGLShader::~IGLShader()
+GLESShader::~GLESShader()
 {
 	for (int i = 0; i < 6; i++)
 	{
@@ -377,7 +377,7 @@ IGLShader::~IGLShader()
 	GL_CHECK(glDeleteProgram(_program));
 }
 
-char* IGLShader::_ExtractUniforms(const char *shaderSource)
+char* GLESShader::_ExtractUniforms(const char *shaderSource)
 {
 	std::vector<std::string> replace;
 	
@@ -425,7 +425,7 @@ char* IGLShader::_ExtractUniforms(const char *shaderSource)
 	return source;
 }
 
-bool IGLShader::Validate()
+bool GLESShader::Validate()
 {
 #ifndef _DEBUG
 	return true;

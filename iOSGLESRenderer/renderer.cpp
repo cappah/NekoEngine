@@ -1,9 +1,9 @@
 /* NekoEngine
  *
- * IGLArrayBuffer.h
+ * renderer.cpp
  * Author: Alexandru Naiman
  *
- * iOS OpenGL|ES Renderer Implementation
+ * OpenGL|ES 3 Renderer Implementation
  *
  * -----------------------------------------------------------------------------
  *
@@ -37,26 +37,14 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef IGLArrayBuffer_h
-#define IGLArrayBuffer_h
+#include "GLESRenderer.h"
 
-#include <Renderer/RArrayBuffer.h>
-#include <OpenGLES/ES3/gl.h>
-
-class IGLArrayBuffer : public RArrayBuffer
+extern "C" Renderer* createRenderer()
 {
-public:
-    IGLArrayBuffer();
-    
-    virtual void Bind() override;
-    virtual void Unbind() override;
-    
-    virtual void CommitBuffers() override;
-    
-    virtual ~IGLArrayBuffer();
-    
-private:
-    GLuint _vao;
-};
+    return (Renderer *)new GLESRenderer();
+}
 
-#endif /* IGLArrayBuffer_h */
+extern "C" unsigned int getRendererAPIVersion()
+{
+    return RENDERER_API_VERSION;
+}

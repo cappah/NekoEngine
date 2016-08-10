@@ -1,9 +1,9 @@
 /* NekoEngine
  *
- * IGLShader.h
+ * GLESShader.h
  * Author: Alexandru Naiman
  *
- * iOS OpenGL|ES Renderer Implementation
+ * OpenGL|ES 3 Renderer Implementation
  *
  * -----------------------------------------------------------------------------
  *
@@ -37,19 +37,19 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef IGLShader_h
-#define IGLShader_h
+#ifndef GLESShader_h
+#define GLESShader_h
 
 #include <Renderer/RShader.h>
 #include <OpenGLES/ES3/gl.h>
 #include <unordered_map>
 #include <vector>
 
-#include "IGLBuffer.h"
+#include "GLESBuffer.h"
 
 typedef struct GL_UNIF_BUF
 {
-    IGLBuffer *ubo;
+    GLESBuffer *ubo;
     size_t offset;
     size_t size;
     uint32_t binding;
@@ -62,10 +62,10 @@ typedef struct UNIFORM_INFO
 	std::string name;
 } UniformInfo;
 
-class IGLShader : public RShader
+class GLESShader : public RShader
 {
 public:
-    IGLShader();
+    GLESShader();
     
 	virtual void Enable() override;
 	virtual void Disable() override;
@@ -87,7 +87,7 @@ public:
     
     virtual bool Link() override;
     
-    virtual ~IGLShader();
+    virtual ~GLESShader();
 	
 	void EnableTextures();
 	bool Validate();
@@ -101,10 +101,10 @@ private:
     uint8_t _fsNumBuffers;
     uint8_t _nextBinding;
 	std::vector<UniformInfo> _uniformInfo;
-	std::unordered_map<unsigned int, class IGLTexture*> _textures;
+	std::unordered_map<unsigned int, class GLESTexture*> _textures;
 	std::unordered_map<int, int> _uniformLocations;
 	
 	char* _ExtractUniforms(const char* source);
 };
 
-#endif /* IGLShader_h */
+#endif /* GLESShader_h */
