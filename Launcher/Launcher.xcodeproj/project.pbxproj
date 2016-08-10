@@ -21,7 +21,7 @@
 		124A320A1CDC268100472893 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 124A32091CDC268100472893 /* libsqlite3.tbd */; };
 		124A320C1CDC268800472893 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 124A320B1CDC268800472893 /* OpenAL.framework */; };
 		124A32511CDC299500472893 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 124A32501CDC299500472893 /* OpenGLES.framework */; };
-		124A32521CDC29A400472893 /* libiOSGLESRenderer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 124A324D1CDC298200472893 /* libiOSGLESRenderer.a */; };
+		1250259D1D5B8FF2005B3341 /* libGLESRenderer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1250259A1D5B8FE7005B3341 /* libGLESRenderer.a */; };
 		1296BC3D1CDC132C00D17488 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1296BC3C1CDC132C00D17488 /* main.m */; };
 		1296BC401CDC132C00D17488 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1296BC3F1CDC132C00D17488 /* AppDelegate.mm */; };
 		1296BC481CDC132C00D17488 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1296BC471CDC132C00D17488 /* Assets.xcassets */; };
@@ -40,19 +40,19 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		124A324C1CDC298200472893 /* PBXContainerItemProxy */ = {
+		125025991D5B8FE7005B3341 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 124A32481CDC298100472893 /* iOSGLESRenderer.xcodeproj */;
+			containerPortal = 125025951D5B8FE7005B3341 /* GLESRenderer.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 124A32201CDC283900472893;
-			remoteInfo = iOSGLESRenderer;
+			remoteInfo = GLESRenderer;
 		};
-		124A324E1CDC298800472893 /* PBXContainerItemProxy */ = {
+		1250259B1D5B8FEE005B3341 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 124A32481CDC298100472893 /* iOSGLESRenderer.xcodeproj */;
+			containerPortal = 125025951D5B8FE7005B3341 /* GLESRenderer.xcodeproj */;
 			proxyType = 1;
 			remoteGlobalIDString = 124A321F1CDC283900472893;
-			remoteInfo = iOSGLESRenderer;
+			remoteInfo = GLESRenderer;
 		};
 		127012521CC315FD001840A7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -178,8 +178,8 @@
 		124A32071CDC267D00472893 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/usr/lib/libz.tbd; sourceTree = DEVELOPER_DIR; };
 		124A32091CDC268100472893 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/usr/lib/libsqlite3.tbd; sourceTree = DEVELOPER_DIR; };
 		124A320B1CDC268800472893 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/System/Library/Frameworks/OpenAL.framework; sourceTree = DEVELOPER_DIR; };
-		124A32481CDC298100472893 /* iOSGLESRenderer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = iOSGLESRenderer.xcodeproj; path = ../iOSGLESRenderer/iOSGLESRenderer.xcodeproj; sourceTree = "<group>"; };
 		124A32501CDC299500472893 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/System/Library/Frameworks/OpenGLES.framework; sourceTree = DEVELOPER_DIR; };
+		125025951D5B8FE7005B3341 /* GLESRenderer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GLESRenderer.xcodeproj; path = ../GLESRenderer/GLESRenderer.xcodeproj; sourceTree = "<group>"; };
 		1270119A1CC31326001840A7 /* launcher.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = launcher.mm; path = Mac/launcher.mm; sourceTree = "<group>"; };
 		1270124E1CC315FD001840A7 /* Engine.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Engine.xcodeproj; path = ../Engine/Engine.xcodeproj; sourceTree = "<group>"; };
 		1296BC391CDC132C00D17488 /* NekoEngine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NekoEngine.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -205,7 +205,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				124A32521CDC29A400472893 /* libiOSGLESRenderer.a in Frameworks */,
+				1250259D1D5B8FF2005B3341 /* libGLESRenderer.a in Frameworks */,
 				124A32511CDC299500472893 /* OpenGLES.framework in Frameworks */,
 				124A320C1CDC268800472893 /* OpenAL.framework in Frameworks */,
 				124A320A1CDC268100472893 /* libsqlite3.tbd in Frameworks */,
@@ -255,10 +255,10 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		124A32491CDC298100472893 /* Products */ = {
+		125025961D5B8FE7005B3341 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				124A324D1CDC298200472893 /* libiOSGLESRenderer.a */,
+				1250259A1D5B8FE7005B3341 /* libGLESRenderer.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -269,7 +269,7 @@
 				1270124E1CC315FD001840A7 /* Engine.xcodeproj */,
 				12B7484A1CC6EA4000825D36 /* TestGame.xcodeproj */,
 				12A15FAE1CD445FE00BEDD06 /* GLRenderer.xcodeproj */,
-				124A32481CDC298100472893 /* iOSGLESRenderer.xcodeproj */,
+				125025951D5B8FE7005B3341 /* GLESRenderer.xcodeproj */,
 				127011991CC31317001840A7 /* Source */,
 				12B748281CC6E7C600825D36 /* Launcher */,
 				1296BC3A1CDC132C00D17488 /* Launcher-iOS */,
@@ -381,7 +381,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				124A324F1CDC298800472893 /* PBXTargetDependency */,
+				1250259C1D5B8FEE005B3341 /* PBXTargetDependency */,
 				1296BD831CDC1E1700D17488 /* PBXTargetDependency */,
 				1296BC541CDC144F00D17488 /* PBXTargetDependency */,
 			);
@@ -446,12 +446,12 @@
 					ProjectRef = 1270124E1CC315FD001840A7 /* Engine.xcodeproj */;
 				},
 				{
-					ProductGroup = 12A15FAF1CD445FE00BEDD06 /* Products */;
-					ProjectRef = 12A15FAE1CD445FE00BEDD06 /* GLRenderer.xcodeproj */;
+					ProductGroup = 125025961D5B8FE7005B3341 /* Products */;
+					ProjectRef = 125025951D5B8FE7005B3341 /* GLESRenderer.xcodeproj */;
 				},
 				{
-					ProductGroup = 124A32491CDC298100472893 /* Products */;
-					ProjectRef = 124A32481CDC298100472893 /* iOSGLESRenderer.xcodeproj */;
+					ProductGroup = 12A15FAF1CD445FE00BEDD06 /* Products */;
+					ProjectRef = 12A15FAE1CD445FE00BEDD06 /* GLRenderer.xcodeproj */;
 				},
 				{
 					ProductGroup = 12B7484B1CC6EA4000825D36 /* Products */;
@@ -467,11 +467,11 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		124A324D1CDC298200472893 /* libiOSGLESRenderer.a */ = {
+		1250259A1D5B8FE7005B3341 /* libGLESRenderer.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
-			path = libiOSGLESRenderer.a;
-			remoteRef = 124A324C1CDC298200472893 /* PBXContainerItemProxy */;
+			path = libGLESRenderer.a;
+			remoteRef = 125025991D5B8FE7005B3341 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		127012531CC315FD001840A7 /* libEngine.dylib */ = {
@@ -557,10 +557,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		124A324F1CDC298800472893 /* PBXTargetDependency */ = {
+		1250259C1D5B8FEE005B3341 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			name = iOSGLESRenderer;
-			targetProxy = 124A324E1CDC298800472893 /* PBXContainerItemProxy */;
+			name = GLESRenderer;
+			targetProxy = 1250259B1D5B8FEE005B3341 /* PBXContainerItemProxy */;
 		};
 		1296BC541CDC144F00D17488 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

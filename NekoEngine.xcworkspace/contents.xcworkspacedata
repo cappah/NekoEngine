@@ -11,7 +11,7 @@
       location = "group:GLRenderer/GLRenderer.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:iOSGLESRenderer/iOSGLESRenderer.xcodeproj">
+      location = "group:GLESRenderer/GLESRenderer.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:TestGame/TestGame.xcodeproj">

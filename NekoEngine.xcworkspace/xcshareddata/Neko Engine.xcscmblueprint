@@ -12,9 +12,9 @@
   "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
     "D485DE6D070C1216B90ECBB21A1496FDDBA038E7" : "NekoEngine\/"
   },
-  "DVTSourceControlWorkspaceBlueprintNameKey" : "Neko Engine",
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "NekoEngine",
   "DVTSourceControlWorkspaceBlueprintVersion" : 204,
-  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "Neko Engine.xcworkspace",
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "NekoEngine.xcworkspace",
   "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "svn:\/\/nalexandru.xyz\/NekoEngine",
