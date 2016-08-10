@@ -31,30 +31,37 @@
     <configuration name="Device-Debug">
        <platformArchitecture>armle-v7</platformArchitecture>
        <asset path="Device-Debug/NekoEngine" entry="true" type="Qnx/Elf">NekoEngine</asset>
+       <asset path="${workspace_loc:/Engine}/Device-Debug/libEngine.so" type="Qnx/Elf">lib/libEngine.so</asset>
     </configuration>
     <configuration name="Device-Release">
        <platformArchitecture>armle-v7</platformArchitecture>
        <asset path="Device-Release/NekoEngine" entry="true" type="Qnx/Elf">NekoEngine</asset>
+       <asset path="${workspace_loc:/Engine}/Device-Release/libEngine.so" type="Qnx/Elf">lib/libEngine.so</asset>
     </configuration>
     <configuration name="Device-Profile">
        <platformArchitecture>armle-v7</platformArchitecture>
        <asset path="Device-Profile/NekoEngine" entry="true" type="Qnx/Elf">NekoEngine</asset>
+       <asset path="${workspace_loc:/Engine}/Device-Profile/libEngine.so" type="Qnx/Elf">lib/libEngine.so</asset>
     </configuration>
     <configuration name="Device-Coverage">
        <platformArchitecture>armle-v7</platformArchitecture>
        <asset path="Device-Coverage/NekoEngine" entry="true" type="Qnx/Elf">NekoEngine</asset>
+       <asset path="${workspace_loc:/Engine}/Device-Coverage/libEngine.so" type="Qnx/Elf">lib/libEngine.so</asset>
     </configuration>
     <configuration name="Simulator-Debug">
        <platformArchitecture>x86</platformArchitecture>
        <asset path="Simulator-Debug/NekoEngine" entry="true" type="Qnx/Elf">NekoEngine</asset>
+       <asset path="${workspace_loc:/Engine/Simulator-Debug/libEngine.so}" type="Qnx/Elf">lib/libEngine.so</asset>
     </configuration>
     <configuration name="Simulator-Profile">
        <platformArchitecture>x86</platformArchitecture>
        <asset path="Simulator-Profile/NekoEngine" entry="true" type="Qnx/Elf">NekoEngine</asset>
+       <asset path="${workspace_loc:/Engine}/Simulator-Profile/libEngine.so" type="Qnx/Elf">lib/libEngine.so</asset>
     </configuration>
     <configuration name="Simulator-Coverage">
        <platformArchitecture>x86</platformArchitecture>
        <asset path="Simulator-Coverage/NekoEngine" entry="true" type="Qnx/Elf">NekoEngine</asset>
+       <asset path="${workspace_loc:/Engine}/Simulator-Coverage/libEngine.so" type="Qnx/Elf">lib/libEngine.so</asset>
     </configuration>
 
     <!-- The name that is displayed in the BlackBerry application installer.
@@ -90,6 +97,6 @@
     </icon>
 
     <!-- Ensure that shared libraries in the package are found at run-time. -->
-    <env var="LD_LIBRARY_PATH" value="app/native/lib"/>
+    <env var="LD_LIBRARY_PATH" value="app/native/lib:/usr/lib/qt4/lib"/>
 
 </qnx>

@@ -120,7 +120,7 @@ void Logger::Flush()
 
 void Logger::_WriteMessage(LogMessage &msg)
 {
-	ofstream stm;
+    FILE *fp = nullptr;
 
 	// Log all messages in debug mode
 #ifndef _DEBUG
@@ -129,7 +129,7 @@ void Logger::_WriteMessage(LogMessage &msg)
 #else
 	if (msg.Severity == LOG_CRITICAL)
 		fprintf(stderr, "[%s][%s]: %s", msg.Module.c_str(), SeverityStr[msg.Severity].c_str(), msg.Message.c_str());
-	
+
 	char buff[2048];
 	if (snprintf(buff, 2048, "[%s][%s]: %s", msg.Module.c_str(), SeverityStr[msg.Severity].c_str(), msg.Message.c_str()) >= 1024)
 		Platform::LogDebugMessage("MESSAGE TRUNCATED");
@@ -138,24 +138,23 @@ void Logger::_WriteMessage(LogMessage &msg)
 
 	if (msg.Severity > LOG_ALL)
 		msg.Severity = LOG_ALL;
-    
-	stm.open(_logFile, ios_base::app);
 
-	if (!stm.good())
+	if((fp = fopen(_logFile.c_str(), "a+")) == nullptr)
 	{
-		stm.close();
+	    perror("failed to open log file for append\n");
 		return;
 	}
-	
+
 	time_t t = time(0);
 	struct tm *tm = localtime(&t);
 
-	stm << (tm->tm_year + 1900) << "-" << (tm->tm_mon + 1) << "-" << tm->tm_mday << "-"
-		<< tm->tm_hour << ":" << tm->tm_min << ":" << tm->tm_sec << "-"
-		<< "[" << msg.Module << "][" << SeverityStr[msg.Severity] << "]: " << msg.Message;
-	
+	fprintf(fp, "%d-%d-%d-%d:%d:%d [%s][%s]: %s",
+	        tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday,
+	        tm->tm_hour, tm->tm_min, tm->tm_sec,
+	        msg.Module.c_str(), SeverityStr[msg.Severity].c_str(), msg.Message.c_str());
+
 	if(msg.Message[msg.Message.size() - 1] != '\n')
-		stm << endl;
-    
-	stm.close();
+	    fprintf(fp, "\n");
+
+	fclose(fp);
 }

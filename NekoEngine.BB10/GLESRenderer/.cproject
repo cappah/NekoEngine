@@ -43,7 +43,7 @@
 									<listOptionValue builtIn="false" value="GLM_FORCE_CXX03"/>
 									<listOptionValue builtIn="false" value="GLESRENDERER_INTERNAL"/>
 								</option>
-								<option id="com.qnx.qcc.option.compiler.ccoptions.852580586" superClass="com.qnx.qcc.option.compiler.ccoptions" valueType="stringList">
+								<option id="com.qnx.qcc.option.compiler.ccoptions.852580586" name="Compiler Options (-Wc,)" superClass="com.qnx.qcc.option.compiler.ccoptions" valueType="stringList">
 									<listOptionValue builtIn="false" value="-std=c++11"/>
 								</option>
 								<inputType id="com.qnx.qcc.inputType.compiler.219589598" superClass="com.qnx.qcc.inputType.compiler"/>
@@ -310,12 +310,21 @@
 								<option id="com.qnx.qcc.option.compile.debug.1832803272" name="Debug (-g)" superClass="com.qnx.qcc.option.compile.debug" value="true" valueType="boolean"/>
 								<option id="com.qnx.qcc.option.compiler.includePath.1516895424" name="Include Directories (-I)" superClass="com.qnx.qcc.option.compiler.includePath" valueType="includePath">
 									<listOptionValue builtIn="false" value="${workspace_loc:/${ProjName}/public}"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc}/../3rdparty/include_bb10&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc}/../3rdparty/include_all&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc}/../Include&quot;"/>
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/usr/include/freetype2"/>
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/../target-override/usr/include"/>
 								</option>
 								<option id="com.qnx.qcc.option.compiler.security.139164270" name="Enhanced Security (-fstack-protector-strong)" superClass="com.qnx.qcc.option.compiler.security" value="true" valueType="boolean"/>
 								<option id="com.qnx.qcc.option.compiler.defines.2067209892" name="Defines (-D)" superClass="com.qnx.qcc.option.compiler.defines" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="_FORTIFY_SOURCE=2"/>
+									<listOptionValue builtIn="false" value="GLM_FORCE_CXX03"/>
+									<listOptionValue builtIn="false" value="_XOPEN_SOURCE=600"/>
+									<listOptionValue builtIn="false" value="GLESRENDERER_INTERNAL"/>
+								</option>
+								<option id="com.qnx.qcc.option.compiler.ccoptions.888991950" superClass="com.qnx.qcc.option.compiler.ccoptions" valueType="stringList">
+									<listOptionValue builtIn="false" value="-std=c++11"/>
 								</option>
 								<inputType id="com.qnx.qcc.inputType.compiler.1680523382" superClass="com.qnx.qcc.inputType.compiler"/>
 							</tool>

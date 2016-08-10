@@ -91,7 +91,7 @@ using namespace std;
 using namespace std::chrono;
 using namespace glm;
 
-float quadVertices[] = 
+float quadVertices[] =
 {
 	-1.f,  1.f,
 	-1.f, -1.f,
@@ -128,7 +128,7 @@ static char _vfsArchiveList[VFS_ARCHIVE_LIST_SIZE];
 ObjectClassMapType *EngineClassFactory::_objectClassMap = nullptr;
 ComponentClassMapType *EngineClassFactory::_componentClassMap = nullptr;
 
-#ifdef NE_DEVICE_MOBILE
+#ifdef NE_PLATFORM_IOS
 extern "C" Renderer *createRenderer();
 extern "C" GameModule *createGameModule();
 #endif
@@ -136,7 +136,7 @@ extern "C" GameModule *createGameModule();
 void Engine::_ParseArgs(string cmdLine)
 {
 	vector<char*> args = EngineUtils::SplitString(cmdLine.c_str(), ' ');
-	
+
 	for(char* arg : args)
 	{
 		char *ptr = NULL;
@@ -263,7 +263,7 @@ void Engine::_ReadInputConfig(const char *file)
 
 		if ((axis_ptr = strchr(optBuff, '=')) == nullptr)
 			break;
-		
+
 		if((sens_ptr = strchr(axis_ptr, ';')) == nullptr)
 			break;
 
@@ -328,7 +328,7 @@ void Engine::_ReadINIFile(const char *file)
 		{ DIE("Failed to load configuration"); }
 		memset(buff, 0x0, INI_BUFF_SZ);
 	}
-	
+
 	if(_config.Engine.LogFile[0] == 0x0)
 	{
 		Platform::GetConfigString("Engine", "sLogFile", "Engine.log", buff, INI_BUFF_SZ, file);
@@ -358,7 +358,7 @@ void Engine::_ReadINIFile(const char *file)
 
 	memset(_vfsArchiveList, 0x0, VFS_ARCHIVE_LIST_SIZE);
 	Platform::GetConfigString("Engine", "sArchiveFiles", "", _vfsArchiveList, VFS_ARCHIVE_LIST_SIZE, file);
-	
+
 	_config.Engine.ScreenWidth = (int)Platform::GetConfigInt("Engine", "iWidth", 1280, file);
 	_config.Engine.ScreenHeight = (int)Platform::GetConfigInt("Engine", "iHeight", 720, file);
 	_config.Engine.Fullscreen = Platform::GetConfigInt("Engine", "bFullscreen", 0, file) != 0;
@@ -386,7 +386,7 @@ void Engine::_ReadINIFile(const char *file)
 	_ReadRendererConfig(file);
 
 	iniFileLoaded = true;
-	
+
 	memset(buff, 0x0, INI_BUFF_SZ);
 }
 
@@ -411,8 +411,8 @@ void Engine::_InitializeQuadVAO()
 
 bool Engine::_InitRenderer()
 {
-#ifndef NE_DEVICE_MOBILE
-	
+#ifndef NE_PLATFORM_IOS
+
 	_rendererLibrary = Platform::LoadModule(_rendererFile);
 
 	if (!_rendererLibrary)
@@ -421,7 +421,7 @@ bool Engine::_InitRenderer()
 		Platform::MessageBox("Fatal Error", "The specified renderer cannot be found. Exiting.", MessageBoxButtons::OK, MessageBoxIcon::Error);
 		return false;
 	}
-	
+
 	RendererAPIVersionProc getRendererAPIVersion = (RendererAPIVersionProc)Platform::GetProcAddress(_rendererLibrary, "getRendererAPIVersion");
 
 	if (!getRendererAPIVersion)
@@ -446,7 +446,7 @@ bool Engine::_InitRenderer()
 		Platform::MessageBox("Fatal Error", "Renderer library is invalid !", MessageBoxButtons::OK, MessageBoxIcon::Error);
 		return false;
 	}
-	
+
 #endif
 
 	_renderer = createRenderer();
@@ -470,14 +470,14 @@ bool Engine::_InitRenderer()
 		Platform::MessageBox("Fatal Error", "Failed to initialize renderer", MessageBoxButtons::OK, MessageBoxIcon::Error);
 		return false;
 	}
-		
+
 	_renderer->SetDebugLogFunction(Logger::LogRendererDebugMessage);
 
 	Logger::Log("Renderer", LOG_INFORMATION, "Renderer: %s", _renderer->GetName());
 	Logger::Log("Renderer", LOG_INFORMATION, "Version: %d.%d", _renderer->GetMajorVersion(), _renderer->GetMinorVersion());
 
 	_haveMemoryInfo = _renderer->HasCapability(RendererCapability::MemoryInformation);
-	
+
 	Shader::SetDefines(_renderer);
 
 	return true;
@@ -513,10 +513,10 @@ bool Engine::_InitSystem()
 			return false;
 
 		VFS::LoadArchive(buff);
-		
+
 		free(archive);
 	}
-	
+
 	if (ResourceManager::Initialize() != ENGINE_OK)
 	{
 		Logger::Log(ENGINE_MODULE, LOG_CRITICAL, "Failed to initialize the resource manager");
@@ -528,13 +528,13 @@ bool Engine::_InitSystem()
 		Logger::Log(ENGINE_MODULE, LOG_CRITICAL, "Failed to initialize the scene manager");
 		return false;
 	}
-	
+
 	if (DeferredBuffer::Initialize() != ENGINE_OK)
 	{
 		Logger::Log(ENGINE_MODULE, LOG_CRITICAL, "Failed to initialize the deferred buffer");
 		return false;
 	}
-	
+
 	if (SoundManager::Initialize() != ENGINE_OK)
 	{
 		Logger::Log(ENGINE_MODULE, LOG_CRITICAL, "Failed to initialize the sound manager");
@@ -554,8 +554,8 @@ bool Engine::_InitGame()
 {
 	Logger::Log(ENGINE_MODULE, LOG_INFORMATION, "Loading game module");
 
-#ifndef NE_DEVICE_MOBILE
-	
+#ifndef NE_PLATFORM_IOS
+
 	_gameModuleLibrary = Platform::LoadModule(_gameModuleFile);
 
 	if (!_gameModuleLibrary)
@@ -577,7 +577,7 @@ bool Engine::_InitGame()
 		Platform::MessageBox("Fatal Error", "Game module library is invalid", MessageBoxButtons::OK, MessageBoxIcon::Error);
 		return false;
 	}
-	
+
 #endif
 
 	_gameModule = createGameModule();
@@ -634,7 +634,7 @@ int Engine::Initialize(string cmdLine, bool editor)
 	}
 
 	Platform::SetActiveWindow(_engineWindow);
-	
+
 	if (!_InitRenderer())
 		return ENGINE_FAIL;
 #endif
@@ -722,7 +722,7 @@ int Engine::Run()
 void Engine::Pause(bool pause)
 {
 	_paused = pause;
-	
+
 	// TODO: let objects know the game was paused
 }
 
@@ -758,17 +758,17 @@ void Engine::Frame() noexcept
 	}
 
 	if(!_paused) Draw();
-		
+
 	if (_engineFont)
 	{
 		if (_printStats)
 			_PrintStats();
-			
+
 		_engineFont->Render();
 	}
-	
+
 	_renderer->SwapBuffers();
-	
+
 #ifdef _DEBUG
 	Logger::Flush();
 #endif
@@ -801,14 +801,14 @@ void Engine::Draw() noexcept
 	_renderer->SetDepthMask(false);
 
 	// Lighting pass
-	
+
 	DeferredBuffer::BindLighting();
 	_renderer->Clear(R_CLEAR_COLOR);
 
 	DeferredBuffer::RenderLighting();
 
 	SceneManager::GetActiveScene()->DrawSkybox();
-	
+
 	// SceneManager::GetActiveScene()->DrawForwardObjects();
 
 	// Effects
@@ -816,7 +816,7 @@ void Engine::Draw() noexcept
 	DeferredBuffer::CopyLight(PostProcessor::GetBuffer());
 	DeferredBuffer::CopyColor(PostProcessor::GetColorBuffer());
 	DeferredBuffer::CopyBrightness(PostProcessor::GetBrightnessBuffer());
-	
+
 	PostProcessor::ApplyEffects();
 
 	_renderer->EnableFaceCulling(false);
@@ -857,7 +857,7 @@ void Engine::ScreenResized(int width, int height) noexcept
 
 	if(_engineFont)
 		_engineFont->ScreenResized(width, height);
-		
+
 	_renderer->SetViewport(0, 0, width, height);
 	_renderer->ScreenResized();
 }
@@ -892,7 +892,7 @@ void Engine::SaveScreenshot() noexcept
 {
 #ifndef NE_DEVICE_MOBILE
 	unsigned char *pixels = nullptr;
-	
+
 	size_t imageSize = 3 /* BPP - RGB */ * _config.Engine.ScreenWidth * _config.Engine.ScreenHeight;
 	size_t imageI = 0;
 
@@ -915,7 +915,7 @@ void Engine::SaveScreenshot() noexcept
 		{
 			int offset = 3 * (j + i * _config.Engine.ScreenWidth);
 			int swapOffset = 3 * (j + swapI * _config.Engine.ScreenWidth);
-			
+
 			swap(pixels[offset], pixels[swapOffset]);
 			swap(pixels[offset + 1], pixels[swapOffset + 1]);
 			swap(pixels[offset + 2], pixels[swapOffset + 2]);
@@ -925,7 +925,7 @@ void Engine::SaveScreenshot() noexcept
 	// save png file
 	time_t t = time(0);
 	struct tm *tm = localtime(&t);
-	
+
 	char tmstr[256];
 	memset(&tmstr, 0x0, 256);
 	(void)strftime(tmstr, 256, "%m%d%Y_%H%M%S", tm);
@@ -1069,7 +1069,7 @@ void Engine::_PrintStats()
 	if (_haveMemoryInfo)
 	{
 		uint64_t totalMem, availableMem;
-		
+
 		totalMem = _renderer->GetVideoMemorySize();
 		availableMem = _renderer->GetUsedVideoMemorySize();
 
@@ -1120,7 +1120,7 @@ void Engine::CleanUp() noexcept
 	delete _quadVBO; _quadVBO = nullptr;
 
 	delete _renderer; _renderer = nullptr;
-	
+
 	if(_rendererLibrary)
 		Platform::ReleaseModule(_rendererLibrary);
 	_rendererLibrary = nullptr;

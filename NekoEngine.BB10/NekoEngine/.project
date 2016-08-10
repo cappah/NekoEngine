@@ -3,6 +3,7 @@
 	<name>NekoEngine</name>
 	<comment></comment>
 	<projects>
+		<project>Engine</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
@@ -34,7 +35,7 @@
 		<link>
 			<name>src/launcher.cpp</name>
 			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/Launcher/X11/launcher.cpp</locationURI>
+			<locationURI>PARENT-2-PROJECT_LOC/Launcher/BB10/launcher.cpp</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>
