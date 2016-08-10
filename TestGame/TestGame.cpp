@@ -3,7 +3,7 @@
  * TestGame.cpp
  * Author: Alexandru Naiman
  *
- * Minimal game module implementation 
+ * Minimal game module implementation
  *
  * -----------------------------------------------------------------------------
  *
@@ -37,7 +37,6 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#define TESTGAME_INTERNAL
 
 #include <vector>
 

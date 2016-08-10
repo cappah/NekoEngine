@@ -3,7 +3,7 @@
  * MovingObject.cpp
  * Author: Alexandru Naiman
  *
- * MovingObject class implementation 
+ * MovingObject class implementation
  *
  * -----------------------------------------------------------------------------
  *
@@ -37,7 +37,6 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#define TESTGAME_INTERNAL
 
 #include <math.h>
 #include <Engine/Engine.h>
@@ -73,7 +72,7 @@ MovingObject::MovingObject(ObjectInitializer *initializer) noexcept : Object(ini
 				_trajectory = TrajectoryType::Circular;
 		}
 	}
-	
+
 	if (((it = initializer->arguments.find("radius")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
 		_radius = (float)atof(ptr);
 

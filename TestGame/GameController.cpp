@@ -37,7 +37,6 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#define TESTGAME_INTERNAL
 
 #include <math.h>
 #include <Engine/Engine.h>

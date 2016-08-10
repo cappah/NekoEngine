@@ -37,10 +37,10 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <unistd.h>
 #include <stdio.h>
 #include <dlfcn.h>
 #include <stdlib.h>
-#include <unistd.h>
 #include <string.h>
 #include <sys/utsname.h>
 #include <Platform/Platform.h>
@@ -114,7 +114,7 @@ PlatformModuleType Platform::LoadModule(const char* module)
 
 	if(!handle)
 		fprintf(stderr, "dlopen() error %s\n", dlerror());
-	
+
 	return handle;
 }
 

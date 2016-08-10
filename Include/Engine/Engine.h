@@ -3,7 +3,7 @@
  * Engine.h
  * Author: Alexandru Naiman
  *
- * Engine class definition 
+ * Engine class definition
  *
  * -----------------------------------------------------------------------------
  *
@@ -238,7 +238,7 @@ public:
 
 	static void Pause(bool pause);
 	static bool IsPaused() { return _paused; }
-	
+
 	/**
 	 * Run one frame
 	 */
@@ -288,11 +288,11 @@ public:
 	 * Get the engine configuration information
 	 */
 	static Configuration &GetConfiguration() noexcept { return _config; }
-	
+
 	static void BindQuadVAO() noexcept { _quadVAO->Bind(); };
 
 	static FT_Library &GetFTLibrary() noexcept { return _ftLibrary; }
-	
+
 	/**
 	 * Swap buffers
 	 */

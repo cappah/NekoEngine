@@ -37,8 +37,8 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <dirent.h>
 #include <sys/stat.h>
+#include <dirent.h>
 #include <stack>
 
 #include <Engine/Engine.h>
@@ -46,7 +46,7 @@
 
 #define VFS_MODULE	"VFS"
 
-#ifdef NE_PLATFORM_WINDOWS
+#if defined(NE_PLATFORM_WINDOWS)
 // Really, M$ ?
 #define stat _stat
 #endif
@@ -87,8 +87,8 @@ int VFS::Initialize()
 					NString path = info.path;
 					path.Append("/");
 					path.Append(ent->d_name);
-					
-					if (stat(*path, &st) < 0)
+
+					if (stat((const char *)*path, &st) < 0)
 					{
 						Logger::Log(VFS_MODULE, LOG_CRITICAL, "File %s does not exist", *path);
 						closedir(dir);
@@ -121,13 +121,13 @@ int VFS::Initialize()
 				closedir(dir);
 			}
 			else
-			{ 
+			{
 				Logger::Log(VFS_MODULE, LOG_CRITICAL, "Failed to open directory: %s", *info.path);
 				DIE("Failed to open directory");
 			}
 		}
 	}
-	
+
 	Logger::Log(VFS_MODULE, LOG_INFORMATION, "Initialized");
 
 	return ENGINE_OK;
@@ -182,6 +182,6 @@ void VFS::Release()
 	for (VFSArchive *archive : _archives)
 		delete archive;
 	_archives.clear();
-	
+
 	Logger::Log(VFS_MODULE, LOG_INFORMATION, "Released");
 }

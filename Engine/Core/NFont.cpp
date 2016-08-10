@@ -85,7 +85,7 @@ int NFont::Load()
 
 	if ((ret = _BuildAtlas()) != ENGINE_OK)
 		return ret;
-	
+
 	if ((_arrayBuffer = Engine::GetRenderer()->CreateArrayBuffer()) == nullptr)
 	{ DIE("Out of resources"); }
 	_arrayBuffer->SetVertexBuffer(_vertexBuffer);
@@ -167,7 +167,7 @@ int NFont::_BuildAtlas()
 		}
 
 		_texWidth += glyph->bitmap.width;
-		_texHeight = std::max(_texHeight, glyph->bitmap.rows);
+		_texHeight = std::max(_texHeight, (uint32_t)glyph->bitmap.rows);
 	}
 
 	Logger::Log(NFONT_MODULE, LOG_DEBUG, "Creating font texture atlas with size %dx%d", _texWidth, _texHeight);
@@ -242,7 +242,7 @@ int NFont::_BuildAtlas()
 void NFont::ScreenResized(int width, int height)
 {
 	_projection = ortho(0.f, (float)width, 0.f, (float)height);
-	
+
 	_uniformBuffer->BeginUpdate();
 	_uniformBuffer->UpdateData(0, sizeof(mat4), value_ptr(_projection));
 	_uniformBuffer->EndUpdate();

@@ -3,7 +3,7 @@
  * DemoAnimatorComponent.cpp
  * Author: Alexandru Naiman
  *
- * DemoAnimatorComponent class implementation 
+ * DemoAnimatorComponent class implementation
  *
  * -----------------------------------------------------------------------------
  *
@@ -37,8 +37,6 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#define TESTGAME_INTERNAL
-
 #include "DemoAnimatorComponent.h"
 #include <Engine/ResourceManager.h>
 #include <Engine/Input.h>
@@ -65,7 +63,7 @@ int DemoAnimatorComponent::Load()
 	_clips[0] = (AnimationClip*)ResourceManager::GetResourceByName(_clipIds[0].c_str(), ResourceType::RES_ANIMCLIP);
 	_clips[1] = (AnimationClip*)ResourceManager::GetResourceByName(_clipIds[1].c_str(), ResourceType::RES_ANIMCLIP);
 	_clips[2] = (AnimationClip*)ResourceManager::GetResourceByName(_clipIds[2].c_str(), ResourceType::RES_ANIMCLIP);
-	
+
 	if(!_clips[0] || !_clips[1] || !_clips[2])
 		return ENGINE_INVALID_RES;
 
@@ -98,7 +96,7 @@ void DemoAnimatorComponent::Update(double deltaTime) noexcept
 	}
 
 	_skeleton->SetAnimationClip(_defaultAnim);
-	
+
 	AnimatorComponent::Update(deltaTime);
 }
 

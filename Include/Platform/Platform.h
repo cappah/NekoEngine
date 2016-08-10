@@ -66,23 +66,17 @@ typedef HMODULE PlatformModuleType;
 #elif defined(PLATFORM_X11)
 #include <X11/Xlib.h>
 
-#define ENGINE_API
-
 typedef Window PlatformWindowType;
 typedef Display* PlatformDisplayType;
 typedef void* PlatformModuleType;
 #elif defined(NE_PLATFORM_MAC)
 #import <Cocoa/Cocoa.h>
 
-#define ENGINE_API
-
 typedef NSWindow* PlatformWindowType;
 typedef NSView* PlatformDisplayType;
 typedef void* PlatformModuleType;
 #elif defined(NE_PLATFORM_IOS)
 #import <UIKit/UIKit.h>
-
-#define ENGINE_API
 
 typedef UIWindow* PlatformWindowType;
 typedef UIView* PlatformDisplayType;
@@ -102,6 +96,14 @@ typedef void* PlatformModuleType;
 - (void)setInputDelegate:(id<EngineInputDelegateProtocol>)delegate;
 
 @end
+
+#elif defined(NE_PLATFORM_BB10)
+
+#include <screen/screen.h>
+
+typedef screen_window_t PlatformWindowType;
+typedef screen_context_t PlatformDisplayType;
+typedef void* PlatformModuleType;
 
 #endif
 
@@ -135,12 +137,12 @@ public:
 	static const char* GetMachineName();
 	static const char* GetMachineArchitecture();
 	static const char* GetVersion();
-	
+
 	static void SetActiveWindow(PlatformWindowType hWnd) { _activeWindow = hWnd; }
 	static PlatformWindowType GetActiveWindow() { return _activeWindow; }
 
 	static PlatformWindowType CreateWindow(int width, int height, bool fullscreen);
-	static void SetWindowTitle(PlatformWindowType hWnd, const char* title);	
+	static void SetWindowTitle(PlatformWindowType hWnd, const char* title);
 	static bool EnterFullscreen(int width, int height);
 
 	static bool CapturePointer();

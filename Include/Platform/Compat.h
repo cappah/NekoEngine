@@ -43,9 +43,16 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include <limits.h>
 
 #if !defined(NE_PLATFORM_OPENBSD) && !defined(NE_PLATFORM_LINUX)
 void PLATFORM_API *reallocarray(void *optr, size_t nmemb, size_t size);
+#endif
+
+#if defined(NE_PLATFORM_BB10)
+#ifndef SIZE_MAX
+#define SIZE_MAX        (~(size_t)0)
+#endif
 #endif
 
 #if defined(NE_PLATFORM_MAC) || defined(NE_PLATFORM_IOS) || defined(NE_PLATFORM_OPENBSD) || defined(NE_PLATFORM_FREEBSD)
