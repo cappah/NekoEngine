@@ -56,8 +56,6 @@ exit(-1);																																\
 fprintf(stderr, "FATAL ERROR: %s\n", #x); \
 exit(-1);
 
-#import <Foundation/Foundation.h>
-#import <UIKit/UIKit.h>
 #include <Renderer/Renderer.h>
 #include <Platform/Platform.h>
 #include <string>
@@ -196,7 +194,7 @@ public:
 	static void MakeCurrent();
     
 private:
-    UIWindow *_window;
+    PlatformWindowType _window;
 	static class GLESShader* _activeShader;
     static RFramebuffer* _boundFramebuffer;
     static std::vector<ShaderDefine> _shaderDefines;

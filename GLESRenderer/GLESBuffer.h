@@ -41,7 +41,12 @@
 #define GLESBuffer_h
 
 #include <Renderer/RBuffer.h>
+
+#ifdef __APPLE__
 #include <OpenGLES/ES3/gl.h>
+#else
+#include <GLES3/gl3.h>
+#endif
 
 typedef struct SYNC_RANGE
 {

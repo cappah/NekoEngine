@@ -45,8 +45,13 @@
 #define RBO_DEPTH_STENCIL	2
 
 #include <Renderer/RFramebuffer.h>
-#include <OpenGLES/ES3/gl.h>
 #include <vector>
+
+#ifdef __APPLE__
+#include <OpenGLES/ES3/gl.h>
+#else
+#include <GLES3/gl3.h>
+#endif
 
 typedef struct GLES_FRAMEBUFFER_ATTACHMENT_INFO
 {

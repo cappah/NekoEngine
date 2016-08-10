@@ -76,6 +76,7 @@ typedef NSWindow* PlatformWindowType;
 typedef NSView* PlatformDisplayType;
 typedef void* PlatformModuleType;
 #elif defined(NE_PLATFORM_IOS)
+#import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
 typedef UIWindow* PlatformWindowType;

@@ -41,9 +41,14 @@
 #define GLESShader_h
 
 #include <Renderer/RShader.h>
-#include <OpenGLES/ES3/gl.h>
 #include <unordered_map>
 #include <vector>
+
+#ifdef __APPLE__
+#include <OpenGLES/ES3/gl.h>
+#else
+#include <GLES3/gl3.h>
+#endif
 
 #include "GLESBuffer.h"
 

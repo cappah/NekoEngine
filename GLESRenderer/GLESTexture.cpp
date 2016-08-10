@@ -42,7 +42,11 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef __APPLE__
 #include <OpenGLES/ES3/glext.h>
+#else
+#include <GLES3/gl2ext.h>
+#endif
 
 #include "GLESRenderer.h"
 

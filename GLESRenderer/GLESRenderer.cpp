@@ -44,11 +44,11 @@
 #include "GLESShader.h"
 #include "GLESTexture.h"
 
-#import "IGLView.h"
-
-#include <OpenGLES/ES3/gl.h>
-
-#import <GLKit/GLKit.h>
+#ifdef __APPLE__
+#include <OpenGLES/ES3/glext.h>
+#else
+#include <GLES3/gl2ext.h>
+#endif
 
 using namespace std;
 
@@ -146,7 +146,6 @@ extern GLenum GL_TexType[];
 RFramebuffer* GLESRenderer::_boundFramebuffer = nullptr;
 std::vector<ShaderDefine> GLESRenderer::_shaderDefines;
 GLESShader* GLESRenderer::_activeShader;
-static IGLView *_view;
 
 GLESRenderer::GLESRenderer()
 {
@@ -449,12 +448,6 @@ void GLESRenderer::Clear(uint32_t mask)
     GL_CHECK(glClear(glMask));
 }
 
-void GLESRenderer::BindDefaultFramebuffer()
-{
-	[_view bindDrawable];
-	_boundFramebuffer = nullptr;
-}
-
 RFramebuffer* GLESRenderer::GetBoundFramebuffer()
 {
     return _boundFramebuffer;
@@ -563,45 +556,4 @@ bool GLESRenderer::_HasExtension(const char* extension)
 GLESRenderer::~GLESRenderer()
 {
     _DestroyContext();
-}
-
-// Platform
-
-bool GLESRenderer::Initialize(PlatformWindowType hWnd, unordered_map<string, string> *args, bool debug)
-{
-	_window = hWnd;
-	
-	UIViewController *viewController = [[UIViewController alloc] init];
-	_view = [[IGLView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-	[viewController setView:_view];
-	[hWnd setRootViewController:viewController];
-	
-	[_view bindDrawable];
-	
-	return true;
-}
-
-void GLESRenderer::SetSwapInterval(int swapInterval)
-{
-	//
-}
-
-void GLESRenderer::ScreenResized()
-{
-	[_view updateDrawable];
-}
-
-void GLESRenderer::SwapBuffers()
-{
-	[_view swapBuffers];
-}
-
-void GLESRenderer::_DestroyContext()
-{
-	//
-}
-
-void GLESRenderer::MakeCurrent()
-{
-	//[EAGLContext setCurrentContext:_ctx];
 }

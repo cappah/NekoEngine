@@ -3,7 +3,7 @@
  * IGLView.h
  * Author: Alexandru Naiman
  *
- * iOS OpenGL|ES Renderer Implementation
+ * OpenGL|ES 3 Renderer Implementation - iOS Platform Support
  *
  * -----------------------------------------------------------------------------
  *

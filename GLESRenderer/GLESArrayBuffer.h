@@ -41,7 +41,12 @@
 #define GLESArrayBuffer_h
 
 #include <Renderer/RArrayBuffer.h>
+
+#ifdef __APPLE__
 #include <OpenGLES/ES3/gl.h>
+#else
+#include <GLES3/gl3.h>
+#endif
 
 class GLESArrayBuffer : public RArrayBuffer
 {

@@ -41,8 +41,13 @@
 #define GLESTexture_h
 
 #include <Renderer/RTexture.h>
-#include <OpenGLES/ES3/gl.h>
 #include <Platform/Platform.h>
+
+#ifdef __APPLE__
+#include <OpenGLES/ES3/gl.h>
+#else
+#include <GLES3/gl3.h>
+#endif
 
 #include <Loaders/tga.h>
 

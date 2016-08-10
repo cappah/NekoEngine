@@ -3,7 +3,7 @@
  * GLESShader.cpp
  * Author: Alexandru Naiman
  *
- * iOS OpenGL|ES Renderer Implementation
+ * OpenGL|ES 3 Renderer Implementation
  *
  * -----------------------------------------------------------------------------
  *
@@ -41,8 +41,11 @@
 #include "GLESTexture.h"
 #include "GLESRenderer.h"
 
-#include <OpenGLES/ES3/gl.h>
+#ifdef __APPLE__
 #include <OpenGLES/ES3/glext.h>
+#else
+#include <GLES3/gl2ext.h>
+#endif
 
 #include <stdio.h>
 #include <stdlib.h>
