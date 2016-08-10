@@ -66,6 +66,8 @@ struct AnimationNode
 	std::vector<VectorKey> scalingKeys;
 };
 
+#if defined(_MSC_VER)
 template class ENGINE_API NArray<VectorKey>;
 template class ENGINE_API NArray<QuatKey>;
 template class ENGINE_API NArray<AnimationNode>;
+#endif

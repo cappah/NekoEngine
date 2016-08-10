@@ -56,4 +56,6 @@ struct Bone
 	glm::dmat4 offset;
 };
 
+#if defined(_MSC_VER)
 template class ENGINE_API NArray<Bone>;
+#endif

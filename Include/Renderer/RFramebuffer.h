@@ -187,4 +187,3 @@ protected:
 	int _width, _height;
 	int *_drawBuffers;
 };
-

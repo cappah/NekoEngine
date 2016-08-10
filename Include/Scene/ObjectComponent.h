@@ -92,4 +92,6 @@ protected:
 	glm::vec3 _position, _rotation, _scale;
 };
 
+#if defined(_MSC_VER)
 template class ENGINE_API NArray<ObjectComponent>;
+#endif

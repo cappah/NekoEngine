@@ -60,4 +60,3 @@ private:
 	static std::vector<VFSFile> _looseFiles;
 	static std::vector<VFSArchive*> _archives;
 };
-

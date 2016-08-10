@@ -83,4 +83,3 @@ private:
 
 	static void _WriteMessage(LogMessage& msg);
 };
-

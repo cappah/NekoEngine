@@ -342,4 +342,3 @@ protected:
 	bool _compressed;
 	int _mipLevels, _samples, _width, _height, _depth;
 };
-

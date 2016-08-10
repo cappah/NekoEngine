@@ -61,4 +61,6 @@ protected:
 	int _refCount;
 };
 
+#if defined(_MSC_VER)
 template class ENGINE_API NArray<Resource*>;
+#endif

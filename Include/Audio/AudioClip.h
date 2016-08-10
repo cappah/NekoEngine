@@ -68,4 +68,6 @@ private:
 	ALuint _buffer;
 };
 
+#if defined(_MSC_VER)
 template class ENGINE_API NArray<AudioClip>;
+#endif

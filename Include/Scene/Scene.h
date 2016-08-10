@@ -148,4 +148,6 @@ private:
 	uint64_t _GetIndexOffset() { return _sceneIndices.size(); }
 };
 
+#if defined(_MSC_VER)
 template ENGINE_API class NArray<Scene>;
+#endif

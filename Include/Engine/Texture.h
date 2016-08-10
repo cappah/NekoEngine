@@ -70,5 +70,7 @@ private:
 	bool _parametersSet;
 };
 
+#if defined(_MSC_VER)
 template class ENGINE_API NArray<Texture>;
 template class ENGINE_API NArray<TextureParams>;
+#endif

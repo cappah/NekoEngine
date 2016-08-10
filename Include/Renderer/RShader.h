@@ -118,7 +118,4 @@ public:
 	 * Release resources
 	 */
 	virtual ~RShader() { };
-
-protected:
 };
-

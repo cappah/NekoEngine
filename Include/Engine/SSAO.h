@@ -112,4 +112,3 @@ private:
 	bool _AttachTextures();
 	void _DeleteTextures(bool noise);
 };
-

@@ -97,4 +97,6 @@ private:
 	int _BuildAtlas();
 };
 
+#if defined(_MSC_VER)
 template class ENGINE_API NArray<NFont*>;
+#endif

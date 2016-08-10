@@ -342,6 +342,7 @@ private:
 	static bool _InitGame();
 };
 
+#if defined(_MSC_VER)
 // Base types
 template class ENGINE_API NArray<char>;
 template class ENGINE_API NArray<short>;
@@ -361,3 +362,4 @@ template class ENGINE_API NArray<NString>;
 template class ENGINE_API NArray<Vertex>;
 
 template class ENGINE_API NArray<std::string>;
+#endif

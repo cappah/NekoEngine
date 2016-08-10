@@ -148,4 +148,6 @@ protected:
 	void _UpdateModelMatrix() noexcept { _modelMatrix = (_translationMatrix * _rotationMatrix) * _scaleMatrix; for(pair<std::string, ObjectComponent *> kvp : _components) kvp.second->UpdatePosition(); }
 };
 
+#if defined(_MSC_VER)
 template ENGINE_API class NArray<Object>;
+#endif

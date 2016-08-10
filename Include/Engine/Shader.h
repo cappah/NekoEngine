@@ -145,4 +145,6 @@ private:
 	inline bool _AppendSourceString(char** dst, char* src, size_t* size);
 };
 
+#if defined(_MSC_VER)
 template class ENGINE_API NArray<Shader>;
+#endif

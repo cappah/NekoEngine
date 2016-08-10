@@ -73,4 +73,6 @@ protected:
 	std::vector<AnimationNode> _channels;
 };
 
+#if defined(_MSC_VER)
 template class ENGINE_API NArray<AnimationClip*>;
+#endif

@@ -66,4 +66,3 @@ private:
 	Shader *_shader;
 	glm::mat4 _projection, _view, _lightWorld;
 };
-

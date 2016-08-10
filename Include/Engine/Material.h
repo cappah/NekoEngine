@@ -108,4 +108,6 @@ private:
 	void _LoadTexture(const char* name, int* id, TextureFilter* minFilter, TextureFilter* magFilter, TextureWrap* wrapS, TextureWrap* wrapT);
 };
 
+#if defined(_MSC_VER)
 template class ENGINE_API NArray<Material*>;
+#endif

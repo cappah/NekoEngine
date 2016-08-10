@@ -59,4 +59,3 @@ public:
 private:
 	RTexture* _textures[2];
 };
-

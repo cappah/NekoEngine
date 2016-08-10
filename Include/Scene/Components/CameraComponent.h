@@ -112,4 +112,3 @@ protected:
 
 	void _UpdateView() noexcept;
 };
-

@@ -84,5 +84,3 @@ private:
 	uint8_t *_data;
 	uint64_t _dataSize;
 };
-
-//template ENGINE_API class NArray<VFSArchive>;

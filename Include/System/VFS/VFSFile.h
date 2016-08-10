@@ -101,5 +101,3 @@ private:
 	FILE* _fp;
 	gzFile _gzfp;
 };
-
-//template ENGINE_API class NArray<VFSFile>;

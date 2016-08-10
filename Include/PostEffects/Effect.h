@@ -69,4 +69,6 @@ protected:
 	RBuffer *_effectUbo;
 };
 
+#if defined(_MSC_VER)
 template class ENGINE_API NArray<Effect>;
+#endif

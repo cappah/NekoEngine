@@ -71,4 +71,3 @@ public:
 protected:
 	RBuffer *_vertexBuffer, *_indexBuffer;
 };
-

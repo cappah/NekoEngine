@@ -158,4 +158,3 @@ protected:
 	bool _persistent, _dynamic;
 	std::vector<BufferAttribute> _attributes;
 };
-
