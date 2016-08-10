@@ -1,6 +1,9 @@
 # Files necessary for build
 x11_icon.h
 
+# BlackBerry 10 Momentics IDE
+.metadata
+
 # KDevelop4
 .kdev4
 
@@ -31,11 +34,15 @@ x86/
 bld/
 [B]in/
 [Oo]bj/
+build/
+Bin64/
+Bin/
 
 # Visual Studio 2015 cache/options directory
 .vs/
 # Uncomment if you have tasks that create the project's static files in wwwroot
 #wwwroot/
+*.VC.db
 
 # MSTest test Results
 [Tt]est[Rr]esult*/
