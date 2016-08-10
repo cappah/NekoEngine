@@ -44,12 +44,12 @@
 #include "GLESShader.h"
 #include "GLESTexture.h"
 
+#include <string.h>
+
 #ifdef __APPLE__
 #include <OpenGLES/ES3/glext.h>
 #else
-#include <GLES3/gl31.h>
-#include <GLES3/gl32.h>
-#include <GLES3/gl2ext.h>
+#include "glad.h"
 #endif
 
 using namespace std;
@@ -152,6 +152,7 @@ GLESShader* GLESRenderer::_activeShader;
 
 GLESRenderer::GLESRenderer()
 {
+    _window = nullptr;
 	memset(&_state, 0x0, sizeof(RendererState));
 }
 
@@ -167,15 +168,17 @@ const char* GLESRenderer::GetName()
 
 int GLESRenderer::GetMajorVersion()
 {
-    if(_verMajor < 0)
-	{ GL_CHECK(glGetIntegerv(GL_MAJOR_VERSION, &_verMajor)); }
+    //if(_verMajor < 0)
+	//{ GL_CHECK(glGetIntegerv(GL_MAJOR_VERSION, &_verMajor)); }
+    _verMajor = 2;
     return _verMajor;
 }
 
 int GLESRenderer::GetMinorVersion()
 {
-    if(_verMinor < 0)
-	{ GL_CHECK(glGetIntegerv(GL_MINOR_VERSION, &_verMinor)); }
+   // if(_verMinor < 0)
+	//{ GL_CHECK(glGetIntegerv(GL_MINOR_VERSION, &_verMinor)); }
+    _verMinor = 0;
     return _verMinor;
 }
 
@@ -186,12 +189,12 @@ void GLESRenderer::SetClearColor(float r, float g, float b, float a)
 	   (_state.ClearColor.b == b) &&
 	   (_state.ClearColor.a == a))
 		return;
-	
+
 	_state.ClearColor.r = r;
 	_state.ClearColor.g = g;
 	_state.ClearColor.b = b;
 	_state.ClearColor.a = a;
-	
+
     GL_CHECK(glClearColor(r, g, b, a));
 }
 
@@ -202,12 +205,12 @@ void GLESRenderer::SetViewport(int x, int y, int width, int height)
 	   (_state.Viewport.width == width) &&
 	   (_state.Viewport.height == height))
 		return;
-	
+
 	_state.Viewport.x = x;
 	_state.Viewport.y = y;
 	_state.Viewport.width = width;
 	_state.Viewport.height = height;
-	
+
     GL_CHECK(glViewport(x, y, width, height));
 }
 
@@ -215,9 +218,9 @@ void GLESRenderer::EnableDepthTest(bool enable)
 {
 	if (enable == _state.DepthTest)
 		return;
-	
+
 	_state.DepthTest = enable;
-	
+
     if (enable)
     { GL_CHECK(glEnable(GL_DEPTH_TEST)); }
     else
@@ -228,9 +231,9 @@ void GLESRenderer::SetDepthFunc(TestFunc func)
 {
 	if(_state.DepthFunc == func)
 		return;
-	
+
 	_state.DepthFunc = func;
-	
+
     GL_CHECK(glDepthFunc(GL_TestFunc[(int)func]));
 }
 
@@ -248,9 +251,9 @@ void GLESRenderer::SetDepthMask(bool mask)
 {
 	if(_state.DepthMask == mask)
 		return;
-	
+
 	_state.DepthMask = mask;
-	
+
     GL_CHECK(glDepthMask(mask ? GL_TRUE : GL_FALSE));
 }
 
@@ -258,9 +261,9 @@ void GLESRenderer::EnableStencilTest(bool enable)
 {
 	if (enable == _state.StencilTest)
 		return;
-	
+
 	_state.StencilTest = enable;
-	
+
     if (enable)
     { GL_CHECK(glEnable(GL_STENCIL_TEST)); }
     else
@@ -273,11 +276,11 @@ void GLESRenderer::SetStencilFunc(TestFunc func, int ref, unsigned int mask)
 	   (_state.StencilFunc.Ref == ref) &&
 	   (_state.StencilFunc.Mask == mask))
 		return;
-	
+
 	_state.StencilFunc.F = func;
 	_state.StencilFunc.Ref = ref;
 	_state.StencilFunc.Mask = mask;
-	
+
     GL_CHECK(glStencilFunc(GL_TestFunc[(int)func], ref, mask));
 }
 
@@ -300,9 +303,9 @@ void GLESRenderer::EnableBlend(bool enable)
 {
 	if (enable == _state.Blend)
 		return;
-	
+
 	_state.Blend = enable;
-	
+
     if (enable)
     { GL_CHECK(glEnable(GL_BLEND)); }
     else
@@ -311,13 +314,13 @@ void GLESRenderer::EnableBlend(bool enable)
 
 void GLESRenderer::SetBlendFunc(BlendFactor src, BlendFactor dst)
 {
-	if((_state.BlendFunc.src == src) &&
-	   (_state.BlendFunc.dst) == dst)
+	if((_state.BlendFunction.src == src) &&
+	   (_state.BlendFunction.dst) == dst)
 		return;
-	
-	_state.BlendFunc.src = src;
-	_state.BlendFunc.dst = dst;
-	
+
+	_state.BlendFunction.src = src;
+	_state.BlendFunction.dst = dst;
+
     GL_CHECK(glBlendFunc(GL_BlendFactor[(int)src], GL_BlendFactor[(int)dst]));
 }
 
@@ -345,9 +348,9 @@ void GLESRenderer::SetStencilMask(unsigned int mask)
 {
 	if(_state.StencilMask == mask)
 		return;
-	
+
 	_state.StencilMask = mask;
-	
+
     GL_CHECK(glStencilMask(mask));
 }
 
@@ -388,14 +391,14 @@ void GLESRenderer::DrawArrays(PolygonMode mode, int32_t first, int32_t count)
 	if(!_activeShader->Validate())
 	{ DIE("Shader program validation failed"); }
 #endif
-	
+
 	_activeShader->EnableTextures();
-	
+
 	if(_boundFramebuffer)
 		_boundFramebuffer->Bind(FB_DRAW);
 	else
 		BindDefaultFramebuffer();
-	
+
     GL_CHECK(glDrawArrays(GL_DrawModes[(int)mode], first, (GLsizei)count));
 }
 
@@ -405,9 +408,9 @@ void GLESRenderer::DrawElements(PolygonMode mode, int32_t count, ElementType typ
 	if(!_activeShader->Validate())
 	{ DIE("Shader program validation failed"); }
 #endif
-	
+
 	_activeShader->EnableTextures();
-	
+
 	if(_boundFramebuffer)
 		_boundFramebuffer->Bind(FB_DRAW);
 	else
@@ -423,14 +426,14 @@ void GLESRenderer::DrawElementsBaseVertex(PolygonMode mode, int32_t count, Eleme
 	if(!_activeShader->Validate())
 	{ DIE("Shader program validation failed"); }
 #endif
-	
+
 	_activeShader->EnableTextures();
-	
+
 	if(_boundFramebuffer)
 		_boundFramebuffer->Bind(FB_DRAW);
 	else
 		BindDefaultFramebuffer();
-	
+
     GL_CHECK(glDrawElementsBaseVertex(GL_DrawModes[(int)mode], (GLsizei)count, GL_ElementType[(int)type], indices, baseVertex));
 #endif
 }
@@ -438,16 +441,16 @@ void GLESRenderer::DrawElementsBaseVertex(PolygonMode mode, int32_t count, Eleme
 void GLESRenderer::Clear(uint32_t mask)
 {
     GLbitfield glMask = 0;
-    
+
     if (mask & R_CLEAR_COLOR)
         glMask |= GL_COLOR_BUFFER_BIT;
-    
+
     if (mask & R_CLEAR_DEPTH)
         glMask |= GL_DEPTH_BUFFER_BIT;
-    
+
     if (mask & R_CLEAR_STENCIL)
         glMask |= GL_STENCIL_BUFFER_BIT;
-    
+
     GL_CHECK(glClear(glMask));
 }
 
@@ -475,10 +478,10 @@ bool GLESRenderer::HasCapability(RendererCapability cap)
 {
 	if(_verMajor < 0)
 	{ GL_CHECK(glGetIntegerv(GL_MAJOR_VERSION, &_verMajor)); }
-	
+
 	if(_verMinor < 0)
 	{ GL_CHECK(glGetIntegerv(GL_MINOR_VERSION, &_verMinor)); }
-	
+
     switch (cap)
     {
         case RendererCapability::AnisotropicFiltering:
@@ -551,16 +554,24 @@ uint64_t GLESRenderer::GetUsedVideoMemorySize()
 bool GLESRenderer::HasExtension(const char* extension)
 {
     int numExtensions;
-    
+
     GL_CHECK(glGetIntegerv(GL_NUM_EXTENSIONS, &numExtensions));
     size_t len = strlen(extension);
-    
+
     for (int i = 0; i < numExtensions; i++)
         if (!strncmp((char *)glGetStringi(GL_EXTENSIONS, i), extension, len))
             return true;
-    
+
     return false;
 }
+
+#ifndef NE_PLATFORM_IOS
+void GLESRenderer::BindDefaultFramebuffer()
+{
+    GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, 0));
+    _boundFramebuffer = nullptr;
+}
+#endif
 
 GLESRenderer::~GLESRenderer()
 {

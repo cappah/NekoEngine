@@ -45,21 +45,21 @@
 #ifdef __APPLE__
 #include <OpenGLES/ES3/gl.h>
 #else
-#include <GLES3/gl3.h>
+#include "glad.h"
 #endif
 
 class GLESArrayBuffer : public RArrayBuffer
 {
 public:
     GLESArrayBuffer();
-    
+
     virtual void Bind() override;
     virtual void Unbind() override;
-    
+
     virtual void CommitBuffers() override;
-    
+
     virtual ~GLESArrayBuffer();
-    
+
 private:
     GLuint _vao;
 };

@@ -40,6 +40,12 @@
 #ifndef GLESRenderer_h
 #define GLESRenderer_h
 
+#ifdef __APPLE__
+#include <OpenGLES/ES3/glext.h>
+#else
+#include "glad.h"
+#endif
+
 #ifdef _DEBUG
 #define GL_CHECK(x)\
 x;																																			\
@@ -94,13 +100,13 @@ typedef struct RENDERER_STATE
 	bool StencilTest;
 	bool DepthMask;
 	unsigned int StencilMask;
-	
+
 	Color ClearColor;
-	
+
 	Func StencilFunc;
 	TestFunc DepthFunc;
-	BlendFunc BlendFunc;
-	
+	BlendFunc BlendFunction;
+
 	struct VIEWPORT
 	{
 		float x;
@@ -108,38 +114,38 @@ typedef struct RENDERER_STATE
 		float width;
 		float height;
 	} Viewport;
-	
+
 } RendererState;
 
 class GLESRenderer : public Renderer
 {
 public:
     GLESRenderer();
-    
+
     virtual bool Initialize(PlatformWindowType hWnd, std::unordered_map<std::string, std::string> *args = nullptr, bool debug = false) override;
-    
+
     virtual void SetDebugLogFunction(RendererDebugLogProc debugLogFunction) override;
-    
+
     virtual const char* GetName() override;
     virtual int GetMajorVersion() override;
     virtual int GetMinorVersion() override;
-    
+
     virtual void SetClearColor(float r, float g, float b, float a) override;
     virtual void SetViewport(int x, int y, int width, int height) override;
-    
+
     virtual void EnableDepthTest(bool enable) override;
-    
+
     virtual void SetDepthFunc(TestFunc func) override;
     virtual void SetDepthRange(double near, double far) override;
     virtual void SetDepthRangef(float near, float far) override;
     virtual void SetDepthMask(bool mask) override;
-    
+
     virtual void EnableStencilTest(bool enable) override;
     virtual void SetStencilFunc(TestFunc func, int ref, unsigned int mask) override;
     virtual void SetStencilFuncSeparate(PolygonFace face, TestFunc func, int ref, unsigned int mask) override;
     virtual void SetStencilOp(TestOp sfail, TestOp dpfail, TestOp dppass) override;
     virtual void SetStencilOpSeparate(PolygonFace face, TestOp sfail, TestOp dpfail, TestOp dppass) override;
-    
+
     virtual void EnableBlend(bool enable) override;
     virtual void SetBlendFunc(BlendFactor src, BlendFactor dst) override;
     virtual void SetBlendFuncSeparate(BlendFactor srcColor, BlendFactor dstColor, BlendFactor srcAlpha, BlendFactor dstAlpha) override;
@@ -148,59 +154,59 @@ public:
     virtual void SetBlendEquationSeparate(BlendEquation color, BlendEquation alpha) override;
     virtual void SetStencilMask(unsigned int mask) override;
     virtual void SetStencilMaskSeparate(PolygonFace face, unsigned int mask) override;
-    
+
     virtual void EnableFaceCulling(bool enable) override;
     virtual void SetFaceCulling(PolygonFace face) override;
     virtual void SetFrontFace(FrontFace face) override;
     virtual void SetColorMask(bool r, bool g, bool b, bool a) override;
-    
+
     virtual void DrawArrays(PolygonMode mode, int32_t first, int32_t count) override;
     virtual void DrawElements(PolygonMode mode, int32_t count, ElementType type, const void *indices) override;
     virtual void DrawElementsBaseVertex(PolygonMode mode, int32_t count, ElementType type, const void *indices, int32_t baseVertex) override;
     virtual void Clear(uint32_t mask) override;
-    
+
     virtual void BindDefaultFramebuffer() override;
     virtual RFramebuffer* GetBoundFramebuffer() override;
-    
+
     virtual void SetMinSampleShading(int32_t samples) override;
     virtual void SetSwapInterval(int swapInterval) override;
-    
+
     virtual void ReadPixels(int x, int y, int width, int height, TextureFormat format, TextureInternalType type, void* data) override;
 	virtual void SetPixelStore(PixelStoreParameter param, int value) override;
-	
+
 	virtual void ScreenResized() override;
     virtual void SwapBuffers() override;
-    
+
     virtual bool HasCapability(RendererCapability cap) override;
-    
+
     virtual class RBuffer* CreateBuffer(BufferType type, bool dynamic, bool persistent) override;
     virtual class RShader* CreateShader() override;
     virtual class RTexture* CreateTexture(TextureType type) override;
     virtual class RFramebuffer* CreateFramebuffer(int width, int height) override;
     virtual class RArrayBuffer* CreateArrayBuffer() override;
-    
+
     virtual void AddShaderDefine(std::string name, std::string value) override;
     virtual bool IsTextureFormatSupported(TextureFileFormat format) override;
-    
+
     virtual uint64_t GetVideoMemorySize() override;
     virtual uint64_t GetUsedVideoMemorySize() override;
-    
+
     virtual ~GLESRenderer();
-    
+
     // Internal functions
     static void SetBoundFramebuffer(RFramebuffer* fbo) { _boundFramebuffer = fbo; }
     static std::vector<ShaderDefine>& GetShaderDefines() { return _shaderDefines; }
 	static void SetActiveShader(class GLESShader *shader) { _activeShader = shader; }
 	static void MakeCurrent();
 	static bool HasExtension(const char* extension);
-    
+
 private:
     PlatformWindowType _window;
 	static class GLESShader* _activeShader;
     static RFramebuffer* _boundFramebuffer;
     static std::vector<ShaderDefine> _shaderDefines;
 	RendererState _state;
-	
+
     void _DestroyContext();
 };
 

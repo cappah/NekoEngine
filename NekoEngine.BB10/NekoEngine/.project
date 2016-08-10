@@ -4,6 +4,8 @@
 	<comment></comment>
 	<projects>
 		<project>Engine</project>
+		<project>GLESRenderer</project>
+		<project>TestGame</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

@@ -47,6 +47,7 @@
 #include <bps/bps.h>
 
 static screen_context_t _screenContext;
+static screen_display_t _screenDisplay;
 static screen_window_t _screenWindow;
 static screen_event_t _screenEvent;
 static bool _shouldExit = false;
@@ -116,7 +117,7 @@ static inline void _bb10_handleEvents()
 PlatformWindowType Platform::CreateWindow(int width, int height, bool fullscreen)
 {
     int rc = 0;
-    int screenFormat = SCREEN_FORMAT_RGBA8888;
+    int screenFormat = SCREEN_FORMAT_RGBX8888;
     int screenUsage = SCREEN_USAGE_OPENGL_ES3;
     int screenSwapInterval = 1;
     int screenTransparency = SCREEN_TRANSPARENCY_NONE;
@@ -128,6 +129,8 @@ PlatformWindowType Platform::CreateWindow(int width, int height, bool fullscreen
         //
         return nullptr;
     }
+
+    bps_initialize();
 
     if(screen_create_window(&_screenWindow, _screenContext))
     {
@@ -169,7 +172,8 @@ PlatformWindowType Platform::CreateWindow(int width, int height, bool fullscreen
         return nullptr;
     }
 
-    bps_initialize();
+    screen_get_window_property_pv(_screenWindow, SCREEN_PROPERTY_DISPLAY, (void **)&_screenDisplay);
+
     screen_request_events(_screenContext);
     navigator_request_events(0);
 

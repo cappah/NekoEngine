@@ -41,6 +41,8 @@
 #include "GLESRenderer.h"
 #include "GLESTexture.h"
 
+#include <string.h>
+
 GLenum GL_FramebufferTarget[2]
 {
 	GL_DRAW_FRAMEBUFFER,
@@ -67,6 +69,7 @@ extern GLenum GL_TexFilter[];
 GLESFramebuffer::GLESFramebuffer(int width, int height)
 	: RFramebuffer(width, height)
 {
+    _lastTarget = GL_FRAMEBUFFER;
 	GL_CHECK(glGenFramebuffers(1, &_id));
 	memset(_rbos, 0x0, sizeof(GLuint) * 3);
 }
@@ -74,7 +77,7 @@ GLESFramebuffer::GLESFramebuffer(int width, int height)
 void GLESFramebuffer::Bind(int location)
 {
 	_lastTarget = GL_FramebufferTarget[location];
-	GL_CHECK(glBindFramebuffer(_lastTarget, _id));	
+	GL_CHECK(glBindFramebuffer(_lastTarget, _id));
 //	GL_CHECK(glViewport(0, 0, _width, _height));
 	GLESRenderer::SetBoundFramebuffer(this);
 }
@@ -88,13 +91,13 @@ void GLESFramebuffer::Resize(int width, int height)
 {
 	_width = width;
 	_height = height;
-	
+
 	GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, _id));
 	for (GLESFramebufferAttachmentInfo &info : _attachmentInfo)
 	{
 		if (info.tex->GetWidth() != width || info.tex->GetHeight() != height)
 			info.tex->Resize2D(width, height);
-		
+
 		GL_CHECK(glFramebufferTexture2D(GL_FRAMEBUFFER, info.attachment, GL_TEXTURE_2D, info.tex->GetId(), 0));
 	}
 
@@ -103,13 +106,13 @@ void GLESFramebuffer::Resize(int width, int height)
 		GL_CHECK(glDeleteBuffers(1, &_rbos[RBO_DEPTH]));
 		CreateDepthBuffer();
 	}
-	
+
 	if (_rbos[RBO_STENCIL] != 0)
 	{
 		GL_CHECK(glDeleteBuffers(1, &_rbos[RBO_STENCIL]));
 		CreateStencilBuffer();
 	}
-	
+
 	if (_rbos[RBO_DEPTH_STENCIL] != 0)
 	{
 		GL_CHECK(glDeleteBuffers(1, &_rbos[RBO_DEPTH_STENCIL]));
@@ -197,83 +200,83 @@ FramebufferStatus GLESFramebuffer::CheckStatus()
 	GLenum status;
 	GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, _id));
 	GL_CHECK(status = glCheckFramebufferStatus(GL_FRAMEBUFFER));
-	
+
 	if (status == GL_FRAMEBUFFER_COMPLETE)
 		return FramebufferStatus::Complete;
-	
+
 	if (status == GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT)
 		return FramebufferStatus::IncompleteAttachment;
-	
+
 	if (status == GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT)
 		return FramebufferStatus::MissingAttachment;
-	
+
 	if (status == GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE)
 		return FramebufferStatus::IncompleteMultisample;
-	
+
 	return FramebufferStatus::Unsupported;
 }
 
 void GLESFramebuffer::Blit(RFramebuffer* dest, int srcX0, int srcY0, int srcX1, int srcY1, int dstX0, int dstY0, int dstX1, int dstY1)
 {
 	GLuint destFbo = 0;
-	
+
 	if (dest != R_DEFAULT_FRAMEBUFFER)
 	{
 		GLESFramebuffer *d = (GLESFramebuffer *)dest;
 		destFbo = d->GetId();
 	}
-	
+
 	GL_CHECK(glBindFramebuffer(GL_DRAW_FRAMEBUFFER, destFbo));
 	GL_CHECK(glBindFramebuffer(GL_READ_FRAMEBUFFER, _id));
-	
+
 	GL_CHECK(glBlitFramebuffer(srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1, GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT, GL_NEAREST));
 }
 
 void GLESFramebuffer::CopyColor(RFramebuffer* dest, TextureFilter filter)
 {
 	GLuint destFbo = 0;
-	
+
 	if (dest != R_DEFAULT_FRAMEBUFFER)
 	{
 		GLESFramebuffer *d = (GLESFramebuffer *)dest;
 		destFbo = d->GetId();
 	}
-	
+
 	GL_CHECK(glBindFramebuffer(GL_DRAW_FRAMEBUFFER, destFbo));
 	GL_CHECK(glBindFramebuffer(GL_READ_FRAMEBUFFER, _id));
-	
+
 	GL_CHECK(glBlitFramebuffer(0, 0, _width, _height, 0, 0, _width, _height, GL_COLOR_BUFFER_BIT, GL_TexFilter[(int)filter]));
 }
 
 void GLESFramebuffer::CopyDepth(RFramebuffer* dest)
 {
 	GLuint destFbo = 0;
-	
+
 	if (dest != R_DEFAULT_FRAMEBUFFER)
 	{
 		GLESFramebuffer *d = (GLESFramebuffer *)dest;
 		destFbo = d->GetId();
 	}
-	
+
 	GL_CHECK(glBindFramebuffer(GL_DRAW_FRAMEBUFFER, destFbo));
 	GL_CHECK(glBindFramebuffer(GL_READ_FRAMEBUFFER, _id));
-	
+
 	GL_CHECK(glBlitFramebuffer(0, 0, _width, _height, 0, 0, _width, _height, GL_DEPTH_BUFFER_BIT, GL_NEAREST));
 }
 
 void GLESFramebuffer::CopyStencil(RFramebuffer* dest)
 {
 	GLuint destFbo = 0;
-	
+
 	if (dest != R_DEFAULT_FRAMEBUFFER)
 	{
 		GLESFramebuffer *d = (GLESFramebuffer *)dest;
 		destFbo = d->GetId();
 	}
-	
+
 	GL_CHECK(glBindFramebuffer(GL_DRAW_FRAMEBUFFER, destFbo));
 	GL_CHECK(glBindFramebuffer(GL_READ_FRAMEBUFFER, _id));
-	
+
 	GL_CHECK(glBlitFramebuffer(0, 0, _width, _height, 0, 0, _width, _height, GL_STENCIL_BUFFER_BIT, GL_NEAREST));
 }
 
@@ -286,10 +289,10 @@ void GLESFramebuffer::SetDrawBuffer(DrawAttachment attachment)
 void GLESFramebuffer::SetDrawBuffers(int32_t n, DrawAttachment* buffers)
 {
 	GLenum drawBuffers[11];
-	
+
 	for (int i = 0; i < n; i++)
 		drawBuffers[i] = GL_Attachments[(int)buffers[i]];
-	
+
 	GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, _id));
 	GL_CHECK(glDrawBuffers(n, drawBuffers));
 }

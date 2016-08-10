@@ -45,7 +45,7 @@
 #ifdef __APPLE__
 #include <OpenGLES/ES3/gl.h>
 #else
-#include <GLES3/gl3.h>
+#include "glad.h"
 #endif
 
 typedef struct SYNC_RANGE
@@ -58,27 +58,27 @@ class GLESBuffer : public RBuffer
 {
 public:
     GLESBuffer(BufferType type, bool dynamic, bool persistent);
-    
+
     virtual void Bind(int location) override;
     virtual void Unbind() override;
-    
+
     virtual uint8_t* GetData() override;
     virtual int GetCurrentBuffer() override;
     virtual uint64_t GetOffset() override;
-    
+
     virtual void SetStorage(size_t size, void* data) override;
     virtual void UpdateData(size_t offset, size_t size, void* data) override;
-    
+
     virtual void SetNumBuffers(int n) override;
-    
+
     virtual void BeginUpdate() override;
     virtual void EndUpdate() override;
     virtual void NextBuffer() override;
-    
+
     void BindUniform(int index, uint64_t offset, uint64_t size);
-    
+
     virtual ~GLESBuffer();
-    
+
 private:
     GLuint _id;
     GLenum _target;

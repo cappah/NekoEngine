@@ -47,7 +47,7 @@
 #ifdef __APPLE__
 #include <OpenGLES/ES3/gl.h>
 #else
-#include <GLES3/gl3.h>
+#include "glad.h"
 #endif
 
 #include "GLESBuffer.h"
@@ -71,32 +71,32 @@ class GLESShader : public RShader
 {
 public:
     GLESShader();
-    
+
 	virtual void Enable() override;
 	virtual void Disable() override;
-    
+
     virtual void BindUniformBuffers() override;
-    
+
     virtual void VSUniformBlockBinding(int location, const char *name) override;
     virtual void FSUniformBlockBinding(int location, const char *name) override;
     virtual void VSSetUniformBuffer(int location, uint64_t offset, uint64_t size, RBuffer *buf) override;
     virtual void FSSetUniformBuffer(int location, uint64_t offset, uint64_t size, RBuffer *buf) override;
-    
+
     virtual void SetTexture(unsigned int location, RTexture *tex) override;
-    
+
     virtual void SetSubroutines(ShaderType type, int count, const unsigned int *indices) override;
-    
+
     virtual bool LoadFromSource(ShaderType type, int count, const char **source, int *length) override;
     virtual bool LoadFromStageBinary(ShaderType type, const char *file) override;
     virtual bool LoadFromBinary(const char *file) override;
-    
+
     virtual bool Link() override;
-    
+
     virtual ~GLESShader();
-	
+
 	void EnableTextures();
 	bool Validate();
-    
+
 private:
     GLint _program;
     GLint _shaders[6];
@@ -108,7 +108,7 @@ private:
 	std::vector<UniformInfo> _uniformInfo;
 	std::unordered_map<unsigned int, class GLESTexture*> _textures;
 	std::unordered_map<int, int> _uniformLocations;
-	
+
 	char* _ExtractUniforms(const char* source);
 };
 

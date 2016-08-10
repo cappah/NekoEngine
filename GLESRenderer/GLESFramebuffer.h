@@ -50,7 +50,7 @@
 #ifdef __APPLE__
 #include <OpenGLES/ES3/gl.h>
 #else
-#include <GLES3/gl3.h>
+#include "glad.h"
 #endif
 
 typedef struct GLES_FRAMEBUFFER_ATTACHMENT_INFO
@@ -63,37 +63,37 @@ class GLESFramebuffer : public RFramebuffer
 {
 public:
     GLESFramebuffer(int width, int height);
-    
+
     GLuint GetId() { return _id; }
-    
+
     virtual void Bind(int location) override;
     virtual void Unbind() override;
-    
+
     virtual void Resize(int width, int height) override;
-    
+
     virtual void AttachTexture(DrawAttachment attachment, class RTexture* texture) override;
     virtual void AttachDepthTexture(class RTexture* texture) override;
     virtual void AttachDepthStencilTexture(class RTexture* texture) override;
-    
+
     virtual void CreateDepthBuffer() override;
     virtual void CreateMultisampledDepthBuffer(int samples) override;
     virtual void CreateStencilBuffer() override;
     virtual void CreateMultisampledStencilBuffer(int samples) override;
     virtual void CreateDepthStencilBuffer() override;
     virtual void CreateMultisampledDepthStencilBuffer(int samples) override;
-    
+
     virtual FramebufferStatus CheckStatus() override;
-    
+
     virtual void Blit(RFramebuffer* dest, int srcX0, int srcY0, int srcX1, int srcY1, int dstX0, int dstY0, int dstX1, int dstY1) override;
     virtual void CopyColor(RFramebuffer* dest, TextureFilter filter) override;
     virtual void CopyDepth(RFramebuffer* dest) override;
     virtual void CopyStencil(RFramebuffer* dest) override;
-    
+
     virtual void SetDrawBuffer(DrawAttachment attachment) override;
     virtual void SetDrawBuffers(int32_t n, DrawAttachment* buffers) override;
-    
+
     virtual ~GLESFramebuffer();
-    
+
 private:
     GLuint _id;
     GLenum _lastTarget;
