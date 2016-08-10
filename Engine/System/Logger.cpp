@@ -40,8 +40,8 @@
 #include <System/Logger.h>
 
 #include <Platform/Platform.h>
-#include <fstream>
 #include <string.h>
+#include <stdio.h>
 #include <time.h>
 
 #define LOG_BUFF	4096
