@@ -42,6 +42,8 @@
 #include <stdlib.h>
 #include <stdint.h>
 
+#include <functional>
+
 #define NARRAY_DEFAULT_INCREMENT	20
 
 template<class T>
@@ -106,6 +108,14 @@ public:
 			((T*)_data)[i - 1] = ((T*)_data)[i];
 	}
 
+	size_t Find(T item, std::function<bool(T, T)> cmpfunc = [bool](T a, T b){ return a == b; })
+	{
+		for (uint32_t i = 0; i <= _count; ++i)
+			if (cmpfunc(item, ((T*)_data)[i]))
+				return i;
+		return NotFound;
+	}
+
 	bool Resize(size_t size)
 	{
 		if (_size == size)
@@ -144,6 +154,8 @@ public:
 
 	T &operator [](const size_t i) { return ((T*)_data)[i]; }
 	T *operator *() { return (T*)_data; }
+
+	static const size_t NotFound = -1;
 
 private:
 	uint8_t *_data;
