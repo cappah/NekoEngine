@@ -295,7 +295,7 @@ public:
 		return str;
 	}
 
-	static const size_t NotFound = -1;
+	static constexpr size_t NotFound = -1;
 
 private:
 	char *_str;
