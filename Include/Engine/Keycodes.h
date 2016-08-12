@@ -169,3 +169,10 @@
 #define NE_GPAD_D_LEFT		0x7D
 #define NE_GPAD_D_UP		0x7E
 #define NE_GPAD_D_DOWN		0x7F
+
+// Mouse buttons
+#define NE_MOUSE_LMB		0x80
+#define NE_MOUSE_RMB		0x81
+#define NE_MOUSE_MMB		0x82
+#define NE_MOUSE_BTN4		0x83
+#define NE_MOUSE_BTN5		0x84

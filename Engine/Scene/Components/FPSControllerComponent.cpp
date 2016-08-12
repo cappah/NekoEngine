@@ -92,31 +92,31 @@ void FPSControllerComponent::Update(double deltaTime) noexcept
 
 	float speed = _moveSpeed;
 
-	if (Input::GetKeyDown("sprint"))
+	if (Input::GetButton("sprint"))
 		speed = _sprintSpeed;
 
 	float velocity = speed * (float)deltaTime;
 
 	CameraComponent *cam = (CameraComponent*)_parent->GetComponent("FPSCamera");
 
-	if (Input::GetKeyDown("forward"))
+	if (Input::GetButton("forward"))
 		pos += cam->GetForward() * velocity * vec3(1.f, 0.f, 1.f);
-	else if (Input::GetKeyDown("back"))
+	else if (Input::GetButton("back"))
 		pos -= cam->GetForward() * velocity * vec3(1.f, 0.f, 1.f);
 
-	if (Input::GetKeyDown("right"))
+	if (Input::GetButton("right"))
 		pos += cam->GetRight() * velocity;
-	else if (Input::GetKeyDown("left"))
+	else if (Input::GetButton("left"))
 		pos -= cam->GetRight() * velocity;
 
-	if (Input::GetKeyDown("rot_right"))
+	if (Input::GetButton("rot_right"))
 		rot.y += _rotateSpeed * (float)deltaTime;
-	else if (Input::GetKeyDown("rot_left"))
+	else if (Input::GetButton("rot_left"))
 		rot.y -= _rotateSpeed * (float)deltaTime;
 
-	if (Input::GetKeyDown("rot_up"))
+	if (Input::GetButton("rot_up"))
 		rot.x -= _rotateSpeed * (float)deltaTime;
-	else if (Input::GetKeyDown("rot_down"))
+	else if (Input::GetButton("rot_down"))
 		rot.x += _rotateSpeed * (float)deltaTime;
 
 	rot.x = clamp(rot.x, -60.f, 85.f);

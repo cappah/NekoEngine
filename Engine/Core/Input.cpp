@@ -45,6 +45,8 @@ using namespace std;
 #define INPUT_MODULE	"Input"
 
 vector<uint8_t> Input::_pressedKeys;
+vector<uint8_t> Input::_keyDown;
+vector<uint8_t> Input::_keyUp;
 unordered_map<int, uint8_t> Input::_keymap;
 float Input::_screenHalfWidth = 0.f, Input::_screenHalfHeight = 0.f;
 float Input::_mouseAxis[2] = { 0.f, 0.f };
@@ -96,18 +98,27 @@ void Input::SetAxisSensivity(uint8_t axis, float sensivity)
 	_sensivity[axis + id * 6] = sensivity;
 }
 
-bool Input::GetKeyUp(uint8_t key) noexcept
+bool Input::GetButton(uint8_t key) noexcept
 {
 	for (uint8_t a : _pressedKeys)
 		if (a == key)
-			return false;
+			return true;
 
-	return true;
+	return false;
 }
 
-bool Input::GetKeyDown(uint8_t key) noexcept
+bool Input::GetButtonUp(uint8_t key) noexcept
 {
-	for (uint8_t a : _pressedKeys)
+	for (uint8_t a : _keyUp)
+		if (a == key)
+			return true;
+
+	return false;
+}
+
+bool Input::GetButtonDown(uint8_t key) noexcept
+{
+	for (uint8_t a : _keyDown)
 		if (a == key)
 			return true;
 
@@ -144,10 +155,10 @@ void Input::Key(int key, bool isPressed) noexcept
 {
 	int code = _keymap[key];
 
-	if (isPressed)
-		_pressedKeys.push_back(code);
-	else
-		_pressedKeys.erase(remove(_pressedKeys.begin(), _pressedKeys.end(), code), _pressedKeys.end());
+	if (isPressed && !GetButton(code))
+		_keyDown.push_back(code);
+	else if(!isPressed)
+		_keyUp.push_back(code);
 }
 
 void Input::Update() noexcept
@@ -172,6 +183,18 @@ void Input::Update() noexcept
 
 	_mouseAxis[NE_MOUSE_X] = -(xDelta / _screenHalfWidth);
 	_mouseAxis[NE_MOUSE_Y] = yDelta / _screenHalfHeight;
+}
+
+void Input::ClearKeyState() noexcept
+{
+	for (uint8_t code : _keyDown)
+		_pressedKeys.push_back(code);
+
+	for (uint8_t code : _keyUp)
+		_pressedKeys.erase(remove(_pressedKeys.begin(), _pressedKeys.end(), code), _pressedKeys.end());
+
+	_keyDown.clear();
+	_keyUp.clear();
 }
 
 void Input::Release()

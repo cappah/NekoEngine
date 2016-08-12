@@ -66,21 +66,18 @@ void GameController::Update(double deltaTime) noexcept
 {
 	Object::Update(deltaTime);
 
-	if (Input::GetKeyDown("exit"))
+	if (Input::GetButtonDown("exit"))
 		Engine::Exit();
 
-	if (Input::GetKeyDown("show_stats"))
-		Engine::DrawStats(true);
+	if (Input::GetButtonDown("show_stats"))
+		Engine::DrawStats(!Engine::IsDrawingStats());
 
-	if (Input::GetKeyDown("hide_stats"))
-		Engine::DrawStats(false);
-
-	if (Input::GetKeyDown("next_scene"))
+	if (Input::GetButtonDown("next_scene"))
 		SceneManager::LoadNextScene();
 
-	if (Input::GetKeyDown("draw_lights"))
+	if (Input::GetButtonDown("draw_lights"))
 		SceneManager::GetActiveScene()->SetDrawLights(!SceneManager::GetActiveScene()->GetDrawLights());
 
-	if (Input::GetKeyDown("screenshot"))
+	if (Input::GetButtonDown("screenshot"))
 		Engine::SaveScreenshot();
 }

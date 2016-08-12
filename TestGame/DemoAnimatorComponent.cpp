@@ -74,22 +74,22 @@ int DemoAnimatorComponent::Load()
 
 void DemoAnimatorComponent::Update(double deltaTime) noexcept
 {
-	if (Input::GetKeyDown("anim_clip0"))
+	if (Input::GetButtonDown("anim_clip0"))
 	{
 		_defaultAnim = _clips[0];
 		_currentTime = 0.0;
 	}
-	else if (Input::GetKeyDown("anim_clip1"))
+	else if (Input::GetButtonDown("anim_clip1"))
 	{
 		_defaultAnim = _clips[1];
 		_currentTime = 0.0;
 	}
-	else if (Input::GetKeyDown("anim_clip2"))
+	else if (Input::GetButtonDown("anim_clip2"))
 	{
 		_defaultAnim = _clips[2];
 		_currentTime = 0.0;
 	}
-	else if (Input::GetKeyDown("anim_initial"))
+	else if (Input::GetButtonDown("anim_initial"))
 	{
 		_defaultAnim = _initialAnim;
 		_currentTime = 0.0;

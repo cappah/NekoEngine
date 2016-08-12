@@ -127,19 +127,56 @@ LRESULT CALLBACK EngineWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
 			PostQuitMessage(0);
 			return 0;
 		}
-		break;
 		case WM_KEYDOWN:
 		{
 			Input::Key((int)_win32MapKeys(wParam, lParam), true);
 			return 0;
 		}
-		break;
 		case WM_KEYUP:
 		{
 			Input::Key((int)_win32MapKeys(wParam, lParam), false);
 			return 0;
 		}
-		break;
+		case WM_LBUTTONDOWN:
+		{
+			Input::Key(NE_MOUSE_LMB, true);
+			return 0;
+		}
+		case WM_LBUTTONUP:
+		{
+			Input::Key(NE_MOUSE_LMB, false);
+			return 0;
+		}
+		case WM_RBUTTONDOWN:
+		{
+			Input::Key(NE_MOUSE_RMB, true);
+			return 0;
+		}
+		case WM_RBUTTONUP:
+		{
+			Input::Key(NE_MOUSE_RMB, false);
+			return 0;
+		}
+		case WM_MBUTTONDOWN:
+		{
+			Input::Key(NE_MOUSE_MMB, true);
+			return 0;
+		}
+		case WM_MBUTTONUP:
+		{
+			Input::Key(NE_MOUSE_MMB, false);
+			return 0;
+		}
+		case WM_XBUTTONDOWN:
+		{
+			Input::Key(GET_XBUTTON_WPARAM(wParam) == XBUTTON1 ? NE_MOUSE_BTN4 : NE_MOUSE_BTN5, true);
+			return 0;
+		}
+		case WM_XBUTTONUP:
+		{
+			Input::Key(GET_XBUTTON_WPARAM(wParam) == XBUTTON1 ? NE_MOUSE_BTN4 : NE_MOUSE_BTN5, false);
+			return 0;
+		}
 		case WM_SIZE:
 			Engine::ScreenResized(LOWORD(lParam), HIWORD(lParam));
 		break;

@@ -831,6 +831,8 @@ void Engine::Update(double deltaTime) noexcept
 	Input::Update();
 
 	SceneManager::UpdateScene(deltaTime);
+
+	Input::ClearKeyState();
 }
 
 double Engine::GetTime() noexcept
