@@ -285,7 +285,7 @@ bool GLESShader::LoadFromStageBinary(ShaderType type, const char *file)
 	return false;
 }
 
-bool GLESShader::LoadFromBinary(int count, const char *file, size_t length)
+bool GLESShader::LoadFromBinary(int count, const void *binary, size_t length)
 {
 	return false;
 }
