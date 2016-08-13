@@ -40,6 +40,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <string.h>
 #include <dirent.h>
 #include <sys/stat.h>
 #include <stack>
@@ -82,6 +83,62 @@ typedef struct DIR_INFO
 	string path;
 	string prefix;
 } DirInfo;
+
+inline int32_t swap_int32(int32_t val)
+{
+	val = ((val << 8) & 0xFF00FF00) | ((val >> 8) & 0xFF00FF);
+	return (val << 16) | ((val >> 16) & 0xFFFF);
+}
+
+inline uint32_t swap_uint32(uint32_t val)
+{
+	val = ((val << 8) & 0xFF00FF00) | ((val >> 8) & 0xFF00FF);
+	return (val << 16) | (val >> 16) & 0xFFFF;
+}
+
+inline int64_t swap_int64(int64_t val)
+{
+	val = ((val << 8) & 0xFF00FF00FF00FF00ULL) | ((val >> 8) & 0x00FF00FF00FF00FFULL);
+	val = ((val << 16) & 0xFFFF0000FFFF0000ULL) | ((val >> 16) & 0x0000FFFF0000FFFFULL);
+	return (val << 32) | ((val >> 32) & 0xFFFFFFFFULL);
+}
+
+inline uint64_t swap_uint64(uint64_t val)
+{
+	val = ((val << 8) & 0xFF00FF00FF00FF00ULL) | ((val >> 8) & 0x00FF00FF00FF00FFULL);
+	val = ((val << 16) & 0xFFFF0000FFFF0000ULL) | ((val >> 16) & 0x0000FFFF0000FFFFULL);
+	return (val << 32) | (val >> 32);
+}
+
+void swap_endianness(VFSArchiveHeader &header)
+{
+	union
+	{
+		uint32_t i;
+		char c[4];
+	} bint { 0x01020304 };
+
+	if(bint.c[0] != 1) return;
+
+	header.magic = swap_int32(header.magic);
+	header.version = swap_int32(header.version);
+	header.num_files = swap_uint32(header.num_files);
+}
+
+void swap_endianness(VFSFileHeader &header)
+{
+	union
+	{
+		uint32_t i;
+		char c[4];
+	} bint { 0x01020304 };
+
+	if(bint.c[0] != 1) return;
+
+	header.start = swap_uint64(header.start);
+	header.size = swap_uint64(header.size);
+}
+
 
 void inline usage(const char *name)
 {
@@ -259,6 +316,13 @@ int inline list_files(const char *archive_file)
 
 	memset(&archiveHeader, 0x0, sizeof(VFSArchiveHeader));
 	fread(&archiveHeader, sizeof(VFSArchiveHeader), 1, fp);
+	swap_endianness(archiveHeader);
+
+	if(archiveHeader.magic != VFS_MAGIC)
+	{
+		printf("Not a valid NekoEngine Archive\n");
+		return -1;
+	}
 
 	printf("File listing for %s:\n", archive_file);
 
@@ -266,6 +330,7 @@ int inline list_files(const char *archive_file)
 	{
 		VFSFileHeader fileHeader;
 		fread(&fileHeader, sizeof(VFSFileHeader), 1, fp);
+		swap_endianness(fileHeader);
 
 		printf("%s\t%lld\n", fileHeader.name, fileHeader.size);
 	}
@@ -289,6 +354,7 @@ int inline extract_archive(const char *archive_file, const char *out_dir)
 
 	memset(&archiveHeader, 0x0, sizeof(VFSArchiveHeader));
 	fread(&archiveHeader, sizeof(VFSArchiveHeader), 1, fp);
+	swap_endianness(archiveHeader);
 
 	printf("Extracting %s:\n", archive_file);
 
@@ -299,6 +365,7 @@ int inline extract_archive(const char *archive_file, const char *out_dir)
 		VFSFileHeader fileHeader;
 		fseek(fp, headerOffset, SEEK_SET);
 		fread(&fileHeader, sizeof(VFSFileHeader), 1, fp);
+		swap_endianness(fileHeader);
 
 		fseek(fp, sizeof(VFSArchiveHeader) + sizeof(VFSFileHeader) * archiveHeader.num_files + fileHeader.start, SEEK_SET);
 
@@ -325,7 +392,7 @@ int inline extract_archive(const char *archive_file, const char *out_dir)
 
 int main(int argc, char *argv[])
 {
-    printf("NekoEngine Archive Tool\nVersion: 0.3.0a\n(C) 2016 Alexandru Naiman. All rights reserved.\n\n");
+    printf("NekoEngine Archive Tool\nVersion: 0.3.0b\n(C) 2016 Alexandru Naiman. All rights reserved.\n\n");
 	if (argc < 3)
 		usage(argv[0]);
 
