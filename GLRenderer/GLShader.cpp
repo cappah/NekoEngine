@@ -52,6 +52,9 @@
 #define GL_COMPUTE_SHADER	0
 #endif
 
+#define GL_SHADER_BINARY_FORMAT_SPIR_V_ARB         0x9551
+#define GL_SPIR_V_BINARY_ARB                       0x9552
+
 GLenum GL_ShaderType[6] =
 {
 	GL_VERTEX_SHADER,
@@ -353,9 +356,19 @@ bool GLShader::LoadFromStageBinary(ShaderType type, const char *file)
 	return false;
 }
 
-bool GLShader::LoadFromBinary(const char *file)
+bool GLShader::LoadFromBinary(int count, const void *binary, size_t length)
 {
-	return false;
+	if(!GLRenderer::HasExtension("GL_ARB_gl_spirv"))
+		return false;
+
+	for (int i = 0; i < count; ++i)
+	{
+		GL_CHECK(_shaders[(int)i] = glCreateShader(GL_ShaderType[(int)i]));
+	}
+
+	GL_CHECK(glShaderBinary(count, (GLuint *)_shaders, GL_SHADER_BINARY_FORMAT_SPIR_V_ARB, binary, length));
+
+	return true;
 }
 
 bool GLShader::Link()

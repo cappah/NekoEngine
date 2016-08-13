@@ -1,9 +1,9 @@
 /* NekoEngine
  *
- * RShader.h
+ * NullBuffer.h
  * Author: Alexandru Naiman
  *
- * Rendering API abstraction
+ * Null Renderer Implementation
  *
  * -----------------------------------------------------------------------------
  *
@@ -39,83 +39,32 @@
 
 #pragma once
 
-#include <stdint.h>
-#include <string>
-#include <vector>
-
-#include <Renderer/RTexture.h>
 #include <Renderer/RBuffer.h>
 
-enum class ShaderType : uint8_t
+class NullBuffer :
+	public RBuffer
 {
-	Vertex = 0,
-	Fragment = 1,
-	Geometry = 2,
-	TesselationControl = 3,
-	TesselationEval = 4,
-	Compute = 5
-};
-
-class RShader
-{
-
 public:
-	
-	/**
-	 * Create a shader object
-	 */
-	RShader() { };
+	NullBuffer(BufferType type) : RBuffer(type) { }
+	NullBuffer(BufferType type, bool dynamic, bool persistent) : RBuffer(type) { }
 
-	virtual void Enable() = 0;
-	virtual void Disable() = 0;
+	virtual void Bind(int location) override { }
+	virtual void Unbind() override { }
 
-	/**
-	 * Set a texture sampler at the specified location
-	 */
-	virtual void SetTexture(unsigned int location, RTexture* tex) = 0;
+	virtual uint8_t* GetData() override { return nullptr; }
+	virtual int GetCurrentBuffer() override { return 0; }
+	virtual uint64_t GetOffset() override { return 0; }
 
-	virtual void BindUniformBuffers() = 0;
+	virtual void SetStorage(size_t size, void* data) override { }
+	virtual void UpdateData(size_t offset, size_t size, void* data) override { }
 
-	virtual void VSUniformBlockBinding(int location, const char *name) = 0;
-	virtual void FSUniformBlockBinding(int location, const char *name) = 0;
+	virtual void SetNumBuffers(int n) override { }
 
-	/**
-	 * Set vertex shader uniform buffer
-	 */
-	virtual void VSSetUniformBuffer(int location, uint64_t offset, uint64_t size, RBuffer *buf) = 0;
+	virtual void BeginUpdate() override { }
+	virtual void EndUpdate() override { }
+	virtual void NextBuffer() override { }
 
-	/**
-	 * Set fragment shader uniform buffer
-	 */
-	virtual void FSSetUniformBuffer(int location, uint64_t offset, uint64_t size, RBuffer *buf) = 0;
+	void BindUniform(int index, uint64_t offset, uint64_t size) { }
 
-	/**
-	 * Set the active shader subroutines
-	 */
-	virtual void SetSubroutines(ShaderType type, int count, const uint32_t* indices) = 0;
-
-	/**
-	 * Compile program source for the specified type.
-	 */
-	virtual bool LoadFromSource(ShaderType type, int count, const char** source, int* length) = 0;
-
-	/**
-	 * Load shader from shader stage binary
-	 */
-	virtual bool LoadFromStageBinary(ShaderType type, const char* file) = 0;
-
-	/**
-	 * Load shader from binary
-	 */
-	virtual bool LoadFromBinary(int count, const void *binary, size_t length) = 0;
-
-	/**
-	* Link the shader program
-	*/
-	virtual bool Link() = 0;
-
-	/**
-	 * Release resources
-	 */
-	virtual ~RShader() { };
+	virtual ~NullBuffer() { }
 };
