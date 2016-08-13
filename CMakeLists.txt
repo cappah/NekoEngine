@@ -23,6 +23,7 @@ file(GLOB TestGameSourceFiles "TestGame/*.cpp")
 file(GLOB RendererSourceFiles "GLRenderer/*.cpp"
 	"GLRenderer/Loaders/*.cpp"
 )
+file(GLOB NullRendererSourceFiles "NullRenderer/*.cpp")
 
 set(OPENAL_LIB openal)
 set(BSD_LIB "")
@@ -63,6 +64,9 @@ elseif(${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD")
 elseif(${CMAKE_SYSTEM_NAME} MATCHES "SunOS")
 	set(PLATFORM_UNIX ON)
 	set(PLATFORM_X11 ON)
+
+	include_directories(/opt/csw/include/freetype2)
+	link_directories(/opt/csw/lib)
 elseif(${CMAKE_SYSTEM_NAME} MATCHES "OpenBSD")
 	set(PLATFORM_UNIX ON)
 	set(PLATFORM_X11 ON)
@@ -97,13 +101,17 @@ if(PLATFORM_X11)
 endif(PLATFORM_X11)
 
 # OpenGL Renderer Library
-if(NOT PLATFORM_MAC)
-	add_library(GLRenderer SHARED ${RendererSourceFiles} ${RendererPlatformSourceFiles})
-	target_compile_options(GLRenderer PRIVATE -std=c++11)
-	target_compile_options(GLRenderer PRIVATE -fPIC)
-	target_compile_options(GLRenderer PRIVATE -frtti)
-	target_link_libraries(GLRenderer GL X11)
-endif(NOT PLATFORM_MAC)
+add_library(GLRenderer SHARED ${RendererSourceFiles} ${RendererPlatformSourceFiles})
+target_compile_options(GLRenderer PRIVATE -std=c++11)
+target_compile_options(GLRenderer PRIVATE -fPIC)
+target_compile_options(GLRenderer PRIVATE -frtti)
+target_link_libraries(GLRenderer GL X11)
+
+# Null Renderer Library
+add_library(NullRenderer SHARED ${NullRendererSourceFiles})
+target_compile_options(NullRenderer PRIVATE -std=c++11)
+target_compile_options(NullRenderer PRIVATE -fPIC)
+target_compile_options(NullRenderer PRIVATE -frtti)
 
 # Engine Library
 add_library(Engine SHARED ${EngineSourceFiles} ${PlatformSourceFiles} ${SharedPlatformSourceFiles})

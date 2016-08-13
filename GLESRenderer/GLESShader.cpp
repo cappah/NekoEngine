@@ -227,17 +227,17 @@ bool GLESShader::LoadFromSource(ShaderType type, int count, const char **source,
 	char defines[8192] { 0 };
 
 	for (ShaderDefine &define : GLESRenderer::GetShaderDefines())
-    {
+	{
 		if (snprintf(defines + strlen(defines), 8192, "#define %s %s\n", define.name.c_str(), define.value.c_str()) >= 8192)
-        {
-            for (int i = 2; i < srcCount; i++)
-                free((void*)src[i]);
+		{
+			for (int i = 2; i < srcCount; i++)
+				free((void*)src[i]);
 
-            free(src);
+			free(src);
 
 			return false;
-        }
-    }
+		}
+	}
 	defines[strlen(defines)] = 0x0;
 
 	src[1] = defines;
@@ -285,7 +285,7 @@ bool GLESShader::LoadFromStageBinary(ShaderType type, const char *file)
 	return false;
 }
 
-bool GLESShader::LoadFromBinary(const char *file)
+bool GLESShader::LoadFromBinary(int count, const char *file, size_t length)
 {
 	return false;
 }

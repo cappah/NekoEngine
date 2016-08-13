@@ -251,8 +251,8 @@ case $OS in
 					exit;
 				fi
 
-				echo "Attempting to install gcc5 using pkgutil"
-				sudo /opt/csw/bin/pkgutil -y -i gcc5core gcc5g++;
+				echo "Attempting to install gcc5 and freetype using pkgutil"
+				sudo /opt/csw/bin/pkgutil -y -i gcc5core gcc5g++ libfreetype6 libfreetype_dev;
 			fi
 		fi
 

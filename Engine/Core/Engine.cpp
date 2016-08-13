@@ -668,9 +668,9 @@ int Engine::Initialize(string cmdLine, bool editor)
 
 	NString alVersion(alVersionStr);
 	if (alVersion.Find("OpenAL") != NString::NotFound)
-		alVersion = " [";
+		alVersion = "[";
 	else
-		alVersion = " [OpenAL ";
+		alVersion = "[OpenAL ";
 	alVersion.Append(alVersionStr);
 	alVersion = alVersion.Substring(0, alVersion.FindFirst('.') + 2);
 

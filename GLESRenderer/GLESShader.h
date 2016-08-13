@@ -88,7 +88,7 @@ public:
 
     virtual bool LoadFromSource(ShaderType type, int count, const char **source, int *length) override;
     virtual bool LoadFromStageBinary(ShaderType type, const char *file) override;
-    virtual bool LoadFromBinary(const char *file) override;
+    virtual bool LoadFromBinary(int count, const char *file, size_t length) override;
 
     virtual bool Link() override;
 
