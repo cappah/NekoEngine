@@ -145,7 +145,7 @@ GenerateX11Icon()
 	$CC -I/usr/local/include -L/usr/local/lib -o Tools/bin/png2argb Tools/png2argb.c -lpng
 
 	# Create x11_icon.h
-	Tools/bin/png2argb Launcher/X11/icon_16.png Launcher/X11/icon_32.png Launcher/X11/icon_64.png Launcher/X11/icon_128.png Launcher/X11/icon_256.png Launcher/X11/icon_512.png > Engine/Platform/X11/x11_icon.h
+	Tools/bin/png2argb Source/Launcher/X11/icon_16.png Source/Launcher/X11/icon_32.png Source/Launcher/X11/icon_64.png Source/Launcher/X11/icon_128.png Source/Launcher/X11/icon_256.png Source/Launcher/X11/icon_512.png > Source/Engine/Platform/X11/x11_icon.h
 
 	echo "Done"
 }

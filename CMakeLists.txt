@@ -1,4 +1,4 @@
-﻿cmake_minimum_required (VERSION 3.0)
+cmake_minimum_required (VERSION 3.0)
 project (NekoEngine)
 
 include(CheckIncludeFiles)
@@ -24,13 +24,13 @@ file(GLOB EngineSourceFiles "Source/Engine/*.cpp"
 	"Source/Engine/Platform/Compat/*.cpp"
 )
 file(GLOB TestGameSourceFiles "Source/TestGame/*.cpp")
-file(GLOB GLRendererSourceFiles “Source/Renderer/GLRenderer/*.cpp"
-	“Source/Renderer/GLRenderer/Loaders/*.cpp"
+file(GLOB GLRendererSourceFiles "Source/Renderer/GLRenderer/*.cpp"
+	"Source/Renderer/GLRenderer/Loaders/*.cpp"
 )
-file(GLOB NullRendererSourceFiles “Source/Renderer/NullRenderer/*.cpp")
-file(GLOB GLESRendererSourceFiles “Source/Renderer/GLESRenderer/*.cpp"
-	“Source/Renderer/GLRenderer/Loaders/tga.cpp"
-	“Source/Renderer/GLESRenderer/Platform/EGL/*.cpp"
+file(GLOB NullRendererSourceFiles "Source/Renderer/NullRenderer/*.cpp")
+file(GLOB GLESRendererSourceFiles "Source/Renderer/GLESRenderer/*.cpp"
+	"Source/Renderer/GLRenderer/Loaders/tga.cpp"
+	"Source/Renderer/GLESRenderer/Platform/EGL/*.cpp"
 )
 
 set(OPENAL_LIB openal)
@@ -103,7 +103,7 @@ endif(PLATFORM_UNIX)
 if(PLATFORM_X11)
 	file(GLOB PlatformSourceFiles "Source/Engine/Platform/X11/*.cpp")
 	file(GLOB ExecutableSourceFile "Source/Launcher/X11/*.cpp")
-	file(GLOB GLRendererPlatformSourceFiles “Source/Renderer/GLRenderer/Platform/X11/*.cpp")
+	file(GLOB GLRendererPlatformSourceFiles "Source/Renderer/GLRenderer/Platform/X11/*.cpp")
 	set(PLATFORM_LIBS "X11")
 	add_definitions(-DPLATFORM_X11)
 endif(PLATFORM_X11)
