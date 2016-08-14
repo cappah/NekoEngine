@@ -980,7 +980,7 @@ void Engine::SaveScreenshot() noexcept
 	png_text title;
 	title.compression = PNG_TEXT_COMPRESSION_NONE;
 	title.key = (char *)"Title";
-	title.text = (char *)"Neko Engine Screenshot";
+	title.text = (char *)"NekoEngine Screenshot";
 	png_set_text(pngStruct, pngInfo, &title, 1);
 
 	png_write_info(pngStruct, pngInfo);
@@ -1046,27 +1046,28 @@ void Engine::_PrintStats()
 	_lastFrameTime = esGetTime();*/
 
 	float charHeight = (float)_engineFont->GetCharacterHeight();
+	vec3 color = vec3(1.f, .494f, 0.f);
 
-	DrawString(vec2(0.f, 0.f), vec3(1.f, 1.f, 1.f), "FPS:       %d (%.02f ms)", _fps, _frameTime);
+	DrawString(vec2(0.f, 0.f), color, "FPS:       %d (%.02f ms)", _fps, _frameTime);
 
 #ifdef _DEBUG
 	//	DrawString(vec2(0.f, _engineFont->GetCharacterHeight()), vec3(1.f, 1.f, 1.f), "DrawCalls: %ld", _drawCalls);
 #endif
-	DrawString(vec2(0.f, charHeight * 1), vec3(1.f, 1.f, 1.f), "Renderer:  %s %d.%d", _renderer->GetName(), _renderer->GetMajorVersion(), _renderer->GetMinorVersion());
-	DrawString(vec2(0.f, charHeight * 2), vec3(1.f, 1.f, 1.f), "Screen:    %dx%d (FBO: %dx%d)",
-			_config.Engine.ScreenWidth, _config.Engine.ScreenHeight, DeferredBuffer::GetWidth(), DeferredBuffer::GetHeight());
-	DrawString(vec2(0.f, charHeight * 3), vec3(1.f, 1.f, 1.f), "Scene:     %s", SceneManager::GetActiveScene()->GetName().c_str());
-	DrawString(vec2(0.f, charHeight * 4), vec3(1.f, 1.f, 1.f), "Verts:     %d", SceneManager::GetActiveScene()->GetVertexCount());
-	DrawString(vec2(0.f, charHeight * 5), vec3(1.f, 1.f, 1.f), "Tris:      %d", SceneManager::GetActiveScene()->GetTriangleCount());
-	DrawString(vec2(0.f, charHeight * 6), vec3(1.f, 1.f, 1.f), "Objects:   %d", SceneManager::GetActiveScene()->GetObjectCount());
-	DrawString(vec2(0.f, charHeight * 7), vec3(1.f, 1.f, 1.f), "Lights:    %d", SceneManager::GetActiveScene()->GetNumLights());
-	DrawString(vec2(0.f, charHeight * 8), vec3(1.f, 1.f, 1.f), "StMeshes:  %d", ResourceManager::LoadedStaticMeshes());
-	DrawString(vec2(0.f, charHeight * 9), vec3(1.f, 1.f, 1.f), "SkMeshes:  %d", ResourceManager::LoadedSkeletalMeshes());
-	DrawString(vec2(0.f, charHeight * 10), vec3(1.f, 1.f, 1.f), "Textures:  %d", ResourceManager::LoadedTextures());
-	DrawString(vec2(0.f, charHeight * 11), vec3(1.f, 1.f, 1.f), "Shaders:   %d", ResourceManager::LoadedShaders());
-	DrawString(vec2(0.f, charHeight * 12), vec3(1.f, 1.f, 1.f), "Materials: %d", ResourceManager::LoadedMaterials());
-	DrawString(vec2(0.f, charHeight * 13), vec3(1.f, 1.f, 1.f), "Sounds:    %d", ResourceManager::LoadedSounds());
-	DrawString(vec2(0.f, charHeight * 14), vec3(1.f, 1.f, 1.f), "Fonts:     %d", ResourceManager::LoadedFonts());
+	DrawString(vec2(0.f, charHeight * 1), color, "Renderer:  %s %d.%d", _renderer->GetName(), _renderer->GetMajorVersion(), _renderer->GetMinorVersion());
+	DrawString(vec2(0.f, charHeight * 2), color, "Screen:    %dx%d (FBO: %dx%d)",
+		_config.Engine.ScreenWidth, _config.Engine.ScreenHeight, DeferredBuffer::GetWidth(), DeferredBuffer::GetHeight());
+	DrawString(vec2(0.f, charHeight * 3), color, "Scene:     %s", SceneManager::GetActiveScene()->GetName().c_str());
+	DrawString(vec2(0.f, charHeight * 4), color, "Verts:     %d", SceneManager::GetActiveScene()->GetVertexCount());
+	DrawString(vec2(0.f, charHeight * 5), color, "Tris:      %d", SceneManager::GetActiveScene()->GetTriangleCount());
+	DrawString(vec2(0.f, charHeight * 6), color, "Objects:   %d", SceneManager::GetActiveScene()->GetObjectCount());
+	DrawString(vec2(0.f, charHeight * 7), color, "Lights:    %d", SceneManager::GetActiveScene()->GetNumLights());
+	DrawString(vec2(0.f, charHeight * 8), color, "StMeshes:  %d", ResourceManager::LoadedStaticMeshes());
+	DrawString(vec2(0.f, charHeight * 9), color, "SkMeshes:  %d", ResourceManager::LoadedSkeletalMeshes());
+	DrawString(vec2(0.f, charHeight * 10), color, "Textures:  %d", ResourceManager::LoadedTextures());
+	DrawString(vec2(0.f, charHeight * 11), color, "Shaders:   %d", ResourceManager::LoadedShaders());
+	DrawString(vec2(0.f, charHeight * 12), color, "Materials: %d", ResourceManager::LoadedMaterials());
+	DrawString(vec2(0.f, charHeight * 13), color, "Sounds:    %d", ResourceManager::LoadedSounds());
+	DrawString(vec2(0.f, charHeight * 14), color, "Fonts:     %d", ResourceManager::LoadedFonts());
 
 	if (_haveMemoryInfo)
 	{
@@ -1075,13 +1076,14 @@ void Engine::_PrintStats()
 		totalMem = _renderer->GetVideoMemorySize();
 		availableMem = _renderer->GetUsedVideoMemorySize();
 
-		DrawString(vec2(0.f, charHeight * 15), vec3(1.f, 1.f, 1.f), "VRAM:      %d/%d MB", (totalMem - availableMem) / 1024, totalMem / 1024);
+		DrawString(vec2(0.f, charHeight * 15), color, "VRAM:      %d/%d MB", (totalMem - availableMem) / 1024, totalMem / 1024);
 	}
 
+	DrawString(vec2(0.f, _config.Engine.ScreenHeight - charHeight * 2), color, "NekoEngine");
 #ifdef _DEBUG
-	DrawString(vec2(0.f, _config.Engine.ScreenHeight - charHeight), vec3(1.f, 1.f, 1.f), "Version: %s [%s] [Debug]", ENGINE_VERSION_STRING, ENGINE_PLATFORM_STRING);
+	DrawString(vec2(0.f, _config.Engine.ScreenHeight - charHeight), color, "Version: %s [%s] [Debug]", ENGINE_VERSION_STRING, ENGINE_PLATFORM_STRING);
 #else
-	DrawString(vec2(0.f, _config.Engine.ScreenHeight - charHeight), vec3(1.f, 1.f, 1.f), "Version: %s [%s]", ENGINE_VERSION_STRING, ENGINE_PLATFORM_STRING);
+	DrawString(vec2(0.f, _config.Engine.ScreenHeight - charHeight), color, "Version: %s [%s]", ENGINE_VERSION_STRING, ENGINE_PLATFORM_STRING);
 #endif
 }
 

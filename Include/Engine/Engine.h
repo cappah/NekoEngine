@@ -220,7 +220,7 @@ class GameModule;
 class NFont;
 
 /**
- * Neko Engine
+ * NekoEngine
  */
 class ENGINE_API Engine
 {

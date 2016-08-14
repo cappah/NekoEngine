@@ -106,7 +106,7 @@ int Texture::Load()
 		return ENGINE_FAIL;
 	}
 	
-	uint64_t size = file->Tell();
+	size_t size = file->Tell();
 	
 	if(file->Seek(0, SEEK_SET) == ENGINE_FAIL)
 	{

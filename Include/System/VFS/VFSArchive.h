@@ -72,7 +72,7 @@ public:
 	
 	VFSFile* Open(NString &path);
 
-	uint64_t Read(void *buffer, uint64_t offset, uint64_t size, uint64_t count);
+	size_t Read(void *buffer, size_t offset, size_t size, size_t count);
 
 	~VFSArchive();
 
@@ -82,5 +82,5 @@ private:
 	std::vector<VFSFile> _files;
 	FILE *_fp;
 	uint8_t *_data;
-	uint64_t _dataSize;
+	size_t _dataSize;
 };

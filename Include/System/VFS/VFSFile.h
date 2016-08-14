@@ -75,10 +75,10 @@ public:
 	bool IsOpen() { return _type == FileType::Loose ? _fp != nullptr : _references > 0; }
 
 	int Open();
-	uint64_t Read(void *buffer, uint64_t size, uint64_t count);
+	size_t Read(void *buffer, size_t size, size_t count);
 	char* Gets(char* str, int num);
-	int Seek(uint64_t offset, int origin);
-	uint64_t Tell();
+	int Seek(size_t offset, int origin);
+	size_t Tell();
 	bool EoF();
 	void Close();
 

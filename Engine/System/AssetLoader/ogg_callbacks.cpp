@@ -42,12 +42,12 @@
 
 size_t ovCbRead(void *ptr, size_t size, size_t nmemb, void *datasource)
 {
-	return ((VFSFile *)datasource)->Read(ptr, size, nmemb);
+	return (size_t)((VFSFile *)datasource)->Read(ptr, size, nmemb);
 }
 
 int ovCbSeek(void *datasource, ogg_int64_t offset, int whence)
 {
-	return ((VFSFile *)datasource)->Seek(offset, whence);
+	return ((VFSFile *)datasource)->Seek((size_t)offset, whence);
 }
 
 int ovCbClose(void *datasource)

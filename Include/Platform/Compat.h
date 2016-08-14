@@ -1,4 +1,4 @@
-/* Neko Engine
+/* NekoEngine
  *
  * Compat.h
  * Author: Alexandru Naiman

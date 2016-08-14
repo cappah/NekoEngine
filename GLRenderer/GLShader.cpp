@@ -366,7 +366,7 @@ bool GLShader::LoadFromBinary(int count, const void *binary, size_t length)
 		GL_CHECK(_shaders[(int)i] = glCreateShader(GL_ShaderType[(int)i]));
 	}
 
-	GL_CHECK(glShaderBinary(count, (GLuint *)_shaders, GL_SHADER_BINARY_FORMAT_SPIR_V_ARB, binary, length));
+	GL_CHECK(glShaderBinary(count, (GLuint *)_shaders, GL_SHADER_BINARY_FORMAT_SPIR_V_ARB, binary, (GLsizei)length));
 
 	return true;
 }

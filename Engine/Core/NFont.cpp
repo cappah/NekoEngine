@@ -111,7 +111,7 @@ int NFont::_BuildAtlas()
 	FT_Face face;
 	FT_GlyphSlot glyph;
 	VFSFile *file = nullptr;
-	uint64_t size = 0;
+	size_t size = 0;
 	uint8_t *mem = nullptr;
 	uint32_t x = 0, vboSize = 0, iboSize = 0, maxChars = 0;
 

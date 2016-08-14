@@ -146,7 +146,7 @@ int VFSFile::Open()
 	return ENGINE_OK;
 }
 
-uint64_t VFSFile::Read(void *buffer, uint64_t size, uint64_t count)
+size_t VFSFile::Read(void *buffer, size_t size, size_t count)
 {
 	if (_type == FileType::Loose)
 	{
@@ -172,7 +172,7 @@ uint64_t VFSFile::Read(void *buffer, uint64_t size, uint64_t count)
 	}
 	else if(_type == FileType::Packed)
 	{
-		uint64_t read = 0;
+		size_t read = 0;
 		if (_compressed && !_decompressing)
 		{
 			if (!_fileData)
@@ -196,7 +196,7 @@ uint64_t VFSFile::Read(void *buffer, uint64_t size, uint64_t count)
 			while (_offset + size * count > _header.size)
 				count--;
 
-			read = _archive->Read(buffer, _header.start + _offset, size, count);
+			read = _archive->Read(buffer, size_t(_header.start + _offset), size, count);
 		}
 
 		_offset += read * size;
@@ -244,7 +244,7 @@ char *VFSFile::Gets(char *str, int num)
 	}
 }
 
-int VFSFile::Seek(uint64_t offset, int origin)
+int VFSFile::Seek(size_t offset, int origin)
 {
 	if (_type == FileType::Loose)
 	{
@@ -274,7 +274,7 @@ int VFSFile::Seek(uint64_t offset, int origin)
 	return ENGINE_OK;
 }
 
-uint64_t VFSFile::Tell()
+size_t VFSFile::Tell()
 {
 	if (_type == FileType::Loose)
 	{
@@ -296,7 +296,7 @@ uint64_t VFSFile::Tell()
 			return 0;
 	}
 
-	return _offset;
+	return (size_t)_offset;
 }
 
 bool VFSFile::EoF()

@@ -31,7 +31,7 @@
 #ifndef ZLIB_H
 #define ZLIB_H
 
-#include <zconf.h>
+#include "zconf.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -1223,9 +1223,9 @@ ZEXTERN int ZEXPORT uncompress OF((Bytef *dest,   uLongf *destLen,
 
 typedef struct gzFile_s *gzFile;    /* semi-opaque gzip file descriptor */
 
-
-ZEXTERN gzFile ZEXPORT gzopen OF((const char *path, const char *mode));
 /*
+ZEXTERN gzFile ZEXPORT gzopen OF((const char *path, const char *mode));
+
      Opens a gzip (.gz) file for reading or writing.  The mode parameter is as
    in fopen ("rb" or "wb") but can also include a compression level ("wb9") or
    a strategy: 'f' for filtered data as in "wb6f", 'h' for Huffman-only

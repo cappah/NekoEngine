@@ -98,7 +98,7 @@ int VFSArchive::Load()
 
 		f.GetHeader().start = fileHeader.start;
 		f.GetHeader().size = fileHeader.size;
-		_dataSize += fileHeader.size;
+		_dataSize += (size_t)fileHeader.size;
 
 		if (snprintf(f.GetHeader().name, VFS_MAX_FILE_NAME, "%s", fileHeader.name) >= VFS_MAX_FILE_NAME)
 		{
@@ -167,7 +167,7 @@ VFSFile *VFSArchive::Open(NString &path)
 	return nullptr;
 }
 
-uint64_t VFSArchive::Read(void *buffer, uint64_t offset, uint64_t size, uint64_t count)
+size_t VFSArchive::Read(void *buffer, size_t offset, size_t size, size_t count)
 {
 	if (_data)
 	{
