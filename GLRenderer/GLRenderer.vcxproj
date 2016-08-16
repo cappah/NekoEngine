@@ -102,6 +102,7 @@
     <ClCompile Include="GLArrayBuffer.cpp" />
     <ClCompile Include="GLBuffer.cpp" />
     <ClCompile Include="GLFramebuffer.cpp" />
+    <ClCompile Include="GLHBAO.cpp" />
     <ClCompile Include="GLRenderer.cpp" />
     <ClCompile Include="GLShader.cpp" />
     <ClCompile Include="GLTexture.cpp" />

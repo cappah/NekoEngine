@@ -146,6 +146,8 @@ GLTexture::GLTexture(TextureType type, bool create)
 	_handle = 0;
 	_fixedLocations = false;
 	_sizedFormat = TextureSizedFormat::RGBA_8U;
+	_skipMipLevels = 0;
+	_haveMipmaps = false;
 
 	if (!create)
 		return;
@@ -237,30 +239,32 @@ bool GLTexture::_LoadDDSTexture(class nv_dds::CDDSImage& image)
 	if (_type == TextureType::Tex1D)
 	{
 		glBindTexture(GL_TEXTURE_1D, _id);
-		ret = image.upload_texture1D();
+		ret = image.upload_texture1D(_skipMipLevels);
 		glBindTexture(GL_TEXTURE_1D, 0);
 	}
 	else if (_type == TextureType::Tex2D)
 	{
 		glBindTexture(GL_TEXTURE_2D, _id);
-		ret = image.upload_texture2D();
+		ret = image.upload_texture2D(0, GL_TEXTURE_2D, _skipMipLevels);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 	else if (_type == TextureType::Tex3D)
 	{
 		glBindTexture(GL_TEXTURE_3D, _id);
-		ret = image.upload_texture3D();
+		ret = image.upload_texture3D(_skipMipLevels);
 		glBindTexture(GL_TEXTURE_3D, 0);
 	}
 	else if (_type == TextureType::TexCubemap)
 	{
 		glBindTexture(GL_TEXTURE_CUBE_MAP, _id);
-		ret = image.upload_texture2D();
+		ret = image.upload_textureCubemap(_skipMipLevels);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 	}
 
 	_width = image.get_width();
 	_height = image.get_height();
+
+	_haveMipmaps = true;
 
 	return ret;
 }
@@ -553,7 +557,12 @@ void GLTexture::ResizeCubemap(int width, int height)
 
 void GLTexture::GenerateMipmaps()
 {
+	if (_haveMipmaps)
+		return;
+
 	GL_CHECK(glGenerateTextureMipmap(_id));
+
+	_haveMipmaps = true;
 }
 
 void GLTexture::_Destroy()
@@ -757,8 +766,13 @@ void GLTexture_NoDSA::ResizeCubemap(int width, int height)
 
 void GLTexture_NoDSA::GenerateMipmaps()
 {
+	if (_haveMipmaps)
+		return;
+
 	GL_CHECK(glBindTexture(GL_TexTarget[(int)_type], _id));
 	GL_CHECK(glGenerateMipmap(GL_TexTarget[(int)_type]));
+
+	_haveMipmaps = true;
 }
 
 GLTexture_NoDSA::~GLTexture_NoDSA()

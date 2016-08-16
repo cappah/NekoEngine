@@ -254,7 +254,7 @@ void PostProcessor::ApplyEffects() noexcept
 	_shader->Disable();
 }
 
-void PostProcessor::DrawEffect(RShader *shader, bool writeColor) noexcept
+void PostProcessor::DrawEffect(RShader *shader, bool writeColor, bool clear) noexcept
 {
 	Renderer *r = Engine::GetRenderer();
 	DrawAttachment attachments[2]{ DrawAttachment::Color0, DrawAttachment::Color1 };
@@ -268,6 +268,9 @@ void PostProcessor::DrawEffect(RShader *shader, bool writeColor) noexcept
 
 	_fbos[_secondFb ? FBO_1 : FBO_0]->Bind(FB_DRAW);
 	_fbos[_secondFb ? FBO_1 : FBO_0]->SetDrawBuffers(writeColor ? 2 : 1, attachments);
+
+	if (clear)
+		r->Clear(R_CLEAR_COLOR);
 
 	r->DrawArrays(PolygonMode::TriangleStrip, 0, 4);
 

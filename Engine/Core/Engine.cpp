@@ -1052,7 +1052,7 @@ void Engine::_PrintStats()
 	_lastFrameTime = esGetTime();*/
 
 	float charHeight = (float)_engineFont->GetCharacterHeight();
-	vec3 color = vec3(1.f, .494f, 0.f);
+	vec3 color = vec3(1.f, 1.f, 1.f);
 
 	DrawString(vec2(0.f, 0.f), color, "FPS:       %d (%.02f ms)", _fps, _frameTime);
 

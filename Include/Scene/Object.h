@@ -155,7 +155,7 @@ protected:
 	RBuffer *_objectUbo;
 	ObjectBlock _objectBlock;
 	glm::mat4 _translationMatrix, _scaleMatrix, _rotationMatrix, _modelMatrix;
-	bool _updateWhilePaused, _mmNeedsUpdate;
+	bool _updateWhilePaused;
 
 	void _UpdateModelMatrix() noexcept { _modelMatrix = (_translationMatrix * _rotationMatrix) * _scaleMatrix; for(pair<std::string, ObjectComponent *> kvp : _components) kvp.second->UpdatePosition(); }
 };

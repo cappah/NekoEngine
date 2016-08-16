@@ -127,6 +127,13 @@ public:
 	virtual void AddShaderDefine(std::string name, std::string value) override { }
 	virtual bool IsTextureFormatSupported(TextureFileFormat format) override { return true; }
 
+	virtual int GetMaxSamples() override { return 31; }
+	virtual int GetMaxAnisotropy() override { return 16; }
+
+	virtual bool IsHBAOSupported() { return false; }
+	virtual bool InitializeHBAO() { return false; }
+	virtual bool RenderHBAO(RHBAOArgs *args, RFramebuffer *fbo) { return false; }
+
 	virtual uint64_t GetVideoMemorySize() override { return 0; }
 	virtual uint64_t GetUsedVideoMemorySize() override { return 0; }
 

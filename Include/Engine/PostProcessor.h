@@ -69,7 +69,7 @@ public:
 	
 	ENGINE_API static void ApplyEffects() noexcept;
 
-	ENGINE_API static void DrawEffect(RShader *shader, bool writeColor) noexcept;
+	ENGINE_API static void DrawEffect(RShader *shader, bool writeColor, bool clear = false) noexcept;
 
 	ENGINE_API static void ScreenResized() noexcept;
 

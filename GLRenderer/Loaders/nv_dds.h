@@ -204,11 +204,11 @@ namespace nv_dds
 		bool loadFromMemory(const uint8_t *mem, size_t size, bool flipImage = true);
 		bool save(std::string filename, bool flipImage = true);
 
-		bool upload_texture1D();
-		bool upload_texture2D(unsigned int imageIndex = 0, GLenum target = GL_TEXTURE_2D);
-		bool upload_texture3D();
-		bool upload_textureRectangle();
-		bool upload_textureCubemap();
+		bool upload_texture1D(int startMip = 0);
+		bool upload_texture2D(unsigned int imageIndex = 0, GLenum target = GL_TEXTURE_2D, int startMip = 0);
+		bool upload_texture3D(int startMip = 0);
+		bool upload_textureRectangle(int startMip = 0);
+		bool upload_textureCubemap(int startMip = 0);
 
 		inline operator unsigned char*()
 		{

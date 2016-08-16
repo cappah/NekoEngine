@@ -541,6 +541,20 @@ bool GLESRenderer::IsTextureFormatSupported(TextureFileFormat format)
     }
 }
 
+int GLESRenderer::GetMaxSamples()
+{
+	GLint maxSamples;
+	GL_CHECK(glGetIntegerv(GL_MAX_SAMPLES, &maxSamples));
+	return maxSamples;
+}
+
+int GLESRenderer::GetMaxAnisotropy()
+{
+	GLint maxAniso;
+	GL_CHECK(glGetIntegerv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &maxAniso));
+	return maxAniso;
+}
+
 uint64_t GLESRenderer::GetVideoMemorySize()
 {
     return 0;

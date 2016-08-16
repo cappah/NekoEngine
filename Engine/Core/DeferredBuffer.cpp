@@ -109,15 +109,13 @@ int DeferredBuffer::Initialize() noexcept
 	if (Engine::GetConfiguration().Renderer.Multisampling)
 	{
 		_samples = Engine::GetConfiguration().Renderer.Samples;
-
-		/*int maxSamples;
-		glGetIntegerv(GL_MAX_SAMPLES, &maxSamples);
+		int maxSamples = Engine::GetRenderer()->GetMaxSamples();
 
 		if (maxSamples < _samples)
 		{
-			Logger::Log(MODULE, LOG_WARNING, "%d samples requested, but the maximum supported is %d.", _samples, maxSamples);
+			Logger::Log(DR_MODULE, LOG_WARNING, "%d samples requested, but the maximum supported is %d.", _samples, maxSamples);
 			_samples = maxSamples;
-		}*/
+		}
 	}
 	else
 		_samples = 1;

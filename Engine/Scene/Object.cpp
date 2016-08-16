@@ -121,7 +121,6 @@ void Object::SetPosition(vec3 &position) noexcept
 {
 	_position = position;
 	_translationMatrix = translate(mat4(), _position);
-	_mmNeedsUpdate = true;
 	_UpdateModelMatrix();
 }
 
@@ -136,7 +135,6 @@ void Object::SetRotation(vec3 &rotation) noexcept
 	_rotationMatrix = rotZMatrix * rotXMatrix * rotYMatrix;
 	SetForwardDirection(_objectForward);
 
-	_mmNeedsUpdate = true;
 	_UpdateModelMatrix();
 }
 
@@ -144,7 +142,6 @@ void Object::SetScale(vec3 &newScale) noexcept
 {
 	_scale = newScale;
 	_scaleMatrix = scale(mat4(), newScale);
-	_mmNeedsUpdate = true;
 	_UpdateModelMatrix();
 }
 
@@ -218,13 +215,13 @@ void Object::LookAt(vec3 &point) noexcept
 void Object::MoveForward(float distance) noexcept
 {
 	_position += _forward * distance;
-	_mmNeedsUpdate = true;
+	SetPosition(_position);
 }
 
 void Object::MoveRight(float distance) noexcept
 {
 	_position += _right * distance;
-	_mmNeedsUpdate = true;
+	SetPosition(_position);
 }
 
 size_t Object::GetVertexCount() noexcept

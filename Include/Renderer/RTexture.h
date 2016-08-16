@@ -170,6 +170,11 @@ public:
 	virtual int GetDepth() { return _depth; }
 	virtual bool IsCompressed() { return _compressed; }
 
+	/**
+	 * Ignore the first n mip levels
+	 */
+	virtual void SkipMipLevels(int n) = 0;
+
 	virtual bool LoadFromFile(const char* file) = 0;
 	virtual bool LoadFromMemory(TextureFileFormat format, const uint8_t* mem, size_t size) = 0;
 

@@ -66,6 +66,8 @@ int SMAA::Load(RBuffer *sharedUbo)
 	_textures[SMAA_TEX_AREA]->SetImage2D(0, AREATEX_WIDTH, AREATEX_HEIGHT, TextureFormat::RG_INT, TextureInternalType::UnsignedByte, areaTexBytes);
 	_textures[SMAA_TEX_AREA]->SetMinFilter(TextureFilter::Linear);
 	_textures[SMAA_TEX_AREA]->SetMagFilter(TextureFilter::Linear);
+	_textures[SMAA_TEX_AREA]->SetWrapS(TextureWrap::ClampToEdge);
+	_textures[SMAA_TEX_AREA]->SetWrapT(TextureWrap::ClampToEdge);
 
 	if((_textures[SMAA_TEX_SEARCH] = Engine::GetRenderer()->CreateTexture(TextureType::Tex2D)) == nullptr)
 		return ENGINE_OUT_OF_RESOURCES;
@@ -73,6 +75,8 @@ int SMAA::Load(RBuffer *sharedUbo)
 	_textures[SMAA_TEX_SEARCH]->SetImage2D(0, SEARCHTEX_WIDTH, SEARCHTEX_HEIGHT, TextureFormat::RED_INT, TextureInternalType::UnsignedByte, searchTexBytes);
 	_textures[SMAA_TEX_SEARCH]->SetMinFilter(TextureFilter::Linear);
 	_textures[SMAA_TEX_SEARCH]->SetMagFilter(TextureFilter::Linear);
+	_textures[SMAA_TEX_AREA]->SetWrapS(TextureWrap::ClampToEdge);
+	_textures[SMAA_TEX_AREA]->SetWrapT(TextureWrap::ClampToEdge);
 
 	_shaders[0]->GetRShader()->SetTexture(U_TEXTURE4, _textures[SMAA_TEX_AREA]);
 	_shaders[0]->GetRShader()->SetTexture(U_TEXTURE5, _textures[SMAA_TEX_SEARCH]);
@@ -85,15 +89,15 @@ void SMAA::Apply()
 	float step = 0.f;
 
 	_effectUbo->UpdateData(0, sizeof(float), &step);
-	PostProcessor::DrawEffect(_shaders[0]->GetRShader(), false);
+	PostProcessor::DrawEffect(_shaders[0]->GetRShader(), false, true);
 
 	step = 1.f;
 	_effectUbo->UpdateData(0, sizeof(float), &step);
-	PostProcessor::DrawEffect(_shaders[0]->GetRShader(), false);
+	PostProcessor::DrawEffect(_shaders[0]->GetRShader(), false, true);
 
 	step = 2.f;
 	_effectUbo->UpdateData(0, sizeof(float), &step);
-	PostProcessor::DrawEffect(_shaders[0]->GetRShader(), false);
+	PostProcessor::DrawEffect(_shaders[0]->GetRShader(), false, true);
 }
 
 SMAA::~SMAA()

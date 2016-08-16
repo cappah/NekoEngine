@@ -47,6 +47,8 @@ class NullTexture :
 public:
 	NullTexture(TextureType type, bool create = true) : RTexture(type) { }
 
+	virtual void SkipMipLevels(int n) { }
+
 	virtual bool LoadFromFile(const char* file) override { return true; }
 	virtual bool LoadFromMemory(TextureFileFormat format, const uint8_t* mem, size_t size) override { return true; }
 

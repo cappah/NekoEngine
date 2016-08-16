@@ -162,6 +162,7 @@ GLESTexture::GLESTexture(TextureType type)
     _fixedLocations = false;
     _handle = 0;
     _sizedFormat = TextureSizedFormat::RGBA_8U;
+	_skipMipLevels = 0;
     GL_CHECK(glGenTextures(1, &_id));
 }
 

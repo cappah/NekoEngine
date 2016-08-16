@@ -66,6 +66,8 @@ public:
 
 	virtual void GetImage(int level, TextureFormat format, TextureInternalType type, size_t size, void *buff) override;
 
+	virtual void SkipMipLevels(int n) override { _skipMipLevels = n; }
+
 	virtual bool LoadFromFile(const char* file) override;
 	virtual bool LoadFromMemory(TextureFileFormat format, const uint8_t* mem, size_t size) override;
 
@@ -111,8 +113,9 @@ public:
 protected:
 	GLuint _id;
 	GLuint64 _handle;
-	bool _resident, _fixedLocations;
+	bool _resident, _fixedLocations, _haveMipmaps;
 	TextureSizedFormat _sizedFormat;
+	int _skipMipLevels;
 
 	void _Destroy();
 	bool _LoadTGATexture(char *tga, int bpp);

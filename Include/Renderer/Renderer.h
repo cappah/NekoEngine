@@ -56,7 +56,7 @@
 #undef Always
 #endif
 
-#define RENDERER_API_VERSION	0x0027
+#define RENDERER_API_VERSION	0x0028
 
 #define R_CLEAR_COLOR			1
 #define R_CLEAR_DEPTH			2
@@ -185,6 +185,11 @@ enum class PixelStoreParameter : uint8_t
 	UnpackSkipImages,
 	UnpackAlignment	
 };
+
+typedef struct RENDERER_HBAO_ARGS
+{
+
+} RHBAOArgs;
 
 class Renderer
 {
@@ -417,6 +422,33 @@ public:
 	 * Check if this renderer supports the specified texture file format
 	 */
 	virtual bool IsTextureFormatSupported(TextureFileFormat format) = 0;
+
+	/**
+	* Get the maximum samples supported
+	*/
+	virtual int GetMaxSamples() = 0;
+
+	/**
+	 * Get the maximum amount of anisotropy supported
+	 */
+	virtual int GetMaxAnisotropy() = 0;
+
+	// HBAO+ Integration
+	/**
+	 *
+	 */
+	virtual bool IsHBAOSupported() = 0;
+
+	/**
+	 *
+	 */
+	virtual bool InitializeHBAO() = 0;
+
+	/**
+	 *
+	 */
+	virtual bool RenderHBAO(RHBAOArgs *args, RFramebuffer *fbo) = 0;
+	// END HBAO+ Integration
 
 	/**
 	 * Release resources

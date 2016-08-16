@@ -815,7 +815,7 @@ void CDDSImage::clear()
 
 ///////////////////////////////////////////////////////////////////////////////
 // uploads a compressed/uncompressed 1D texture
-bool CDDSImage::upload_texture1D()
+bool CDDSImage::upload_texture1D(int startMip)
 {
 	assert(m_valid);
 	assert(!m_images.empty());
@@ -827,14 +827,23 @@ bool CDDSImage::upload_texture1D()
 
 	if (is_compressed())
 	{
-		glCompressedTexImage1D(GL_TEXTURE_1D, 0, m_format,
-			baseImage.get_width(), 0, baseImage.get_size(), baseImage);
+		if (!startMip)
+		{
+			glCompressedTexImage1D(GL_TEXTURE_1D, 0, m_format,
+				baseImage.get_width(), 0, baseImage.get_size(), baseImage);
+		}
+		else
+		{
+			const CSurface &mipmap = baseImage.get_mipmap(startMip - 1);
+			glCompressedTexImage2D(GL_TEXTURE_1D, 0, m_format, mipmap.get_width(),
+				mipmap.get_height(), 0, mipmap.get_size(), mipmap);
+		}
 
 		// load all mipmaps
-		for (unsigned int i = 0; i < baseImage.get_num_mipmaps(); i++)
+		for (unsigned int i = startMip; i < baseImage.get_num_mipmaps(); i++)
 		{
 			const CSurface &mipmap = baseImage.get_mipmap(i);
-			glCompressedTexImage1D(GL_TEXTURE_1D, i + 1, m_format,
+			glCompressedTexImage1D(GL_TEXTURE_1D, i + 1 - startMip, m_format,
 				mipmap.get_width(), 0, mipmap.get_size(), mipmap);
 		}
 	}
@@ -847,15 +856,24 @@ bool CDDSImage::upload_texture1D()
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		}
 
-		glTexImage1D(GL_TEXTURE_1D, 0, m_components, baseImage.get_width(), 0,
-			m_format, GL_UNSIGNED_BYTE, baseImage);
+		if (!startMip)
+		{
+			glTexImage1D(GL_TEXTURE_1D, 0, m_components, baseImage.get_width(), 0,
+				m_format, GL_UNSIGNED_BYTE, baseImage);
+		}
+		else
+		{
+			const CSurface &mipmap = baseImage.get_mipmap(startMip - 1);
+			glTexImage1D(GL_TEXTURE_1D, 0, m_components,
+				mipmap.get_width(), 0, m_format, GL_UNSIGNED_BYTE, mipmap);
+		}
 
 		// load all mipmaps
-		for (unsigned int i = 0; i < baseImage.get_num_mipmaps(); i++)
+		for (unsigned int i = startMip; i < baseImage.get_num_mipmaps(); i++)
 		{
 			const CSurface &mipmap = baseImage.get_mipmap(i);
 
-			glTexImage1D(GL_TEXTURE_1D, i + 1, m_components,
+			glTexImage1D(GL_TEXTURE_1D, i + 1 - startMip, m_components,
 				mipmap.get_width(), 0, m_format, GL_UNSIGNED_BYTE, mipmap);
 		}
 
@@ -878,7 +896,7 @@ bool CDDSImage::upload_texture1D()
 //              the 2D texture such as a specific face of a cubemap
 //
 //              default: GL_TEXTURE_2D
-bool CDDSImage::upload_texture2D(unsigned int imageIndex, GLenum target)
+bool CDDSImage::upload_texture2D(unsigned int imageIndex, GLenum target, int startMip)
 {
 	assert(m_valid);
 	assert(!m_images.empty());
@@ -895,15 +913,24 @@ bool CDDSImage::upload_texture2D(unsigned int imageIndex, GLenum target)
 
 	if (is_compressed())
 	{
-		glCompressedTexImage2D(target, 0, m_format, image.get_width(),
-			image.get_height(), 0, image.get_size(), image);
+		if (!startMip)
+		{
+			glCompressedTexImage2D(target, 0, m_format, image.get_width(),
+				image.get_height(), 0, image.get_size(), image);
+		}
+		else
+		{
+			const CSurface &mipmap = image.get_mipmap(startMip - 1);
+			glCompressedTexImage2D(target, 0, m_format, mipmap.get_width(),
+				mipmap.get_height(), 0, mipmap.get_size(), mipmap);
+		}
 
 		// load all mipmaps
-		for (unsigned int i = 0; i < image.get_num_mipmaps(); i++)
+		for (unsigned int i = startMip; i < image.get_num_mipmaps(); i++)
 		{
 			const CSurface &mipmap = image.get_mipmap(i);
 
-			glCompressedTexImage2D(target, i + 1, m_format,
+			glCompressedTexImage2D(target, i + 1 - startMip, m_format,
 				mipmap.get_width(), mipmap.get_height(), 0,
 				mipmap.get_size(), mipmap);
 		}
@@ -917,16 +944,25 @@ bool CDDSImage::upload_texture2D(unsigned int imageIndex, GLenum target)
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		}
 
-		glTexImage2D(target, 0, m_components, image.get_width(),
-			image.get_height(), 0, m_format, GL_UNSIGNED_BYTE,
-			image);
+		if (!startMip)
+		{
+			glTexImage2D(target, 0, m_components, image.get_width(),
+				image.get_height(), 0, m_format, GL_UNSIGNED_BYTE,
+				image);
+		}
+		else
+		{
+			const CSurface &mipmap = image.get_mipmap(startMip - 1);
+			glTexImage2D(target, 0, m_components, mipmap.get_width(),
+				mipmap.get_height(), 0, m_format, GL_UNSIGNED_BYTE, mipmap);
+		}
 
 		// load all mipmaps
-		for (unsigned int i = 0; i < image.get_num_mipmaps(); i++)
+		for (unsigned int i = startMip; i < image.get_num_mipmaps(); i++)
 		{
 			const CSurface &mipmap = image.get_mipmap(i);
 
-			glTexImage2D(target, i + 1, m_components, mipmap.get_width(),
+			glTexImage2D(target, i + 1 - startMip, m_components, mipmap.get_width(),
 				mipmap.get_height(), 0, m_format, GL_UNSIGNED_BYTE, mipmap);
 		}
 
@@ -939,7 +975,7 @@ bool CDDSImage::upload_texture2D(unsigned int imageIndex, GLenum target)
 
 ///////////////////////////////////////////////////////////////////////////////
 // uploads a compressed/uncompressed 3D texture
-bool CDDSImage::upload_texture3D()
+bool CDDSImage::upload_texture3D(int startMip)
 {
 	assert(m_valid);
 	assert(!m_images.empty());
@@ -951,16 +987,26 @@ bool CDDSImage::upload_texture3D()
 
 	if (is_compressed())
 	{
-		glCompressedTexImage3D(GL_TEXTURE_3D, 0, m_format,
-			baseImage.get_width(), baseImage.get_height(), baseImage.get_depth(),
-			0, baseImage.get_size(), baseImage);
+		if (startMip)
+		{
+			glCompressedTexImage3D(GL_TEXTURE_3D, 0, m_format,
+				baseImage.get_width(), baseImage.get_height(), baseImage.get_depth(),
+				0, baseImage.get_size(), baseImage);
+		}
+		else
+		{
+			const CSurface &mipmap = baseImage.get_mipmap(startMip);
+			glCompressedTexImage3D(GL_TEXTURE_3D, 0, m_format,
+				mipmap.get_width(), mipmap.get_height(), mipmap.get_depth(),
+				0, mipmap.get_size(), mipmap);
+		}
 
 		// load all mipmap volumes
-		for (unsigned int i = 0; i < baseImage.get_num_mipmaps(); i++)
+		for (unsigned int i = startMip; i < baseImage.get_num_mipmaps(); i++)
 		{
 			const CSurface &mipmap = baseImage.get_mipmap(i);
 
-			glCompressedTexImage3D(GL_TEXTURE_3D, i + 1, m_format,
+			glCompressedTexImage3D(GL_TEXTURE_3D, i + 1 - startMip, m_format,
 				mipmap.get_width(), mipmap.get_height(), mipmap.get_depth(),
 				0, mipmap.get_size(), mipmap);
 		}
@@ -974,16 +1020,26 @@ bool CDDSImage::upload_texture3D()
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		}
 
-		glTexImage3D(GL_TEXTURE_3D, 0, m_components, baseImage.get_width(),
-			baseImage.get_height(), baseImage.get_depth(), 0, m_format,
-			GL_UNSIGNED_BYTE, baseImage);
+		if (!startMip)
+		{
+			glTexImage3D(GL_TEXTURE_3D, 0, m_components, baseImage.get_width(),
+				baseImage.get_height(), baseImage.get_depth(), 0, m_format,
+				GL_UNSIGNED_BYTE, baseImage);
+		}
+		else
+		{
+			const CSurface &mipmap = baseImage.get_mipmap(startMip);
+			glTexImage3D(GL_TEXTURE_3D, 0, m_components,
+				mipmap.get_width(), mipmap.get_height(), mipmap.get_depth(), 0,
+				m_format, GL_UNSIGNED_BYTE, mipmap);
+		}
 
 		// load all mipmap volumes
-		for (unsigned int i = 0; i < baseImage.get_num_mipmaps(); i++)
+		for (unsigned int i = startMip; i < baseImage.get_num_mipmaps(); i++)
 		{
 			const CSurface &mipmap = baseImage.get_mipmap(i);
 
-			glTexImage3D(GL_TEXTURE_3D, i + 1, m_components,
+			glTexImage3D(GL_TEXTURE_3D, i + 1 - startMip, m_components,
 				mipmap.get_width(), mipmap.get_height(), mipmap.get_depth(), 0,
 				m_format, GL_UNSIGNED_BYTE, mipmap);
 		}
@@ -995,14 +1051,14 @@ bool CDDSImage::upload_texture3D()
 	return true;
 }
 
-bool CDDSImage::upload_textureRectangle()
+bool CDDSImage::upload_textureRectangle(int startMip)
 {
-	return upload_texture2D(0, GL_TEXTURE_RECTANGLE);
+	return upload_texture2D(0, GL_TEXTURE_RECTANGLE, startMip);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // uploads a compressed/uncompressed cubemap texture
-bool CDDSImage::upload_textureCubemap()
+bool CDDSImage::upload_textureCubemap(int startMip)
 {
 	assert(m_valid);
 	assert(!m_images.empty());
@@ -1016,7 +1072,7 @@ bool CDDSImage::upload_textureCubemap()
 	{
 		// specify cubemap face
 		target = GL_TEXTURE_CUBE_MAP_POSITIVE_X_ARB + n;
-		if (!upload_texture2D(n, target))
+		if (!upload_texture2D(n, target, startMip))
 			return false;
 	}
 

@@ -56,8 +56,8 @@
 #define RENDERER_VERSION_MAJOR		0
 #define RENDERER_VERSION_MINOR		3
 #define RENDERER_VERSION_REVISION	0
-#define RENDERER_VERSION_BUILD		85
-#define RENDERER_VERSION_STRING		"0.3.0.85"
+#define RENDERER_VERSION_BUILD		86
+#define RENDERER_VERSION_STRING		"0.3.0.86"
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <Windows.h>
@@ -222,6 +222,13 @@ public:
 	
 	virtual void AddShaderDefine(std::string name, std::string value) override;
 	virtual bool IsTextureFormatSupported(TextureFileFormat format) override;
+
+	virtual int GetMaxSamples() override;
+	virtual int GetMaxAnisotropy() override;
+
+	virtual bool IsHBAOSupported() override;
+	virtual bool InitializeHBAO() override;
+	virtual bool RenderHBAO(RHBAOArgs *args, RFramebuffer *fbo) override;
 
 	virtual uint64_t GetVideoMemorySize() override;
 	virtual uint64_t GetUsedVideoMemorySize() override;

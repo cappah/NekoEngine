@@ -67,6 +67,8 @@ public:
     bool IsResident() { return _resident; }
     void MakeResident();
 
+	virtual void SkipMipLevels(int n) override { _skipMipLevels = n; }
+
     virtual bool LoadFromFile(const char* file) override;
     virtual bool LoadFromMemory(TextureFileFormat format, const uint8_t* mem, size_t size) override;
 
@@ -116,6 +118,7 @@ private:
     GLuint64 _handle;
     bool _resident, _fixedLocations;
     TextureSizedFormat _sizedFormat;
+	int _skipMipLevels;
 
     void _Destroy();
     bool _LoadTGATexture(char *tga, int bpp);
