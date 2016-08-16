@@ -71,14 +71,14 @@ public:
 	ENGINE_API virtual void Draw(RShader *shader) noexcept override;
 	ENGINE_API virtual void Update(double deltaTime) noexcept override;
 
-	ENGINE_API virtual void Unload() override;
+	ENGINE_API virtual bool Unload() override;
 	
-	ENGINE_API virtual ~StaticMeshComponent();
+	ENGINE_API virtual ~StaticMeshComponent() { };
 	
 protected:
 	std::string _meshId;
 	StaticMesh *_mesh;
-	bool _loaded, _blend;
+	bool _blend;
 	Renderer* _renderer;
 	glm::mat4 _translationMatrix, _scaleMatrix, _rotationMatrix;
 	std::vector<int> _materialIds;

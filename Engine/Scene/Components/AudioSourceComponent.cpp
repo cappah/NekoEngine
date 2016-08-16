@@ -102,9 +102,10 @@ void AudioSourceComponent::Update(double deltaTime) noexcept
 	_src->SetPosition(pos.x, pos.y, pos.z);
 }
 
-void AudioSourceComponent::Unload()
+bool AudioSourceComponent::Unload()
 {
-	ObjectComponent::Unload();
+	if (!ObjectComponent::Unload())
+		return false;
 
 	if(_defaultClip)
 		ResourceManager::UnloadResourceByName(_defaultClipId.c_str(), ResourceType::RES_AUDIOCLIP);
@@ -112,4 +113,6 @@ void AudioSourceComponent::Unload()
 
 	delete _src;
 	_src = nullptr;
+
+	return true;
 }

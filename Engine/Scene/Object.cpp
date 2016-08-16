@@ -55,15 +55,7 @@
 using namespace std;
 using namespace glm;
 
-static ObjectInitializer _objDefaultInitializer =
-{
-	7000,
-	"unnamed",
-	{ 0.f, 0.f, 0.f },
-	{ 0.f, 0.f, 0.f },
-	{ 1.f, 1.f, 1.f },
-	{ 0.f, 0.f, 0.f }
-};
+static ObjectInitializer _objDefaultInitializer;
 
 ENGINE_REGISTER_OBJECT_CLASS(Object)
 
@@ -129,6 +121,7 @@ void Object::SetPosition(vec3 &position) noexcept
 {
 	_position = position;
 	_translationMatrix = translate(mat4(), _position);
+	_mmNeedsUpdate = true;
 	_UpdateModelMatrix();
 }
 
@@ -143,6 +136,7 @@ void Object::SetRotation(vec3 &rotation) noexcept
 	_rotationMatrix = rotZMatrix * rotXMatrix * rotYMatrix;
 	SetForwardDirection(_objectForward);
 
+	_mmNeedsUpdate = true;
 	_UpdateModelMatrix();
 }
 
@@ -150,6 +144,7 @@ void Object::SetScale(vec3 &newScale) noexcept
 {
 	_scale = newScale;
 	_scaleMatrix = scale(mat4(), newScale);
+	_mmNeedsUpdate = true;
 	_UpdateModelMatrix();
 }
 
@@ -223,13 +218,13 @@ void Object::LookAt(vec3 &point) noexcept
 void Object::MoveForward(float distance) noexcept
 {
 	_position += _forward * distance;
-	SetPosition(_position);
+	_mmNeedsUpdate = true;
 }
 
 void Object::MoveRight(float distance) noexcept
 {
 	_position += _right * distance;
-	SetPosition(_position);
+	_mmNeedsUpdate = true;
 }
 
 size_t Object::GetVertexCount() noexcept
@@ -289,10 +284,10 @@ void Object::Update(double deltaTime) noexcept
 		kvp.second->Update(deltaTime);
 }
 
-void Object::Unload() noexcept
+bool Object::Unload() noexcept
 {
 	if(!_loaded)
-		return;
+		return false;
 
 	delete _objectUbo;
 	
@@ -304,6 +299,8 @@ void Object::Unload() noexcept
 	_components.clear();
 
 	_loaded = false;
+
+	return true;
 }
 
 void Object::AddComponent(const char *name, ObjectComponent *comp)

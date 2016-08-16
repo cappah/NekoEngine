@@ -51,7 +51,7 @@ public:
 
 	TESTGAME_API virtual void Update(double deltaTime) noexcept override;
 
-	TESTGAME_API virtual void Unload() override;
+	TESTGAME_API virtual bool Unload() override;
 
 	TESTGAME_API ~DemoAnimatorComponent() { }
 

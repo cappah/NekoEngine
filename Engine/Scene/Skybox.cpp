@@ -91,8 +91,13 @@ void Skybox::Update(double deltaTime) noexcept
 	SetPosition(pos);
 }
 
-Skybox::~Skybox() noexcept
+bool Skybox::Unload() noexcept
 {
+	if (!Object::Unload())
+		return false;
+
 	ResourceManager::UnloadResource(_shaderId, ResourceType::RES_SHADER);
 	_skyboxShader = nullptr;
+
+	return true;
 }

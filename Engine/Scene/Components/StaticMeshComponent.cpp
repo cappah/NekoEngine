@@ -213,13 +213,11 @@ void StaticMeshComponent::Update(double deltaTime) noexcept
 		return;*/
 }
 
-void StaticMeshComponent::Unload()
+bool StaticMeshComponent::Unload()
 {
-	if(!_loaded)
-		return;
+	if(!ObjectComponent::Unload())
+		return false;
 	
-	ObjectComponent::Unload();
-
 	for(Material *mat : _materials)
 		ResourceManager::UnloadResource(mat->GetResourceInfo()->id, ResourceType::RES_MATERIAL);
 
@@ -241,9 +239,6 @@ void StaticMeshComponent::Unload()
 	delete _matrixUbo;
 	
 	_loaded = false;
-}
 
-StaticMeshComponent::~StaticMeshComponent()
-{
-	Unload();
+	return true;
 }

@@ -116,10 +116,13 @@ void AnimatorComponent::Update(double deltaTime) noexcept
 	}
 }
 
-void AnimatorComponent::Unload()
+bool AnimatorComponent::Unload()
 {
-	ObjectComponent::Unload();
+	if (!ObjectComponent::Unload())
+		return false;
 
 	if (_defaultAnim)
 		ResourceManager::UnloadResource(_defaultAnim->GetResourceInfo()->id, ResourceType::RES_ANIMCLIP);
+
+	return true;
 }

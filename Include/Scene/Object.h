@@ -82,6 +82,15 @@ typedef std::pair<ArgumentMapType::iterator, ArgumentMapType::iterator> Argument
 class ObjectInitializer
 {
 public:
+	ObjectInitializer() :
+		id(8000),
+		name("unnamed"),
+		position(0.f),
+		rotation(0.f),
+		scale(1.f),
+		color(0.f)
+	{ }
+
 	int id;
 	std::string name;
 	glm::vec3 position;
@@ -125,7 +134,7 @@ public:
 	ENGINE_API virtual int Load();
 	ENGINE_API virtual void Draw(RShader* shader) noexcept;
 	ENGINE_API virtual void Update(double deltaTime) noexcept;
-	ENGINE_API void Unload() noexcept;
+	ENGINE_API virtual bool Unload() noexcept;
 
 	ENGINE_API void AddComponent(const char *name, ObjectComponent *comp);
 	ENGINE_API ObjectComponent *GetComponent(const char *name) { return _components[name]; }
@@ -146,7 +155,7 @@ protected:
 	RBuffer *_objectUbo;
 	ObjectBlock _objectBlock;
 	glm::mat4 _translationMatrix, _scaleMatrix, _rotationMatrix, _modelMatrix;
-	bool _updateWhilePaused;
+	bool _updateWhilePaused, _mmNeedsUpdate;
 
 	void _UpdateModelMatrix() noexcept { _modelMatrix = (_translationMatrix * _rotationMatrix) * _scaleMatrix; for(pair<std::string, ObjectComponent *> kvp : _components) kvp.second->UpdatePosition(); }
 };

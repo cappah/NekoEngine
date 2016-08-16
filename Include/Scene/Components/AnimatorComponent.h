@@ -58,7 +58,7 @@ public:
 	
 	ENGINE_API virtual void Update(double deltaTime) noexcept override;
 
-	ENGINE_API virtual void Unload() override;
+	ENGINE_API virtual bool Unload() override;
 
 	ENGINE_API virtual ~AnimatorComponent() { }
 	

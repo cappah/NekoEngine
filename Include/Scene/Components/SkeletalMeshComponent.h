@@ -56,9 +56,9 @@ public:
 	ENGINE_API virtual void Draw(RShader *shader) noexcept override;
 	ENGINE_API virtual void Update(double deltaTime) noexcept override;
 
-	ENGINE_API virtual void Unload() override;
+	ENGINE_API virtual bool Unload() override;
 
-	ENGINE_API virtual ~SkeletalMeshComponent();
+	ENGINE_API virtual ~SkeletalMeshComponent() { };
 	
 protected:
 	SkeletalMesh *_mesh;

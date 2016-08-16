@@ -222,7 +222,12 @@ void Terrain::Update(double deltaTime) noexcept
 	lastCamPos = camPos;
 }
 
-Terrain::~Terrain() noexcept
+bool Terrain::Unload() noexcept
 {
+	if (!Object::Unload())
+		return false;
+
 	_terrainVertices.clear();
+
+	return true;
 }

@@ -76,13 +76,13 @@ public:
 
 	virtual void UpdatePosition() noexcept;
 
-	virtual int Load() { return ENGINE_OK; }
+	virtual int Load() { _loaded = true; return ENGINE_OK; }
 	virtual int InitializeComponent() { return ENGINE_OK; }
 	
 	virtual void Draw(RShader *shader) noexcept { }
 	virtual void Update(double deltaTime) noexcept { }
 	
-	virtual void Unload() { }
+	virtual bool Unload();
 
 	virtual ~ObjectComponent() { Unload(); }
 
@@ -90,8 +90,9 @@ protected:
 	class Object* _parent;
 	glm::vec3 _localPosition, _localRotation, _localScale;
 	glm::vec3 _position, _rotation, _scale;
+	bool _loaded;
 };
 
 #if defined(_MSC_VER)
-template class ENGINE_API NArray<ObjectComponent>;
+template class ENGINE_API NArray<ObjectComponent*>;
 #endif

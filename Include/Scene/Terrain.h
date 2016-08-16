@@ -56,7 +56,9 @@ public:
 	ENGINE_API virtual int Load() override;
 	ENGINE_API virtual void Update(double deltaTime) noexcept override;
 
-	ENGINE_API virtual ~Terrain() noexcept;
+	ENGINE_API virtual bool Unload() noexcept override;
+
+	ENGINE_API virtual ~Terrain() noexcept { };
 
 protected:
 	std::vector<Vertex> _terrainVertices;

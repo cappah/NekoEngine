@@ -100,12 +100,13 @@ void DemoAnimatorComponent::Update(double deltaTime) noexcept
 	AnimatorComponent::Update(deltaTime);
 }
 
-void DemoAnimatorComponent::Unload()
+bool DemoAnimatorComponent::Unload()
 {
 	_defaultAnim = _initialAnim;
 	_initialAnim = nullptr;
 
-	AnimatorComponent::Unload();
+	if (!AnimatorComponent::Unload())
+		return false;
 
 	if (_clips[0])
 		ResourceManager::UnloadResource(_clips[0]->GetResourceInfo()->id, ResourceType::RES_ANIMCLIP);
@@ -115,4 +116,6 @@ void DemoAnimatorComponent::Unload()
 
 	if (_clips[2])
 		ResourceManager::UnloadResource(_clips[2]->GetResourceInfo()->id, ResourceType::RES_ANIMCLIP);
+
+	return true;
 }

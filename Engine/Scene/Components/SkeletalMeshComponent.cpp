@@ -141,12 +141,7 @@ void SkeletalMeshComponent::Update(double deltaTime) noexcept
 	StaticMeshComponent::Update(deltaTime);
 }
 
-void SkeletalMeshComponent::Unload()
+bool SkeletalMeshComponent::Unload()
 {
-	StaticMeshComponent::Unload();
-}
-
-SkeletalMeshComponent::~SkeletalMeshComponent()
-{
-	Unload();
+	return StaticMeshComponent::Unload();
 }

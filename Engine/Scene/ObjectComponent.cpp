@@ -51,7 +51,8 @@ ObjectComponent::ObjectComponent(ComponentInitializer *initializer)
 	_localScale(vec3(1.f)),
 	_position(vec3(0.f)),
 	_rotation(vec3(0.f)),
-	_scale(vec3(1.f))
+	_scale(vec3(1.f)),
+	_loaded(false)
 {
 	ArgumentMapType::iterator it;
 	const char *ptr = nullptr;
@@ -89,4 +90,15 @@ void ObjectComponent::UpdatePosition() noexcept
 	_position = _parent->GetPosition() + _localPosition;
 	_rotation = _parent->GetRotation() + _localRotation;
 	_scale = _parent->GetScale() + _localScale;
+}
+
+bool ObjectComponent::Unload()
+{
+	if (_loaded)
+	{
+		_loaded = false;
+		return true;
+	}
+
+	return false;
 }
