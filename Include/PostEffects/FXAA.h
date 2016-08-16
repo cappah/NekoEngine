@@ -54,9 +54,9 @@ public:
 		_options.insert(pair<std::string, float*>("EdgeThreshold", &_effectData.y));
 		_options.insert(pair<std::string, float*>("EdgeThresholdMin", &_effectData.z));
 
-		_effectData.x = 1.f;
-		_effectData.y = .063f;
-		_effectData.z = 0.f;
+		_effectData.x = .5f;
+		_effectData.y = .125f;
+		_effectData.z = .0625f;
 	}
 
 	ENGINE_API virtual ~FXAA() { };

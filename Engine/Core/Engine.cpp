@@ -666,24 +666,6 @@ int Engine::Initialize(string cmdLine, bool editor)
 	// make sure the log queue gets written
 	::atexit(Logger::Flush);
 
-	NString alVersion(alVersionStr);
-	if (alVersion.Find("OpenAL") != NString::NotFound)
-		alVersion = "[";
-	else
-		alVersion = "[OpenAL ";
-	alVersion.Append(alVersionStr);
-	alVersion = alVersion.Substring(0, alVersion.FindFirst('.') + 2);
-
-	NString title = NString::StringWithFormat(256, "NekoEngine v%s [%s %d.%d] %s] [%s]",
-		ENGINE_VERSION_STRING, _renderer->GetName(), _renderer->GetMajorVersion(), _renderer->GetMinorVersion(),
-		*alVersion, ENGINE_PLATFORM_STRING);
-
-#ifdef _DEBUG
-	title.Append(" [Debug]");
-#endif
-
-	Platform::SetWindowTitle(_engineWindow, *title);
-
 	if (!_graphicsDebug)
 	{
 		Platform::CapturePointer();
@@ -700,6 +682,30 @@ int Engine::Initialize(string cmdLine, bool editor)
 		CleanUp();
 		return ENGINE_FAIL;
 	}
+
+	NString title;
+	if (!strncmp(_gameModule->GetModuleName(), "TestGame", 8))
+	{
+		NString alVersion(alVersionStr);
+		if (alVersion.Find("OpenAL") != NString::NotFound)
+			alVersion = "[";
+		else
+			alVersion = "[OpenAL ";
+		alVersion.Append(alVersionStr);
+		alVersion = alVersion.Substring(0, alVersion.FindFirst('.') + 2);
+
+		title = NString::StringWithFormat(256, "NekoEngine v%s [%s %d.%d] %s] [%s]",
+			ENGINE_VERSION_STRING, _renderer->GetName(), _renderer->GetMajorVersion(), _renderer->GetMinorVersion(),
+			*alVersion, ENGINE_PLATFORM_STRING);
+
+#ifdef _DEBUG
+		title.Append(" [Debug]");
+#endif
+	}
+	else
+		title = _gameModule->GetModuleName();
+
+	Platform::SetWindowTitle(_engineWindow, *title);
 
 	_prevTime = high_resolution_clock::now();
 	_startup = false;
