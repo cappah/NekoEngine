@@ -311,6 +311,23 @@ void Object::AddComponent(const char *name, ObjectComponent *comp)
 	_components.insert({ name, comp });
 }
 
+void Object::AddToScene()
+{
+	Scene *s = SceneManager::GetLoadingScene();
+	if (!s)
+		s = SceneManager::GetActiveScene();
+
+	s->AddObject(this);
+}
+
+void Object::Destroy()
+{
+	Scene *s = SceneManager::GetActiveScene();
+	if (!s)
+		return;
+	s->RemoveObject(this);
+}
+
 Object::~Object() noexcept
 {
 	Unload();

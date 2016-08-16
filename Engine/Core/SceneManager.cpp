@@ -53,9 +53,10 @@
 using namespace std;
 
 std::vector<Scene*> SceneManager::_scenes;
-Scene* SceneManager::_activeScene = nullptr;
+Scene *SceneManager::_activeScene = nullptr;
+Scene *SceneManager::_loadingScene = nullptr;
 int SceneManager::_defaultScene = 0;
-LoadingScreen* SceneManager::_loadingScreen = nullptr;
+LoadingScreen *SceneManager::_loadingScreen = nullptr;
 
 int SceneManager::Initialize()
 {
@@ -141,6 +142,8 @@ int SceneManager::LoadScene(int id)
 	if ((_loadingScreen = new LoadingScreen(scn->GetLoadingScreenTexture())) == nullptr)
 		return ENGINE_OUT_OF_RESOURCES;
 
+	_loadingScene = scn;
+
 	if (_activeScene != nullptr)
 		_UnloadScene();
 
@@ -153,6 +156,7 @@ int SceneManager::LoadScene(int id)
 
 	delete _loadingScreen;
 	_loadingScreen = nullptr;
+	_loadingScene = nullptr;
 
 	return ret;
 }

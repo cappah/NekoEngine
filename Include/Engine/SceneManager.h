@@ -52,7 +52,8 @@ class SceneManager
 public:
 	ENGINE_API static int Initialize();
 
-	ENGINE_API static Scene* GetActiveScene() noexcept { return _activeScene; }
+	ENGINE_API static Scene *GetActiveScene() noexcept { return _activeScene; }
+	ENGINE_API static Scene *GetLoadingScene() noexcept { return _loadingScene; }
 
 	ENGINE_API static int LoadScene(int id);
 	ENGINE_API static int LoadDefaultScene() { return LoadScene(_defaultScene); }
@@ -65,7 +66,7 @@ public:
 	
 private:
 	static std::vector<Scene*> _scenes;
-	static Scene* _activeScene;
+	static Scene *_activeScene, *_loadingScene;
 	static int _defaultScene;
 
 	static LoadingScreen *_loadingScreen;

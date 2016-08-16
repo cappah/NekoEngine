@@ -130,6 +130,9 @@ public:
 	ENGINE_API void AddComponent(const char *name, ObjectComponent *comp);
 	ENGINE_API ObjectComponent *GetComponent(const char *name) { return _components[name]; }
 
+	ENGINE_API void AddToScene();
+	ENGINE_API void Destroy();
+
 	ENGINE_API virtual ~Object() noexcept;
 
 protected:

@@ -115,6 +115,9 @@ public:
 	ENGINE_API void Update(double deltaTime) noexcept;
 	ENGINE_API void Unload() noexcept;
 
+	ENGINE_API void AddObject(Object *obj) noexcept;
+	ENGINE_API void RemoveObject(Object *obj) noexcept;
+
 	ENGINE_API void RenderForCamera(CameraComponent *cam) noexcept;
 
 	ENGINE_API ~Scene() noexcept;
@@ -124,6 +127,7 @@ private:
 	bool _loaded;
 	std::string _sceneFile, _name;
 	std::vector<Object *> _objects;
+	std::vector<Object *> _newObjects, _deletedObjects;
 	std::vector<Light *> _lights;
 	float _bgMusicVolume;
 	glm::vec3 _ambientColor;

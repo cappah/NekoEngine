@@ -560,6 +560,18 @@ void Scene::Update(double deltaTime) noexcept
 	//#pragma omp parallel for
 	for (size_t i = 0; i < _lights.size(); i++)
 		_lights[i]->Update(deltaTime);
+
+	for (Object *obj : _newObjects)
+		_objects.push_back(obj);
+	_newObjects.clear();
+
+	for (Object *obj : _deletedObjects)
+	{
+		_objects.erase(remove(_objects.begin(), _objects.end(), obj), _objects.end());
+		obj->Unload();
+		delete obj;
+	}
+	_deletedObjects.clear();
 }
 
 void Scene::Unload() noexcept
@@ -608,6 +620,19 @@ void Scene::RenderForCamera(CameraComponent *cam) noexcept
 	DrawSkybox();
 
 	CameraManager::SetActiveCamera(sceneCam);
+}
+
+void Scene::AddObject(Object *obj) noexcept
+{
+	if (_loaded)
+		_newObjects.push_back(obj);
+	else
+		_objects.push_back(obj);
+}
+
+void Scene::RemoveObject(Object *obj) noexcept
+{
+	_deletedObjects.push_back(obj);
 }
 
 Scene::~Scene() noexcept

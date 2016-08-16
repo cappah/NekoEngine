@@ -1,9 +1,9 @@
 /* NekoEngine
  *
- * AnimatorComponent.h
+ * AudioSourceComponent.h
  * Author: Alexandru Naiman
  *
- * AnimatorComponent class definition 
+ * AudioSourceComponent class definition 
  *
  * -----------------------------------------------------------------------------
  *
