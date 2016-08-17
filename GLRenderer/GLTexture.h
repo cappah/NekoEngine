@@ -61,6 +61,7 @@ public:
 	
 	GLuint GetId() { return _id; }
 	GLuint64 GetHandle() { return _handle; }
+	GLenum GetTarget();
 	bool IsResident() { return _resident; }
 	void MakeResident();
 

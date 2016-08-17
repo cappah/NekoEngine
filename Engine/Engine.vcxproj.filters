@@ -347,6 +347,9 @@
     <ClInclude Include="..\Include\Runtime\Runtime.h">
       <Filter>Include\Runtime</Filter>
     </ClInclude>
+    <ClInclude Include="..\Include\Engine\HBAO.h">
+      <Filter>Include\Engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Resources\Data\scenes.cfg">
@@ -654,6 +657,9 @@
       <Filter>Source\Scene\Components</Filter>
     </ClCompile>
     <ClCompile Include="Core\NFont.cpp">
+      <Filter>Source\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\HBAO.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>
   </ItemGroup>

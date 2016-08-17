@@ -77,6 +77,9 @@ void Skybox::Draw(RShader* shader) noexcept
 {
 	_skyboxShader->GetRShader()->Enable();
 
+	mat4 view = CameraManager::GetActiveCamera()->GetView();
+
+
 	Object::Draw(_skyboxShader->GetRShader());
 
 	_skyboxShader->GetRShader()->Disable();

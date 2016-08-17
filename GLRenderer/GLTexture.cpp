@@ -160,6 +160,11 @@ void GLTexture::Bind()
 	GL_CHECK(glBindTexture(GL_TexTarget[(int)_type], _id));
 }
 
+GLenum GLTexture::GetTarget()
+{
+	return GL_TexTarget[(int)_type];
+}
+
 void GLTexture::MakeResident()
 {
 	GL_CHECK(_handle = glGetTextureHandleARB(_id));

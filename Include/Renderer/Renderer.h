@@ -188,7 +188,16 @@ enum class PixelStoreParameter : uint8_t
 
 typedef struct RENDERER_HBAO_ARGS
 {
-
+	struct Viewport
+	{
+		uint32_t top, left;
+		uint32_t width, height;
+		float zNear, zFar;
+	} viewport;
+	RTexture *depthTexture;
+	RTexture *normalTexture;
+	float projection[16];
+	float worldToView[16];
 } RHBAOArgs;
 
 class Renderer

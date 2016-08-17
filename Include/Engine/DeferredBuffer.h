@@ -57,6 +57,7 @@
 #include <Engine/Shader.h>
 #include <Scene/Object.h>
 #include <Engine/SSAO.h>
+#include <Engine/HBAO.h>
 #include <Renderer/Renderer.h>
 #include <Engine/ShadowMap.h>
 
@@ -120,6 +121,7 @@ private:
 	static uint32_t _fboWidth, _fboHeight;
 	static Shader *_geometryShader, *_lightingShader;
 	static SSAO *_ssao;
+	static HBAO *_hbao;
 	static int _samples;
 	static Object *_lightSphere;
 	static ShadowMap *_shadow;

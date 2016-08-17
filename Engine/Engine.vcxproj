@@ -147,6 +147,7 @@
     <ClInclude Include="..\Include\Engine\EngineClassFactory.h" />
     <ClInclude Include="..\include\Engine\EngineUtils.h" />
     <ClInclude Include="..\include\Engine\GameModule.h" />
+    <ClInclude Include="..\Include\Engine\HBAO.h" />
     <ClInclude Include="..\Include\Engine\Input.h" />
     <ClInclude Include="..\Include\Engine\Keycodes.h" />
     <ClInclude Include="..\include\Engine\LoadingScreen.h" />
@@ -280,6 +281,7 @@
     <ClCompile Include="Core\CameraManager.cpp" />
     <ClCompile Include="Core\DeferredBuffer.cpp" />
     <ClCompile Include="Core\Engine.cpp" />
+    <ClCompile Include="Core\HBAO.cpp" />
     <ClCompile Include="Core\Input.cpp" />
     <ClCompile Include="Core\LoadingScreen.cpp" />
     <ClCompile Include="Core\Material.cpp" />

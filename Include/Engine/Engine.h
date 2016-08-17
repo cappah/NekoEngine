@@ -194,6 +194,7 @@ struct RendererConfig
 	int Samples;
 	int TextureQuality;
 	int ShadowMapSize;
+	bool HBAO;
 };
 
 /**

@@ -41,6 +41,7 @@
 
 #include <Scene/Object.h>
 #include <Engine/ResourceManager.h>
+#include <Scene/Components/CameraComponent.h>
 
 class Skybox :
 	public Object

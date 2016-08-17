@@ -59,6 +59,7 @@ uint32_t DeferredBuffer::_fboHeight = 720;
 Shader* DeferredBuffer::_geometryShader = nullptr;
 Shader* DeferredBuffer::_lightingShader = nullptr;
 SSAO* DeferredBuffer::_ssao = nullptr;
+HBAO* DeferredBuffer::_hbao = nullptr;
 int DeferredBuffer::_samples = 8;
 Object* DeferredBuffer::_lightSphere = nullptr;
 ShadowMap* DeferredBuffer::_shadow = nullptr;
@@ -136,7 +137,18 @@ int DeferredBuffer::Initialize() noexcept
 	DrawAttachment drawAttachments[4] { DrawAttachment::Color0, DrawAttachment::Color1, DrawAttachment::Color2, DrawAttachment::Color3 };
 	_fbos[GB_FBO_GEOMETRY]->SetDrawBuffers(4, drawAttachments);
 
-	if (Engine::GetConfiguration().Renderer.SSAO)
+	if (Engine::GetConfiguration().Renderer.HBAO)
+	{
+		_hbao = new HBAO(_fboWidth, _fboHeight);
+
+		if (!_hbao->Initialize())
+		{
+			Logger::Log(DR_MODULE, LOG_WARNING, "Failed to initialize HBAO+. Will load SSAO instead.");
+			delete _hbao;
+			_ssao = new SSAO(_fboWidth, _fboHeight);
+		}
+	}
+	else if (Engine::GetConfiguration().Renderer.SSAO)
 		_ssao = new SSAO(_fboWidth, _fboHeight);
 		
 	ObjectInitializer lsInitializer;
@@ -215,7 +227,7 @@ int DeferredBuffer::Initialize() noexcept
 	vec3 data;
 	data.x = (float)_fboWidth;
 	data.y = (float)_fboHeight;
-	data.z = _ssao ? 1.f : 0.f;
+	data.z = _ssao || _hbao ? 1.f : 0.f;
 
 	_sceneLightUbo->UpdateData(sizeof(vec4) * 3, sizeof(vec3), &data.x);
 
@@ -277,7 +289,15 @@ void DeferredBuffer::RenderLighting() noexcept
 	CameraComponent *cam = CameraManager::GetActiveCamera();
 	RShader *lightShader = _lightingShader->GetRShader();
 
-	if (Engine::GetConfiguration().Renderer.SSAO)
+	if (_hbao)
+	{
+		mat4 worldToView = inverse(cam->GetView());
+		_hbao->SetProjection(value_ptr(cam->GetProjectionMatrix()));
+		_hbao->SetWorldToView(value_ptr(worldToView));
+		_hbao->SetViewport(0, 0, _fboWidth, _fboHeight, cam->GetNear(), cam->GetFar());
+		_hbao->Render();
+	}
+	else if (_ssao)
 		_ssao->Render();
 	
 	DrawAttachment drawAttachments[2] { DrawAttachment::Color0, DrawAttachment::Color1 };
@@ -294,7 +314,9 @@ void DeferredBuffer::RenderLighting() noexcept
 	lightShader->SetTexture(U_TEXTURE3, _gbTextures[GB_TEX_MATERIAL_INFO]);	
 	lightShader->SetTexture(U_TEXTURE5, _gbTextures[GB_TEX_LIGHT_ACCUM]);
 
-	if (Engine::GetConfiguration().Renderer.SSAO)
+	if (_hbao)
+		lightShader->SetTexture(U_TEXTURE4, _hbao->GetTexture());
+	else if (_ssao)
 		lightShader->SetTexture(U_TEXTURE4, _ssao->GetTexture());
 
 	_sceneLightUbo->UpdateData(0, sizeof(float) * 3, &cam->GetPosition().x);
@@ -394,6 +416,9 @@ void DeferredBuffer::ScreenResized(int width, int height) noexcept
 	_fbos[GB_FBO_BRIGHT]->Resize(_fboWidth, _fboHeight);
 	_fbos[GB_FBO_LIGHT_ACCUM]->Resize(_fboWidth, _fboHeight);
 		
+	if (_hbao)
+		_hbao->Resize(_fboWidth, _fboHeight);
+
 	if (_ssao)
 		_ssao->Resize(_fboWidth, _fboHeight);
 
@@ -601,6 +626,7 @@ void DeferredBuffer::Release() noexcept
 
 	delete _shadow; _shadow = nullptr;
 	delete _ssao; _ssao = nullptr;
+	delete _hbao; _hbao = nullptr;
 
 	if (_lightSphere)
 	{

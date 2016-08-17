@@ -376,6 +376,7 @@ void Engine::_ReadINIFile(const char *file)
 	_config.Renderer.SSAOQuality = Platform::GetConfigInt("Renderer", "iSSAOQuality", RENDER_SSAO_HIGH, file);
 	_config.Renderer.TextureQuality = Platform::GetConfigInt("Renderer", "iTextureQuality", RENDER_TEX_Q_HIGH, file);
 	_config.Renderer.ShadowMapSize = Platform::GetConfigInt("Renderer", "iShadowMapSize", 1024, file);
+	_config.Renderer.HBAO = Platform::GetConfigInt("Renderer", "bHBAO", 1, file) != 0;
 
 	_config.PostProcessor.Bloom = Platform::GetConfigInt("PostProcessor", "bBloom", 1, file) != 0;
 	_config.PostProcessor.SMAA = Platform::GetConfigInt("PostProcessor", "bSMAA", 1, file) != 0;

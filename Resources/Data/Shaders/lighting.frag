@@ -98,6 +98,7 @@ void calculateAmbientLight()
 	mapped = (1.0 - fog_alpha) * mapped + fog_alpha * FogColorAndRFog.xyz;
 
 	o_FragColor = vec4(mapped, 1.0);
+	o_FragColor = vec4(vec3(texture(GET_TEX_2D(SSAOTexture), uv).r), 1.0);
 
 	float brightness = dot(color.rgb, vec3(0.2126, 0.7152, 0.0722)) * (1.0 - fog_alpha);
 	o_BrightColor = (color.rgb * when_gt(brightness, 1.0)) * material.w;
