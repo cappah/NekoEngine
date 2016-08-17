@@ -56,6 +56,7 @@ public:
 	ENGINE_API virtual void Update(double deltaTime) noexcept override;
 
 	ENGINE_API virtual bool Unload() override;
+	ENGINE_API virtual bool CanUnload() override { return !_src->IsPlaying(); }
 
 	ENGINE_API virtual ~AudioSourceComponent() { }
 	

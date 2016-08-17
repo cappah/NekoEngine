@@ -133,45 +133,48 @@ class Platform
 {
 public:
 
-	// Platform specific
-	static const char* GetName();
-	static const char* GetMachineName();
-	static const char* GetMachineArchitecture();
-	static const char* GetVersion();
+	// Platform specific public functions
+	PLATFORM_API static const char* GetName();
+	PLATFORM_API static const char* GetMachineName();
+	PLATFORM_API static const char* GetMachineArchitecture();
+	PLATFORM_API static const char* GetVersion();
 
+	PLATFORM_API static PlatformWindowType GetActiveWindow() { return _activeWindow; }
+
+	PLATFORM_API static void SetWindowTitle(PlatformWindowType hWnd, const char* title);
+	PLATFORM_API static bool EnterFullscreen(int width, int height);
+
+	PLATFORM_API static bool CapturePointer();
+	PLATFORM_API static void ReleasePointer();
+	PLATFORM_API static bool GetPointerPosition(long &x, long &y);
+	PLATFORM_API static bool SetPointerPosition(long x, long y);
+	PLATFORM_API static bool GetTouchMovementDelta(float &x, float &y);
+
+	PLATFORM_API static MessageBoxResult MessageBox(const char* title, const char* message, MessageBoxButtons buttons, MessageBoxIcon icon);
+
+	PLATFORM_API static void LogDebugMessage(const char* message);
+
+	PLATFORM_API static void Exit();
+
+	// Shared
+	PLATFORM_API static size_t GetConfigString(const char *section, const char *entry, const char *def, char *buffer, int buffer_len, const char *file);
+	PLATFORM_API static int GetConfigInt(const char *section, const char *entry, int def, const char *file);
+	PLATFORM_API static float GetConfigFloat(const char *section, const char *entry, float def, const char *file);
+	PLATFORM_API static double GetConfigDouble(const char *section, const char *entry, double def, const char *file);
+	PLATFORM_API static size_t GetConfigSection(const char *section, char *out, size_t size, const char *file);
+	PLATFORM_API static int Rand();
+
+#ifdef PLATFORM_INTERNAL // Platform specific private functions
 	static void SetActiveWindow(PlatformWindowType hWnd) { _activeWindow = hWnd; }
-	static PlatformWindowType GetActiveWindow() { return _activeWindow; }
-
 	static PlatformWindowType CreateWindow(int width, int height, bool fullscreen);
-	static void SetWindowTitle(PlatformWindowType hWnd, const char* title);
-	static bool EnterFullscreen(int width, int height);
-
-	static bool CapturePointer();
-	static void ReleasePointer();
-	static bool GetPointerPosition(long &x, long &y);
-	static bool SetPointerPosition(long x, long y);
-	static bool GetTouchMovementDelta(float &x, float &y);
-
-	static MessageBoxResult MessageBox(const char* title, const char* message, MessageBoxButtons buttons, MessageBoxIcon icon);
-
-	static void LogDebugMessage(const char* message);
 
 	static PlatformModuleType LoadModule(const char* module);
 	static void* GetProcAddress(PlatformModuleType module, const char* proc);
 	static void ReleaseModule(PlatformModuleType module);
 
 	static int MainLoop();
-
-	static void CleanUp();
-
-	static void Exit();
-
-	// Shared
-	static size_t GetConfigString(const char *section, const char *entry, const char *def, char *buffer, int buffer_len, const char *file);
-	static int GetConfigInt(const char *section, const char *entry, int def, const char *file);
-	static float GetConfigFloat(const char *section, const char *entry, float def, const char *file);
-	static double GetConfigDouble(const char *section, const char *entry, double def, const char *file);
-	static size_t GetConfigSection(const char *section, char *out, size_t size, const char *file);
+	static void CleanUp();	
+#endif
 
 private:
 	static PlatformWindowType _activeWindow;

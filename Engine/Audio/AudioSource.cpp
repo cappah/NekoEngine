@@ -176,6 +176,13 @@ int AudioSource::Rewind() noexcept
 	return ENGINE_OK;
 }
 
+bool AudioSource::IsPlaying() noexcept
+{
+	ALenum state;
+	alGetSourcei(_src, AL_SOURCE_STATE, &state);
+	return state == AL_PLAYING;
+}
+
 AudioSource::~AudioSource()
 {
 	AL_CHECK(alSourceStop(_src));

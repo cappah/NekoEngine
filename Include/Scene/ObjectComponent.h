@@ -83,6 +83,7 @@ public:
 	virtual void Update(double deltaTime) noexcept { }
 	
 	virtual bool Unload();
+	virtual bool CanUnload() { return true; }
 
 	virtual ~ObjectComponent() { Unload(); }
 

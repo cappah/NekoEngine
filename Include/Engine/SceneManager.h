@@ -67,13 +67,14 @@ public:
 private:
 	static std::vector<Scene*> _scenes;
 	static Scene *_activeScene, *_loadingScene;
-	static int _defaultScene;
+	static int _defaultScene, _loadScene;
 
 	static LoadingScreen *_loadingScreen;
 
 	static int _ReadConfigFile(NString configFile);
 	static void _UnloadScene() noexcept;
 	static void _UnloadScenes() noexcept;
+	static int _LoadSceneInternal(int id);
 
 	SceneManager() { }
 };

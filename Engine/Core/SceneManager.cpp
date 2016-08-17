@@ -56,6 +56,7 @@ std::vector<Scene*> SceneManager::_scenes;
 Scene *SceneManager::_activeScene = nullptr;
 Scene *SceneManager::_loadingScene = nullptr;
 int SceneManager::_defaultScene = 0;
+int SceneManager::_loadScene = -1;
 LoadingScreen *SceneManager::_loadingScreen = nullptr;
 
 int SceneManager::Initialize()
@@ -127,38 +128,13 @@ int SceneManager::_ReadConfigFile(NString file)
 
 int SceneManager::LoadScene(int id)
 {
-	Logger::Log(SM_MODULE, LOG_INFORMATION, "Loading scene id=%d", id);
-	Scene *scn = nullptr;
-
-	for (Scene *s : _scenes)
+	if (_activeScene)
 	{
-		if (s->GetId() == id)
-			scn = s;
+		_loadScene = id;
+		return ENGINE_OK;
 	}
 
-	if (scn == nullptr)
-		return ENGINE_NOT_FOUND;
-
-	if ((_loadingScreen = new LoadingScreen(scn->GetLoadingScreenTexture())) == nullptr)
-		return ENGINE_OUT_OF_RESOURCES;
-
-	_loadingScene = scn;
-
-	if (_activeScene != nullptr)
-		_UnloadScene();
-
-	int ret = scn->Load();
-
-	if (ret == ENGINE_OK)
-		_activeScene = scn;
-	else
-		scn = nullptr;
-
-	delete _loadingScreen;
-	_loadingScreen = nullptr;
-	_loadingScene = nullptr;
-
-	return ret;
+	return _LoadSceneInternal(id);
 }
 
 int SceneManager::LoadNextScene()
@@ -193,6 +169,15 @@ int SceneManager::DrawScene(RShader* shader) noexcept
 
 void SceneManager::UpdateScene(double deltaTime) noexcept
 {
+	if (_loadScene != -1)
+	{
+		if (_LoadSceneInternal(_loadScene) != ENGINE_OK)
+		{
+			DIE("Failed to load scene");
+		}
+		_loadScene = -1;
+	}
+
 	if (_activeScene)
 		_activeScene->Update(deltaTime);
 }
@@ -218,6 +203,42 @@ void SceneManager::_UnloadScenes() noexcept
 	}
 
 	_scenes.clear();
+}
+
+int SceneManager::_LoadSceneInternal(int id)
+{
+	Logger::Log(SM_MODULE, LOG_INFORMATION, "Loading scene id=%d", id);
+	Scene *scn = nullptr;
+
+	for (Scene *s : _scenes)
+	{
+		if (s->GetId() == id)
+			scn = s;
+	}
+
+	if (scn == nullptr)
+		return ENGINE_NOT_FOUND;
+
+	if ((_loadingScreen = new LoadingScreen(scn->GetLoadingScreenTexture())) == nullptr)
+		return ENGINE_OUT_OF_RESOURCES;
+
+	_loadingScene = scn;
+
+	if (_activeScene != nullptr)
+		_UnloadScene();
+
+	int ret = scn->Load();
+
+	if (ret == ENGINE_OK)
+		_activeScene = scn;
+	else
+		scn = nullptr;
+
+	delete _loadingScreen;
+	_loadingScreen = nullptr;
+	_loadingScene = nullptr;
+
+	return ret;
 }
 
 void SceneManager::Release() noexcept

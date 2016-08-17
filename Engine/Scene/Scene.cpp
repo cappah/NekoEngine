@@ -565,13 +565,20 @@ void Scene::Update(double deltaTime) noexcept
 		_objects.push_back(obj);
 	_newObjects.clear();
 
+	vector<Object *> tmp;
 	for (Object *obj : _deletedObjects)
 	{
-		_objects.erase(remove(_objects.begin(), _objects.end(), obj), _objects.end());
-		obj->Unload();
-		delete obj;
+		if (obj->CanUnload())
+		{
+			_objects.erase(remove(_objects.begin(), _objects.end(), obj), _objects.end());
+			delete obj;
+		}
+		else
+			tmp.push_back(obj);
 	}
 	_deletedObjects.clear();
+	for (Object *obj : tmp)
+		_deletedObjects.push_back(obj);
 }
 
 void Scene::Unload() noexcept
@@ -632,7 +639,8 @@ void Scene::AddObject(Object *obj) noexcept
 
 void Scene::RemoveObject(Object *obj) noexcept
 {
-	_deletedObjects.push_back(obj);
+	if (find(_deletedObjects.begin(), _deletedObjects.end(), obj) == _deletedObjects.end())
+		_deletedObjects.push_back(obj);
 }
 
 Scene::~Scene() noexcept

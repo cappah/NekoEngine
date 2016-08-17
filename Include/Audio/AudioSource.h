@@ -87,6 +87,7 @@ public:
 	ENGINE_API int Pause() noexcept;
 	ENGINE_API int Stop() noexcept;
 	ENGINE_API int Rewind() noexcept;
+	ENGINE_API bool IsPlaying() noexcept;
 
 	virtual ~AudioSource();
 

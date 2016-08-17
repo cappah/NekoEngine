@@ -300,9 +300,31 @@ bool Object::Unload() noexcept
 	return true;
 }
 
+bool Object::CanUnload() noexcept
+{
+	bool ret = true;
+	for (pair<string, ObjectComponent *> kvp : _components)
+		ret = ret && kvp.second->CanUnload();
+	return ret;
+}
+
 void Object::AddComponent(const char *name, ObjectComponent *comp)
 {
 	_components.insert({ name, comp });
+}
+
+bool Object::RemoveComponent(const char *name, bool force)
+{
+	ObjectComponent *comp = _components[name];
+
+	if (comp->CanUnload() || force)
+	{
+		_components.erase(name);
+		delete comp;
+		return true;
+	}
+
+	return false;
 }
 
 void Object::AddToScene()

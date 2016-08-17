@@ -222,3 +222,8 @@ size_t Platform::GetConfigSection(const char *section, char *out, size_t size, c
 	fclose(fp);
 	return offset;
 }
+
+int Platform::Rand()
+{
+	return NE_RANDOM();
+}

@@ -135,9 +135,11 @@ public:
 	ENGINE_API virtual void Draw(RShader* shader) noexcept;
 	ENGINE_API virtual void Update(double deltaTime) noexcept;
 	ENGINE_API virtual bool Unload() noexcept;
+	ENGINE_API virtual bool CanUnload() noexcept;
 
 	ENGINE_API void AddComponent(const char *name, ObjectComponent *comp);
 	ENGINE_API ObjectComponent *GetComponent(const char *name) { return _components[name]; }
+	ENGINE_API bool RemoveComponent(const char *name, bool force = false);
 
 	ENGINE_API void AddToScene();
 	ENGINE_API void Destroy();
