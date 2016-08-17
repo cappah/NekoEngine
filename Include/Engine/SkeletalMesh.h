@@ -62,8 +62,8 @@ public:
 	
 private:
 	glm::dmat4 _globalInverseTransform;
-	vector<Bone> _bones;
-	vector<TransformNode> _nodes;
+	std::vector<Bone> _bones;
+	std::vector<TransformNode> _nodes;
 	Skeleton *_skel;
 };
 

@@ -49,13 +49,9 @@
 #define TERRAIN_MODULE	"Terrain"
 
 using namespace glm;
+using namespace std;
 
-ENGINE_REGISTER_OBJECT_CLASS(Terrain)
-	std::vector<Vertex> _terrainVertices;
-	TextureParams _heightmapParams;
-	float _cellSize;
-	unsigned short _numCells;
-	float _uvStep;
+ENGINE_REGISTER_OBJECT_CLASS(Terrain);
 
 Terrain::Terrain(ObjectInitializer *initializer) noexcept : Object(initializer),
 	_heightmapParams{TextureFilter::Trilinear, TextureFilter::Linear, TextureWrap::ClampToEdge, TextureWrap::ClampToEdge},

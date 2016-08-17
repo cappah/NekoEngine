@@ -63,12 +63,15 @@ public:
 	static void Release() noexcept;
 
 private:
-	static ALCdevice* _device;
-	static ALCcontext* _context;
 	static class AudioSource* _bgMusicSource;
 	static class AudioClip *_bgMusicClip;
 
 	static void _UnsetBackgroundMusic() noexcept;
 	
 	SoundManager() { }
+
+#ifdef ENGINE_INTERNAL
+	static ALCdevice* _device;
+	static ALCcontext* _context;
+#endif
 };

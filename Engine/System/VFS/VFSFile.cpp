@@ -79,6 +79,8 @@ VFSFile::VFSFile(VFSArchive *archive)
 	_decompressing = false;
 }
 
+bool VFSFile::IsOpen() { return _type == FileType::Loose ? (_fp != nullptr || _gzfp != nullptr) : _references > 0; }
+
 int VFSFile::Open()
 {
 	if (_type == FileType::Loose && (!_fp || !_gzfp))

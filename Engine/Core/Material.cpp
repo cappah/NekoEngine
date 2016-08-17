@@ -45,6 +45,8 @@
 #define LINE_BUFF	1024
 #define MAT_MODULE	"Material"
 
+using namespace std;
+
 void Material::_LoadTexture(const char* name, int *id, TextureFilter* minFilter, TextureFilter* magFilter, TextureWrap* wrapS, TextureWrap* wrapT)
 {
 	vector<char*> texInfo = EngineUtils::SplitString(name, ',');

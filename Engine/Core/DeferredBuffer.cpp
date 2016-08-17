@@ -49,6 +49,7 @@
 #define DR_MODULE	"DeferredBuffer"
 
 using namespace glm;
+using namespace std;
 
 RFramebuffer* DeferredBuffer::_fbos[4]{ 0, 0, 0, 0 };
 RTexture* DeferredBuffer::_gbTextures[8]{ 0, 0, 0, 0, 0, 0 };

@@ -48,6 +48,12 @@
 
 using namespace std;
 
+AudioClip::AudioClip(AudioClipResource *res) noexcept
+{
+	_buffer = 0;
+	_resourceInfo = res;
+}
+
 int AudioClip::Load()
 {
 	ALsizei size = 0, freq = 0;

@@ -159,7 +159,7 @@ protected:
 	glm::mat4 _translationMatrix, _scaleMatrix, _rotationMatrix, _modelMatrix;
 	bool _updateWhilePaused;
 
-	void _UpdateModelMatrix() noexcept { _modelMatrix = (_translationMatrix * _rotationMatrix) * _scaleMatrix; for(pair<std::string, ObjectComponent *> kvp : _components) kvp.second->UpdatePosition(); }
+	void _UpdateModelMatrix() noexcept { _modelMatrix = (_translationMatrix * _rotationMatrix) * _scaleMatrix; for(std::pair<std::string, ObjectComponent *> kvp : _components) kvp.second->UpdatePosition(); }
 };
 
 #if defined(_MSC_VER)

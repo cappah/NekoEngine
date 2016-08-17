@@ -39,10 +39,14 @@
 
 #pragma once
 
+#ifdef ENGINE_INTERNAL
+	#include <zlib.h>
+#endif
+
 #include <stdio.h>
 #include <stdint.h>
-#include <zlib.h>
 
+#include <Engine/Engine.h>
 #include <Runtime/Runtime.h>
 
 enum class FileType : unsigned
@@ -64,25 +68,27 @@ typedef struct VFS_FILE_HEADER
 
 class VFSFile
 {
-
 public:
-	VFSFile(FileType type);
-	VFSFile(class VFSArchive *archive);
+	ENGINE_API VFSFile(FileType type);
+	ENGINE_API VFSFile(class VFSArchive *archive);
 
-	VFSFileHeader& GetHeader() { return _header; }
+	ENGINE_API VFSFileHeader& GetHeader() { return _header; }
+	
+	ENGINE_API bool IsOpen();
+
+	ENGINE_API int Open();
+	ENGINE_API size_t Read(void *buffer, size_t size, size_t count);
+	ENGINE_API char* Gets(char* str, int num);
+	ENGINE_API int Seek(size_t offset, int origin);
+	ENGINE_API size_t Tell();
+	ENGINE_API bool EoF();
+	ENGINE_API void Close();
+
+	ENGINE_API virtual ~VFSFile();
+
+#ifdef ENGINE_INTERNAL
 	FILE* GetNativeHandle() { return _fp; }
-
-	bool IsOpen() { return _type == FileType::Loose ? _fp != nullptr : _references > 0; }
-
-	int Open();
-	size_t Read(void *buffer, size_t size, size_t count);
-	char* Gets(char* str, int num);
-	int Seek(size_t offset, int origin);
-	size_t Tell();
-	bool EoF();
-	void Close();
-
-	~VFSFile();
+#endif
 
 private:
 	VFSFileHeader _header;
@@ -97,7 +103,9 @@ private:
 
 	int _Decompress();
 
+#ifdef ENGINE_INTERNAL
 	// Only for loose files
 	FILE* _fp;
 	gzFile _gzfp;
+#endif
 };

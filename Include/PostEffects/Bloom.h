@@ -55,7 +55,7 @@ public:
 		_shaderIds.push_back(4);
 		_shaderIds.push_back(5);
 
-		_options.insert(pair<std::string, float*>("Step", &_effectData.x));
+		_options.insert(std::pair<std::string, float*>("Step", &_effectData.x));
 
 		_effectData.x = .3f;
 	}

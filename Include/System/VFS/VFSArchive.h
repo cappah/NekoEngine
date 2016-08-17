@@ -44,6 +44,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+#include <Engine/Engine.h>
 #include <Runtime/Runtime.h>
 #include <System/VFS/VFSFile.h>
 
@@ -61,20 +62,20 @@ typedef struct VFS_ARCHIVE_HEADER
 class VFSArchive
 {
 public:
-	VFSArchive(NString &path);
+	ENGINE_API VFSArchive(NString &path);
 	
-	int Load();
-	void Unload();
+	ENGINE_API int Load();
+	ENGINE_API void Unload();
 
-	int MakeResident();
-	void MakeNonResident() { free(_data); _data = nullptr; }
-	bool IsResident() { return _data ? true : false; }
+	ENGINE_API int MakeResident();
+	ENGINE_API void MakeNonResident() { free(_data); _data = nullptr; }
+	ENGINE_API bool IsResident() { return _data ? true : false; }
 	
-	VFSFile* Open(NString &path);
+	ENGINE_API VFSFile* Open(NString &path);
 
-	size_t Read(void *buffer, size_t offset, size_t size, size_t count);
+	ENGINE_API size_t Read(void *buffer, size_t offset, size_t size, size_t count);
 
-	~VFSArchive();
+	ENGINE_API virtual ~VFSArchive();
 
 private:
 	VFSArchiveHeader _header;

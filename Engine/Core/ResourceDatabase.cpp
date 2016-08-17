@@ -65,6 +65,8 @@ char resource_to_table_map[10][40] =
 	{ 'a', 'n', 'i', 'm', 'c', 'l', 'i', 'p', 's', 0x0 }
 };
 
+ResourceDatabase::ResourceDatabase() noexcept : _db(nullptr) { }
+
 bool ResourceDatabase::Open(const char *file) noexcept
 {
 	if (sqlite3_open_v2(file, &_db, SQLITE_OPEN_READONLY, nullptr) != SQLITE_OK)

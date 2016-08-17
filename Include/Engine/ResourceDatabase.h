@@ -39,15 +39,17 @@
 
 #pragma once
 
-#include <vector>
-#include <sqlite3.h>
+#ifdef ENGINE_INTERNAL
+	#include <sqlite3.h>
+#endif
 
+#include <vector>
 #include <Resource/ResourceInfo.h>
 
 class ResourceDatabase
 {
 public:
-	ResourceDatabase() noexcept : _db(nullptr) {};
+	ResourceDatabase() noexcept;
 
 	bool Open(const char* file) noexcept;
 
@@ -56,8 +58,10 @@ public:
 	virtual ~ResourceDatabase() noexcept;
 
 private:
+#ifdef ENGINE_INTERNAL
 	sqlite3* _db;
 
 	bool _CheckDatabase() noexcept;
 	bool _TableExists(const char* table) noexcept;
+#endif
 };

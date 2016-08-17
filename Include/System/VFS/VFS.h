@@ -42,6 +42,7 @@
 #include <stdint.h>
 #include <vector>
 
+#include <Engine/Engine.h>
 #include <System/VFS/VFSFile.h>
 #include <System/VFS/VFSArchive.h>
 
@@ -50,9 +51,9 @@ class VFS
 public:
 	static int Initialize();
 	
-	static int LoadArchive(NString path);
+	ENGINE_API static int LoadArchive(NString path);
 
-	static VFSFile* Open(NString &path);
+	ENGINE_API static VFSFile* Open(NString &path);
 
 	static void Release();
 

@@ -41,10 +41,12 @@
 
 #include <Platform/PlatformDetect.h>
 
-#if defined(NE_PLATFORM_MAC) || defined(NE_PLATFORM_IOS)
-	#include <OpenAL/al.h>
-#else
-	#include <AL/al.h>
+#ifdef ENGINE_INTERNAL
+	#if defined(NE_PLATFORM_MAC) || defined(NE_PLATFORM_IOS)
+		#include <OpenAL/al.h>
+	#else
+		#include <AL/al.h>
+	#endif
 #endif
 
 #include <glm/glm.hpp>
@@ -91,8 +93,11 @@ public:
 
 	virtual ~AudioSource();
 
+#ifdef ENGINE_INTERNAL
 private:
 	ALuint _src;
+#endif
+
 	AudioClip *_clip;
 };
 

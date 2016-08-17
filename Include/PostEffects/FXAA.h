@@ -50,9 +50,9 @@ public:
 	{
 		_shaderIds.push_back(13);
 
-		_options.insert(pair<std::string, float*>("Subpix", &_effectData.x));
-		_options.insert(pair<std::string, float*>("EdgeThreshold", &_effectData.y));
-		_options.insert(pair<std::string, float*>("EdgeThresholdMin", &_effectData.z));
+		_options.insert(std::pair<std::string, float*>("Subpix", &_effectData.x));
+		_options.insert(std::pair<std::string, float*>("EdgeThreshold", &_effectData.y));
+		_options.insert(std::pair<std::string, float*>("EdgeThresholdMin", &_effectData.z));
 
 		_effectData.x = .5f;
 		_effectData.y = .125f;

@@ -41,10 +41,12 @@
 
 #include <Platform/PlatformDetect.h>
 
-#if defined(NE_PLATFORM_MAC) || defined(NE_PLATFORM_IOS)
-	#include <OpenAL/al.h>
-#else
-	#include <AL/al.h>
+#ifdef ENGINE_INTERNAL
+	#if defined(NE_PLATFORM_MAC) || defined(NE_PLATFORM_IOS)
+		#include <OpenAL/al.h>
+	#else
+		#include <AL/al.h>
+	#endif
 #endif
 
 #include <Runtime/Runtime.h>
@@ -54,18 +56,19 @@
 class ENGINE_API AudioClip : public Resource
 {
 public:
-	AudioClip(AudioClipResource *res) noexcept :
-		_buffer(0)
-	{ _resourceInfo = res; };
+	AudioClip(AudioClipResource *res) noexcept;
 
 	AudioClipResource *GetResourceInfo() noexcept  { return (AudioClipResource *)_resourceInfo; }
-	ALuint GetBufferID() noexcept { return _buffer; }
 	virtual int Load() override;
 
 	virtual ~AudioClip() noexcept;
 
+#ifdef ENGINE_INTERNAL
+	ALuint GetBufferID() noexcept { return _buffer; }
+
 private:
 	ALuint _buffer;
+#endif
 };
 
 #if defined(_MSC_VER)

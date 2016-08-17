@@ -106,8 +106,6 @@
 
 #define SH_MAX_BONES		100
 
-using namespace std;
-
 class Shader : public Resource
 {
 public:
