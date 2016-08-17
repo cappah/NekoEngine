@@ -59,8 +59,8 @@ public:
 	glm::vec3& GetFogColor() noexcept { return _fogColor; }
 	glm::vec3& GetForward() noexcept { return _front; }
 	glm::vec3& GetRight() noexcept { return _right; }
-	glm::mat4& GetView() noexcept { return _view; }
-	glm::mat4& GetProjectionMatrix() noexcept { return _projectionMatrix; }
+	glm::mat4& GetView() noexcept { return _drawSkybox ? _skyboxView : _view; }
+	glm::mat4& GetProjectionMatrix() noexcept { return _drawSkybox ? _skyboxProjectionMatrix : _projectionMatrix; }
 	float GetNear() noexcept { return _near; }
 	float GetFar() noexcept { return _far; }
 	float GetFOV() noexcept { return _fov; }
@@ -75,6 +75,8 @@ public:
 	void SetViewDistance(float distance) noexcept { _viewDistance = distance; }
 	void SetFogDistance(float distance) noexcept { _fogDistance = distance; }
 	void SetProjection(ProjectionType projection) noexcept { _projection = projection; }
+
+	void EnableSkybox(bool enable) { _drawSkybox = enable; }
 	
 	virtual void UpdatePosition() noexcept override { ObjectComponent::UpdatePosition(); _UpdateView(); }
 	void UpdatePerspective() noexcept;
@@ -107,8 +109,10 @@ protected:
 
 	ProjectionType _projection;
 
-	glm::mat4 _view;
-	glm::mat4 _projectionMatrix;
+	glm::mat4 _view, _skyboxView;
+	glm::mat4 _projectionMatrix, _skyboxProjectionMatrix;
+
+	bool _noRegister, _drawSkybox;
 
 	void _UpdateView() noexcept;
 };

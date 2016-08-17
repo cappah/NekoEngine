@@ -68,7 +68,10 @@ CameraComponent::CameraComponent(ComponentInitializer *initializer) : ObjectComp
 	_fogColor(glm::vec3(0, 0, 0)),
 	_projection(ProjectionType::Perspective),
 	_view(glm::mat4(0.f)),
-	_projectionMatrix(glm::mat4(0.f))
+	_skyboxView(glm::mat4(0.f)),
+	_projectionMatrix(glm::mat4(0.f)),
+	_skyboxProjectionMatrix(glm::mat4(0.f)),
+	_noRegister(false)
 {
 	_UpdateView();
 
@@ -103,6 +106,14 @@ CameraComponent::CameraComponent(ComponentInitializer *initializer) : ObjectComp
 			_projection = ProjectionType::Ortographic;
 	}
 
+	if (((it = initializer->arguments.find("noregister")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
+	{
+		size_t len = strlen(ptr);
+
+		if (!strncmp(ptr, "true", len))
+			_noRegister = true;
+	}
+
 	_UpdateView();
 }
 
@@ -114,7 +125,8 @@ int CameraComponent::Load()
 
 	UpdatePerspective();
 
-	CameraManager::AddCamera(this);
+	if(!_noRegister)
+		CameraManager::AddCamera(this);
 
 	return ENGINE_OK;
 }
@@ -122,6 +134,7 @@ int CameraComponent::Load()
 void CameraComponent::UpdatePerspective() noexcept
 {
 	_projectionMatrix = perspective(_fov, (float)DeferredBuffer::GetWidth() / (float)DeferredBuffer::GetHeight(), _near, _far);
+	_skyboxProjectionMatrix = perspective(_fov, (float)DeferredBuffer::GetWidth() / (float)DeferredBuffer::GetHeight(), _near, 10000.f);
 }
 
 void CameraComponent::_UpdateView() noexcept
@@ -140,6 +153,7 @@ void CameraComponent::_UpdateView() noexcept
 	_up = normalize(cross(_right, _front));
 
 	_view = lookAt(pos, pos + _front, _up);
+	_skyboxView = mat4(mat3(_view));
 
 	SoundManager::SetListenerPosition(pos.x, pos.y, pos.z);
 	SoundManager::SetListenerOrientation(_front.x, _front.y, _front.z);

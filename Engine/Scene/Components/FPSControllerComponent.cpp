@@ -75,6 +75,21 @@ FPSControllerComponent::FPSControllerComponent(ComponentInitializer *initializer
 
 	if (((it = initializer->arguments.find("vertical_sensivity")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
 		_verticalSensivity = (float)atof(ptr);
+
+	/*ComponentInitializer init;
+	init.parent = this;
+	init.arguments.insert(make_pair("near", "1.0"));
+	init.arguments.insert(make_pair("far", "10000.0"));
+	init.arguments.insert(make_pair("projection", "perspective"));
+	init.arguments.insert(make_pair("position", "0.0, 0.0, 0.0"));
+	init.arguments.insert(make_pair("rotation", "0.0, 0.0, 0.0"));
+	init.arguments.insert(make_pair("fog_color", "0.207, 0.255, 0.349"));
+	init.arguments.insert(make_pair("view_distance", "1200"));
+	init.arguments.insert(make_pair("fog_distance", "3000"));
+	init.arguments.insert(make_pair("noregister", "true"));
+
+	_skyboxCamera = (CameraComponent *)Engine::NewComponent("CameraComponent", &init);
+	_skyboxCamera->Load();*/
 }
 
 void FPSControllerComponent::Update(double deltaTime) noexcept

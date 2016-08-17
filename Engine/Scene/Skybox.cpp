@@ -46,6 +46,7 @@
 #include <Scene/Skybox.h>
 
 using namespace glm;
+using namespace std;
 
 ENGINE_REGISTER_OBJECT_CLASS(Skybox)
 
@@ -76,22 +77,12 @@ int Skybox::Load()
 void Skybox::Draw(RShader* shader) noexcept
 {
 	_skyboxShader->GetRShader()->Enable();
-
-	mat4 view = CameraManager::GetActiveCamera()->GetView();
-
+	CameraManager::GetActiveCamera()->EnableSkybox(true);
 
 	Object::Draw(_skyboxShader->GetRShader());
 
+	CameraManager::GetActiveCamera()->EnableSkybox(false);
 	_skyboxShader->GetRShader()->Disable();
-}
-
-void Skybox::Update(double deltaTime) noexcept
-{
-	Object::Update(deltaTime);
-
-	vec3 pos = CameraManager::GetActiveCamera()->GetPosition();
-	pos.y = _position.y;
-	SetPosition(pos);
 }
 
 bool Skybox::Unload() noexcept
