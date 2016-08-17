@@ -39,18 +39,19 @@
 
 #pragma once
 
+#include <stddef.h>
 #include <glm/glm.hpp>
 
-#define VERTEX_POSITION_OFFSET		0
-#define VERTEX_COLOR_OFFSET		sizeof(glm::vec3)
-#define VERTEX_NORMAL_OFFSET		(sizeof(glm::vec3) + sizeof(glm::vec3))
-#define VERTEX_BINORMAL_OFFSET		(sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3))
-#define VERTEX_TANGENT_OFFSET		(sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3))
-#define VERTEX_UV_OFFSET		(sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3))
-#define VERTEX_TUV_OFFSET		(sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec2))
-#define VERTEX_INDEX_OFFSET		(sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec2) + sizeof(glm::vec2))
-#define VERTEX_WEIGHT_OFFSET		(sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec2) + sizeof(glm::vec2) + sizeof(glm::ivec4))
-#define VERTEX_NUMBONES_OFFSET		(sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec3) + sizeof(glm::vec2) + sizeof(glm::vec2) + sizeof(glm::ivec4) + sizeof(glm::vec4))
+#define VERTEX_POSITION_OFFSET		offsetof(Vertex, pos)
+#define VERTEX_COLOR_OFFSET			offsetof(Vertex, color)
+#define VERTEX_NORMAL_OFFSET		offsetof(Vertex, norm)
+#define VERTEX_BINORMAL_OFFSET		offsetof(Vertex, binorm)
+#define VERTEX_TANGENT_OFFSET		offsetof(Vertex, tgt)
+#define VERTEX_UV_OFFSET			offsetof(Vertex, uv)
+#define VERTEX_TUV_OFFSET			offsetof(Vertex, terrainUv)
+#define VERTEX_INDEX_OFFSET			offsetof(Vertex, boneIndices)
+#define VERTEX_WEIGHT_OFFSET		offsetof(Vertex, boneWeights)
+#define VERTEX_NUMBONES_OFFSET		offsetof(Vertex, numBones)
 
 struct Vertex 
 {

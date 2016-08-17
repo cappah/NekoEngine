@@ -43,8 +43,7 @@
 
 #include <Engine/Engine.h>
 #include <Scene/ObjectComponent.h>
-#include <Engine/AnimationClip.h>
-#include <Engine/Skeleton.h>
+#include <Scene/Components/CameraComponent.h>
 
 #define DEFAULT_VSENS		25.0f
 #define DEFAULT_HSENS		25.0f
@@ -65,6 +64,7 @@ public:
 	ENGINE_API virtual ~FPSControllerComponent() { Unload(); }
 
 protected:
+	CameraComponent *_camera;
 	float _moveSpeed, _sprintSpeed;
 	float _rotateSpeed;
 	float _verticalSensivity;

@@ -47,11 +47,13 @@
 #include <glm/glm.hpp>
 
 using namespace glm;
+using namespace std;
 
 ENGINE_REGISTER_COMPONENT_CLASS(FPSControllerComponent);
 
 FPSControllerComponent::FPSControllerComponent(ComponentInitializer *initializer)
 	: ObjectComponent(initializer),
+	_camera(nullptr),
 	_moveSpeed(DEFAULT_MOVE_SPD),
 	_sprintSpeed(DEFAULT_SPRINT_SPD),
 	_rotateSpeed(DEFAULT_ROTS),
@@ -76,20 +78,20 @@ FPSControllerComponent::FPSControllerComponent(ComponentInitializer *initializer
 	if (((it = initializer->arguments.find("vertical_sensivity")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
 		_verticalSensivity = (float)atof(ptr);
 
-	/*ComponentInitializer init;
-	init.parent = this;
+	ComponentInitializer init;
+	init.parent = _parent;
 	init.arguments.insert(make_pair("near", "1.0"));
-	init.arguments.insert(make_pair("far", "10000.0"));
+	init.arguments.insert(make_pair("far", "4000.0"));
 	init.arguments.insert(make_pair("projection", "perspective"));
-	init.arguments.insert(make_pair("position", "0.0, 0.0, 0.0"));
+	init.arguments.insert(make_pair("position", "-50.0, 47.0, -50.0"));
 	init.arguments.insert(make_pair("rotation", "0.0, 0.0, 0.0"));
 	init.arguments.insert(make_pair("fog_color", "0.207, 0.255, 0.349"));
 	init.arguments.insert(make_pair("view_distance", "1200"));
-	init.arguments.insert(make_pair("fog_distance", "3000"));
-	init.arguments.insert(make_pair("noregister", "true"));
+	init.arguments.insert(make_pair("fog_distance", "2500"));
 
-	_skyboxCamera = (CameraComponent *)Engine::NewComponent("CameraComponent", &init);
-	_skyboxCamera->Load();*/
+	_camera = (CameraComponent *)Engine::NewComponent("CameraComponent", &init);
+	_camera->Load();
+	_parent->AddComponent("FPSCamera", _camera);
 }
 
 void FPSControllerComponent::Update(double deltaTime) noexcept
@@ -112,17 +114,15 @@ void FPSControllerComponent::Update(double deltaTime) noexcept
 
 	float velocity = speed * (float)deltaTime;
 
-	CameraComponent *cam = (CameraComponent*)_parent->GetComponent("FPSCamera");
-
 	if (Input::GetButton("forward"))
-		pos += cam->GetForward() * velocity * vec3(1.f, 0.f, 1.f);
+		pos += _camera->GetForward() * velocity * vec3(1.f, 0.f, 1.f);
 	else if (Input::GetButton("back"))
-		pos -= cam->GetForward() * velocity * vec3(1.f, 0.f, 1.f);
+		pos -= _camera->GetForward() * velocity * vec3(1.f, 0.f, 1.f);
 
 	if (Input::GetButton("right"))
-		pos += cam->GetRight() * velocity;
+		pos += _camera->GetRight() * velocity;
 	else if (Input::GetButton("left"))
-		pos -= cam->GetRight() * velocity;
+		pos -= _camera->GetRight() * velocity;
 
 	if (Input::GetButton("rot_right"))
 		rot.y += _rotateSpeed * (float)deltaTime;
