@@ -191,9 +191,9 @@ public:
 	virtual int GetMaxSamples() override;
 	virtual int GetMaxAnisotropy() override;
 
-	virtual bool IsHBAOSupported() { return false; }
-	virtual bool InitializeHBAO() { return false; }
-	virtual bool RenderHBAO(RHBAOArgs *args, RFramebuffer *fbo) { return false; }
+	virtual bool IsHBAOSupported() override { return false; }
+	virtual bool InitializeHBAO() override { return false; }
+	virtual bool RenderHBAO(RHBAOArgs *args, RFramebuffer *fbo) override { return false; }
 
     virtual uint64_t GetVideoMemorySize() override;
     virtual uint64_t GetUsedVideoMemorySize() override;

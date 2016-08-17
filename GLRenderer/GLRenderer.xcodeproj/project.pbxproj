@@ -30,6 +30,7 @@
 		12A15FA81CD4191600BEDD06 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12A15FA71CD4191600BEDD06 /* Cocoa.framework */; };
 		12A15FAA1CD4191A00BEDD06 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12A15FA91CD4191A00BEDD06 /* OpenGL.framework */; };
 		12A15FAD1CD4449800BEDD06 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12A15FAC1CD4449800BEDD06 /* AppKit.framework */; };
+		12A4ABC51D648CA200D22B76 /* config.h in Headers */ = {isa = PBXBuildFile; fileRef = 12A4ABC41D648CA200D22B76 /* config.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -65,6 +66,7 @@
 		12A15FC61CD44DFE00BEDD06 /* RTexture.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RTexture.h; sourceTree = "<group>"; };
 		12A15FCA1CD44E1200BEDD06 /* Compat.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Compat.h; sourceTree = "<group>"; };
 		12A15FCB1CD44E1200BEDD06 /* Platform.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Platform.h; sourceTree = "<group>"; };
+		12A4ABC41D648CA200D22B76 /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,6 +106,7 @@
 			children = (
 				12A15FA31CD40E7200BEDD06 /* Platform */,
 				12A15F9A1CD40E5E00BEDD06 /* Loaders */,
+				12A4ABC41D648CA200D22B76 /* config.h */,
 				12A15F861CD40E5600BEDD06 /* GLArrayBuffer.h */,
 				12A15F881CD40E5600BEDD06 /* GLBuffer.h */,
 				12A15F811CD40E4B00BEDD06 /* GLRenderer.h */,
@@ -202,6 +205,7 @@
 			files = (
 				12A15F921CD40E5600BEDD06 /* GLBuffer.h in Headers */,
 				12A15F971CD40E5600BEDD06 /* GLShader.h in Headers */,
+				12A4ABC51D648CA200D22B76 /* config.h in Headers */,
 				12A15F941CD40E5600BEDD06 /* GLFramebuffer.h in Headers */,
 				12A15FA01CD40E5E00BEDD06 /* nv_dds.h in Headers */,
 				12A15F841CD40E4B00BEDD06 /* GLRenderer.h in Headers */,
