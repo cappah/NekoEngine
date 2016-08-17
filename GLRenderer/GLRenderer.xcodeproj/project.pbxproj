@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		127B137E1D62C25F0034F3DA /* GLHBAO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 127B137D1D62C25F0034F3DA /* GLHBAO.cpp */; };
 		12A15F7F1CD40E4100BEDD06 /* debug.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12A15F7E1CD40E4100BEDD06 /* debug.cpp */; };
 		12A15F831CD40E4B00BEDD06 /* GLArrayBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12A15F801CD40E4B00BEDD06 /* GLArrayBuffer.cpp */; };
 		12A15F841CD40E4B00BEDD06 /* GLRenderer.h in Headers */ = {isa = PBXBuildFile; fileRef = 12A15F811CD40E4B00BEDD06 /* GLRenderer.h */; };
@@ -32,6 +33,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		127B137D1D62C25F0034F3DA /* GLHBAO.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GLHBAO.cpp; sourceTree = SOURCE_ROOT; };
 		12A15F701CD40DC300BEDD06 /* libGLRenderer.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libGLRenderer.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		12A15F7E1CD40E4100BEDD06 /* debug.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = debug.cpp; sourceTree = SOURCE_ROOT; };
 		12A15F801CD40E4B00BEDD06 /* GLArrayBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GLArrayBuffer.cpp; sourceTree = SOURCE_ROOT; };
@@ -114,6 +116,7 @@
 				12A15F891CD40E5600BEDD06 /* GLFramebuffer.cpp */,
 				12A15F8C1CD40E5600BEDD06 /* GLShader.cpp */,
 				12A15F8E1CD40E5600BEDD06 /* GLTexture.cpp */,
+				127B137D1D62C25F0034F3DA /* GLHBAO.cpp */,
 				12A15F821CD40E4B00BEDD06 /* renderer.cpp */,
 				12A15F7E1CD40E4100BEDD06 /* debug.cpp */,
 			);
@@ -268,6 +271,7 @@
 				12A15F961CD40E5600BEDD06 /* GLShader.cpp in Sources */,
 				12A15F981CD40E5600BEDD06 /* GLTexture.cpp in Sources */,
 				12A15F9F1CD40E5E00BEDD06 /* nv_dds.cpp in Sources */,
+				127B137E1D62C25F0034F3DA /* GLHBAO.cpp in Sources */,
 				12A15F931CD40E5600BEDD06 /* GLFramebuffer.cpp in Sources */,
 				12A15F851CD40E4B00BEDD06 /* renderer.cpp in Sources */,
 				12A15F911CD40E5600BEDD06 /* GLBuffer.cpp in Sources */,
