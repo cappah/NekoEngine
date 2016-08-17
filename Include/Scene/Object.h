@@ -139,6 +139,20 @@ public:
 
 	ENGINE_API void AddComponent(const char *name, ObjectComponent *comp);
 	ENGINE_API ObjectComponent *GetComponent(const char *name) { return _components[name]; }
+	template<typename T>
+	std::vector<T *> GetComponentsOfType()
+	{
+		std::vector<T *> vec;
+
+		for (std::pair<std::string, ObjectComponent *> kvp : _components)
+		{
+			T *c = dynamic_cast<T *>(kvp.second);
+			if (c)
+				vec.push_back(c);
+		}
+
+		return vec;
+	}
 	ENGINE_API bool RemoveComponent(const char *name, bool force = false);
 
 	ENGINE_API void AddToScene();
