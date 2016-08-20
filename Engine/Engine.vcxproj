@@ -142,6 +142,7 @@
     <ClInclude Include="..\Include\Engine\AnimationNode.h" />
     <ClInclude Include="..\Include\Engine\Bone.h" />
     <ClInclude Include="..\Include\Engine\CameraManager.h" />
+    <ClInclude Include="..\Include\Engine\Console.h" />
     <ClInclude Include="..\Include\Engine\DeferredBuffer.h" />
     <ClInclude Include="..\include\Engine\Engine.h" />
     <ClInclude Include="..\Include\Engine\EngineClassFactory.h" />
@@ -279,6 +280,7 @@
     <ClCompile Include="Audio\AudioSource.cpp" />
     <ClCompile Include="Core\AnimationClip.cpp" />
     <ClCompile Include="Core\CameraManager.cpp" />
+    <ClCompile Include="Core\Console.cpp" />
     <ClCompile Include="Core\DeferredBuffer.cpp" />
     <ClCompile Include="Core\Engine.cpp" />
     <ClCompile Include="Core\HBAO.cpp" />

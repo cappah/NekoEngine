@@ -176,3 +176,9 @@
 #define NE_MOUSE_MMB		0x82
 #define NE_MOUSE_BTN4		0x83
 #define NE_MOUSE_BTN5		0x84
+
+#ifdef ENGINE_INTERNAL
+#include <map>
+
+extern std::map<uint8_t, char> keycodeToChar;
+#endif

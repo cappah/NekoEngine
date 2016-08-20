@@ -65,6 +65,7 @@
 #include <Engine/PostProcessor.h>
 #include <Engine/GameModule.h>
 #include <Engine/DeferredBuffer.h>
+#include <Engine/Console.h>
 #include <System/Logger.h>
 #include <PostEffects/Effect.h>
 #include <System/VFS/VFS.h>
@@ -486,6 +487,12 @@ bool Engine::_InitRenderer()
 
 bool Engine::_InitSystem()
 {
+	if (Console::Initialize() != ENGINE_OK)
+	{
+		Logger::Log(ENGINE_MODULE, LOG_CRITICAL, "Failed to initialize the console");
+		return false;
+	}
+
 	if (FT_Init_FreeType(&_ftLibrary))
 	{
 		Logger::Log(ENGINE_MODULE, LOG_CRITICAL, "Failed to initialize the FreeType library");

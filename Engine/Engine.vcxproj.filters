@@ -350,6 +350,9 @@
     <ClInclude Include="..\Include\Engine\HBAO.h">
       <Filter>Include\Engine</Filter>
     </ClInclude>
+    <ClInclude Include="..\Include\Engine\Console.h">
+      <Filter>Include\Engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Resources\Data\scenes.cfg">
@@ -660,6 +663,9 @@
       <Filter>Source\Core</Filter>
     </ClCompile>
     <ClCompile Include="Core\HBAO.cpp">
+      <Filter>Source\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Console.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>
   </ItemGroup>

@@ -116,6 +116,7 @@ public:
 
 	void Append(NString &str) { Append(*str); }
 	void Append(std::string &str) { Append(str.c_str()); }
+	void Append(char c) { Append(&c); }
 	void Append(const char *str)
 	{
 		size_t len = strlen(str);
@@ -225,9 +226,18 @@ public:
 		return true;
 	}
 
+	void RemoveLast() { _str[--_length] = 0x0; }
+
+	void Clear()
+	{
+		memset(_str, 0x0, _length);
+		_length = 0;
+	}
+
 	virtual ~NString()
 	{
 		free(_str);
+		_str = nullptr;
 		_length = 0;
 		_size = 0;
 	}
@@ -238,6 +248,7 @@ public:
 	explicit operator unsigned long() { return (unsigned long)atof(_str); }
 	explicit operator float() { return (float)atof(_str); }
 	explicit operator double() { return atof(_str); }
+	explicit operator bool() { return *this == "true"; }
 
 	NString &operator =(const NString &other)
 	{
@@ -280,6 +291,19 @@ public:
 
 	char &operator [](size_t i) { return _str[i]; }
 	char *operator *() { return _str; }
+
+	inline bool operator < (const NString &other) const
+	{
+		if (!_length && other._length)
+			return false;
+
+		if (_length && !other._length)
+			return true;
+
+		return strncmp(_str, other._str, _length) < 0;
+	}
+	inline bool operator> (const NString other) const { return other < *this; }
+	//inline bool operator<= (NString &other) { return !(*this > other); }
 
 	static NString StringWithFormat(size_t len, const char *fmt, ...)
 	{

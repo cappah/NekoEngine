@@ -42,6 +42,7 @@
 #include <Engine/Engine.h>
 #include <Engine/Input.h>
 #include <Engine/SceneManager.h>
+#include <Engine/Console.h>
 
 #include "TestGame.h"
 #include "GameController.h"
@@ -67,7 +68,7 @@ void GameController::Update(double deltaTime) noexcept
 	Object::Update(deltaTime);
 
 	if (Input::GetButtonDown("exit"))
-		Engine::Exit();
+		Console::ExecuteCommand("call eng_exit");
 
 	if (Input::GetButtonDown("show_stats"))
 		Engine::DrawStats(!Engine::IsDrawingStats());
@@ -79,5 +80,5 @@ void GameController::Update(double deltaTime) noexcept
 		SceneManager::GetActiveScene()->SetDrawLights(!SceneManager::GetActiveScene()->GetDrawLights());
 
 	if (Input::GetButtonDown("screenshot"))
-		Engine::SaveScreenshot();
+		Console::ExecuteCommand("call eng_screenshot");
 }
