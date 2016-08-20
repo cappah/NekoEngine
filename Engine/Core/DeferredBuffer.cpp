@@ -40,9 +40,10 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include <Engine/DeferredBuffer.h>
+#include <Engine/Console.h>
 #include <Engine/SceneManager.h>
 #include <Engine/CameraManager.h>
+#include <Engine/DeferredBuffer.h>
 #include <Engine/ResourceManager.h>
 #include <Scene/Components/StaticMeshComponent.h>
 
@@ -66,6 +67,44 @@ ShadowMap* DeferredBuffer::_shadow = nullptr;
 RBuffer* DeferredBuffer::_sceneLightUbo = nullptr;
 RBuffer* DeferredBuffer::_lightUbo = nullptr;
 RBuffer* DeferredBuffer::_lightMatrixUbo = nullptr;
+
+static bool _enableHBAO = false, _enableSSAO = false;
+NString _drCVar_GetHBAO() { return _enableHBAO ? "true" : "false"; }
+void _drCVar_SetHBAO(NString str) { _enableHBAO = (bool)str; DeferredBuffer::EnableAO(_enableHBAO); }
+NString _drCVar_GetSSAO() { return _enableSSAO ? "true" : "false"; }
+void _drCVar_SetSSAO(NString str) { _enableSSAO = (bool)str; DeferredBuffer::EnableAO(_enableSSAO); }
+
+static inline bool _initSSAO(SSAO **ssao, int width, int height)
+{
+	if ((*ssao = new SSAO(width, height)) == nullptr)
+		return false;
+
+	/*if (!(SSAO*)(*ssao)->Initialize())
+	{
+		Logger::Log(DR_MODULE, LOG_WARNING, "Failed to initialize SSAO.");
+		delete *ssao;
+		*ssao = nullptr;
+		return false;
+	}*/
+
+	return true;
+}
+
+static inline bool _initHBAO(HBAO **hbao, int width, int height)
+{
+	if ((*hbao = new HBAO(width, height)) == nullptr)
+		return false;
+
+	if (!(HBAO*)(*hbao)->Initialize())
+	{
+		Logger::Log(DR_MODULE, LOG_WARNING, "Failed to initialize HBAO+.");
+		delete *hbao;
+		*hbao = nullptr;
+		return false;
+	}
+
+	return true;
+}
 
 int DeferredBuffer::Initialize() noexcept
 {
@@ -137,20 +176,13 @@ int DeferredBuffer::Initialize() noexcept
 	DrawAttachment drawAttachments[4] { DrawAttachment::Color0, DrawAttachment::Color1, DrawAttachment::Color2, DrawAttachment::Color3 };
 	_fbos[GB_FBO_GEOMETRY]->SetDrawBuffers(4, drawAttachments);
 
-	if (Engine::GetConfiguration().Renderer.HBAO)
-	{
-		_hbao = new HBAO(_fboWidth, _fboHeight);
+	_enableHBAO = Engine::GetConfiguration().Renderer.HBAO;
+	_enableSSAO = Engine::GetConfiguration().Renderer.SSAO;
 
-		if (!_hbao->Initialize())
-		{
-			Logger::Log(DR_MODULE, LOG_WARNING, "Failed to initialize HBAO+. Will load SSAO instead.");
-			delete _hbao;
-			_hbao = nullptr;
-			_ssao = new SSAO(_fboWidth, _fboHeight);
-		}
-	}
-	else if (Engine::GetConfiguration().Renderer.SSAO)
-		_ssao = new SSAO(_fboWidth, _fboHeight);
+	if (_enableHBAO)
+		_initHBAO(&_hbao, _fboWidth, _fboHeight);
+	else if (_enableSSAO)
+		_initSSAO(&_ssao, _fboWidth, _fboHeight);
 		
 	ObjectInitializer lsInitializer;
 
@@ -241,6 +273,8 @@ int DeferredBuffer::Initialize() noexcept
 	geomShader->FSUniformBlockBinding(0, "ObjectBlock");
 	geomShader->FSUniformBlockBinding(1, "MaterialBlock");
 
+	_RegisterCVars();
+
 	return ENGINE_OK;
 }
 
@@ -290,7 +324,7 @@ void DeferredBuffer::RenderLighting() noexcept
 	CameraComponent *cam = CameraManager::GetActiveCamera();
 	RShader *lightShader = _lightingShader->GetRShader();
 
-	if (_hbao)
+	if (_enableHBAO && _hbao)
 	{
 		mat4 worldToView = inverse(cam->GetView());
 		_hbao->SetProjection(value_ptr(cam->GetProjectionMatrix()));
@@ -298,7 +332,7 @@ void DeferredBuffer::RenderLighting() noexcept
 		_hbao->SetViewport(0, 0, _fboWidth, _fboHeight, cam->GetNear(), cam->GetFar());
 		_hbao->Render();
 	}
-	else if (_ssao)
+	else if (_enableSSAO && _ssao)
 		_ssao->Render();
 	
 	DrawAttachment drawAttachments[2] { DrawAttachment::Color0, DrawAttachment::Color1 };
@@ -315,9 +349,9 @@ void DeferredBuffer::RenderLighting() noexcept
 	lightShader->SetTexture(U_TEXTURE3, _gbTextures[GB_TEX_MATERIAL_INFO]);	
 	lightShader->SetTexture(U_TEXTURE5, _gbTextures[GB_TEX_LIGHT_ACCUM]);
 
-	if (_hbao)
+	if (_enableHBAO && _hbao)
 		lightShader->SetTexture(U_TEXTURE4, _hbao->GetTexture());
-	else if (_ssao)
+	else if (_enableSSAO && _ssao)
 		lightShader->SetTexture(U_TEXTURE4, _ssao->GetTexture());
 
 	_sceneLightUbo->UpdateData(0, sizeof(float) * 3, &cam->GetPosition().x);
@@ -427,7 +461,9 @@ void DeferredBuffer::ScreenResized(int width, int height) noexcept
 	data.x = (float)_fboWidth;
 	data.y = (float)_fboHeight;
 
+	_sceneLightUbo->BeginUpdate();
 	_sceneLightUbo->UpdateData(sizeof(vec4) * 3, sizeof(vec2), &data.x);
+	_sceneLightUbo->EndUpdate();
 }
 
 void DeferredBuffer::_Bind() noexcept
@@ -613,6 +649,14 @@ void DeferredBuffer::CopyStencil(RFramebuffer* destFbo) noexcept
 	_fbos[GB_FBO_GEOMETRY]->CopyStencil(destFbo);
 }
 
+void DeferredBuffer::EnableAO(bool enable) noexcept
+{
+	float f = enable ? 1.f : 0.f;
+	_sceneLightUbo->BeginUpdate();
+	_sceneLightUbo->UpdateData((sizeof(vec4) * 3) + (sizeof(float) * 2), sizeof(float), &f);
+	_sceneLightUbo->EndUpdate();
+}
+
 void DeferredBuffer::Release() noexcept
 {
 	_DeleteTextures();
@@ -641,4 +685,10 @@ void DeferredBuffer::Release() noexcept
 	delete _lightUbo; _lightUbo = nullptr;
 	
 	Logger::Log(DR_MODULE, LOG_INFORMATION, "Released");
+}
+
+void DeferredBuffer::_RegisterCVars()
+{
+	REGISTER_CVAR_STATIC(enable_hbao, _drCVar_GetHBAO, _drCVar_SetHBAO);
+	REGISTER_CVAR_STATIC(enable_ssao, _drCVar_GetSSAO, _drCVar_SetSSAO);
 }

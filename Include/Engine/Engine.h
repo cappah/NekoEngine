@@ -71,7 +71,7 @@
 #include <stdint.h>
 
 #include <glm/glm.hpp>
-
+#include <Engine/Console.h>
 #include <Runtime/Runtime.h>
 #include <Renderer/Renderer.h>
 #include <Engine/EngineUtils.h>

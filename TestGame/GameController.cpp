@@ -62,7 +62,7 @@ int GameController::Load()
 
 	return ENGINE_OK;
 }
-
+bool b = true;
 void GameController::Update(double deltaTime) noexcept
 {
 	Object::Update(deltaTime);

@@ -112,6 +112,8 @@ public:
 	ENGINE_API static void CopyDepth(RFramebuffer* destFbo) noexcept;
 	ENGINE_API static void CopyStencil(RFramebuffer* destFbo) noexcept;
 
+	ENGINE_API static void EnableAO(bool enable) noexcept;
+
 	ENGINE_API static void Release() noexcept;
 	
 private:
@@ -134,5 +136,8 @@ private:
 	static void _DeleteTextures() noexcept;
 	
 	DeferredBuffer() { }
+
+	// Console variable functions
+	static void _RegisterCVars();	
 };
 
