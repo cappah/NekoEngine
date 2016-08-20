@@ -42,6 +42,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <limits.h>
 
 #include "tga.h"
@@ -53,20 +54,20 @@ using namespace std;
 
 typedef struct
 {
-    unsigned char  identsize;			// size of ID field that follows 18 byte header (0 usually)
-    unsigned char  colourmaptype;		// type of colour map 0=none, 1=has palette
-    unsigned char  imagetype;			// type of image 2=rgb uncompressed, 10 - rgb rle compressed
+    uint8_t identsize;			// size of ID field that follows 18 byte header (0 usually)
+	uint8_t colourmaptype;		// type of colour map 0=none, 1=has palette
+	uint8_t imagetype;			// type of image 2=rgb uncompressed, 10 - rgb rle compressed
 
-    short colourmapstart;				// first colour map entry in palette
-    short colourmaplength;				// number of colours in palette
-    unsigned char  colourmapbits;		// number of bits per palette entry 15,16,24,32
+	int16_t colourmapstart;				// first colour map entry in palette
+    int16_t colourmaplength;				// number of colours in palette
+	uint8_t colourmapbits;		// number of bits per palette entry 15,16,24,32
 
-    short xstart;						// image x origin
-    short ystart;						// image y origin
-    unsigned short width;						// image width in pixels
-    unsigned short height;						// image height in pixels
-    unsigned char  bits;				// image bits per pixel 24,32
-    unsigned char  descriptor;			// image descriptor bits (vh flip bits)
+	int16_t xstart;						// image x origin
+	int16_t ystart;						// image y origin
+    uint16_t width;						// image width in pixels
+    uint16_t height;						// image height in pixels
+	uint8_t bits;				// image bits per pixel 24,32
+	uint8_t descriptor;			// image descriptor bits (vh flip bits)
 
     // pixel data follows header
 } TGA_HEADER;
@@ -75,6 +76,36 @@ typedef struct
 
 const int IT_COMPRESSED = 10;
 const int IT_UNCOMPRESSED = 2;
+
+inline int16_t swap_int16(int16_t val)
+{
+	return (val << 8) | ((val >> 8) & 0xFF);
+}
+
+inline uint16_t swap_uint16(uint16_t val)
+{
+	return (val << 8) | (val >> 8);
+}
+
+inline void _swapEndianness(TGA_HEADER *header)
+{
+	union
+	{
+		uint32_t i;
+		char c[4];
+	} bint{ 0x01020304 };
+
+	if (bint.c[0] != 1) return;
+
+	header->colourmapstart = swap_int16(header->colourmapstart);
+	header->colourmaplength = swap_int16(header->colourmaplength);
+
+	header->xstart = swap_int16(header->xstart);
+	header->ystart = swap_int16(header->ystart);
+
+	header->width = swap_uint16(header->width);
+	header->height = swap_uint16(header->height);
+}
 
 void LoadCompressedImage(char *pDest, char *pSrc, TGA_HEADER *pHeader)
 {
@@ -170,6 +201,8 @@ char *_loadTGA(string path, int *width, int *height, int *bpp)
 		fclose(fp);
 		return NULL;
 	}
+
+	_swapEndianness(&header);
 
 	if (fseek(fp, 0, SEEK_END) != 0)
 	{
@@ -269,6 +302,8 @@ char* _loadTGAFromMemory(const uint8_t *mem, size_t memSize, int* width, int* he
 	TGA_HEADER header;
 	memcpy(&header, ptr, sizeof(header));
 	ptr += sizeof(header) + header.identsize;
+
+	_swapEndianness(&header);
 
 	if (header.imagetype != IT_COMPRESSED && header.imagetype != IT_UNCOMPRESSED)
 		return nullptr;

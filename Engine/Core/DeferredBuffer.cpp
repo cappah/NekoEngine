@@ -145,6 +145,7 @@ int DeferredBuffer::Initialize() noexcept
 		{
 			Logger::Log(DR_MODULE, LOG_WARNING, "Failed to initialize HBAO+. Will load SSAO instead.");
 			delete _hbao;
+			_hbao = nullptr;
 			_ssao = new SSAO(_fboWidth, _fboHeight);
 		}
 	}
