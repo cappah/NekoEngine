@@ -116,10 +116,16 @@ public:
 
 	void Append(NString &str) { Append(*str); }
 	void Append(std::string &str) { Append(str.c_str()); }
-	void Append(char c) { Append(&c); }
+	void Append(char c) { char f[2] = { c, 0x0 }; Append(f); }
 	void Append(const char *str)
 	{
+		if (!str)
+			return;
+
 		size_t len = strlen(str);
+
+		if (!len)
+			return;
 
 		if (!_str)
 		{
@@ -230,7 +236,7 @@ public:
 
 	void Clear()
 	{
-		memset(_str, 0x0, _length);
+		memset(_str, 0x0, _size);
 		_length = 0;
 	}
 

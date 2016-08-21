@@ -364,6 +364,7 @@ void Engine::_ReadINIFile(const char *file)
 	_config.Engine.ScreenHeight = (int)Platform::GetConfigInt("Engine", "iHeight", 720, file);
 	_config.Engine.Fullscreen = Platform::GetConfigInt("Engine", "bFullscreen", 0, file) != 0;
 	_config.Engine.LoadLooseFiles = Platform::GetConfigInt("Engine", "bLoadLooseFiles", 0, file) != 0;
+	_config.Engine.EnableConsole = Platform::GetConfigInt("Engine", "bEnableConsole", 0, file) != 0;
 
 	_config.Renderer.Quality = Platform::GetConfigInt("Renderer", "iQuality", RENDER_QUALITY_HIGH, file);
 	_config.Renderer.Supersampling = Platform::GetConfigInt("Renderer", "bSupersampling", 0, file) != 0;
@@ -835,6 +836,9 @@ void Engine::Draw() noexcept
 
 	_renderer->EnableFaceCulling(false);
 	_renderer->EnableDepthTest(false);
+
+	if (Console::IsOpen())
+		Console::Draw();
 }
 
 void Engine::Update(double deltaTime) noexcept
@@ -843,6 +847,10 @@ void Engine::Update(double deltaTime) noexcept
 		return;
 
 	Input::Update();
+
+	if (_config.Engine.EnableConsole)
+		if (Input::GetButtonDown(NE_KEY_TILDE))
+			Console::OpenConsole();
 
 	SceneManager::UpdateScene(deltaTime);
 

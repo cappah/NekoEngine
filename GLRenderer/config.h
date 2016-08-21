@@ -47,4 +47,4 @@
  * - GFSDK_SSAO_LIB = GFSDK_SSAO.win64.lib
  * Alternatively, you can add the paths and the library manually to the project configuration
  */
-#define ENABLE_HBAO
+//#define ENABLE_HBAO

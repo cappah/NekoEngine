@@ -62,16 +62,16 @@ int GameController::Load()
 
 	return ENGINE_OK;
 }
-bool b = true;
+
 void GameController::Update(double deltaTime) noexcept
 {
 	Object::Update(deltaTime);
 
 	if (Input::GetButtonDown("exit"))
-		Console::ExecuteCommand("call eng_exit");
+		Console::ExecuteCommand("call exit");
 
 	if (Input::GetButtonDown("show_stats"))
-		Engine::DrawStats(!Engine::IsDrawingStats());
+		Console::ExecuteCommand("call showstats");
 
 	if (Input::GetButtonDown("next_scene"))
 		SceneManager::LoadNextScene();
@@ -80,5 +80,5 @@ void GameController::Update(double deltaTime) noexcept
 		SceneManager::GetActiveScene()->SetDrawLights(!SceneManager::GetActiveScene()->GetDrawLights());
 
 	if (Input::GetButtonDown("screenshot"))
-		Console::ExecuteCommand("call eng_screenshot");
+		Console::ExecuteCommand("call screenshot");
 }

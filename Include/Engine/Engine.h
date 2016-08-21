@@ -173,6 +173,7 @@ struct EngineConfig
 	int ScreenWidth;
 	bool Fullscreen;
 	bool LoadLooseFiles;
+	bool EnableConsole;
 	char DataDirectory[PATH_SIZE];
 	char LogFile[PATH_SIZE];
 };

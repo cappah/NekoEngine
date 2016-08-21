@@ -181,7 +181,8 @@ int DeferredBuffer::Initialize() noexcept
 
 	if (_enableHBAO)
 		_initHBAO(&_hbao, _fboWidth, _fboHeight);
-	else if (_enableSSAO)
+	
+	if (_enableSSAO && !_hbao)
 		_initSSAO(&_ssao, _fboWidth, _fboHeight);
 		
 	ObjectInitializer lsInitializer;
@@ -689,6 +690,6 @@ void DeferredBuffer::Release() noexcept
 
 void DeferredBuffer::_RegisterCVars()
 {
-	REGISTER_CVAR_STATIC(enable_hbao, _drCVar_GetHBAO, _drCVar_SetHBAO);
-	REGISTER_CVAR_STATIC(enable_ssao, _drCVar_GetSSAO, _drCVar_SetSSAO);
+	REGISTER_CVAR_STATIC(enableHBAO, _drCVar_GetHBAO, _drCVar_SetHBAO);
+	REGISTER_CVAR_STATIC(enableSSAO, _drCVar_GetSSAO, _drCVar_SetSSAO);
 }

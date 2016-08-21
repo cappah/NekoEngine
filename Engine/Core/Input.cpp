@@ -156,7 +156,12 @@ void Input::Key(int key, bool isPressed) noexcept
 	int code = _keymap[key];
 
 	if (isPressed && !GetButton(code))
-		_keyDown.push_back(code);
+	{
+		if (Console::IsOpen())
+			Console::HandleKeyDown(code);
+		else
+			_keyDown.push_back(code);
+	}
 	else if(!isPressed)
 		_keyUp.push_back(code);
 }
@@ -247,8 +252,8 @@ map<uint8_t, char> keycodeToChar =
 	{ NE_KEY_QUOTE, '\'' },
 	{ NE_KEY_PLUS, '+' },
 	{ NE_KEY_MINUS, '-' },
-	{ NE_KEY_SLASH, '\\' },
-	{ NE_KEY_BKSLASH, '/' },
+	{ NE_KEY_SLASH, '/' },
+	{ NE_KEY_BKSLASH, '\\' },
 	{ NE_KEY_LBRACKET, '[' },
 	{ NE_KEY_RBRACKET, ']' },
 	{ NE_KEY_NUM_MULT, '*' },

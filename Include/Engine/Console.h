@@ -46,13 +46,6 @@
 #include <Engine/Engine.h>
 #include <Runtime/Runtime.h>
 
-struct ConsoleString
-{
-	NString text;
-	glm::vec2 pos;
-	glm::vec3 color;
-};
-
 template<typename T>
 class ConsoleVariable
 {
@@ -88,6 +81,7 @@ public:
 
 	ENGINE_API static void OpenConsole() { _open = true; }
 	ENGINE_API static void CloseConsole() { _open = false; }
+	ENGINE_API static bool IsOpen() { return _open; }
 
 	static void Draw();
 
@@ -114,7 +108,7 @@ private:
 	};
 
 	static bool _open;
-	static NArray<ConsoleString> _text;
+	static NArray<NString> _text;
 	static std::map<NString, CVarFuncs> _vars;
 	static std::map<NString, std::function<void()>> _voidFuncs;
 	static std::map<NString, std::function<void(NArray<NString> &)>> _argFuncs;

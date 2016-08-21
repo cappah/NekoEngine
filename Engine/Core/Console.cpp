@@ -41,11 +41,13 @@
 #include <Engine/Console.h>
 #include <Engine/Keycodes.h>
 
+#define MAX_SCREEN_LINES	15
+
 using namespace std;
 using namespace glm;
 
 bool Console::_open;
-NArray<ConsoleString> Console::_text;
+NArray<NString> Console::_text;
 map<NString, Console::CVarFuncs> Console::_vars;
 map<NString, function<void()>> Console::_voidFuncs;
 map<NString, function<void(NArray<NString> &)>> Console::_argFuncs;
@@ -58,29 +60,48 @@ void eng_setres(NArray<NString> &args)
 	Engine::ScreenResized((int)args[1], (int)args[2]);
 }
 
-void eng_showstats(NArray<NString> &args)
+void eng_showstats()
 {
+	Engine::DrawStats(!Engine::IsDrawingStats());
+}
 
+void eng_pause()
+{
+	Engine::Pause(!Engine::IsPaused());
 }
 
 int Console::Initialize()
 {
-	_voidFuncs.insert(make_pair("eng_exit", Engine::Exit));
-	_voidFuncs.insert(make_pair("eng_screenshot", Engine::SaveScreenshot));
+	_voidFuncs.insert(make_pair("exit", Engine::Exit));
+	_voidFuncs.insert(make_pair("screenshot", Engine::SaveScreenshot));
+	_voidFuncs.insert(make_pair("showstats", eng_showstats));
+	_voidFuncs.insert(make_pair("pause", eng_pause));
 	
-	_argFuncs.insert(make_pair("eng_setres", eng_setres));
+	_argFuncs.insert(make_pair("setres", eng_setres));
 
-	return _buff.Resize(100) ? ENGINE_OK : ENGINE_FAIL;
+	if (!_buff.Resize(100))
+		return ENGINE_FAIL;
+	
+	_buff.Clear();
+
+	return ENGINE_OK;
 }
 
 void Console::Print(NString &string)
 {
-	_nextX += 20;
+	_text.Add(string);
 }
 
 void Console::Print(const char *fmt, ...)
 {
-	//
+	va_list args;
+	char buff[100];
+
+	va_start(args, fmt);
+	vsnprintf(buff, 100, fmt, args);
+	va_end(args);
+	
+	_text.Add(buff);
 }
 
 void Console::Clear()
@@ -93,16 +114,24 @@ void Console::Draw()
 	if (!_open)
 		return;
 
-	for (ConsoleString &cstr : _text)
-		Engine::DrawString(cstr.pos, cstr.color, cstr.text);
+	vec2 pos = vec2(10, Engine::GetScreenHeight() * .9);
 
-	Engine::DrawString(vec2(100, 100), vec3(1, 1, 1), _buff);
+	Engine::DrawString(vec2(pos.x, pos.y), vec3(1, 1, 1), "> ");
+	Engine::DrawString(vec2(pos.x + 20, pos.y), vec3(1, 1, 1), _buff);
+	pos.y -= 20 * (_text.Count() + 1);
+
+	for (NString &nstr : _text)
+	{
+		Engine::DrawString(pos, vec3(1, 1, 1), nstr);
+		pos.y += 20;
+	}
 }
 
 void Console::HandleKeyDown(uint8_t key)
 {
 	if (key == NE_KEY_RETURN)
 	{
+		Print(_buff);
 		ExecuteCommand(_buff);
 		_buff.Clear();
 	}
@@ -128,9 +157,10 @@ void Console::HandleKeyDown(uint8_t key)
 	{
 		//
 	}
+	else if (key == NE_KEY_TILDE)
+		_open = false;
 	else
 	{
-
 		_buff.Append(keycodeToChar[key]);
 	}
 }
