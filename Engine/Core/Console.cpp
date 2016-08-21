@@ -52,7 +52,6 @@ map<NString, Console::CVarFuncs> Console::_vars;
 map<NString, function<void()>> Console::_voidFuncs;
 map<NString, function<void(NArray<NString> &)>> Console::_argFuncs;
 
-static float _nextX, _nextY;
 static NString _buff;
 
 void eng_setres(NArray<NString> &args)

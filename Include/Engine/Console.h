@@ -46,29 +46,12 @@
 #include <Engine/Engine.h>
 #include <Runtime/Runtime.h>
 
-template<typename T>
-class ConsoleVariable
-{
-public:
-	ConsoleVariable(NString name) { Console::RegisterCVar(name, [=]() -> NString &{ return this->GetString(); }, [=](NString &str) { this->SetString(str); }); }
-
-	NString &GetString() { return _str; }
-	void SetString(NString &str) { }
-
-	T &Get() { return _t; }
-	void Set(T t) { _t = t; }
-
-private:
-	T _t;
-	NString _str;
-};
-
 class Console
 {
 public:
 	static int Initialize();
 
-	ENGINE_API static void RegisterCVar(NString name, std::function<NString &()> get, std::function<void(NString &)> set) { _vars.insert(std::make_pair(name, CVarFuncs(get, set))); }
+	ENGINE_API static void RegisterCVar(NString name, std::function<NString()> get, std::function<void(NString &)> set) { _vars.insert(std::make_pair(name, CVarFuncs(get, set))); }
 	ENGINE_API static void UnregisterCVar();
 
 	ENGINE_API static void RegisterFunc(NString name, std::function<void()> func) { _voidFuncs.insert(std::make_pair(name, func)); }
@@ -93,7 +76,7 @@ private:
 	struct CVarFuncs
 	{
 		CVarFuncs() { Get = nullptr; Set = nullptr; }
-		CVarFuncs(std::function<NString &()> get, std::function<void(NString &)> set) 
+		CVarFuncs(std::function<NString()> get, std::function<void(NString &)> set) 
 		{
 			Get = get;
 			Set = set;
@@ -103,7 +86,7 @@ private:
 			Get = other.Get;
 			Set = other.Set;
 		}
-		std::function<NString &()> Get;
+		std::function<NString()> Get;
 		std::function<void(NString &)> Set;
 	};
 
@@ -116,9 +99,26 @@ private:
 	Console();
 };
 
+template<typename T>
+class ConsoleVariable
+{
+public:
+	ConsoleVariable(NString name) { Console::RegisterCVar(name, [=]() -> NString &{ return this->GetString(); }, [=](NString &str) { this->SetString(str); }); }
+	
+	NString &GetString() { return _str; }
+	void SetString(NString &str) { }
+	
+	T &Get() { return _t; }
+	void Set(T t) { _t = t; }
+	
+private:
+	T _t;
+	NString _str;
+};
+
 #define REGISTER_CVAR(a, b) static ConsoleVariable<a> b(#b)
-#define REGISTER_CVAR_FUNCS(a, b, c) Console::RegisterCVar(#a, [=]() -> NString &{ return this->b(); }, [=](NString &str) { this->c(str); });
-#define REGISTER_CVAR_STATIC(a, b, c) Console::RegisterCVar(#a, [=]() -> NString &{ return b(); }, [=](NString &str) { c(str); });
+#define REGISTER_CVAR_FUNCS(a, b, c) Console::RegisterCVar(#a, [=]() -> NString { return this->b(); }, [=](NString &str) { this->c(str); });
+#define REGISTER_CVAR_STATIC(a, b, c) Console::RegisterCVar(#a, [=]() -> NString { return b(); }, [=](NString &str) { c(str); });
 
 #if defined(_MSC_VER)
 template class ENGINE_API ConsoleVariable<float>;

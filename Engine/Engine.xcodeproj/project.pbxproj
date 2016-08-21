@@ -75,6 +75,9 @@
 		12822BBA1CC1DB9500EE5D0A /* EngineDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 12822BB81CC1DB9500EE5D0A /* EngineDelegate.h */; };
 		12822BBB1CC1DB9500EE5D0A /* EngineDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 12822BB91CC1DB9500EE5D0A /* EngineDelegate.mm */; };
 		1296BBD41CDBB6B500D17488 /* PlatformDetect.h in Headers */ = {isa = PBXBuildFile; fileRef = 1296BBD31CDBB6B500D17488 /* PlatformDetect.h */; };
+		1297E3971D69E91500A00959 /* Console.h in Headers */ = {isa = PBXBuildFile; fileRef = 1297E3961D69E91500A00959 /* Console.h */; };
+		1297E3991D69E93100A00959 /* Console.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1297E3981D69E93100A00959 /* Console.cpp */; };
+		1297E39A1D69E93100A00959 /* Console.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1297E3981D69E93100A00959 /* Console.cpp */; };
 		12A4ABC71D648CD400D22B76 /* HBAO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12A4ABC61D648CD400D22B76 /* HBAO.cpp */; };
 		12A4ABC81D648CD400D22B76 /* HBAO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12A4ABC61D648CD400D22B76 /* HBAO.cpp */; };
 		12A4ABCA1D648CEC00D22B76 /* HBAO.h in Headers */ = {isa = PBXBuildFile; fileRef = 12A4ABC91D648CEC00D22B76 /* HBAO.h */; };
@@ -265,6 +268,8 @@
 		1296BB701CDB7EEA00D17488 /* EngineAppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = EngineAppDelegate.mm; path = Platform/iOS/EngineAppDelegate.mm; sourceTree = SOURCE_ROOT; };
 		1296BB731CDB7F3400D17488 /* iOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = iOS.mm; path = Platform/iOS/iOS.mm; sourceTree = SOURCE_ROOT; };
 		1296BBD31CDBB6B500D17488 /* PlatformDetect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlatformDetect.h; sourceTree = "<group>"; };
+		1297E3961D69E91500A00959 /* Console.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Console.h; sourceTree = "<group>"; };
+		1297E3981D69E93100A00959 /* Console.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Console.cpp; path = Core/Console.cpp; sourceTree = SOURCE_ROOT; };
 		12A4ABC61D648CD400D22B76 /* HBAO.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HBAO.cpp; path = Core/HBAO.cpp; sourceTree = SOURCE_ROOT; };
 		12A4ABC91D648CEC00D22B76 /* HBAO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HBAO.h; sourceTree = "<group>"; };
 		12B0CF5B1CEB4A9700E5D2FE /* SkeletalMeshComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SkeletalMeshComponent.cpp; path = Scene/Components/SkeletalMeshComponent.cpp; sourceTree = SOURCE_ROOT; };
@@ -403,6 +408,7 @@
 		12822B0A1CC1AD9F00EE5D0A /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				1297E3981D69E93100A00959 /* Console.cpp */,
 				12FABB1B1D3256C400D88639 /* CameraManager.cpp */,
 				12C0588E1D2AF4E90042023D /* Input.cpp */,
 				12C560901CFB57B200E25478 /* AnimationClip.cpp */,
@@ -542,6 +548,7 @@
 		12822B5B1CC1AE4E00EE5D0A /* Engine */ = {
 			isa = PBXGroup;
 			children = (
+				1297E3961D69E91500A00959 /* Console.h */,
 				12FABB1E1D3256D200D88639 /* CameraManager.h */,
 				12C058911D2AF5360042023D /* Input.h */,
 				12C058921D2AF5360042023D /* Keycodes.h */,
@@ -788,6 +795,7 @@
 				12C058931D2AF5360042023D /* Input.h in Headers */,
 				12C8E5D41D59DA76002DD5EE /* Runtime.h in Headers */,
 				12C058941D2AF5360042023D /* Keycodes.h in Headers */,
+				1297E3971D69E91500A00959 /* Console.h in Headers */,
 				12822BBA1CC1DB9500EE5D0A /* EngineDelegate.h in Headers */,
 				12ECE5E21CF110D2004F3697 /* AudioSourceComponent.h in Headers */,
 				12C8E5D21D59DA76002DD5EE /* NArray.h in Headers */,
@@ -899,6 +907,7 @@
 				12C560C31CFB57B200E25478 /* Texture.cpp in Sources */,
 				124A31F41CDC262D00472893 /* EngineAppDelegate.mm in Sources */,
 				124A32051CDC264100472893 /* VFSFile.cpp in Sources */,
+				1297E39A1D69E93100A00959 /* Console.cpp in Sources */,
 				12ECE5E51CF110F1004F3697 /* AudioSourceComponent.cpp in Sources */,
 				124A32011CDC264100472893 /* AssetLoader.cpp in Sources */,
 				12C560B71CFB57B200E25478 /* ShadowMap.cpp in Sources */,
@@ -934,6 +943,7 @@
 				12C560B81CFB57B200E25478 /* SkeletalMesh.cpp in Sources */,
 				12C560A21CFB57B200E25478 /* AnimationClip.cpp in Sources */,
 				12822B561CC1AE2E00EE5D0A /* VFSFile.cpp in Sources */,
+				1297E3991D69E93100A00959 /* Console.cpp in Sources */,
 				12FABB1C1D3256C400D88639 /* CameraManager.cpp in Sources */,
 				12822B2F1CC1ADD500EE5D0A /* Mac.mm in Sources */,
 				12822B441CC1AE0E00EE5D0A /* Scene.cpp in Sources */,
