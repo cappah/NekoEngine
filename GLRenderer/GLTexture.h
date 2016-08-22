@@ -88,13 +88,6 @@ public:
 		const void *posX, const void *negX, const void *posY, const void *negY, const void *posZ, const void *negZ) override;
 	virtual void SetImageCubeFace(CubeFace face, int level, int width, int height, TextureFormat format, TextureInternalType type, const void *data) override;
 
-	virtual void SetCompressedImage1D(int level, int width, CompressedTextureFormat format, int size, const void* data) override;
-	virtual void SetCompressedImage2D(int level, int width, int height, CompressedTextureFormat format, int size, const void* data) override;
-	virtual void SetCompressedImage3D(int level, int width, int height, int depth, CompressedTextureFormat format, int size, const void* data) override;
-	virtual void SetCompressedImageCube(int level, int width, int height, CompressedTextureFormat format, int size,
-		const void *posX, const void *negX, const void *posY, const void *negY, const void *posZ, const void *negZ) override;
-	virtual void SetCompressedImageCubeFace(CubeFace face, int level, int width, int height, CompressedTextureFormat format, int size, const void *data) override;
-
 	virtual void SetMinFilter(TextureFilter filter) override;
 	virtual void SetMagFilter(TextureFilter filter) override;
 	virtual void SetAnisotropic(int aniso) override;

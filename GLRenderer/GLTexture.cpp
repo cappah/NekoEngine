@@ -90,11 +90,7 @@ GLenum GL_TexFormatSized[26] =
 	GL_R8UI,
 	GL_RG8UI,
 	GL_RGB8UI,
-	GL_RGBA8UI,
-	GL_COMPRESSED_RGB_S3TC_DXT1_EXT,
-	GL_COMPRESSED_RGBA_S3TC_DXT1_EXT,
-	GL_COMPRESSED_RGBA_S3TC_DXT3_EXT,
-	GL_COMPRESSED_RGBA_S3TC_DXT5_EXT
+	GL_RGBA8UI
 };
 
 GLenum GL_TexFormat[10] =
@@ -109,14 +105,6 @@ GLenum GL_TexFormat[10] =
 	GL_RG_INTEGER,
 	GL_RGB_INTEGER,
 	GL_RGBA_INTEGER
-};
-
-GLenum GL_CompressedTexFormat[4] =
-{
-	GL_COMPRESSED_RGB_S3TC_DXT1_EXT,
-	GL_COMPRESSED_RGBA_S3TC_DXT1_EXT,
-	GL_COMPRESSED_RGBA_S3TC_DXT3_EXT,
-	GL_COMPRESSED_RGBA_S3TC_DXT5_EXT
 };
 
 GLenum GL_TexType[5] =
@@ -439,57 +427,6 @@ void GLTexture::SetImageCubeFace(CubeFace face, int level, int width, int height
 	_format = format;
 	GL_CHECK(glBindTexture(GL_TEXTURE_CUBE_MAP, _id));
 	GL_CHECK(glTexSubImage2D(GL_CubeFace[(int)face], level, 0, 0, width, height, GL_TexFormat[(int)format], GL_TexType[(int)type], data));
-	GL_CHECK(glBindTexture(GL_TEXTURE_CUBE_MAP, 0));
-}
-
-void GLTexture::SetCompressedImage1D(int level, int width, CompressedTextureFormat format, int size, const void* data)
-{
-	GL_CHECK(glBindTexture(GL_TexTarget[(int)_type], _id));
-	GL_CHECK(glCompressedTexSubImage1D(GL_TexTarget[(int)_type], level, 0, width, GL_CompressedTexFormat[(int)format], size, data));
-	
-	_compressed = true;
-	_compressedFormat = format;
-}
-
-void GLTexture::SetCompressedImage2D(int level, int width, int height, CompressedTextureFormat format, int size, const void* data)
-{
-	GL_CHECK(glBindTexture(GL_TexTarget[(int)_type], _id));
-	GL_CHECK(glCompressedTexImage2D(GL_TEXTURE_2D, level, GL_CompressedTexFormat[(int)format], width, height, 0, size, data));
-	
-	_compressed = true;
-	_compressedFormat = format;
-}
-
-void GLTexture::SetCompressedImage3D(int level, int width, int height, int depth, CompressedTextureFormat format, int size, const void* data)
-{
-	GL_CHECK(glBindTexture(GL_TexTarget[(int)_type], _id));
-	GL_CHECK(glCompressedTexImage3D(GL_TexTarget[(int)_type], level, GL_CompressedTexFormat[(int)format], width, height, depth, 0, size, data));
-	
-	_compressed = true;
-	_compressedFormat = format;
-}
-
-void GLTexture::SetCompressedImageCube(int level, int width, int height, CompressedTextureFormat format, int size,
-	const void *posX, const void *negX, const void *posY, const void *negY, const void *posZ, const void *negZ)
-{
-	_compressed = true;
-	_compressedFormat = format;
-	GL_CHECK(glBindTexture(GL_TEXTURE_CUBE_MAP, _id));
-	GL_CHECK(glCompressedTexSubImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, level, 0, 0, width, height, GL_CompressedTexFormat[(int)format], size, posX));
-	GL_CHECK(glCompressedTexSubImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, level, 0, 0, width, height, GL_CompressedTexFormat[(int)format], size, negX));
-	GL_CHECK(glCompressedTexSubImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, level, 0, 0, width, height, GL_CompressedTexFormat[(int)format], size, posY));
-	GL_CHECK(glCompressedTexSubImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, level, 0, 0, width, height, GL_CompressedTexFormat[(int)format], size, negY));
-	GL_CHECK(glCompressedTexSubImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, level, 0, 0, width, height, GL_CompressedTexFormat[(int)format], size, posZ));
-	GL_CHECK(glCompressedTexSubImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, level, 0, 0, width, height, GL_CompressedTexFormat[(int)format], size, negZ));
-	GL_CHECK(glBindTexture(GL_TEXTURE_CUBE_MAP, 0));
-}
-
-void GLTexture::SetCompressedImageCubeFace(CubeFace face, int level, int width, int height, CompressedTextureFormat format, int size, const void *data)
-{
-	_compressed = true;
-	_compressedFormat = format;
-	GL_CHECK(glBindTexture(GL_TEXTURE_CUBE_MAP, _id));
-	GL_CHECK(glCompressedTexSubImage2D(GL_CubeFace[(int)face], level, 0, 0, width, height, GL_CompressedTexFormat[(int)format], size, data));
 	GL_CHECK(glBindTexture(GL_TEXTURE_CUBE_MAP, 0));
 }
 

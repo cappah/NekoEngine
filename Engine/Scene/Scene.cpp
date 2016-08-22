@@ -447,6 +447,7 @@ int Scene::Load()
 		_sceneIndexBuffer->SetStorage(sizeof(uint32_t) * _sceneIndices.size(), _sceneIndices.data());
 
 		BufferAttribute attrib;
+		attrib.name = "POSITION";
 		attrib.index = SHADER_POSITION_ATTRIBUTE;
 		attrib.size = 3;
 		attrib.type = BufferDataType::Float;
@@ -455,40 +456,48 @@ int Scene::Load()
 		attrib.ptr = (void *)VERTEX_POSITION_OFFSET;
 		_sceneVertexBuffer->AddAttribute(attrib);
 
+		attrib.name = "COLOR";
 		attrib.index = SHADER_COLOR_ATTRIBUTE;
 		attrib.ptr = (void *)VERTEX_COLOR_OFFSET;
 		_sceneVertexBuffer->AddAttribute(attrib);
 
+		attrib.name = "NORMAL";
 		attrib.index = SHADER_NORMAL_ATTRIBUTE;
 		attrib.ptr = (void *)VERTEX_NORMAL_OFFSET;
 		_sceneVertexBuffer->AddAttribute(attrib);
 
+		attrib.name = "TANGENT";
 		attrib.index = SHADER_TANGENT_ATTRIBUTE;
 		attrib.ptr = (void *)VERTEX_TANGENT_OFFSET;
 		_sceneVertexBuffer->AddAttribute(attrib);
 
+		attrib.name = "TEXCOORD";
 		attrib.index = SHADER_UV_ATTRIBUTE;
 		attrib.size = 2;
 		attrib.ptr = (void *)VERTEX_UV_OFFSET;
 		_sceneVertexBuffer->AddAttribute(attrib);
 
+		attrib.name = "TEXCOORD";
 		attrib.index = SHADER_TERRAINUV_ATTRIBUTE;
 		attrib.size = 2;
 		attrib.ptr = (void *)VERTEX_TUV_OFFSET;
 		_sceneVertexBuffer->AddAttribute(attrib);
 
+		attrib.name = "INDEX";
 		attrib.index = SHADER_INDEX_ATTRIBUTE;
 		attrib.size = 4;
 		attrib.type = BufferDataType::Int;
 		attrib.ptr = (void *)VERTEX_INDEX_OFFSET;
 		_sceneVertexBuffer->AddAttribute(attrib);
 
+		attrib.name = "WEIGHT";
 		attrib.index = SHADER_WEIGHT_ATTRIBUTE;
 		attrib.size = 4;
 		attrib.type = BufferDataType::Float;
 		attrib.ptr = (void *)VERTEX_WEIGHT_OFFSET;
 		_sceneVertexBuffer->AddAttribute(attrib);
 
+		attrib.name = "NUMBONES";
 		attrib.index = SHADER_NUMBONES_ATTRIBUTE;
 		attrib.size = 1;
 		attrib.type = BufferDataType::Int;

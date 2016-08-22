@@ -57,6 +57,12 @@ typedef struct NFONT_CHARACTER_INFO
 	float offset;
 } NFontCharacterInfo;
 
+typedef struct NFONT_VERTEX
+{
+	glm::vec4 pos;
+	glm::vec3 color;
+} NFontVertex;
+
 class NFont : public Resource
 {
 public:
@@ -78,7 +84,7 @@ public:
 	ENGINE_API virtual ~NFont();
 
 private:
-	NArray<Vertex> _vertices;
+	NArray<NFontVertex> _vertices;
 	NArray<uint32_t> _indices;
 	glm::mat4 _projection;
 	NFontCharacterInfo _characterInfo[NFONT_NUM_CHARS];
@@ -99,4 +105,5 @@ private:
 
 #if defined(_MSC_VER)
 template class ENGINE_API NArray<NFont*>;
+template class ENGINE_API NArray<NFontVertex>;
 #endif

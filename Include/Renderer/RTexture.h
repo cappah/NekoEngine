@@ -92,11 +92,7 @@ enum class TextureSizedFormat : uint8_t
 	R_8UI,
 	RG_8UI,
 	RGB_8UI,
-	RGBA_8UI,
-	RGB_S3TC_DXT1,
-	RGBA_S3TC_DXT1,
-	RGBA_S3TC_DXT3,
-	RGBA_S3TC_DXT5
+	RGBA_8UI
 };
 
 enum class TextureFormat : uint8_t
@@ -111,14 +107,6 @@ enum class TextureFormat : uint8_t
 	RG_INT,
 	RGB_INT,
 	RGBA_INT
-};
-
-enum class CompressedTextureFormat : uint8_t
-{	
-	RGB_S3TC_DXT1 = 0,
-	RGBA_S3TC_DXT1 = 1,
-	RGBA_S3TC_DXT3,
-	RGBA_S3TC_DXT5
 };
 
 enum class TextureInternalType : uint8_t
@@ -151,8 +139,6 @@ public:
 	RTexture(TextureType type) : 
 		_type(type),
 		_format(TextureFormat::RGB),
-		_compressedFormat(CompressedTextureFormat::RGB_S3TC_DXT1),
-		_compressed(false),
 		_mipLevels(1),
 		_samples(1),
 		_width(0),
@@ -162,13 +148,11 @@ public:
 
 	virtual TextureType GetType() { return _type; }
 	virtual TextureFormat GetFormat() { return _format; }
-	virtual CompressedTextureFormat GetCompressedFormat() { return _compressedFormat; }
 	virtual int GetMipLevels() { return _mipLevels; }
 	virtual int GetSamples() { return _samples; }
 	virtual int GetWidth() { return _width; }
 	virtual int GetHeight() { return _height; }
 	virtual int GetDepth() { return _depth; }
-	virtual bool IsCompressed() { return _compressed; }
 
 	/**
 	 * Ignore the first n mip levels
@@ -250,32 +234,6 @@ public:
 	virtual void SetImageCubeFace(CubeFace face, int level, int width, int height, TextureFormat format, TextureInternalType type, const void *data) = 0;
 
 	/**
-	 * Set image data for a one-dimensional texture in a compressed format
-	 */
-	virtual void SetCompressedImage1D(int level, int width, CompressedTextureFormat format, int size, const void* data) = 0;
-	
-	/**
-	 * Set image data for a two-dimensional texture in a compressed format
-	 */
-	virtual void SetCompressedImage2D(int level, int width, int height, CompressedTextureFormat format, int size, const void* data) = 0;
-	
-	/**
-	 * Set image data for a three-dimensional texture in a compressed format
-	 */
-	virtual void SetCompressedImage3D(int level, int width, int height, int depth, CompressedTextureFormat format, int size, const void* data) = 0;
-
-	/**
-	 * Set image data for a cubemap texture in a compressed format
-	 */
-	virtual void SetCompressedImageCube(int level, int width, int height, CompressedTextureFormat format, int size,
-		const void *posX, const void *negX, const void *posY, const void *negY, const void *posZ, const void *negZ) = 0;
-
-	/**
- 	 * Set image data for a cubemap face in a compressed format
-	 */
-	virtual void SetCompressedImageCubeFace(CubeFace face, int level, int width, int height, CompressedTextureFormat format, int size, const void *data) = 0;
-
-	/**
 	 * Set the minification filtering
 	 */
 	virtual void SetMinFilter(TextureFilter filter) = 0;
@@ -343,7 +301,5 @@ public:
 protected:
 	TextureType _type;
 	TextureFormat _format;
-	CompressedTextureFormat _compressedFormat;
-	bool _compressed;
 	int _mipLevels, _samples, _width, _height, _depth;
 };

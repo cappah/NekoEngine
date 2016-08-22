@@ -43,7 +43,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <Engine/Engine.h>
-#include <Engine/Vertex.h>
 #include <Engine/Shader.h>
 #include <Engine/Texture.h>
 #include <Engine/NFont.h>
@@ -208,7 +207,7 @@ int NFont::_BuildAtlas()
 	if ((_vertexBuffer = Engine::GetRenderer()->CreateBuffer(BufferType::Vertex, false, true)) == nullptr)
 	{ DIE("Out of resources"); }
 	_vertexBuffer->SetNumBuffers(1);
-	_vertexBuffer->SetStorage(sizeof(Vertex) * vboSize, nullptr);
+	_vertexBuffer->SetStorage(sizeof(NFontVertex) * vboSize, nullptr);
 
 	if ((_indexBuffer = Engine::GetRenderer()->CreateBuffer(BufferType::Index, false, true)) == nullptr)
 	{ DIE("Out of resources"); }
@@ -216,21 +215,18 @@ int NFont::_BuildAtlas()
 	_indexBuffer->SetStorage(sizeof(uint32_t) * iboSize, nullptr);
 
 	BufferAttribute attrib;
+	attrib.name = "POSITION";
 	attrib.index = SHADER_POSITION_ATTRIBUTE;
-	attrib.size = 3;
+	attrib.size = 4;
 	attrib.type = BufferDataType::Float;
 	attrib.normalize = false;
-	attrib.stride = sizeof(Vertex);
-	attrib.ptr = (void *)VERTEX_POSITION_OFFSET;
+	attrib.stride = sizeof(NFontVertex);
+	attrib.ptr = (void *)offsetof(NFontVertex, pos);
 	_vertexBuffer->AddAttribute(attrib);
 
+	attrib.name = "COLOR";
 	attrib.index = SHADER_COLOR_ATTRIBUTE;
-	attrib.ptr = (void *)VERTEX_COLOR_OFFSET;
-	_vertexBuffer->AddAttribute(attrib);
-
-	attrib.index = SHADER_UV_ATTRIBUTE;
-	attrib.size = 2;
-	attrib.ptr = (void *)VERTEX_UV_OFFSET;
+	attrib.ptr = (void *)offsetof(NFontVertex, color);
 	_vertexBuffer->AddAttribute(attrib);
 
 	FT_Done_Face(face);
@@ -293,23 +289,19 @@ void NFont::Draw(NString text, vec2 &pos, vec3 &color) noexcept
 		float w = (float)info.size.x;
 		float h = (float)info.size.y;
 
-		Vertex v;
+		NFontVertex v;
 		v.color = color;
 
-		v.pos = vec3(x, y, 0.f);
-		v.uv = vec2(info.offset, (float)info.size.y / (float)_texHeight);
+		v.pos = vec4(x, y, info.offset, (float)info.size.y / (float)_texHeight);
 		_vertices.Add(v);
 
-		v.pos = vec3(x, y + h, 0.f);
-		v.uv = vec2(info.offset, 0.f);
+		v.pos = vec4(x, y + h, info.offset, 0.f);
 		_vertices.Add(v);
 
-		v.pos = vec3(x + w, y + h, 0.f);
-		v.uv = vec2(info.offset + ((float)info.size.x / (float)_texWidth), 0.f);
+		v.pos = vec4(x + w, y + h, info.offset + ((float)info.size.x / (float)_texWidth), 0.f);
 		_vertices.Add(v);
 
-		v.pos = vec3(x + w, y, 0);
-		v.uv = vec2(info.offset + ((float)info.size.x / (float)_texWidth), (float)info.size.y / (float)_texHeight);
+		v.pos = vec4(x + w, y, info.offset + ((float)info.size.x / (float)_texWidth), (float)info.size.y / (float)_texHeight);
 		_vertices.Add(v);
 
 		unsigned int indexOffset = (4 * i) + vertexCount;
@@ -339,7 +331,7 @@ void NFont::Render()
 	_vertexBuffer->BeginUpdate();
 	_indexBuffer->BeginUpdate();
 
-	_vertexBuffer->UpdateData(0, (sizeof(Vertex) * _vertices.Count()), *_vertices);
+	_vertexBuffer->UpdateData(0, (sizeof(NFontVertex) * _vertices.Count()), *_vertices);
 	_indexBuffer->UpdateData(0, (sizeof(uint32_t) * _indices.Count()), *_indices);
 
 	_vertexBuffer->EndUpdate();

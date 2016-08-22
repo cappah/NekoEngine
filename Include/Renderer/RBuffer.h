@@ -42,6 +42,7 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <vector>
+#include <string>
 
 #define R_VERTEX_BUFFER	0
 #define R_INDEX_BUFFER	1
@@ -63,6 +64,7 @@ enum class BufferDataType
 typedef struct BUFFER_ATTRIB
 {
 	uint32_t index;
+	std::string name;
 	int32_t size;
 	BufferDataType type;
 	bool normalize;

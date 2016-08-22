@@ -52,7 +52,7 @@ public:
 	static int Initialize();
 
 	ENGINE_API static void RegisterCVar(NString name, std::function<NString()> get, std::function<void(NString &)> set) { _vars.insert(std::make_pair(name, CVarFuncs(get, set))); }
-	ENGINE_API static void UnregisterCVar();
+	ENGINE_API static void UnregisterCVar() { }
 
 	ENGINE_API static void RegisterFunc(NString name, std::function<void()> func) { _voidFuncs.insert(std::make_pair(name, func)); }
 	ENGINE_API static void RegisterFunc(NString name, std::function<void(NArray<NString> &)> func) { _argFuncs.insert(std::make_pair(name, func)); }
