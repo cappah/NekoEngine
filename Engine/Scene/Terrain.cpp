@@ -81,7 +81,6 @@ bool Terrain::_GenerateTerrain() noexcept
 	v.pos = vec3();
 	v.color = vec3();
 	v.norm = vec3(0.f, 1.f, 0.f);
-	v.binorm = vec3();
 	v.tgt = vec3();
 	
 	for (int i = 0; i <= _numCells; i++)

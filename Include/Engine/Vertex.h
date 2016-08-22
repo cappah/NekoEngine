@@ -45,7 +45,6 @@
 #define VERTEX_POSITION_OFFSET		offsetof(Vertex, pos)
 #define VERTEX_COLOR_OFFSET			offsetof(Vertex, color)
 #define VERTEX_NORMAL_OFFSET		offsetof(Vertex, norm)
-#define VERTEX_BINORMAL_OFFSET		offsetof(Vertex, binorm)
 #define VERTEX_TANGENT_OFFSET		offsetof(Vertex, tgt)
 #define VERTEX_UV_OFFSET			offsetof(Vertex, uv)
 #define VERTEX_TUV_OFFSET			offsetof(Vertex, terrainUv)
@@ -59,7 +58,6 @@ struct Vertex
 		pos(glm::vec3(0.f)),
 		color(glm::vec3(0.f)),
 		norm(glm::vec3(0.f)),
-		binorm(glm::vec3(0.f)),
 		tgt(glm::vec3(0.f)),
 		uv(glm::vec2(0.f)),
 		terrainUv(glm::vec2(0.f)),
@@ -84,7 +82,6 @@ struct Vertex
 	glm::vec3 pos;
 	glm::vec3 color;
 	glm::vec3 norm;
-	glm::vec3 binorm;
 	glm::vec3 tgt;
 	glm::vec2 uv;
 	glm::vec2 terrainUv;

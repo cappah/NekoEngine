@@ -113,7 +113,7 @@ private:
 			if ((pch = strstr(buff, "pos")) != NULL)
 				EngineUtils::ReadFloatArray(buff + 4, 3, &v.pos.x);
 			else if ((pch = strstr(buff, "binorm")) != NULL)
-				EngineUtils::ReadFloatArray(buff + 7, 3, &v.binorm.x);
+				goto next;
 			else if ((pch = strstr(buff, "norm")) != NULL)
 				EngineUtils::ReadFloatArray(buff + 5, 3, &v.norm.x);
 			else if ((pch = strstr(buff, "tgt")) != NULL)
@@ -127,6 +127,7 @@ private:
 			else if ((pch = strstr(buff, "bonen")) != NULL)
 				EngineUtils::ReadIntArray(buff + 6, 1, &v.numBones);
 
+			next:
 			memset(buff, 0x0, i_buff);
 
 			i_buff = 0;

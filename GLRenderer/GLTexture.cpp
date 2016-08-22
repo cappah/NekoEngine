@@ -67,7 +67,7 @@ GLenum GL_TexWrap[4] =
 	GL_CLAMP_TO_BORDER
 };
 
-GLenum GL_TexFormatSized[26] =
+GLenum GL_TexFormatSized[22] =
 {
 	GL_R8,
 	GL_RG8,
