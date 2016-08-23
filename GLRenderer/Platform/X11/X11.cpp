@@ -245,9 +245,9 @@ void GLRenderer::SwapBuffers()
 void GLRenderer::MakeCurrent(int context)
 {
 	if (context == R_RENDER_CONTEXT)
-		glXMakeCurrent(_dc, hWnd, _ctx);
+		glXMakeCurrent(_dc, _hWnd, _ctx);
 	else
-		glXMakeCurrent(_dc, hWnd, _loadCtx);
+		glXMakeCurrent(_dc, _hWnd, _loadCtx);
 }
 
 void GLRenderer::_DestroyContext()
