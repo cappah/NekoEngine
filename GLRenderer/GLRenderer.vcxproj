@@ -105,6 +105,7 @@
     <ClCompile Include="glad.cpp" />
     <ClCompile Include="GLArrayBuffer.cpp" />
     <ClCompile Include="GLBuffer.cpp" />
+    <ClCompile Include="GLFence.cpp" />
     <ClCompile Include="GLFramebuffer.cpp" />
     <ClCompile Include="GLHBAO.cpp" />
     <ClCompile Include="GLRenderer.cpp" />
@@ -120,6 +121,7 @@
     <ClInclude Include="glad.h" />
     <ClInclude Include="GLArrayBuffer.h" />
     <ClInclude Include="GLBuffer.h" />
+    <ClInclude Include="GLFence.h" />
     <ClInclude Include="GLFramebuffer.h" />
     <ClInclude Include="GLRenderer.h" />
     <ClInclude Include="GLShader.h" />

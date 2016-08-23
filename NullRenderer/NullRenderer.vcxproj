@@ -86,6 +86,7 @@
   <ItemGroup>
     <ClInclude Include="NullArrayBuffer.h" />
     <ClInclude Include="NullBuffer.h" />
+    <ClInclude Include="NullFence.h" />
     <ClInclude Include="NullFramebuffer.h" />
     <ClInclude Include="NullRenderer.h" />
     <ClInclude Include="NullShader.h" />

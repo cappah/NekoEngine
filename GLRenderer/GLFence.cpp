@@ -1,9 +1,9 @@
 /* NekoEngine
  *
- * SceneManager.h
+ * GLFence.cpp
  * Author: Alexandru Naiman
  *
- * SceneManager class definition
+ * OpenGL 4 Renderer Implementation
  *
  * -----------------------------------------------------------------------------
  *
@@ -39,46 +39,19 @@
 
 #pragma once
 
-#include <vector>
-#include <string>
-#include <thread>
+#include "GLFence.h"
 
-#include <Runtime/Runtime.h>
-#include <Engine/Engine.h>
-#include <Engine/LoadingScreen.h>
-#include <Scene/Scene.h>
-
-class SceneManager
+GLFence::GLFence()
 {
-public:
-	ENGINE_API static int Initialize();
+	_sync = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
+}
 
-	ENGINE_API static Scene *GetActiveScene() noexcept { return _activeScene; }
-	ENGINE_API static Scene *GetLoadingScene() noexcept { return _loadingScene; }
+void GLFence::Wait()
+{
+	glWaitSync(_sync, 0, GL_TIMEOUT_IGNORED);
+}
 
-	ENGINE_API static int LoadScene(int id);
-	ENGINE_API static int LoadDefaultScene() { return LoadScene(_defaultScene); }
-	ENGINE_API static int LoadNextScene();
-	ENGINE_API static int DrawScene(RShader* shader) noexcept;
-	ENGINE_API static void DrawLoadingScreen() noexcept;
-	ENGINE_API static void UpdateScene(double deltaTime) noexcept;
-	ENGINE_API static bool IsSceneLoaded() noexcept { return _activeScene && _activeScene->IsLoaded() ? true : false; }
-
-	ENGINE_API static void Release() noexcept;
-	
-private:
-	static std::vector<Scene*> _scenes;
-	static Scene *_activeScene, *_loadingScene;
-	static int _defaultScene, _loadScene;
-	static std::thread *_loadThread;
-
-	static LoadingScreen *_loadingScreen;
-
-	static int _ReadConfigFile(NString configFile);
-	static void _UnloadScene() noexcept;
-	static void _UnloadScenes() noexcept;
-	static int _LoadSceneInternal(int id);
-	static int _LoadSceneWorker(Scene *scn);
-
-	SceneManager() { }
-};
+GLFence::~GLFence()
+{
+	glDeleteSync(_sync);
+}

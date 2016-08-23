@@ -109,6 +109,7 @@ public:
 	ENGINE_API void SetDrawLights(bool draw) noexcept { _drawLights = draw; }
 	
 	ENGINE_API int Load();
+	ENGINE_API int CreateArrayBuffers() noexcept;
 	ENGINE_API void Draw(RShader* shader) noexcept;
 	ENGINE_API void DrawTerrain() noexcept;
 	ENGINE_API void DrawSkybox() noexcept;

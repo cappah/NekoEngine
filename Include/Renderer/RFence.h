@@ -1,9 +1,9 @@
 /* NekoEngine
  *
- * SceneManager.h
+ * RFence.h
  * Author: Alexandru Naiman
  *
- * SceneManager class definition
+ * Rendering API abstraction
  *
  * -----------------------------------------------------------------------------
  *
@@ -39,46 +39,24 @@
 
 #pragma once
 
-#include <vector>
-#include <string>
-#include <thread>
+#include <Renderer/RBuffer.h>
 
-#include <Runtime/Runtime.h>
-#include <Engine/Engine.h>
-#include <Engine/LoadingScreen.h>
-#include <Scene/Scene.h>
-
-class SceneManager
+class RFence
 {
 public:
-	ENGINE_API static int Initialize();
 
-	ENGINE_API static Scene *GetActiveScene() noexcept { return _activeScene; }
-	ENGINE_API static Scene *GetLoadingScene() noexcept { return _loadingScene; }
+	/**
+	 * Create a fence object.
+	 */
+	RFence() { };
 
-	ENGINE_API static int LoadScene(int id);
-	ENGINE_API static int LoadDefaultScene() { return LoadScene(_defaultScene); }
-	ENGINE_API static int LoadNextScene();
-	ENGINE_API static int DrawScene(RShader* shader) noexcept;
-	ENGINE_API static void DrawLoadingScreen() noexcept;
-	ENGINE_API static void UpdateScene(double deltaTime) noexcept;
-	ENGINE_API static bool IsSceneLoaded() noexcept { return _activeScene && _activeScene->IsLoaded() ? true : false; }
+	/*
+	 * Wait for all gpu commands to finish
+	 */
+	virtual void Wait() = 0;
 
-	ENGINE_API static void Release() noexcept;
-	
-private:
-	static std::vector<Scene*> _scenes;
-	static Scene *_activeScene, *_loadingScene;
-	static int _defaultScene, _loadScene;
-	static std::thread *_loadThread;
-
-	static LoadingScreen *_loadingScreen;
-
-	static int _ReadConfigFile(NString configFile);
-	static void _UnloadScene() noexcept;
-	static void _UnloadScenes() noexcept;
-	static int _LoadSceneInternal(int id);
-	static int _LoadSceneWorker(Scene *scn);
-
-	SceneManager() { }
+	/**
+	 * Release resources
+	 */
+	virtual ~RFence() { };
 };

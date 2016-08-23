@@ -261,6 +261,16 @@ int Object::Load()
 	return ENGINE_OK;
 }
 
+int Object::CreateArrayBuffer()
+{
+	int ret = ENGINE_OK;
+
+	for (pair<string, ObjectComponent*> kvp : _components)
+		ret = kvp.second->CreateArrayBuffer();
+
+	return ret;
+}
+
 void Object::Draw(RShader* shader) noexcept
 {
 	if (!_loaded)

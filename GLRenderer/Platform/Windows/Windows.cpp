@@ -135,9 +135,11 @@ bool GLRenderer::Initialize(PlatformWindowType hWnd, unordered_map<string, strin
 	attribList.push_back(0);
 
 	_ctx = wglCreateContextAttribsARB(_dc, nullptr, attribList.data());
-
 	if (!_ctx)
+		return false;
 
+	_loadCtx = wglCreateContextAttribsARB(_dc, _ctx, attribList.data());
+	if (!_loadCtx)
 		return false;
 
 	wglMakeCurrent(_dc, _ctx);
@@ -187,9 +189,18 @@ void GLRenderer::SwapBuffers()
 	::SwapBuffers(_dc);
 }
 
+void GLRenderer::MakeCurrent(int context)
+{
+	if (context == R_RENDER_CONTEXT)
+		wglMakeCurrent(_dc, _ctx);
+	else
+		wglMakeCurrent(_dc, _loadCtx);
+}
+
 void GLRenderer::_DestroyContext()
 {
 	wglMakeCurrent(NULL, NULL);
+	wglDeleteContext(_loadCtx);
 	wglDeleteContext(_ctx);
 	DeleteDC(_dc);
 }	

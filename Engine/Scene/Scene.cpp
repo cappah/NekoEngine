@@ -170,8 +170,6 @@ Object *Scene::_LoadObject(VFSFile *f, const string &className)
 				_AddVertices(skcomp->GetMesh()->GetVertices());
 				_AddIndices(skcomp->GetMesh()->GetIndices());
 			}
-			else
-				skcomp->GetMesh()->CreateBuffers(false);
 		}
 		else
 		{
@@ -186,8 +184,6 @@ Object *Scene::_LoadObject(VFSFile *f, const string &className)
 					_AddVertices(stcomp->GetMesh()->GetVertices());
 					_AddIndices(stcomp->GetMesh()->GetIndices());
 				}
-				else
-					stcomp->GetMesh()->CreateBuffers(false);
 			}
 		}
 		
@@ -436,11 +432,20 @@ int Scene::Load()
 			Logger::Log(SCENE_MODULE, LOG_WARNING, "Failed to load background music id=%d for scene id=%d", _bgMusic, _id);
 	}
 
-	if(Engine::GetRenderer()->HasCapability(RendererCapability::DrawBaseVertex))
+	Logger::Log(SCENE_MODULE, LOG_INFORMATION, "Scene %s, id=%d loaded with %d %s and %d %s", _name.c_str(), _id, _objects.size(), _objects.size() > 1 ? "objects" : "object", CameraManager::Count(), CameraManager::Count() > 1 ? "cameras" : "camera");
+
+	return ENGINE_OK;
+}
+
+int Scene::CreateArrayBuffers() noexcept
+{
+	Engine::GetRenderer()->MakeCurrent(R_RENDER_CONTEXT);
+
+	if (Engine::GetRenderer()->HasCapability(RendererCapability::DrawBaseVertex))
 	{
-		if((_sceneVertexBuffer = Engine::GetRenderer()->CreateBuffer(BufferType::Vertex, false, false)) == nullptr)
+		if ((_sceneVertexBuffer = Engine::GetRenderer()->CreateBuffer(BufferType::Vertex, false, false)) == nullptr)
 			return ENGINE_OUT_OF_RESOURCES;
-		if((_sceneIndexBuffer = Engine::GetRenderer()->CreateBuffer(BufferType::Index, false, false)) == nullptr)
+		if ((_sceneIndexBuffer = Engine::GetRenderer()->CreateBuffer(BufferType::Index, false, false)) == nullptr)
 			return ENGINE_OUT_OF_RESOURCES;
 
 		_sceneVertexBuffer->SetStorage(sizeof(Vertex) * _sceneVertices.size(), _sceneVertices.data());
@@ -504,7 +509,7 @@ int Scene::Load()
 		attrib.ptr = (void *)VERTEX_NUMBONES_OFFSET;
 		_sceneVertexBuffer->AddAttribute(attrib);
 
-		if((_sceneArrayBuffer = Engine::GetRenderer()->CreateArrayBuffer()) == nullptr)
+		if ((_sceneArrayBuffer = Engine::GetRenderer()->CreateArrayBuffer()) == nullptr)
 			return ENGINE_OUT_OF_RESOURCES;
 		_sceneArrayBuffer->SetVertexBuffer(_sceneVertexBuffer);
 		_sceneArrayBuffer->SetIndexBuffer(_sceneIndexBuffer);
@@ -512,9 +517,25 @@ int Scene::Load()
 
 		_sceneVertices.clear();
 		_sceneIndices.clear();
-	}
 
-	Logger::Log(SCENE_MODULE, LOG_INFORMATION, "Scene %s, id=%d loaded with %d %s and %d %s", _name.c_str(), _id, _objects.size(), _objects.size() > 1 ? "objects" : "object", CameraManager::Count(), CameraManager::Count() > 1 ? "cameras" : "camera");
+		if (_terrain)
+			return _terrain->CreateArrayBuffer();
+	}
+	else
+	{
+		int ret = ENGINE_OK;
+
+		for (Object *obj : _objects)
+			ret = obj->CreateArrayBuffer();
+
+		if(_terrain)
+			ret = _terrain->CreateArrayBuffer();
+
+		if (_skybox)
+			ret = _skybox->CreateArrayBuffer();
+
+		return ret;
+	}
 
 	return ENGINE_OK;
 }

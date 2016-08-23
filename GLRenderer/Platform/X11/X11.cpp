@@ -184,6 +184,12 @@ bool GLRenderer::Initialize(PlatformWindowType hWnd, unordered_map<string, strin
 	context_attribs.push_back(0);
 
 	_ctx = glXCreateContextAttribsARB(_dc, bestFbc, 0, True, context_attribs.data());
+	if (!_ctx)
+		return false;
+
+	_loadCtx = glXCreateContextAttribsARB(_dc, bestFbc, _ctx, True, context_attribs.data());
+	if (!_loadCtx)
+		return false;
 
 	XSync(_dc, False);
 
@@ -234,6 +240,14 @@ void GLRenderer::ScreenResized()
 void GLRenderer::SwapBuffers()
 {
 	glXSwapBuffers(_dc, _hWnd);
+}
+
+void GLRenderer::MakeCurrent(int context)
+{
+	if (context == R_RENDER_CONTEXT)
+		glXMakeCurrent(_dc, hWnd, _ctx);
+	else
+		glXMakeCurrent(_dc, hWnd, _loadCtx);
 }
 
 void GLRenderer::_DestroyContext()

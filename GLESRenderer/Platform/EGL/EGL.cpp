@@ -150,6 +150,14 @@ void GLESRenderer::_DestroyContext()
     eglTerminate(_display);
 }
 
+void GLESRenderer::MakeCurrent(int context)
+{
+/*	if (context == R_RENDER_CONTEXT)
+		wglMakeCurrent(_dc, _ctx);
+	else
+		wglMakeCurrent(_dc, _loadCtx);*/
+}
+
 void GLESRenderer::MakeCurrent()
 {
     eglMakeCurrent(_display, _surface, _surface, _context);

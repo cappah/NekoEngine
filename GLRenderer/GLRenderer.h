@@ -56,8 +56,8 @@
 #define RENDERER_VERSION_MAJOR		0
 #define RENDERER_VERSION_MINOR		3
 #define RENDERER_VERSION_REVISION	0
-#define RENDERER_VERSION_BUILD		87
-#define RENDERER_VERSION_STRING		"0.3.0.87"
+#define RENDERER_VERSION_BUILD		88
+#define RENDERER_VERSION_STRING		"0.3.0.88"
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <Windows.h>
@@ -214,17 +214,20 @@ public:
 
 	virtual bool HasCapability(RendererCapability cap) override;
 
-	virtual class RBuffer* CreateBuffer(BufferType type, bool dynamic, bool persistent) override;
-	virtual class RShader* CreateShader() override;
-	virtual class RTexture* CreateTexture(TextureType type) override;
-	virtual class RFramebuffer* CreateFramebuffer(int width, int height) override;
-	virtual class RArrayBuffer* CreateArrayBuffer() override;
+	virtual class RBuffer *CreateBuffer(BufferType type, bool dynamic, bool persistent) override;
+	virtual class RShader *CreateShader() override;
+	virtual class RTexture *CreateTexture(TextureType type) override;
+	virtual class RFramebuffer *CreateFramebuffer(int width, int height) override;
+	virtual class RArrayBuffer *CreateArrayBuffer() override;
+	virtual class RFence *CreateFence() override;
 	
 	virtual void AddShaderDefine(std::string name, std::string value) override;
 	virtual bool IsTextureFormatSupported(TextureFileFormat format) override;
 
 	virtual int GetMaxSamples() override;
 	virtual int GetMaxAnisotropy() override;
+
+	virtual void MakeCurrent(int context) override;
 
 	virtual bool IsHBAOSupported() override;
 	virtual bool InitializeHBAO() override;
@@ -243,7 +246,7 @@ public:
 	static GLRendererConfig *GetConfiguration() { return &_configuration; }
 
 private:
-	RHI_GL_CTX _ctx;
+	RHI_GL_CTX _ctx, _loadCtx;
 	RHI_DC _dc;
 	PlatformWindowType _hWnd;
 	bool _haveDSA;

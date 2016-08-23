@@ -132,6 +132,7 @@ public:
 	ENGINE_API void BindUniformBuffer(RShader *shader) { shader->FSSetUniformBuffer(0, 0, sizeof(ObjectBlock), _objectUbo); }
     
 	ENGINE_API virtual int Load();
+	ENGINE_API virtual int CreateArrayBuffer();
 	ENGINE_API virtual void Draw(RShader* shader) noexcept;
 	ENGINE_API virtual void Update(double deltaTime) noexcept;
 	ENGINE_API virtual bool Unload() noexcept;

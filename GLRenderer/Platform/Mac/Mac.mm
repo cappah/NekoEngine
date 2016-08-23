@@ -69,6 +69,10 @@ bool GLRenderer::Initialize(PlatformWindowType hWnd, unordered_map<string, strin
     if(!_ctx)
         return false;
     
+	_loadCtx = [[NSOpenGLContext alloc] initWithFormat:pf shareContext:_ctx];
+    if(!_loadCtx)
+        return false;
+
 	[_ctx setView:_hWnd.contentView];
 	[_ctx makeCurrentContext];
 	
@@ -92,6 +96,14 @@ void GLRenderer::ScreenResized()
 void GLRenderer::SwapBuffers()
 {
 	[_ctx flushBuffer];
+}
+
+void GLRenderer::MakeCurrent(int context)
+{
+	if (context == R_RENDER_CONTEXT)
+		[_ctx makeCurrentContext];
+	else
+		[_loadCtx makeCurrentContext];
 }
 
 void GLRenderer::_DestroyContext()

@@ -191,6 +191,8 @@ public:
 	virtual int GetMaxSamples() override;
 	virtual int GetMaxAnisotropy() override;
 
+    virtual void MakeCurrent(int context) override;
+
 	virtual bool IsHBAOSupported() override { return false; }
 	virtual bool InitializeHBAO() override { return false; }
 	virtual bool RenderHBAO(RHBAOArgs *args, RFramebuffer *fbo) override { return false; }
