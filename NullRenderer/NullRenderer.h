@@ -46,6 +46,7 @@
 #include "NullBuffer.h"
 #include "NullShader.h"
 #include "NullTexture.h"
+#include "NullFence.h"
 
 #include <stdlib.h>
 
@@ -118,17 +119,20 @@ public:
 
 	virtual bool HasCapability(RendererCapability cap) override { return false; }
 
-	virtual class RBuffer* CreateBuffer(BufferType type, bool dynamic, bool persistent) override { return new NullBuffer(type, dynamic, persistent); }
-	virtual class RShader* CreateShader() override { return new NullShader(); }
-	virtual class RTexture* CreateTexture(TextureType type) override { return new NullTexture(type); }
-	virtual class RFramebuffer* CreateFramebuffer(int width, int height) override;
-	virtual class RArrayBuffer* CreateArrayBuffer() override { return new NullArrayBuffer(); }
+	virtual class RBuffer *CreateBuffer(BufferType type, bool dynamic, bool persistent) override { return new NullBuffer(type, dynamic, persistent); }
+	virtual class RShader *CreateShader() override { return new NullShader(); }
+	virtual class RTexture *CreateTexture(TextureType type) override { return new NullTexture(type); }
+	virtual class RFramebuffer *CreateFramebuffer(int width, int height) override;
+	virtual class RArrayBuffer *CreateArrayBuffer() override { return new NullArrayBuffer(); }
+	virtual class RFence *CreateFence() override { return new NullFence(); }
 
 	virtual void AddShaderDefine(std::string name, std::string value) override { }
 	virtual bool IsTextureFormatSupported(TextureFileFormat format) override { return true; }
 
 	virtual int GetMaxSamples() override { return 31; }
 	virtual int GetMaxAnisotropy() override { return 16; }
+
+	virtual void MakeCurrent(int context) override { (void)context; }
 
 	virtual bool IsHBAOSupported() { return false; }
 	virtual bool InitializeHBAO() { return false; }

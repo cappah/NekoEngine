@@ -54,6 +54,14 @@ void GLESRenderer::BindDefaultFramebuffer()
 	_boundFramebuffer = nullptr;
 }
 
+void GLESRenderer::MakeCurrent(int context)
+{
+/*	if (context == R_RENDER_CONTEXT)
+		wglMakeCurrent(_dc, _ctx);
+	else
+		wglMakeCurrent(_dc, _loadCtx);*/
+}
+
 void GLESRenderer::MakeCurrent()
 {
 	//[EAGLContext setCurrentContext:_ctx];

@@ -353,6 +353,9 @@
     <ClInclude Include="..\Include\Engine\Console.h">
       <Filter>Include\Engine</Filter>
     </ClInclude>
+    <ClInclude Include="..\Include\Renderer\RFence.h">
+      <Filter>Include\Renderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Resources\Data\scenes.cfg">

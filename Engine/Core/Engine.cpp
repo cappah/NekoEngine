@@ -772,14 +772,24 @@ void Engine::Frame() noexcept
 		lastTime = curTime;
 	}
 
-	if(!_paused) Draw();
-
-	if (_engineFont)
+	if (!_paused)
 	{
-		if (_printStats)
-			_PrintStats();
+		if (SceneManager::IsSceneLoaded())
+		{
+			_renderer->MakeCurrent(R_RENDER_CONTEXT);
 
-		_engineFont->Render();
+			Draw();
+
+			if (_engineFont)
+			{
+				if (_printStats)
+					_PrintStats();
+
+				_engineFont->Render();
+			}
+		}
+		else
+			SceneManager::DrawLoadingScreen();
 	}
 
 	_renderer->SwapBuffers();

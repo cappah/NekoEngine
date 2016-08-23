@@ -38,6 +38,7 @@
  */
 
 #include "GLRenderer.h"
+#include "GLFence.h"
 #include "GLBuffer.h"
 #include "GLShader.h"
 #include "GLTexture.h"
@@ -438,7 +439,7 @@ bool GLRenderer::HasCapability(RendererCapability cap)
 	return HasExtension(ext);
 }
 
-RBuffer* GLRenderer::CreateBuffer(BufferType type, bool dynamic, bool persistent)
+RBuffer *GLRenderer::CreateBuffer(BufferType type, bool dynamic, bool persistent)
 {
 	if (_haveDSA)
 		return (RBuffer *)new GLBuffer(type, dynamic, persistent);
@@ -446,12 +447,12 @@ RBuffer* GLRenderer::CreateBuffer(BufferType type, bool dynamic, bool persistent
 		return (RBuffer *)new GLBuffer_NoDSA(type, dynamic, persistent);
 }
 
-RShader* GLRenderer::CreateShader()
+RShader *GLRenderer::CreateShader()
 {
 	return (RShader *)new GLShader();
 }
 
-RTexture* GLRenderer::CreateTexture(TextureType type)
+RTexture *GLRenderer::CreateTexture(TextureType type)
 {
 	if(_haveDSA)
 		return (RTexture *)new GLTexture(type);
@@ -459,7 +460,7 @@ RTexture* GLRenderer::CreateTexture(TextureType type)
 		return (RTexture *)new GLTexture_NoDSA(type);
 }
 
-RFramebuffer* GLRenderer::CreateFramebuffer(int width, int height)
+RFramebuffer *GLRenderer::CreateFramebuffer(int width, int height)
 {
 	if(_haveDSA)
 		return (RFramebuffer *)new GLFramebuffer(width, height);
@@ -467,9 +468,14 @@ RFramebuffer* GLRenderer::CreateFramebuffer(int width, int height)
 		return (RFramebuffer *)new GLFramebuffer_NoDSA(width, height);
 }
 
-RArrayBuffer* GLRenderer::CreateArrayBuffer()
+RArrayBuffer *GLRenderer::CreateArrayBuffer()
 {
 	return (RArrayBuffer *)new GLArrayBuffer();
+}
+
+RFence *GLRenderer::CreateFence()
+{
+	return (RFence *)new GLFence();
 }
 
 void GLRenderer::AddShaderDefine(std::string name, std::string value)

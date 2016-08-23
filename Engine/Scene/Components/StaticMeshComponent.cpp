@@ -158,6 +158,11 @@ int StaticMeshComponent::Load()
 	return ENGINE_OK;
 }
 
+int StaticMeshComponent::CreateArrayBuffer()
+{
+	return _mesh->CreateBuffers(false);
+}
+
 void StaticMeshComponent::Draw(RShader *shader) noexcept
 {
 	if (!_loaded)

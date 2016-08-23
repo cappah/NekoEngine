@@ -45,6 +45,7 @@
 #include <unordered_map>
 
 #include <Platform/Platform.h>
+#include <Renderer/RFence.h>
 #include <Renderer/RBuffer.h>
 #include <Renderer/RShader.h>
 #include <Renderer/RTexture.h>
@@ -56,11 +57,14 @@
 #undef Always
 #endif
 
-#define RENDERER_API_VERSION	0x0029
+#define RENDERER_API_VERSION	0x0030
 
 #define R_CLEAR_COLOR			1
 #define R_CLEAR_DEPTH			2
 #define R_CLEAR_STENCIL			4
+
+#define R_RENDER_CONTEXT		0
+#define R_LOAD_CONTEXT			1
 
 typedef void(*RendererDebugLogProc)(const char* msg);
 typedef unsigned int(*RendererAPIVersionProc)(void);
@@ -400,27 +404,32 @@ public:
 	/**
 	 * Create a buffer object
 	 */
-	virtual class RBuffer* CreateBuffer(BufferType type, bool dynamic, bool persistent) = 0;
+	virtual class RBuffer *CreateBuffer(BufferType type, bool dynamic, bool persistent) = 0;
 	
 	/**
 	 * Create a shader object
 	 */
-	virtual class RShader* CreateShader() = 0;
+	virtual class RShader *CreateShader() = 0;
 	
 	/**
 	 * Create a texture object
 	 */
-	virtual class RTexture* CreateTexture(TextureType type) = 0;
+	virtual class RTexture *CreateTexture(TextureType type) = 0;
 	
 	/**
 	 * Create a framebuffer object
 	 */
-	virtual class RFramebuffer* CreateFramebuffer(int width, int height) = 0;
+	virtual class RFramebuffer *CreateFramebuffer(int width, int height) = 0;
 
 	/**
 	 * Create an array buffer object
 	 */
-	virtual class RArrayBuffer* CreateArrayBuffer() = 0;
+	virtual class RArrayBuffer *CreateArrayBuffer() = 0;
+
+	/**
+	* Create a fence object
+	*/
+	virtual class RFence *CreateFence() = 0;
 	
 	/**
 	 * Add a define to be inserted into shader source
@@ -441,6 +450,11 @@ public:
 	 * Get the maximum amount of anisotropy supported
 	 */
 	virtual int GetMaxAnisotropy() = 0;
+
+	/**
+	 * Enable the specified context for the current thread
+	 */
+	virtual void MakeCurrent(int context) = 0;
 
 	// HBAO+ Integration
 	/**

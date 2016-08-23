@@ -77,6 +77,7 @@ public:
 	virtual void UpdatePosition() noexcept;
 
 	virtual int Load() { _loaded = true; return ENGINE_OK; }
+	virtual int CreateArrayBuffer() { return ENGINE_OK; }
 	virtual int InitializeComponent() { return ENGINE_OK; }
 	
 	virtual void Draw(RShader *shader) noexcept { (void)shader; }

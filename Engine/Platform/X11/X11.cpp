@@ -95,6 +95,8 @@ PlatformWindowType Platform::CreateWindow(int width, int height, bool fullscreen
 	XEvent xev;
 	Window win;
 
+	XInitThreads();
+
 	x_display = XOpenDisplay(NULL);
 	
 	if(!x_display)

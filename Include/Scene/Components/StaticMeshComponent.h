@@ -67,6 +67,7 @@ public:
 	ENGINE_API virtual void UpdatePosition() noexcept override { ObjectComponent::UpdatePosition(); _mmNeedsUpdate = true; }
 
 	ENGINE_API virtual int Load() override;
+	ENGINE_API virtual int CreateArrayBuffer() override;
 	
 	ENGINE_API virtual void Draw(RShader *shader) noexcept override;
 	ENGINE_API virtual void Update(double deltaTime) noexcept override;

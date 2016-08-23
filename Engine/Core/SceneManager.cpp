@@ -58,6 +58,7 @@ Scene *SceneManager::_loadingScene = nullptr;
 int SceneManager::_defaultScene = 0;
 int SceneManager::_loadScene = -1;
 LoadingScreen *SceneManager::_loadingScreen = nullptr;
+thread *SceneManager::_loadThread = nullptr;
 
 int SceneManager::Initialize()
 {
@@ -151,20 +152,29 @@ int SceneManager::LoadNextScene()
 
 int SceneManager::DrawScene(RShader* shader) noexcept
 {
-	if (_activeScene == nullptr)
+	if (_activeScene)
 	{
-		if (_loadingScreen == nullptr)
+		if (_loadingScreen)
 		{
-			if((_loadingScreen = new LoadingScreen(LS_DEFAULT_TEXTURE)) == nullptr)
-				return ENGINE_OUT_OF_RESOURCES;
+			_activeScene->CreateArrayBuffers();
+			delete _loadingScreen;
+			_loadingScreen = nullptr;
 		}
-		
-		_loadingScreen->Draw();
-	}
-	else
+
 		_activeScene->Draw(shader);
+	}
 
 	return ENGINE_OK;
+}
+
+void SceneManager::DrawLoadingScreen() noexcept
+{
+	Engine::GetRenderer()->MakeCurrent(R_RENDER_CONTEXT);
+
+	if (_loadingScreen == nullptr)
+		_loadingScreen = new LoadingScreen(LS_DEFAULT_TEXTURE);
+
+	_loadingScreen->Draw();
 }
 
 void SceneManager::UpdateScene(double deltaTime) noexcept
@@ -188,7 +198,6 @@ void SceneManager::_UnloadScene() noexcept
 		return;
 
 	_activeScene->Unload();
-
 	_activeScene = nullptr;
 }
 
@@ -221,6 +230,18 @@ int SceneManager::_LoadSceneInternal(int id)
 
 	if ((_loadingScreen = new LoadingScreen(scn->GetLoadingScreenTexture())) == nullptr)
 		return ENGINE_OUT_OF_RESOURCES;
+	
+	_loadThread = new thread(_LoadSceneWorker, scn);
+	return ENGINE_OK;
+}
+
+int SceneManager::_LoadSceneWorker(Scene *scn)
+{
+	Engine::GetRenderer()->MakeCurrent(R_LOAD_CONTEXT);
+	RFence *fence = Engine::GetRenderer()->CreateFence();
+
+	if (scn == nullptr)
+		return ENGINE_NOT_FOUND;
 
 	_loadingScene = scn;
 
@@ -229,13 +250,14 @@ int SceneManager::_LoadSceneInternal(int id)
 
 	int ret = scn->Load();
 
+	fence->Wait();
+	delete fence;
+
 	if (ret == ENGINE_OK)
 		_activeScene = scn;
 	else
 		scn = nullptr;
 
-	delete _loadingScreen;
-	_loadingScreen = nullptr;
 	_loadingScene = nullptr;
 
 	return ret;

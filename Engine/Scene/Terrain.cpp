@@ -74,7 +74,6 @@ Terrain::Terrain(ObjectInitializer *initializer) noexcept : Object(initializer),
 
 bool Terrain::_GenerateTerrain() noexcept
 {
-	vector<uint32_t> indices;
 	_uvStep = 1.f / (float)_numCells;
 
 	Vertex v;
@@ -101,21 +100,17 @@ bool Terrain::_GenerateTerrain() noexcept
 			if (i < _numCells && j < _numCells)
 			{
 				int indexOffset = j + i * (_numCells + 1);
-				indices.push_back(indexOffset + _numCells + 1);
-				indices.push_back(indexOffset + 1);
-				indices.push_back(indexOffset);
+				_terrainIndices.push_back(indexOffset + _numCells + 1);
+				_terrainIndices.push_back(indexOffset + 1);
+				_terrainIndices.push_back(indexOffset);
 
 				indexOffset++;
-				indices.push_back(indexOffset + _numCells);
-				indices.push_back(indexOffset + _numCells + 1);
-				indices.push_back(indexOffset);
+				_terrainIndices.push_back(indexOffset + _numCells);
+				_terrainIndices.push_back(indexOffset + _numCells + 1);
+				_terrainIndices.push_back(indexOffset);
 			}
 		}
 	}
-    
-	((StaticMeshComponent*)GetComponent("Mesh"))->GetMesh()->LoadDynamic(_terrainVertices, indices);
-
-	indices.clear();
 	
 	return true;
 }
@@ -136,6 +131,11 @@ int Terrain::Load()
 	SetForwardDirection(ForwardDirection::NegativeZ);
 
 	return ENGINE_OK;
+}
+
+int Terrain::CreateArrayBuffer()
+{
+	return ((StaticMeshComponent*)GetComponent("Mesh"))->GetMesh()->LoadDynamic(_terrainVertices, _terrainIndices);
 }
 
 void Terrain::Update(double deltaTime) noexcept

@@ -54,6 +54,7 @@ public:
 	ENGINE_API void SetNumCells(unsigned short numCells) noexcept { _numCells = numCells; }
 	
 	ENGINE_API virtual int Load() override;
+	ENGINE_API virtual int CreateArrayBuffer() override;
 	ENGINE_API virtual void Update(double deltaTime) noexcept override;
 
 	ENGINE_API virtual bool Unload() noexcept override;
@@ -62,6 +63,7 @@ public:
 
 protected:
 	std::vector<Vertex> _terrainVertices;
+	std::vector<uint32_t> _terrainIndices;
 	TextureParams _heightmapParams;
 	float _cellSize;
 	unsigned short _numCells;
