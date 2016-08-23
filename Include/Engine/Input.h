@@ -117,11 +117,11 @@ public:
 
 	static void Release();
 
-#ifdef ENGINE_INTERNAL
+#if defined(ENGINE_INTERNAL) || defined(EDITOR_INTERNAL)
 	// Internal functions
-	static void Key(int key, bool isPressed) noexcept;
-	static void Update() noexcept;
-	static void ClearKeyState() noexcept;
+	ENGINE_API static void Key(int key, bool isPressed) noexcept;
+	ENGINE_API static void Update() noexcept;
+	ENGINE_API static void ClearKeyState() noexcept;
 #endif
 
 	// Platform-specific functions

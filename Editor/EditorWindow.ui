@@ -11,10 +11,14 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Farrah Editor</string>
+   <string>NekoEditor</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="editor.qrc">
+    <normaloff>:/icons/editor_icon.png</normaloff>:/icons/editor_icon.png</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="EditorGLWidget" name="editorGLWidget" native="true">
+   <widget class="EngineWidget" name="engineWidget" native="true">
     <property name="geometry">
      <rect>
       <x>180</x>
@@ -22,6 +26,12 @@
       <width>891</width>
       <height>471</height>
      </rect>
+    </property>
+    <property name="mouseTracking">
+     <bool>true</bool>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::StrongFocus</enum>
     </property>
    </widget>
    <widget class="QTabWidget" name="tabWidget">
@@ -124,9 +134,9 @@
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
-   <class>EditorGLWidget</class>
+   <class>EngineWidget</class>
    <extends>QWidget</extends>
-   <header>editorglwidget.h</header>
+   <header>enginewidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

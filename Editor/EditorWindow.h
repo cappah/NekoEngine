@@ -1,6 +1,6 @@
 /* NekoEngine
  *
- * editorwindow.h
+ * EditorWindow.h
  * Author: Alexandru Naiman
  *
  * Editor Window
@@ -42,20 +42,24 @@
 
 #include <QMainWindow>
 
-namespace Ui {
-class EditorWindow;
+namespace Ui
+{
+	class EditorWindow;
 }
 
 class EditorWindow : public QMainWindow
 {
-    Q_OBJECT
+	Q_OBJECT
 
 public:
-    explicit EditorWindow(QWidget *parent = 0);
-    ~EditorWindow();
+	explicit EditorWindow(QWidget *parent = 0);
+	~EditorWindow();
+
+public slots:
+	void showAboutDialog();
 
 private:
-    Ui::EditorWindow *ui;
+	Ui::EditorWindow *ui;
 };
 
 #endif // EDITORWINDOW_H

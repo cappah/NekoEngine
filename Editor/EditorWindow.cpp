@@ -1,9 +1,9 @@
 /* NekoEngine
  *
- * editorglwidget.cpp
+ * EditorWindow.cpp
  * Author: Alexandru Naiman
  *
- * Editor OpenGL Widget
+ * Editor Window
  *
  * -----------------------------------------------------------------------------
  *
@@ -37,42 +37,27 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <Engine.h>
-#include <SceneManager.h>
-#include <QtOpenGL>
+#include "EditorWindow.h"
+#include "ui_editorwindow.h"
 
-#include "editorglwidget.h"
+#include "AboutDialog.h"
 
-EditorGLWidget::EditorGLWidget(QWidget *parent) : QOpenGLWidget(parent)
+EditorWindow::EditorWindow(QWidget *parent) :
+	QMainWindow(parent),
+	ui(new Ui::EditorWindow)
 {
-    _timer = new QTimer(this);
-    connect(_timer, SIGNAL(timeout()), this, SLOT(update()));
+	ui->setupUi(this);
 
-    _engineInitialized = false;
+	connect(ui->actionAbout, SIGNAL(triggered(bool)), this, SLOT(showAboutDialog()));
 }
 
-void EditorGLWidget::initializeGL()
+void EditorWindow::showAboutDialog()
 {
-    glClearColor(.5f, 0.f, .7f, 1.f);
-
-    glewInit();
-
-    Engine::Initialize("--ini=D:/Projects/farrah/Resources/Engine.ini --data=D:/Projects/farrah/Resources/Data --gfxdbg", true);
-    SceneManager::LoadDefaultScene();
-
-    _engineInitialized = true;
-    _timer->start(1);
+	AboutDialog *dlg = new AboutDialog(this);
+	dlg->show();
 }
 
-void EditorGLWidget::paintGL()
+EditorWindow::~EditorWindow()
 {
-    if(_engineInitialized)
-        Engine::Frame();
-
-    context()->swapBuffers(context()->surface());
-}
-
-void EditorGLWidget::resizeGL(int width, int height)
-{
-    Engine::ScreenResized(width, height);
+	delete ui;
 }

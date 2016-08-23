@@ -21,38 +21,39 @@ INCLUDEPATH += ../Utilities
 
 win32 {
     CONFIG(debug, debug|release) {
-        LIBS += -L../Engine/debug -L../Utilities/debug -L$$(AL_SDK)/lib/win64 -L$$(COMMON_SDK)/lib/win64 -L$$(GL_SDK)\lib\win64 -lopengl32 -lglew32 -llibvorbisfile -llibpng16d -lsqlited -lzlibstatic -lOpenAL32
-        DEPENDPATH += ../Engine/debug
-        DEPENDPATH += ../Utilities/debug
-        DEPENDPATH += $$(AL_SDK)/lib/win64
-        DEPENDPATH += $$(COMMON_SDK)/lib/win64
+        LIBS += -L../Bin64
+        DEPENDPATH += ../Bin64
         DEFINES += _DEBUG
     } else {
-        LIBS += -L../Engine/release -L../Utilities/release -L$$(AL_SDK)/lib/win64 -L$$(COMMON_SDK)/lib/win64 -L$$(GL_SDK)\lib\win64 -lopengl32 -lglew32 -llibvorbisfile -llibpng16 -lsqlite -lzlibstatic -lOpenAL32
-        DEPENDPATH += ../Engine/release
-        DEPENDPATH += ../Utilities/release
-        DEPENDPATH += $$(AL_SDK)/lib/win64
-        DEPENDPATH += $$(COMMON_SDK)/lib/win64
+        LIBS += -L../Bin64
+        DEPENDPATH += ../Bin64
     }
 
-    INCLUDEPATH += $$(GL_SDK)\include
-    INCLUDEPATH += $$(AL_SDK)\include
-    INCLUDEPATH += $$(COMMON_SDK)\include
+    INCLUDEPATH += ..\Include
+    INCLUDEPATH += ..\3rdparty\include_all
+    RC_INCLUDEPATH += ..\Include
     DEFINES += NOMINMAX
     DEFINES += _CRT_SECURE_NO_WARNINGS
+    DEFINES += EDITOR_INTERNAL
     RC_FILE = Editor.rc
 }
 
-LIBS += -lEngine -lUtilities
+LIBS += -lEngine
 
 SOURCES += main.cpp\
-        editorwindow.cpp \
-    editorglwidget.cpp
+    EngineWidget.cpp \
+    EditorWindow.cpp \
+    AboutDialog.cpp
 
-HEADERS  += editorwindow.h \
-    editorglwidget.h
+HEADERS  += \
+    EngineWidget.h \
+    EditorWindow.h \
+    AboutDialog.h \
+    Version.h
 
-FORMS    += editorwindow.ui
+FORMS    += \
+    EditorWindow.ui \
+    AboutDialog.ui
 
 RESOURCES += \
     editor.qrc

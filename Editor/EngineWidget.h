@@ -1,9 +1,9 @@
 /* NekoEngine
  *
- * editorglwidget.h
+ * EngineWidget.h
  * Author: Alexandru Naiman
  *
- * Editor OpenGL Widget
+ * NekoEngine Widget
  *
  * -----------------------------------------------------------------------------
  *
@@ -37,30 +37,39 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef EDITORGLWIDGET_H
-#define EDITORGLWIDGET_H
+#ifndef ENGINEWIDGET_H
+#define ENGINEWIDGET_H
 
 #include <QTimer>
-#include <QOpenGLWidget>
+#include <QWidget>
+#include <QThread>
 
-class EditorGLWidget : public QOpenGLWidget
+class EngineWidget : public QWidget
 {
-    Q_OBJECT
+	Q_OBJECT
 public:
-    explicit EditorGLWidget(QWidget *parent = 0);
+	explicit EngineWidget(QWidget *parent = 0);
+
+	virtual ~EngineWidget();
 
 protected:
-    void initializeGL();
-    void paintGL();
-    void resizeGL(int width, int height);
+	virtual void resizeEvent(QResizeEvent *event) override;
+
+	virtual void keyPressEvent(QKeyEvent *event) override;
+	virtual void keyReleaseEvent(QKeyEvent *event) override;
+
+	virtual void mouseMoveEvent(QMouseEvent *event) override;
+	virtual void mousePressEvent(QMouseEvent *event) override;
+	virtual void mouseReleaseEvent(QMouseEvent *event) override;
 
 signals:
 
 public slots:
+	void update();
 
 private:
-    bool _engineInitialized;
-    QTimer *_timer;
+	bool _engineInitialized;
+	QTimer *_timer;
 };
 
-#endif // EDITORGLWIDGET_H
+#endif // ENGINEWIDGET_H

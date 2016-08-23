@@ -1,3 +1,6 @@
 <RCC>
-    <qresource prefix="/"/>
+    <qresource prefix="/">
+        <file>../LICENSE</file>
+        <file>icons/editor_icon.png</file>
+    </qresource>
 </RCC>

@@ -79,8 +79,8 @@ public:
 	virtual int Load() { _loaded = true; return ENGINE_OK; }
 	virtual int InitializeComponent() { return ENGINE_OK; }
 	
-	virtual void Draw(RShader *shader) noexcept { }
-	virtual void Update(double deltaTime) noexcept { }
+	virtual void Draw(RShader *shader) noexcept { (void)shader; }
+	virtual void Update(double deltaTime) noexcept { (void)deltaTime; }
 	
 	virtual bool Unload();
 	virtual bool CanUnload() { return true; }
