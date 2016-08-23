@@ -63,7 +63,7 @@ EngineWidget::EngineWidget(QWidget *parent) : QWidget(parent)
 	setAttribute(Qt::WA_NoSystemBackground, true);
 	setAutoFillBackground(false);
 
-	Engine::Initialize("--ini=E:/Projects/NekoEngine/Resources/Engine.ini --data=E:/Projects/NekoEngine/Resources/Data --gfxdbg", true);
+    Engine::Initialize("--ini=E:/Projects/NekoEngine/Resources/Engine.ini --data=E:/Projects/NekoEngine/Resources/Data --gfxdbg", true);
 
 	QWindow *nativeWindow = QWindow::fromWinId((WId)Platform::GetActiveWindow());
 	QWidget *nativeWidget = QWidget::createWindowContainer(nativeWindow);

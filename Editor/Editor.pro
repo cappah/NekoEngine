@@ -38,6 +38,20 @@ win32 {
     RC_FILE = Editor.rc
 }
 
+unix {
+    CONFIG(debug, debug|release) {
+        DEFINES += _DEBUG
+    }
+
+    LIBS += -L../Bin64
+    DEPENDPATH += ../Bin64
+
+    INCLUDEPATH += ../Include
+    INCLUDEPATH += ../3rdparty/include_all
+    DEFINES += EDITOR_INTERNAL
+    DEFINES += PLATFORM_X11
+}
+
 LIBS += -lEngine
 
 SOURCES += main.cpp\

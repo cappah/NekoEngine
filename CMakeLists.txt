@@ -100,6 +100,9 @@ if(PLATFORM_X11)
 	add_definitions(-DPLATFORM_X11)
 endif(PLATFORM_X11)
 
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/Bin64")
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/Bin64")
+
 # OpenGL Renderer Library
 add_library(GLRenderer SHARED ${RendererSourceFiles} ${RendererPlatformSourceFiles})
 target_compile_options(GLRenderer PRIVATE -std=c++11)

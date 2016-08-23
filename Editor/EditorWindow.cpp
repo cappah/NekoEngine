@@ -38,7 +38,7 @@
  */
 
 #include "EditorWindow.h"
-#include "ui_editorwindow.h"
+#include "ui_EditorWindow.h"
 
 #include "AboutDialog.h"
 
