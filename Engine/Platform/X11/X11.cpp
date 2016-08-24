@@ -68,7 +68,18 @@ bool UserInterrupt()
 		if (xev.type == KeyPress)
 			Input::Key(XLookupKeysym(&xev.xkey, 0), 1);
 		else if(xev.type == KeyRelease)
+		{
+			if(XEventsQueued(x_display, QueuedAfterReading))
+			{
+			   XEvent nxev;
+			   XPeekEvent(x_display, &nxev);
+			   
+			   if(nxev.type == KeyPress && nxev.xkey.time == xev.xkey.time && nxev.xkey.keycode == xev.xkey.keycode)
+				   return userInterrupt;
+			}
+			
 			Input::Key(XLookupKeysym(&xev.xkey, 0), 0);
+		}
 		else if(xev.type == ConfigureNotify)
 		{
 			XConfigureEvent xce = xev.xconfigure;
