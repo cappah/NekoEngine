@@ -70,17 +70,19 @@
 								<option id="com.qnx.qcc.option.linker.libraryPaths.494847924" name="Library Paths (-L)" superClass="com.qnx.qcc.option.linker.libraryPaths" valueType="libPaths">
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/../target-override/${CPUVARDIR}/lib"/>
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/../target-override/${CPUVARDIR}/usr/lib"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/NekoEngine/3rdparty/lib/armv7}&quot;"/>
 								</option>
 								<option id="com.qnx.qcc.option.linker.security.2107788714" name="Enhanced Security (-Wl,-z,relro -Wl,-z,now)" superClass="com.qnx.qcc.option.linker.security" value="true" valueType="boolean"/>
 								<option id="com.qnx.qcc.option.linker.libraries.527747035" name="Libraries (-l)" superClass="com.qnx.qcc.option.linker.libraries" valueType="libs">
-									<listOptionValue builtIn="false" value="sqlite3"/>
+									<listOptionValue builtIn="false" value="bps"/>
+									<listOptionValue builtIn="false" value="screen"/>
 									<listOptionValue builtIn="false" value="freetype"/>
 									<listOptionValue builtIn="false" value="png16"/>
-									<listOptionValue builtIn="false" value="screen"/>
 									<listOptionValue builtIn="false" value="OpenAL"/>
-									<listOptionValue builtIn="false" value="bps"/>
-									<listOptionValue builtIn="false" value="bb"/>
 									<listOptionValue builtIn="false" value="z"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="sqlite3_neko"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="ogg"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="vorbis"/>
 								</option>
 								<inputType id="com.qnx.qcc.inputType.linker.843770664" superClass="com.qnx.qcc.inputType.linker">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
@@ -153,6 +155,7 @@
 								<option id="com.qnx.qcc.option.linker.libraryPaths.1280711780" name="Library Paths (-L)" superClass="com.qnx.qcc.option.linker.libraryPaths" valueType="libPaths">
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/../target-override/${CPUVARDIR}/lib"/>
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/../target-override/${CPUVARDIR}/usr/lib"/>
+									<listOptionValue builtIn="false" value="/NekoEngine/3rdparty/lib/armv7"/>
 								</option>
 								<option id="com.qnx.qcc.option.linker.security.1342020613" name="Enhanced Security (-Wl,-z,relro -Wl,-z,now)" superClass="com.qnx.qcc.option.linker.security" value="true" valueType="boolean"/>
 								<option id="com.qnx.qcc.option.linker.libraries.257458596" name="Libraries (-l)" superClass="com.qnx.qcc.option.linker.libraries" valueType="libs">
@@ -160,9 +163,10 @@
 									<listOptionValue builtIn="false" value="png16"/>
 									<listOptionValue builtIn="false" value="screen"/>
 									<listOptionValue builtIn="false" value="OpenAL"/>
-									<listOptionValue builtIn="false" value="bps"/>
-									<listOptionValue builtIn="false" value="bb"/>
 									<listOptionValue builtIn="false" value="z"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="bps"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="sqlite3_neko"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="ogg"/>
 								</option>
 								<inputType id="com.qnx.qcc.inputType.linker.129092102" superClass="com.qnx.qcc.inputType.linker">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
@@ -237,6 +241,7 @@
 								<option id="com.qnx.qcc.option.linker.libraryPaths.1887458590" name="Library Paths (-L)" superClass="com.qnx.qcc.option.linker.libraryPaths" valueType="libPaths">
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/../target-override/${CPUVARDIR}/lib"/>
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/../target-override/${CPUVARDIR}/usr/lib"/>
+									<listOptionValue builtIn="false" value="/NekoEngine/3rdparty/lib/armv7"/>
 								</option>
 								<option id="com.qnx.qcc.option.linker.security.1267489128" name="Enhanced Security (-Wl,-z,relro -Wl,-z,now)" superClass="com.qnx.qcc.option.linker.security" value="true" valueType="boolean"/>
 								<option id="com.qnx.qcc.option.linker.libraries.441424934" name="Libraries (-l)" superClass="com.qnx.qcc.option.linker.libraries" valueType="libs">
@@ -244,9 +249,10 @@
 									<listOptionValue builtIn="false" value="png16"/>
 									<listOptionValue builtIn="false" value="screen"/>
 									<listOptionValue builtIn="false" value="OpenAL"/>
-									<listOptionValue builtIn="false" value="bps"/>
-									<listOptionValue builtIn="false" value="bb"/>
 									<listOptionValue builtIn="false" value="z"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="bps"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="sqlite3_neko"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="ogg"/>
 								</option>
 								<inputType id="com.qnx.qcc.inputType.linker.123441976" superClass="com.qnx.qcc.inputType.linker">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
@@ -321,6 +327,7 @@
 								<option id="com.qnx.qcc.option.linker.libraryPaths.479781768" name="Library Paths (-L)" superClass="com.qnx.qcc.option.linker.libraryPaths" valueType="libPaths">
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/../target-override/${CPUVARDIR}/lib"/>
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/../target-override/${CPUVARDIR}/usr/lib"/>
+									<listOptionValue builtIn="false" value="/NekoEngine/3rdparty/lib/armv7"/>
 								</option>
 								<option id="com.qnx.qcc.option.linker.security.1468801696" name="Enhanced Security (-Wl,-z,relro -Wl,-z,now)" superClass="com.qnx.qcc.option.linker.security" value="true" valueType="boolean"/>
 								<option id="com.qnx.qcc.option.linker.libraries.625102962" name="Libraries (-l)" superClass="com.qnx.qcc.option.linker.libraries" valueType="libs">
@@ -329,8 +336,9 @@
 									<listOptionValue builtIn="false" value="screen"/>
 									<listOptionValue builtIn="false" value="OpenAL"/>
 									<listOptionValue builtIn="false" value="bps"/>
-									<listOptionValue builtIn="false" value="bb"/>
 									<listOptionValue builtIn="false" value="z"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="sqlite3_neko"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="ogg"/>
 								</option>
 								<inputType id="com.qnx.qcc.inputType.linker.238691266" superClass="com.qnx.qcc.inputType.linker">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
@@ -415,6 +423,7 @@
 								<option id="com.qnx.qcc.option.linker.libraryPaths.1375202030" name="Library Paths (-L)" superClass="com.qnx.qcc.option.linker.libraryPaths" valueType="libPaths">
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/../target-override/${CPUVARDIR}/lib"/>
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/../target-override/${CPUVARDIR}/usr/lib"/>
+									<listOptionValue builtIn="false" value="/NekoEngine/3rdparty/lib/armv7"/>
 								</option>
 								<option id="com.qnx.qcc.option.linker.security.593003671" name="Enhanced Security (-Wl,-z,relro -Wl,-z,now)" superClass="com.qnx.qcc.option.linker.security" value="true" valueType="boolean"/>
 								<option id="com.qnx.qcc.option.linker.libraries.596592595" name="Libraries (-l)" superClass="com.qnx.qcc.option.linker.libraries" valueType="libs">
@@ -424,8 +433,9 @@
 									<listOptionValue builtIn="false" value="screen"/>
 									<listOptionValue builtIn="false" value="OpenAL"/>
 									<listOptionValue builtIn="false" value="bps"/>
-									<listOptionValue builtIn="false" value="bb"/>
 									<listOptionValue builtIn="false" value="z"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="sqlite3_neko"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="ogg"/>
 								</option>
 								<inputType id="com.qnx.qcc.inputType.linker.794132144" superClass="com.qnx.qcc.inputType.linker">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
@@ -500,6 +510,7 @@
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/../target-override/${CPUVARDIR}/lib"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/3rdparty/lib/x86/release}&quot;"/>
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/../target-override/${CPUVARDIR}/usr/lib"/>
+									<listOptionValue builtIn="false" value="/NekoEngine/3rdparty/lib/armv7"/>
 								</option>
 								<option id="com.qnx.qcc.option.linker.security.1110595185" name="Enhanced Security (-Wl,-z,relro -Wl,-z,now)" superClass="com.qnx.qcc.option.linker.security" value="true" valueType="boolean"/>
 								<option id="com.qnx.qcc.option.linker.libraries.1600811958" name="Libraries (-l)" superClass="com.qnx.qcc.option.linker.libraries" valueType="libs">
@@ -510,8 +521,8 @@
 									<listOptionValue builtIn="false" value="screen"/>
 									<listOptionValue builtIn="false" value="OpenAL"/>
 									<listOptionValue builtIn="false" value="bps"/>
-									<listOptionValue builtIn="false" value="bb"/>
 									<listOptionValue builtIn="false" value="z"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="sqlite3_neko"/>
 								</option>
 								<inputType id="com.qnx.qcc.inputType.linker.827981964" superClass="com.qnx.qcc.inputType.linker">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
@@ -585,6 +596,7 @@
 								<option id="com.qnx.qcc.option.linker.libraryPaths.445437666" name="Library Paths (-L)" superClass="com.qnx.qcc.option.linker.libraryPaths" valueType="libPaths">
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/../target-override/${CPUVARDIR}/lib"/>
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/../target-override/${CPUVARDIR}/usr/lib"/>
+									<listOptionValue builtIn="false" value="/NekoEngine/3rdparty/lib/armv7"/>
 								</option>
 								<option id="com.qnx.qcc.option.linker.security.844167594" name="Enhanced Security (-Wl,-z,relro -Wl,-z,now)" superClass="com.qnx.qcc.option.linker.security" value="true" valueType="boolean"/>
 								<option id="com.qnx.qcc.option.linker.libraries.1532469758" name="Libraries (-l)" superClass="com.qnx.qcc.option.linker.libraries" valueType="libs">
@@ -593,8 +605,9 @@
 									<listOptionValue builtIn="false" value="screen"/>
 									<listOptionValue builtIn="false" value="OpenAL"/>
 									<listOptionValue builtIn="false" value="bps"/>
-									<listOptionValue builtIn="false" value="bb"/>
 									<listOptionValue builtIn="false" value="z"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="sqlite3_neko"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="ogg"/>
 								</option>
 								<inputType id="com.qnx.qcc.inputType.linker.289236113" superClass="com.qnx.qcc.inputType.linker">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>

@@ -29,7 +29,7 @@ file(GLOB GLRendererSourceFiles "GLRenderer/*.cpp"
 )
 file(GLOB NullRendererSourceFiles "NullRenderer/*.cpp")
 file(GLOB GLESRendererSourceFiles "GLESRenderer/*.cpp"
-	"GLRenderer/Loaders/*.cpp"
+	"GLRenderer/Loaders/tga.cpp"
 	"GLESRenderer/Platform/EGL/*.cpp"
 )
 
@@ -161,5 +161,5 @@ if(GLESRenderer)
 	target_compile_options(GLESRenderer PRIVATE -std=c++11)
 	target_compile_options(GLESRenderer PRIVATE -fPIC)
 	target_compile_options(GLESRenderer PRIVATE -frtti)
-	target_link_libraries(GLESRenderer GL X11)
+	target_link_libraries(GLESRenderer EGL GLESv2 X11)
 endif(GLESRenderer)

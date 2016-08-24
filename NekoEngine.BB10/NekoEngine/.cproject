@@ -71,12 +71,12 @@
 								</option>
 								<option id="com.qnx.qcc.option.linker.security.1998344492" name="Enhanced Security (-Wl,-z,relro -Wl,-z,now)" superClass="com.qnx.qcc.option.linker.security" value="true" valueType="boolean"/>
 								<option id="com.qnx.qcc.option.linker.libraries.396841114" name="Libraries (-l)" superClass="com.qnx.qcc.option.linker.libraries" valueType="libs">
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="vorbis"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="ogg"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="sqlite3_neko"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="Engine"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="GLESRenderer"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="TestGame"/>
-									<listOptionValue builtIn="false" value="vorbisfile"/>
-									<listOptionValue builtIn="false" value="vorbis"/>
-									<listOptionValue builtIn="false" value="ogg"/>
 								</option>
 								<inputType id="com.qnx.qcc.inputType.linker.506972712" superClass="com.qnx.qcc.inputType.linker">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
@@ -180,6 +180,9 @@
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="Engine"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="GLESRenderer"/>
 									<listOptionValue builtIn="false" value="TestGame"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="sqlite3_neko"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="ogg"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="vorbis"/>
 								</option>
 								<inputType id="com.qnx.qcc.inputType.linker.136329251" superClass="com.qnx.qcc.inputType.linker">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>

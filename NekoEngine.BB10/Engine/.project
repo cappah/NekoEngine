@@ -457,9 +457,19 @@
 			<locationURI>PARENT-2-PROJECT_LOC/Engine/Core/AnimationClip.cpp</locationURI>
 		</link>
 		<link>
+			<name>src/Core/Camera.cpp</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/Engine/Core/Camera.cpp</locationURI>
+		</link>
+		<link>
 			<name>src/Core/CameraManager.cpp</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Engine/Core/CameraManager.cpp</locationURI>
+		</link>
+		<link>
+			<name>src/Core/Console.cpp</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/Engine/Core/Console.cpp</locationURI>
 		</link>
 		<link>
 			<name>src/Core/DeferredBuffer.cpp</name>
@@ -470,6 +480,11 @@
 			<name>src/Core/Engine.cpp</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Engine/Core/Engine.cpp</locationURI>
+		</link>
+		<link>
+			<name>src/Core/HBAO.cpp</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/Engine/Core/HBAO.cpp</locationURI>
 		</link>
 		<link>
 			<name>src/Core/Input.cpp</name>

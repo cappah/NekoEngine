@@ -34,6 +34,9 @@
        <asset path="${workspace_loc:/Engine}/Device-Debug/libEngine.so" type="Qnx/Elf">lib/libEngine.so</asset>
        <asset path="${workspace_loc:/GLESRenderer}/Device-Debug/libGLESRenderer.so" type="Qnx/Elf">lib/libGLESRenderer.so</asset>
        <asset path="${workspace_loc:/TestGame}/Device-Debug/libTestGame.so" type="Qnx/Elf">lib/libTestGame.so</asset>
+       <asset path="3rdparty/lib/armv7/libogg.so" type="Qnx/Elf">lib/libogg.so</asset>
+       <asset path="3rdparty/lib/armv7/libsqlite3_neko.so" type="Qnx/Elf">lib/libsqlite3_neko.so</asset>
+       <asset path="3rdparty/lib/armv7/libvorbis.so" type="Qnx/Elf">lib/libvorbis.so</asset>
     </configuration>
     <configuration name="Device-Release">
        <platformArchitecture>armle-v7</platformArchitecture>
@@ -89,7 +92,7 @@
 
     <!-- Fourth digit segment of the package version. First three segments are taken from the
          <versionNumber> element.  Must be an integer from 0 to 2^16-1 -->
-    <buildId>272</buildId>
+    <buildId>289</buildId>
 
     <!-- Description, displayed in the BlackBerry application installer.
          May have multiple values for each language. See samples or xsd schema file. Optional. -->
@@ -111,6 +114,6 @@
     </icon>
 
     <!-- Ensure that shared libraries in the package are found at run-time. -->
-    <env var="LD_LIBRARY_PATH" value="app/native/lib:/usr/lib/qt4/lib"/>
+    <env var="LD_LIBRARY_PATH" value="app/native/lib"/>
 
 </qnx>

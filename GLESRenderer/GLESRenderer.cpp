@@ -579,9 +579,17 @@ bool GLESRenderer::HasExtension(const char* extension)
     size_t len = strlen(extension);
 
     for (int i = 0; i < numExtensions; i++)
-        if (!strncmp((char *)glGetStringi(GL_EXTENSIONS, i), extension, len))
+	{
+		const char *ext = (const char *)glGetStringi(GL_EXTENSIONS, i);
+		if(!ext)
+			continue;
+		
+		len = strlen(ext);
+		
+        if (!strncmp(ext, extension, len))
             return true;
-
+	}
+	
     return false;
 }
 

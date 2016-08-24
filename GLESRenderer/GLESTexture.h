@@ -44,16 +44,12 @@
 #include <Platform/Platform.h>
 
 #ifdef __APPLE__
-#include <OpenGLES/ES3/gl.h>
+	#include <OpenGLES/ES3/gl.h>
 #else
-#include "glad.h"
+	#include "glad.h"
 #endif
 
 #include <Loaders/tga.h>
-
-#ifndef NE_DEVICE_MOBILE
-#include <Loaders/nv_dds.h>
-#endif
 
 class GLESTexture : public RTexture
 {

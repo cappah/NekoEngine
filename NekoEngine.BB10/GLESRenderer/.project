@@ -72,6 +72,16 @@
 			<locationURI>PARENT-2-PROJECT_LOC/GLESRenderer/GLESBuffer.cpp</locationURI>
 		</link>
 		<link>
+			<name>src/GLESFence.cpp</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/GLESRenderer/GLESFence.cpp</locationURI>
+		</link>
+		<link>
+			<name>src/GLESFence.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/GLESRenderer/GLESFence.h</locationURI>
+		</link>
+		<link>
 			<name>src/GLESFramebuffer.cpp</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/GLESRenderer/GLESFramebuffer.cpp</locationURI>

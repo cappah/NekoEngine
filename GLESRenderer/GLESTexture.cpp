@@ -43,9 +43,9 @@
 #include <string.h>
 
 #ifdef __APPLE__
-#include <OpenGLES/ES3/glext.h>
+	#include <OpenGLES/ES3/glext.h>
 #else
-#include "glad.h"
+	#include "glad.h"
 #endif
 
 #include "GLESRenderer.h"
@@ -195,7 +195,6 @@ bool GLESTexture::_LoadTGATexture(char *tga, int bpp)
 		if (!cubemap)
 			return false;
 
-#pragma omp parallel for
 		for (int i = 0; i < size; i++)
 		{
 			int dstOffset = rowSize * i;
@@ -258,12 +257,7 @@ void GLESTexture::GetImage(int level, TextureFormat format, TextureInternalType 
 
 void GLESTexture::SetStorage1D(int levels, TextureSizedFormat format, int width)
 {
-	/*GL_CHECK(glBindTexture(GL_TexTarget[(int)_type], _id));
-	GL_CHECK(glTexStorage1D(GL_TexTarget[(int)_type], levels, GL_TexFormatSized[(int)format], width));
-
-	_width = width;
-	_mipLevels = levels;
-	_sizedFormat = format;*/
+	// Unsupported in GL|ES
 }
 
 void GLESTexture::SetStorage2D(int levels, TextureSizedFormat format, int width, int height)
@@ -314,10 +308,7 @@ void GLESTexture::SetStorageCube(int levels, TextureSizedFormat format, int widt
 
 void GLESTexture::SetImage1D(int level, int width, TextureFormat format, TextureInternalType type, const void* data)
 {
-	/*GL_CHECK(glBindTexture(GL_TexTarget[(int)_type], _id));
-	GL_CHECK(glTexSubImage1D(GL_TexTarget[(int)_type], level, 0, width, GL_TexFormat[(int)format], GL_TexType[(int)type], data));
-
-	_format = format;*/
+	// Unsupported in GL|ES
 }
 
 void GLESTexture::SetImage2D(int level, int width, int height, TextureFormat format, TextureInternalType type, const void* data)
@@ -338,7 +329,7 @@ void GLESTexture::SetImage3D(int level, int width, int height, int depth, Textur
 
 void GLESTexture::SetSubImage1D(int level, int x, int width, TextureFormat format, TextureInternalType type, const void* data)
 {
-	// Unsupported
+	// Unsupported in GL|ES
 }
 
 void GLESTexture::SetSubImage2D(int level, int x, int y, int width, int height, TextureFormat format, TextureInternalType type, const void* data)
