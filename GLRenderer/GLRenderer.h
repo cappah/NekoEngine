@@ -306,6 +306,7 @@ void DebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsiz
 #define glCheckNamedFramebufferStatus(x, y) 0
 #define glBlitNamedFramebuffer(a, b, c, d, e, f, g, h, i, j, k, l)
 #define glNamedFramebufferDrawBuffer(x, y)
+#define glNamedFramebufferReadBuffer(x, y)
 #define glNamedFramebufferDrawBuffers(x, y, z)
 
 #define GL_MAP_PERSISTENT_BIT	0

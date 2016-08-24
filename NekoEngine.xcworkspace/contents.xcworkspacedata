@@ -187,6 +187,12 @@
                location = "group:postproc.vert">
             </FileRef>
             <FileRef
+               location = "group:shadow.frag">
+            </FileRef>
+            <FileRef
+               location = "group:shadow.vert">
+            </FileRef>
+            <FileRef
                location = "group:ssao.frag">
             </FileRef>
             <FileRef

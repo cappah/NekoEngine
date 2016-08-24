@@ -677,7 +677,7 @@
     <ClCompile Include="Core\Console.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
+    <ClCompile Include="Core\Camera.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>
   </ItemGroup>

@@ -74,6 +74,9 @@
 		12822BB71CC1DA4C00EE5D0A /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12822BB61CC1DA4C00EE5D0A /* Carbon.framework */; };
 		12822BBA1CC1DB9500EE5D0A /* EngineDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 12822BB81CC1DB9500EE5D0A /* EngineDelegate.h */; };
 		12822BBB1CC1DB9500EE5D0A /* EngineDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 12822BB91CC1DB9500EE5D0A /* EngineDelegate.mm */; };
+		128DBB611D6D7C7F00E7CFFD /* Camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 128DBB601D6D7C7F00E7CFFD /* Camera.cpp */; };
+		128DBB621D6D7C7F00E7CFFD /* Camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 128DBB601D6D7C7F00E7CFFD /* Camera.cpp */; };
+		128DBB641D6D7C9300E7CFFD /* Camera.h in Headers */ = {isa = PBXBuildFile; fileRef = 128DBB631D6D7C9300E7CFFD /* Camera.h */; };
 		1296BBD41CDBB6B500D17488 /* PlatformDetect.h in Headers */ = {isa = PBXBuildFile; fileRef = 1296BBD31CDBB6B500D17488 /* PlatformDetect.h */; };
 		1297E3971D69E91500A00959 /* Console.h in Headers */ = {isa = PBXBuildFile; fileRef = 1297E3961D69E91500A00959 /* Console.h */; };
 		1297E3991D69E93100A00959 /* Console.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1297E3981D69E93100A00959 /* Console.cpp */; };
@@ -264,6 +267,8 @@
 		12822BB61CC1DA4C00EE5D0A /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
 		12822BB81CC1DB9500EE5D0A /* EngineDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EngineDelegate.h; path = Platform/Mac/EngineDelegate.h; sourceTree = SOURCE_ROOT; };
 		12822BB91CC1DB9500EE5D0A /* EngineDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = EngineDelegate.mm; path = Platform/Mac/EngineDelegate.mm; sourceTree = SOURCE_ROOT; };
+		128DBB601D6D7C7F00E7CFFD /* Camera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Camera.cpp; path = Core/Camera.cpp; sourceTree = SOURCE_ROOT; };
+		128DBB631D6D7C9300E7CFFD /* Camera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Camera.h; sourceTree = "<group>"; };
 		1296BB6F1CDB7EEA00D17488 /* EngineAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EngineAppDelegate.h; path = Platform/iOS/EngineAppDelegate.h; sourceTree = SOURCE_ROOT; };
 		1296BB701CDB7EEA00D17488 /* EngineAppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = EngineAppDelegate.mm; path = Platform/iOS/EngineAppDelegate.mm; sourceTree = SOURCE_ROOT; };
 		1296BB731CDB7F3400D17488 /* iOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = iOS.mm; path = Platform/iOS/iOS.mm; sourceTree = SOURCE_ROOT; };
@@ -409,6 +414,7 @@
 			isa = PBXGroup;
 			children = (
 				1297E3981D69E93100A00959 /* Console.cpp */,
+				128DBB601D6D7C7F00E7CFFD /* Camera.cpp */,
 				12FABB1B1D3256C400D88639 /* CameraManager.cpp */,
 				12C0588E1D2AF4E90042023D /* Input.cpp */,
 				12C560901CFB57B200E25478 /* AnimationClip.cpp */,
@@ -549,6 +555,7 @@
 			isa = PBXGroup;
 			children = (
 				1297E3961D69E91500A00959 /* Console.h */,
+				128DBB631D6D7C9300E7CFFD /* Camera.h */,
 				12FABB1E1D3256D200D88639 /* CameraManager.h */,
 				12C058911D2AF5360042023D /* Input.h */,
 				12C058921D2AF5360042023D /* Keycodes.h */,
@@ -797,6 +804,7 @@
 				12C058941D2AF5360042023D /* Keycodes.h in Headers */,
 				1297E3971D69E91500A00959 /* Console.h in Headers */,
 				12822BBA1CC1DB9500EE5D0A /* EngineDelegate.h in Headers */,
+				128DBB641D6D7C9300E7CFFD /* Camera.h in Headers */,
 				12ECE5E21CF110D2004F3697 /* AudioSourceComponent.h in Headers */,
 				12C8E5D21D59DA76002DD5EE /* NArray.h in Headers */,
 			);
@@ -926,6 +934,7 @@
 				124A31F31CDC262800472893 /* UNIX.cpp in Sources */,
 				1243C8931CDCE15A00BA692E /* EngineInputDelegate.mm in Sources */,
 				124A32001CDC264100472893 /* Terrain.cpp in Sources */,
+				128DBB621D6D7C7F00E7CFFD /* Camera.cpp in Sources */,
 				124A31FD1CDC264100472893 /* ObjectComponent.cpp in Sources */,
 				12C058901D2AF4E90042023D /* Input.cpp in Sources */,
 				121482B81D51466B00F804C3 /* NFont.cpp in Sources */,
@@ -937,6 +946,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				128DBB611D6D7C7F00E7CFFD /* Camera.cpp in Sources */,
 				12C560B01CFB57B200E25478 /* ResourceManager.cpp in Sources */,
 				12822B081CC1AD9C00EE5D0A /* AudioClip.cpp in Sources */,
 				12B0CF5F1CEB4A9700E5D2FE /* StaticMeshComponent.cpp in Sources */,
