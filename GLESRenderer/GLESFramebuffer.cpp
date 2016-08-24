@@ -286,6 +286,12 @@ void GLESFramebuffer::SetDrawBuffer(DrawAttachment attachment)
 	GL_CHECK(glDrawBuffers(1, &GL_Attachments[(int)attachment]));
 }
 
+void GLESFramebuffer::SetReadBuffer(DrawAttachment attachment)
+{
+	GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, _id));
+	GL_CHECK(glReadBuffer(GL_Attachments[(int)attachment]));
+}
+
 void GLESFramebuffer::SetDrawBuffers(int32_t n, DrawAttachment* buffers)
 {
 	GLenum drawBuffers[11];

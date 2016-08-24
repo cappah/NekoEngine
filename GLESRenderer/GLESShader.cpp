@@ -129,10 +129,6 @@ void GLESShader::VSUniformBlockBinding(int location, const char *name)
 	_vsBuffers[location].binding = _nextBinding++;
 	GL_CHECK(_vsBuffers[location].index = glGetUniformBlockIndex(_program, name));
 
-#ifdef _DEBUG
-	printf("VSUniformBlockBinding: name: %s location: %d index: %d binding: %d\n", name, location, _vsBuffers[location].index, _vsBuffers[location].binding);
-#endif
-
 	if(_vsBuffers[location].index == GL_INVALID_INDEX)
 		return;
 
@@ -143,10 +139,6 @@ void GLESShader::FSUniformBlockBinding(int location, const char *name)
 {
 	_fsBuffers[location].binding = _nextBinding++;
 	GL_CHECK(_fsBuffers[location].index = glGetUniformBlockIndex(_program, name));
-
-#ifdef _DEBUG
-	printf("FSUniformBlockBinding: name: %s location: %d index: %d binding: %d\n", name, location, _fsBuffers[location].index, _fsBuffers[location].binding);
-#endif
 
 	if(_fsBuffers[location].index == GL_INVALID_INDEX)
 		return;

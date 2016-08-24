@@ -106,7 +106,7 @@ int CameraComponent::Load()
 	if (ret != ENGINE_OK)
 		return ret;
 
-	_cam->UpdatePerspective();
+	_cam->UpdateProjection();
 
 	return ENGINE_OK;
 }

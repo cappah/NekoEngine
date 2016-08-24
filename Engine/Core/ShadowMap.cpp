@@ -41,8 +41,8 @@
 
 #include <Engine/ShadowMap.h>
 #include <Engine/SceneManager.h>
+#include <Engine/DeferredBuffer.h>
 #include <Engine/ResourceManager.h>
-#include <Scene/Components/CameraComponent.h>
 #include <Scene/Light.h>
 
 using namespace glm;
@@ -62,11 +62,13 @@ ShadowMap::ShadowMap(int size) :
 	_texture->SetStorage2D(1, TextureSizedFormat::DEPTH_32F, size, size);
 	_texture->SetMinFilter(TextureFilter::Nearest);
 	_texture->SetMagFilter(TextureFilter::Nearest);
-	_texture->SetWrapS(TextureWrap::ClampToEdge);
-	_texture->SetWrapT(TextureWrap::ClampToEdge);
+	_texture->SetWrapS(TextureWrap::Repeat);
+	_texture->SetWrapT(TextureWrap::Repeat);
 
 	_fbo = Engine::GetRenderer()->CreateFramebuffer(size, size);
 	_fbo->AttachDepthTexture(_texture);
+	_fbo->SetDrawBuffer(DrawAttachment::None);
+	_fbo->SetReadBuffer(DrawAttachment::None);
 	if(_fbo->CheckStatus() != FramebufferStatus::Complete)
 	{ DIE("Failed to create shadow framebuffer"); }
 
@@ -77,24 +79,29 @@ ShadowMap::ShadowMap(int size) :
 	if((_shader = (Shader*)ResourceManager::GetResourceByName("sh_shadow", ResourceType::RES_SHADER)) == nullptr)
 	{ DIE("Failed to load shadow map shader"); }
 
-	_shader->GetRShader()->VSUniformBlockBinding(0, "MatrixBlock");
-	_shader->GetRShader()->VSSetUniformBuffer(0, 0, sizeof(ShadowMapMatrixBlock), _uniformBuffer);
+	/*_shader->GetRShader()->VSUniformBlockBinding(0, "MatrixBlock");
+	_shader->GetRShader()->VSSetUniformBuffer(0, 0, sizeof(ShadowMapMatrixBlock), _uniformBuffer);*/
 
 	/*lightShader->FSUniformBlockBinding(0, "SceneLightData");
 	lightShader->FSSetUniformBuffer(0, 0, sizeof(LightSceneData), _sceneLightUbo);*/
 
-	//_shadowCamera = Engine::NewComponent()
+	_shadowCamera = new Camera();
+
+	_shadowCamera->SetNear(.1f);
+	_shadowCamera->SetFar(10000.f);
+	_shadowCamera->SetProjection(ProjectionType::Ortographic);
+	_shadowCamera->UpdateProjection();
 
 	_size = size;
 }
-
+#include <Engine/CameraManager.h>
 void ShadowMap::Render()
 {
 	Scene *s = SceneManager::GetActiveScene();
 
 	_fbo->Bind(FB_DRAW);
-	_fbo->SetDrawBuffer(DrawAttachment::None);
 
+	Engine::GetRenderer()->SetDepthMask(true);
 	Engine::GetRenderer()->Clear(R_CLEAR_DEPTH);
 
 	Engine::BindQuadVAO();
@@ -106,30 +113,30 @@ void ShadowMap::Render()
 		if (!l->CastShadows())
 			continue;
 
-		if (l->GetType() == LightType::Directional)
+		if (l->GetType() == LightType::Directional || l->GetType() == LightType::Spot)
 		{
-			_projection = ortho(-10.f, 10.f, -10.f, 10.f, .1f, 10000.f);
-			_view = lookAt(l->GetDirection(), vec3(0.f), vec3(1.f));
-			_lightWorld = _projection * _view;
-
-			SceneManager::DrawScene(_shader->GetRShader());
+			_shadowCamera->LookAt(l->GetDirection(), vec3(0.f), vec3(0.f, 1.f, 0.f));
+			SceneManager::DrawScene(DeferredBuffer::GetGeometryShader(), _shadowCamera);
+		}
+		else if (l->GetType() == LightType::Point)
+		{
+			//
 		}
 
-		_shader->GetRShader()->BindUniformBuffers();
-		// bind light world to camera
-		// bind world to camera
+		//
 
-		Engine::GetRenderer()->DrawArrays(PolygonMode::TriangleStrip, 0, 4);
+		//Engine::GetRenderer()->DrawArrays(PolygonMode::TriangleStrip, 0, 4);
 	}
 
 	_fbo->Unbind();
+	Engine::GetRenderer()->SetDepthMask(false);
 
 //	_colorFbo->Bind(FB_DRAW);
 
 	// bind world to camera
 
-	Engine::GetRenderer()->Clear(R_CLEAR_DEPTH);
-	Engine::GetRenderer()->DrawArrays(PolygonMode::TriangleStrip, 0, 4);
+	/*Engine::GetRenderer()->Clear(R_CLEAR_DEPTH);
+	Engine::GetRenderer()->DrawArrays(PolygonMode::TriangleStrip, 0, 4);*/
 }
 
 ShadowMap::~ShadowMap()

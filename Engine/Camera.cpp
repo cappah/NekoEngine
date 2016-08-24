@@ -69,55 +69,26 @@ Camera::Camera() :
 	_skyboxProjectionMatrix(glm::mat4(0.f)),
 	_noRegister(false)
 {
-	//_UpdateView();
-
-/*	if (((it = initializer->arguments.find("fov")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
-		_fov = (float)atof(ptr);
-
-	if (((it = initializer->arguments.find("near")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
-		_near = (float)atof(ptr);
-
-	if (((it = initializer->arguments.find("far")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
-		_far = (float)atof(ptr);
-
-	if (((it = initializer->arguments.find("view_distance")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
-		_viewDistance = (float)atof(ptr);
-
-	if (((it = initializer->arguments.find("fog_distance")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
-		_fogDistance = (float)atof(ptr);
-
-	if (((it = initializer->arguments.find("fog_color")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
-		EngineUtils::ReadFloatArray(ptr, 3, &_fogColor.x);
-
-	if (((it = initializer->arguments.find("projection")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
-	{
-		size_t len = strlen(ptr);
-
-		if (!strncmp(ptr, "perspective", len))
-			_projection = ProjectionType::Perspective;
-		else if (!strncmp(ptr, "ortographics", len))
-			_projection = ProjectionType::Ortographic;
-	}
-
-	if (((it = initializer->arguments.find("noregister")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
-	{
-		size_t len = strlen(ptr);
-
-		if (!strncmp(ptr, "true", len))
-			_noRegister = true;
-	}*/
-
 	UpdateView();
-
-	UpdatePerspective();
-
+	UpdateProjection();
 	CameraManager::AddCamera(this);
 }
 
-void Camera::UpdatePerspective() noexcept
+void Camera::LookAt(vec3 eye, vec3 center, vec3 up) noexcept
 {
-	_projectionMatrix = perspective(_fov, (float)DeferredBuffer::GetWidth() / (float)DeferredBuffer::GetHeight(), _near, _far);
-	_skyboxProjectionMatrix = perspective(_fov, (float)DeferredBuffer::GetWidth() / (float)DeferredBuffer::GetHeight(), _near, 10000.f);
+	_view = lookAt(eye, center, up);
+}
+
+void Camera::UpdateProjection() noexcept
+{
+	if (_projection == ProjectionType::Perspective)
+	{
+		_projectionMatrix = perspective(_fov, (float)DeferredBuffer::GetWidth() / (float)DeferredBuffer::GetHeight(), _near, _far);
+		_skyboxProjectionMatrix = perspective(_fov, (float)DeferredBuffer::GetWidth() / (float)DeferredBuffer::GetHeight(), _near, 10000.f);
+	}
+	else
+		_projectionMatrix = ortho(-10.0f, 10.0f, -10.0f, 10.0f, _near, _far);
+		//_projectionMatrix = ortho(0.f, (float)DeferredBuffer::GetWidth(), (float)DeferredBuffer::GetHeight(), 0.f, _near, _far);
 }
 
 void Camera::UpdateView() noexcept

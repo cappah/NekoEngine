@@ -72,6 +72,7 @@ public:
 	virtual void CopyStencil(RFramebuffer* dest) override { }
 
 	virtual void SetDrawBuffer(DrawAttachment attachment) override { }
+	virtual void SetReadBuffer(DrawAttachment attachment) override { }
 	virtual void SetDrawBuffers(int32_t n, DrawAttachment* buffers) override { }
 
 	virtual ~NullFramebuffer() { }

@@ -176,6 +176,7 @@ public:
 	virtual void CopyStencil(RFramebuffer* dest) = 0;
 
 	virtual void SetDrawBuffer(DrawAttachment attachment) = 0;
+	virtual void SetReadBuffer(DrawAttachment attachment) = 0;
 	virtual void SetDrawBuffers(int32_t n, DrawAttachment* buffers) = 0;
 	
 	/**

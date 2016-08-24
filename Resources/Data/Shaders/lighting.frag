@@ -30,6 +30,7 @@ layout(location=U_TEXTURE2) uniform TEXTURE_2DMS ColorTexture;
 layout(location=U_TEXTURE3) uniform TEXTURE_2DMS MaterialTexture;
 layout(location=U_TEXTURE4) uniform TEXTURE_2D SSAOTexture;
 layout(location=U_TEXTURE5) uniform TEXTURE_2DMS LightAccumulationTexture;
+layout(location=U_TEXTURE6) uniform TEXTURE_2D ShadowTexture;
 
 vec4 color; // rgb - color, a - specular
 vec4 fragmentPosition;	// xyz - fragment position, w - shader type

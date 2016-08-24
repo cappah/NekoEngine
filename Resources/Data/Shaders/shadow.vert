@@ -26,10 +26,22 @@ layout(std140) uniform BoneBlock
 	mat4 BoneMatrices[SH_MAX_BONES];
 };
 
-out vec2 v_uv;
+out VertexData
+{
+	vec2 UV;
+	vec2 TerrainUV;
+	vec3 Position;
+	vec3 Normal;
+	vec3 Color;
+	vec3 Tangent;
+	vec3 CubemapUV;
+	vec3 ViewSpacePosition;
+} vertexData;
+
+layout(location=U_TEXTURE4) uniform TEXTURE_2D HeightmapTexture;
 
 void main()
 {
-	v_uv = a_uv;
+	vertexData.UV = a_uv;
 	gl_Position = (ModelViewProjection * vec4(a_pos, 1.0));
 }

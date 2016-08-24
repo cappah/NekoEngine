@@ -39,12 +39,18 @@
 
 #include "GLESRenderer.h"
 
-extern "C" Renderer* createRenderer()
+#if defined(_WIN32) || defined(_WIN64)
+	#define EXPORT __declspec(dllexport)
+#else
+	#define EXPORT
+#endif
+
+extern "C" EXPORT Renderer* createRenderer()
 {
     return (Renderer *)new GLESRenderer();
 }
 
-extern "C" unsigned int getRendererAPIVersion()
+extern "C" EXPORT unsigned int getRendererAPIVersion()
 {
     return RENDERER_API_VERSION;
 }

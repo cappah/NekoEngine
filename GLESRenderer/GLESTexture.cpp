@@ -146,9 +146,7 @@ GLenum GL_CubeFace[6] =
 GLESTexture::GLESTexture(TextureType type)
 	: RTexture(type)
 {
-    _resident = false;
     _fixedLocations = false;
-    _handle = 0;
     _sizedFormat = TextureSizedFormat::RGBA_8U;
 	_skipMipLevels = 0;
     GL_CHECK(glGenTextures(1, &_id));
@@ -221,46 +219,6 @@ bool GLESTexture::_LoadTGATexture(char *tga, int bpp)
 	return true;
 }
 
-#ifndef NE_DEVICE_MOBILE
-bool GLESTexture::_LoadDDSTexture(class nv_dds::CDDSImage& image)
-{
-	bool ret = false;
-
-	if (!image.is_valid())
-		return false;
-
-	if (_type == TextureType::Tex1D)
-	{
-		GL_CHECK(glBindTexture(GL_TEXTURE_1D, _id));
-		ret = image.upload_texture1D();
-		GL_CHECK(glBindTexture(GL_TEXTURE_1D, 0));
-	}
-	else if (_type == TextureType::Tex2D)
-	{
-		GL_CHECK(glBindTexture(GL_TEXTURE_2D, _id));
-		ret = image.upload_texture2D();
-		GL_CHECK(glBindTexture(GL_TEXTURE_2D, 0));
-	}
-	else if (_type == TextureType::Tex3D)
-	{
-		GL_CHECK(glBindTexture(GL_TEXTURE_3D, _id));
-		ret = image.upload_texture3D();
-		GL_CHECK(glBindTexture(GL_TEXTURE_3D, 0));
-	}
-	else if (_type == TextureType::TexCubemap)
-	{
-		GL_CHECK(glBindTexture(GL_TEXTURE_CUBE_MAP, _id));
-		ret = image.upload_texture2D();
-		GL_CHECK(glBindTexture(GL_TEXTURE_CUBE_MAP, 0));
-	}
-
-	_width = image.get_width();
-	_height = image.get_height();
-
-	return ret;
-}
-#endif
-
 bool GLESTexture::LoadFromFile(const char* file)
 {
 	const char *ext = strrchr(file, '.');
@@ -273,20 +231,6 @@ bool GLESTexture::LoadFromFile(const char* file)
 		free(data);
 		return ret;
 	}
-	#ifndef NE_DEVICE_MOBILE
-	else if (!strncmp(ext, "dds", 3))
-	{
-		nv_dds::CDDSImage image;
-
-		image.load(file);
-		bool ret = _LoadDDSTexture(image);
-
-		image.clear();
-
-		return ret;
-
-	}
-	#endif
 	else
 		return false;
 
@@ -303,19 +247,6 @@ bool GLESTexture::LoadFromMemory(TextureFileFormat format, const uint8_t* mem, s
 		free(data);
 		return ret;
 	}
-	#ifndef NE_DEVICE_MOBILE
-	else if (format == TextureFileFormat::DDS)
-	{
-		nv_dds::CDDSImage image;
-
-		image.loadFromMemory(mem, size);
-		bool ret = _LoadDDSTexture(image);
-
-		image.clear();
-
-		return ret;
-	}
-	#endif
 
 	return false;
 }

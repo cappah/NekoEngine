@@ -42,11 +42,11 @@
 #include <EGL/eglext.h>
 #include <Platform/Platform.h>
 
-#include "GLESRenderer.h"
+#include "../../GLESRenderer.h"
 #include "glad.h"
 
 static EGLDisplay _display;
-static EGLContext _context;
+static EGLContext _context, _loadContext;
 static EGLSurface _surface;
 
 using namespace std;
@@ -113,6 +113,12 @@ bool GLESRenderer::Initialize(PlatformWindowType hWnd, unordered_map<string, str
         return false;
     }
 
+	if ((_loadContext = eglCreateContext(_display, config, _context, attributes)) == EGL_NO_CONTEXT)
+	{
+		fprintf(stderr, "eglCreateContext failed with 0x%x\n", eglGetError());
+		return false;
+	}
+
     if((_surface = eglCreateWindowSurface(_display, config, (EGLNativeWindowType)_window, NULL)) == EGL_NO_SURFACE)
     {
         fprintf(stderr, "eglCreateWindowSurface failed with 0x%x\n", eglGetError());
@@ -152,10 +158,10 @@ void GLESRenderer::_DestroyContext()
 
 void GLESRenderer::MakeCurrent(int context)
 {
-/*	if (context == R_RENDER_CONTEXT)
-		wglMakeCurrent(_dc, _ctx);
+	if (context == R_RENDER_CONTEXT)
+		eglMakeCurrent(_display, _surface, _surface, _context);
 	else
-		wglMakeCurrent(_dc, _loadCtx);*/
+		eglMakeCurrent(_display, _surface, _surface, _loadContext);
 }
 
 void GLESRenderer::MakeCurrent()

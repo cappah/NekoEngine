@@ -63,9 +63,6 @@ public:
 	void Bind();
 
     GLuint GetId() { return _id; }
-    GLuint64 GetHandle() { return _handle; }
-    bool IsResident() { return _resident; }
-    void MakeResident();
 
 	virtual void SkipMipLevels(int n) override { _skipMipLevels = n; }
 
@@ -108,16 +105,12 @@ public:
 
 private:
     GLuint _id;
-    GLuint64 _handle;
-    bool _resident, _fixedLocations;
+    bool _fixedLocations;
     TextureSizedFormat _sizedFormat;
 	int _skipMipLevels;
 
     void _Destroy();
     bool _LoadTGATexture(char *tga, int bpp);
-#ifndef NE_DEVICE_MOBILE
-    bool _LoadDDSTexture(class nv_dds::CDDSImage& image);
-#endif
 };
 
 #endif /* GLESTexture_h */

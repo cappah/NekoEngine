@@ -102,6 +102,7 @@ public:
 	ENGINE_API static void BindLighting() noexcept;
 	ENGINE_API static void Unbind() noexcept;
 
+	ENGINE_API static void RenderShadows() noexcept;
 	ENGINE_API static void RenderLighting() noexcept;
 
 	ENGINE_API static void ScreenResized(int width, int height) noexcept;

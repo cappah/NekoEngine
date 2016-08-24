@@ -318,6 +318,12 @@ void DeferredBuffer::Unbind() noexcept
 	_geometryShader->Disable();
 }
 
+void DeferredBuffer::RenderShadows() noexcept
+{
+	if (_shadow)
+		_shadow->Render();
+}
+
 void DeferredBuffer::RenderLighting() noexcept
 {
 	Renderer* r = Engine::GetRenderer();
@@ -354,6 +360,9 @@ void DeferredBuffer::RenderLighting() noexcept
 		lightShader->SetTexture(U_TEXTURE4, _hbao->GetTexture());
 	else if (_enableSSAO && _ssao)
 		lightShader->SetTexture(U_TEXTURE4, _ssao->GetTexture());
+
+	if (_shadow)
+		lightShader->SetTexture(U_TEXTURE6, _shadow->GetTexture());
 
 	_sceneLightUbo->UpdateData(0, sizeof(float) * 3, &cam->GetPosition().x);
 	_lightMatrixUbo->UpdateData(0, sizeof(mat4), (void *)value_ptr(mat4()));

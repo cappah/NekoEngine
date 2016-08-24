@@ -262,6 +262,11 @@ void GLFramebuffer::SetDrawBuffer(DrawAttachment attachment)
 	GL_CHECK(glNamedFramebufferDrawBuffer(_id, GL_Attachments[(int)attachment]));
 }
 
+void GLFramebuffer::SetReadBuffer(DrawAttachment attachment)
+{
+	GL_CHECK(glNamedFramebufferReadBuffer(_id, GL_Attachments[(int)attachment]));
+}
+
 void GLFramebuffer::SetDrawBuffers(int32_t n, DrawAttachment* buffers)
 {
 	GLenum drawBuffers[11];
@@ -483,6 +488,12 @@ void GLFramebuffer_NoDSA::SetDrawBuffer(DrawAttachment attachment)
 {
 	GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, _id));
 	GL_CHECK(glDrawBuffer(GL_Attachments[(int)attachment]));
+}
+
+void GLFramebuffer_NoDSA::SetReadBuffer(DrawAttachment attachment)
+{
+	GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, _id));
+	GL_CHECK(glReadBuffer(GL_Attachments[(int)attachment]));
 }
 
 void GLFramebuffer_NoDSA::SetDrawBuffers(int32_t n, DrawAttachment* buffers)

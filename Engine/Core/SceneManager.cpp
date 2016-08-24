@@ -152,6 +152,8 @@ int SceneManager::LoadNextScene()
 
 int SceneManager::DrawScene(RShader* shader, Camera *camera) noexcept
 {
+	shader->Enable();
+
 	if (_activeScene)
 	{
 		if (_loadingScreen)
@@ -163,6 +165,8 @@ int SceneManager::DrawScene(RShader* shader, Camera *camera) noexcept
 
 		_activeScene->Draw(shader, camera);
 	}
+
+	shader->Disable();
 
 	return ENGINE_OK;
 }

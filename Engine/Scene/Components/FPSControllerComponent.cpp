@@ -42,6 +42,7 @@
 #include <Scene/Components/FPSControllerComponent.h>
 #include <Scene/Components/CameraComponent.h>
 #include <Engine/ResourceManager.h>
+#include <Engine/CameraManager.h>
 #include <Scene/Object.h>
 
 #include <glm/glm.hpp>
@@ -92,6 +93,8 @@ FPSControllerComponent::FPSControllerComponent(ComponentInitializer *initializer
 	_cameraComponent = (CameraComponent *)Engine::NewComponent("CameraComponent", &init);
 	_cameraComponent->Load();
 	_parent->AddComponent("FPSCamera", _cameraComponent);
+
+	CameraManager::SetActiveCamera(_cameraComponent->GetCamera());
 }
 
 void FPSControllerComponent::Update(double deltaTime) noexcept

@@ -82,7 +82,8 @@ public:
 
 	void EnableSkybox(bool enable) { _drawSkybox = enable; }
 
-	void UpdatePerspective() noexcept;
+	void LookAt(glm::vec3 eye, glm::vec3 center, glm::vec3 up) noexcept;
+	void UpdateProjection() noexcept;
 	void UpdateView() noexcept;
 
 	void MoveForward(float distance) noexcept { _position += _front * distance; }

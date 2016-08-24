@@ -43,8 +43,8 @@
 
 #include <Engine/Engine.h>
 #include <Engine/Shader.h>
+#include <Engine/Camera.h>
 #include <Renderer/Renderer.h>
-#include <Scene/Components/CameraComponent.h>
 
 typedef struct SHADOW_MAP_MATRIX_BLOCK
 {
@@ -71,7 +71,7 @@ private:
 	RBuffer *_uniformBuffer;
 	RTexture *_texture;
 	Shader *_shader;
-	class CameraComponent *_shadowCamera;
+	Camera *_shadowCamera;
 	ShadowMapMatrixBlock _matrixBlock;
 	glm::mat4 _projection, _view, _lightWorld;
 };

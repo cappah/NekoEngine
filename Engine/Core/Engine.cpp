@@ -809,6 +809,10 @@ void Engine::Frame() noexcept
 
 void Engine::Draw() noexcept
 {
+	// Shadow pass
+
+	DeferredBuffer::RenderShadows();
+
 	// Geometry pass
 
 	DeferredBuffer::BindGeometry();
@@ -825,11 +829,9 @@ void Engine::Draw() noexcept
 	SceneManager::DrawScene(DeferredBuffer::GetGeometryShader(), cam);
 	DeferredBuffer::Unbind();
 
-	_renderer->SetDepthMask(false);
-
-	// Shadow pass
-
 	// Lighting pass
+
+	_renderer->SetDepthMask(false);
 
 	DeferredBuffer::BindLighting();
 	_renderer->Clear(R_CLEAR_COLOR);
@@ -891,7 +893,7 @@ void Engine::ScreenResized(int width, int height) noexcept
 	PostProcessor::ScreenResized();
 
 	if(SceneManager::IsSceneLoaded())
-		CameraManager::GetActiveCamera()->UpdatePerspective();
+		CameraManager::GetActiveCamera()->UpdateProjection();
 
 	if(_engineFont)
 		_engineFont->ScreenResized(width, height);

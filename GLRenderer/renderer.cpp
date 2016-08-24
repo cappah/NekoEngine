@@ -41,9 +41,9 @@
 #include <Renderer/Renderer.h>
 
 #if defined(_WIN32) || defined(_WIN64)
-#define EXPORT __declspec(dllexport)
+	#define EXPORT __declspec(dllexport)
 #else
-#define EXPORT
+	#define EXPORT
 #endif
 
 extern "C" EXPORT Renderer* createRenderer()

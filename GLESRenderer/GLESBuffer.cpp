@@ -44,10 +44,6 @@
 
 #include <Platform/Platform.h>
 
-#if defined(NE_PLATFORM_IOS) || defined(NE_PLATFORM_BB10)
-#define GL_DOUBLE 0
-#endif
-
 GLenum GL_BufferTargets[3]
 {
     GL_ARRAY_BUFFER,
@@ -72,7 +68,7 @@ GLenum GL_AttribTypes[10]
     GL_UNSIGNED_INT,
     GL_HALF_FLOAT,
     GL_FLOAT,
-    GL_DOUBLE,
+    0,
     GL_FIXED
 };
 
