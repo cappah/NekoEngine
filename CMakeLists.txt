@@ -7,6 +7,10 @@ if(NOT CMAKE_BUILD_TYPE)
 set(CMAKE_BUILD_TYPE, DEBUG)
 endif(NOT CMAKE_BUILD_TYPE)
 
+option(GLRenderer "GLRenderer" ON)
+option(NullRenderer "NullRenderer" OFF)
+option(GLESRenderer "GLESRenderer" OFF)
+
 file(GLOB EngineSourceFiles "Engine/*.cpp"
 	"Engine/Audio/*.cpp"
 	"Engine/Core/*.cpp"
@@ -107,19 +111,6 @@ endif(PLATFORM_X11)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/Bin64")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/Bin64")
 
-# OpenGL Renderer Library
-add_library(GLRenderer SHARED ${GLRendererSourceFiles} ${GLRendererPlatformSourceFiles})
-target_compile_options(GLRenderer PRIVATE -std=c++11)
-target_compile_options(GLRenderer PRIVATE -fPIC)
-target_compile_options(GLRenderer PRIVATE -frtti)
-target_link_libraries(GLRenderer GL X11)
-
-# Null Renderer Library
-add_library(NullRenderer SHARED ${NullRendererSourceFiles})
-target_compile_options(NullRenderer PRIVATE -std=c++11)
-target_compile_options(NullRenderer PRIVATE -fPIC)
-target_compile_options(NullRenderer PRIVATE -frtti)
-
 # Engine Library
 add_library(Engine SHARED ${EngineSourceFiles} ${PlatformSourceFiles} ${SharedPlatformSourceFiles})
 target_compile_options(Engine PRIVATE -std=c++11)
@@ -145,11 +136,30 @@ target_compile_options(TestGame PRIVATE -frtti)
 target_compile_options(Engine PRIVATE -DTESTGAME_INTERNAL)
 target_link_libraries(TestGame Engine)
 
-include_directories(${PROJECT_SOURCE_DIR}/GLRenderer)
+# OpenGL Renderer Library
+if(GLRenderer)
+	add_library(GLRenderer SHARED ${GLRendererSourceFiles} ${GLRendererPlatformSourceFiles})
+	target_compile_options(GLRenderer PRIVATE -std=c++11)
+	target_compile_options(GLRenderer PRIVATE -fPIC)
+	target_compile_options(GLRenderer PRIVATE -frtti)
+	target_link_libraries(GLRenderer GL X11)
+endif(GLRenderer)
+
+# Null Renderer Library
+if(NullRenderer)
+	add_library(NullRenderer SHARED ${NullRendererSourceFiles})
+	target_compile_options(NullRenderer PRIVATE -std=c++11)
+	target_compile_options(NullRenderer PRIVATE -fPIC)
+	target_compile_options(NullRenderer PRIVATE -frtti)
+endif(NullRenderer)
 
 # OpenGL|ES Renderer Library
-add_library(GLESRenderer SHARED ${GLESRendererSourceFiles})
-target_compile_options(GLESRenderer PRIVATE -std=c++11)
-target_compile_options(GLESRenderer PRIVATE -fPIC)
-target_compile_options(GLESRenderer PRIVATE -frtti)
-target_link_libraries(GLESRenderer GL X11)
+if(GLESRenderer)
+	include_directories(${PROJECT_SOURCE_DIR}/GLRenderer)
+	
+	add_library(GLESRenderer SHARED ${GLESRendererSourceFiles})
+	target_compile_options(GLESRenderer PRIVATE -std=c++11)
+	target_compile_options(GLESRenderer PRIVATE -fPIC)
+	target_compile_options(GLESRenderer PRIVATE -frtti)
+	target_link_libraries(GLESRenderer GL X11)
+endif(GLESRenderer)
