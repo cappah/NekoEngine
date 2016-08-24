@@ -41,9 +41,9 @@
 #define GLESRenderer_h
 
 #ifdef __APPLE__
-#include <OpenGLES/ES3/glext.h>
+	#include <OpenGLES/ES3/glext.h>
 #else
-#include "glad.h"
+	#include "glad.h"
 #endif
 
 #ifdef _DEBUG
@@ -65,6 +65,12 @@ exit(-1);
 #include <Renderer/Renderer.h>
 #include <Platform/Platform.h>
 #include <string>
+
+#define RENDERER_VERSION_MAJOR		0
+#define RENDERER_VERSION_MINOR		3
+#define RENDERER_VERSION_REVISION	0
+#define RENDERER_VERSION_BUILD		88
+#define RENDERER_VERSION_STRING		"0.3.0.88"
 
 typedef struct SHADER_DEFINE
 {
@@ -179,11 +185,12 @@ public:
 
     virtual bool HasCapability(RendererCapability cap) override;
 
-    virtual class RBuffer* CreateBuffer(BufferType type, bool dynamic, bool persistent) override;
-    virtual class RShader* CreateShader() override;
-    virtual class RTexture* CreateTexture(TextureType type) override;
-    virtual class RFramebuffer* CreateFramebuffer(int width, int height) override;
-    virtual class RArrayBuffer* CreateArrayBuffer() override;
+    virtual class RBuffer *CreateBuffer(BufferType type, bool dynamic, bool persistent) override;
+    virtual class RShader *CreateShader() override;
+    virtual class RTexture *CreateTexture(TextureType type) override;
+    virtual class RFramebuffer *CreateFramebuffer(int width, int height) override;
+    virtual class RArrayBuffer *CreateArrayBuffer() override;
+	virtual class RFence *CreateFence() override;
 
     virtual void AddShaderDefine(std::string name, std::string value) override;
     virtual bool IsTextureFormatSupported(TextureFileFormat format) override;

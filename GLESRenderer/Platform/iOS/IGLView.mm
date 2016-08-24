@@ -44,9 +44,9 @@
 
 @interface IGLView ()
 {
-	EAGLContext* _context;
+	EAGLContext *_context, *_loadContext;
 	NSInteger _animationFrameInterval;
-	CADisplayLink* _displayLink;
+	CADisplayLink *_displayLink;
 	GLuint _defaultFbo, _colorBuffer, _depthBuffer;
 	GLint _width, _height;
 }
@@ -68,12 +68,16 @@
 	layer.opaque = true;
 	layer.drawableProperties = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:false], kEAGLDrawablePropertyRetainedBacking, kEAGLColorFormatRGBA8, kEAGLDrawablePropertyColorFormat, nil];
 	
-	_context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3];
-	
-	if(!_context || ![EAGLContext setCurrentContext:_context])
+	if((_context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3]) == nil)
 		return nil;
 	
-	glClearColor(1.f, 0.f, .0f, 1.f);
+	if((_loadContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3 sharegroup:_context.sharegroup]) == nil)
+		return nil;
+	
+	if(![EAGLContext setCurrentContext:_context])
+		return nil;
+	
+	glClearColor(0.f, 0.f, .0f, 0.f);
 	
 	if(![self createBuffers])
 		return nil;
@@ -137,6 +141,16 @@
 	glDeleteRenderbuffers(1, &_depthBuffer);
 	
 	[self createBuffers];
+}
+
+- (void) makeRenderContextCurrent
+{
+	[EAGLContext setCurrentContext:_context];
+}
+
+- (void) makeLoadContextCurrent
+{
+	[EAGLContext setCurrentContext:_loadContext];
 }
 
 - (void)dealloc

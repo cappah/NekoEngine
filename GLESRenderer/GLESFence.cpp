@@ -1,9 +1,9 @@
 /* NekoEngine
  *
- * IGLView.h
+ * GLESFence.cpp
  * Author: Alexandru Naiman
  *
- * OpenGL|ES 3 Renderer Implementation - iOS Platform Support
+ * OpenGL|ES 3 Renderer Implementation
  *
  * -----------------------------------------------------------------------------
  *
@@ -37,20 +37,19 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import <UIKit/UIKit.h>
+#include "GLESFence.h"
 
-#include <Platform/Platform.h>
-
-@interface IGLView : UIView <EngineViewProtocol>
+GLESFence::GLESFence()
 {
-	id<EngineInputDelegateProtocol> _inputDelegate;
+	_sync = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
 }
 
-- (bool) createBuffers;
-- (void) bindDrawable;
-- (void) swapBuffers;
-- (void) updateDrawable;
-- (void) makeRenderContextCurrent;
-- (void) makeLoadContextCurrent;
+void GLESFence::Wait()
+{
+	glWaitSync(_sync, 0, GL_TIMEOUT_IGNORED);
+}
 
-@end
+GLESFence::~GLESFence()
+{
+	glDeleteSync(_sync);
+}

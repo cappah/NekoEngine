@@ -39,6 +39,7 @@
 
 #include "GLESRenderer.h"
 #include "GLESArrayBuffer.h"
+#include "GLESFence.h"
 #include "GLESBuffer.h"
 #include "GLESFramebuffer.h"
 #include "GLESShader.h"
@@ -499,29 +500,34 @@ bool GLESRenderer::HasCapability(RendererCapability cap)
     }
 }
 
-RBuffer* GLESRenderer::CreateBuffer(BufferType type, bool dynamic, bool persistent)
+RBuffer *GLESRenderer::CreateBuffer(BufferType type, bool dynamic, bool persistent)
 {
     return (RBuffer *)new GLESBuffer(type, dynamic, persistent);
 }
 
-RShader* GLESRenderer::CreateShader()
+RShader *GLESRenderer::CreateShader()
 {
     return (RShader *)new GLESShader();
 }
 
-RTexture* GLESRenderer::CreateTexture(TextureType type)
+RTexture *GLESRenderer::CreateTexture(TextureType type)
 {
     return (RTexture *)new GLESTexture(type);
 }
 
-RFramebuffer* GLESRenderer::CreateFramebuffer(int width, int height)
+RFramebuffer *GLESRenderer::CreateFramebuffer(int width, int height)
 {
     return (RFramebuffer *)new GLESFramebuffer(width, height);
 }
 
-RArrayBuffer* GLESRenderer::CreateArrayBuffer()
+RArrayBuffer *GLESRenderer::CreateArrayBuffer()
 {
     return (RArrayBuffer *)new GLESArrayBuffer();
+}
+
+RFence *GLESRenderer::CreateFence()
+{
+	return (RFence *)new GLESFence();
 }
 
 void GLESRenderer::AddShaderDefine(std::string name, std::string value)

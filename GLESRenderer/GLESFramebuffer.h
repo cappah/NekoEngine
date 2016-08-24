@@ -48,9 +48,9 @@
 #include <vector>
 
 #ifdef __APPLE__
-#include <OpenGLES/ES3/gl.h>
+	#include <OpenGLES/ES3/gl.h>
 #else
-#include "glad.h"
+	#include "glad.h"
 #endif
 
 typedef struct GLES_FRAMEBUFFER_ATTACHMENT_INFO

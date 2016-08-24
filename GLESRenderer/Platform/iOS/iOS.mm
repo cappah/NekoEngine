@@ -56,10 +56,10 @@ void GLESRenderer::BindDefaultFramebuffer()
 
 void GLESRenderer::MakeCurrent(int context)
 {
-/*	if (context == R_RENDER_CONTEXT)
-		wglMakeCurrent(_dc, _ctx);
+	if (context == R_RENDER_CONTEXT)
+		[_view makeRenderContextCurrent];
 	else
-		wglMakeCurrent(_dc, _loadCtx);*/
+		[_view makeLoadContextCurrent];
 }
 
 void GLESRenderer::MakeCurrent()

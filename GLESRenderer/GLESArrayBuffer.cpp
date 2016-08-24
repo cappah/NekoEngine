@@ -1,6 +1,6 @@
 /* NekoEngine
  *
- * GLArrayBuffer.cpp
+ * GLESArrayBuffer.cpp
  * Author: Alexandru Naiman
  *
  * OpenGL|ES 3 Renderer Implementation
