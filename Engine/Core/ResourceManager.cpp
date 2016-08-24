@@ -338,6 +338,24 @@ void ResourceManager::_UnloadResources() noexcept
 	}
 }
 
+NArray<Resource *> ResourceManager::GetResourcesOfType(ResourceType type) noexcept
+{
+	NArray<Resource *> ret;
+	
+	for (Resource *r : _resources)
+	{
+		if (r->GetResourceInfo() == nullptr)
+			continue;
+		
+		if (r->GetResourceInfo()->type != type)
+			continue;
+		
+		ret.Add(r);
+	}
+	
+	return ret;
+}
+
 void ResourceManager::Release() noexcept
 {
 	_UnloadResources();

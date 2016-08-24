@@ -79,6 +79,8 @@ public:
 	ENGINE_API static size_t LoadedSounds() noexcept { return _loadedResources[ResourceType::RES_AUDIOCLIP]; }
 	ENGINE_API static size_t LoadedFonts() noexcept { return _loadedResources[ResourceType::RES_FONT]; }
 	
+	ENGINE_API static NArray<Resource *> GetResourcesOfType(ResourceType type) noexcept;
+	
 	ENGINE_API static void Release() noexcept;
 	
 private:	

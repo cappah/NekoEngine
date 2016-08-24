@@ -144,9 +144,6 @@ int Texture::Load()
 	
 	free(mem);
 
-	if (Engine::GetConfiguration().Renderer.Mipmaps)
-		_texture->GenerateMipmaps();
-
 	Logger::Log(TEX_MODULE, LOG_DEBUG, "Loaded texture id %d from %s, size %dx%d", _resourceInfo->id, *path, _texture->GetWidth(), _texture->GetHeight());
 
 	return ENGINE_OK;

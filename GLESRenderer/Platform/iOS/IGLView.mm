@@ -71,7 +71,7 @@
 	if((_context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3]) == nil)
 		return nil;
 	
-	if((_loadContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3 sharegroup:_context.sharegroup]) == nil)
+	if((_loadContext = [[EAGLContext alloc] initWithAPI:_context.API sharegroup:_context.sharegroup]) == nil)
 		return nil;
 	
 	if(![EAGLContext setCurrentContext:_context])

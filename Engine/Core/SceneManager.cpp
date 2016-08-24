@@ -45,6 +45,7 @@
 #include <Engine/EngineUtils.h>
 #include <Engine/SceneManager.h>
 #include <Engine/LoadingScreen.h>
+#include <Engine/ResourceManager.h>
 #include <System/VFS/VFS.h>
 
 #define LINE_BUFF	1024
@@ -159,6 +160,14 @@ int SceneManager::DrawScene(RShader* shader, Camera *camera) noexcept
 		if (_loadingScreen)
 		{
 			_activeScene->CreateArrayBuffers();
+			
+			if (Engine::GetConfiguration().Renderer.Mipmaps)
+			{
+				NArray<Resource *> _textures = ResourceManager::GetResourcesOfType(ResourceType::RES_TEXTURE);
+				for(Resource *r : _textures)
+					((Texture *)r)->GetRTexture()->GenerateMipmaps();
+			}
+				
 			delete _loadingScreen;
 			_loadingScreen = nullptr;
 		}
