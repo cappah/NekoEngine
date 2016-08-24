@@ -229,7 +229,6 @@
     <None Include="..\Resources\Data\Materials\terrain.nmtl" />
     <None Include="..\Resources\Data\Materials\w_girl.nmtl" />
     <None Include="..\Resources\Data\scenes.cfg" />
-    <None Include="..\Resources\Data\Scenes\ios.nscene" />
     <None Include="..\Resources\Data\Scenes\main.nscene" />
     <None Include="..\Resources\Data\Scenes\scene.nscene" />
     <None Include="..\Resources\Data\Shaders\depthmap.frag" />
@@ -258,6 +257,8 @@
     <None Include="..\Resources\Data\Shaders\postproc\gauss_v.frag" />
     <None Include="..\Resources\Data\Shaders\postproc\smaa.frag" />
     <None Include="..\Resources\Data\Shaders\postproc\smaa.vert" />
+    <None Include="..\Resources\Data\Shaders\shadow.frag" />
+    <None Include="..\Resources\Data\Shaders\shadow.vert" />
     <None Include="..\Resources\Data\Shaders\ssao.frag" />
     <None Include="..\Resources\Data\Shaders\ssao_blur.frag" />
     <None Include="..\Resources\Data\SkeletalMeshes\sophia.nmesh" />

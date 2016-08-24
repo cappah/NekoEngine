@@ -41,6 +41,7 @@
 
 #include <Engine/ShadowMap.h>
 #include <Engine/SceneManager.h>
+#include <Engine/ResourceManager.h>
 #include <Scene/Light.h>
 
 using namespace glm;
@@ -49,9 +50,10 @@ ShadowMap::ShadowMap(int size) :
 	_fboWidth(size),
 	_fboHeight(size),
 	_colorFbo(nullptr),
+	_texture(nullptr),
 	_shader(nullptr)
 {
-	_texture = Engine::GetRenderer()->CreateTexture(TextureType::Tex2D);
+	/*_texture = Engine::GetRenderer()->CreateTexture(TextureType::Tex2D);
 	_texture->SetStorage2D(1, TextureSizedFormat::DEPTH_32F, size, size);
 	_texture->SetMinFilter(TextureFilter::Nearest);
 	_texture->SetMagFilter(TextureFilter::Nearest);
@@ -63,6 +65,19 @@ ShadowMap::ShadowMap(int size) :
 	if(_fbo->CheckStatus() != FramebufferStatus::Complete)
 	{ DIE("Failed to create shadow framebuffer"); }
 
+	_uniformBuffer = Engine::GetRenderer()->CreateBuffer(BufferType::Uniform, true, false);
+	_uniformBuffer->SetNumBuffers(0);
+	_uniformBuffer->SetStorage(sizeof(ShadowMapMatrixBlock), &_matrixBlock);
+
+	if((_shader = (Shader*)ResourceManager::GetResourceByName("sh_shadow", ResourceType::RES_SHADER)) == nullptr)
+	{ DIE("Failed to load shadow map shader"); }
+
+	_shader->GetRShader()->VSUniformBlockBinding(0, "MatrixBlock");
+	_shader->GetRShader()->VSSetUniformBuffer(0, 0, sizeof(ShadowMapMatrixBlock), _uniformBuffer);
+
+	/*lightShader->FSUniformBlockBinding(0, "SceneLightData");
+	lightShader->FSSetUniformBuffer(0, 0, sizeof(LightSceneData), _sceneLightUbo);*/
+
 	_size = size;
 }
 
@@ -71,6 +86,8 @@ void ShadowMap::Render()
 	Scene *s = SceneManager::GetActiveScene();
 
 	_fbo->Bind(FB_DRAW);
+	_fbo->SetDrawBuffer(DrawAttachment::None);
+
 	Engine::GetRenderer()->Clear(R_CLEAR_DEPTH);
 
 	Engine::BindQuadVAO();
@@ -87,10 +104,11 @@ void ShadowMap::Render()
 			_projection = ortho(-10.f, 10.f, -10.f, 10.f, .1f, 10000.f);
 			_view = lookAt(l->GetDirection(), vec3(0.f), vec3(1.f));
 			_lightWorld = _projection * _view;
-			
-		//	SceneManager::DrawScene(nullptr);
+
+			SceneManager::DrawScene(_shader->GetRShader());
 		}
 
+		_shader->GetRShader()->BindUniformBuffers();
 		// bind light world to camera
 		// bind world to camera
 

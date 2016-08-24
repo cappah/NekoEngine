@@ -540,36 +540,36 @@ int Scene::CreateArrayBuffers() noexcept
 	return ENGINE_OK;
 }
 
-void Scene::Draw(RShader* shader) noexcept
+void Scene::Draw(RShader* shader, CameraComponent *camera) noexcept
 {
 	if (_terrain)
-		_terrain->Draw(shader);
+		_terrain->Draw(shader, camera);
 
 	if(_sceneArrayBuffer) _sceneArrayBuffer->Bind();
 
 	for (Object *obj : _objects)
-		if (distance(CameraManager::GetActiveCamera()->GetPosition(), obj->GetPosition()) < CameraManager::GetActiveCamera()->GetFogDistance() + 600)
-			obj->Draw(shader);
+		if (distance(camera->GetPosition(), obj->GetPosition()) < camera->GetFogDistance() + 600)
+			obj->Draw(shader, camera);
 
 	if (_drawLights)
 		for (Light *l : _lights)
-			l->Draw(shader);
+			l->Draw(shader, camera);
 
 	if(_sceneArrayBuffer) _sceneArrayBuffer->Unbind();
 }
 
-void Scene::DrawTerrain() noexcept
+void Scene::DrawTerrain(CameraComponent *camera) noexcept
 {
 	if (_terrain)
-		_terrain->Draw(nullptr);
+		_terrain->Draw(nullptr, camera);
 }
 
-void Scene::DrawSkybox() noexcept
+void Scene::DrawSkybox(CameraComponent *camera) noexcept
 {
 	if(_sceneArrayBuffer) _sceneArrayBuffer->Bind();
 
 	if (_skybox)
-		_skybox->Draw(nullptr);
+		_skybox->Draw(nullptr, camera);
 
 	if(_sceneArrayBuffer) _sceneArrayBuffer->Unbind();
 }
@@ -646,17 +646,6 @@ void Scene::Unload() noexcept
 	_sceneArrayBuffer = nullptr;
 	
 	_loaded = false;
-}
-
-void Scene::RenderForCamera(CameraComponent *cam) noexcept
-{
-	CameraComponent *sceneCam = CameraManager::GetActiveCamera();
-	CameraManager::SetActiveCamera(cam);
-
-	Draw(nullptr);
-	DrawSkybox();
-
-	CameraManager::SetActiveCamera(sceneCam);
 }
 
 void Scene::AddObject(Object *obj) noexcept

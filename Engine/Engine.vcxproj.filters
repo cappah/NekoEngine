@@ -517,8 +517,11 @@
     <None Include="..\Resources\Data\SkeletalMeshes\sophia.nmesh">
       <Filter>Resources\Data\SkeletalMeshes</Filter>
     </None>
-    <None Include="..\Resources\Data\Scenes\ios.nscene">
-      <Filter>Resources\Data\Scenes</Filter>
+    <None Include="..\Resources\Data\Shaders\shadow.frag">
+      <Filter>Resources\Data\Shaders</Filter>
+    </None>
+    <None Include="..\Resources\Data\Shaders\shadow.vert">
+      <Filter>Resources\Data\Shaders</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

@@ -53,7 +53,7 @@ public:
 	ENGINE_API virtual int Load() override;
 	ENGINE_API virtual int InitializeComponent() override;
 	
-	ENGINE_API virtual void Draw(RShader *shader) noexcept override;
+	ENGINE_API virtual void Draw(RShader *shader, class CameraComponent *camera) noexcept override;
 	ENGINE_API virtual void Update(double deltaTime) noexcept override;
 
 	ENGINE_API virtual bool Unload() override;

@@ -820,10 +820,14 @@ void Engine::Draw() noexcept
 	_renderer->Clear(R_CLEAR_COLOR | R_CLEAR_DEPTH | R_CLEAR_STENCIL);
 	_renderer->EnableStencilTest(false);
 
-	SceneManager::DrawScene(DeferredBuffer::GetGeometryShader());
+	CameraComponent *cam = CameraManager::GetActiveCamera();
+
+	SceneManager::DrawScene(DeferredBuffer::GetGeometryShader(), cam);
 	DeferredBuffer::Unbind();
 
 	_renderer->SetDepthMask(false);
+
+	// Shadow pass
 
 	// Lighting pass
 
@@ -832,7 +836,7 @@ void Engine::Draw() noexcept
 
 	DeferredBuffer::RenderLighting();
 
-	SceneManager::GetActiveScene()->DrawSkybox();
+	SceneManager::GetActiveScene()->DrawSkybox(cam);
 
 	// SceneManager::GetActiveScene()->DrawForwardObjects();
 

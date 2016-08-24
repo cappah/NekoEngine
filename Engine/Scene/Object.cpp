@@ -271,15 +271,15 @@ int Object::CreateArrayBuffer()
 	return ret;
 }
 
-void Object::Draw(RShader* shader) noexcept
+void Object::Draw(RShader *shader, CameraComponent *camera) noexcept
 {
 	if (!_loaded)
 		return;
 
-	_objectUbo->UpdateData(0, sizeof(vec3), &CameraManager::GetActiveCamera()->GetPosition().x);
+	_objectUbo->UpdateData(0, sizeof(vec3), &camera->GetPosition().x);
 
 	for (pair<string, ObjectComponent*> kvp : _components)
-		kvp.second->Draw(shader);
+		kvp.second->Draw(shader, camera);
 }
 
 void Object::Update(double deltaTime) noexcept

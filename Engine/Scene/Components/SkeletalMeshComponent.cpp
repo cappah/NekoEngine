@@ -123,14 +123,14 @@ int SkeletalMeshComponent::InitializeComponent()
 	return ENGINE_OK;
 }
 
-void SkeletalMeshComponent::Draw(RShader *shader) noexcept
+void SkeletalMeshComponent::Draw(RShader *shader, class CameraComponent *camera) noexcept
 {
 	if (!_loaded)
 		return;
 	
 	_animator->BindSkeleton(shader);
 	
-	StaticMeshComponent::Draw(shader);
+	StaticMeshComponent::Draw(shader, camera);
 }
 
 void SkeletalMeshComponent::Update(double deltaTime) noexcept

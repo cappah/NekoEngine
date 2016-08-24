@@ -74,14 +74,14 @@ int Skybox::Load()
 	return ENGINE_OK;
 }
 
-void Skybox::Draw(RShader* shader) noexcept
+void Skybox::Draw(RShader* shader, CameraComponent *camera) noexcept
 {
 	_skyboxShader->GetRShader()->Enable();
-	CameraManager::GetActiveCamera()->EnableSkybox(true);
+	camera->EnableSkybox(true);
 
-	Object::Draw(_skyboxShader->GetRShader());
+	Object::Draw(_skyboxShader->GetRShader(), camera);
 
-	CameraManager::GetActiveCamera()->EnableSkybox(false);
+	camera->EnableSkybox(false);
 	_skyboxShader->GetRShader()->Disable();
 }
 

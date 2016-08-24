@@ -163,7 +163,7 @@ int StaticMeshComponent::CreateArrayBuffer()
 	return _mesh->CreateBuffers(false);
 }
 
-void StaticMeshComponent::Draw(RShader *shader) noexcept
+void StaticMeshComponent::Draw(RShader *shader, CameraComponent *camera) noexcept
 {
 	if (!_loaded)
 		return;
@@ -176,8 +176,6 @@ void StaticMeshComponent::Draw(RShader *shader) noexcept
 		_mesh->Draw(_renderer, 0);
 	else
 	{
-		CameraComponent *cam = CameraManager::GetActiveCamera();
-
 		if(_mmNeedsUpdate)
 		{
 			_matrixBlock.Model = (_translationMatrix * _rotationMatrix) * _scaleMatrix;
@@ -185,8 +183,8 @@ void StaticMeshComponent::Draw(RShader *shader) noexcept
 			_mmNeedsUpdate = false;
 		}	
 
-		_matrixBlock.View = cam->GetView();
-		_matrixBlock.ModelViewProjection = (cam->GetProjectionMatrix() * cam->GetView()) * _matrixBlock.Model;
+		_matrixBlock.View = camera->GetView();
+		_matrixBlock.ModelViewProjection = (camera->GetProjectionMatrix() * camera->GetView()) * _matrixBlock.Model;
 		
 		shader->VSSetUniformBuffer(0, 0, sizeof(MatrixBlock), _matrixUbo);
 		_matrixUbo->UpdateData(0, sizeof(MatrixBlock), &_matrixBlock);

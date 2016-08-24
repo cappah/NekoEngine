@@ -395,7 +395,7 @@ void DeferredBuffer::RenderLighting() noexcept
 			_lightMatrixUbo->UpdateData(0, sizeof(mat4), (void *)value_ptr(mvpMatrix));
 
 			_lightSphere->Update(0);
-			_lightSphere->Draw(lightShader);
+			_lightSphere->Draw(lightShader, cam);
 
 			_fbos[GB_FBO_LIGHT_ACCUM]->SetDrawBuffers(1, drawAttachments);
 
