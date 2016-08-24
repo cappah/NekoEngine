@@ -26,6 +26,8 @@ layout(std140) uniform BoneBlock
 	mat4 BoneMatrices[SH_MAX_BONES];
 };
 
+out vec2 v_uv;
+
 void main()
 {
 	v_uv = a_uv;

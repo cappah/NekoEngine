@@ -80,7 +80,7 @@ public:
 	virtual int CreateArrayBuffer() { return ENGINE_OK; }
 	virtual int InitializeComponent() { return ENGINE_OK; }
 	
-	virtual void Draw(RShader *shader, class CameraComponent *camera) noexcept { (void)shader; (void)camera; }
+	virtual void Draw(RShader *shader, class Camera *camera) noexcept { (void)shader; (void)camera; }
 	virtual void Update(double deltaTime) noexcept { (void)deltaTime; }
 	
 	virtual bool Unload();

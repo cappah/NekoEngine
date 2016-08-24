@@ -53,7 +53,7 @@ ENGINE_REGISTER_COMPONENT_CLASS(FPSControllerComponent);
 
 FPSControllerComponent::FPSControllerComponent(ComponentInitializer *initializer)
 	: ObjectComponent(initializer),
-	_camera(nullptr),
+	_cameraComponent(nullptr),
 	_moveSpeed(DEFAULT_MOVE_SPD),
 	_sprintSpeed(DEFAULT_SPRINT_SPD),
 	_rotateSpeed(DEFAULT_ROTS),
@@ -89,14 +89,16 @@ FPSControllerComponent::FPSControllerComponent(ComponentInitializer *initializer
 	init.arguments.insert(make_pair("view_distance", "1200"));
 	init.arguments.insert(make_pair("fog_distance", "2500"));
 
-	_camera = (CameraComponent *)Engine::NewComponent("CameraComponent", &init);
-	_camera->Load();
-	_parent->AddComponent("FPSCamera", _camera);
+	_cameraComponent = (CameraComponent *)Engine::NewComponent("CameraComponent", &init);
+	_cameraComponent->Load();
+	_parent->AddComponent("FPSCamera", _cameraComponent);
 }
 
 void FPSControllerComponent::Update(double deltaTime) noexcept
 {
 	ObjectComponent::Update(deltaTime);
+
+	Camera *cam = _cameraComponent->GetCamera();
 
 	float vAngle = _verticalSensivity * Input::GetAxis("vertical") * (float)deltaTime;
 	float hAngle = _horizontalSensivity * Input::GetAxis("horizontal") * (float)deltaTime;
@@ -115,14 +117,14 @@ void FPSControllerComponent::Update(double deltaTime) noexcept
 	float velocity = speed * (float)deltaTime;
 
 	if (Input::GetButton("forward"))
-		pos += _camera->GetForward() * velocity * vec3(1.f, 0.f, 1.f);
+		pos += cam->GetForward() * velocity * vec3(1.f, 0.f, 1.f);
 	else if (Input::GetButton("back"))
-		pos -= _camera->GetForward() * velocity * vec3(1.f, 0.f, 1.f);
+		pos -= cam->GetForward() * velocity * vec3(1.f, 0.f, 1.f);
 
 	if (Input::GetButton("right"))
-		pos += _camera->GetRight() * velocity;
+		pos += cam->GetRight() * velocity;
 	else if (Input::GetButton("left"))
-		pos -= _camera->GetRight() * velocity;
+		pos -= cam->GetRight() * velocity;
 
 	if (Input::GetButton("rot_right"))
 		rot.y += _rotateSpeed * (float)deltaTime;

@@ -123,7 +123,7 @@ int SkeletalMeshComponent::InitializeComponent()
 	return ENGINE_OK;
 }
 
-void SkeletalMeshComponent::Draw(RShader *shader, class CameraComponent *camera) noexcept
+void SkeletalMeshComponent::Draw(RShader *shader, Camera *camera) noexcept
 {
 	if (!_loaded)
 		return;

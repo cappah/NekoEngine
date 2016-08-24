@@ -540,7 +540,7 @@ int Scene::CreateArrayBuffers() noexcept
 	return ENGINE_OK;
 }
 
-void Scene::Draw(RShader* shader, CameraComponent *camera) noexcept
+void Scene::Draw(RShader* shader, Camera *camera) noexcept
 {
 	if (_terrain)
 		_terrain->Draw(shader, camera);
@@ -558,13 +558,13 @@ void Scene::Draw(RShader* shader, CameraComponent *camera) noexcept
 	if(_sceneArrayBuffer) _sceneArrayBuffer->Unbind();
 }
 
-void Scene::DrawTerrain(CameraComponent *camera) noexcept
+void Scene::DrawTerrain(Camera *camera) noexcept
 {
 	if (_terrain)
 		_terrain->Draw(nullptr, camera);
 }
 
-void Scene::DrawSkybox(CameraComponent *camera) noexcept
+void Scene::DrawSkybox(Camera *camera) noexcept
 {
 	if(_sceneArrayBuffer) _sceneArrayBuffer->Bind();
 

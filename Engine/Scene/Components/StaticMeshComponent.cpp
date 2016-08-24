@@ -163,7 +163,7 @@ int StaticMeshComponent::CreateArrayBuffer()
 	return _mesh->CreateBuffers(false);
 }
 
-void StaticMeshComponent::Draw(RShader *shader, CameraComponent *camera) noexcept
+void StaticMeshComponent::Draw(RShader *shader, Camera *camera) noexcept
 {
 	if (!_loaded)
 		return;

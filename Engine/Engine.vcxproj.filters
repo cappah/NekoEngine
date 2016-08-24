@@ -356,6 +356,9 @@
     <ClInclude Include="..\Include\Renderer\RFence.h">
       <Filter>Include\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="..\Include\Engine\Camera.h">
+      <Filter>Include\Engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Resources\Data\scenes.cfg">
@@ -672,6 +675,9 @@
       <Filter>Source\Core</Filter>
     </ClCompile>
     <ClCompile Include="Core\Console.cpp">
+      <Filter>Source\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>
   </ItemGroup>

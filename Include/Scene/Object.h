@@ -133,7 +133,7 @@ public:
     
 	ENGINE_API virtual int Load();
 	ENGINE_API virtual int CreateArrayBuffer();
-	ENGINE_API virtual void Draw(RShader* shader, class CameraComponent *camera) noexcept;
+	ENGINE_API virtual void Draw(RShader* shader, class Camera *camera) noexcept;
 	ENGINE_API virtual void Update(double deltaTime) noexcept;
 	ENGINE_API virtual bool Unload() noexcept;
 	ENGINE_API virtual bool CanUnload() noexcept;

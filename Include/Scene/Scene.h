@@ -52,7 +52,6 @@
 #include <Engine/Shader.h>
 #include <Engine/LoadingScreen.h>
 #include <System/VFS/VFS.h>
-#include <Scene/Components/CameraComponent.h>
 
 class Scene
 {
@@ -110,9 +109,9 @@ public:
 	
 	ENGINE_API int Load();
 	ENGINE_API int CreateArrayBuffers() noexcept;
-	ENGINE_API void Draw(RShader* shader, CameraComponent *camera) noexcept;
-	ENGINE_API void DrawTerrain(CameraComponent *camera) noexcept;
-	ENGINE_API void DrawSkybox(CameraComponent *camera) noexcept;
+	ENGINE_API void Draw(RShader* shader, class Camera *camera) noexcept;
+	ENGINE_API void DrawTerrain(class Camera *camera) noexcept;
+	ENGINE_API void DrawSkybox(class Camera *camera) noexcept;
 	ENGINE_API void Update(double deltaTime) noexcept;
 	ENGINE_API void Unload() noexcept;
 

@@ -820,7 +820,7 @@ void Engine::Draw() noexcept
 	_renderer->Clear(R_CLEAR_COLOR | R_CLEAR_DEPTH | R_CLEAR_STENCIL);
 	_renderer->EnableStencilTest(false);
 
-	CameraComponent *cam = CameraManager::GetActiveCamera();
+	Camera *cam = CameraManager::GetActiveCamera();
 
 	SceneManager::DrawScene(DeferredBuffer::GetGeometryShader(), cam);
 	DeferredBuffer::Unbind();

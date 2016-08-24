@@ -11,9 +11,10 @@ in vec2 v_uv;
 
 void main()
 {	
-	float d01 = (LightToView.z * 0.5 + 0.5);
+	/*float d01 = (LightToView.z * 0.5 + 0.5);
 	float z = ((LightToView.w < 0.0) ? -LightToView.w : d01);
 	float d = (z - ClipPlanes.x) / (ClipPlanes.y - ClipPlanes.x);
 
-	o_FragColor = vec4(d, d * d, 0.0, 0.0);
+	o_FragColor = vec4(d, d * d, 0.0, 0.0);*/
+	o_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
 }

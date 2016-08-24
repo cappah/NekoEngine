@@ -42,6 +42,7 @@
 #include <Engine/ShadowMap.h>
 #include <Engine/SceneManager.h>
 #include <Engine/ResourceManager.h>
+#include <Scene/Components/CameraComponent.h>
 #include <Scene/Light.h>
 
 using namespace glm;
@@ -49,11 +50,15 @@ using namespace glm;
 ShadowMap::ShadowMap(int size) :
 	_fboWidth(size),
 	_fboHeight(size),
+	_size(size),
+	_fbo(nullptr),
 	_colorFbo(nullptr),
+	_uniformBuffer(nullptr),
 	_texture(nullptr),
-	_shader(nullptr)
+	_shader(nullptr),
+	_shadowCamera(nullptr)
 {
-	/*_texture = Engine::GetRenderer()->CreateTexture(TextureType::Tex2D);
+	_texture = Engine::GetRenderer()->CreateTexture(TextureType::Tex2D);
 	_texture->SetStorage2D(1, TextureSizedFormat::DEPTH_32F, size, size);
 	_texture->SetMinFilter(TextureFilter::Nearest);
 	_texture->SetMagFilter(TextureFilter::Nearest);
@@ -77,6 +82,8 @@ ShadowMap::ShadowMap(int size) :
 
 	/*lightShader->FSUniformBlockBinding(0, "SceneLightData");
 	lightShader->FSSetUniformBuffer(0, 0, sizeof(LightSceneData), _sceneLightUbo);*/
+
+	//_shadowCamera = Engine::NewComponent()
 
 	_size = size;
 }
@@ -129,4 +136,8 @@ ShadowMap::~ShadowMap()
 {
 	delete _texture;
 	delete _fbo;
+	delete _colorFbo;
+	delete _uniformBuffer;
+
+	ResourceManager::UnloadResourceByName("sh_shadow", ResourceType::RES_SHADER);
 }

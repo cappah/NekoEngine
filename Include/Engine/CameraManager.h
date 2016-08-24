@@ -43,12 +43,12 @@
 #include <string>
 
 #include <Engine/Engine.h>
-#include <Scene/Components/CameraComponent.h>
+#include <Engine/Camera.h>
 
 class CameraManager
 {
 public:
-	ENGINE_API static CameraComponent* GetActiveCamera() noexcept
+	ENGINE_API static Camera* GetActiveCamera() noexcept
 	{
 		if (!_activeCamera)
 			_activeCamera = _cameras[0];
@@ -56,14 +56,14 @@ public:
 		return _activeCamera;
 	}
 
-	ENGINE_API static void SetActiveCamera(CameraComponent *cam) noexcept { _activeCamera = cam; }
+	ENGINE_API static void SetActiveCamera(Camera *cam) noexcept { _activeCamera = cam; }
 	ENGINE_API static void SetActiveCameraId(int id) noexcept { _activeCamera = _cameras[id]; }
-	ENGINE_API static void AddCamera(CameraComponent *cam) noexcept { _cameras.push_back(cam); }
+	ENGINE_API static void AddCamera(Camera *cam) noexcept { _cameras.push_back(cam); }
 	ENGINE_API static size_t Count() noexcept { return _cameras.size(); }
 
 private:
-	static std::vector<CameraComponent *> _cameras;
-	static CameraComponent *_activeCamera;
+	static std::vector<Camera *> _cameras;
+	static Camera *_activeCamera;
 
 	CameraManager() { _cameras.clear(); }
 };

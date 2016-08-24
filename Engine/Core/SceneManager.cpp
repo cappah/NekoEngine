@@ -150,7 +150,7 @@ int SceneManager::LoadNextScene()
 	return LoadScene(scene);
 }
 
-int SceneManager::DrawScene(RShader* shader, CameraComponent *camera) noexcept
+int SceneManager::DrawScene(RShader* shader, Camera *camera) noexcept
 {
 	if (_activeScene)
 	{

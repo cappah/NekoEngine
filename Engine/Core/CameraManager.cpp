@@ -52,5 +52,5 @@
 
 using namespace std;
 
-vector<CameraComponent *> CameraManager::_cameras;
-CameraComponent *CameraManager::_activeCamera = nullptr;
+vector<Camera *> CameraManager::_cameras;
+Camera *CameraManager::_activeCamera = nullptr;

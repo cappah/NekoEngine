@@ -56,62 +56,45 @@ using namespace glm;
 ENGINE_REGISTER_COMPONENT_CLASS(CameraComponent);
 
 CameraComponent::CameraComponent(ComponentInitializer *initializer) : ObjectComponent(initializer),
-	_front(glm::vec3(0, 0, 1)),
-	_up(glm::vec3(0, 1, 0)),
-	_right(glm::vec3(0, 0, 0)),
-	_worldUp(glm::vec3(0, 1, 0)),
-	_near(.2f),
-	_far(1000.f),
-	_fov(45.f),
-	_viewDistance(1000.f),
-	_fogDistance(1200.f),
-	_fogColor(glm::vec3(0, 0, 0)),
-	_projection(ProjectionType::Perspective),
-	_view(glm::mat4(0.f)),
-	_skyboxView(glm::mat4(0.f)),
-	_projectionMatrix(glm::mat4(0.f)),
-	_skyboxProjectionMatrix(glm::mat4(0.f)),
-	_noRegister(false)
+	_cam(nullptr)
 {
-	_UpdateView();
+	vec3 tmp;
+
+	if ((_cam = new Camera()) == nullptr)
+	{ DIE("Out of resources"); }
 
 	ArgumentMapType::iterator it;
 	const char *ptr = nullptr;
 
 	if (((it = initializer->arguments.find("fov")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
-		_fov = (float)atof(ptr);
+		_cam->SetFOV((float)atof(ptr));
 
 	if (((it = initializer->arguments.find("near")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
-		_near = (float)atof(ptr);
+		_cam->SetNear((float)atof(ptr));
 
 	if (((it = initializer->arguments.find("far")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
-		_far = (float)atof(ptr);
+		_cam->SetFar((float)atof(ptr));
 
 	if (((it = initializer->arguments.find("view_distance")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
-		_viewDistance = (float)atof(ptr);
+		_cam->SetViewDistance((float)atof(ptr));
 
 	if (((it = initializer->arguments.find("fog_distance")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
-		_fogDistance = (float)atof(ptr);
+		_cam->SetFogDistance((float)atof(ptr));
 
 	if (((it = initializer->arguments.find("fog_color")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
-		EngineUtils::ReadFloatArray(ptr, 3, &_fogColor.x);
+	{
+		EngineUtils::ReadFloatArray(ptr, 3, &tmp.x);
+		_cam->SetFogColor(tmp);
+	}
 
 	if (((it = initializer->arguments.find("projection")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
 	{
 		size_t len = strlen(ptr);
 
 		if (!strncmp(ptr, "perspective", len))
-			_projection = ProjectionType::Perspective;
-		else if (!strncmp(ptr, "ortographics", len))
-			_projection = ProjectionType::Ortographic;
-	}
-
-	if (((it = initializer->arguments.find("noregister")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
-	{
-		size_t len = strlen(ptr);
-
-		if (!strncmp(ptr, "true", len))
-			_noRegister = true;
+			_cam->SetProjection(ProjectionType::Perspective);
+		else if (!strncmp(ptr, "ortographic", len))
+			_cam->SetProjection(ProjectionType::Ortographic);
 	}
 
 	_UpdateView();
@@ -123,38 +106,21 @@ int CameraComponent::Load()
 	if (ret != ENGINE_OK)
 		return ret;
 
-	UpdatePerspective();
-
-	if(!_noRegister)
-		CameraManager::AddCamera(this);
+	_cam->UpdatePerspective();
 
 	return ENGINE_OK;
 }
 
-void CameraComponent::UpdatePerspective() noexcept
-{
-	_projectionMatrix = perspective(_fov, (float)DeferredBuffer::GetWidth() / (float)DeferredBuffer::GetHeight(), _near, _far);
-	_skyboxProjectionMatrix = perspective(_fov, (float)DeferredBuffer::GetWidth() / (float)DeferredBuffer::GetHeight(), _near, 10000.f);
-}
-
 void CameraComponent::_UpdateView() noexcept
 {
-	vec3 front;
+	vec3 tmp = _parent->GetPosition() + _localPosition;
+	_cam->SetPosition(tmp, false);
 
-	vec3 pos = _parent->GetPosition() + _localPosition;
-	vec3 rot = _parent->GetRotation() + _localRotation;
+	tmp = _parent->GetRotation() + _localRotation;
+	_cam->SetRotation(tmp, false);
 
-	front.x = cos(radians(rot.y)) * cos(radians(rot.x));
-	front.y = sin(radians(rot.x));
-	front.z = sin(radians(rot.y)) * cos(radians(rot.x));
+	_cam->UpdateView();
 
-	_front = normalize(front);
-	_right = normalize(cross(_front, _worldUp));
-	_up = normalize(cross(_right, _front));
-
-	_view = lookAt(pos, pos + _front, _up);
-	_skyboxView = mat4(mat3(_view));
-
-	SoundManager::SetListenerPosition(pos.x, pos.y, pos.z);
-	SoundManager::SetListenerOrientation(_front.x, _front.y, _front.z);
+	/*SoundManager::SetListenerPosition(pos.x, pos.y, pos.z);
+	SoundManager::SetListenerOrientation(_front.x, _front.y, _front.z);*/
 }

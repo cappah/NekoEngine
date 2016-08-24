@@ -271,7 +271,7 @@ int Object::CreateArrayBuffer()
 	return ret;
 }
 
-void Object::Draw(RShader *shader, CameraComponent *camera) noexcept
+void Object::Draw(RShader *shader, Camera *camera) noexcept
 {
 	if (!_loaded)
 		return;

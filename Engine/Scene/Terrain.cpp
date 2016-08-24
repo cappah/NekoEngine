@@ -144,7 +144,7 @@ void Terrain::Update(double deltaTime) noexcept
 
 	static vec3 lastCamPos = vec3(0, 0, 0);
 	bool modified = false;
-	CameraComponent *cam = CameraManager::GetActiveCamera();
+	Camera *cam = CameraManager::GetActiveCamera();
 	vec3 camPos = cam->GetPosition();
 
 	if ((camPos.x == lastCamPos.x) && (camPos.z == lastCamPos.z))

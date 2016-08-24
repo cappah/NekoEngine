@@ -41,7 +41,6 @@
 
 #include <Scene/Object.h>
 #include <Engine/ResourceManager.h>
-#include <Scene/Components/CameraComponent.h>
 
 class Skybox :
 	public Object
@@ -54,7 +53,7 @@ public:
 
 	ENGINE_API virtual int Load() override;
 
-	ENGINE_API virtual void Draw(RShader* shader, class CameraComponent *camera) noexcept override;
+	ENGINE_API virtual void Draw(RShader* shader, class Camera *camera) noexcept override;
 
 	ENGINE_API virtual bool Unload() noexcept override;
 

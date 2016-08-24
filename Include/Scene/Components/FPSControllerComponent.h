@@ -64,7 +64,7 @@ public:
 	ENGINE_API virtual ~FPSControllerComponent() { Unload(); }
 
 protected:
-	CameraComponent *_camera;
+	CameraComponent *_cameraComponent;
 	float _moveSpeed, _sprintSpeed;
 	float _rotateSpeed;
 	float _verticalSensivity;

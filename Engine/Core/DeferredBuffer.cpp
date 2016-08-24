@@ -322,7 +322,7 @@ void DeferredBuffer::RenderLighting() noexcept
 {
 	Renderer* r = Engine::GetRenderer();
 	Scene *s = SceneManager::GetActiveScene();
-	CameraComponent *cam = CameraManager::GetActiveCamera();
+	Camera *cam = CameraManager::GetActiveCamera();
 	RShader *lightShader = _lightingShader->GetRShader();
 
 	if (_enableHBAO && _hbao)

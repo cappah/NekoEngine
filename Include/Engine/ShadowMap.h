@@ -71,6 +71,7 @@ private:
 	RBuffer *_uniformBuffer;
 	RTexture *_texture;
 	Shader *_shader;
+	class CameraComponent *_shadowCamera;
 	ShadowMapMatrixBlock _matrixBlock;
 	glm::mat4 _projection, _view, _lightWorld;
 };

@@ -59,7 +59,7 @@ public:
 	ENGINE_API static int LoadScene(int id);
 	ENGINE_API static int LoadDefaultScene() { return LoadScene(_defaultScene); }
 	ENGINE_API static int LoadNextScene();
-	ENGINE_API static int DrawScene(RShader* shader, CameraComponent *camera = nullptr) noexcept;
+	ENGINE_API static int DrawScene(RShader* shader, class Camera *camera = nullptr) noexcept;
 	ENGINE_API static void DrawLoadingScreen() noexcept;
 	ENGINE_API static void UpdateScene(double deltaTime) noexcept;
 	ENGINE_API static bool IsSceneLoaded() noexcept { return _activeScene && _activeScene->IsLoaded() ? true : false; }
