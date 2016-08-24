@@ -241,6 +241,8 @@ public:
 	static void Pause(bool pause);
 	static bool IsPaused() { return _paused; }
 
+	static bool IsEditor() { return _editor; }
+
 	/**
 	 * Run one frame
 	 */
@@ -314,6 +316,7 @@ private:
 	static GameModule *_gameModule;
 	static Renderer *_renderer;
 	static bool _paused;
+	static bool _editor;
 
 #ifdef ENGINE_INTERNAL
 	static int _nFrames;

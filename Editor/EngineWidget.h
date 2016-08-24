@@ -50,6 +50,8 @@ class EngineWidget : public QWidget
 public:
 	explicit EngineWidget(QWidget *parent = 0);
 
+	void initializeEngine();
+
 	virtual ~EngineWidget();
 
 protected:

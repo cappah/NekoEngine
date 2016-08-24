@@ -53,6 +53,7 @@ class EditorWindow : public QMainWindow
 
 public:
 	explicit EditorWindow(QWidget *parent = 0);
+	void initialize();
 	~EditorWindow();
 
 public slots:

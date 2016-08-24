@@ -51,6 +51,11 @@ EditorWindow::EditorWindow(QWidget *parent) :
 	connect(ui->actionAbout, SIGNAL(triggered(bool)), this, SLOT(showAboutDialog()));
 }
 
+void EditorWindow::initialize()
+{
+	ui->engineWidget->initializeEngine();
+}
+
 void EditorWindow::showAboutDialog()
 {
 	AboutDialog *dlg = new AboutDialog(this);

@@ -121,6 +121,7 @@ PlatformModuleType Engine::_rendererLibrary = nullptr;
 bool Engine::_haveMemoryInfo = false;
 bool Engine::_startup = true;
 bool Engine::_paused = false;
+bool Engine::_editor = false;
 FT_Library Engine::_ftLibrary = nullptr;
 static bool iniFileLoaded = false;
 static unordered_map<string, string> _rendererArguments;
@@ -622,6 +623,8 @@ int Engine::Initialize(string cmdLine, bool editor)
 		_ReadINIFile("./Engine.ini");
 
 	Logger::Initialize(_config.Engine.LogFile, LOG_ALL);
+
+	_editor = editor;
 
 	if (!editor)
 		Logger::Log(ENGINE_MODULE, LOG_INFORMATION, "NekoEngine v%s starting up...", ENGINE_VERSION_STRING);

@@ -332,7 +332,7 @@ PlatformWindowType Platform::CreateWindow(int width, int height, bool fullscreen
 	if (hWnd == NULL)
 		return nullptr;
 
-	ShowWindow(hWnd, SW_SHOWDEFAULT);
+	ShowWindow(hWnd, Engine::IsEditor() ? SW_SHOWMINIMIZED : SW_SHOWDEFAULT);
 
 	if (fullscreen)
 		EnterFullscreen(width, height);

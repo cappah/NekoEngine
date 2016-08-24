@@ -39,11 +39,25 @@
 
 #include "EditorWindow.h"
 #include <QApplication>
+#include <QSplashScreen>
+#include "Version.h"
+#include <Engine/Version.h>
 
 int main(int argc, char *argv[])
 {
 	QApplication a(argc, argv);
+
+	QPixmap splashPixmap(":/splash.png");
+	QSplashScreen splash(splashPixmap);
+	splash.showMessage(QString::asprintf("Editor: %s\nEngine: %s", EDITOR_VERSION_STRING, ENGINE_VERSION_STRING), Qt::AlignRight);
+
+	splash.show();
+	a.processEvents();
+
 	EditorWindow w;
+	w.initialize();
+
+	splash.finish(&w);
 	w.show();
 
 	return a.exec();

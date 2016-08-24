@@ -62,8 +62,11 @@ EngineWidget::EngineWidget(QWidget *parent) : QWidget(parent)
 	setAttribute(Qt::WA_PaintOnScreen, true);
 	setAttribute(Qt::WA_NoSystemBackground, true);
 	setAutoFillBackground(false);
+}
 
-    Engine::Initialize("--ini=E:/Projects/NekoEngine/Resources/Engine.ini --data=E:/Projects/NekoEngine/Resources/Data --gfxdbg", true);
+void EngineWidget::initializeEngine()
+{
+	Engine::Initialize("--ini=E:/Projects/NekoEngine/Resources/Engine.ini --data=E:/Projects/NekoEngine/Resources/Data --gfxdbg", true);
 
 	QWindow *nativeWindow = QWindow::fromWinId((WId)Platform::GetActiveWindow());
 	QWidget *nativeWidget = QWidget::createWindowContainer(nativeWindow);
@@ -92,13 +95,18 @@ void EngineWidget::resizeEvent(QResizeEvent *event)
 
 void EngineWidget::keyPressEvent(QKeyEvent *event)
 {
+	if(event->isAutoRepeat())
+		return;
+
 	Input::Key(event->nativeVirtualKey(), true);
 }
 
 void EngineWidget::keyReleaseEvent(QKeyEvent *event)
 {
+	if(event->isAutoRepeat())
+		return;
+
 	Input::Key(event->nativeVirtualKey(), false);
-	qDebug() << "key release";
 }
 
 void EngineWidget::mouseMoveEvent(QMouseEvent *event)
