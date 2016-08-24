@@ -153,7 +153,7 @@ GLESShader* GLESRenderer::_activeShader;
 
 GLESRenderer::GLESRenderer()
 {
-    _window = nullptr;
+    _window = (PlatformWindowType)0;
 	memset(&_state, 0x0, sizeof(RendererState));
 }
 

@@ -20,10 +20,14 @@ file(GLOB EngineSourceFiles "Engine/*.cpp"
 	"Engine/Platform/Compat/*.cpp"
 )
 file(GLOB TestGameSourceFiles "TestGame/*.cpp")
-file(GLOB RendererSourceFiles "GLRenderer/*.cpp"
+file(GLOB GLRendererSourceFiles "GLRenderer/*.cpp"
 	"GLRenderer/Loaders/*.cpp"
 )
 file(GLOB NullRendererSourceFiles "NullRenderer/*.cpp")
+file(GLOB GLESRendererSourceFiles "GLESRenderer/*.cpp"
+	"GLRenderer/Loaders/*.cpp"
+	"GLESRenderer/Platform/EGL/*.cpp"
+)
 
 set(OPENAL_LIB openal)
 set(BSD_LIB "")
@@ -95,7 +99,7 @@ endif(PLATFORM_UNIX)
 if(PLATFORM_X11)
 	file(GLOB PlatformSourceFiles "Engine/Platform/X11/*.cpp")
 	file(GLOB ExecutableSourceFile "Launcher/X11/*.cpp")
-	file(GLOB RendererPlatformSourceFiles "GLRenderer/Platform/X11/*.cpp")
+	file(GLOB GLRendererPlatformSourceFiles "GLRenderer/Platform/X11/*.cpp")
 	set(PLATFORM_LIBS "X11")
 	add_definitions(-DPLATFORM_X11)
 endif(PLATFORM_X11)
@@ -104,7 +108,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/Bin64")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/Bin64")
 
 # OpenGL Renderer Library
-add_library(GLRenderer SHARED ${RendererSourceFiles} ${RendererPlatformSourceFiles})
+add_library(GLRenderer SHARED ${GLRendererSourceFiles} ${GLRendererPlatformSourceFiles})
 target_compile_options(GLRenderer PRIVATE -std=c++11)
 target_compile_options(GLRenderer PRIVATE -fPIC)
 target_compile_options(GLRenderer PRIVATE -frtti)
@@ -140,3 +144,12 @@ target_compile_options(TestGame PRIVATE -fPIC)
 target_compile_options(TestGame PRIVATE -frtti)
 target_compile_options(Engine PRIVATE -DTESTGAME_INTERNAL)
 target_link_libraries(TestGame Engine)
+
+include_directories(${PROJECT_SOURCE_DIR}/GLRenderer)
+
+# OpenGL|ES Renderer Library
+add_library(GLESRenderer SHARED ${GLESRendererSourceFiles})
+target_compile_options(GLESRenderer PRIVATE -std=c++11)
+target_compile_options(GLESRenderer PRIVATE -fPIC)
+target_compile_options(GLESRenderer PRIVATE -frtti)
+target_link_libraries(GLESRenderer GL X11)
