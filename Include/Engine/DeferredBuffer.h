@@ -67,6 +67,7 @@ typedef struct LIGHT_SCENE_DATA
 	glm::vec4 AmbientColorAndRClear;
 	glm::vec4 FogColorAndRFog;
 	glm::vec4 FrameSizeAndSSAO;
+	glm::mat4 CameraWorld;
 } LightSceneData;
 
 typedef struct LIGHT_DATA
@@ -75,9 +76,10 @@ typedef struct LIGHT_DATA
 	float padding0;
 	glm::vec3 LightColor;
 	float padding1;
-	glm::vec3 LightDirection;
-	float padding2;
+	glm::vec4 LightDirectionAndShadow;
 	glm::vec4 LightAttenuationAndData;
+	glm::mat4 LightWorld;
+	glm::mat4 LightProjection;
 } LightData;
 
 class DeferredBuffer
@@ -102,7 +104,6 @@ public:
 	ENGINE_API static void BindLighting() noexcept;
 	ENGINE_API static void Unbind() noexcept;
 
-	ENGINE_API static void RenderShadows() noexcept;
 	ENGINE_API static void RenderLighting() noexcept;
 
 	ENGINE_API static void ScreenResized(int width, int height) noexcept;

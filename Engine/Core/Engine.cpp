@@ -812,10 +812,6 @@ void Engine::Frame() noexcept
 
 void Engine::Draw() noexcept
 {
-	// Shadow pass
-
-	DeferredBuffer::RenderShadows();
-
 	// Geometry pass
 
 	DeferredBuffer::BindGeometry();

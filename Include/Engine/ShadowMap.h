@@ -46,32 +46,23 @@
 #include <Engine/Camera.h>
 #include <Renderer/Renderer.h>
 
-typedef struct SHADOW_MAP_MATRIX_BLOCK
-{
-	glm::mat4 _view;
-	glm::mat4 _world;
-} ShadowMapMatrixBlock;
-
 class ShadowMap
 {
 public:
 	ShadowMap(int size);
 
-	RTexture* GetTexture() { return _texture; }
+	RTexture *GetTexture() { return _texture; }
+	glm::mat4 &GetView() { return _lightCamera->GetView(); }
+	glm::mat4 &GetProjection() { return _lightCamera->GetProjectionMatrix(); }
 
-	void Render();
+	void Render(class Light *l);
 
 	virtual ~ShadowMap();
 
 private:
-	int _fboWidth, _fboHeight;
-	int _size;
 	RFramebuffer *_fbo;
-	RFramebuffer *_colorFbo;
-	RBuffer *_uniformBuffer;
 	RTexture *_texture;
-	Shader *_shader;
-	Camera *_shadowCamera;
-	ShadowMapMatrixBlock _matrixBlock;
+	Camera *_lightCamera;
+	int _size;
 	glm::mat4 _projection, _view, _lightWorld;
 };

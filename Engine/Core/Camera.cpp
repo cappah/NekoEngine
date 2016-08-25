@@ -74,6 +74,11 @@ Camera::Camera() :
 	CameraManager::AddCamera(this);
 }
 
+void Camera::Ortho(float left, float right, float top, float bottom, float zNear, float zFar)
+{
+	_projectionMatrix = ortho(left, right, top, bottom, zNear, zFar);
+}
+
 void Camera::LookAt(vec3 eye, vec3 center, vec3 up) noexcept
 {
 	_view = lookAt(eye, center, up);
@@ -87,8 +92,7 @@ void Camera::UpdateProjection() noexcept
 		_skyboxProjectionMatrix = perspective(_fov, (float)DeferredBuffer::GetWidth() / (float)DeferredBuffer::GetHeight(), _near, 10000.f);
 	}
 	else
-		_projectionMatrix = ortho(-10.0f, 10.0f, -10.0f, 10.0f, _near, _far);
-		//_projectionMatrix = ortho(0.f, (float)DeferredBuffer::GetWidth(), (float)DeferredBuffer::GetHeight(), 0.f, _near, _far);
+		_projectionMatrix = ortho(0.f, (float)DeferredBuffer::GetWidth(), (float)DeferredBuffer::GetHeight(), 0.f, _near, _far);
 }
 
 void Camera::UpdateView() noexcept

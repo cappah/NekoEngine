@@ -318,12 +318,6 @@ void DeferredBuffer::Unbind() noexcept
 	_geometryShader->Disable();
 }
 
-void DeferredBuffer::RenderShadows() noexcept
-{
-	if (_shadow)
-		_shadow->Render();
-}
-
 void DeferredBuffer::RenderLighting() noexcept
 {
 	Renderer* r = Engine::GetRenderer();
@@ -364,7 +358,10 @@ void DeferredBuffer::RenderLighting() noexcept
 	if (_shadow)
 		lightShader->SetTexture(U_TEXTURE6, _shadow->GetTexture());
 
+	mat4 cameraWorld = inverse(cam->GetView());
+
 	_sceneLightUbo->UpdateData(0, sizeof(float) * 3, &cam->GetPosition().x);
+	_sceneLightUbo->UpdateData(sizeof(LightSceneData) - sizeof(mat4), sizeof(mat4), value_ptr(cameraWorld));
 	_lightMatrixUbo->UpdateData(0, sizeof(mat4), (void *)value_ptr(mat4()));
 
 	for (size_t i = 0; i < s->GetNumLights(); i++)
@@ -374,11 +371,26 @@ void DeferredBuffer::RenderLighting() noexcept
 
 		data.LightPosition = l->GetPosition();
 		data.LightColor = l->GetColor();
-		data.LightDirection = l->GetDirection();
-
 		data.LightAttenuationAndData = vec4(l->GetAttenuation(), l->GetIntensity(), (float)l->GetType());
-		
-		_lightUbo->UpdateData(0, sizeof(LightData), &data);
+
+		if (_shadow && l->CastShadows())
+		{
+			_shadow->Render(l);
+			
+			lightShader->Enable();
+			lightShader->BindUniformBuffers();
+			BindLighting();
+
+			data.LightWorld = inverse(_shadow->GetView());
+			data.LightProjection = _shadow->GetProjection();
+			data.LightDirectionAndShadow = vec4(l->GetDirection(), 1.f);
+			_lightUbo->UpdateData(0, sizeof(LightData), &data);
+		}
+		else
+		{
+			data.LightDirectionAndShadow = vec4(l->GetDirection(), 0.f);
+			_lightUbo->UpdateData(0, sizeof(LightData) - sizeof(mat4) * 2, &data);
+		}
 		
 		uint32_t subroutine = (uint32_t)l->GetType();
 		lightShader->SetSubroutines(ShaderType::Fragment, 1, &subroutine);
@@ -434,7 +446,7 @@ void DeferredBuffer::RenderLighting() noexcept
 	lightShader->SetSubroutines(ShaderType::Fragment, 1, &subroutine);
 
 	int v = LT_AMBIENTAL;
-	_lightUbo->UpdateData(sizeof(LightData) - sizeof(int), sizeof(int), &v);
+	_lightUbo->UpdateData(sizeof(LightData) - sizeof(mat4) * 2 - sizeof(int), sizeof(int), &v);
 
 	Engine::BindQuadVAO();
 	_lightMatrixUbo->UpdateData(0, sizeof(mat4), (void *)value_ptr(mat4()));

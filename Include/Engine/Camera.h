@@ -82,6 +82,7 @@ public:
 
 	void EnableSkybox(bool enable) { _drawSkybox = enable; }
 
+	void Ortho(float left, float right, float top, float bottom, float zNear, float zFar);
 	void LookAt(glm::vec3 eye, glm::vec3 center, glm::vec3 up) noexcept;
 	void UpdateProjection() noexcept;
 	void UpdateView() noexcept;

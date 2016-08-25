@@ -1,19 +1,4 @@
-layout(location = O_POSITION) out vec4 o_Position;
-layout(location = O_NORMAL) out vec4 o_Normal;
-layout(location = O_COLORSPECULAR) out vec4 o_ColorSpecular;
-layout(location = O_MATERIALINFO) out vec4 o_MaterialInfo;
-
-in VertexData
-{
-	vec2 UV;
-	vec2 TerrainUV;
-	vec3 Position;
-	vec3 Normal;
-	vec3 Color;
-	vec3 Tangent;
-	vec3 CubemapUV;
-	vec3 ViewSpacePosition;
-} vertexData;
+layout(location = O_FRAGCOLOR) out float o_FragColor;
 
 layout(std140) uniform ObjectBlock
 {
@@ -27,21 +12,41 @@ layout(std140) uniform MaterialBlock
 	vec4 MaterialData1;
 };
 
-layout(location=U_TEXTURE0) uniform TEXTURE_2D u_texture0;
-layout(location=U_TEXTURE1) uniform TEXTURE_2D u_texture1;
-layout(location=U_TEXTURE2) uniform TEXTURE_2D u_texture2;
-layout(location=U_TEXTURE3) uniform TEXTURE_2D u_texture3;
-layout(location=U_TEXTURE_CUBE) uniform TEXTURE_CUBE u_texture_cube;
+layout(std140) uniform ShadowMapParameters
+{
+	mat4 inverseView;
+	mat4 lightViewProjection;
+	vec3 frustumCorners[4];
+	ivec2 occlusionSize;
+	ivec2 shadowMapSize;
+};
 
-//layout(location = O_FRAGCOLOR) out vec4 o_FragColor;
+in VertexData
+{
+	vec2 UV;
+	vec4 FragPosLS;
+} vertexData;
 
+layout(location=U_TEXTURE9) uniform TEXTURE_2D u_ShadowMap;
+
+SUBROUTINE_DELEGATE(setColorSub)
+SUBROUTINE_DELEGATE(setNormalSub)
+
+SUBROUTINE(0, setColorSub, setColor)
+SUBROUTINE(1, setNormalSub, setNormal)
+
+SUBROUTINE_FUNC(SH_SUB_C_SPEC_MAP, setColorSub)
+void setColorSpecularMap() { }
+SUBROUTINE_FUNC(SH_SUB_N_MAP, setNormalSub)
+void setNormalMap() { }
 
 void main()
 {	
-	/*float d01 = (LightToView.z * 0.5 + 0.5);
-	float z = ((LightToView.w < 0.0) ? -LightToView.w : d01);
-	float d = (z - ClipPlanes.x) / (ClipPlanes.y - ClipPlanes.x);
+	vec3 projectionCoords = FragPosLS.xyz / FragPosLS.w;
+	projectionCoords = projectionCoords * 0.5 + 0.5;
 
-	o_FragColor = vec4(d, d * d, 0.0, 0.0);*/
-	//o_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+	float closest = texture(GET_TEX_2D(u_ShadowMap), projectionCoords.xy).r;
+	float current = projectionCoords.z;
+
+	o_FragColor = current > closest ? 1.0 : 0.0;
 }

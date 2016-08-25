@@ -12,14 +12,17 @@ layout(std140) uniform SceneLightData
 	vec4 AmbientColorAndRClear;
 	vec4 FogColorAndRFog;
 	vec4 FrameSizeAndSSAO;
+	mat4 CameraWorld;
 };
 
 layout(std140) uniform LightData
 {
 	vec4 LightPosition;
 	vec4 LightColor;
-	vec4 LightDirection;
+	vec4 LightDirectionAndShadow;
 	vec4 LightAttenuationAndData;
+	mat4 LightWorld;
+	mat4 LightProjection;
 };
 
 #define LightType int(LightAttenuationAndData.w)
@@ -41,10 +44,32 @@ float attenuation = 1.0;
 vec3 normal;
 vec3 lightDirection;
 
+float getShadow(vec3 eyeDir)
+{
+	return 1.0;
+
+	if(LightDirectionAndShadow.w < 0.1)
+		return 1.0;
+
+	mat4 cameraView = inverse(CameraWorld);
+	mat4 cameraToLS = LightProjection * LightWorld * cameraView;
+	vec4 projEyeDir = cameraToLS * vec4(eyeDir, 1.0);
+	projEyeDir = projEyeDir / projEyeDir.w;
+
+	vec2 texCoords = projEyeDir.xy * vec2(0.5, 0.5) + vec2(0.5, 0.5);
+
+	const float bias = 0.0001;
+	float depthValue = texture(GET_TEX_2D(ShadowTexture), texCoords).z - bias;
+
+	return projEyeDir.z * 0.5 + 0.5 < depthValue ? 1.0 : 0.2;
+}
+
 void blinnPhong()
 {
 	vec3 light_color = LightColor.xyz * LightAttenuationAndData.z;
 	vec3 view_direction = normalize(CameraPositionAndAmbient.xyz - fragmentPosition.xyz);
+
+	float shadow = getShadow(view_direction);
 
 	float diffuse_coef = max(0.0, dot(normal.xyz, lightDirection));
 	vec3 diffuse = (material.x * diffuse_coef * light_color);
@@ -57,7 +82,7 @@ void blinnPhong()
 	//spec_coef = pow(max(0.0, dot(view_direction, reflect(-light_direction, norm))), color.a);		
 
 	vec3 specular = (material.y * light_color * spec_coef);
-	o_FragColor.rgb = attenuation * (diffuse + specular);
+	o_FragColor.rgb = attenuation * (diffuse + specular) * shadow;
 }
 
 SUBROUTINE_FUNC(LT_POINT, calculateLightingSub)
@@ -77,7 +102,7 @@ SUBROUTINE_FUNC(LT_DIRECTIONAL, calculateLightingSub)
 void calculateDirectionalLight()
 {
 	normal = texelFetch(GET_TEX_2DMS(NormalTexture), iuv, gl_SampleID).xyz;
-	lightDirection = normalize(LightPosition.xyz);
+	lightDirection = normalize(LightDirectionAndShadow.xyz);
 
 	blinnPhong();
 }
@@ -99,7 +124,7 @@ void calculateAmbientLight()
 	mapped = (1.0 - fog_alpha) * mapped + fog_alpha * FogColorAndRFog.xyz;
 
 	o_FragColor = vec4(mapped, 1.0);
-	//o_FragColor = vec4(vec3(texture(GET_TEX_2D(SSAOTexture), uv).r), 1.0);
+	//o_FragColor = vec4(vec3(texture(GET_TEX_2D(ShadowTexture), uv).r), 1.0);
 
 	float brightness = dot(color.rgb, vec3(0.2126, 0.7152, 0.0722)) * (1.0 - fog_alpha);
 	o_BrightColor = (color.rgb * when_gt(brightness, 1.0)) * material.w;

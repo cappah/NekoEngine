@@ -26,22 +26,26 @@ layout(std140) uniform BoneBlock
 	mat4 BoneMatrices[SH_MAX_BONES];
 };
 
+layout(std140) uniform ShadowMapParameters
+{
+	mat4 inverseView;
+	mat4 lightViewProjection;
+	vec3 frustumCorners[4];
+	ivec2 occlusionSize;
+	ivec2 shadowMapSize;
+};
+
 out VertexData
 {
 	vec2 UV;
-	vec2 TerrainUV;
-	vec3 Position;
-	vec3 Normal;
-	vec3 Color;
-	vec3 Tangent;
-	vec3 CubemapUV;
-	vec3 ViewSpacePosition;
+	vec4 FragPosLS;
 } vertexData;
 
 layout(location=U_TEXTURE4) uniform TEXTURE_2D HeightmapTexture;
 
 void main()
 {
-	vertexData.UV = a_uv;
+	vec3 fragmentPos = vec3(Model * vec4(a_pos, 1.0));
+	vertexData.FragPosLS = lightViewProjection * vec4(fragmentPos, 1.0);
 	gl_Position = (ModelViewProjection * vec4(a_pos, 1.0));
 }

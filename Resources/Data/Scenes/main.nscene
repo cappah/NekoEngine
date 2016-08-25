@@ -256,7 +256,7 @@ position=0.0, 150.0, 0.0
 rotation=0.0, 0.0, 0.0
 color=1.0, 1.0, 1.0
 type=directional
-direction=1.0, 0.0, 0.0
+direction=-1.0, 1.0, 0.0
 intensity=0.2
 shadows=true
 EndObject
