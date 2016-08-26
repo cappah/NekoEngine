@@ -58,18 +58,18 @@
 #define SHADER_NUMBONES_ATTRIBUTE	8
 
 // Textures
-#define U_TEXTURE0				10
-#define U_TEXTURE1				11
-#define U_TEXTURE2				12
-#define U_TEXTURE3				13
-#define U_TEXTURE4				14
-#define U_TEXTURE5				15
-#define U_TEXTURE6				16
-#define U_TEXTURE7				17
-#define U_TEXTURE8				18
-#define U_TEXTURE9				19
+#define U_TEXTURE0				0
+#define U_TEXTURE1				1
+#define U_TEXTURE2				2
+#define U_TEXTURE3				3
+#define U_TEXTURE4				4
+#define U_TEXTURE5				5
+#define U_TEXTURE6				6
+#define U_TEXTURE7				7
+#define U_TEXTURE8				8
+#define U_TEXTURE9				9
 
-#define U_TEXTURE_CUBE			29
+#define U_TEXTURE_CUBE			9
 
 // Lighting shader
 #define LT_AMBIENTAL			0

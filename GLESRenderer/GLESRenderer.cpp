@@ -154,6 +154,7 @@ GLESShader* GLESRenderer::_activeShader;
 GLESRenderer::GLESRenderer()
 {
     _window = (PlatformWindowType)0;
+	_drawCalls = 0;
 	memset(&_state, 0x0, sizeof(RendererState));
 }
 
@@ -559,6 +560,16 @@ int GLESRenderer::GetMaxAnisotropy()
 	GLint maxAniso;
 	GL_CHECK(glGetIntegerv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &maxAniso));
 	return maxAniso;
+}
+
+void GLESRenderer::ResetDrawCalls()
+{
+	_drawCalls = 0;
+}
+
+uint64_t GLESRenderer::GetDrawCalls()
+{
+	return _drawCalls;
 }
 
 uint64_t GLESRenderer::GetVideoMemorySize()

@@ -164,6 +164,7 @@ GLRenderer::GLRenderer()
 	_dc = nullptr;
 	_hWnd = (PlatformWindowType)0;
 	_haveDSA = false;
+	_drawCalls = 0;
 }
 
 void GLRenderer::SetDebugLogFunction(RendererDebugLogProc debugLog)
@@ -338,6 +339,7 @@ void GLRenderer::DrawArrays(PolygonMode mode, int32_t first, int32_t count)
 	}
 	
 	GL_CHECK(glDrawArrays(GL_DrawModes[(int)mode], first, (GLsizei)count));
+	++_drawCalls;
 }
 
 void GLRenderer::DrawElements(PolygonMode mode, int32_t count, ElementType type, const void *indices)
@@ -353,6 +355,7 @@ void GLRenderer::DrawElements(PolygonMode mode, int32_t count, ElementType type,
 	}
 	
 	GL_CHECK(glDrawElements(GL_DrawModes[(int)mode], (GLsizei)count, GL_ElementType[(int)type], indices));
+	++_drawCalls;
 }
 
 void GLRenderer::DrawElementsBaseVertex(PolygonMode mode, int32_t count, ElementType type, const void *indices, int32_t baseVertex)
@@ -368,6 +371,7 @@ void GLRenderer::DrawElementsBaseVertex(PolygonMode mode, int32_t count, Element
 	}
 	
 	GL_CHECK(glDrawElementsBaseVertex(GL_DrawModes[(int)mode], (GLsizei)count, GL_ElementType[(int)type], indices, baseVertex));
+	++_drawCalls;
 }
 
 void GLRenderer::Clear(uint32_t mask)
@@ -508,6 +512,16 @@ int GLRenderer::GetMaxAnisotropy()
 	GLint maxAniso;
 	GL_CHECK(glGetIntegerv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &maxAniso));
 	return maxAniso;
+}
+
+void GLRenderer::ResetDrawCalls()
+{
+	_drawCalls = 0;
+}
+
+uint64_t GLRenderer::GetDrawCalls()
+{
+	return _drawCalls;
 }
 
 uint64_t GLRenderer::GetVideoMemorySize()

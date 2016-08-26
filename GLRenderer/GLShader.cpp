@@ -195,7 +195,7 @@ void GLShader::SetSubroutines(ShaderType type, int count, const unsigned int *in
 	GL_CHECK(glUniformSubroutinesuiv(GL_ShaderType[(int)type], count, indices));
 }
 
-bool GLShader::LoadFromSource(ShaderType type, int count, const char **source, int *length)
+bool GLShader::LoadFromSource(ShaderType type, int count, const char *source, int length)
 {
 	GLint compiled;
 
@@ -309,13 +309,13 @@ bool GLShader::LoadFromSource(ShaderType type, int count, const char **source, i
 	for (int i = 4; i < srcCount; i++)
 	{
 		if(_haveExplicitUniforms)
-			src[i] = source[i - 4];
+			src[i] = &source[i - 4];
 		else
-			src[i] = _ExtractUniforms(source[i - 4]);
+			src[i] = _ExtractUniforms(&source[i - 4]);
 	}
 	
 	GL_CHECK(_shaders[(int)type] = glCreateShader(GL_ShaderType[(int)type]));
-	GL_CHECK(glShaderSource(_shaders[(int)type], srcCount, src, length));
+	GL_CHECK(glShaderSource(_shaders[(int)type], srcCount, src, NULL));
 	GL_CHECK(glCompileShader(_shaders[(int)type]));
 	GL_CHECK(glGetShaderiv(_shaders[(int)type], GL_COMPILE_STATUS, &compiled));
 

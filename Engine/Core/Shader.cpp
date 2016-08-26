@@ -135,7 +135,7 @@ int Shader::_CompileShader(ShaderType type, NString &file)
 
 	f->Close();
 
-	if (!_shader->LoadFromSource(type, 1, (const char**)&source, NULL))
+	if (!_shader->LoadFromSource(type, 1, source, (int)strlen(source)))
 	{
 		Logger::Log(SHADER_MODULE, LOG_CRITICAL, "Error compiling shader <%s>:\ns\n", *file/*, infoLog*/);
 		free(source);

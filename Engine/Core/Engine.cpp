@@ -126,6 +126,8 @@ FT_Library Engine::_ftLibrary = nullptr;
 static bool iniFileLoaded = false;
 static unordered_map<string, string> _rendererArguments;
 static char _vfsArchiveList[VFS_ARCHIVE_LIST_SIZE];
+static double _updateTime;
+static double _renderTime;
 
 ObjectClassMapType *EngineClassFactory::_objectClassMap = nullptr;
 ComponentClassMapType *EngineClassFactory::_componentClassMap = nullptr;
@@ -765,34 +767,36 @@ void Engine::DrawString(vec2 pos, vec3 color, const char *fmt, ...) noexcept
 void Engine::Frame() noexcept
 {
 	static double lastTime = GetTime();
-
+	double temp = 0.0;
 	double curTime = GetTime();
 	double deltaTime = curTime - lastTime;
 
-	if (deltaTime > UPDATE_DELTA)
-	{
-		Update(deltaTime);
-		lastTime = curTime;
-	}
+	_renderer->MakeCurrent(R_RENDER_CONTEXT);
 
 	if (!_paused)
 	{
-		if (SceneManager::IsSceneLoaded())
+		if (deltaTime > UPDATE_DELTA)
 		{
-			_renderer->MakeCurrent(R_RENDER_CONTEXT);
-
-			Draw();
-
-			if (_engineFont)
-			{
-				if (_printStats)
-					_PrintStats();
-
-				_engineFont->Render();
-			}
+			temp = GetTime();
+			Update(deltaTime);
+			_updateTime = GetTime() - temp;
+			lastTime = curTime;
 		}
+
+		temp = GetTime();
+		if (SceneManager::IsSceneLoaded())
+			Draw();
 		else
 			SceneManager::DrawLoadingScreen();
+		_renderTime = GetTime() - temp;
+	}
+
+	if (_engineFont)
+	{
+		if (_printStats)
+			_PrintStats();
+
+		_engineFont->Render();
 	}
 
 	_renderer->SwapBuffers();
@@ -1066,13 +1070,14 @@ void Engine::SaveScreenshot() noexcept
 void Engine::_PrintStats()
 {
 	double diff = GetTime() - _lastTime;
-	static double _frameTime = 0.0;
+	static double _frameTime = 0.0, _logic = 0.0, _render = 0.0;
 	_nFrames++;
 
 	if (diff > 1.f)
 	{
 		_fps = _nFrames;
 		_frameTime = (diff / (double)_fps) * 1000;
+		_render = _renderTime * 1000;
 		_lastTime += diff;
 		_nFrames = 0;
 	}
@@ -1086,25 +1091,23 @@ void Engine::_PrintStats()
 	vec3 color = vec3(1.f, 1.f, 1.f);
 
 	DrawString(vec2(0.f, 0.f), color, "FPS:       %d (%.02f ms)", _fps, _frameTime);
-
-#ifdef _DEBUG
-	//	DrawString(vec2(0.f, _engineFont->GetCharacterHeight()), vec3(1.f, 1.f, 1.f), "DrawCalls: %ld", _drawCalls);
-#endif
-	DrawString(vec2(0.f, charHeight * 1), color, "Renderer:  %s %d.%d", _renderer->GetName(), _renderer->GetMajorVersion(), _renderer->GetMinorVersion());
-	DrawString(vec2(0.f, charHeight * 2), color, "Screen:    %dx%d (FBO: %dx%d)",
+	DrawString(vec2(0.f, charHeight * 1), color, "DrawCalls: %ld", _renderer->GetDrawCalls());
+	_renderer->ResetDrawCalls();
+	DrawString(vec2(0.f, charHeight * 2), color, "Renderer:  %s %d.%d", _renderer->GetName(), _renderer->GetMajorVersion(), _renderer->GetMinorVersion());
+	DrawString(vec2(0.f, charHeight * 3), color, "Screen:    %dx%d (FBO: %dx%d)",
 		_config.Engine.ScreenWidth, _config.Engine.ScreenHeight, DeferredBuffer::GetWidth(), DeferredBuffer::GetHeight());
-	DrawString(vec2(0.f, charHeight * 3), color, "Scene:     %s", SceneManager::GetActiveScene()->GetName().c_str());
-	DrawString(vec2(0.f, charHeight * 4), color, "Verts:     %d", SceneManager::GetActiveScene()->GetVertexCount());
-	DrawString(vec2(0.f, charHeight * 5), color, "Tris:      %d", SceneManager::GetActiveScene()->GetTriangleCount());
-	DrawString(vec2(0.f, charHeight * 6), color, "Objects:   %d", SceneManager::GetActiveScene()->GetObjectCount());
-	DrawString(vec2(0.f, charHeight * 7), color, "Lights:    %d", SceneManager::GetActiveScene()->GetNumLights());
-	DrawString(vec2(0.f, charHeight * 8), color, "StMeshes:  %d", ResourceManager::LoadedStaticMeshes());
-	DrawString(vec2(0.f, charHeight * 9), color, "SkMeshes:  %d", ResourceManager::LoadedSkeletalMeshes());
-	DrawString(vec2(0.f, charHeight * 10), color, "Textures:  %d", ResourceManager::LoadedTextures());
-	DrawString(vec2(0.f, charHeight * 11), color, "Shaders:   %d", ResourceManager::LoadedShaders());
-	DrawString(vec2(0.f, charHeight * 12), color, "Materials: %d", ResourceManager::LoadedMaterials());
-	DrawString(vec2(0.f, charHeight * 13), color, "Sounds:    %d", ResourceManager::LoadedSounds());
-	DrawString(vec2(0.f, charHeight * 14), color, "Fonts:     %d", ResourceManager::LoadedFonts());
+	DrawString(vec2(0.f, charHeight * 4), color, "Scene:     %s", SceneManager::GetActiveScene()->GetName().c_str());
+	DrawString(vec2(0.f, charHeight * 5), color, "Verts:     %d", SceneManager::GetActiveScene()->GetVertexCount());
+	DrawString(vec2(0.f, charHeight * 6), color, "Tris:      %d", SceneManager::GetActiveScene()->GetTriangleCount());
+	DrawString(vec2(0.f, charHeight * 7), color, "Objects:   %d", SceneManager::GetActiveScene()->GetObjectCount());
+	DrawString(vec2(0.f, charHeight * 8), color, "Lights:    %d", SceneManager::GetActiveScene()->GetNumLights());
+	DrawString(vec2(0.f, charHeight * 9), color, "StMeshes:  %d", ResourceManager::LoadedStaticMeshes());
+	DrawString(vec2(0.f, charHeight * 10), color, "SkMeshes:  %d", ResourceManager::LoadedSkeletalMeshes());
+	DrawString(vec2(0.f, charHeight * 11), color, "Textures:  %d", ResourceManager::LoadedTextures());
+	DrawString(vec2(0.f, charHeight * 12), color, "Shaders:   %d", ResourceManager::LoadedShaders());
+	DrawString(vec2(0.f, charHeight * 13), color, "Materials: %d", ResourceManager::LoadedMaterials());
+	DrawString(vec2(0.f, charHeight * 14), color, "Sounds:    %d", ResourceManager::LoadedSounds());
+	DrawString(vec2(0.f, charHeight * 15), color, "Fonts:     %d", ResourceManager::LoadedFonts());
 
 	if (_haveMemoryInfo)
 	{
@@ -1113,7 +1116,7 @@ void Engine::_PrintStats()
 		totalMem = _renderer->GetVideoMemorySize();
 		availableMem = _renderer->GetUsedVideoMemorySize();
 
-		DrawString(vec2(0.f, charHeight * 15), color, "VRAM:      %d/%d MB", (totalMem - availableMem) / 1024, totalMem / 1024);
+		DrawString(vec2(0.f, charHeight * 16), color, "VRAM:      %d/%d MB", (totalMem - availableMem) / 1024, totalMem / 1024);
 	}
 
 	DrawString(vec2(0.f, _config.Engine.ScreenHeight - charHeight * 2), color, "NekoEngine");

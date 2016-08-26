@@ -86,7 +86,7 @@ public:
 
     virtual void SetSubroutines(ShaderType type, int count, const unsigned int *indices) override;
 
-    virtual bool LoadFromSource(ShaderType type, int count, const char **source, int *length) override;
+    virtual bool LoadFromSource(ShaderType type, int count, const char *source, int length) override;
     virtual bool LoadFromStageBinary(ShaderType type, const char *file) override;
     virtual bool LoadFromBinary(int count, const void *binary, size_t length) override;
 

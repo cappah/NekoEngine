@@ -53,8 +53,8 @@
 #define RENDERER_VERSION_MAJOR		0
 #define RENDERER_VERSION_MINOR		3
 #define RENDERER_VERSION_REVISION	0
-#define RENDERER_VERSION_BUILD		2
-#define RENDERER_VERSION_STRING		"0.3.0.2"
+#define RENDERER_VERSION_BUILD		3
+#define RENDERER_VERSION_STRING		"0.3.0.3"
 
 class NullRenderer :
 	public Renderer
@@ -100,9 +100,9 @@ public:
 	virtual void SetFrontFace(FrontFace face) override { }
 	virtual void SetColorMask(bool r, bool g, bool b, bool a) override { }
 
-	virtual void DrawArrays(PolygonMode mode, int32_t first, int32_t count) override { }
-	virtual void DrawElements(PolygonMode mode, int32_t count, ElementType type, const void *indices) override { }
-	virtual void DrawElementsBaseVertex(PolygonMode mode, int32_t count, ElementType type, const void *indices, int32_t baseVertex) override { }
+	virtual void DrawArrays(PolygonMode mode, int32_t first, int32_t count) override { ++_drawCalls;  }
+	virtual void DrawElements(PolygonMode mode, int32_t count, ElementType type, const void *indices) override { ++_drawCalls; }
+	virtual void DrawElementsBaseVertex(PolygonMode mode, int32_t count, ElementType type, const void *indices, int32_t baseVertex) override { ++_drawCalls; }
 	virtual void Clear(uint32_t mask) override { }
 
 	virtual void BindDefaultFramebuffer() override { _boundFramebuffer = nullptr; }
@@ -134,6 +134,9 @@ public:
 
 	virtual void MakeCurrent(int context) override { (void)context; }
 
+	virtual void ResetDrawCalls() { _drawCalls = 0; }
+	virtual uint64_t GetDrawCalls() { return _drawCalls; }
+
 	virtual bool IsHBAOSupported() { return false; }
 	virtual bool InitializeHBAO() { return false; }
 	virtual bool RenderHBAO(RHBAOArgs *args, RFramebuffer *fbo) { return false; }
@@ -148,4 +151,5 @@ public:
 
 private:
 	static RFramebuffer* _boundFramebuffer;
+	uint64_t _drawCalls;
 };

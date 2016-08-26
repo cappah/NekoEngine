@@ -69,8 +69,8 @@ exit(-1);
 #define RENDERER_VERSION_MAJOR		0
 #define RENDERER_VERSION_MINOR		3
 #define RENDERER_VERSION_REVISION	0
-#define RENDERER_VERSION_BUILD		89
-#define RENDERER_VERSION_STRING		"0.3.0.89"
+#define RENDERER_VERSION_BUILD		90
+#define RENDERER_VERSION_STRING		"0.3.0.90"
 
 typedef struct SHADER_DEFINE
 {
@@ -200,6 +200,9 @@ public:
 
     virtual void MakeCurrent(int context) override;
 
+	virtual void ResetDrawCalls() override;
+	virtual uint64_t GetDrawCalls() override;
+
 	virtual bool IsHBAOSupported() override { return false; }
 	virtual bool InitializeHBAO() override { return false; }
 	virtual bool RenderHBAO(RHBAOArgs *args, RFramebuffer *fbo) override { return false; }
@@ -221,6 +224,7 @@ private:
 	static class GLESShader* _activeShader;
     static RFramebuffer* _boundFramebuffer;
     static std::vector<ShaderDefine> _shaderDefines;
+	uint64_t _drawCalls;
 	RendererState _state;
 
     void _DestroyContext();

@@ -57,7 +57,7 @@
 #undef Always
 #endif
 
-#define RENDERER_API_VERSION	0x0030
+#define RENDERER_API_VERSION	0x0031
 
 #define R_CLEAR_COLOR			1
 #define R_CLEAR_DEPTH			2
@@ -455,6 +455,16 @@ public:
 	 * Enable the specified context for the current thread
 	 */
 	virtual void MakeCurrent(int context) = 0;
+
+	/**
+	 * Reset the number of draw calls
+	 */
+	virtual void ResetDrawCalls() = 0;
+
+	/**
+	 * Get the number of times a Draw* function has been called since the last reset
+	 */
+	virtual uint64_t GetDrawCalls() = 0;
 
 	// HBAO+ Integration
 	/**

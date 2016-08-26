@@ -92,17 +92,17 @@ public:
 	/**
 	 * Set the active shader subroutines
 	 */
-	virtual void SetSubroutines(ShaderType type, int count, const uint32_t* indices) = 0;
+	virtual void SetSubroutines(ShaderType type, int count, const uint32_t *indices) = 0;
 
 	/**
 	 * Compile program source for the specified type.
 	 */
-	virtual bool LoadFromSource(ShaderType type, int count, const char** source, int* length) = 0;
+	virtual bool LoadFromSource(ShaderType type, int count, const char *source, int length) = 0;
 
 	/**
 	 * Load shader from shader stage binary
 	 */
-	virtual bool LoadFromStageBinary(ShaderType type, const char* file) = 0;
+	virtual bool LoadFromStageBinary(ShaderType type, const char *file) = 0;
 
 	/**
 	 * Load shader from binary
