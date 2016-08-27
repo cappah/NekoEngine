@@ -43,7 +43,8 @@
 #ifdef __APPLE__
 	#include <OpenGLES/ES3/glext.h>
 #else
-	#include "glad.h"
+	#include <GLES3/gl3.h>
+    #include <GLES2/gl2ext.h>
 #endif
 
 #ifdef _DEBUG
@@ -122,6 +123,13 @@ typedef struct RENDERER_STATE
 	} Viewport;
 
 } RendererState;
+
+typedef struct GL_FUNCS
+{
+    PFNGLBUFFERSTORAGEEXTPROC BufferStorage;
+    PFNGLPROGRAMUNIFORM1IEXTPROC ProgramUniform1i;
+    PFNGLDRAWELEMENTSBASEVERTEXOESPROC DrawElementsBaseVertex;
+} GLFuncs;
 
 class GLESRenderer : public Renderer
 {
@@ -218,12 +226,14 @@ public:
 	static void SetActiveShader(class GLESShader *shader) { _activeShader = shader; }
 	static void MakeCurrent();
 	static bool HasExtension(const char* extension);
+	static GLFuncs Funcs;
 
 private:
     PlatformWindowType _window;
 	static class GLESShader* _activeShader;
     static RFramebuffer* _boundFramebuffer;
     static std::vector<ShaderDefine> _shaderDefines;
+
 	uint64_t _drawCalls;
 	RendererState _state;
 
@@ -246,6 +256,12 @@ void DebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsiz
 #define GL_MAP_PERSISTENT_BIT_EXT	0
 #define GL_MAP_COHERENT_BIT_EXT		0
 #define GL_DYNAMIC_STORAGE_BIT_EXT	0
+
+#else
+
+#define glBufferStorageEXT(x, y, z, w) GLESRenderer::Funcs.BufferStorage(x, y, z, w)
+#define glProgramUniform1iEXT(x, y, z) GLESRenderer::Funcs.ProgramUniform1i(x, y, z)
+#define glDrawElementsBaseVertex(x, y, z, w, a) GLESRenderer::Funcs.DrawElementsBaseVertex(x, y, z, w, a)
 
 #endif
 

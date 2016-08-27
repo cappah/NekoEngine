@@ -48,9 +48,9 @@
 #include <string.h>
 
 #ifdef __APPLE__
-#include <OpenGLES/ES3/glext.h>
+    #include <OpenGLES/ES3/glext.h>
 #else
-#include "glad.h"
+    #include <GLES3/gl3ext.h>
 #endif
 
 using namespace std;
@@ -150,6 +150,7 @@ static int _verMajor = -1, _verMinor = -1;
 RFramebuffer* GLESRenderer::_boundFramebuffer = nullptr;
 std::vector<ShaderDefine> GLESRenderer::_shaderDefines;
 GLESShader* GLESRenderer::_activeShader;
+GLFuncs GLESRenderer::Funcs;
 
 GLESRenderer::GLESRenderer()
 {
@@ -478,12 +479,6 @@ void GLESRenderer::SetPixelStore(PixelStoreParameter param, int value)
 
 bool GLESRenderer::HasCapability(RendererCapability cap)
 {
-	if(_verMajor < 0)
-	{ GL_CHECK(glGetIntegerv(GL_MAJOR_VERSION, &_verMajor)); }
-
-	if(_verMinor < 0)
-	{ GL_CHECK(glGetIntegerv(GL_MINOR_VERSION, &_verMinor)); }
-
     switch (cap)
     {
         case RendererCapability::AnisotropicFiltering:
@@ -493,7 +488,7 @@ bool GLESRenderer::HasCapability(RendererCapability cap)
         case RendererCapability::PerSampleShading:
 			return true;
 		case RendererCapability::DrawBaseVertex:
-			return ((_verMajor == 3) && (_verMinor == 2)) || _verMajor >= 4;
+			return Funcs.DrawElementsBaseVertex != nullptr;
         case RendererCapability::MemoryInformation:
             return false;
         default:
@@ -594,13 +589,13 @@ bool GLESRenderer::HasExtension(const char* extension)
 		const char *ext = (const char *)glGetStringi(GL_EXTENSIONS, i);
 		if(!ext)
 			continue;
-		
+
 		len = strlen(ext);
-		
+
         if (!strncmp(ext, extension, len))
             return true;
 	}
-	
+
     return false;
 }
 

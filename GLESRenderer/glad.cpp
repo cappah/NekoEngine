@@ -2789,10 +2789,13 @@ static void find_coreGLES2(void) {
 	}
 }
 
-int gladLoadGLES2Loader(GLADloadproc load) {
+int gladLoadGLES2Loader(GLADloadproc load)
+{
 	GLVersion.major = 0; GLVersion.minor = 0;
+#ifndef NE_PLATFORM_BB10
 	glGetString = (PFNGLGETSTRINGPROC)load("glGetString");
 	if(glGetString == NULL) return 0;
+#endif
 	if(glGetString(GL_VERSION) == NULL) return 0;
 	find_coreGLES2();
 	load_GL_ES_VERSION_2_0(load);

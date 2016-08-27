@@ -26,8 +26,8 @@
 								<option id="com.qnx.qcc.option.compiler.includePath.1017388604" name="Include Directories (-I)" superClass="com.qnx.qcc.option.compiler.includePath" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Engine/public}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Engine}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GLESRenderer/public}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/TestGame/public}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GLESRenderer/public}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/TestGame}&quot;"/>
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/usr/include/freetype2"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc}/../3rdparty/include_bb10&quot;"/>
@@ -52,8 +52,8 @@
 								<option id="com.qnx.qcc.option.assembler.includePath.491437603" name="Include Directories (-I)" superClass="com.qnx.qcc.option.assembler.includePath" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Engine/public}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Engine}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GLESRenderer/public}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/TestGame/public}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GLESRenderer/public}&quot;"/>
 								</option>
 								<inputType id="com.qnx.qcc.inputType.assembler.1903870577" superClass="com.qnx.qcc.inputType.assembler"/>
 							</tool>
@@ -63,20 +63,28 @@
 								<option id="com.qnx.qcc.option.linker.libraryPaths.1280117371" name="Library Paths (-L)" superClass="com.qnx.qcc.option.linker.libraryPaths" valueType="libPaths">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Engine/Device-Debug}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Engine}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GLESRenderer/Device-Debug}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/TestGame/Device-Debug}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GLESRenderer/Device-Debug}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/3rdparty/lib/armv7}&quot;"/>
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/../target-override/${CPUVARDIR}/lib"/>
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/../target-override/${CPUVARDIR}/usr/lib"/>
 								</option>
 								<option id="com.qnx.qcc.option.linker.security.1998344492" name="Enhanced Security (-Wl,-z,relro -Wl,-z,now)" superClass="com.qnx.qcc.option.linker.security" value="true" valueType="boolean"/>
 								<option id="com.qnx.qcc.option.linker.libraries.396841114" name="Libraries (-l)" superClass="com.qnx.qcc.option.linker.libraries" valueType="libs">
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="vorbis"/>
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="ogg"/>
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="sqlite3_neko"/>
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="Engine"/>
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="GLESRenderer"/>
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="TestGame"/>
+									<listOptionValue builtIn="false" value="Engine"/>
+									<listOptionValue builtIn="false" value="TestGame"/>
+									<listOptionValue builtIn="false" value="GLESRenderer"/>
+									<listOptionValue builtIn="false" value="vorbis"/>
+									<listOptionValue builtIn="false" value="ogg"/>
+									<listOptionValue builtIn="false" value="sqlite3_neko"/>
+									<listOptionValue builtIn="false" value="EGL"/>
+									<listOptionValue builtIn="false" value="GLESv2"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="screen"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="bps"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="freetype"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="png16"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="OpenAL"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="z"/>
 								</option>
 								<inputType id="com.qnx.qcc.inputType.linker.506972712" superClass="com.qnx.qcc.inputType.linker">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
@@ -92,18 +100,18 @@
 				</configuration>
 			</storageModule>
 			<storageModule moduleId="org.eclipse.cdt.core.externalSettings">
+				<externalSettings containerId="GLESRenderer;com.qnx.qcc.configuration.staticLib.debug.1497556161" factoryId="org.eclipse.cdt.core.cfg.export.settings.sipplier">
+					<externalSetting>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/GLESRenderer/public"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/GLESRenderer/Device-Debug"/>
+						<entry flags="NONE" kind="libraryFile" name="GLESRenderer" srcPrefixMapping="" srcRootPath=""/>
+					</externalSetting>
+				</externalSettings>
 				<externalSettings containerId="TestGame;com.qnx.qcc.configuration.sharedLib.debug.899944548" factoryId="org.eclipse.cdt.core.cfg.export.settings.sipplier">
 					<externalSetting>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/TestGame/public"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/TestGame/Device-Debug"/>
 						<entry flags="NONE" kind="libraryFile" name="TestGame" srcPrefixMapping="" srcRootPath=""/>
-					</externalSetting>
-				</externalSettings>
-				<externalSettings containerId="GLESRenderer;com.qnx.qcc.configuration.sharedLib.debug.240569480" factoryId="org.eclipse.cdt.core.cfg.export.settings.sipplier">
-					<externalSetting>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/GLESRenderer/public"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/GLESRenderer/Device-Debug"/>
-						<entry flags="NONE" kind="libraryFile" name="GLESRenderer" srcPrefixMapping="" srcRootPath=""/>
 					</externalSetting>
 				</externalSettings>
 				<externalSettings containerId="Engine;com.qnx.qcc.configuration.sharedLib.debug.741189266" factoryId="org.eclipse.cdt.core.cfg.export.settings.sipplier">
@@ -140,8 +148,8 @@
 								<option id="com.qnx.qcc.option.compiler.includePath.1812916097" name="Include Directories (-I)" superClass="com.qnx.qcc.option.compiler.includePath" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Engine/public}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Engine}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GLESRenderer/public}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/TestGame/public}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GLESRenderer/public}&quot;"/>
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/usr/include/freetype2"/>
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/../target-override/usr/include"/>
 								</option>
@@ -159,8 +167,8 @@
 								<option id="com.qnx.qcc.option.assembler.includePath.611206750" name="Include Directories (-I)" superClass="com.qnx.qcc.option.assembler.includePath" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Engine/public}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Engine}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GLESRenderer/public}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/TestGame/public}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GLESRenderer/public}&quot;"/>
 								</option>
 								<inputType id="com.qnx.qcc.inputType.assembler.2059819699" superClass="com.qnx.qcc.inputType.assembler"/>
 							</tool>
@@ -169,20 +177,28 @@
 								<option id="com.qnx.qcc.option.linker.libraryPaths.1933942376" name="Library Paths (-L)" superClass="com.qnx.qcc.option.linker.libraryPaths" valueType="libPaths">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Engine/Device-Release}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Engine}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/TestGame/Device-Release}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GLESRenderer/Device-Release}&quot;"/>
-									<listOptionValue builtIn="false" value="${workspace_loc:/TestGame}/Device-Release"/>
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/../target-override/${CPUVARDIR}/lib"/>
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/../target-override/${CPUVARDIR}/usr/lib"/>
 								</option>
 								<option id="com.qnx.qcc.option.linker.pie.993810844" name="Position Independent Executable (-pie)" superClass="com.qnx.qcc.option.linker.pie" value="true" valueType="boolean"/>
 								<option id="com.qnx.qcc.option.linker.security.1098906790" name="Enhanced Security (-Wl,-z,relro -Wl,-z,now)" superClass="com.qnx.qcc.option.linker.security" value="true" valueType="boolean"/>
 								<option id="com.qnx.qcc.option.linker.libraries.938016041" name="Libraries (-l)" superClass="com.qnx.qcc.option.linker.libraries" valueType="libs">
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="Engine"/>
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="GLESRenderer"/>
+									<listOptionValue builtIn="false" value="Engine"/>
 									<listOptionValue builtIn="false" value="TestGame"/>
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="sqlite3_neko"/>
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="ogg"/>
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="vorbis"/>
+									<listOptionValue builtIn="false" value="GLESRenderer"/>
+									<listOptionValue builtIn="false" value="sqlite3_neko"/>
+									<listOptionValue builtIn="false" value="ogg"/>
+									<listOptionValue builtIn="false" value="vorbis"/>
+									<listOptionValue builtIn="false" value="EGL"/>
+									<listOptionValue builtIn="false" value="GLESv2"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="screen"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="bps"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="freetype"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="png16"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="OpenAL"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="z"/>
 								</option>
 								<inputType id="com.qnx.qcc.inputType.linker.136329251" superClass="com.qnx.qcc.inputType.linker">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
@@ -198,18 +214,18 @@
 				</configuration>
 			</storageModule>
 			<storageModule moduleId="org.eclipse.cdt.core.externalSettings">
+				<externalSettings containerId="GLESRenderer;com.qnx.qcc.configuration.staticLib.release.1649326917" factoryId="org.eclipse.cdt.core.cfg.export.settings.sipplier">
+					<externalSetting>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/GLESRenderer/public"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/GLESRenderer/Device-Release"/>
+						<entry flags="NONE" kind="libraryFile" name="GLESRenderer" srcPrefixMapping="" srcRootPath=""/>
+					</externalSetting>
+				</externalSettings>
 				<externalSettings containerId="TestGame;com.qnx.qcc.configuration.sharedLib.release.1773939287" factoryId="org.eclipse.cdt.core.cfg.export.settings.sipplier">
 					<externalSetting>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/TestGame/public"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/TestGame/Device-Release"/>
 						<entry flags="NONE" kind="libraryFile" name="TestGame" srcPrefixMapping="" srcRootPath=""/>
-					</externalSetting>
-				</externalSettings>
-				<externalSettings containerId="GLESRenderer;com.qnx.qcc.configuration.sharedLib.release.2042472600" factoryId="org.eclipse.cdt.core.cfg.export.settings.sipplier">
-					<externalSetting>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/GLESRenderer/public"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/GLESRenderer/Device-Release"/>
-						<entry flags="NONE" kind="libraryFile" name="GLESRenderer" srcPrefixMapping="" srcRootPath=""/>
 					</externalSetting>
 				</externalSettings>
 				<externalSettings containerId="Engine;com.qnx.qcc.configuration.sharedLib.release.1155351363" factoryId="org.eclipse.cdt.core.cfg.export.settings.sipplier">
@@ -248,8 +264,8 @@
 								<option id="com.qnx.qcc.option.compiler.includePath.1362933880" name="Include Directories (-I)" superClass="com.qnx.qcc.option.compiler.includePath" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Engine/public}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Engine}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GLESRenderer/public}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/TestGame/public}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GLESRenderer/public}&quot;"/>
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/usr/include/freetype2"/>
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/../target-override/usr/include"/>
 								</option>
@@ -264,8 +280,8 @@
 								<option id="com.qnx.qcc.option.assembler.includePath.859629929" name="Include Directories (-I)" superClass="com.qnx.qcc.option.assembler.includePath" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Engine/public}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Engine}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GLESRenderer/public}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/TestGame/public}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GLESRenderer/public}&quot;"/>
 								</option>
 								<inputType id="com.qnx.qcc.inputType.assembler.743367702" superClass="com.qnx.qcc.inputType.assembler"/>
 							</tool>
@@ -276,16 +292,24 @@
 								<option id="com.qnx.qcc.option.linker.libraryPaths.1540517279" name="Library Paths (-L)" superClass="com.qnx.qcc.option.linker.libraryPaths" valueType="libPaths">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Engine/Device-Profile}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Engine}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/TestGame/Device-Profile}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GLESRenderer/Device-Profile}&quot;"/>
-									<listOptionValue builtIn="false" value="${workspace_loc:/TestGame}/Device-Profile"/>
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/../target-override/${CPUVARDIR}/lib"/>
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/../target-override/${CPUVARDIR}/usr/lib"/>
 								</option>
 								<option id="com.qnx.qcc.option.linker.security.2062417490" name="Enhanced Security (-Wl,-z,relro -Wl,-z,now)" superClass="com.qnx.qcc.option.linker.security" value="true" valueType="boolean"/>
 								<option id="com.qnx.qcc.option.linker.libraries.992091242" name="Libraries (-l)" superClass="com.qnx.qcc.option.linker.libraries" valueType="libs">
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="Engine"/>
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="GLESRenderer"/>
+									<listOptionValue builtIn="false" value="Engine"/>
 									<listOptionValue builtIn="false" value="TestGame"/>
+									<listOptionValue builtIn="false" value="GLESRenderer"/>
+									<listOptionValue builtIn="false" value="EGL"/>
+									<listOptionValue builtIn="false" value="GLESv2"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="screen"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="bps"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="freetype"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="png16"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="OpenAL"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="z"/>
 								</option>
 								<inputType id="com.qnx.qcc.inputType.linker.1798655419" superClass="com.qnx.qcc.inputType.linker">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
@@ -301,18 +325,18 @@
 				</configuration>
 			</storageModule>
 			<storageModule moduleId="org.eclipse.cdt.core.externalSettings">
+				<externalSettings containerId="GLESRenderer;com.qnx.qcc.configuration.staticLib.profile.324354835" factoryId="org.eclipse.cdt.core.cfg.export.settings.sipplier">
+					<externalSetting>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/GLESRenderer/public"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/GLESRenderer/Device-Profile"/>
+						<entry flags="NONE" kind="libraryFile" name="GLESRenderer" srcPrefixMapping="" srcRootPath=""/>
+					</externalSetting>
+				</externalSettings>
 				<externalSettings containerId="TestGame;com.qnx.qcc.configuration.sharedLib.profile.1823372244" factoryId="org.eclipse.cdt.core.cfg.export.settings.sipplier">
 					<externalSetting>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/TestGame/public"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/TestGame/Device-Profile"/>
 						<entry flags="NONE" kind="libraryFile" name="TestGame" srcPrefixMapping="" srcRootPath=""/>
-					</externalSetting>
-				</externalSettings>
-				<externalSettings containerId="GLESRenderer;com.qnx.qcc.configuration.sharedLib.profile.784137217" factoryId="org.eclipse.cdt.core.cfg.export.settings.sipplier">
-					<externalSetting>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/GLESRenderer/public"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/GLESRenderer/Device-Profile"/>
-						<entry flags="NONE" kind="libraryFile" name="GLESRenderer" srcPrefixMapping="" srcRootPath=""/>
 					</externalSetting>
 				</externalSettings>
 				<externalSettings containerId="Engine;com.qnx.qcc.configuration.sharedLib.profile.919149292" factoryId="org.eclipse.cdt.core.cfg.export.settings.sipplier">
@@ -351,8 +375,8 @@
 								<option id="com.qnx.qcc.option.compiler.includePath.1688093839" name="Include Directories (-I)" superClass="com.qnx.qcc.option.compiler.includePath" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Engine/public}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Engine}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GLESRenderer/public}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/TestGame/public}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GLESRenderer/public}&quot;"/>
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/usr/include/freetype2"/>
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/../target-override/usr/include"/>
 								</option>
@@ -367,8 +391,8 @@
 								<option id="com.qnx.qcc.option.assembler.includePath.1904226440" name="Include Directories (-I)" superClass="com.qnx.qcc.option.assembler.includePath" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Engine/public}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Engine}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GLESRenderer/public}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/TestGame/public}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GLESRenderer/public}&quot;"/>
 								</option>
 								<inputType id="com.qnx.qcc.inputType.assembler.2143457286" superClass="com.qnx.qcc.inputType.assembler"/>
 							</tool>
@@ -379,16 +403,24 @@
 								<option id="com.qnx.qcc.option.linker.libraryPaths.1156508719" name="Library Paths (-L)" superClass="com.qnx.qcc.option.linker.libraryPaths" valueType="libPaths">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Engine/Device-Coverage}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Engine}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/TestGame/Device-Coverage}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GLESRenderer/Device-Coverage}&quot;"/>
-									<listOptionValue builtIn="false" value="${workspace_loc:/TestGame}/Device-Coverage"/>
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/../target-override/${CPUVARDIR}/lib"/>
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/../target-override/${CPUVARDIR}/usr/lib"/>
 								</option>
 								<option id="com.qnx.qcc.option.linker.security.533351218" name="Enhanced Security (-Wl,-z,relro -Wl,-z,now)" superClass="com.qnx.qcc.option.linker.security" value="true" valueType="boolean"/>
 								<option id="com.qnx.qcc.option.linker.libraries.1518587393" name="Libraries (-l)" superClass="com.qnx.qcc.option.linker.libraries" valueType="libs">
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="Engine"/>
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="GLESRenderer"/>
+									<listOptionValue builtIn="false" value="Engine"/>
 									<listOptionValue builtIn="false" value="TestGame"/>
+									<listOptionValue builtIn="false" value="GLESRenderer"/>
+									<listOptionValue builtIn="false" value="EGL"/>
+									<listOptionValue builtIn="false" value="GLESv2"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="screen"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="bps"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="freetype"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="png16"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="OpenAL"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="z"/>
 								</option>
 								<inputType id="com.qnx.qcc.inputType.linker.1581454042" superClass="com.qnx.qcc.inputType.linker">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
@@ -404,18 +436,18 @@
 				</configuration>
 			</storageModule>
 			<storageModule moduleId="org.eclipse.cdt.core.externalSettings">
+				<externalSettings containerId="GLESRenderer;com.qnx.qcc.configuration.staticLib.coverage.576606472" factoryId="org.eclipse.cdt.core.cfg.export.settings.sipplier">
+					<externalSetting>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/GLESRenderer/public"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/GLESRenderer/Device-Coverage"/>
+						<entry flags="NONE" kind="libraryFile" name="GLESRenderer" srcPrefixMapping="" srcRootPath=""/>
+					</externalSetting>
+				</externalSettings>
 				<externalSettings containerId="TestGame;com.qnx.qcc.configuration.sharedLib.coverage.1323492395" factoryId="org.eclipse.cdt.core.cfg.export.settings.sipplier">
 					<externalSetting>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/TestGame/public"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/TestGame/Device-Coverage"/>
 						<entry flags="NONE" kind="libraryFile" name="TestGame" srcPrefixMapping="" srcRootPath=""/>
-					</externalSetting>
-				</externalSettings>
-				<externalSettings containerId="GLESRenderer;com.qnx.qcc.configuration.sharedLib.coverage.381935525" factoryId="org.eclipse.cdt.core.cfg.export.settings.sipplier">
-					<externalSetting>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/GLESRenderer/public"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/GLESRenderer/Device-Coverage"/>
-						<entry flags="NONE" kind="libraryFile" name="GLESRenderer" srcPrefixMapping="" srcRootPath=""/>
 					</externalSetting>
 				</externalSettings>
 				<externalSettings containerId="Engine;com.qnx.qcc.configuration.sharedLib.coverage.1215463039" factoryId="org.eclipse.cdt.core.cfg.export.settings.sipplier">
@@ -454,9 +486,9 @@
 								<option id="com.qnx.qcc.option.compiler.includePath.1029922557" name="Include Directories (-I)" superClass="com.qnx.qcc.option.compiler.includePath" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Engine/public}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Engine}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GLESRenderer/public}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/TestGame/public}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/TestGame}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GLESRenderer/public}&quot;"/>
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/usr/include/freetype2"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc}/../3rdparty/include_bb10&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc}/../3rdparty/include_all&quot;"/>
@@ -480,9 +512,9 @@
 								<option id="com.qnx.qcc.option.assembler.includePath.1533235202" name="Include Directories (-I)" superClass="com.qnx.qcc.option.assembler.includePath" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Engine/public}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Engine}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GLESRenderer/public}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/TestGame/public}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/TestGame}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GLESRenderer/public}&quot;"/>
 								</option>
 								<inputType id="com.qnx.qcc.inputType.assembler.323736240" superClass="com.qnx.qcc.inputType.assembler"/>
 							</tool>
@@ -492,21 +524,29 @@
 								<option id="com.qnx.qcc.option.linker.libraryPaths.1706503235" name="Library Paths (-L)" superClass="com.qnx.qcc.option.linker.libraryPaths" valueType="libPaths">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Engine/Simulator-Debug}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Engine}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GLESRenderer/Simulator-Debug}&quot;"/>
-									<listOptionValue builtIn="false" value="${workspace_loc:/TestGame}/Simulator-Debug"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/TestGame/Simulator-Debug}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/TestGame}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GLESRenderer/Simulator-Debug}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/3rdparty/lib/x86}&quot;"/>
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/../target-override/${CPUVARDIR}/lib"/>
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/../target-override/${CPUVARDIR}/usr/lib"/>
 								</option>
 								<option id="com.qnx.qcc.option.linker.security.1193829251" name="Enhanced Security (-Wl,-z,relro -Wl,-z,now)" superClass="com.qnx.qcc.option.linker.security" value="true" valueType="boolean"/>
 								<option id="com.qnx.qcc.option.linker.libraries.2086541846" name="Libraries (-l)" superClass="com.qnx.qcc.option.linker.libraries" valueType="libs">
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="Engine"/>
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="GLESRenderer"/>
+									<listOptionValue builtIn="false" value="Engine"/>
+									<listOptionValue builtIn="false" value="TestGame"/>
+									<listOptionValue builtIn="false" value="GLESRenderer"/>
 									<listOptionValue builtIn="false" value="vorbisfile"/>
 									<listOptionValue builtIn="false" value="vorbis"/>
 									<listOptionValue builtIn="false" value="ogg"/>
-									<listOptionValue builtIn="false" value="TestGame"/>
+									<listOptionValue builtIn="false" value="EGL"/>
+									<listOptionValue builtIn="false" value="GLESv2"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="screen"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="bps"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="freetype"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="png16"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="OpenAL"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="z"/>
 								</option>
 								<inputType id="com.qnx.qcc.inputType.linker.1091093552" superClass="com.qnx.qcc.inputType.linker">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
@@ -522,6 +562,13 @@
 				</configuration>
 			</storageModule>
 			<storageModule moduleId="org.eclipse.cdt.core.externalSettings">
+				<externalSettings containerId="GLESRenderer;com.qnx.qcc.configuration.staticLib.debug.619732558" factoryId="org.eclipse.cdt.core.cfg.export.settings.sipplier">
+					<externalSetting>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/GLESRenderer/public"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/GLESRenderer/Simulator-Debug"/>
+						<entry flags="NONE" kind="libraryFile" name="GLESRenderer" srcPrefixMapping="" srcRootPath=""/>
+					</externalSetting>
+				</externalSettings>
 				<externalSettings containerId="TestGame;com.qnx.qcc.configuration.sharedLib.debug.2065646447" factoryId="org.eclipse.cdt.core.cfg.export.settings.sipplier">
 					<externalSetting>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/TestGame/public"/>
@@ -530,13 +577,6 @@
 						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/TestGame"/>
 						<entry flags="NONE" kind="libraryFile" name="TestGame" srcPrefixMapping="" srcRootPath=""/>
 						<entry flags="RESOLVED" kind="libraryFile" name="TestGame" srcPrefixMapping="" srcRootPath=""/>
-					</externalSetting>
-				</externalSettings>
-				<externalSettings containerId="GLESRenderer;com.qnx.qcc.configuration.sharedLib.debug.1511200357" factoryId="org.eclipse.cdt.core.cfg.export.settings.sipplier">
-					<externalSetting>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/GLESRenderer/public"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/GLESRenderer/Simulator-Debug"/>
-						<entry flags="NONE" kind="libraryFile" name="GLESRenderer" srcPrefixMapping="" srcRootPath=""/>
 					</externalSetting>
 				</externalSettings>
 				<externalSettings containerId="Engine;com.qnx.qcc.configuration.sharedLib.debug.203398217" factoryId="org.eclipse.cdt.core.cfg.export.settings.sipplier">
@@ -574,8 +614,8 @@
 								<option id="com.qnx.qcc.option.compiler.includePath.338899861" name="Include Directories (-I)" superClass="com.qnx.qcc.option.compiler.includePath" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Engine/public}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Engine}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GLESRenderer/public}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/TestGame/public}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GLESRenderer/public}&quot;"/>
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/usr/include/freetype2"/>
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/../target-override/usr/include"/>
 								</option>
@@ -590,8 +630,8 @@
 								<option id="com.qnx.qcc.option.assembler.includePath.1050742234" name="Include Directories (-I)" superClass="com.qnx.qcc.option.assembler.includePath" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Engine/public}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Engine}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GLESRenderer/public}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/TestGame/public}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GLESRenderer/public}&quot;"/>
 								</option>
 								<inputType id="com.qnx.qcc.inputType.assembler.497796135" superClass="com.qnx.qcc.inputType.assembler"/>
 							</tool>
@@ -602,16 +642,24 @@
 								<option id="com.qnx.qcc.option.linker.libraryPaths.1934635610" name="Library Paths (-L)" superClass="com.qnx.qcc.option.linker.libraryPaths" valueType="libPaths">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Engine/Simulator-Profile}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Engine}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/TestGame/Simulator-Profile}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GLESRenderer/Simulator-Profile}&quot;"/>
-									<listOptionValue builtIn="false" value="${workspace_loc:/TestGame}/Simulator-Profile"/>
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/../target-override/${CPUVARDIR}/lib"/>
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/../target-override/${CPUVARDIR}/usr/lib"/>
 								</option>
 								<option id="com.qnx.qcc.option.linker.security.303062560" name="Enhanced Security (-Wl,-z,relro -Wl,-z,now)" superClass="com.qnx.qcc.option.linker.security" value="true" valueType="boolean"/>
 								<option id="com.qnx.qcc.option.linker.libraries.713980857" name="Libraries (-l)" superClass="com.qnx.qcc.option.linker.libraries" valueType="libs">
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="Engine"/>
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="GLESRenderer"/>
+									<listOptionValue builtIn="false" value="Engine"/>
 									<listOptionValue builtIn="false" value="TestGame"/>
+									<listOptionValue builtIn="false" value="GLESRenderer"/>
+									<listOptionValue builtIn="false" value="EGL"/>
+									<listOptionValue builtIn="false" value="GLESv2"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="screen"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="bps"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="freetype"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="png16"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="OpenAL"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="z"/>
 								</option>
 								<inputType id="com.qnx.qcc.inputType.linker.294824469" superClass="com.qnx.qcc.inputType.linker">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
@@ -627,18 +675,18 @@
 				</configuration>
 			</storageModule>
 			<storageModule moduleId="org.eclipse.cdt.core.externalSettings">
+				<externalSettings containerId="GLESRenderer;com.qnx.qcc.configuration.staticLib.profile.767268590" factoryId="org.eclipse.cdt.core.cfg.export.settings.sipplier">
+					<externalSetting>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/GLESRenderer/public"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/GLESRenderer/Simulator-Profile"/>
+						<entry flags="NONE" kind="libraryFile" name="GLESRenderer" srcPrefixMapping="" srcRootPath=""/>
+					</externalSetting>
+				</externalSettings>
 				<externalSettings containerId="TestGame;com.qnx.qcc.configuration.sharedLib.profile.1992027789" factoryId="org.eclipse.cdt.core.cfg.export.settings.sipplier">
 					<externalSetting>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/TestGame/public"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/TestGame/Simulator-Profile"/>
 						<entry flags="NONE" kind="libraryFile" name="TestGame" srcPrefixMapping="" srcRootPath=""/>
-					</externalSetting>
-				</externalSettings>
-				<externalSettings containerId="GLESRenderer;com.qnx.qcc.configuration.sharedLib.profile.180955239" factoryId="org.eclipse.cdt.core.cfg.export.settings.sipplier">
-					<externalSetting>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/GLESRenderer/public"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/GLESRenderer/Simulator-Profile"/>
-						<entry flags="NONE" kind="libraryFile" name="GLESRenderer" srcPrefixMapping="" srcRootPath=""/>
 					</externalSetting>
 				</externalSettings>
 				<externalSettings containerId="Engine;com.qnx.qcc.configuration.sharedLib.profile.831693224" factoryId="org.eclipse.cdt.core.cfg.export.settings.sipplier">
@@ -676,8 +724,8 @@
 								<option id="com.qnx.qcc.option.compiler.includePath.1721491082" name="Include Directories (-I)" superClass="com.qnx.qcc.option.compiler.includePath" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Engine/public}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Engine}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GLESRenderer/public}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/TestGame/public}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GLESRenderer/public}&quot;"/>
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/usr/include/freetype2"/>
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/../target-override/usr/include"/>
 								</option>
@@ -692,8 +740,8 @@
 								<option id="com.qnx.qcc.option.assembler.includePath.2018906423" name="Include Directories (-I)" superClass="com.qnx.qcc.option.assembler.includePath" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Engine/public}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Engine}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GLESRenderer/public}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/TestGame/public}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GLESRenderer/public}&quot;"/>
 								</option>
 								<inputType id="com.qnx.qcc.inputType.assembler.864918736" superClass="com.qnx.qcc.inputType.assembler"/>
 							</tool>
@@ -704,16 +752,24 @@
 								<option id="com.qnx.qcc.option.linker.libraryPaths.1696676045" name="Library Paths (-L)" superClass="com.qnx.qcc.option.linker.libraryPaths" valueType="libPaths">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Engine/Simulator-Coverage}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Engine}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/TestGame/Simulator-Coverage}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/GLESRenderer/Simulator-Coverage}&quot;"/>
-									<listOptionValue builtIn="false" value="${workspace_loc:/TestGame}/Simulator-Coverage"/>
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/../target-override/${CPUVARDIR}/lib"/>
 									<listOptionValue builtIn="false" value="${QNX_TARGET}/../target-override/${CPUVARDIR}/usr/lib"/>
 								</option>
 								<option id="com.qnx.qcc.option.linker.security.1110039664" name="Enhanced Security (-Wl,-z,relro -Wl,-z,now)" superClass="com.qnx.qcc.option.linker.security" value="true" valueType="boolean"/>
 								<option id="com.qnx.qcc.option.linker.libraries.460403444" name="Libraries (-l)" superClass="com.qnx.qcc.option.linker.libraries" valueType="libs">
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="Engine"/>
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="GLESRenderer"/>
+									<listOptionValue builtIn="false" value="Engine"/>
 									<listOptionValue builtIn="false" value="TestGame"/>
+									<listOptionValue builtIn="false" value="GLESRenderer"/>
+									<listOptionValue builtIn="false" value="EGL"/>
+									<listOptionValue builtIn="false" value="GLESv2"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="screen"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="bps"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="freetype"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="png16"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="OpenAL"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="z"/>
 								</option>
 								<inputType id="com.qnx.qcc.inputType.linker.1545100586" superClass="com.qnx.qcc.inputType.linker">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
@@ -729,18 +785,18 @@
 				</configuration>
 			</storageModule>
 			<storageModule moduleId="org.eclipse.cdt.core.externalSettings">
+				<externalSettings containerId="GLESRenderer;com.qnx.qcc.configuration.staticLib.coverage.1893319899" factoryId="org.eclipse.cdt.core.cfg.export.settings.sipplier">
+					<externalSetting>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/GLESRenderer/public"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/GLESRenderer/Simulator-Coverage"/>
+						<entry flags="NONE" kind="libraryFile" name="GLESRenderer" srcPrefixMapping="" srcRootPath=""/>
+					</externalSetting>
+				</externalSettings>
 				<externalSettings containerId="TestGame;com.qnx.qcc.configuration.sharedLib.coverage.1739048011" factoryId="org.eclipse.cdt.core.cfg.export.settings.sipplier">
 					<externalSetting>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/TestGame/public"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/TestGame/Simulator-Coverage"/>
 						<entry flags="NONE" kind="libraryFile" name="TestGame" srcPrefixMapping="" srcRootPath=""/>
-					</externalSetting>
-				</externalSettings>
-				<externalSettings containerId="GLESRenderer;com.qnx.qcc.configuration.sharedLib.coverage.833149119" factoryId="org.eclipse.cdt.core.cfg.export.settings.sipplier">
-					<externalSetting>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="includePath" name="/GLESRenderer/public"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="libraryPath" name="/GLESRenderer/Simulator-Coverage"/>
-						<entry flags="NONE" kind="libraryFile" name="GLESRenderer" srcPrefixMapping="" srcRootPath=""/>
 					</externalSetting>
 				</externalSettings>
 				<externalSettings containerId="Engine;com.qnx.qcc.configuration.sharedLib.coverage.646944410" factoryId="org.eclipse.cdt.core.cfg.export.settings.sipplier">

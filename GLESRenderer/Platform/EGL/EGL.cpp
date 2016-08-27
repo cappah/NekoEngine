@@ -42,8 +42,9 @@
 #include <EGL/eglext.h>
 #include <Platform/Platform.h>
 
+#include <string.h>
+
 #include "../../GLESRenderer.h"
-#include "glad.h"
 
 static EGLDisplay _display;
 static EGLContext _context, _loadContext;
@@ -127,8 +128,21 @@ bool GLESRenderer::Initialize(PlatformWindowType hWnd, unordered_map<string, str
 
     eglMakeCurrent(_display, _surface, _surface, _context);
 
-    if (!gladLoadGLES2Loader((GLADloadproc)eglGetProcAddress))
-        return false;
+    memset(&Funcs, 0x0, sizeof(GLFuncs));
+
+    if(HasExtension("GL_EXT_buffer_storage"))
+        Funcs.BufferStorage = (PFNGLBUFFERSTORAGEEXTPROC)eglGetProcAddress("glBufferStorageEXT");
+
+    if(HasExtension("GL_EXT_separate_shader_objects"))
+        Funcs.ProgramUniform1i = (PFNGLPROGRAMUNIFORM1IEXTPROC)eglGetProcAddress("glProgramUniform1i");
+
+    if(HasExtension("GL_OES_draw_elements_base_vertex"))
+        Funcs.DrawElementsBaseVertex = (PFNGLDRAWELEMENTSBASEVERTEXOESPROC)eglGetProcAddress("glDrawElementsBaseVertexOES");
+    else if(HasExtension("GL_EXT_draw_elements_base_vertex"))
+        Funcs.DrawElementsBaseVertex = (PFNGLDRAWELEMENTSBASEVERTEXOESPROC)eglGetProcAddress("glDrawElementsBaseVertexEXT");
+
+//    if (!gladLoadGLES2Loader((GLADloadproc)eglGetProcAddress))
+ //       return false;
 
     return true;
 }
@@ -152,7 +166,8 @@ void GLESRenderer::_DestroyContext()
 {
     eglMakeCurrent(_display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
     eglDestroySurface(_display, _surface);
-    eglDestroyContext(_display, _surface);
+    eglDestroyContext(_display, _context);
+    eglDestroyContext(_display, _loadContext);
     eglTerminate(_display);
 }
 

@@ -42,6 +42,11 @@
 			<locationURI>PARENT-2-PROJECT_LOC/GLESRenderer/GLESBuffer.h</locationURI>
 		</link>
 		<link>
+			<name>public/GLESFence.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/GLESRenderer/GLESFence.h</locationURI>
+		</link>
+		<link>
 			<name>public/GLESFramebuffer.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/GLESRenderer/GLESFramebuffer.h</locationURI>
@@ -77,11 +82,6 @@
 			<locationURI>PARENT-2-PROJECT_LOC/GLESRenderer/GLESFence.cpp</locationURI>
 		</link>
 		<link>
-			<name>src/GLESFence.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/GLESRenderer/GLESFence.h</locationURI>
-		</link>
-		<link>
 			<name>src/GLESFramebuffer.cpp</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/GLESRenderer/GLESFramebuffer.cpp</locationURI>
@@ -102,19 +102,14 @@
 			<locationURI>PARENT-2-PROJECT_LOC/GLESRenderer/GLESTexture.cpp</locationURI>
 		</link>
 		<link>
-			<name>src/Platform</name>
+			<name>src/Loaders</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
-			<name>src/glad.cpp</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/GLESRenderer/glad.cpp</locationURI>
-		</link>
-		<link>
-			<name>src/glad.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/GLESRenderer/glad.h</locationURI>
+			<name>src/Platform</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
 			<name>src/renderer.cpp</name>

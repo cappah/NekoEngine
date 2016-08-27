@@ -41,15 +41,15 @@
 #include "GLESTexture.h"
 #include "GLESRenderer.h"
 
-#ifdef __APPLE__
-#include <OpenGLES/ES3/glext.h>
-#else
-#include "glad.h"
-#endif
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#ifdef __APPLE__
+    #include <OpenGLES/ES3/glext.h>
+#else
+    #include <GLES3/gl3ext.h>
+#endif
 
 GLenum GL_ShaderType[6] =
 {
@@ -238,7 +238,7 @@ bool GLESShader::LoadFromSource(ShaderType type, int count, const char *source, 
 		src[i] = _ExtractUniforms(&source[i - 2]);
 
 	GL_CHECK(_shaders[(int)type] = glCreateShader(GL_ShaderType[(int)type]));
-	GL_CHECK(glShaderSource(_shaders[(int)type], srcCount, src, &length));
+	GL_CHECK(glShaderSource(_shaders[(int)type], srcCount, src, NULL));
 	GL_CHECK(glCompileShader(_shaders[(int)type]));
 	GL_CHECK(glGetShaderiv(_shaders[(int)type], GL_COMPILE_STATUS, &compiled));
 

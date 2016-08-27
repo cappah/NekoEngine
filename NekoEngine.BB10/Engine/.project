@@ -132,9 +132,19 @@
 			<locationURI>PARENT-2-PROJECT_LOC/Include/Engine/Bone.h</locationURI>
 		</link>
 		<link>
+			<name>public/Engine/Camera.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/Include/Engine/Camera.h</locationURI>
+		</link>
+		<link>
 			<name>public/Engine/CameraManager.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Include/Engine/CameraManager.h</locationURI>
+		</link>
+		<link>
+			<name>public/Engine/Console.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/Include/Engine/Console.h</locationURI>
 		</link>
 		<link>
 			<name>public/Engine/DeferredBuffer.h</name>
@@ -160,6 +170,11 @@
 			<name>public/Engine/GameModule.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Include/Engine/GameModule.h</locationURI>
+		</link>
+		<link>
+			<name>public/Engine/HBAO.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/Include/Engine/HBAO.h</locationURI>
 		</link>
 		<link>
 			<name>public/Engine/Input.h</name>
@@ -310,6 +325,11 @@
 			<name>public/Renderer/RBuffer.h</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/Include/Renderer/RBuffer.h</locationURI>
+		</link>
+		<link>
+			<name>public/Renderer/RFence.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/Include/Renderer/RFence.h</locationURI>
 		</link>
 		<link>
 			<name>public/Renderer/RFramebuffer.h</name>

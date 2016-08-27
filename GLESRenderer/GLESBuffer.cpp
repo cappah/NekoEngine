@@ -44,6 +44,12 @@
 
 #include <Platform/Platform.h>
 
+#ifdef __APPLE__
+    #include <OpenGLES/ES3/glext.h>
+#else
+    #include <GLES2/gl2ext.h>
+#endif
+
 GLenum GL_BufferTargets[3]
 {
     GL_ARRAY_BUFFER,

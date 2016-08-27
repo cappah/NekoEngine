@@ -32,14 +32,29 @@
 	</natures>
 	<linkedResources>
 		<link>
+			<name>public/DemoAnimatorComponent.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/TestGame/DemoAnimatorComponent.h</locationURI>
+		</link>
+		<link>
+			<name>public/GameController.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/TestGame/GameController.h</locationURI>
+		</link>
+		<link>
+			<name>public/MovingObject.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/TestGame/MovingObject.h</locationURI>
+		</link>
+		<link>
+			<name>public/TestGame.h</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/TestGame/TestGame.h</locationURI>
+		</link>
+		<link>
 			<name>src/DemoAnimatorComponent.cpp</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/TestGame/DemoAnimatorComponent.cpp</locationURI>
-		</link>
-		<link>
-			<name>src/DemoAnimatorComponent.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/TestGame/DemoAnimatorComponent.h</locationURI>
 		</link>
 		<link>
 			<name>src/GameController.cpp</name>
@@ -47,29 +62,14 @@
 			<locationURI>PARENT-2-PROJECT_LOC/TestGame/GameController.cpp</locationURI>
 		</link>
 		<link>
-			<name>src/GameController.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/TestGame/GameController.h</locationURI>
-		</link>
-		<link>
 			<name>src/MovingObject.cpp</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/TestGame/MovingObject.cpp</locationURI>
 		</link>
 		<link>
-			<name>src/MovingObject.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/TestGame/MovingObject.h</locationURI>
-		</link>
-		<link>
 			<name>src/TestGame.cpp</name>
 			<type>1</type>
 			<locationURI>PARENT-2-PROJECT_LOC/TestGame/TestGame.cpp</locationURI>
-		</link>
-		<link>
-			<name>src/TestGame.h</name>
-			<type>1</type>
-			<locationURI>PARENT-2-PROJECT_LOC/TestGame/TestGame.h</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>

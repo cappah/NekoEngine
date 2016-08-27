@@ -42,12 +42,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#ifdef __APPLE__
-	#include <OpenGLES/ES3/glext.h>
-#else
-	#include "glad.h"
-#endif
-
 #include "GLESRenderer.h"
 
 #ifdef NE_PLATFORM_IOS
@@ -81,7 +75,7 @@ GLenum GL_TexWrap[4] =
     GL_REPEAT,
     GL_MIRRORED_REPEAT,
     GL_CLAMP_TO_EDGE,
-    GL_CLAMP_TO_BORDER
+    0
 };
 
 GLenum GL_TexFormatSized[22] =

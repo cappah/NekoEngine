@@ -28,12 +28,13 @@
     <id>org.nalexandru.NekoEngine</id>
     <asset path="assets">assets</asset>
     <asset path="icon.png">icon.png</asset>
+    <asset path="E:/Projects/NekoEngine/Resources/Data/Shaders">assets/Data/Shaders</asset>
+    <asset path="E:/Projects/NekoEngine/Resources/Data/core.nar">assets/Data/core.nar</asset>
+    <asset path="E:/Projects/NekoEngine/Resources/Data/resources.db">assets/Data/resources.db</asset>
+    <asset path="E:/Projects/NekoEngine/Resources/Data/scenes.cfg">assets/Data/scenes.cfg</asset>
     <configuration name="Device-Debug">
        <platformArchitecture>armle-v7</platformArchitecture>
        <asset path="Device-Debug/NekoEngine" entry="true" type="Qnx/Elf">NekoEngine</asset>
-       <asset path="${workspace_loc:/Engine}/Device-Debug/libEngine.so" type="Qnx/Elf">lib/libEngine.so</asset>
-       <asset path="${workspace_loc:/GLESRenderer}/Device-Debug/libGLESRenderer.so" type="Qnx/Elf">lib/libGLESRenderer.so</asset>
-       <asset path="${workspace_loc:/TestGame}/Device-Debug/libTestGame.so" type="Qnx/Elf">lib/libTestGame.so</asset>
        <asset path="3rdparty/lib/armv7/libogg.so" type="Qnx/Elf">lib/libogg.so</asset>
        <asset path="3rdparty/lib/armv7/libsqlite3_neko.so" type="Qnx/Elf">lib/libsqlite3_neko.so</asset>
        <asset path="3rdparty/lib/armv7/libvorbis.so" type="Qnx/Elf">lib/libvorbis.so</asset>
@@ -41,44 +42,26 @@
     <configuration name="Device-Release">
        <platformArchitecture>armle-v7</platformArchitecture>
        <asset path="Device-Release/NekoEngine" entry="true" type="Qnx/Elf">NekoEngine</asset>
-       <asset path="${workspace_loc:/Engine}/Device-Release/libEngine.so" type="Qnx/Elf">lib/libEngine.so</asset>
-       <asset path="${workspace_loc:/GLESRenderer}/Device-Release/libGLESRenderer.so" type="Qnx/Elf">lib/libGLESRenderer.so</asset>
-       <asset path="${workspace_loc:/TestGame}/Device-Release/libTestGame.so" type="Qnx/Elf">lib/libTestGame.so</asset>
     </configuration>
     <configuration name="Device-Profile">
        <platformArchitecture>armle-v7</platformArchitecture>
        <asset path="Device-Profile/NekoEngine" entry="true" type="Qnx/Elf">NekoEngine</asset>
-       <asset path="${workspace_loc:/Engine}/Device-Profile/libEngine.so" type="Qnx/Elf">lib/libEngine.so</asset>
-       <asset path="${workspace_loc:/GLESRenderer}/Device-Profile/libGLESRenderer.so" type="Qnx/Elf">lib/libGLESRenderer.so</asset>
-       <asset path="${workspace_loc:/TestGame}/Device-Profile/libTestGame.so" type="Qnx/Elf">lib/libTestGame.so</asset>
     </configuration>
     <configuration name="Device-Coverage">
        <platformArchitecture>armle-v7</platformArchitecture>
        <asset path="Device-Coverage/NekoEngine" entry="true" type="Qnx/Elf">NekoEngine</asset>
-       <asset path="${workspace_loc:/Engine}/Device-Coverage/libEngine.so" type="Qnx/Elf">lib/libEngine.so</asset>
-       <asset path="${workspace_loc:/GLESRenderer}/Device-Coverage/libGLESRenderer.so" type="Qnx/Elf">lib/libGLESRenderer.so</asset>
-       <asset path="${workspace_loc:/TestGame}/Device-Coverage/libTestGame.so" type="Qnx/Elf">lib/libTestGame.so</asset>
     </configuration>
     <configuration name="Simulator-Debug">
        <platformArchitecture>x86</platformArchitecture>
-       <asset path="Simulator-Debug/NekoEngine" entry="true" type="Qnx/Elf">NekoEngine</asset>
-       <asset path="${workspace_loc:/Engine/Simulator-Debug/libEngine.so}" type="Qnx/Elf">lib/libEngine.so</asset>
-       <asset path="${workspace_loc:/GLESRenderer/Simulator-Debug/libGLESRenderer.so}" type="Qnx/Elf">lib/libGLESRenderer.so</asset>
-       <asset path="${workspace_loc:/TestGame/Simulator-Debug/libTestGame.so}" type="Qnx/Elf">lib/libTestGame.so</asset>
+       <asset path="Simulator-Debug/NekoEngine" entry="true" type="Qnx/Elf">lib/NekoEngine</asset>
     </configuration>
     <configuration name="Simulator-Profile">
        <platformArchitecture>x86</platformArchitecture>
        <asset path="Simulator-Profile/NekoEngine" entry="true" type="Qnx/Elf">NekoEngine</asset>
-       <asset path="${workspace_loc:/Engine}/Simulator-Profile/libEngine.so" type="Qnx/Elf">lib/libEngine.so</asset>
-       <asset path="${workspace_loc:/GLESRenderer}/Simulator-Profile/libGLESRenderer.so" type="Qnx/Elf">lib/libGLESRenderer.so</asset>
-       <asset path="${workspace_loc:/TestGame}/Simulator-Profile/libTestGame.so" type="Qnx/Elf">lib/libTestGame.so</asset>
     </configuration>
     <configuration name="Simulator-Coverage">
        <platformArchitecture>x86</platformArchitecture>
        <asset path="Simulator-Coverage/NekoEngine" entry="true" type="Qnx/Elf">NekoEngine</asset>
-       <asset path="${workspace_loc:/Engine}/Simulator-Coverage/libEngine.so" type="Qnx/Elf">lib/libEngine.so</asset>
-       <asset path="${workspace_loc:/GLESRenderer}/Simulator-Coverage/libGLESRenderer.so" type="Qnx/Elf">lib/libGLESRenderer.so</asset>
-       <asset path="${workspace_loc:/TestGame}/Simulator-Coverage/libTestGame.so" type="Qnx/Elf">lib/libTestGame.so</asset>
     </configuration>
 
     <!-- The name that is displayed in the BlackBerry application installer.
@@ -96,9 +79,9 @@
 
     <!-- Description, displayed in the BlackBerry application installer.
          May have multiple values for each language. See samples or xsd schema file. Optional. -->
-    <description>The NekoEngine application</description>
 
     <!--  Name of author which is used for signing. Must match the developer name of your developer certificate. -->
+    <description>Cross-platform 3D game engine</description>
     <author>Alexandru Naiman</author>
 
     <!--  Unique author ID assigned by signing authority. Required if using debug tokens. -->

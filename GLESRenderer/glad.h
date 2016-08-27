@@ -276,6 +276,8 @@
 #include <windows.h>
 #endif
 
+#include <Platform/PlatformDetect.h>
+
 #ifndef APIENTRY
 #define APIENTRY
 #endif
@@ -1625,7 +1627,9 @@ GLAPI PFNGLGETSHADERSOURCEPROC glad_glGetShaderSource;
 #define glGetShaderSource glad_glGetShaderSource
 typedef const GLubyte* (APIENTRYP PFNGLGETSTRINGPROC)(GLenum name);
 GLAPI PFNGLGETSTRINGPROC glad_glGetString;
+#ifndef NE_PLATFORM_BB10
 #define glGetString glad_glGetString
+#endif
 typedef void (APIENTRYP PFNGLGETTEXPARAMETERFVPROC)(GLenum target, GLenum pname, GLfloat* params);
 GLAPI PFNGLGETTEXPARAMETERFVPROC glad_glGetTexParameterfv;
 #define glGetTexParameterfv glad_glGetTexParameterfv
