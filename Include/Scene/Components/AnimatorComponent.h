@@ -49,7 +49,7 @@ class AnimatorComponent : public ObjectComponent
 public:
 	ENGINE_API AnimatorComponent(ComponentInitializer *initializer);
 	
-	ENGINE_API void BindSkeleton(RShader *shader) noexcept { _skeleton->Bind(shader); }
+	ENGINE_API void BindSkeleton(RShader *shader) noexcept { _skeleton->UpdateBuffers(); _skeleton->Bind(shader); }
 
 	ENGINE_API virtual int Load() override;
 	

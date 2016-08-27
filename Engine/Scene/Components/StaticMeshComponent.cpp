@@ -212,8 +212,6 @@ void StaticMeshComponent::Draw(RShader *shader, Camera *camera) noexcept
 void StaticMeshComponent::Update(double deltaTime) noexcept
 {
 	ObjectComponent::Update(deltaTime);
-	/*if (!_loaded)
-		return;*/
 }
 
 bool StaticMeshComponent::Unload()

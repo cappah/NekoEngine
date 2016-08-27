@@ -526,6 +526,9 @@
     <None Include="..\Resources\Data\Shaders\shadow.vert">
       <Filter>Resources\Data\Shaders</Filter>
     </None>
+    <None Include="..\Resources\Data\Scenes\shadow.nscene">
+      <Filter>Resources\Data\Scenes</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Engine.rc">

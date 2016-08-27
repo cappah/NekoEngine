@@ -109,4 +109,13 @@ void Camera::UpdateView() noexcept
 
 	_view = lookAt(_position, _position + _front, _up);
 	_skyboxView = mat4(mat3(_view));
+
+	mat4 rotXMatrix = rotate(mat4(), DEG2RAD(_rotation.x), vec3(1.f, 0.f, 0.f));
+	mat4 rotYMatrix = rotate(mat4(), DEG2RAD(_rotation.y), vec3(0.f, 1.f, 0.f));
+	mat4 rotZMatrix = rotate(mat4(), DEG2RAD(_rotation.z), vec3(0.f, 0.f, 1.f));
+
+	mat4 rotationMatrix = rotZMatrix * rotXMatrix * rotYMatrix;
+	mat4 translationMatrix = translate(mat4(), _position);
+
+	_model = (translationMatrix * rotationMatrix);
 }

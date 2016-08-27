@@ -85,7 +85,11 @@ void ShadowMap::Render(Light *l)
 
 	if (l->GetType() == LightType::Directional || l->GetType() == LightType::Spot)
 	{
-		_lightCamera->LookAt(l->GetDirection(), vec3(0.f), vec3(0.f, 1.f, 0.f));
+		_lightCamera->SetPosition(vec3(0.0, 0.0, -165.0));
+		_lightCamera->UpdateView();
+		//position = -20.0, -25.0, -165.0
+		//_lightCamera->LookAt(vec3(0.0, 0.0, -165.0), vec3(0.0, 0.0, -145.0), vec3(0.f, 1.f, 0.f));
+		//_lightCamera->LookAt(l->GetDirection(), vec3(0.f), vec3(0.f, 1.f, 0.f));
 		SceneManager::DrawScene(DeferredBuffer::GetGeometryShader(), _lightCamera);
 	}
 	else if (l->GetType() == LightType::Point)

@@ -358,10 +358,9 @@ void DeferredBuffer::RenderLighting() noexcept
 	if (_shadow)
 		lightShader->SetTexture(U_TEXTURE6, _shadow->GetTexture());
 
-	mat4 cameraWorld = inverse(cam->GetView());
+	lightShader->SetTexture(U_TEXTURE7, _gbTextures[GB_TEX_DEPTH_STENCIL]);
 
 	_sceneLightUbo->UpdateData(0, sizeof(float) * 3, &cam->GetPosition().x);
-	_sceneLightUbo->UpdateData(sizeof(LightSceneData) - sizeof(mat4), sizeof(mat4), value_ptr(cameraWorld));
 	_lightMatrixUbo->UpdateData(0, sizeof(mat4), (void *)value_ptr(mat4()));
 
 	for (size_t i = 0; i < s->GetNumLights(); i++)
@@ -381,15 +380,14 @@ void DeferredBuffer::RenderLighting() noexcept
 			lightShader->BindUniformBuffers();
 			BindLighting();
 
-			data.LightWorld = inverse(_shadow->GetView());
-			data.LightProjection = _shadow->GetProjection();
 			data.LightDirectionAndShadow = vec4(l->GetDirection(), 1.f);
+			data.CameraToLight = ((_shadow->GetProjection() * _shadow->GetView()) * _shadow->GetModel()) * inverse((cam->GetProjectionMatrix() * cam->GetView()) * cam->GetModel());
 			_lightUbo->UpdateData(0, sizeof(LightData), &data);
 		}
 		else
 		{
 			data.LightDirectionAndShadow = vec4(l->GetDirection(), 0.f);
-			_lightUbo->UpdateData(0, sizeof(LightData) - sizeof(mat4) * 2, &data);
+			_lightUbo->UpdateData(0, sizeof(LightData) - sizeof(mat4), &data);
 		}
 		
 		uint32_t subroutine = (uint32_t)l->GetType();
@@ -446,7 +444,7 @@ void DeferredBuffer::RenderLighting() noexcept
 	lightShader->SetSubroutines(ShaderType::Fragment, 1, &subroutine);
 
 	int v = LT_AMBIENTAL;
-	_lightUbo->UpdateData(sizeof(LightData) - sizeof(mat4) * 2 - sizeof(int), sizeof(int), &v);
+	_lightUbo->UpdateData(sizeof(LightData) - sizeof(mat4) - sizeof(int), sizeof(int), &v);
 
 	Engine::BindQuadVAO();
 	_lightMatrixUbo->UpdateData(0, sizeof(mat4), (void *)value_ptr(mat4()));

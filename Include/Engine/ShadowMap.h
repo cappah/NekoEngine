@@ -53,6 +53,7 @@ public:
 
 	RTexture *GetTexture() { return _texture; }
 	glm::mat4 &GetView() { return _lightCamera->GetView(); }
+	glm::mat4 &GetModel() { return _lightCamera->GetModel(); }
 	glm::mat4 &GetProjection() { return _lightCamera->GetProjectionMatrix(); }
 
 	void Render(class Light *l);

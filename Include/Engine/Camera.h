@@ -63,6 +63,7 @@ public:
 	glm::vec3 &GetRotation() noexcept { return _rotation; }
 	glm::mat4 &GetView() noexcept { return _drawSkybox ? _skyboxView : _view; }
 	glm::mat4 &GetProjectionMatrix() noexcept { return _drawSkybox ? _skyboxProjectionMatrix : _projectionMatrix; }
+	glm::mat4 &GetModel() noexcept { return _model; }
 	float GetNear() noexcept { return _near; }
 	float GetFar() noexcept { return _far; }
 	float GetFOV() noexcept { return _fov; }
@@ -116,7 +117,7 @@ protected:
 
 	ProjectionType _projection;
 
-	glm::mat4 _view, _skyboxView;
+	glm::mat4 _view, _skyboxView, _model;
 	glm::mat4 _projectionMatrix, _skyboxProjectionMatrix;
 
 	bool _noRegister, _drawSkybox;

@@ -41,9 +41,9 @@
 
 #define GB_TEX_POSITION					0
 #define GB_TEX_NORMAL					1
-#define GB_TEX_COLOR_SPECULAR				2
-#define GB_TEX_MATERIAL_INFO				3
-#define GB_TEX_DEPTH_STENCIL				4
+#define GB_TEX_COLOR_SPECULAR			2
+#define GB_TEX_MATERIAL_INFO			3
+#define GB_TEX_DEPTH_STENCIL			4
 #define GB_TEX_LIGHT					5
 #define GB_TEX_BRIGHT					6
 #define GB_TEX_LIGHT_ACCUM				7
@@ -67,7 +67,6 @@ typedef struct LIGHT_SCENE_DATA
 	glm::vec4 AmbientColorAndRClear;
 	glm::vec4 FogColorAndRFog;
 	glm::vec4 FrameSizeAndSSAO;
-	glm::mat4 CameraWorld;
 } LightSceneData;
 
 typedef struct LIGHT_DATA
@@ -78,8 +77,7 @@ typedef struct LIGHT_DATA
 	float padding1;
 	glm::vec4 LightDirectionAndShadow;
 	glm::vec4 LightAttenuationAndData;
-	glm::mat4 LightWorld;
-	glm::mat4 LightProjection;
+	glm::mat4 CameraToLight;
 } LightData;
 
 class DeferredBuffer

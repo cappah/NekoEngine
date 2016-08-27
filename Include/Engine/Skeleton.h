@@ -72,6 +72,7 @@ public:
 	
 	ENGINE_API int Load();
 	ENGINE_API void Update(float deltaTime);
+	ENGINE_API void UpdateBuffers();
 
 	ENGINE_API void TransformBones(double time);
 

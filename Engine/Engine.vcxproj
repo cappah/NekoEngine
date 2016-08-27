@@ -232,6 +232,7 @@
     <None Include="..\Resources\Data\scenes.cfg" />
     <None Include="..\Resources\Data\Scenes\main.nscene" />
     <None Include="..\Resources\Data\Scenes\scene.nscene" />
+    <None Include="..\Resources\Data\Scenes\shadow.nscene" />
     <None Include="..\Resources\Data\Shaders\depthmap.frag" />
     <None Include="..\Resources\Data\Shaders\depthmap.vert" />
     <None Include="..\Resources\Data\Shaders\font.frag" />

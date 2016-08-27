@@ -140,12 +140,15 @@ void Skeleton::TransformBones(double time)
 	double animTime = mod(timeInTicks, _animationClip->GetDuration());
 
 	_TransformHierarchy(animTime, _rootNode, ident);
+}
+
+void Skeleton::UpdateBuffers()
+{
+	_buffer->NextBuffer();
 
 	_buffer->BeginUpdate();
 	_buffer->UpdateData(0, sizeof(_transforms), _transforms);
 	_buffer->EndUpdate();
-
-	_buffer->NextBuffer();
 }
 
 void Skeleton::_CalculatePosition(dvec3 &out, double time, const AnimationNode *node)
