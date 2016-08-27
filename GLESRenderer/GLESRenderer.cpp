@@ -150,7 +150,10 @@ static int _verMajor = -1, _verMinor = -1;
 RFramebuffer* GLESRenderer::_boundFramebuffer = nullptr;
 std::vector<ShaderDefine> GLESRenderer::_shaderDefines;
 GLESShader* GLESRenderer::_activeShader;
-GLFuncs GLESRenderer::Funcs;
+
+#ifndef NE_PLATFORM_IOS
+	GLFuncs GLESRenderer::Funcs;
+#endif
 
 GLESRenderer::GLESRenderer()
 {
@@ -488,7 +491,11 @@ bool GLESRenderer::HasCapability(RendererCapability cap)
         case RendererCapability::PerSampleShading:
 			return true;
 		case RendererCapability::DrawBaseVertex:
+#ifndef NE_PLATFORM_IOS
 			return Funcs.DrawElementsBaseVertex != nullptr;
+#else
+			return false;
+#endif
         case RendererCapability::MemoryInformation:
             return false;
         default:

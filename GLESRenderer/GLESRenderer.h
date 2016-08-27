@@ -124,12 +124,14 @@ typedef struct RENDERER_STATE
 
 } RendererState;
 
+#ifndef NE_PLATFORM_IOS
 typedef struct GL_FUNCS
 {
     PFNGLBUFFERSTORAGEEXTPROC BufferStorage;
     PFNGLPROGRAMUNIFORM1IEXTPROC ProgramUniform1i;
     PFNGLDRAWELEMENTSBASEVERTEXOESPROC DrawElementsBaseVertex;
 } GLFuncs;
+#endif
 
 class GLESRenderer : public Renderer
 {
@@ -226,8 +228,11 @@ public:
 	static void SetActiveShader(class GLESShader *shader) { _activeShader = shader; }
 	static void MakeCurrent();
 	static bool HasExtension(const char* extension);
+	
+#ifndef NE_PLATFORM_IOS
 	static GLFuncs Funcs;
-
+#endif
+	
 private:
     PlatformWindowType _window;
 	static class GLESShader* _activeShader;

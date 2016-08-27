@@ -78,7 +78,6 @@ ShadowMap::ShadowMap(int size) :
 
 void ShadowMap::Render(Light *l)
 {
-	Scene *s = SceneManager::GetActiveScene();
 	Engine::GetRenderer()->SetDepthMask(true);
 
 	_fbo->Bind(FB_DRAW);
