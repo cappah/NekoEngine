@@ -358,8 +358,6 @@ void DeferredBuffer::RenderLighting() noexcept
 	if (_shadow)
 		lightShader->SetTexture(U_TEXTURE6, _shadow->GetTexture());
 
-	lightShader->SetTexture(U_TEXTURE7, _gbTextures[GB_TEX_DEPTH_STENCIL]);
-
 	_sceneLightUbo->UpdateData(0, sizeof(float) * 3, &cam->GetPosition().x);
 	_lightMatrixUbo->UpdateData(0, sizeof(mat4), (void *)value_ptr(mat4()));
 
@@ -368,7 +366,14 @@ void DeferredBuffer::RenderLighting() noexcept
 		Light *l = s->GetLight(i);
 		LightData data;
 
-		data.LightPosition = l->GetPosition();
+		if (l->GetType() == LightType::Directional)
+		{
+			mat4 invWorld = inverse(l->GetModelMatrix());
+			data.LightPositionAndShadow = vec4(invWorld[3].x, invWorld[3].y, invWorld[3].z, 0.f);
+		}
+		else
+			data.LightPositionAndShadow = vec4(l->GetPosition(), 0.f);
+
 		data.LightColor = l->GetColor();
 		data.LightAttenuationAndData = vec4(l->GetAttenuation(), l->GetIntensity(), (float)l->GetType());
 
@@ -380,13 +385,14 @@ void DeferredBuffer::RenderLighting() noexcept
 			lightShader->BindUniformBuffers();
 			BindLighting();
 
-			data.LightDirectionAndShadow = vec4(l->GetDirection(), 1.f);
-			data.CameraToLight = ((_shadow->GetProjection() * _shadow->GetView()) * _shadow->GetModel()) * inverse((cam->GetProjectionMatrix() * cam->GetView()) * cam->GetModel());
+			data.LightPositionAndShadow.w = 1.f;
+			data.CameraToLight = _shadow->GetProjection() * _shadow->GetView() * _shadow->GetModel() * inverse(cam->GetView() * cam->GetModel());
+		//	data.CameraToLight = ((_shadow->GetProjection() * _shadow->GetView()) * _shadow->GetModel()) * inverse((cam->GetProjectionMatrix() * cam->GetView()) * cam->GetModel());
 			_lightUbo->UpdateData(0, sizeof(LightData), &data);
 		}
 		else
 		{
-			data.LightDirectionAndShadow = vec4(l->GetDirection(), 0.f);
+			data.LightPositionAndShadow.w = 0.f;
 			_lightUbo->UpdateData(0, sizeof(LightData) - sizeof(mat4), &data);
 		}
 		

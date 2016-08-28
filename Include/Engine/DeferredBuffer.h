@@ -71,11 +71,9 @@ typedef struct LIGHT_SCENE_DATA
 
 typedef struct LIGHT_DATA
 {
-	glm::vec3 LightPosition;
-	float padding0;
+	glm::vec4 LightPositionAndShadow;
 	glm::vec3 LightColor;
 	float padding1;
-	glm::vec4 LightDirectionAndShadow;
 	glm::vec4 LightAttenuationAndData;
 	glm::mat4 CameraToLight;
 } LightData;

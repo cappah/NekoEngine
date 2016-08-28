@@ -109,8 +109,8 @@ EndObject
 Object=Light
 id=102
 scale=1.0, 1.0, 1.0
-position=-20.0, -25.0, -165.0
-rotation=0.0, 0.0, 0.0
+position=0.0, 0.0, -165.0
+rotation=20.0, 0.0, 0.0
 color=1.0, 0.0, 0.0
 type=directional
 direction=-1.0, 1.0, 0.0

@@ -16,9 +16,8 @@ layout(std140) uniform SceneLightData
 
 layout(std140) uniform LightData
 {
-	vec4 LightPosition;
+	vec4 LightPositionAndShadow;
 	vec4 LightColor;
-	vec4 LightDirectionAndShadow;
 	vec4 LightAttenuationAndData;
 	mat4 CameraToLight;
 };
@@ -32,7 +31,6 @@ layout(location=U_TEXTURE3) uniform TEXTURE_2DMS MaterialTexture;
 layout(location=U_TEXTURE4) uniform TEXTURE_2D SSAOTexture;
 layout(location=U_TEXTURE5) uniform TEXTURE_2DMS LightAccumulationTexture;
 layout(location=U_TEXTURE6) uniform TEXTURE_2D ShadowTexture;
-layout(location=U_TEXTURE7) uniform TEXTURE_2DMS DepthTexture;
 
 vec4 color; // rgb - color, a - specular
 vec4 fragmentPosition;	// xyz - fragment position, w - shader type
@@ -47,27 +45,18 @@ float getShadow(vec3 eyeDir)
 {
 	//return 1.0;
 
-	if(LightDirectionAndShadow.w < 0.1)
+	if(LightPositionAndShadow.w < 0.1)
 		return 1.0;
 
-	float z = texelFetch(GET_TEX_2DMS(DepthTexture), iuv, gl_SampleID).r;
-	vec3 ndcCamera = 2 * vec3(uv, z) - 1;
-	vec4 clipCamera = vec4(ndcCamera, 1);
-	vec4 clipLight = CameraToLight * clipCamera;
-	vec3 ndcLight = clipLight.xyz / clipLight.w;
-	vec3 texCoords = (ndcLight + 1) / 2;
-
-	//mat4 cameraView = inverse(CameraWorld);
-	/*mat4 cameraToLS = LightProjection * LightWorld * CameraWorld;
-	vec4 projEyeDir = cameraToLS * vec4(eyeDir, 1.0);
+	vec4 projEyeDir = CameraToLight * vec4(eyeDir, 1.0);
 	projEyeDir = projEyeDir / projEyeDir.w;
 
 	vec2 texCoords = projEyeDir.xy * vec2(0.5, 0.5) + vec2(0.5, 0.5);
 
 	const float bias = 0.0001;
-	float depthValue = texture(GET_TEX_2D(ShadowTexture), texCoords).z - bias;*/
+	float depthValue = texture(GET_TEX_2D(ShadowTexture), texCoords).z - bias;
 
-	return texture(GET_TEX_2D(ShadowTexture), texCoords.xy).r < texCoords.z ? 1.0 : 0.2;
+	return projEyeDir.z * 0.5 + 0.5 < depthValue ? 1.0 : 0.2;
 }
 
 void blinnPhong()
@@ -95,7 +84,7 @@ SUBROUTINE_FUNC(LT_POINT, calculateLightingSub)
 void calculatePointLight()
 {
 	normal = texelFetch(GET_TEX_2DMS(NormalTexture), iuv, gl_SampleID).xyz;
-	lightDirection = LightPosition.xyz - fragmentPosition.xyz;
+	lightDirection = LightPositionAndShadow.xyz - fragmentPosition.xyz;
 	
 	float light_distance = length(lightDirection);
 	attenuation = (smoothstep(LightAttenuationAndData.y, LightAttenuationAndData.x, light_distance));
@@ -108,7 +97,7 @@ SUBROUTINE_FUNC(LT_DIRECTIONAL, calculateLightingSub)
 void calculateDirectionalLight()
 {
 	normal = texelFetch(GET_TEX_2DMS(NormalTexture), iuv, gl_SampleID).xyz;
-	lightDirection = normalize(LightDirectionAndShadow.xyz);
+	lightDirection = normalize(LightPositionAndShadow.xyz - fragmentPosition.xyz);
 
 	blinnPhong();
 }
