@@ -52,7 +52,7 @@ public:
 	ShadowMap(int size);
 
 	RTexture *GetTexture() { return _texture; }
-	glm::mat4 &GetViewProjection() { return _lightCamera->GetProjectionMatrix() * _lightCamera->GetView(); }
+	glm::mat4 GetViewProjection() { return _lightCamera->GetProjectionMatrix() * _lightCamera->GetView(); }
 
 	void Render(class Light *l);
 
