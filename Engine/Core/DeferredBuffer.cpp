@@ -67,6 +67,7 @@ ShadowMap* DeferredBuffer::_shadow = nullptr;
 RBuffer* DeferredBuffer::_sceneLightUbo = nullptr;
 RBuffer* DeferredBuffer::_lightUbo = nullptr;
 RBuffer* DeferredBuffer::_lightMatrixUbo = nullptr;
+LightSceneData DeferredBuffer::_sceneData;
 
 static bool _enableHBAO = false, _enableSSAO = false;
 NString _drCVar_GetHBAO() { return _enableHBAO ? "true" : "false"; }
@@ -226,11 +227,12 @@ int DeferredBuffer::Initialize() noexcept
 		return ENGINE_FAIL;
 	}
 
-	if((_sceneLightUbo = Engine::GetRenderer()->CreateBuffer(BufferType::Uniform, true, false)) == nullptr)
+	if((_sceneLightUbo = Engine::GetRenderer()->CreateBuffer(BufferType::Uniform, true, true)) == nullptr)
 	{
 		Release();
 		return ENGINE_OUT_OF_RESOURCES;
 	}
+	_sceneLightUbo->SetNumBuffers(3);
 	_sceneLightUbo->SetStorage(sizeof(LightSceneData), nullptr);
 
 	if((_lightUbo = Engine::GetRenderer()->CreateBuffer(BufferType::Uniform, true, false)) == nullptr)
@@ -258,12 +260,8 @@ int DeferredBuffer::Initialize() noexcept
 	lightShader->FSUniformBlockBinding(1, "LightData");
 	lightShader->FSSetUniformBuffer(1, 0, sizeof(LightData), _lightUbo);
 
-	vec3 data;
-	data.x = (float)_fboWidth;
-	data.y = (float)_fboHeight;
-	data.z = _ssao || _hbao ? 1.f : 0.f;
-
-	_sceneLightUbo->UpdateData(sizeof(vec4) * 3, sizeof(vec3), &data.x);
+	memset(&_sceneData, 0x0, sizeof(LightSceneData));
+	_sceneData.FrameSizeAndSSAO = vec4(_fboWidth, _fboHeight, _ssao || _hbao ? 1.f : 0.f, _sceneData.FrameSizeAndSSAO.w);
 
 	RShader *geomShader = _geometryShader->GetRShader();
 	
@@ -281,19 +279,19 @@ int DeferredBuffer::Initialize() noexcept
 
 void DeferredBuffer::SetAmbientColor(vec3 &color, float intensity) noexcept
 {
-	_sceneLightUbo->UpdateData(sizeof(vec3), sizeof(float), &intensity);
-	_sceneLightUbo->UpdateData(sizeof(vec4), sizeof(vec3), &color.x);
+	_sceneData.CameraPositionAndAmbient.w = intensity;
+	_sceneData.AmbientColorAndRClear = vec4(color, _sceneData.AmbientColorAndRClear.w);
 }
 
 void DeferredBuffer::SetFogColor(vec3 &color) noexcept
 {
-	_sceneLightUbo->UpdateData(sizeof(vec4) * 2, sizeof(vec3), &color.x);
+	_sceneData.FogColorAndRFog = vec4(color, _sceneData.FogColorAndRFog.w);
 }
 
 void DeferredBuffer::SetFogProperties(float clear, float start) noexcept
 {
-	_sceneLightUbo->UpdateData(sizeof(vec4) + sizeof(vec3), sizeof(float), &clear);
-	_sceneLightUbo->UpdateData(sizeof(vec4) * 2 + sizeof(vec3), sizeof(float), &start);
+	_sceneData.AmbientColorAndRClear.w = clear;
+	_sceneData.FogColorAndRFog.w = start;
 }
 
 void DeferredBuffer::BindGeometry() noexcept
@@ -341,25 +339,12 @@ void DeferredBuffer::RenderLighting() noexcept
 
 	r->Clear(R_CLEAR_COLOR);
 
-	lightShader->Enable();
-	lightShader->BindUniformBuffers();
-
-	lightShader->SetTexture(U_TEXTURE0, _gbTextures[GB_TEX_POSITION]);
-	lightShader->SetTexture(U_TEXTURE1, _gbTextures[GB_TEX_NORMAL]);
-	lightShader->SetTexture(U_TEXTURE2, _gbTextures[GB_TEX_COLOR_SPECULAR]);
-	lightShader->SetTexture(U_TEXTURE3, _gbTextures[GB_TEX_MATERIAL_INFO]);	
-	lightShader->SetTexture(U_TEXTURE5, _gbTextures[GB_TEX_LIGHT_ACCUM]);
-
-	if (_enableHBAO && _hbao)
-		lightShader->SetTexture(U_TEXTURE4, _hbao->GetTexture());
-	else if (_enableSSAO && _ssao)
-		lightShader->SetTexture(U_TEXTURE4, _ssao->GetTexture());
-
-	if (_shadow)
-		lightShader->SetTexture(U_TEXTURE6, _shadow->GetTexture());
-
-	_sceneLightUbo->UpdateData(0, sizeof(float) * 3, &cam->GetPosition().x);
-	_lightMatrixUbo->UpdateData(0, sizeof(mat4), (void *)value_ptr(mat4()));
+	_sceneLightUbo->BeginUpdate();
+	{
+		_sceneData.CameraPositionAndAmbient = vec4(cam->GetPosition(), _sceneData.CameraPositionAndAmbient.w);
+		_sceneLightUbo->UpdateData(0, sizeof(LightSceneData), &_sceneData);
+	}
+	_sceneLightUbo->EndUpdate();
 
 	for (size_t i = 0; i < s->GetNumLights(); i++)
 	{
@@ -368,8 +353,8 @@ void DeferredBuffer::RenderLighting() noexcept
 
 		if (l->GetType() == LightType::Directional)
 		{
-			mat4 invWorld = inverse(l->GetModelMatrix());
-			data.LightPositionAndShadow = vec4(invWorld[3].x, invWorld[3].y, invWorld[3].z, 0.f);
+			vec3 pos = l->GetPosition() * vec3(-1.f);
+			data.LightPositionAndShadow = vec4(pos, 0.f);
 		}
 		else
 			data.LightPositionAndShadow = vec4(l->GetPosition(), 0.f);
@@ -381,21 +366,38 @@ void DeferredBuffer::RenderLighting() noexcept
 		{
 			_shadow->Render(l);
 			
-			lightShader->Enable();
-			lightShader->BindUniformBuffers();
-			BindLighting();
-
 			data.LightPositionAndShadow.w = 1.f;
-			data.CameraToLight = _shadow->GetProjection() * _shadow->GetView() * _shadow->GetModel() * inverse(cam->GetView() * cam->GetModel());
-		//	data.CameraToLight = ((_shadow->GetProjection() * _shadow->GetView()) * _shadow->GetModel()) * inverse((cam->GetProjectionMatrix() * cam->GetView()) * cam->GetModel());
-			_lightUbo->UpdateData(0, sizeof(LightData), &data);
+			data.LightVP = _shadow->GetViewProjection();
+			
+			BindLighting();
 		}
 		else
-		{
 			data.LightPositionAndShadow.w = 0.f;
-			_lightUbo->UpdateData(0, sizeof(LightData) - sizeof(mat4), &data);
-		}
+
+		_lightUbo->BeginUpdate();
+		_lightUbo->UpdateData(0, sizeof(LightData), &data);
+		_lightUbo->EndUpdate();
+
+		lightShader->Enable();
+		lightShader->BindUniformBuffers();
 		
+		lightShader->SetTexture(U_TEXTURE0, _gbTextures[GB_TEX_POSITION]);
+		lightShader->SetTexture(U_TEXTURE1, _gbTextures[GB_TEX_NORMAL]);
+		lightShader->SetTexture(U_TEXTURE2, _gbTextures[GB_TEX_COLOR_SPECULAR]);
+		lightShader->SetTexture(U_TEXTURE3, _gbTextures[GB_TEX_MATERIAL_INFO]);
+		lightShader->SetTexture(U_TEXTURE5, _gbTextures[GB_TEX_LIGHT_ACCUM]);
+		lightShader->SetTexture(U_TEXTURE7, _gbTextures[GB_TEX_DEPTH_STENCIL]);
+
+		if (_enableHBAO && _hbao)
+			lightShader->SetTexture(U_TEXTURE4, _hbao->GetTexture());
+		else if (_enableSSAO && _ssao)
+			lightShader->SetTexture(U_TEXTURE4, _ssao->GetTexture());
+
+		if (_shadow)
+			lightShader->SetTexture(U_TEXTURE6, _shadow->GetTexture());
+
+		_lightMatrixUbo->UpdateData(0, sizeof(mat4), (void *)value_ptr(mat4()));
+
 		uint32_t subroutine = (uint32_t)l->GetType();
 		lightShader->SetSubroutines(ShaderType::Fragment, 1, &subroutine);
 
@@ -440,6 +442,8 @@ void DeferredBuffer::RenderLighting() noexcept
 		r->EnableBlend(false);
 		r->EnableStencilTest(false);
 		r->EnableDepthTest(true);
+
+		_lightUbo->NextBuffer();
 	}
 
 	_fbos[GB_FBO_LIGHT]->Bind(FB_DRAW);
@@ -449,8 +453,13 @@ void DeferredBuffer::RenderLighting() noexcept
 	uint32_t subroutine = LT_AMBIENTAL;
 	lightShader->SetSubroutines(ShaderType::Fragment, 1, &subroutine);
 
-	int v = LT_AMBIENTAL;
-	_lightUbo->UpdateData(sizeof(LightData) - sizeof(mat4) - sizeof(int), sizeof(int), &v);
+	_lightUbo->BeginUpdate();
+	{
+		LightData data;
+		data.LightAttenuationAndData.w = LT_AMBIENTAL;
+		_lightUbo->UpdateData(0, sizeof(LightData), &data);
+	}
+	_lightUbo->EndUpdate();
 
 	Engine::BindQuadVAO();
 	_lightMatrixUbo->UpdateData(0, sizeof(mat4), (void *)value_ptr(mat4()));
@@ -459,6 +468,9 @@ void DeferredBuffer::RenderLighting() noexcept
 	_lightingShader->Disable();
 
 	_fbos[GB_FBO_LIGHT]->SetDrawBuffers(1, drawAttachments);
+
+	_sceneLightUbo->NextBuffer();
+	_lightUbo->NextBuffer();
 }
 
 void DeferredBuffer::ScreenResized(int width, int height) noexcept
@@ -483,13 +495,7 @@ void DeferredBuffer::ScreenResized(int width, int height) noexcept
 	if (_ssao)
 		_ssao->Resize(_fboWidth, _fboHeight);
 
-	vec2 data;
-	data.x = (float)_fboWidth;
-	data.y = (float)_fboHeight;
-
-	_sceneLightUbo->BeginUpdate();
-	_sceneLightUbo->UpdateData(sizeof(vec4) * 3, sizeof(vec2), &data.x);
-	_sceneLightUbo->EndUpdate();
+	_sceneData.FrameSizeAndSSAO = vec4(_fboWidth, _fboHeight, _sceneData.FrameSizeAndSSAO.z, _sceneData.FrameSizeAndSSAO.w);
 }
 
 void DeferredBuffer::_Bind() noexcept
@@ -677,10 +683,7 @@ void DeferredBuffer::CopyStencil(RFramebuffer* destFbo) noexcept
 
 void DeferredBuffer::EnableAO(bool enable) noexcept
 {
-	float f = enable ? 1.f : 0.f;
-	_sceneLightUbo->BeginUpdate();
-	_sceneLightUbo->UpdateData((sizeof(vec4) * 3) + (sizeof(float) * 2), sizeof(float), &f);
-	_sceneLightUbo->EndUpdate();
+	_sceneData.FrameSizeAndSSAO = vec4(_sceneData.FrameSizeAndSSAO.x, _sceneData.FrameSizeAndSSAO.y, enable ? 1.f : 0.f, _sceneData.FrameSizeAndSSAO.w);
 }
 
 void DeferredBuffer::Release() noexcept

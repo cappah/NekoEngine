@@ -89,7 +89,11 @@ void Effect::SetOption(std::string option, float value)
 	*_options[option] = value;
 
 	if (_effectUbo)
+	{
+		_effectUbo->BeginUpdate();
 		_effectUbo->UpdateData(0, sizeof(vec4), value_ptr(_effectData));
+		_effectUbo->EndUpdate();
+	}
 }
 
 void Effect::Apply()

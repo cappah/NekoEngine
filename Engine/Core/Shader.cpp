@@ -59,15 +59,20 @@ int Shader::Load()
 	if((_shader = Engine::GetRenderer()->CreateShader()) == nullptr)
 		return ENGINE_OUT_OF_RESOURCES;
 	
-	if (!_CompileShader(ShaderType::Vertex, GetResourceInfo()->vsFilePath))
+	NString vsPath = NString::StringWithFormat(VFS_MAX_FILE_NAME, "/Shaders/%s/%s.%s", Engine::GetRenderer()->GetShadingLanguage(), *GetResourceInfo()->vsFilePath, Engine::GetRenderer()->GetShadingLanguage());
+	if (!_CompileShader(ShaderType::Vertex, vsPath))
 		return ENGINE_LOAD_VS_FAIL;
 
-	if (!_CompileShader(ShaderType::Fragment, GetResourceInfo()->fsFilePath))
+	NString fsPath = NString::StringWithFormat(VFS_MAX_FILE_NAME, "/Shaders/%s/%s.%s", Engine::GetRenderer()->GetShadingLanguage(), *GetResourceInfo()->fsFilePath, Engine::GetRenderer()->GetShadingLanguage());
+	if (!_CompileShader(ShaderType::Fragment, fsPath))
 		return ENGINE_LOAD_FS_FAIL;
 
 	if (GetResourceInfo()->gsFilePath.Length() > 0)
-		if (!_CompileShader(ShaderType::Geometry, GetResourceInfo()->gsFilePath))
+	{
+		NString gsPath = NString::StringWithFormat(VFS_MAX_FILE_NAME, "/Shaders/%s/%s.%s", Engine::GetRenderer()->GetShadingLanguage(), *GetResourceInfo()->gsFilePath, Engine::GetRenderer()->GetShadingLanguage());
+		if (!_CompileShader(ShaderType::Geometry, gsPath))
 			return ENGINE_LOAD_GS_FAIL;
+	}
 
 	if (!_shader->Link())
 		return ENGINE_LOAD_SHADER_FAIL;

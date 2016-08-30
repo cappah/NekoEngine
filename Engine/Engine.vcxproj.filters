@@ -16,15 +16,6 @@
     <Filter Include="Resources\Data\Materials">
       <UniqueIdentifier>{b0d54189-285a-48bc-b8c8-9db03649d690}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resources\Data\Shaders\postproc">
-      <UniqueIdentifier>{5a2836ac-cef7-40a8-8c8e-dee8a1f4e58b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resources\Data\Shaders\forward">
-      <UniqueIdentifier>{6c97070b-0dfe-4a63-b1d5-3693dd61e7cf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resources\Data\Shaders\include">
-      <UniqueIdentifier>{08d217f2-fbb4-4861-a204-024a578c67ba}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Include">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
@@ -114,17 +105,29 @@
     <Filter Include="Include\Runtime">
       <UniqueIdentifier>{38b5af03-b708-4896-8c68-1cf67528d755}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resources\Data\Shaders\hlsl">
+      <UniqueIdentifier>{afc6efe9-c0a1-4648-b3f4-3a92fd448e27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources\Data\Shaders\include">
+      <UniqueIdentifier>{876c8610-d343-4ad5-a22f-d73b198ced34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources\Data\Shaders\glsl">
+      <UniqueIdentifier>{3c8f1b62-52ed-4640-81bc-5b9cd21b26a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources\Data\Shaders\hlsl\forward">
+      <UniqueIdentifier>{080a6861-2723-4f36-84df-fcec9bf6728f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources\Data\Shaders\hlsl\postproc">
+      <UniqueIdentifier>{e9838195-9762-46b2-966a-b47fb69dc3b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources\Data\Shaders\glsl\forward">
+      <UniqueIdentifier>{2f621e4d-4e30-4e5b-a74f-10cbd3d50438}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources\Data\Shaders\glsl\postproc">
+      <UniqueIdentifier>{c022a17b-4f01-49c4-a195-8aed62efe430}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Resources\Data\Shaders\include\SMAA.h">
-      <Filter>Resources\Data\Shaders\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Resources\Data\Shaders\include\Fxaa3_11.h">
-      <Filter>Resources\Data\Shaders\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Resources\Data\Shaders\include\conditionals.h">
-      <Filter>Resources\Data\Shaders\include</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\Audio\AudioSource.h">
       <Filter>Include\Audio</Filter>
     </ClInclude>
@@ -359,6 +362,15 @@
     <ClInclude Include="..\Include\Engine\Camera.h">
       <Filter>Include\Engine</Filter>
     </ClInclude>
+    <ClInclude Include="..\Resources\Data\Shaders\include\Fxaa3_11.h">
+      <Filter>Resources\Data\Shaders\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Resources\Data\Shaders\include\SMAA.h">
+      <Filter>Resources\Data\Shaders\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Resources\Data\Shaders\include\conditionals.h">
+      <Filter>Resources\Data\Shaders\include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Resources\Data\scenes.cfg">
@@ -367,92 +379,8 @@
     <None Include="..\Resources\Engine.ini">
       <Filter>Resources</Filter>
     </None>
-    <None Include="..\Resources\Data\Shaders\postproc\blur.frag">
-      <Filter>Resources\Data\Shaders\postproc</Filter>
-    </None>
-    <None Include="..\Resources\Data\Shaders\postproc\blur_dof.frag">
-      <Filter>Resources\Data\Shaders\postproc</Filter>
-    </None>
-    <None Include="..\Resources\Data\Shaders\postproc\bw.frag">
-      <Filter>Resources\Data\Shaders\postproc</Filter>
-    </None>
-    <None Include="..\Resources\Data\Shaders\postproc\dof.frag">
-      <Filter>Resources\Data\Shaders\postproc</Filter>
-    </None>
-    <None Include="..\Resources\Data\Shaders\font.frag">
-      <Filter>Resources\Data\Shaders</Filter>
-    </None>
-    <None Include="..\Resources\Data\Shaders\font.vert">
-      <Filter>Resources\Data\Shaders</Filter>
-    </None>
-    <None Include="..\Resources\Data\Shaders\geometry.frag">
-      <Filter>Resources\Data\Shaders</Filter>
-    </None>
-    <None Include="..\Resources\Data\Shaders\geometry.vert">
-      <Filter>Resources\Data\Shaders</Filter>
-    </None>
-    <None Include="..\Resources\Data\Shaders\lighting.frag">
-      <Filter>Resources\Data\Shaders</Filter>
-    </None>
-    <None Include="..\Resources\Data\Shaders\postproc.frag">
-      <Filter>Resources\Data\Shaders</Filter>
-    </None>
-    <None Include="..\Resources\Data\Shaders\postproc.vert">
-      <Filter>Resources\Data\Shaders</Filter>
-    </None>
-    <None Include="..\Resources\Data\Shaders\ssao.frag">
-      <Filter>Resources\Data\Shaders</Filter>
-    </None>
-    <None Include="..\Resources\Data\Shaders\ssao_blur.frag">
-      <Filter>Resources\Data\Shaders</Filter>
-    </None>
-    <None Include="..\Resources\Data\Shaders\forward\skybox.vert">
-      <Filter>Resources\Data\Shaders\forward</Filter>
-    </None>
-    <None Include="..\Resources\Data\Shaders\forward\skybox.frag">
-      <Filter>Resources\Data\Shaders\forward</Filter>
-    </None>
     <None Include="..\Resources\Engine_Low.ini">
       <Filter>Resources</Filter>
-    </None>
-    <None Include="..\Resources\Data\Shaders\lighting.vert">
-      <Filter>Resources\Data\Shaders</Filter>
-    </None>
-    <None Include="..\Resources\Data\Shaders\postproc\gauss_h.frag">
-      <Filter>Resources\Data\Shaders\postproc</Filter>
-    </None>
-    <None Include="..\Resources\Data\Shaders\postproc\gauss_v.frag">
-      <Filter>Resources\Data\Shaders\postproc</Filter>
-    </None>
-    <None Include="..\Resources\Data\Shaders\postproc\bloom.frag">
-      <Filter>Resources\Data\Shaders\postproc</Filter>
-    </None>
-    <None Include="..\Resources\Data\Shaders\postproc\bloom_prepass.frag">
-      <Filter>Resources\Data\Shaders\postproc</Filter>
-    </None>
-    <None Include="..\Resources\Data\Shaders\loadscreen.frag">
-      <Filter>Resources\Data\Shaders</Filter>
-    </None>
-    <None Include="..\Resources\Data\Shaders\loadscreen.vert">
-      <Filter>Resources\Data\Shaders</Filter>
-    </None>
-    <None Include="..\Resources\Data\Shaders\depthmap.frag">
-      <Filter>Resources\Data\Shaders</Filter>
-    </None>
-    <None Include="..\Resources\Data\Shaders\depthmap.vert">
-      <Filter>Resources\Data\Shaders</Filter>
-    </None>
-    <None Include="..\Resources\Data\Shaders\postproc\fxaa.frag">
-      <Filter>Resources\Data\Shaders\postproc</Filter>
-    </None>
-    <None Include="..\Resources\Data\Shaders\postproc\fxaa.vert">
-      <Filter>Resources\Data\Shaders\postproc</Filter>
-    </None>
-    <None Include="..\Resources\Data\Shaders\postproc\smaa.frag">
-      <Filter>Resources\Data\Shaders\postproc</Filter>
-    </None>
-    <None Include="..\Resources\Data\Shaders\postproc\smaa.vert">
-      <Filter>Resources\Data\Shaders\postproc</Filter>
     </None>
     <None Include="..\Resources\Data\Scenes\main.nscene">
       <Filter>Resources\Data\Scenes</Filter>
@@ -520,14 +448,92 @@
     <None Include="..\Resources\Data\SkeletalMeshes\sophia.nmesh">
       <Filter>Resources\Data\SkeletalMeshes</Filter>
     </None>
-    <None Include="..\Resources\Data\Shaders\shadow.frag">
-      <Filter>Resources\Data\Shaders</Filter>
-    </None>
-    <None Include="..\Resources\Data\Shaders\shadow.vert">
-      <Filter>Resources\Data\Shaders</Filter>
-    </None>
     <None Include="..\Resources\Data\Scenes\shadow.nscene">
       <Filter>Resources\Data\Scenes</Filter>
+    </None>
+    <None Include="..\Resources\Data\Shaders\glsl\font_fs.glsl">
+      <Filter>Resources\Data\Shaders\glsl</Filter>
+    </None>
+    <None Include="..\Resources\Data\Shaders\glsl\font_vs.glsl">
+      <Filter>Resources\Data\Shaders\glsl</Filter>
+    </None>
+    <None Include="..\Resources\Data\Shaders\glsl\geometry_fs.glsl">
+      <Filter>Resources\Data\Shaders\glsl</Filter>
+    </None>
+    <None Include="..\Resources\Data\Shaders\glsl\geometry_vs.glsl">
+      <Filter>Resources\Data\Shaders\glsl</Filter>
+    </None>
+    <None Include="..\Resources\Data\Shaders\glsl\lighting_fs.glsl">
+      <Filter>Resources\Data\Shaders\glsl</Filter>
+    </None>
+    <None Include="..\Resources\Data\Shaders\glsl\lighting_vs.glsl">
+      <Filter>Resources\Data\Shaders\glsl</Filter>
+    </None>
+    <None Include="..\Resources\Data\Shaders\glsl\loadscreen_fs.glsl">
+      <Filter>Resources\Data\Shaders\glsl</Filter>
+    </None>
+    <None Include="..\Resources\Data\Shaders\glsl\loadscreen_vs.glsl">
+      <Filter>Resources\Data\Shaders\glsl</Filter>
+    </None>
+    <None Include="..\Resources\Data\Shaders\glsl\postproc_fs.glsl">
+      <Filter>Resources\Data\Shaders\glsl</Filter>
+    </None>
+    <None Include="..\Resources\Data\Shaders\glsl\postproc_vs.glsl">
+      <Filter>Resources\Data\Shaders\glsl</Filter>
+    </None>
+    <None Include="..\Resources\Data\Shaders\glsl\shadow_fs.glsl">
+      <Filter>Resources\Data\Shaders\glsl</Filter>
+    </None>
+    <None Include="..\Resources\Data\Shaders\glsl\shadow_vs.glsl">
+      <Filter>Resources\Data\Shaders\glsl</Filter>
+    </None>
+    <None Include="..\Resources\Data\Shaders\glsl\ssao_blur_fs.glsl">
+      <Filter>Resources\Data\Shaders\glsl</Filter>
+    </None>
+    <None Include="..\Resources\Data\Shaders\glsl\ssao_fs.glsl">
+      <Filter>Resources\Data\Shaders\glsl</Filter>
+    </None>
+    <None Include="..\Resources\Data\Shaders\glsl\postproc\bloom_prepass_fs.glsl">
+      <Filter>Resources\Data\Shaders\glsl\postproc</Filter>
+    </None>
+    <None Include="..\Resources\Data\Shaders\glsl\postproc\blur_dof_fs.glsl">
+      <Filter>Resources\Data\Shaders\glsl\postproc</Filter>
+    </None>
+    <None Include="..\Resources\Data\Shaders\glsl\postproc\blur_fs.glsl">
+      <Filter>Resources\Data\Shaders\glsl\postproc</Filter>
+    </None>
+    <None Include="..\Resources\Data\Shaders\glsl\postproc\bw_fs.glsl">
+      <Filter>Resources\Data\Shaders\glsl\postproc</Filter>
+    </None>
+    <None Include="..\Resources\Data\Shaders\glsl\postproc\dof_fs.glsl">
+      <Filter>Resources\Data\Shaders\glsl\postproc</Filter>
+    </None>
+    <None Include="..\Resources\Data\Shaders\glsl\postproc\fxaa_fs.glsl">
+      <Filter>Resources\Data\Shaders\glsl\postproc</Filter>
+    </None>
+    <None Include="..\Resources\Data\Shaders\glsl\postproc\fxaa_vs.glsl">
+      <Filter>Resources\Data\Shaders\glsl\postproc</Filter>
+    </None>
+    <None Include="..\Resources\Data\Shaders\glsl\postproc\gauss_h_fs.glsl">
+      <Filter>Resources\Data\Shaders\glsl\postproc</Filter>
+    </None>
+    <None Include="..\Resources\Data\Shaders\glsl\postproc\gauss_v_fs.glsl">
+      <Filter>Resources\Data\Shaders\glsl\postproc</Filter>
+    </None>
+    <None Include="..\Resources\Data\Shaders\glsl\postproc\smaa_fs.glsl">
+      <Filter>Resources\Data\Shaders\glsl\postproc</Filter>
+    </None>
+    <None Include="..\Resources\Data\Shaders\glsl\postproc\smaa_vs.glsl">
+      <Filter>Resources\Data\Shaders\glsl\postproc</Filter>
+    </None>
+    <None Include="..\Resources\Data\Shaders\glsl\postproc\bloom_fs.glsl">
+      <Filter>Resources\Data\Shaders\glsl\postproc</Filter>
+    </None>
+    <None Include="..\Resources\Data\Shaders\glsl\forward\skybox_vs.glsl">
+      <Filter>Resources\Data\Shaders\glsl\forward</Filter>
+    </None>
+    <None Include="..\Resources\Data\Shaders\glsl\forward\skybox_fs.glsl">
+      <Filter>Resources\Data\Shaders\glsl\forward</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -683,5 +689,52 @@
     <ClCompile Include="Core\Camera.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\Resources\Data\Shaders\hlsl\font_vs.hlsl">
+      <Filter>Resources\Data\Shaders\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Resources\Data\Shaders\hlsl\lighting_fs.hlsl">
+      <Filter>Resources\Data\Shaders\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Resources\Data\Shaders\hlsl\lighting_vs.hlsl">
+      <Filter>Resources\Data\Shaders\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Resources\Data\Shaders\hlsl\geometry_fs.hlsl">
+      <Filter>Resources\Data\Shaders\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Resources\Data\Shaders\hlsl\geometry_vs.hlsl">
+      <Filter>Resources\Data\Shaders\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Resources\Data\Shaders\hlsl\loadscreen_fs.hlsl">
+      <Filter>Resources\Data\Shaders\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Resources\Data\Shaders\hlsl\postproc_fs.hlsl">
+      <Filter>Resources\Data\Shaders\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Resources\Data\Shaders\hlsl\postproc_vs.hlsl">
+      <Filter>Resources\Data\Shaders\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Resources\Data\Shaders\hlsl\forward\skybox_vs.hlsl">
+      <Filter>Resources\Data\Shaders\hlsl\forward</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Resources\Data\Shaders\hlsl\forward\skybox_fs.hlsl">
+      <Filter>Resources\Data\Shaders\hlsl\forward</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Resources\Data\Shaders\hlsl\shadow_fs.hlsl">
+      <Filter>Resources\Data\Shaders\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Resources\Data\Shaders\hlsl\shadow_vs.hlsl">
+      <Filter>Resources\Data\Shaders\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Resources\Data\Shaders\hlsl\ssao_fs.hlsl">
+      <Filter>Resources\Data\Shaders\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Resources\Data\Shaders\hlsl\ssao_blur_fs.hlsl">
+      <Filter>Resources\Data\Shaders\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Resources\Data\Shaders\hlsl\font_fs.hlsl">
+      <Filter>Resources\Data\Shaders\hlsl</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

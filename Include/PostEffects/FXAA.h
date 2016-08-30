@@ -40,6 +40,7 @@
 #pragma once
 
 #include <PostEffects/Effect.h>
+#include <Engine/ResourceManager.h>
 
 class FXAA : public Effect
 {
@@ -48,7 +49,7 @@ public:
 	ENGINE_API FXAA() noexcept
 		: Effect("FXAA")
 	{
-		_shaderIds.push_back(13);
+		_shaderIds.push_back(ResourceManager::GetResourceID("sh_fxaa", ResourceType::RES_SHADER));
 
 		_options.insert(std::pair<std::string, float*>("Subpix", &_effectData.x));
 		_options.insert(std::pair<std::string, float*>("EdgeThreshold", &_effectData.y));

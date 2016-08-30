@@ -52,18 +52,17 @@ public:
 	ShadowMap(int size);
 
 	RTexture *GetTexture() { return _texture; }
-	glm::mat4 &GetView() { return _lightCamera->GetView(); }
-	glm::mat4 &GetModel() { return _lightCamera->GetModel(); }
-	glm::mat4 &GetProjection() { return _lightCamera->GetProjectionMatrix(); }
+	glm::mat4 &GetViewProjection() { return _lightCamera->GetProjectionMatrix() * _lightCamera->GetView(); }
 
 	void Render(class Light *l);
 
 	virtual ~ShadowMap();
 
 private:
-	RFramebuffer *_fbo;
-	RTexture *_texture;
+	RFramebuffer *_fbo, *_occlusionFbo;
+	RTexture *_texture, *_occlussionTexture;
 	Camera *_lightCamera;
+	Shader *_shader;
 	int _size;
 	glm::mat4 _projection, _view, _lightWorld;
 };

@@ -50,16 +50,19 @@ using namespace glm;
 
 ShadowMap::ShadowMap(int size) :
 	_fbo(nullptr),
+	_occlusionFbo(nullptr),
 	_texture(nullptr),
+	_occlussionTexture(nullptr),
 	_lightCamera(nullptr),
+	_shader(nullptr),
 	_size(size)
 {
 	_texture = Engine::GetRenderer()->CreateTexture(TextureType::Tex2D);
-	_texture->SetStorage2D(1, TextureSizedFormat::DEPTH_32F, size, size);
+	_texture->SetStorage2D(1, TextureSizedFormat::DEPTH_16, size, size);
 	_texture->SetMinFilter(TextureFilter::Nearest);
 	_texture->SetMagFilter(TextureFilter::Nearest);
-	_texture->SetWrapS(TextureWrap::Repeat);
-	_texture->SetWrapT(TextureWrap::Repeat);
+	_texture->SetWrapS(TextureWrap::ClampToEdge);
+	_texture->SetWrapT(TextureWrap::ClampToEdge);
 
 	_fbo = Engine::GetRenderer()->CreateFramebuffer(size, size);
 	_fbo->AttachDepthTexture(_texture);
@@ -69,17 +72,13 @@ ShadowMap::ShadowMap(int size) :
 	{ DIE("Failed to create shadow framebuffer"); }
 
 	_lightCamera = new Camera();
-
-	_lightCamera->SetNear(.1f);
-	_lightCamera->SetFar(1000.f);
-	_lightCamera->SetProjection(ProjectionType::Ortographic);
+	_lightCamera->Ortho(-400, 400, -400, 400, -40, 4000);
 	_lightCamera->UpdateProjection();
 }
 
 void ShadowMap::Render(Light *l)
 {
 	Engine::GetRenderer()->SetDepthMask(true);
-
 	_fbo->Bind(FB_DRAW);
 	Engine::GetRenderer()->Clear(R_CLEAR_DEPTH);
 

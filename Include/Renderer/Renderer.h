@@ -57,7 +57,7 @@
 #undef Always
 #endif
 
-#define RENDERER_API_VERSION	0x0031
+#define RENDERER_API_VERSION	0x0032
 
 #define R_CLEAR_COLOR			1
 #define R_CLEAR_DEPTH			2
@@ -465,6 +465,11 @@ public:
 	 * Get the number of times a Draw* function has been called since the last reset
 	 */
 	virtual uint64_t GetDrawCalls() = 0;
+
+	/**
+	 * Return a string with the shading language name, lowercase (ex: "glsl")
+	 */
+	virtual const char *GetShadingLanguage() = 0;
 
 	// HBAO+ Integration
 	/**

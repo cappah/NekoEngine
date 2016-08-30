@@ -77,11 +77,13 @@ Camera::Camera() :
 void Camera::Ortho(float left, float right, float top, float bottom, float zNear, float zFar)
 {
 	_projectionMatrix = ortho(left, right, top, bottom, zNear, zFar);
+	_projection = ProjectionType::Ortographic;
 }
 
 void Camera::LookAt(vec3 eye, vec3 center, vec3 up) noexcept
 {
 	_view = lookAt(eye, center, up);
+	_projection = ProjectionType::Perspective;
 }
 
 void Camera::UpdateProjection() noexcept

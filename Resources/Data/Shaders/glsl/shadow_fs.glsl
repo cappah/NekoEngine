@@ -1,5 +1,10 @@
 layout(location = O_FRAGCOLOR) out float o_FragColor;
 
+in VertexData
+{
+	vec4 LightPosition;
+} vertexData;
+
 layout(std140) uniform ObjectBlock
 {
 	vec4 CameraPosition;
@@ -12,22 +17,14 @@ layout(std140) uniform MaterialBlock
 	vec4 MaterialData1;
 };
 
-layout(std140) uniform ShadowMapParameters
-{
-	mat4 inverseView;
-	mat4 lightViewProjection;
-	vec3 frustumCorners[4];
-	ivec2 occlusionSize;
-	ivec2 shadowMapSize;
-};
+#define DiffuseConstant MaterialData.x
+#define SpecularConstant MaterialData.y
+#define Shininess MaterialData.z
+#define Bloom MaterialData.w
+#define MaterialType MaterialData1.
 
-in VertexData
-{
-	vec2 UV;
-	vec4 FragPosLS;
-} vertexData;
-
-layout(location=U_TEXTURE9) uniform TEXTURE_2D u_ShadowMap;
+layout(location=U_TEXTURE0) uniform TEXTURE_2D u_ShadowMap;
+layout(location=U_TEXTURE_CUBE) uniform TEXTURE_CUBE u_texture_cube;
 
 SUBROUTINE_DELEGATE(setColorSub)
 SUBROUTINE_DELEGATE(setNormalSub)
@@ -41,8 +38,9 @@ SUBROUTINE_FUNC(SH_SUB_N_MAP, setNormalSub)
 void setNormalMap() { }
 
 void main()
-{	
-	vec3 projectionCoords = FragPosLS.xyz / FragPosLS.w;
+{
+
+	vec3 projectionCoords = LightPosition.xyz / LightPosition.w;
 	projectionCoords = projectionCoords * 0.5 + 0.5;
 
 	float closest = texture(GET_TEX_2D(u_ShadowMap), projectionCoords.xy).r;

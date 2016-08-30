@@ -149,6 +149,11 @@ void main()
 		setNormal();
 		setColor();	
 	#else
+		if(ShaderType == SH_NM_SPEC || ShaderType == SH_NM)
+			setNormalMap();
+		else
+			setNormalArg();
+
 		if(ShaderType == SH_NM_SPEC || ShaderType == SH_SPEC)
 			setColorSpecularMap();
 		else if(ShaderType == SH_TERRAIN)
@@ -158,10 +163,7 @@ void main()
 		else
 			setColorSpecularArg();
 
-		if(ShaderType == SH_NM_SPEC || ShaderType == SH_NM)
-			setNormalMap();
-		else
-			setNormalArg();
+	
 	#endif
 
 	o_Position = vec4(vertexData.Position, MaterialType);

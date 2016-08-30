@@ -239,6 +239,8 @@ public:
 	virtual uint64_t GetVideoMemorySize() override;
 	virtual uint64_t GetUsedVideoMemorySize() override;
 
+	virtual const char *GetShadingLanguage() override { return "glsl"; }
+
 	virtual ~GLRenderer();
 
 	// Internal functions

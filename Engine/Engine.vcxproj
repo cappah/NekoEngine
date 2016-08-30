@@ -233,36 +233,34 @@
     <None Include="..\Resources\Data\Scenes\main.nscene" />
     <None Include="..\Resources\Data\Scenes\scene.nscene" />
     <None Include="..\Resources\Data\Scenes\shadow.nscene" />
-    <None Include="..\Resources\Data\Shaders\depthmap.frag" />
-    <None Include="..\Resources\Data\Shaders\depthmap.vert" />
-    <None Include="..\Resources\Data\Shaders\font.frag" />
-    <None Include="..\Resources\Data\Shaders\font.vert" />
-    <None Include="..\Resources\Data\Shaders\forward\skybox.frag" />
-    <None Include="..\Resources\Data\Shaders\forward\skybox.vert" />
-    <None Include="..\Resources\Data\Shaders\geometry.frag" />
-    <None Include="..\Resources\Data\Shaders\geometry.vert" />
-    <None Include="..\Resources\Data\Shaders\lighting.frag" />
-    <None Include="..\Resources\Data\Shaders\lighting.vert" />
-    <None Include="..\Resources\Data\Shaders\loadscreen.frag" />
-    <None Include="..\Resources\Data\Shaders\loadscreen.vert" />
-    <None Include="..\Resources\Data\Shaders\postproc.frag" />
-    <None Include="..\Resources\Data\Shaders\postproc.vert" />
-    <None Include="..\Resources\Data\Shaders\postproc\bloom.frag" />
-    <None Include="..\Resources\Data\Shaders\postproc\bloom_prepass.frag" />
-    <None Include="..\Resources\Data\Shaders\postproc\blur.frag" />
-    <None Include="..\Resources\Data\Shaders\postproc\blur_dof.frag" />
-    <None Include="..\Resources\Data\Shaders\postproc\bw.frag" />
-    <None Include="..\Resources\Data\Shaders\postproc\dof.frag" />
-    <None Include="..\Resources\Data\Shaders\postproc\fxaa.frag" />
-    <None Include="..\Resources\Data\Shaders\postproc\fxaa.vert" />
-    <None Include="..\Resources\Data\Shaders\postproc\gauss_h.frag" />
-    <None Include="..\Resources\Data\Shaders\postproc\gauss_v.frag" />
-    <None Include="..\Resources\Data\Shaders\postproc\smaa.frag" />
-    <None Include="..\Resources\Data\Shaders\postproc\smaa.vert" />
-    <None Include="..\Resources\Data\Shaders\shadow.frag" />
-    <None Include="..\Resources\Data\Shaders\shadow.vert" />
-    <None Include="..\Resources\Data\Shaders\ssao.frag" />
-    <None Include="..\Resources\Data\Shaders\ssao_blur.frag" />
+    <None Include="..\Resources\Data\Shaders\glsl\font_fs.glsl" />
+    <None Include="..\Resources\Data\Shaders\glsl\font_vs.glsl" />
+    <None Include="..\Resources\Data\Shaders\glsl\forward\skybox_fs.glsl" />
+    <None Include="..\Resources\Data\Shaders\glsl\forward\skybox_vs.glsl" />
+    <None Include="..\Resources\Data\Shaders\glsl\geometry_fs.glsl" />
+    <None Include="..\Resources\Data\Shaders\glsl\geometry_vs.glsl" />
+    <None Include="..\Resources\Data\Shaders\glsl\lighting_fs.glsl" />
+    <None Include="..\Resources\Data\Shaders\glsl\lighting_vs.glsl" />
+    <None Include="..\Resources\Data\Shaders\glsl\loadscreen_fs.glsl" />
+    <None Include="..\Resources\Data\Shaders\glsl\loadscreen_vs.glsl" />
+    <None Include="..\Resources\Data\Shaders\glsl\postproc\bloom_fs.glsl" />
+    <None Include="..\Resources\Data\Shaders\glsl\postproc\bloom_prepass_fs.glsl" />
+    <None Include="..\Resources\Data\Shaders\glsl\postproc\blur_dof_fs.glsl" />
+    <None Include="..\Resources\Data\Shaders\glsl\postproc\blur_fs.glsl" />
+    <None Include="..\Resources\Data\Shaders\glsl\postproc\bw_fs.glsl" />
+    <None Include="..\Resources\Data\Shaders\glsl\postproc\dof_fs.glsl" />
+    <None Include="..\Resources\Data\Shaders\glsl\postproc\fxaa_fs.glsl" />
+    <None Include="..\Resources\Data\Shaders\glsl\postproc\fxaa_vs.glsl" />
+    <None Include="..\Resources\Data\Shaders\glsl\postproc\gauss_h_fs.glsl" />
+    <None Include="..\Resources\Data\Shaders\glsl\postproc\gauss_v_fs.glsl" />
+    <None Include="..\Resources\Data\Shaders\glsl\postproc\smaa_fs.glsl" />
+    <None Include="..\Resources\Data\Shaders\glsl\postproc\smaa_vs.glsl" />
+    <None Include="..\Resources\Data\Shaders\glsl\postproc_fs.glsl" />
+    <None Include="..\Resources\Data\Shaders\glsl\postproc_vs.glsl" />
+    <None Include="..\Resources\Data\Shaders\glsl\shadow_fs.glsl" />
+    <None Include="..\Resources\Data\Shaders\glsl\shadow_vs.glsl" />
+    <None Include="..\Resources\Data\Shaders\glsl\ssao_blur_fs.glsl" />
+    <None Include="..\Resources\Data\Shaders\glsl\ssao_fs.glsl" />
     <None Include="..\Resources\Data\SkeletalMeshes\sophia.nmesh" />
     <None Include="..\Resources\Data\StaticMeshes\arissa.nmesh" />
     <None Include="..\Resources\Data\StaticMeshes\bila.nmesh" />
@@ -329,6 +327,98 @@
     <ClCompile Include="System\VFS\VFS.cpp" />
     <ClCompile Include="System\VFS\VFSArchive.cpp" />
     <ClCompile Include="System\VFS\VFSFile.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\Resources\Data\Shaders\hlsl\font_fs.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="..\Resources\Data\Shaders\hlsl\font_vs.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="..\Resources\Data\Shaders\hlsl\forward\skybox_fs.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="..\Resources\Data\Shaders\hlsl\forward\skybox_vs.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="..\Resources\Data\Shaders\hlsl\geometry_fs.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="..\Resources\Data\Shaders\hlsl\geometry_vs.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="..\Resources\Data\Shaders\hlsl\lighting_fs.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="..\Resources\Data\Shaders\hlsl\lighting_vs.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="..\Resources\Data\Shaders\hlsl\loadscreen_fs.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="..\Resources\Data\Shaders\hlsl\postproc_fs.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="..\Resources\Data\Shaders\hlsl\postproc_vs.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="..\Resources\Data\Shaders\hlsl\shadow_fs.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="..\Resources\Data\Shaders\hlsl\shadow_vs.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="..\Resources\Data\Shaders\hlsl\ssao_blur_fs.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="..\Resources\Data\Shaders\hlsl\ssao_fs.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

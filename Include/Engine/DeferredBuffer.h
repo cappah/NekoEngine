@@ -67,15 +67,18 @@ typedef struct LIGHT_SCENE_DATA
 	glm::vec4 AmbientColorAndRClear;
 	glm::vec4 FogColorAndRFog;
 	glm::vec4 FrameSizeAndSSAO;
+	glm::mat4 _padding;
+	glm::mat4 _padding1;
+	glm::mat4 _padding2;
 } LightSceneData;
 
 typedef struct LIGHT_DATA
 {
 	glm::vec4 LightPositionAndShadow;
 	glm::vec3 LightColor;
-	float padding1;
+	float _padding;
 	glm::vec4 LightAttenuationAndData;
-	glm::mat4 CameraToLight;
+	glm::mat4 LightVP;
 } LightData;
 
 class DeferredBuffer
@@ -126,6 +129,7 @@ private:
 	static Object *_lightSphere;
 	static ShadowMap *_shadow;
 	static RBuffer *_sceneLightUbo, *_lightUbo, *_lightMatrixUbo;
+	static LightSceneData _sceneData;
 
 	static void _Bind() noexcept;
 

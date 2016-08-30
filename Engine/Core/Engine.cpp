@@ -403,6 +403,7 @@ void Engine::_InitializeQuadVAO()
 
 	BufferAttribute attrib;
 	attrib.index = SHADER_POSITION_ATTRIBUTE;
+	attrib.name = "POSITION";
 	attrib.size = 2;
 	attrib.type = BufferDataType::Float;
 	attrib.normalize = false;
@@ -667,7 +668,7 @@ int Engine::Initialize(string cmdLine, bool editor)
 	Logger::Log("OpenAL", LOG_INFORMATION, "Version: %s", alVersionStr);
 	Logger::Log("OpenAL", LOG_INFORMATION, "Extensions: %s", alGetString(AL_EXTENSIONS));
 
-	_renderer->SetClearColor(0.f, 0.f, 0.f, 1.f);
+	_renderer->SetClearColor(0.f, 0.f, 0.f, 0.f);
 	_renderer->Clear(R_CLEAR_COLOR);
 
 	_engineFont = (NFont*)ResourceManager::GetResourceByName("fnt_system", ResourceType::RES_FONT);
@@ -821,11 +822,9 @@ void Engine::Draw() noexcept
 	DeferredBuffer::BindGeometry();
 
 	_renderer->EnableDepthTest(true);
-	_renderer->EnableStencilTest(true);
 	_renderer->SetDepthMask(true);
 	_renderer->EnableFaceCulling(true);
 	_renderer->Clear(R_CLEAR_COLOR | R_CLEAR_DEPTH | R_CLEAR_STENCIL);
-	_renderer->EnableStencilTest(false);
 
 	Camera *cam = CameraManager::GetActiveCamera();
 

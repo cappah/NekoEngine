@@ -147,6 +147,8 @@ public:
 	// Internal functions
 	static void SetBoundFramebuffer(RFramebuffer* fbo) { _boundFramebuffer = fbo; }
 
+	virtual const char *GetShadingLanguage() override { return "glsl"; }
+
 	virtual ~NullRenderer() { }
 
 private:
