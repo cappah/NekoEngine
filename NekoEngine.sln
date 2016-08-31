@@ -18,6 +18,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NullRenderer", "NullRendere
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GLESRenderer", "GLESRenderer\GLESRenderer.vcxproj", "{22CF43F6-85FD-48EC-993D-44ED7D075304}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "D3D11Renderer", "Renderer\D3D11Renderer\D3D11Renderer.vcxproj", "{E3988136-901F-4968-B8AA-D82602ECE679}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Renderer", "Renderer", "{D4EB7F4A-27E7-4BAD-8852-802E9D430B14}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -46,8 +50,18 @@ Global
 		{22CF43F6-85FD-48EC-993D-44ED7D075304}.Debug|x64.ActiveCfg = Debug|x64
 		{22CF43F6-85FD-48EC-993D-44ED7D075304}.Release|x64.ActiveCfg = Release|x64
 		{22CF43F6-85FD-48EC-993D-44ED7D075304}.Release|x64.Build.0 = Release|x64
+		{E3988136-901F-4968-B8AA-D82602ECE679}.Debug|x64.ActiveCfg = Debug|x64
+		{E3988136-901F-4968-B8AA-D82602ECE679}.Debug|x64.Build.0 = Debug|x64
+		{E3988136-901F-4968-B8AA-D82602ECE679}.Release|x64.ActiveCfg = Release|x64
+		{E3988136-901F-4968-B8AA-D82602ECE679}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{3DD5A636-6EC2-4CE3-82A8-E43068C321C4} = {D4EB7F4A-27E7-4BAD-8852-802E9D430B14}
+		{C244AD6C-7368-474B-B6DA-AA8967161626} = {D4EB7F4A-27E7-4BAD-8852-802E9D430B14}
+		{22CF43F6-85FD-48EC-993D-44ED7D075304} = {D4EB7F4A-27E7-4BAD-8852-802E9D430B14}
+		{E3988136-901F-4968-B8AA-D82602ECE679} = {D4EB7F4A-27E7-4BAD-8852-802E9D430B14}
 	EndGlobalSection
 EndGlobal

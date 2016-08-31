@@ -266,7 +266,7 @@ void GLBuffer::NextBuffer()
 
 void GLBuffer::BindUniform(int index, uint64_t offset, uint64_t size)
 {
-	GL_CHECK(glBindBufferRange(_target, index, _id, _syncRanges != nullptr ? (_syncRanges[_currentBuffer].offset + offset) : offset, size));
+	GL_CHECK(glBindBufferRange(_target, index, _id, _syncRanges ? (_syncRanges[_currentBuffer].offset + offset) : offset, size));
 }
 
 GLBuffer::~GLBuffer()

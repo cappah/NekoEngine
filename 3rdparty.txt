@@ -8,6 +8,7 @@ glm 0.9.7.6 - https://github.com/g-truc/glm/releases
 zlib 1.2.8 - http://www.zlib.net/
 dirent - https://github.com/tronkko/dirent
 freetype 2.6.5 - https://www.freetype.org
+DirectXTex - https://github.com/Microsoft/DirectXTex
 
 All libraries were compiled using MSVC2015.
 
