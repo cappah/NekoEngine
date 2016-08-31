@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.0)
+﻿cmake_minimum_required (VERSION 3.0)
 project (NekoEngine)
 
 include(CheckIncludeFiles)
@@ -11,26 +11,26 @@ option(GLRenderer "GLRenderer" ON)
 option(NullRenderer "NullRenderer" OFF)
 option(GLESRenderer "GLESRenderer" OFF)
 
-file(GLOB EngineSourceFiles "Engine/*.cpp"
-	"Engine/Audio/*.cpp"
-	"Engine/Core/*.cpp"
-	"Engine/PostEffects/*.cpp"
-	"Engine/Scene/*.cpp"
-	"Engine/Scene/Components/*.cpp"
-	"Engine/System/*.cpp"
-	"Engine/System/AssetLoader/*.cpp"
-	"Engine/System/VFS/*.cpp"
-	"Engine/Platform/*.cpp"
-	"Engine/Platform/Compat/*.cpp"
+file(GLOB EngineSourceFiles "Source/Engine/*.cpp"
+	"Source/Engine/Audio/*.cpp"
+	"Source/Engine/Core/*.cpp"
+	"Source/Engine/PostEffects/*.cpp"
+	"Source/Engine/Scene/*.cpp"
+	"Source/Engine/Scene/Components/*.cpp"
+	"Source/Engine/System/*.cpp"
+	"Source/Engine/System/AssetLoader/*.cpp"
+	"Source/Engine/System/VFS/*.cpp"
+	"Source/Engine/Platform/*.cpp"
+	"Source/Engine/Platform/Compat/*.cpp"
 )
-file(GLOB TestGameSourceFiles "TestGame/*.cpp")
-file(GLOB GLRendererSourceFiles “Renderer/GLRenderer/*.cpp"
-	“Renderer/GLRenderer/Loaders/*.cpp"
+file(GLOB TestGameSourceFiles "Source/TestGame/*.cpp")
+file(GLOB GLRendererSourceFiles “Source/Renderer/GLRenderer/*.cpp"
+	“Source/Renderer/GLRenderer/Loaders/*.cpp"
 )
-file(GLOB NullRendererSourceFiles “Renderer/NullRenderer/*.cpp")
-file(GLOB GLESRendererSourceFiles “Renderer/GLESRenderer/*.cpp"
-	“Renderer/GLRenderer/Loaders/tga.cpp"
-	“Renderer/GLESRenderer/Platform/EGL/*.cpp"
+file(GLOB NullRendererSourceFiles “Source/Renderer/NullRenderer/*.cpp")
+file(GLOB GLESRendererSourceFiles “Source/Renderer/GLESRenderer/*.cpp"
+	“Source/Renderer/GLRenderer/Loaders/tga.cpp"
+	“Source/Renderer/GLESRenderer/Platform/EGL/*.cpp"
 )
 
 set(OPENAL_LIB openal)
@@ -59,8 +59,8 @@ set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -flto")
 endif(CMAKE_BUILD_TYPE EQUAL "RELEASE")
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-	file(GLOB ExecutableSourceFile "Launcher/Windows/*.cpp")
-	file(GLOB RendererPlatformSourceFiles "GL4Renderer/Platform/Windows/*.cpp")
+	file(GLOB ExecutableSourceFile "Source/Launcher/Windows/*.cpp")
+	file(GLOB RendererPlatformSourceFiles "Source/Renderer/GLRenderer/Platform/Windows/*.cpp")
 elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 	set(PLATFORM_UNIX ON)
 	set(PLATFORM_X11 ON)
@@ -82,8 +82,8 @@ elseif(${CMAKE_SYSTEM_NAME} MATCHES "OpenBSD")
 	include_directories(/usr/X11R6/include)
 	link_directories(/usr/X11R6/lib)
 elseif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-	file(GLOB ExecutableSourceFile "Launcher/Mac/*.mm")
-	file(GLOB PlatformSourceFiles "Engine/Platform/Mac/*.mm")
+	file(GLOB ExecutableSourceFile "Source/Launcher/Mac/*.mm")
+	file(GLOB PlatformSourceFiles "Source/Engine/Platform/Mac/*.mm")
 	set(PLATFORM_UNIX ON)
 	set(PLATFORM_MAC ON)
 	set(OPENAL_LIB "")
@@ -97,13 +97,13 @@ elseif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 endif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 
 if(PLATFORM_UNIX)
-	file(GLOB SharedPlatformSourceFiles "Engine/Platform/UNIX/*.cpp")
+	file(GLOB SharedPlatformSourceFiles "Source/Engine/Platform/UNIX/*.cpp")
 endif(PLATFORM_UNIX)
 
 if(PLATFORM_X11)
-	file(GLOB PlatformSourceFiles "Engine/Platform/X11/*.cpp")
-	file(GLOB ExecutableSourceFile "Launcher/X11/*.cpp")
-	file(GLOB GLRendererPlatformSourceFiles “Renderer/GLRenderer/Platform/X11/*.cpp")
+	file(GLOB PlatformSourceFiles "Source/Engine/Platform/X11/*.cpp")
+	file(GLOB ExecutableSourceFile "Source/Launcher/X11/*.cpp")
+	file(GLOB GLRendererPlatformSourceFiles “Source/Renderer/GLRenderer/Platform/X11/*.cpp")
 	set(PLATFORM_LIBS "X11")
 	add_definitions(-DPLATFORM_X11)
 endif(PLATFORM_X11)
@@ -155,7 +155,7 @@ endif(NullRenderer)
 
 # OpenGL|ES Renderer Library
 if(GLESRenderer)
-	include_directories(${PROJECT_SOURCE_DIR}/Renderer/GLRenderer)
+	include_directories(${PROJECT_SOURCE_DIR}/Source/Renderer/GLRenderer)
 	
 	add_library(GLESRenderer SHARED ${GLESRendererSourceFiles})
 	target_compile_options(GLESRenderer PRIVATE -std=c++11)
