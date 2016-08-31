@@ -38,22 +38,22 @@
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\NekoEngine.props" />
+    <Import Project="..\..\Projects\VS2015\NekoEngine.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\NekoEngine.props" />
+    <Import Project="..\..\Projects\VS2015\NekoEngine.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)Bin64\</OutDir>
+    <OutDir>$(SolutionDir)..\..\Bin64\</OutDir>
     <IntDir>$(Configuration)\</IntDir>
     <UseMultiToolTask>true</UseMultiToolTask>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)Bin64\</OutDir>
+    <OutDir>$(SolutionDir)..\..\Bin64\</OutDir>
     <IntDir>$(Configuration)\</IntDir>
     <UseMultiToolTask>true</UseMultiToolTask>
   </PropertyGroup>
@@ -74,8 +74,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(SolutionDir)3rdparty\bin\*.dll $(SolutionDir)Bin64\
-copy $(SolutionDir)Resources\Engine.ini $(SolutionDir)Bin64\</Command>
+      <Command>copy $(SolutionDir)..\..\3rdparty\bin\*.dll $(SolutionDir)..\..\Bin64\
+copy $(SolutionDir)..\..\Resources\Engine.ini $(SolutionDir)..\..\Bin64\</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -104,8 +104,8 @@ copy $(SolutionDir)Resources\Engine.ini $(SolutionDir)Bin64\</Command>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(SolutionDir)3rdparty\bin\*.dll $(SolutionDir)Bin64\
-copy $(SolutionDir)Resources\Engine.ini $(SolutionDir)Bin64\</Command>
+      <Command>copy $(SolutionDir)..\..\3rdparty\bin\*.dll $(SolutionDir)..\..\Bin64\
+copy $(SolutionDir)..\..\Resources\Engine.ini $(SolutionDir)..\..\Bin64\</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

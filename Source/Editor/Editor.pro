@@ -21,17 +21,17 @@ INCLUDEPATH += ../Utilities
 
 win32 {
     CONFIG(debug, debug|release) {
-        LIBS += -L../Bin64
-        DEPENDPATH += ../Bin64
+        LIBS += -L../../Bin64
+        DEPENDPATH += ../../Bin64
         DEFINES += _DEBUG
     } else {
-        LIBS += -L../Bin64
-        DEPENDPATH += ../Bin64
+        LIBS += -L../../Bin64
+        DEPENDPATH += ../../Bin64
     }
 
-    INCLUDEPATH += ..\Include
-    INCLUDEPATH += ..\3rdparty\include_all
-    RC_INCLUDEPATH += ..\Include
+    INCLUDEPATH += ..\..\Include
+    INCLUDEPATH += ..\..\3rdparty\include_all
+    RC_INCLUDEPATH += ..\..\Include
     DEFINES += NOMINMAX
     DEFINES += _CRT_SECURE_NO_WARNINGS
     DEFINES += EDITOR_INTERNAL
@@ -43,11 +43,11 @@ unix {
         DEFINES += _DEBUG
     }
 
-    LIBS += -L../Bin64
-    DEPENDPATH += ../Bin64
+    LIBS += -L../../Bin64
+    DEPENDPATH += ../../Bin64
 
-    INCLUDEPATH += ../Include
-    INCLUDEPATH += ../3rdparty/include_all
+    INCLUDEPATH += ../../Include
+    INCLUDEPATH += ../../3rdparty/include_all
     DEFINES += EDITOR_INTERNAL
     DEFINES += PLATFORM_X11
 }

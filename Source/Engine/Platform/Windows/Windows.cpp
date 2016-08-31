@@ -41,7 +41,7 @@
 #include <Engine/Input.h>
 #include <Platform/Platform.h>
 
-#include "../Launcher/resource.h"
+#include "../Source/Launcher/resource.h"
 
 PlatformWindowType Platform::_activeWindow = nullptr;
 
