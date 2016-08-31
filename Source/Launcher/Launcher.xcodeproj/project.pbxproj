@@ -1,0 +1,885 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		120718C01CCFD0BA001A1EEA /* Engine_Low.ini in Resources */ = {isa = PBXBuildFile; fileRef = 120718BF1CCFD0BA001A1EEA /* Engine_Low.ini */; };
+		121976861D469C7400CCDD12 /* core.nar in CopyFiles */ = {isa = PBXBuildFile; fileRef = 121976851D469C7400CCDD12 /* core.nar */; };
+		1219768B1D469CCC00CCDD12 /* resources.db in CopyFiles */ = {isa = PBXBuildFile; fileRef = 121976881D469CCC00CCDD12 /* resources.db */; };
+		1219768C1D469CCC00CCDD12 /* Shaders in CopyFiles */ = {isa = PBXBuildFile; fileRef = 121976891D469CCC00CCDD12 /* Shaders */; };
+		1219768D1D469CCC00CCDD12 /* Sounds in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1219768A1D469CCC00CCDD12 /* Sounds */; };
+		1219768F1D469D3900CCDD12 /* scenes.cfg in Resources */ = {isa = PBXBuildFile; fileRef = 1219768E1D469D3900CCDD12 /* scenes.cfg */; };
+		121976901D469D4400CCDD12 /* scenes.cfg in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1219768E1D469D3900CCDD12 /* scenes.cfg */; };
+		122A3AC01D338B7B0047786A /* ogg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 122A3ABA1D338B340047786A /* ogg.framework */; };
+		122A3AC11D338B7B0047786A /* vorbis.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 122A3ABB1D338B340047786A /* vorbis.framework */; };
+		122A4B201D47450E009F23CE /* Data in Resources */ = {isa = PBXBuildFile; fileRef = 122A4B1F1D47450E009F23CE /* Data */; };
+		124A32081CDC267D00472893 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 124A32071CDC267D00472893 /* libz.tbd */; };
+		124A320A1CDC268100472893 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 124A32091CDC268100472893 /* libsqlite3.tbd */; };
+		124A320C1CDC268800472893 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 124A320B1CDC268800472893 /* OpenAL.framework */; };
+		124A32511CDC299500472893 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 124A32501CDC299500472893 /* OpenGLES.framework */; };
+		1250259D1D5B8FF2005B3341 /* libGLESRenderer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1250259A1D5B8FE7005B3341 /* libGLESRenderer.a */; };
+		128F682E1D72494F005AECA1 /* dirt.tga in Copy Files */ = {isa = PBXBuildFile; fileRef = 128F682B1D724947005AECA1 /* dirt.tga */; };
+		128F682F1D72494F005AECA1 /* grass.tga in Copy Files */ = {isa = PBXBuildFile; fileRef = 128F682C1D724947005AECA1 /* grass.tga */; };
+		128F68301D72494F005AECA1 /* rock.tga in Copy Files */ = {isa = PBXBuildFile; fileRef = 128F682D1D724947005AECA1 /* rock.tga */; };
+		128F68321D724985005AECA1 /* terrain_blend_map.tga in Copy Files */ = {isa = PBXBuildFile; fileRef = 128F68311D72497D005AECA1 /* terrain_blend_map.tga */; };
+		128F68351D7249BA005AECA1 /* shadow.nscene in CopyFiles */ = {isa = PBXBuildFile; fileRef = 128F68331D72499D005AECA1 /* shadow.nscene */; };
+		1296BC3D1CDC132C00D17488 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1296BC3C1CDC132C00D17488 /* main.m */; };
+		1296BC401CDC132C00D17488 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1296BC3F1CDC132C00D17488 /* AppDelegate.mm */; };
+		1296BC481CDC132C00D17488 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1296BC471CDC132C00D17488 /* Assets.xcassets */; };
+		1296BC4B1CDC132C00D17488 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1296BC491CDC132C00D17488 /* LaunchScreen.storyboard */; };
+		1296BC551CDC145600D17488 /* libEngine_iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1296BC511CDC132C00D17488 /* libEngine_iOS.a */; };
+		1296BD871CDC1E1A00D17488 /* libTestGame_iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1296BD861CDC1E1700D17488 /* libTestGame_iOS.a */; };
+		12A15FB61CD4460F00BEDD06 /* libGLRenderer.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 12A15FB31CD445FE00BEDD06 /* libGLRenderer.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		12A9BAAC1D54F037001B363A /* libfreetype.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 12A9BAAB1D54F037001B363A /* libfreetype.a */; };
+		12A9BAB11D54FEDE001B363A /* Engine_iOS.ini in Resources */ = {isa = PBXBuildFile; fileRef = 12A9BAB01D54FEDE001B363A /* Engine_iOS.ini */; };
+		12B748301CC6E7C600825D36 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 12B7482F1CC6E7C600825D36 /* Assets.xcassets */; };
+		12B748381CC6E80100825D36 /* launcher.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1270119A1CC31326001840A7 /* launcher.mm */; };
+		12B7483B1CC6E81B00825D36 /* libEngine.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 127012531CC315FD001840A7 /* libEngine.dylib */; };
+		12B7483D1CC6E97200825D36 /* libEngine.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 127012531CC315FD001840A7 /* libEngine.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		12B748531CC6EA4E00825D36 /* libTestGame.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 12B7484F1CC6EA4000825D36 /* libTestGame.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		12B748571CC6F52100825D36 /* Engine.ini in Resources */ = {isa = PBXBuildFile; fileRef = 12B748561CC6F52100825D36 /* Engine.ini */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		125025991D5B8FE7005B3341 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 125025951D5B8FE7005B3341 /* GLESRenderer.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 124A32201CDC283900472893;
+			remoteInfo = GLESRenderer;
+		};
+		1250259B1D5B8FEE005B3341 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 125025951D5B8FE7005B3341 /* GLESRenderer.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 124A321F1CDC283900472893;
+			remoteInfo = GLESRenderer;
+		};
+		127012521CC315FD001840A7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1270124E1CC315FD001840A7 /* Engine.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 12822AF11CC1AD4300EE5D0A;
+			remoteInfo = Engine;
+		};
+		1296BC501CDC132C00D17488 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1270124E1CC315FD001840A7 /* Engine.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1296BB791CDB801100D17488;
+			remoteInfo = Engine_iOS;
+		};
+		1296BC531CDC144F00D17488 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1270124E1CC315FD001840A7 /* Engine.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 124A31D21CDC258C00472893;
+			remoteInfo = Engine_iOS;
+		};
+		1296BD821CDC1E1700D17488 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 12B7484A1CC6EA4000825D36 /* TestGame.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 124A31C31CDC252200472893;
+			remoteInfo = TestGame_iOS;
+		};
+		1296BD851CDC1E1700D17488 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 12B7484A1CC6EA4000825D36 /* TestGame.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1296BD721CDC1D9600D17488;
+			remoteInfo = TestGame_iOS;
+		};
+		12A15FB21CD445FE00BEDD06 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 12A15FAE1CD445FE00BEDD06 /* GLRenderer.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 12A15F701CD40DC300BEDD06;
+			remoteInfo = GLRenderer;
+		};
+		12A15FB41CD4460100BEDD06 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 12A15FAE1CD445FE00BEDD06 /* GLRenderer.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 12A15F6F1CD40DC300BEDD06;
+			remoteInfo = GLRenderer;
+		};
+		12B748391CC6E81400825D36 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1270124E1CC315FD001840A7 /* Engine.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 12822AF01CC1AD4300EE5D0A;
+			remoteInfo = Engine;
+		};
+		12B7484E1CC6EA4000825D36 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 12B7484A1CC6EA4000825D36 /* TestGame.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 127011EF1CC313D7001840A7;
+			remoteInfo = TestGame;
+		};
+		12B748501CC6EA4400825D36 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 12B7484A1CC6EA4000825D36 /* TestGame.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 127011EE1CC313D7001840A7;
+			remoteInfo = TestGame;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		121976841D469C5D00CCDD12 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Data;
+			dstSubfolderSpec = 7;
+			files = (
+				1219768B1D469CCC00CCDD12 /* resources.db in CopyFiles */,
+				1219768C1D469CCC00CCDD12 /* Shaders in CopyFiles */,
+				1219768D1D469CCC00CCDD12 /* Sounds in CopyFiles */,
+				121976861D469C7400CCDD12 /* core.nar in CopyFiles */,
+				121976901D469D4400CCDD12 /* scenes.cfg in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		121976911D469D7800CCDD12 /* Copy Files */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Data/Textures;
+			dstSubfolderSpec = 7;
+			files = (
+				128F68321D724985005AECA1 /* terrain_blend_map.tga in Copy Files */,
+				128F682E1D72494F005AECA1 /* dirt.tga in Copy Files */,
+				128F682F1D72494F005AECA1 /* grass.tga in Copy Files */,
+				128F68301D72494F005AECA1 /* rock.tga in Copy Files */,
+			);
+			name = "Copy Files";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		128F68341D7249AA005AECA1 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Data/Scenes;
+			dstSubfolderSpec = 7;
+			files = (
+				128F68351D7249BA005AECA1 /* shadow.nscene in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		12B7483C1CC6E95500825D36 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 6;
+			files = (
+				12A15FB61CD4460F00BEDD06 /* libGLRenderer.dylib in CopyFiles */,
+				12B748531CC6EA4E00825D36 /* libTestGame.dylib in CopyFiles */,
+				12B7483D1CC6E97200825D36 /* libEngine.dylib in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		120718BF1CCFD0BA001A1EEA /* Engine_Low.ini */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Engine_Low.ini; path = ../../../Resources/Engine_Low.ini; sourceTree = "<group>"; };
+		121976851D469C7400CCDD12 /* core.nar */ = {isa = PBXFileReference; lastKnownFileType = file; name = core.nar; path = ../../Resources/Data/core.nar; sourceTree = "<group>"; };
+		121976881D469CCC00CCDD12 /* resources.db */ = {isa = PBXFileReference; lastKnownFileType = file; name = resources.db; path = ../../Resources/Data/resources.db; sourceTree = "<group>"; };
+		121976891D469CCC00CCDD12 /* Shaders */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Shaders; path = ../../Resources/Data/Shaders; sourceTree = "<group>"; };
+		1219768A1D469CCC00CCDD12 /* Sounds */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Sounds; path = ../../Resources/Data/Sounds; sourceTree = "<group>"; };
+		1219768E1D469D3900CCDD12 /* scenes.cfg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = scenes.cfg; sourceTree = "<group>"; };
+		122A3ABA1D338B340047786A /* ogg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ogg.framework; path = Frameworks/ogg.framework; sourceTree = "<group>"; };
+		122A3ABB1D338B340047786A /* vorbis.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = vorbis.framework; path = Frameworks/vorbis.framework; sourceTree = "<group>"; };
+		122A4B1F1D47450E009F23CE /* Data */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Data; path = ../../Resources/Data; sourceTree = "<group>"; };
+		124A32071CDC267D00472893 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/usr/lib/libz.tbd; sourceTree = DEVELOPER_DIR; };
+		124A32091CDC268100472893 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/usr/lib/libsqlite3.tbd; sourceTree = DEVELOPER_DIR; };
+		124A320B1CDC268800472893 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/System/Library/Frameworks/OpenAL.framework; sourceTree = DEVELOPER_DIR; };
+		124A32501CDC299500472893 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/System/Library/Frameworks/OpenGLES.framework; sourceTree = DEVELOPER_DIR; };
+		125025951D5B8FE7005B3341 /* GLESRenderer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GLESRenderer.xcodeproj; path = ../Renderer/GLESRenderer/GLESRenderer.xcodeproj; sourceTree = "<group>"; };
+		1270119A1CC31326001840A7 /* launcher.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = launcher.mm; path = Mac/launcher.mm; sourceTree = "<group>"; };
+		1270124E1CC315FD001840A7 /* Engine.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Engine.xcodeproj; path = ../Engine/Engine.xcodeproj; sourceTree = "<group>"; };
+		128F682B1D724947005AECA1 /* dirt.tga */ = {isa = PBXFileReference; lastKnownFileType = file; name = dirt.tga; path = ../../Resources/Data/Textures/dirt.tga; sourceTree = "<group>"; };
+		128F682C1D724947005AECA1 /* grass.tga */ = {isa = PBXFileReference; lastKnownFileType = file; name = grass.tga; path = ../../Resources/Data/Textures/grass.tga; sourceTree = "<group>"; };
+		128F682D1D724947005AECA1 /* rock.tga */ = {isa = PBXFileReference; lastKnownFileType = file; name = rock.tga; path = ../../Resources/Data/Textures/rock.tga; sourceTree = "<group>"; };
+		128F68311D72497D005AECA1 /* terrain_blend_map.tga */ = {isa = PBXFileReference; lastKnownFileType = file; name = terrain_blend_map.tga; path = ../../Resources/Data/Textures/terrain_blend_map.tga; sourceTree = "<group>"; };
+		128F68331D72499D005AECA1 /* shadow.nscene */ = {isa = PBXFileReference; lastKnownFileType = text; name = shadow.nscene; path = ../../Resources/Data/Scenes/shadow.nscene; sourceTree = "<group>"; };
+		1296BC391CDC132C00D17488 /* NekoEngine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NekoEngine.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1296BC3C1CDC132C00D17488 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		1296BC3E1CDC132C00D17488 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		1296BC3F1CDC132C00D17488 /* AppDelegate.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = AppDelegate.mm; sourceTree = "<group>"; };
+		1296BC471CDC132C00D17488 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		1296BC4A1CDC132C00D17488 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		1296BC4C1CDC132C00D17488 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		12A15FAE1CD445FE00BEDD06 /* GLRenderer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GLRenderer.xcodeproj; path = ../Renderer/GLRenderer/GLRenderer.xcodeproj; sourceTree = "<group>"; };
+		12A9BAAB1D54F037001B363A /* libfreetype.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libfreetype.a; path = Frameworks/freetype/libfreetype.a; sourceTree = "<group>"; };
+		12A9BAAD1D54F691001B363A /* Fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Fonts; path = ../../Resources/Data/Fonts; sourceTree = "<group>"; };
+		12A9BAB01D54FEDE001B363A /* Engine_iOS.ini */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Engine_iOS.ini; sourceTree = "<group>"; };
+		12B748271CC6E7C600825D36 /* Launcher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Launcher.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		12B7482F1CC6E7C600825D36 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		12B748341CC6E7C600825D36 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		12B7484A1CC6EA4000825D36 /* TestGame.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = TestGame.xcodeproj; path = ../TestGame/TestGame.xcodeproj; sourceTree = "<group>"; };
+		12B748561CC6F52100825D36 /* Engine.ini */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Engine.ini; path = ../../../Resources/Engine.ini; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1296BC361CDC132C00D17488 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1250259D1D5B8FF2005B3341 /* libGLESRenderer.a in Frameworks */,
+				124A32511CDC299500472893 /* OpenGLES.framework in Frameworks */,
+				124A320C1CDC268800472893 /* OpenAL.framework in Frameworks */,
+				124A320A1CDC268100472893 /* libsqlite3.tbd in Frameworks */,
+				124A32081CDC267D00472893 /* libz.tbd in Frameworks */,
+				122A3AC01D338B7B0047786A /* ogg.framework in Frameworks */,
+				122A3AC11D338B7B0047786A /* vorbis.framework in Frameworks */,
+				12A9BAAC1D54F037001B363A /* libfreetype.a in Frameworks */,
+				1296BD871CDC1E1A00D17488 /* libTestGame_iOS.a in Frameworks */,
+				1296BC551CDC145600D17488 /* libEngine_iOS.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		12B748241CC6E7C600825D36 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				12B7483B1CC6E81B00825D36 /* libEngine.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		121976871D469C8900CCDD12 /* iOS Data */ = {
+			isa = PBXGroup;
+			children = (
+				128F68331D72499D005AECA1 /* shadow.nscene */,
+				128F68311D72497D005AECA1 /* terrain_blend_map.tga */,
+				128F682B1D724947005AECA1 /* dirt.tga */,
+				128F682C1D724947005AECA1 /* grass.tga */,
+				128F682D1D724947005AECA1 /* rock.tga */,
+				121976881D469CCC00CCDD12 /* resources.db */,
+				12A9BAAD1D54F691001B363A /* Fonts */,
+				121976891D469CCC00CCDD12 /* Shaders */,
+				1219768A1D469CCC00CCDD12 /* Sounds */,
+				121976851D469C7400CCDD12 /* core.nar */,
+			);
+			name = "iOS Data";
+			sourceTree = "<group>";
+		};
+		124A320D1CDC26AE00472893 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				12A9BAAA1D54F02C001B363A /* freetype */,
+				122A3ABA1D338B340047786A /* ogg.framework */,
+				122A3ABB1D338B340047786A /* vorbis.framework */,
+				124A32501CDC299500472893 /* OpenGLES.framework */,
+				124A320B1CDC268800472893 /* OpenAL.framework */,
+				124A32091CDC268100472893 /* libsqlite3.tbd */,
+				124A32071CDC267D00472893 /* libz.tbd */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		125025961D5B8FE7005B3341 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1250259A1D5B8FE7005B3341 /* libGLESRenderer.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		127011851CC312F3001840A7 = {
+			isa = PBXGroup;
+			children = (
+				1270124E1CC315FD001840A7 /* Engine.xcodeproj */,
+				12B7484A1CC6EA4000825D36 /* TestGame.xcodeproj */,
+				12A15FAE1CD445FE00BEDD06 /* GLRenderer.xcodeproj */,
+				125025951D5B8FE7005B3341 /* GLESRenderer.xcodeproj */,
+				127011991CC31317001840A7 /* Source */,
+				12B748281CC6E7C600825D36 /* Launcher */,
+				1296BC3A1CDC132C00D17488 /* Launcher-iOS */,
+				1270118F1CC312F3001840A7 /* Products */,
+				122A4B1F1D47450E009F23CE /* Data */,
+				121976871D469C8900CCDD12 /* iOS Data */,
+			);
+			sourceTree = "<group>";
+		};
+		1270118F1CC312F3001840A7 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				12B748271CC6E7C600825D36 /* Launcher.app */,
+				1296BC391CDC132C00D17488 /* NekoEngine.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		127011991CC31317001840A7 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				1270119A1CC31326001840A7 /* launcher.mm */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+		1270124F1CC315FD001840A7 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				127012531CC315FD001840A7 /* libEngine.dylib */,
+				1296BC511CDC132C00D17488 /* libEngine_iOS.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1296BC3A1CDC132C00D17488 /* Launcher-iOS */ = {
+			isa = PBXGroup;
+			children = (
+				124A320D1CDC26AE00472893 /* Frameworks */,
+				1296BC3E1CDC132C00D17488 /* AppDelegate.h */,
+				1296BC3F1CDC132C00D17488 /* AppDelegate.mm */,
+				1296BC471CDC132C00D17488 /* Assets.xcassets */,
+				1296BC491CDC132C00D17488 /* LaunchScreen.storyboard */,
+				12A9BAB01D54FEDE001B363A /* Engine_iOS.ini */,
+				1296BC4C1CDC132C00D17488 /* Info.plist */,
+				1219768E1D469D3900CCDD12 /* scenes.cfg */,
+				1296BC3B1CDC132C00D17488 /* Supporting Files */,
+			);
+			path = "Launcher-iOS";
+			sourceTree = "<group>";
+		};
+		1296BC3B1CDC132C00D17488 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				1296BC3C1CDC132C00D17488 /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		12A15FAF1CD445FE00BEDD06 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				12A15FB31CD445FE00BEDD06 /* libGLRenderer.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		12A9BAAA1D54F02C001B363A /* freetype */ = {
+			isa = PBXGroup;
+			children = (
+				12A9BAAB1D54F037001B363A /* libfreetype.a */,
+			);
+			name = freetype;
+			sourceTree = "<group>";
+		};
+		12B748281CC6E7C600825D36 /* Launcher */ = {
+			isa = PBXGroup;
+			children = (
+				12B7482F1CC6E7C600825D36 /* Assets.xcassets */,
+				12B748341CC6E7C600825D36 /* Info.plist */,
+				12B748561CC6F52100825D36 /* Engine.ini */,
+				120718BF1CCFD0BA001A1EEA /* Engine_Low.ini */,
+			);
+			path = Launcher;
+			sourceTree = "<group>";
+		};
+		12B7484B1CC6EA4000825D36 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				12B7484F1CC6EA4000825D36 /* libTestGame.dylib */,
+				1296BD861CDC1E1700D17488 /* libTestGame_iOS.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1296BC381CDC132C00D17488 /* Launcher-iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1296BC521CDC132C00D17488 /* Build configuration list for PBXNativeTarget "Launcher-iOS" */;
+			buildPhases = (
+				1296BC351CDC132C00D17488 /* Sources */,
+				1296BC361CDC132C00D17488 /* Frameworks */,
+				1296BC371CDC132C00D17488 /* Resources */,
+				121976841D469C5D00CCDD12 /* CopyFiles */,
+				121976911D469D7800CCDD12 /* Copy Files */,
+				128F68341D7249AA005AECA1 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1250259C1D5B8FEE005B3341 /* PBXTargetDependency */,
+				1296BD831CDC1E1700D17488 /* PBXTargetDependency */,
+				1296BC541CDC144F00D17488 /* PBXTargetDependency */,
+			);
+			name = "Launcher-iOS";
+			productName = "Launcher-iOS";
+			productReference = 1296BC391CDC132C00D17488 /* NekoEngine.app */;
+			productType = "com.apple.product-type.application";
+		};
+		12B748261CC6E7C600825D36 /* Launcher */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 12B748351CC6E7C600825D36 /* Build configuration list for PBXNativeTarget "Launcher" */;
+			buildPhases = (
+				12B748231CC6E7C600825D36 /* Sources */,
+				12B748241CC6E7C600825D36 /* Frameworks */,
+				12B748251CC6E7C600825D36 /* Resources */,
+				12B7483C1CC6E95500825D36 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				12A15FB51CD4460100BEDD06 /* PBXTargetDependency */,
+				12B748511CC6EA4400825D36 /* PBXTargetDependency */,
+				12B7483A1CC6E81400825D36 /* PBXTargetDependency */,
+			);
+			name = Launcher;
+			productName = Launcher;
+			productReference = 12B748271CC6E7C600825D36 /* Launcher.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		127011861CC312F3001840A7 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0730;
+				ORGANIZATIONNAME = "Alexandru Naiman";
+				TargetAttributes = {
+					1296BC381CDC132C00D17488 = {
+						CreatedOnToolsVersion = 7.3;
+						DevelopmentTeam = UJ5SVB42BG;
+					};
+					12B748261CC6E7C600825D36 = {
+						CreatedOnToolsVersion = 7.3;
+					};
+				};
+			};
+			buildConfigurationList = 127011891CC312F3001840A7 /* Build configuration list for PBXProject "Launcher" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 127011851CC312F3001840A7;
+			productRefGroup = 1270118F1CC312F3001840A7 /* Products */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 1270124F1CC315FD001840A7 /* Products */;
+					ProjectRef = 1270124E1CC315FD001840A7 /* Engine.xcodeproj */;
+				},
+				{
+					ProductGroup = 125025961D5B8FE7005B3341 /* Products */;
+					ProjectRef = 125025951D5B8FE7005B3341 /* GLESRenderer.xcodeproj */;
+				},
+				{
+					ProductGroup = 12A15FAF1CD445FE00BEDD06 /* Products */;
+					ProjectRef = 12A15FAE1CD445FE00BEDD06 /* GLRenderer.xcodeproj */;
+				},
+				{
+					ProductGroup = 12B7484B1CC6EA4000825D36 /* Products */;
+					ProjectRef = 12B7484A1CC6EA4000825D36 /* TestGame.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				12B748261CC6E7C600825D36 /* Launcher */,
+				1296BC381CDC132C00D17488 /* Launcher-iOS */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		1250259A1D5B8FE7005B3341 /* libGLESRenderer.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libGLESRenderer.a;
+			remoteRef = 125025991D5B8FE7005B3341 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		127012531CC315FD001840A7 /* libEngine.dylib */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.dylib";
+			path = libEngine.dylib;
+			remoteRef = 127012521CC315FD001840A7 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1296BC511CDC132C00D17488 /* libEngine_iOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libEngine_iOS.a;
+			remoteRef = 1296BC501CDC132C00D17488 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1296BD861CDC1E1700D17488 /* libTestGame_iOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libTestGame_iOS.a;
+			remoteRef = 1296BD851CDC1E1700D17488 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		12A15FB31CD445FE00BEDD06 /* libGLRenderer.dylib */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.dylib";
+			path = libGLRenderer.dylib;
+			remoteRef = 12A15FB21CD445FE00BEDD06 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		12B7484F1CC6EA4000825D36 /* libTestGame.dylib */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.dylib";
+			path = libTestGame.dylib;
+			remoteRef = 12B7484E1CC6EA4000825D36 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1296BC371CDC132C00D17488 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1296BC4B1CDC132C00D17488 /* LaunchScreen.storyboard in Resources */,
+				1219768F1D469D3900CCDD12 /* scenes.cfg in Resources */,
+				12A9BAB11D54FEDE001B363A /* Engine_iOS.ini in Resources */,
+				1296BC481CDC132C00D17488 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		12B748251CC6E7C600825D36 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				12B748571CC6F52100825D36 /* Engine.ini in Resources */,
+				12B748301CC6E7C600825D36 /* Assets.xcassets in Resources */,
+				122A4B201D47450E009F23CE /* Data in Resources */,
+				120718C01CCFD0BA001A1EEA /* Engine_Low.ini in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1296BC351CDC132C00D17488 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1296BC401CDC132C00D17488 /* AppDelegate.mm in Sources */,
+				1296BC3D1CDC132C00D17488 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		12B748231CC6E7C600825D36 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				12B748381CC6E80100825D36 /* launcher.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		1250259C1D5B8FEE005B3341 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = GLESRenderer;
+			targetProxy = 1250259B1D5B8FEE005B3341 /* PBXContainerItemProxy */;
+		};
+		1296BC541CDC144F00D17488 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Engine_iOS;
+			targetProxy = 1296BC531CDC144F00D17488 /* PBXContainerItemProxy */;
+		};
+		1296BD831CDC1E1700D17488 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = TestGame_iOS;
+			targetProxy = 1296BD821CDC1E1700D17488 /* PBXContainerItemProxy */;
+		};
+		12A15FB51CD4460100BEDD06 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = GLRenderer;
+			targetProxy = 12A15FB41CD4460100BEDD06 /* PBXContainerItemProxy */;
+		};
+		12B7483A1CC6E81400825D36 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Engine;
+			targetProxy = 12B748391CC6E81400825D36 /* PBXContainerItemProxy */;
+		};
+		12B748511CC6EA4400825D36 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = TestGame;
+			targetProxy = 12B748501CC6EA4400825D36 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		1296BC491CDC132C00D17488 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1296BC4A1CDC132C00D17488 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		127011931CC312F3001840A7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = c11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		127011941CC312F3001840A7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = c11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		1296BC4D1CDC132C00D17488 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_OPTIMIZATION = space;
+				CLANG_ADDRESS_SANITIZER_CONTAINER_OVERFLOW = YES;
+				CLANG_ANALYZER_SECURITY_FLOATLOOPCOUNTER = YES;
+				CLANG_ANALYZER_SECURITY_INSECUREAPI_RAND = YES;
+				CLANG_ANALYZER_SECURITY_INSECUREAPI_STRCPY = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				CLANG_WARN_CXX0X_EXTENSIONS = YES;
+				CLANG_WARN__EXIT_TIME_DESTRUCTORS = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEAD_CODE_STRIPPING = NO;
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Launcher-iOS/Frameworks",
+				);
+				GCC_C_LANGUAGE_STANDARD = c11;
+				GCC_FAST_MATH = YES;
+				GCC_UNROLL_LOOPS = YES;
+				GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS = YES;
+				HEADER_SEARCH_PATHS = (
+					"\"$(SRCROOT)/../../Include\"",
+					"\"$(SRCROOT)/../../3rdparty/include_all\"",
+					"\"$(PROJECT_DIR)/Launcher-iOS/Frameworks/freetype/include\"",
+				);
+				INFOPLIST_FILE = "Launcher-iOS/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Launcher-iOS/Frameworks/freetype",
+				);
+				OTHER_LDFLAGS = "-all_load";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.anaiman.Launcher-iOS";
+				PRODUCT_NAME = NekoEngine;
+				PROVISIONING_PROFILE = "";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		1296BC4E1CDC132C00D17488 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_OPTIMIZATION = space;
+				CLANG_ADDRESS_SANITIZER_CONTAINER_OVERFLOW = YES;
+				CLANG_ANALYZER_SECURITY_FLOATLOOPCOUNTER = YES;
+				CLANG_ANALYZER_SECURITY_INSECUREAPI_RAND = YES;
+				CLANG_ANALYZER_SECURITY_INSECUREAPI_STRCPY = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				CLANG_WARN_CXX0X_EXTENSIONS = YES;
+				CLANG_WARN__EXIT_TIME_DESTRUCTORS = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEAD_CODE_STRIPPING = NO;
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Launcher-iOS/Frameworks",
+				);
+				GCC_C_LANGUAGE_STANDARD = c11;
+				GCC_FAST_MATH = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_UNROLL_LOOPS = YES;
+				GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS = YES;
+				HEADER_SEARCH_PATHS = (
+					"\"$(SRCROOT)/../../Include\"",
+					"\"$(SRCROOT)/../../3rdparty/include_all\"",
+					"\"$(PROJECT_DIR)/Launcher-iOS/Frameworks/freetype/include\"",
+				);
+				INFOPLIST_FILE = "Launcher-iOS/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Launcher-iOS/Frameworks/freetype",
+				);
+				OTHER_LDFLAGS = "-all_load";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.anaiman.Launcher-iOS";
+				PRODUCT_NAME = NekoEngine;
+				PROVISIONING_PROFILE = "";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		12B748361CC6E7C600825D36 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+					_DEBUG,
+				);
+				HEADER_SEARCH_PATHS = (
+					"\"$(SRCROOT)/../../Include\"",
+					/usr/local/include,
+					"\"$(SRCROOT)/../../3rdparty/include_all\"",
+					/usr/local/include/freetype2,
+				);
+				INFOPLIST_FILE = Launcher/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				PRODUCT_BUNDLE_IDENTIFIER = org.anaiman.NekoEngine.Launcher;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		12B748371CC6E7C600825D36 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				HEADER_SEARCH_PATHS = (
+					"\"$(SRCROOT)/../../Include\"",
+					/usr/local/include,
+					"\"$(SRCROOT)/../../3rdparty/include_all\"",
+					/usr/local/include/freetype2,
+				);
+				INFOPLIST_FILE = Launcher/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				PRODUCT_BUNDLE_IDENTIFIER = org.anaiman.NekoEngine.Launcher;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		127011891CC312F3001840A7 /* Build configuration list for PBXProject "Launcher" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				127011931CC312F3001840A7 /* Debug */,
+				127011941CC312F3001840A7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1296BC521CDC132C00D17488 /* Build configuration list for PBXNativeTarget "Launcher-iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1296BC4D1CDC132C00D17488 /* Debug */,
+				1296BC4E1CDC132C00D17488 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		12B748351CC6E7C600825D36 /* Build configuration list for PBXNativeTarget "Launcher" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				12B748361CC6E7C600825D36 /* Debug */,
+				12B748371CC6E7C600825D36 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 127011861CC312F3001840A7 /* Project object */;
+}

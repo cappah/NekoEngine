@@ -281,7 +281,7 @@ case $OS in
 
 		echo ""
 		echo "Setup done. Opening the Xcode workspace file..."
-		open NekoEngine.xcworkspace
+		open Projects/Xcode/NekoEngine.xcworkspace
 	;;
 	'OpenBSD')
 		echo "Attempting to install dependencies using pkg"
