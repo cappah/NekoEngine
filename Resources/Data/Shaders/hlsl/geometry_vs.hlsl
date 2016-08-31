@@ -1,8 +1,8 @@
 struct VSInput
 {
 	float3 a_pos : POSITION;
-	float3 a_norm : NORMAL0;
 	float3 a_color : COLOR0;
+	float3 a_norm : NORMAL0;		
 	float3 a_tgt : TANGENT0;
 	float2 a_uv : TEXCOORD0;
 	float2 a_uv_terrain : TEXCOORD1;

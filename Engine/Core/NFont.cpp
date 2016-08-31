@@ -217,6 +217,7 @@ int NFont::_BuildAtlas()
 	BufferAttribute attrib;
 	attrib.name = "POSITION";
 	attrib.index = SHADER_POSITION_ATTRIBUTE;
+	attrib.sindex = 0;
 	attrib.size = 4;
 	attrib.type = BufferDataType::Float;
 	attrib.normalize = false;

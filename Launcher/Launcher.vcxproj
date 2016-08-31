@@ -95,7 +95,7 @@ copy $(SolutionDir)Resources\Engine.ini $(SolutionDir)Bin64\</Command>
       <MSExtensions>true</MSExtensions>
       <DataLevelLinking>true</DataLevelLinking>
       <UseShortEnums>true</UseShortEnums>
-      <TreatWarningAsError>true</TreatWarningAsError>
+      <TreatWarningAsError>false</TreatWarningAsError>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

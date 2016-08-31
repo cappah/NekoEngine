@@ -57,7 +57,7 @@
 #undef Always
 #endif
 
-#define RENDERER_API_VERSION	0x0032
+#define RENDERER_API_VERSION	0x0033
 
 #define R_CLEAR_COLOR			1
 #define R_CLEAR_DEPTH			2

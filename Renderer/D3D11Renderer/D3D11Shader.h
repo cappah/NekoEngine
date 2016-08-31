@@ -44,7 +44,7 @@
 #include "D3D11Texture.h"
 #include "D3D11Buffer.h"
 
-#include <unordered_map>
+#include <vector>
 
 #include <d3d11.h>
 #include <d3d11_1.h>
@@ -55,6 +55,12 @@ typedef struct SHADER_BLOB
 	char *data;
 	size_t size;
 } ShaderBlob;
+
+typedef struct D3D11_TEXTURE_INFO
+{
+	unsigned int location;
+	D3D11Texture *texture;
+} D3D11TextureInfo;
 
 typedef struct D3D11_UNIF_BUF
 {
@@ -128,6 +134,6 @@ private:
 	uint8_t _fsNumBuffers;
 	uint8_t _nextBinding;
 
-	std::unordered_map<int, D3D11Texture*> _textures;
+	std::vector<D3D11TextureInfo> _textures;
 };
 

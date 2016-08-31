@@ -162,22 +162,31 @@ void D3D11Shader::Disable()
 { 
 	D3D11Renderer::SetActiveShader(nullptr);
 
-	for (pair<unsigned int, D3D11Texture*> kvp : _textures)
+	for (D3D11TextureInfo &ti : _textures)
 	{
-		if (!kvp.second->IsUsable())
-			kvp.second->CreateTexture();
+		if (!ti.texture->IsUsable())
+			ti.texture->CreateTexture();
 
-		_ctx->deviceContext->VSSetSamplers(kvp.first, 0, nullptr);
-		_ctx->deviceContext->PSSetSamplers(kvp.first, 0, nullptr);
+		_ctx->deviceContext->VSSetSamplers(ti.location, 0, nullptr);
+		_ctx->deviceContext->PSSetSamplers(ti.location, 0, nullptr);
 
-		_ctx->deviceContext->VSSetShaderResources(kvp.first, 0, nullptr);
-		_ctx->deviceContext->PSSetShaderResources(kvp.first, 0, nullptr);
+		_ctx->deviceContext->VSSetShaderResources(ti.location, 0, nullptr);
+		_ctx->deviceContext->PSSetShaderResources(ti.location, 0, nullptr);
 	}
 }
 
 void D3D11Shader::SetTexture(unsigned int location, RTexture *tex)
 {
-	_textures[location] = (D3D11Texture*)tex;
+	for (D3D11TextureInfo &ti : _textures)
+	{
+		if (ti.location == location)
+		{
+			ti.texture = (D3D11Texture *)tex;
+			return;
+		}
+	}
+	
+	_textures.push_back({ location, (D3D11Texture *)tex });
 }
 
 void D3D11Shader::BindUniformBuffers()
@@ -471,16 +480,16 @@ D3D11Shader::~D3D11Shader()
 
 void D3D11Shader::EnableTextures()
 {
-	for (pair<unsigned int, D3D11Texture*> kvp : _textures)
+	for (D3D11TextureInfo &ti : _textures)
 	{
-		if (!kvp.second->IsUsable())
-			kvp.second->CreateTexture();
+		if (!ti.texture->IsUsable())
+			ti.texture->CreateTexture();
 
-		_ctx->deviceContext->VSSetSamplers(kvp.first, 1, kvp.second->GetPPSS());
-		_ctx->deviceContext->PSSetSamplers(kvp.first, 1, kvp.second->GetPPSS());
+		_ctx->deviceContext->VSSetSamplers(ti.location, 1, ti.texture->GetPPSS());
+		_ctx->deviceContext->PSSetSamplers(ti.location, 1, ti.texture->GetPPSS());
 
-		_ctx->deviceContext->VSSetShaderResources(kvp.first, 1, kvp.second->GetPPSRV());
-		_ctx->deviceContext->PSSetShaderResources(kvp.first, 1, kvp.second->GetPPSRV());
+		_ctx->deviceContext->VSSetShaderResources(ti.location, 1, ti.texture->GetPPSRV());
+		_ctx->deviceContext->PSSetShaderResources(ti.location, 1, ti.texture->GetPPSRV());
 	}
 }
 
@@ -494,7 +503,7 @@ void D3D11Shader::SetInputLayout()
 
 
 		for (BufferAttribute &attrib : vertexBuffer->GetAttributes())
-			descriptors[numDescriptors++] = { attrib.name.c_str(), 0, D3D11_BufferDataType[((int)attrib.type * 4) + attrib.size - 1], 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 };
+			descriptors[numDescriptors++] = { attrib.name.c_str(), attrib.sindex, D3D11_BufferDataType[((int)attrib.type * 4) + attrib.size - 1], 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 };
 
 		if(_d3dVsBlob)
 			_ctx->device->CreateInputLayout(descriptors, numDescriptors, _d3dVsBlob->GetBufferPointer(), _d3dVsBlob->GetBufferSize(), &_layout);

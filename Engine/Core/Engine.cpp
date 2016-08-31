@@ -403,6 +403,7 @@ void Engine::_InitializeQuadVAO()
 
 	BufferAttribute attrib;
 	attrib.index = SHADER_POSITION_ATTRIBUTE;
+	attrib.sindex = 0;
 	attrib.name = "POSITION";
 	attrib.size = 2;
 	attrib.type = BufferDataType::Float;
@@ -669,7 +670,7 @@ int Engine::Initialize(string cmdLine, bool editor)
 	Logger::Log("OpenAL", LOG_INFORMATION, "Extensions: %s", alGetString(AL_EXTENSIONS));
 
 	_renderer->SetClearColor(0.f, 0.f, 0.f, 0.f);
-	_renderer->Clear(R_CLEAR_COLOR);
+	_renderer->Clear(R_CLEAR_COLOR | R_CLEAR_DEPTH | R_CLEAR_STENCIL);
 
 	_engineFont = (NFont*)ResourceManager::GetResourceByName("fnt_system", ResourceType::RES_FONT);
 

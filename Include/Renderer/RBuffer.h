@@ -65,6 +65,7 @@ typedef struct BUFFER_ATTRIB
 {
 	uint32_t index;
 	std::string name;
+	uint32_t sindex;
 	int32_t size;
 	BufferDataType type;
 	bool normalize;

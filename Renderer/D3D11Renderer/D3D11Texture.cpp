@@ -263,8 +263,9 @@ void D3D11Texture::CreateTexture()
 
 			if (desc_2d.Format == DXGI_FORMAT_D16_UNORM)
 			{
-				srvDesc.Format = DXGI_FORMAT_R32_FLOAT;
+				srvDesc.Format = DXGI_FORMAT_R16_UNORM;
 				desc = &srvDesc;
+				desc_2d.Format = DXGI_FORMAT_R16_TYPELESS;
 				desc_2d.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
 			}
 			else if (desc_2d.Format == DXGI_FORMAT_D24_UNORM_S8_UINT)
@@ -278,12 +279,14 @@ void D3D11Texture::CreateTexture()
 			{
 				srvDesc.Format = DXGI_FORMAT_R32_FLOAT;
 				desc = &srvDesc;
+				desc_2d.Format = DXGI_FORMAT_R32_TYPELESS;
 				desc_2d.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
 			}
 			else if (desc_2d.Format == DXGI_FORMAT_D32_FLOAT_S8X24_UINT)
 			{
 				srvDesc.Format = DXGI_FORMAT_R32_FLOAT;
 				desc = &srvDesc;
+				desc_2d.Format = DXGI_FORMAT_R32_TYPELESS;
 				desc_2d.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
 			}
 

@@ -21,8 +21,9 @@ SamplerState sam : register(s0);
 PSOutput main(PSInput input)
 {
 	PSOutput output;
+	float2 uv = float2(input.v_uv.x, 1.0 - input.v_uv.y);
 
-	output.o_FragColor = LoadScreenTexture.Sample(sam, input.v_uv);
+	output.o_FragColor = LoadScreenTexture.Sample(sam, uv);
 	output.o_ColorTexture = output.o_FragColor;
 
 	return output;

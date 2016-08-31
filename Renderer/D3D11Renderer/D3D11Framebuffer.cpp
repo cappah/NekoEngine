@@ -90,7 +90,15 @@ void D3D11Framebuffer::AttachDepthTexture(class RTexture* texture)
 	D3D11Texture *tex = (D3D11Texture *)texture;
 	if (!tex->IsUsable()) tex->CreateTexture();
 	if (_dsv) _dsv->Release();
-	_ctx->device->CreateDepthStencilView(tex->GetTexture2D(), NULL, &_dsv);
+
+	D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
+	ZeroMemory(&dsvDesc, sizeof(D3D11_DEPTH_STENCIL_VIEW_DESC));
+
+	dsvDesc.Format = tex->GetDXGIFormat();
+	dsvDesc.ViewDimension = tex->IsMultisampled() ? D3D11_DSV_DIMENSION_TEXTURE2DMS : D3D11_DSV_DIMENSION_TEXTURE2D;
+	dsvDesc.Texture2D.MipSlice = 0;
+
+	_ctx->device->CreateDepthStencilView(tex->GetTexture2D(), &dsvDesc, &_dsv);
 }
 
 void D3D11Framebuffer::AttachDepthStencilTexture(class RTexture* texture)

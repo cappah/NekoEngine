@@ -455,6 +455,7 @@ int Scene::CreateArrayBuffers() noexcept
 		attrib.name = "POSITION";
 		attrib.index = SHADER_POSITION_ATTRIBUTE;
 		attrib.size = 3;
+		attrib.sindex = 0;
 		attrib.type = BufferDataType::Float;
 		attrib.normalize = false;
 		attrib.stride = sizeof(Vertex);
@@ -483,26 +484,29 @@ int Scene::CreateArrayBuffers() noexcept
 		_sceneVertexBuffer->AddAttribute(attrib);
 
 		attrib.name = "TEXCOORD";
+		attrib.sindex = 1;
 		attrib.index = SHADER_TERRAINUV_ATTRIBUTE;
 		attrib.size = 2;
 		attrib.ptr = (void *)VERTEX_TUV_OFFSET;
 		_sceneVertexBuffer->AddAttribute(attrib);
 
-		attrib.name = "INDEX";
+		attrib.name = "BLENDINDICES";
+		attrib.sindex = 0;
 		attrib.index = SHADER_INDEX_ATTRIBUTE;
 		attrib.size = 4;
 		attrib.type = BufferDataType::Int;
 		attrib.ptr = (void *)VERTEX_INDEX_OFFSET;
 		_sceneVertexBuffer->AddAttribute(attrib);
 
-		attrib.name = "WEIGHT";
+		attrib.name = "BLENDWEIGHT";
 		attrib.index = SHADER_WEIGHT_ATTRIBUTE;
 		attrib.size = 4;
 		attrib.type = BufferDataType::Float;
 		attrib.ptr = (void *)VERTEX_WEIGHT_OFFSET;
 		_sceneVertexBuffer->AddAttribute(attrib);
 
-		attrib.name = "NUMBONES";
+		attrib.name = "TEXCOORD";
+		attrib.sindex = 2;
 		attrib.index = SHADER_NUMBONES_ATTRIBUTE;
 		attrib.size = 1;
 		attrib.type = BufferDataType::Int;

@@ -349,7 +349,7 @@ bool D3D11Renderer::Initialize(PlatformWindowType hWnd, std::unordered_map<std::
 	_stencilRef = 0;
 	ZeroMemory(&_depthStencilStateDesc, sizeof(D3D11_DEPTH_STENCIL_DESC));
 	
-	_depthStencilStateDesc.DepthEnable = FALSE;
+	_depthStencilStateDesc.DepthEnable = TRUE;
 	_depthStencilStateDesc.DepthFunc = D3D11_COMPARISON_LESS;
 	_depthStencilStateDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
 
@@ -371,8 +371,13 @@ bool D3D11Renderer::Initialize(PlatformWindowType hWnd, std::unordered_map<std::
 	if (FAILED(hr))
 		return false;
 
+	_ctx.deviceContext->OMSetDepthStencilState(_depthStencilState, 1.f);
+
 	_syncInterval = 0;
 	_drawCalls = 0;
+
+	_ctx.deviceContext->ClearRenderTargetView(_ctx.renderTargetView, _clearColor);
+	_ctx.deviceContext->ClearDepthStencilView(_ctx.depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
 
 	return true;
 }
@@ -703,6 +708,9 @@ void D3D11Renderer::DrawArrays(PolygonMode mode, int32_t first, int count)
 		_activeShader->SetInputLayout();
 	}
 
+	if (!_boundFramebuffer)
+		_ctx.deviceContext->OMSetRenderTargets(1, &_ctx.renderTargetView, _ctx.depthStencilView);
+
 	_ctx.deviceContext->IASetPrimitiveTopology(D3D11_DrawModes[(int)mode]);
 	_ctx.deviceContext->Draw(count, first);
 	++_drawCalls;
@@ -716,6 +724,9 @@ void D3D11Renderer::DrawElements(PolygonMode mode, int count, ElementType type, 
 		_activeShader->SetInputLayout();
 	}
 
+	if (!_boundFramebuffer)
+		_ctx.deviceContext->OMSetRenderTargets(1, &_ctx.renderTargetView, _ctx.depthStencilView);
+
 	_ctx.deviceContext->IASetPrimitiveTopology(D3D11_DrawModes[(int)mode]);
 	_ctx.deviceContext->DrawIndexed(count, (int)indices, 0);
 	++_drawCalls;
@@ -728,6 +739,9 @@ void D3D11Renderer::DrawElementsBaseVertex(PolygonMode mode, int32_t count, Elem
 		_activeShader->EnableTextures();
 		_activeShader->SetInputLayout();
 	}
+
+	if (!_boundFramebuffer)
+		_ctx.deviceContext->OMSetRenderTargets(1, &_ctx.renderTargetView, _ctx.depthStencilView);
 
 	_ctx.deviceContext->IASetPrimitiveTopology(D3D11_DrawModes[(int)mode]);
 	_ctx.deviceContext->DrawIndexed(count, (int)indices, baseVertex);
