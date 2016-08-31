@@ -396,7 +396,7 @@
 				GCC_UNROLL_LOOPS = YES;
 				HEADER_SEARCH_PATHS = (
 					/usr/local/include,
-					"\"$(SRCROOT)/../Include\"",
+					"\"$(SRCROOT)/../../Include\"",
 					/usr/local/include/freetype2,
 				);
 				INSTALL_PATH = "@rpath";
@@ -426,7 +426,7 @@
 				GCC_UNROLL_LOOPS = YES;
 				HEADER_SEARCH_PATHS = (
 					/usr/local/include,
-					"\"$(SRCROOT)/../Include\"",
+					"\"$(SRCROOT)/../../Include\"",
 					/usr/local/include/freetype2,
 				);
 				INSTALL_PATH = "@rpath";

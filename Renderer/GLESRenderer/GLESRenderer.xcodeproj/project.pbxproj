@@ -341,7 +341,7 @@
 				);
 				GCC_UNROLL_LOOPS = YES;
 				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/../Include\"",
+					"\"$(SRCROOT)/../../Include\"",
 					"\"$(SRCROOT)/../GLRenderer\"",
 				);
 				LLVM_LTO = YES;
@@ -361,7 +361,7 @@
 				GCC_OPTIMIZATION_LEVEL = fast;
 				GCC_UNROLL_LOOPS = YES;
 				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/../Include\"",
+					"\"$(SRCROOT)/../../Include\"",
 					"\"$(SRCROOT)/../GLRenderer\"",
 				);
 				LLVM_LTO = YES;

@@ -22,6 +22,11 @@
 		124A320C1CDC268800472893 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 124A320B1CDC268800472893 /* OpenAL.framework */; };
 		124A32511CDC299500472893 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 124A32501CDC299500472893 /* OpenGLES.framework */; };
 		1250259D1D5B8FF2005B3341 /* libGLESRenderer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1250259A1D5B8FE7005B3341 /* libGLESRenderer.a */; };
+		128F682E1D72494F005AECA1 /* dirt.tga in Copy Files */ = {isa = PBXBuildFile; fileRef = 128F682B1D724947005AECA1 /* dirt.tga */; };
+		128F682F1D72494F005AECA1 /* grass.tga in Copy Files */ = {isa = PBXBuildFile; fileRef = 128F682C1D724947005AECA1 /* grass.tga */; };
+		128F68301D72494F005AECA1 /* rock.tga in Copy Files */ = {isa = PBXBuildFile; fileRef = 128F682D1D724947005AECA1 /* rock.tga */; };
+		128F68321D724985005AECA1 /* terrain_blend_map.tga in Copy Files */ = {isa = PBXBuildFile; fileRef = 128F68311D72497D005AECA1 /* terrain_blend_map.tga */; };
+		128F68351D7249BA005AECA1 /* shadow.nscene in CopyFiles */ = {isa = PBXBuildFile; fileRef = 128F68331D72499D005AECA1 /* shadow.nscene */; };
 		1296BC3D1CDC132C00D17488 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1296BC3C1CDC132C00D17488 /* main.m */; };
 		1296BC401CDC132C00D17488 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1296BC3F1CDC132C00D17488 /* AppDelegate.mm */; };
 		1296BC481CDC132C00D17488 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1296BC471CDC132C00D17488 /* Assets.xcassets */; };
@@ -144,11 +149,25 @@
 		121976911D469D7800CCDD12 /* Copy Files */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
-			dstPath = "";
+			dstPath = Data/Textures;
 			dstSubfolderSpec = 7;
 			files = (
+				128F68321D724985005AECA1 /* terrain_blend_map.tga in Copy Files */,
+				128F682E1D72494F005AECA1 /* dirt.tga in Copy Files */,
+				128F682F1D72494F005AECA1 /* grass.tga in Copy Files */,
+				128F68301D72494F005AECA1 /* rock.tga in Copy Files */,
 			);
 			name = "Copy Files";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		128F68341D7249AA005AECA1 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Data/Scenes;
+			dstSubfolderSpec = 7;
+			files = (
+				128F68351D7249BA005AECA1 /* shadow.nscene in CopyFiles */,
+			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		12B7483C1CC6E95500825D36 /* CopyFiles */ = {
@@ -179,9 +198,14 @@
 		124A32091CDC268100472893 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/usr/lib/libsqlite3.tbd; sourceTree = DEVELOPER_DIR; };
 		124A320B1CDC268800472893 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/System/Library/Frameworks/OpenAL.framework; sourceTree = DEVELOPER_DIR; };
 		124A32501CDC299500472893 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/System/Library/Frameworks/OpenGLES.framework; sourceTree = DEVELOPER_DIR; };
-		125025951D5B8FE7005B3341 /* GLESRenderer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GLESRenderer.xcodeproj; path = ../GLESRenderer/GLESRenderer.xcodeproj; sourceTree = "<group>"; };
+		125025951D5B8FE7005B3341 /* GLESRenderer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GLESRenderer.xcodeproj; path = ../Renderer/GLESRenderer/GLESRenderer.xcodeproj; sourceTree = "<group>"; };
 		1270119A1CC31326001840A7 /* launcher.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = launcher.mm; path = Mac/launcher.mm; sourceTree = "<group>"; };
 		1270124E1CC315FD001840A7 /* Engine.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Engine.xcodeproj; path = ../Engine/Engine.xcodeproj; sourceTree = "<group>"; };
+		128F682B1D724947005AECA1 /* dirt.tga */ = {isa = PBXFileReference; lastKnownFileType = file; name = dirt.tga; path = ../Resources/Data/Textures/dirt.tga; sourceTree = "<group>"; };
+		128F682C1D724947005AECA1 /* grass.tga */ = {isa = PBXFileReference; lastKnownFileType = file; name = grass.tga; path = ../Resources/Data/Textures/grass.tga; sourceTree = "<group>"; };
+		128F682D1D724947005AECA1 /* rock.tga */ = {isa = PBXFileReference; lastKnownFileType = file; name = rock.tga; path = ../Resources/Data/Textures/rock.tga; sourceTree = "<group>"; };
+		128F68311D72497D005AECA1 /* terrain_blend_map.tga */ = {isa = PBXFileReference; lastKnownFileType = file; name = terrain_blend_map.tga; path = ../Resources/Data/Textures/terrain_blend_map.tga; sourceTree = "<group>"; };
+		128F68331D72499D005AECA1 /* shadow.nscene */ = {isa = PBXFileReference; lastKnownFileType = text; name = shadow.nscene; path = ../Resources/Data/Scenes/shadow.nscene; sourceTree = "<group>"; };
 		1296BC391CDC132C00D17488 /* NekoEngine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NekoEngine.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1296BC3C1CDC132C00D17488 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		1296BC3E1CDC132C00D17488 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -189,7 +213,7 @@
 		1296BC471CDC132C00D17488 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1296BC4A1CDC132C00D17488 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1296BC4C1CDC132C00D17488 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		12A15FAE1CD445FE00BEDD06 /* GLRenderer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GLRenderer.xcodeproj; path = ../GLRenderer/GLRenderer.xcodeproj; sourceTree = "<group>"; };
+		12A15FAE1CD445FE00BEDD06 /* GLRenderer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GLRenderer.xcodeproj; path = ../Renderer/GLRenderer/GLRenderer.xcodeproj; sourceTree = "<group>"; };
 		12A9BAAB1D54F037001B363A /* libfreetype.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libfreetype.a; path = Frameworks/freetype/libfreetype.a; sourceTree = "<group>"; };
 		12A9BAAD1D54F691001B363A /* Fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Fonts; path = ../Resources/Data/Fonts; sourceTree = "<group>"; };
 		12A9BAB01D54FEDE001B363A /* Engine_iOS.ini */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Engine_iOS.ini; sourceTree = "<group>"; };
@@ -232,6 +256,11 @@
 		121976871D469C8900CCDD12 /* iOS Data */ = {
 			isa = PBXGroup;
 			children = (
+				128F68331D72499D005AECA1 /* shadow.nscene */,
+				128F68311D72497D005AECA1 /* terrain_blend_map.tga */,
+				128F682B1D724947005AECA1 /* dirt.tga */,
+				128F682C1D724947005AECA1 /* grass.tga */,
+				128F682D1D724947005AECA1 /* rock.tga */,
 				121976881D469CCC00CCDD12 /* resources.db */,
 				12A9BAAD1D54F691001B363A /* Fonts */,
 				121976891D469CCC00CCDD12 /* Shaders */,
@@ -377,6 +406,7 @@
 				1296BC371CDC132C00D17488 /* Resources */,
 				121976841D469C5D00CCDD12 /* CopyFiles */,
 				121976911D469D7800CCDD12 /* Copy Files */,
+				128F68341D7249AA005AECA1 /* CopyFiles */,
 			);
 			buildRules = (
 			);

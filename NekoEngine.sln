@@ -13,11 +13,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Engine", "Engine\Engine.vcx
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestGame", "TestGame\TestGame.vcxproj", "{8E393A6F-DC1C-4DB4-8A20-2FB1FCBCA29A}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GLRenderer", "GLRenderer\GLRenderer.vcxproj", "{3DD5A636-6EC2-4CE3-82A8-E43068C321C4}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GLRenderer", "Renderer\GLRenderer\GLRenderer.vcxproj", "{3DD5A636-6EC2-4CE3-82A8-E43068C321C4}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NullRenderer", "NullRenderer\NullRenderer.vcxproj", "{C244AD6C-7368-474B-B6DA-AA8967161626}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NullRenderer", "Renderer\NullRenderer\NullRenderer.vcxproj", "{C244AD6C-7368-474B-B6DA-AA8967161626}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GLESRenderer", "GLESRenderer\GLESRenderer.vcxproj", "{22CF43F6-85FD-48EC-993D-44ED7D075304}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GLESRenderer", "Renderer\GLESRenderer\GLESRenderer.vcxproj", "{22CF43F6-85FD-48EC-993D-44ED7D075304}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "D3D11Renderer", "Renderer\D3D11Renderer\D3D11Renderer.vcxproj", "{E3988136-901F-4968-B8AA-D82602ECE679}"
 EndProject

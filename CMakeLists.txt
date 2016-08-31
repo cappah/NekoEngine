@@ -24,13 +24,13 @@ file(GLOB EngineSourceFiles "Engine/*.cpp"
 	"Engine/Platform/Compat/*.cpp"
 )
 file(GLOB TestGameSourceFiles "TestGame/*.cpp")
-file(GLOB GLRendererSourceFiles "GLRenderer/*.cpp"
-	"GLRenderer/Loaders/*.cpp"
+file(GLOB GLRendererSourceFiles “Renderer/GLRenderer/*.cpp"
+	“Renderer/GLRenderer/Loaders/*.cpp"
 )
-file(GLOB NullRendererSourceFiles "NullRenderer/*.cpp")
-file(GLOB GLESRendererSourceFiles "GLESRenderer/*.cpp"
-	"GLRenderer/Loaders/tga.cpp"
-	"GLESRenderer/Platform/EGL/*.cpp"
+file(GLOB NullRendererSourceFiles “Renderer/NullRenderer/*.cpp")
+file(GLOB GLESRendererSourceFiles “Renderer/GLESRenderer/*.cpp"
+	“Renderer/GLRenderer/Loaders/tga.cpp"
+	“Renderer/GLESRenderer/Platform/EGL/*.cpp"
 )
 
 set(OPENAL_LIB openal)
@@ -103,7 +103,7 @@ endif(PLATFORM_UNIX)
 if(PLATFORM_X11)
 	file(GLOB PlatformSourceFiles "Engine/Platform/X11/*.cpp")
 	file(GLOB ExecutableSourceFile "Launcher/X11/*.cpp")
-	file(GLOB GLRendererPlatformSourceFiles "GLRenderer/Platform/X11/*.cpp")
+	file(GLOB GLRendererPlatformSourceFiles “Renderer/GLRenderer/Platform/X11/*.cpp")
 	set(PLATFORM_LIBS "X11")
 	add_definitions(-DPLATFORM_X11)
 endif(PLATFORM_X11)
@@ -155,7 +155,7 @@ endif(NullRenderer)
 
 # OpenGL|ES Renderer Library
 if(GLESRenderer)
-	include_directories(${PROJECT_SOURCE_DIR}/GLRenderer)
+	include_directories(${PROJECT_SOURCE_DIR}/Renderer/GLRenderer)
 	
 	add_library(GLESRenderer SHARED ${GLESRendererSourceFiles})
 	target_compile_options(GLESRenderer PRIVATE -std=c++11)

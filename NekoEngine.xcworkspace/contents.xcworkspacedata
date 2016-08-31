@@ -8,10 +8,10 @@
       location = "group:Launcher/Launcher.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:GLRenderer/GLRenderer.xcodeproj">
+      location = "group:Renderer/GLRenderer/GLRenderer.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:GLESRenderer/GLESRenderer.xcodeproj">
+      location = "group:Renderer/GLESRenderer/GLESRenderer.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:TestGame/TestGame.xcodeproj">
