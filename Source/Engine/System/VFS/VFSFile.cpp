@@ -208,6 +208,20 @@ size_t VFSFile::Read(void *buffer, size_t size, size_t count)
 	return 0;
 }
 
+void *VFSFile::ReadAll(size_t &size)
+{
+	void *ret = nullptr;
+
+	Seek(0, SEEK_END);
+	size = Tell();
+	Seek(0, SEEK_SET);
+
+	ret = calloc(size, 1);
+	Read(ret, 1, size);
+
+	return ret;
+}
+
 char *VFSFile::Gets(char *str, int num)
 {
 	if (_type == FileType::Loose)

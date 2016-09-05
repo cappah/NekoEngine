@@ -118,7 +118,7 @@ target_compile_options(Engine PRIVATE -fPIC)
 target_compile_options(Engine PRIVATE -frtti)
 target_compile_options(Engine PRIVATE -DENGINE_INTERNAL)
 target_compile_options(Engine PRIVATE -DPLATFORM_INTERNAL)
-target_link_libraries(Engine ${PLATFORM_LIBS} ${OPENAL_LIB} z sqlite3 png vorbisfile freetype ${BSD_LIB})
+target_link_libraries(Engine ${PLATFORM_LIBS} ${OPENAL_LIB} z sqlite3 png freetype ${BSD_LIB})
 
 # Launcher Executable
 add_executable(Launcher ${ExecutableSourceFile})

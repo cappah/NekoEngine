@@ -83,7 +83,7 @@
       <DisableSpecificWarnings>4251</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>freetype.lib;Xinput9_1_0.lib;libvorbisfile.lib;libpng16d.lib;sqlited.lib;zlibstatic.lib;OpenAL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>freetype.lib;Xinput9_1_0.lib;libpng16d.lib;sqlited.lib;zlibstatic.lib;OpenAL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
@@ -126,7 +126,7 @@
       <WholeProgramOptimization>true</WholeProgramOptimization>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>freetype.lib;Xinput9_1_0.lib;libvorbisfile.lib;libpng16.lib;sqlite.lib;zlibstatic.lib;OpenAL32.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>freetype.lib;Xinput9_1_0.lib;libpng16.lib;sqlite.lib;zlibstatic.lib;OpenAL32.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>No</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
@@ -209,7 +209,6 @@
     <ClInclude Include="..\..\include\Scene\Skybox.h" />
     <ClInclude Include="..\..\include\Scene\Terrain.h" />
     <ClInclude Include="..\..\include\System\AssetLoader\AssetLoader.h" />
-    <ClInclude Include="..\..\inc..\lude\System\AssetLoader\ogg_callbacks.h" />
     <ClInclude Include="..\..\include\System\Logger.h" />
     <ClInclude Include="..\..\include\System\VFS\VFS.h" />
     <ClInclude Include="..\..\include\System\VFS\VFSArchive.h" />
@@ -322,7 +321,6 @@
     <ClCompile Include="Scene\Skybox.cpp" />
     <ClCompile Include="Scene\Terrain.cpp" />
     <ClCompile Include="System\AssetLoader\AssetLoader.cpp" />
-    <ClCompile Include="System\AssetLoader\ogg_callbacks.cpp" />
     <ClCompile Include="System\Logger.cpp" />
     <ClCompile Include="System\VFS\VFS.cpp" />
     <ClCompile Include="System\VFS\VFSArchive.cpp" />

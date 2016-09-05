@@ -502,8 +502,8 @@ void D3D11Shader::SetInputLayout()
 		int numDescriptors = 0;
 
 
-		for (BufferAttribute &attrib : vertexBuffer->GetAttributes())
-			descriptors[numDescriptors++] = { attrib.name.c_str(), attrib.sindex, D3D11_BufferDataType[((int)attrib.type * 4) + attrib.size - 1], 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 };
+		//for (BufferAttribute &attrib : vertexBuffer->GetAttributes())
+		//	descriptors[numDescriptors++] = { attrib.name.c_str(), attrib.sindex, D3D11_BufferDataType[((int)attrib.type * 4) + attrib.size - 1], 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 };
 
 		if(_d3dVsBlob)
 			_ctx->device->CreateInputLayout(descriptors, numDescriptors, _d3dVsBlob->GetBufferPointer(), _d3dVsBlob->GetBufferSize(), &_layout);

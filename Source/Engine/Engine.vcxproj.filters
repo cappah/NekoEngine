@@ -368,9 +368,6 @@
     <ClInclude Include="..\..\Resources\Data\Shaders\include\conditionals.h">
       <Filter>Resources\Data\Shaders\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc..\lude\System\AssetLoader\ogg_callbacks.h">
-      <Filter>Include</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Resources\Data\scenes.cfg">
@@ -580,9 +577,6 @@
     </ClCompile>
     <ClCompile Include="System\VFS\VFS.cpp">
       <Filter>Source\System\VFS</Filter>
-    </ClCompile>
-    <ClCompile Include="System\AssetLoader\ogg_callbacks.cpp">
-      <Filter>Source\System\AssetLoader</Filter>
     </ClCompile>
     <ClCompile Include="System\AssetLoader\AssetLoader.cpp">
       <Filter>Source\System\AssetLoader</Filter>

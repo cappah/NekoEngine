@@ -38,10 +38,9 @@
  */
 
 #include <algorithm>
-#include <vorbis/vorbisfile.h>
 
 #include <System/AssetLoader/AssetLoader.h>
-#include <System/AssetLoader/ogg_callbacks.h>
+#include <System/AssetLoader/stb_vorbis.h>
 #include <System/VFS/VFS.h>
 
 #include <Platform/Compat.h>
@@ -454,76 +453,29 @@ exit:
 
 int AssetLoader::LoadOGG(NString &file, ALenum *format, unsigned char **data, ALsizei *size, ALsizei *freq)
 {
-	int bitStream;
-	long bytes;
-	char *buff;
-	long dataSize = DATA_SIZE;
-	long dataUsed = 0;
-
-	buff = (char*)calloc(BUFFER_SIZE, sizeof(char));
-	if (!buff)
-		return ENGINE_FAIL;
+	int channels, sampleRate;
+	size_t len;
+	uint8_t *buff;
 
 	VFSFile *f = VFS::Open(file);
 	if (!f)
+		return ENGINE_FAIL;
+
+	buff = (uint8_t *)f->ReadAll(len);
+	if (!buff)
+		return ENGINE_IO_FAIL;
+
+	len = stb_vorbis_decode_memory(buff, len, &channels, &sampleRate, (short **)data);
+
+	if (!len)
 	{
 		free(buff);
 		return ENGINE_FAIL;
 	}
 
-	vorbis_info *info;
-	OggVorbis_File oggFile;
-
-	ov_callbacks callbacks;
-	callbacks.read_func = ovCbRead;
-	callbacks.seek_func = ovCbSeek;
-	callbacks.close_func = ovCbClose;
-	callbacks.tell_func = ovCvTell;
-
-	if (ov_open_callbacks(f, &oggFile, NULL, 0, callbacks) < 0)
-	{
-		free(buff);
-		return ENGINE_IO_FAIL;
-	}
-
-	info = ov_info(&oggFile, -1);
-
-	if (info->channels == 1)
-		*format = AL_FORMAT_MONO16;
-	else
-		*format = AL_FORMAT_STEREO16;
-
-	*freq = (int)info->rate;
-	*data = (unsigned char *)reallocarray(NULL, dataSize, sizeof(unsigned char));
-
-	do
-	{
-		memset(buff, 0x0, BUFFER_SIZE);
-		bytes = ov_read(&oggFile, buff, BUFFER_SIZE, 0, 2, 1, &bitStream);
-
-		if (dataUsed + bytes >= dataSize)
-		{
-			unsigned char *newptr = (unsigned char *)reallocarray(*data, dataSize + DATA_SIZE, sizeof(unsigned char));
-
-			if (newptr == nullptr)
-			{
-				free(buff);
-				free(*data);
-				return ENGINE_FAIL;
-			}
-
-			*data = newptr;
-			dataSize += DATA_SIZE;
-		}
-
-		memcpy(*data + dataUsed, buff, bytes);
-		dataUsed += bytes;
-	}
-	while (bytes > 0);
-
-	ov_clear(&oggFile);
-
-	*size = (int)dataUsed;
+	*format = channels == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16;
+	*freq = sampleRate;
+	*size = len;
 
 	f->Close();
 	free(buff);
