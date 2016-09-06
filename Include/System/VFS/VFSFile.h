@@ -78,7 +78,7 @@ public:
 
 	ENGINE_API int Open();
 	ENGINE_API size_t Read(void *buffer, size_t size, size_t count);
-	ENGINE_API void *VFSFile::ReadAll(size_t &size);
+	ENGINE_API void *ReadAll(size_t &size);
 	ENGINE_API char* Gets(char* str, int num);
 	ENGINE_API int Seek(size_t offset, int origin);
 	ENGINE_API size_t Tell();
