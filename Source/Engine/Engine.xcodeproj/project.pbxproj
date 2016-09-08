@@ -32,7 +32,6 @@
 		124A31FF1CDC264100472893 /* Skybox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B3E1CC1AE0E00EE5D0A /* Skybox.cpp */; };
 		124A32001CDC264100472893 /* Terrain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B3F1CC1AE0E00EE5D0A /* Terrain.cpp */; };
 		124A32011CDC264100472893 /* AssetLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B491CC1AE2000EE5D0A /* AssetLoader.cpp */; };
-		124A32021CDC264100472893 /* ogg_callbacks.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B4A1CC1AE2000EE5D0A /* ogg_callbacks.cpp */; };
 		124A32031CDC264100472893 /* VFS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B511CC1AE2E00EE5D0A /* VFS.cpp */; };
 		124A32041CDC264100472893 /* VFSArchive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B521CC1AE2E00EE5D0A /* VFSArchive.cpp */; };
 		124A32051CDC264100472893 /* VFSFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B531CC1AE2E00EE5D0A /* VFSFile.cpp */; };
@@ -60,7 +59,6 @@
 		12822B451CC1AE0E00EE5D0A /* Skybox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B3E1CC1AE0E00EE5D0A /* Skybox.cpp */; };
 		12822B461CC1AE0E00EE5D0A /* Terrain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B3F1CC1AE0E00EE5D0A /* Terrain.cpp */; };
 		12822B4B1CC1AE2000EE5D0A /* AssetLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B491CC1AE2000EE5D0A /* AssetLoader.cpp */; };
-		12822B4C1CC1AE2000EE5D0A /* ogg_callbacks.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B4A1CC1AE2000EE5D0A /* ogg_callbacks.cpp */; };
 		12822B4F1CC1AE2800EE5D0A /* Logger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B4D1CC1AE2800EE5D0A /* Logger.cpp */; };
 		12822B541CC1AE2E00EE5D0A /* VFS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B511CC1AE2E00EE5D0A /* VFS.cpp */; };
 		12822B551CC1AE2E00EE5D0A /* VFSArchive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12822B521CC1AE2E00EE5D0A /* VFSArchive.cpp */; };
@@ -202,7 +200,6 @@
 		12822B3E1CC1AE0E00EE5D0A /* Skybox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Skybox.cpp; path = Scene/Skybox.cpp; sourceTree = SOURCE_ROOT; };
 		12822B3F1CC1AE0E00EE5D0A /* Terrain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Terrain.cpp; path = Scene/Terrain.cpp; sourceTree = SOURCE_ROOT; };
 		12822B491CC1AE2000EE5D0A /* AssetLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AssetLoader.cpp; path = System/AssetLoader/AssetLoader.cpp; sourceTree = SOURCE_ROOT; };
-		12822B4A1CC1AE2000EE5D0A /* ogg_callbacks.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ogg_callbacks.cpp; path = System/AssetLoader/ogg_callbacks.cpp; sourceTree = SOURCE_ROOT; };
 		12822B4D1CC1AE2800EE5D0A /* Logger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Logger.cpp; path = System/Logger.cpp; sourceTree = SOURCE_ROOT; };
 		12822B511CC1AE2E00EE5D0A /* VFS.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VFS.cpp; path = System/VFS/VFS.cpp; sourceTree = SOURCE_ROOT; };
 		12822B521CC1AE2E00EE5D0A /* VFSArchive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VFSArchive.cpp; path = System/VFS/VFSArchive.cpp; sourceTree = SOURCE_ROOT; };
@@ -253,7 +250,6 @@
 		12822B901CC1AE4E00EE5D0A /* Skybox.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Skybox.h; sourceTree = "<group>"; };
 		12822B911CC1AE4E00EE5D0A /* Terrain.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Terrain.h; sourceTree = "<group>"; };
 		12822B941CC1AE4E00EE5D0A /* AssetLoader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AssetLoader.h; sourceTree = "<group>"; };
-		12822B951CC1AE4E00EE5D0A /* ogg_callbacks.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ogg_callbacks.h; sourceTree = "<group>"; };
 		12822B961CC1AE4E00EE5D0A /* Logger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Logger.h; sourceTree = "<group>"; };
 		12822B991CC1AE4E00EE5D0A /* VFS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VFS.h; sourceTree = "<group>"; };
 		12822B9A1CC1AE4E00EE5D0A /* VFSArchive.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VFSArchive.h; sourceTree = "<group>"; };
@@ -522,7 +518,6 @@
 			isa = PBXGroup;
 			children = (
 				12822B491CC1AE2000EE5D0A /* AssetLoader.cpp */,
-				12822B4A1CC1AE2000EE5D0A /* ogg_callbacks.cpp */,
 			);
 			name = AssetLoader;
 			sourceTree = "<group>";
@@ -686,7 +681,6 @@
 			isa = PBXGroup;
 			children = (
 				12822B941CC1AE4E00EE5D0A /* AssetLoader.h */,
-				12822B951CC1AE4E00EE5D0A /* ogg_callbacks.h */,
 			);
 			path = AssetLoader;
 			sourceTree = "<group>";
@@ -928,7 +922,6 @@
 				12C560C11CFB57B200E25478 /* StaticMesh.cpp in Sources */,
 				12C560AD1CFB57B200E25478 /* PostProcessor.cpp in Sources */,
 				12C560A71CFB57B200E25478 /* Engine.cpp in Sources */,
-				124A32021CDC264100472893 /* ogg_callbacks.cpp in Sources */,
 				12C560A51CFB57B200E25478 /* DeferredBuffer.cpp in Sources */,
 				124A31E11CDC260E00472893 /* AudioSource.cpp in Sources */,
 				12C560BF1CFB57B200E25478 /* SSAO.cpp in Sources */,
@@ -994,7 +987,6 @@
 				12C560BC1CFB57B200E25478 /* SoundManager.cpp in Sources */,
 				12150A201CEB875D0066A044 /* AnimatorComponent.cpp in Sources */,
 				12822B451CC1AE0E00EE5D0A /* Skybox.cpp in Sources */,
-				12822B4C1CC1AE2000EE5D0A /* ogg_callbacks.cpp in Sources */,
 				12822B4F1CC1AE2800EE5D0A /* Logger.cpp in Sources */,
 				12FABB191D3256B600D88639 /* FPSControllerComponent.cpp in Sources */,
 				12822BBB1CC1DB9500EE5D0A /* EngineDelegate.mm in Sources */,

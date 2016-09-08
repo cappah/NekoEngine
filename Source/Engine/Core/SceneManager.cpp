@@ -244,10 +244,10 @@ int SceneManager::_LoadSceneInternal(int id)
 	if ((_loadingScreen = new LoadingScreen(scn->GetLoadingScreenTexture())) == nullptr)
 		return ENGINE_OUT_OF_RESOURCES;
 	
-	//if (Engine::IsEditor())
+	if (Engine::IsEditor())
 		return _LoadSceneWorker(scn);
 
-//	_loadThread = new thread(_LoadSceneWorker, scn);
+	_loadThread = new thread(_LoadSceneWorker, scn);
 	return ENGINE_OK;
 }
 

@@ -14,8 +14,6 @@
 		1219768D1D469CCC00CCDD12 /* Sounds in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1219768A1D469CCC00CCDD12 /* Sounds */; };
 		1219768F1D469D3900CCDD12 /* scenes.cfg in Resources */ = {isa = PBXBuildFile; fileRef = 1219768E1D469D3900CCDD12 /* scenes.cfg */; };
 		121976901D469D4400CCDD12 /* scenes.cfg in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1219768E1D469D3900CCDD12 /* scenes.cfg */; };
-		122A3AC01D338B7B0047786A /* ogg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 122A3ABA1D338B340047786A /* ogg.framework */; };
-		122A3AC11D338B7B0047786A /* vorbis.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 122A3ABB1D338B340047786A /* vorbis.framework */; };
 		122A4B201D47450E009F23CE /* Data in Resources */ = {isa = PBXBuildFile; fileRef = 122A4B1F1D47450E009F23CE /* Data */; };
 		124A32081CDC267D00472893 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 124A32071CDC267D00472893 /* libz.tbd */; };
 		124A320A1CDC268100472893 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 124A32091CDC268100472893 /* libsqlite3.tbd */; };
@@ -162,8 +160,6 @@
 		121976891D469CCC00CCDD12 /* Shaders */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Shaders; path = ../../Resources/Data/Shaders; sourceTree = "<group>"; };
 		1219768A1D469CCC00CCDD12 /* Sounds */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Sounds; path = ../../Resources/Data/Sounds; sourceTree = "<group>"; };
 		1219768E1D469D3900CCDD12 /* scenes.cfg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = scenes.cfg; sourceTree = "<group>"; };
-		122A3ABA1D338B340047786A /* ogg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ogg.framework; path = Frameworks/ogg.framework; sourceTree = "<group>"; };
-		122A3ABB1D338B340047786A /* vorbis.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = vorbis.framework; path = Frameworks/vorbis.framework; sourceTree = "<group>"; };
 		122A4B1F1D47450E009F23CE /* Data */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Data; path = ../../Resources/Data; sourceTree = "<group>"; };
 		124A32071CDC267D00472893 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/usr/lib/libz.tbd; sourceTree = DEVELOPER_DIR; };
 		124A32091CDC268100472893 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/usr/lib/libsqlite3.tbd; sourceTree = DEVELOPER_DIR; };
@@ -205,8 +201,6 @@
 				124A320C1CDC268800472893 /* OpenAL.framework in Frameworks */,
 				124A320A1CDC268100472893 /* libsqlite3.tbd in Frameworks */,
 				124A32081CDC267D00472893 /* libz.tbd in Frameworks */,
-				122A3AC01D338B7B0047786A /* ogg.framework in Frameworks */,
-				122A3AC11D338B7B0047786A /* vorbis.framework in Frameworks */,
 				12A9BAAC1D54F037001B363A /* libfreetype.a in Frameworks */,
 				1296BD871CDC1E1A00D17488 /* libTestGame_iOS.a in Frameworks */,
 				1296BC551CDC145600D17488 /* libEngine_iOS.a in Frameworks */,
@@ -245,8 +239,6 @@
 			isa = PBXGroup;
 			children = (
 				12A9BAAA1D54F02C001B363A /* freetype */,
-				122A3ABA1D338B340047786A /* ogg.framework */,
-				122A3ABB1D338B340047786A /* vorbis.framework */,
 				124A32501CDC299500472893 /* OpenGLES.framework */,
 				124A320B1CDC268800472893 /* OpenAL.framework */,
 				124A32091CDC268100472893 /* libsqlite3.tbd */,

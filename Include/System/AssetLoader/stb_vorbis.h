@@ -1270,12 +1270,12 @@ static void neighbors(uint16 *x, int n, int *plow, int *phigh)
 typedef struct
 {
    uint16 x,y;
-} Point;
+} STB_Point;
 
 static int STBV_CDECL point_compare(const void *p, const void *q)
 {
-   Point *a = (Point *) p;
-   Point *b = (Point *) q;
+   STB_Point *a = (STB_Point *) p;
+   STB_Point *b = (STB_Point *) q;
    return a->x < b->x ? -1 : a->x > b->x;
 }
 
@@ -3871,7 +3871,7 @@ static int start_decoder(vorb *f)
             g->book_list[j] = get_bits(f,8);
          return error(f, VORBIS_feature_not_supported);
       } else {
-         Point p[31*8+2];
+         STB_Point p[31*8+2];
          Floor1 *g = &f->floor_config[i].floor1;
          int max_class = -1; 
          g->partitions = get_bits(f, 5);
@@ -4586,7 +4586,7 @@ static int seek_to_sample_coarse(stb_vorbis *f, uint32 sample_number)
    ProbedPage left, right, mid;
    int i, start_seg_with_known_loc, end_pos, page_start;
    uint32 delta, stream_length, padding;
-   double offset, bytes_per_sample;
+   double offset = 0, bytes_per_sample = 0;
    int probe = 0;
 
    // find the last page and validate the target sample
