@@ -133,7 +133,7 @@ add_library(TestGame SHARED ${TestGameSourceFiles})
 target_compile_options(TestGame PRIVATE -std=c++11)
 target_compile_options(TestGame PRIVATE -fPIC)
 target_compile_options(TestGame PRIVATE -frtti)
-target_compile_options(Engine PRIVATE -DTESTGAME_INTERNAL)
+target_compile_options(TestGame PRIVATE -DTESTGAME_INTERNAL)
 target_link_libraries(TestGame Engine)
 
 # OpenGL Renderer Library

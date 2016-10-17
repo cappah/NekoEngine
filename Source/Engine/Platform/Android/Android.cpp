@@ -1,9 +1,9 @@
 /* NekoEngine
  *
- * Mac.mm
+ * Android.cpp
  * Author: Alexandru Naiman
  *
- * macOS platform support
+ * Android platform support
  *
  * -----------------------------------------------------------------------------
  *
@@ -39,6 +39,8 @@
 
 #include <Engine/Engine.h>
 #include <Platform/Platform.h>
+
+#include <android/log.h>
 
 PlatformWindowType Platform::_activeWindow = nullptr;
 
@@ -103,7 +105,7 @@ MessageBoxResult Platform::MessageBox(const char* title, const char* message, Me
 
 void Platform::LogDebugMessage(const char* message)
 {
-	fprintf(stderr, "%s", message);
+	__android_log_write(ANDROID_LOG_INFO, "DEBUG_MESSAGE", message);
 }
 
 int Platform::MainLoop()
