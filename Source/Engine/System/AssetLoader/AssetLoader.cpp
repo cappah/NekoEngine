@@ -47,9 +47,8 @@
 
 #define AL_MODULE	"AssetLoader"
 
-#define BUFFER_SIZE		65536
-#define DATA_SIZE		524288
-#define AL_LINE_BUFF	1024
+#define DATA_SIZE			524288
+#define AL_LINE_BUFF		1024
 
 using namespace std;
 

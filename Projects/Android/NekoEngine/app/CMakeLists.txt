@@ -27,7 +27,6 @@ file(GLOB GLESRendererSourceFiles "../../../../Source/Renderer/GLESRenderer/*.cp
 
 include_directories(${ANDROID_NDK}/sources/android/native_app_glue)
 include_directories(${PROJECT_SOURCE_DIR}/../../../../Include)
-include_directories(${PROJECT_SOURCE_DIR}/../../../../3rdparty/include_all)
 include_directories(${PROJECT_SOURCE_DIR}/../../../../3rdparty/include_android)
 include_directories(${PROJECT_SOURCE_DIR}/../../../../Source/Renderer/GLRenderer)
 

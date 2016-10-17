@@ -50,7 +50,7 @@
 #ifdef __APPLE__
 	#include <OpenGLES/ES3/gl.h>
 #else
-	#include <GLES3/gl3.h>
+	#include "glad.h"
 #endif
 
 typedef struct GLES_FRAMEBUFFER_ATTACHMENT_INFO

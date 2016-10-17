@@ -67,21 +67,21 @@ typedef HMODULE PlatformModuleType;
 #include <X11/Xlib.h>
 
 typedef Window PlatformWindowType;
-typedef Display* PlatformDisplayType;
-typedef void* PlatformModuleType;
+typedef Display *PlatformDisplayType;
+typedef void *PlatformModuleType;
 #elif defined(NE_PLATFORM_MAC)
 #import <Cocoa/Cocoa.h>
 
-typedef NSWindow* PlatformWindowType;
-typedef NSView* PlatformDisplayType;
-typedef void* PlatformModuleType;
+typedef NSWindow *PlatformWindowType;
+typedef NSView *PlatformDisplayType;
+typedef void *PlatformModuleType;
 #elif defined(NE_PLATFORM_IOS)
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-typedef UIWindow* PlatformWindowType;
-typedef UIView* PlatformDisplayType;
-typedef void* PlatformModuleType;
+typedef UIWindow *PlatformWindowType;
+typedef UIView *PlatformDisplayType;
+typedef void *PlatformModuleType;
 
 @protocol EngineInputDelegateProtocol <NSObject>
 
@@ -104,7 +104,15 @@ typedef void* PlatformModuleType;
 
 typedef screen_window_t PlatformWindowType;
 typedef screen_context_t PlatformDisplayType;
-typedef void* PlatformModuleType;
+typedef void *PlatformModuleType;
+
+#elif defined(NE_PLATFORM_ANDROID)
+
+#include <android_native_app_glue.h>
+
+typedef ANativeWindow *PlatformWindowType;
+typedef void *PlatformDisplayType;
+typedef void *PlatformModuleType;
 
 #endif
 

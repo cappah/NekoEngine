@@ -43,8 +43,7 @@
 #ifdef __APPLE__
 	#include <OpenGLES/ES3/glext.h>
 #else
-	#include <GLES3/gl3.h>
-    #include <GLES2/gl2ext.h>
+	#include "glad.h"
 #endif
 
 #ifdef _DEBUG
@@ -264,7 +263,7 @@ void DebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsiz
 #define GL_MAP_COHERENT_BIT_EXT		0
 #define GL_DYNAMIC_STORAGE_BIT_EXT	0
 
-#else
+#elif !defined(__ANDROID__)
 
 #define glBufferStorageEXT(x, y, z, w) GLESRenderer::Funcs.BufferStorage(x, y, z, w)
 #define glProgramUniform1iEXT(x, y, z) GLESRenderer::Funcs.ProgramUniform1i(x, y, z)

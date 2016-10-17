@@ -123,7 +123,7 @@ int VFSFile::Open()
 		if (!_gzfp)
 			return ENGINE_FAIL;
 
-	#if !defined(NE_PLATFORM_OPENBSD) && !defined(NE_PLATFORM_SUNOS)
+	#if !defined(NE_PLATFORM_OPENBSD) && !defined(NE_PLATFORM_SUNOS) && !defined(NE_PLATFORM_ANDROID)
 		gzbuffer(_gzfp, 131072); // 128 kB buffer
 	#endif
 	}

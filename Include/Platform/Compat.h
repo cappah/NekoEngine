@@ -49,7 +49,7 @@
 void PLATFORM_API *reallocarray(void *optr, size_t nmemb, size_t size);
 #endif
 
-#if defined(NE_PLATFORM_BB10)
+#if defined(NE_PLATFORM_BB10) || defined(NE_PLATFORM_ANDROID)
 #include <string>
 #include <sstream>
 
