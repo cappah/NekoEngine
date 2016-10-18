@@ -51,11 +51,19 @@ using namespace std;
 
 static struct utsname uname_data;
 
+#ifndef NE_PLATFORM_ANDROID
 const char* Platform::GetName()
 {
 	uname(&uname_data);
 	return uname_data.sysname;
 }
+
+const char* Platform::GetVersion()
+{
+	uname(&uname_data);
+	return uname_data.release;
+}
+#endif
 
 const char* Platform::GetMachineName()
 {
@@ -67,12 +75,6 @@ const char* Platform::GetMachineArchitecture()
 {
 	uname(&uname_data);
 	return uname_data.machine;
-}
-
-const char* Platform::GetVersion()
-{
-	uname(&uname_data);
-	return uname_data.release;
 }
 
 PlatformModuleType Platform::LoadModule(const char* module)

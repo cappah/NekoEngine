@@ -174,17 +174,15 @@ const char* GLESRenderer::GetName()
 
 int GLESRenderer::GetMajorVersion()
 {
-    //if(_verMajor < 0)
-	//{ GL_CHECK(glGetIntegerv(GL_MAJOR_VERSION, &_verMajor)); }
-    _verMajor = 2;
+    if(_verMajor < 0)
+	{ GL_CHECK(glGetIntegerv(GL_MAJOR_VERSION, &_verMajor)); }
     return _verMajor;
 }
 
 int GLESRenderer::GetMinorVersion()
 {
-   // if(_verMinor < 0)
-	//{ GL_CHECK(glGetIntegerv(GL_MINOR_VERSION, &_verMinor)); }
-    _verMinor = 0;
+    if(_verMinor < 0)
+	{ GL_CHECK(glGetIntegerv(GL_MINOR_VERSION, &_verMinor)); }
     return _verMinor;
 }
 

@@ -40,8 +40,8 @@ add_library(sqlite3 STATIC src/main/cpp/sqlite3.c)
 add_library(freetype STATIC IMPORTED)
 set_target_properties(freetype PROPERTIES IMPORTED_LOCATION ${PROJECT_SOURCE_DIR}/../../../../3rdparty/lib_android/${ANDROID_ABI}/libfreetype.a)
 
-add_library(OpenAL-MOB SHARED IMPORTED)
-set_target_properties(OpenAL-MOB PROPERTIES IMPORTED_LOCATION ${PROJECT_SOURCE_DIR}/../../../../3rdparty/lib_android/${ANDROID_ABI}/libOpenAL-MOB.so)
+add_library(OpenAL-MOB STATIC IMPORTED)
+set_target_properties(OpenAL-MOB PROPERTIES IMPORTED_LOCATION ${PROJECT_SOURCE_DIR}/../../../../3rdparty/lib_android/${ANDROID_ABI}/libOpenAL-MOB.a)
 
 add_library(TestGame STATIC ${TestGameSourceFiles})
 target_compile_options(TestGame PRIVATE -std=c++11)
@@ -61,9 +61,4 @@ target_compile_options(Engine PRIVATE -fPIC)
 target_compile_options(Engine PRIVATE -frtti)
 target_compile_options(Engine PRIVATE -DENGINE_INTERNAL)
 target_compile_options(Engine PRIVATE -DPLATFORM_INTERNAL)
-target_link_libraries(Engine GLESRenderer TestGame app-glue z sqlite3 freetype OpenAL-MOB ${log-lib})
-
-add_library(launcher SHARED ${LauncherSourceFiles})
-target_compile_options(Engine PRIVATE -std=c++11)
-
-target_link_libraries(launcher ${log-lib})
+target_link_libraries(Engine GLESRenderer TestGame app-glue z sqlite3 freetype OpenAL-MOB OpenSLES android ${log-lib})

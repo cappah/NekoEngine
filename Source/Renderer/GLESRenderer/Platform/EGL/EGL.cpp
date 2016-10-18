@@ -65,7 +65,7 @@ bool GLESRenderer::Initialize(PlatformWindowType hWnd, unordered_map<string, str
             EGL_GREEN_SIZE,         8,
             EGL_BLUE_SIZE,          8,
             EGL_ALPHA_SIZE,         0,
-            EGL_DEPTH_SIZE,         EGL_DONT_CARE,
+            EGL_DEPTH_SIZE,         16,
             EGL_STENCIL_SIZE,       0,
             EGL_SAMPLE_BUFFERS,     0,
             EGL_SAMPLES,            0,
@@ -130,6 +130,9 @@ bool GLESRenderer::Initialize(PlatformWindowType hWnd, unordered_map<string, str
 
     memset(&Funcs, 0x0, sizeof(GLFuncs));
 
+    if (!gladLoadGLES2Loader((GLADloadproc)eglGetProcAddress))
+        return false;
+
     if(HasExtension("GL_EXT_buffer_storage"))
         Funcs.BufferStorage = (PFNGLBUFFERSTORAGEEXTPROC)eglGetProcAddress("glBufferStorageEXT");
 
@@ -140,9 +143,6 @@ bool GLESRenderer::Initialize(PlatformWindowType hWnd, unordered_map<string, str
         Funcs.DrawElementsBaseVertex = (PFNGLDRAWELEMENTSBASEVERTEXOESPROC)eglGetProcAddress("glDrawElementsBaseVertexOES");
     else if(HasExtension("GL_EXT_draw_elements_base_vertex"))
         Funcs.DrawElementsBaseVertex = (PFNGLDRAWELEMENTSBASEVERTEXOESPROC)eglGetProcAddress("glDrawElementsBaseVertexEXT");
-
-//    if (!gladLoadGLES2Loader((GLADloadproc)eglGetProcAddress))
- //       return false;
 
     return true;
 }

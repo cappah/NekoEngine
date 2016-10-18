@@ -768,6 +768,9 @@ void Engine::DrawString(vec2 pos, vec3 color, const char *fmt, ...) noexcept
 
 void Engine::Frame() noexcept
 {
+	if(_startup)
+		return;
+
 	static double lastTime = GetTime();
 	double temp = 0.0;
 	double curTime = GetTime();

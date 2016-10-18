@@ -40,13 +40,115 @@
 #include <Engine/Engine.h>
 #include <Platform/Platform.h>
 
+#include <sys/stat.h>
+
 #include <android/log.h>
+#include <android/sensor.h>
+#include <android/configuration.h>
+#include <android/log.h>
+#include <android_native_app_glue.h>
+#include <sys/system_properties.h>
+
+static struct android_app *_app;
+static ASensorManager *_sensorManager;
+
+static const ASensor *_accelerometer;
+static const ASensor *_gyroscope;
+static const ASensor *_lightSensor;
+
+static ASensorEventQueue *_sensorEventQueue;
+
+static NString _sdkVersion;
+static NString _dataPath;
+
+int32_t _android_handle_input_event(struct android_app* app, AInputEvent* event);
+void _android_handle_sensor_event(ASensorEventQueue *queue, const ASensor *_accelerometer, const ASensor *_gyroscope, const ASensor *_lightSensor);
+
+void _android_handle_app_cmd(struct android_app *app, int32_t cmd)
+{
+	switch (cmd)
+	{
+		case APP_CMD_INIT_WINDOW:
+		{
+			NString args = "--log=";
+			args.Append(_dataPath);
+			args.Append("/engine.log");
+
+			if(Engine::Initialize(*args, false) != ENGINE_OK)
+				Platform::Exit();
+
+			Engine::Run();
+		}
+		break;
+		case APP_CMD_TERM_WINDOW:
+			Platform::Exit();
+		break;
+	}
+}
+
+void android_main(struct android_app *state)
+{
+	int ident{ 0 };
+	int events{ 0 };
+	struct android_poll_source *source{ nullptr };
+	struct stat st;
+	bool exit{ false };
+
+	app_dummy();
+
+	_app = state;
+	_app->onAppCmd = _android_handle_app_cmd;
+	_app->onInputEvent = _android_handle_input_event;
+
+	_dataPath = _app->activity->internalDataPath;
+
+	if(stat(*_dataPath, &st) || !(st.st_mode & S_IFDIR))
+		mkdir(*_dataPath, 0770);
+
+	_sensorManager = ASensorManager_getInstance();
+	_accelerometer = ASensorManager_getDefaultSensor(_sensorManager, ASENSOR_TYPE_ACCELEROMETER);
+	_gyroscope = ASensorManager_getDefaultSensor(_sensorManager, ASENSOR_TYPE_GYROSCOPE);
+	_lightSensor = ASensorManager_getDefaultSensor(_sensorManager, ASENSOR_TYPE_LIGHT);
+
+	_sensorEventQueue = ASensorManager_createEventQueue(_sensorManager, state->looper, LOOPER_ID_USER, NULL, NULL);
+
+	int ver = AConfiguration_getSdkVersion(_app->config);
+	_sdkVersion = NString::StringWithFormat(10, "%d", ver);
+
+	while(!exit)
+	{
+		while((ident = ALooper_pollAll(0, NULL, &events, (void **)&source)) >= 0)
+		{
+			if (source) source->process(_app, source);
+
+			if (ident == LOOPER_ID_USER)
+			{
+				//
+			}
+
+			if (state->destroyRequested)
+				Engine::Exit();
+		}
+
+		Engine::Frame();
+	}
+}
 
 PlatformWindowType Platform::_activeWindow = nullptr;
 
+const char* Platform::GetName()
+{
+	return "Android";
+}
+
+const char* Platform::GetVersion()
+{
+	return *_sdkVersion;
+}
+
 PlatformWindowType Platform::CreateWindow(int width, int height, bool fullscreen)
 {
-	return nullptr;
+	return _app->window;
 }
 
 void Platform::SetWindowTitle(PlatformWindowType hWnd, const char* title) { (void)hWnd; (void)title; }
@@ -108,10 +210,7 @@ void Platform::LogDebugMessage(const char* message)
 	__android_log_write(ANDROID_LOG_INFO, "DEBUG_MESSAGE", message);
 }
 
-int Platform::MainLoop()
-{
-	return 0;
-}
+int Platform::MainLoop() { return 0; }
 
 void Platform::CleanUp()
 {
