@@ -19,3 +19,8 @@ iOS Frameworks:
 Vorbis - https://github.com/iosdevzone/IDZPrecompiledVorbis
 
 OGG - https://github.com/iosdevzone/IDZPrecompiledOgg
+
+Android:
+
+OpenAL-MOB - https://github.com/Jawbone/OpenAL-MOB
+FreeType 2 for Android - https://github.com/cdave1/freetype2-android
