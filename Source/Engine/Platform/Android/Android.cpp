@@ -59,7 +59,9 @@ static const ASensor *_lightSensor;
 static ASensorEventQueue *_sensorEventQueue;
 
 static NString _sdkVersion;
-static NString _dataPath;
+
+static NString _internalDataPath;
+static NString _externalDataPath;
 
 int32_t _android_handle_input_event(struct android_app* app, AInputEvent* event);
 void _android_handle_sensor_event(ASensorEventQueue *queue, const ASensor *_accelerometer, const ASensor *_gyroscope, const ASensor *_lightSensor);
@@ -71,7 +73,7 @@ void _android_handle_app_cmd(struct android_app *app, int32_t cmd)
 		case APP_CMD_INIT_WINDOW:
 		{
 			NString args = "--log=";
-			args.Append(_dataPath);
+			args.Append(_externalDataPath);
 			args.Append("/engine.log");
 
 			if(Engine::Initialize(*args, false) != ENGINE_OK)
@@ -100,10 +102,14 @@ void android_main(struct android_app *state)
 	_app->onAppCmd = _android_handle_app_cmd;
 	_app->onInputEvent = _android_handle_input_event;
 
-	_dataPath = _app->activity->internalDataPath;
+	_internalDataPath = _app->activity->internalDataPath;
+	_externalDataPath = _app->activity->externalDataPath;
 
-	if(stat(*_dataPath, &st) || !(st.st_mode & S_IFDIR))
-		mkdir(*_dataPath, 0770);
+	if(stat(*_internalDataPath, &st) || !(st.st_mode & S_IFDIR))
+		mkdir(*_internalDataPath, 0770);
+
+	if(stat(*_externalDataPath, &st) || !(st.st_mode & S_IFDIR))
+		mkdir(*_externalDataPath, 0770);
 
 	_sensorManager = ASensorManager_getInstance();
 	_accelerometer = ASensorManager_getDefaultSensor(_sensorManager, ASENSOR_TYPE_ACCELEROMETER);
