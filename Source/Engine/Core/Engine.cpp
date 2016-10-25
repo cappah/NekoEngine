@@ -1073,7 +1073,7 @@ void Engine::SaveScreenshot() noexcept
 void Engine::_PrintStats()
 {
 	double diff = GetTime() - _lastTime;
-	static double _frameTime = 0.0, _logic = 0.0, _render = 0.0;
+	static double _frameTime = 0.0, _render = 0.0;
 	_nFrames++;
 
 	if (diff > 1.f)
