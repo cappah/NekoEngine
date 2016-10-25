@@ -133,6 +133,7 @@
 		12C8E5D31D59DA76002DD5EE /* NString.h in Headers */ = {isa = PBXBuildFile; fileRef = 12C8E5D01D59DA76002DD5EE /* NString.h */; };
 		12C8E5D41D59DA76002DD5EE /* Runtime.h in Headers */ = {isa = PBXBuildFile; fileRef = 12C8E5D11D59DA76002DD5EE /* Runtime.h */; };
 		12CE01721CC991B900F3D84B /* SkeletalMesh.h in Headers */ = {isa = PBXBuildFile; fileRef = 12CE01711CC991B900F3D84B /* SkeletalMesh.h */; };
+		12D7EF8D1DBF3E9600205B9C /* PlatformInput.mm in Sources */ = {isa = PBXBuildFile; fileRef = 12D7EF8C1DBF3E9600205B9C /* PlatformInput.mm */; };
 		12ECE5D91CEFBE85004F3697 /* AnimationNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 12ECE5D81CEFBE85004F3697 /* AnimationNode.h */; };
 		12ECE5E01CF0FFD1004F3697 /* TransformNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 12ECE5DF1CF0FFD1004F3697 /* TransformNode.h */; };
 		12ECE5E21CF110D2004F3697 /* AudioSourceComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 12ECE5E11CF110D2004F3697 /* AudioSourceComponent.h */; };
@@ -304,6 +305,7 @@
 		12C8E5D01D59DA76002DD5EE /* NString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NString.h; path = ../Include/Runtime/NString.h; sourceTree = "<group>"; };
 		12C8E5D11D59DA76002DD5EE /* Runtime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Runtime.h; path = ../Include/Runtime/Runtime.h; sourceTree = "<group>"; };
 		12CE01711CC991B900F3D84B /* SkeletalMesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkeletalMesh.h; sourceTree = "<group>"; };
+		12D7EF8C1DBF3E9600205B9C /* PlatformInput.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PlatformInput.mm; path = Platform/iOS/PlatformInput.mm; sourceTree = SOURCE_ROOT; };
 		12ECE5D81CEFBE85004F3697 /* AnimationNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnimationNode.h; sourceTree = "<group>"; };
 		12ECE5DF1CF0FFD1004F3697 /* TransformNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransformNode.h; sourceTree = "<group>"; };
 		12ECE5E11CF110D2004F3697 /* AudioSourceComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AudioSourceComponent.h; path = Components/AudioSourceComponent.h; sourceTree = "<group>"; };
@@ -729,6 +731,7 @@
 				1243C8911CDCE15A00BA692E /* EngineInputDelegate.h */,
 				1243C8921CDCE15A00BA692E /* EngineInputDelegate.mm */,
 				1296BB731CDB7F3400D17488 /* iOS.mm */,
+				12D7EF8C1DBF3E9600205B9C /* PlatformInput.mm */,
 			);
 			name = iOS;
 			sourceTree = "<group>";
@@ -986,6 +989,7 @@
 				12C560BE1CFB57B200E25478 /* SSAO.cpp in Sources */,
 				12C560BC1CFB57B200E25478 /* SoundManager.cpp in Sources */,
 				12150A201CEB875D0066A044 /* AnimatorComponent.cpp in Sources */,
+				12D7EF8D1DBF3E9600205B9C /* PlatformInput.mm in Sources */,
 				12822B451CC1AE0E00EE5D0A /* Skybox.cpp in Sources */,
 				12822B4F1CC1AE2800EE5D0A /* Logger.cpp in Sources */,
 				12FABB191D3256B600D88639 /* FPSControllerComponent.cpp in Sources */,

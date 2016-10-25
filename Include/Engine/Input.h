@@ -114,7 +114,7 @@ public:
 	ENGINE_API static float GetAxis(std::string axis) noexcept { return GetAxis(_axisMap[axis]); }
 
 	ENGINE_API static int GetConnectedControllerCount() noexcept { return _connectedControllers; }
-
+	
 	static void Release();
 
 #if defined(ENGINE_INTERNAL) || defined(EDITOR_INTERNAL)
@@ -126,6 +126,9 @@ public:
 
 	// Platform-specific functions
 	ENGINE_API static bool SetControllerVibration(int n, float left, float right);
+	ENGINE_API static bool GetAccelerometerAxis(glm::vec3 &axis);
+	ENGINE_API static bool GetGyroscopeAxis(glm::vec3 &axis);
+	ENGINE_API static bool GetLightIntensity(float &intensity);
 
 private:
 	static std::vector<uint8_t> _pressedKeys, _keyDown, _keyUp;
