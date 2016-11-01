@@ -464,7 +464,7 @@ int AssetLoader::LoadOGG(NString &file, ALenum *format, unsigned char **data, AL
 	if (!buff)
 		return ENGINE_IO_FAIL;
 
-	len = stb_vorbis_decode_memory(buff, len, &channels, &sampleRate, (short **)data);
+	len = stb_vorbis_decode_memory(buff, (int)len, &channels, &sampleRate, (short **)data);
 
 	if (!len)
 	{
@@ -474,7 +474,7 @@ int AssetLoader::LoadOGG(NString &file, ALenum *format, unsigned char **data, AL
 
 	*format = channels == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16;
 	*freq = sampleRate;
-	*size = len;
+	*size = (int)len;
 
 	f->Close();
 	free(buff);

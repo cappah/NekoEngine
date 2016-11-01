@@ -374,3 +374,21 @@ bool Platform::GetTouchMovementDelta(float &x, float &y)
 {
 	return false;
 }
+
+bool Input::GetAccelerometerAxis(glm::vec3 &axis)
+{
+	(void)axis;
+	return false;
+}
+
+bool Input::GetGyroscopeAxis(glm::vec3 &axis)
+{
+	(void)axis;
+	return false;
+}
+
+bool Input::GetLightIntensity(float &intensity)
+{
+	(void)intensity;
+	return false;
+}
