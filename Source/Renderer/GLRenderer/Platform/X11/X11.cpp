@@ -174,6 +174,12 @@ bool GLRenderer::Initialize(PlatformWindowType hWnd, unordered_map<string, strin
 	std::vector<int> context_attribs;
 	context_attribs.push_back(GLX_CONTEXT_PROFILE_MASK_ARB);
 	context_attribs.push_back(GLX_CONTEXT_CORE_PROFILE_BIT_ARB);
+	context_attribs.push_back(GLX_CONTEXT_MAJOR_VERSION_ARB);
+	context_attribs.push_back(4);
+	context_attribs.push_back(GLX_CONTEXT_MINOR_VERSION_ARB);
+	context_attribs.push_back(1);
+	context_attribs.push_back(GLX_CONTEXT_FLAGS_ARB);
+	context_attribs.push_back(GLX_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB);
 	
 	if (debug)
 	{
@@ -229,7 +235,7 @@ bool GLRenderer::Initialize(PlatformWindowType hWnd, unordered_map<string, strin
 
 void GLRenderer::SetSwapInterval(int swapInterval)
 {
-	glXSwapIntervalEXT(_dc, _hWnd, swapInterval);
+	if(glXSwapIntervalEXT) glXSwapIntervalEXT(_dc, _hWnd, swapInterval);
 }
 
 void GLRenderer::ScreenResized()

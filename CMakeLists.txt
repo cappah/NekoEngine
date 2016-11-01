@@ -156,6 +156,7 @@ endif(NullRenderer)
 # OpenGL|ES Renderer Library
 if(GLESRenderer)
 	include_directories(${PROJECT_SOURCE_DIR}/Source/Renderer/GLRenderer)
+	include_directories(${PROJECT_SOURCE_DIR}/3rdparty/include_android)
 	
 	add_library(GLESRenderer SHARED ${GLESRendererSourceFiles})
 	target_compile_options(GLESRenderer PRIVATE -std=c++11)

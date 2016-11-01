@@ -263,11 +263,9 @@ void DebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsiz
 #define GL_MAP_COHERENT_BIT_EXT		0
 #define GL_DYNAMIC_STORAGE_BIT_EXT	0
 
-#elif !defined(__ANDROID__)
-
-#define glBufferStorageEXT(x, y, z, w) GLESRenderer::Funcs.BufferStorage(x, y, z, w)
-#define glProgramUniform1iEXT(x, y, z) GLESRenderer::Funcs.ProgramUniform1i(x, y, z)
-#define glDrawElementsBaseVertex(x, y, z, w, a) GLESRenderer::Funcs.DrawElementsBaseVertex(x, y, z, w, a)
+//#define glBufferStorageEXT(x, y, z, w) GLESRenderer::Funcs.BufferStorage(x, y, z, w)
+//#define glProgramUniform1iEXT(x, y, z) GLESRenderer::Funcs.ProgramUniform1i(x, y, z)
+//#define glDrawElementsBaseVertex(x, y, z, w, a) GLESRenderer::Funcs.DrawElementsBaseVertex(x, y, z, w, a)
 
 #endif
 

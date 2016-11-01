@@ -56,6 +56,7 @@ ALCcontext *SoundManager::_context;
 AudioSource *SoundManager::_bgMusicSource;
 AudioClip *SoundManager::_bgMusicClip;
 ALfloat listenerOrientation[] = { 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f };
+static bool _initialized = false;
 
 int SoundManager::Initialize()
 {
@@ -67,10 +68,17 @@ int SoundManager::Initialize()
 	Logger::Log(SNDMGR_MODULE, LOG_INFORMATION, "Initializing OpenAL...");
 
 	if ((_device = alcOpenDevice(NULL)) == nullptr)
-		return ENGINE_FAIL;
+	{
+		Logger::Log(SNDMGR_MODULE, LOG_WARNING, "Failed to initialize OpenAL, sound disabled.");
+		return ENGINE_OK;
+	}
 
 	if ((_context = alcCreateContext(_device, NULL)) == nullptr)
-		return ENGINE_FAIL;
+	{
+		alcCloseDevice(_device);
+		Logger::Log(SNDMGR_MODULE, LOG_WARNING, "Failed to initialize OpenAL, sound disabled.");
+		return ENGINE_OK;
+	}
 
 	if (!alcMakeContextCurrent(_context))
 		return ENGINE_FAIL;
@@ -84,13 +92,19 @@ int SoundManager::Initialize()
 	_bgMusicSource = new AudioSource();
 	_bgMusicSource->SetLooping(true);
 
+	_initialized = true;
+
 	Logger::Log(SNDMGR_MODULE, LOG_INFORMATION, "Initialized");
 
 	return ENGINE_OK;
 }
 
+bool SoundManager::Enabled() { return _initialized; }
+
 int SoundManager::SetBackgroundMusic(int clipId) noexcept
 {
+	if (!_initialized) return ENGINE_OK;
+
 	StopBackgroundMusic();
 	
 	if (_bgMusicClip)
@@ -107,32 +121,38 @@ int SoundManager::SetBackgroundMusic(int clipId) noexcept
 
 int SoundManager::PlayBackgroundMusic() noexcept
 {
+	if (!_initialized) return ENGINE_OK;
 	return _bgMusicSource->Play();
 }
 
 int SoundManager::StopBackgroundMusic() noexcept
 {
+	if (!_initialized) return ENGINE_OK;
 	return _bgMusicSource->Stop();
 }
 
 int SoundManager::SetBackgroundMusicVolume(float vol) noexcept
 {
+	if (!_initialized) return ENGINE_OK;
 	return _bgMusicSource->SetGain(vol);
 }
 
 void SoundManager::SetListenerPosition(float x, float y, float z) noexcept
 {
+	if (!_initialized) return;
 	_bgMusicSource->SetPosition(x, y, z);
 	AL_CHECK(alListener3f(AL_POSITION, x, y, z));
 }
 
 void SoundManager::SetListenerOrientation(float x, float y, float z) noexcept
 {
+	if (!_initialized) return;
 //	AL_CHECK(alListener3f(AL_ORIENTATION, x, y, z));
 }
 
 void SoundManager::_UnsetBackgroundMusic() noexcept
 {
+	if (!_initialized) return;
 	StopBackgroundMusic();
 	
 	ResourceManager::UnloadResource(_bgMusicClip->GetResourceInfo()->id, ResourceType::RES_AUDIOCLIP);
@@ -141,6 +161,7 @@ void SoundManager::_UnsetBackgroundMusic() noexcept
 
 void SoundManager::Release() noexcept
 {
+	if (!_initialized) return;
 	if (_bgMusicSource)
 		delete _bgMusicSource;
 

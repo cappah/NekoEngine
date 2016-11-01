@@ -663,11 +663,17 @@ int Engine::Initialize(string cmdLine, bool editor)
 		return ENGINE_FAIL;
 	}
 
-	AL_CHECK_FATAL(const char *alVersionStr = (const char *)alGetString(AL_VERSION));
-	Logger::Log("OpenAL", LOG_INFORMATION, "Vendor: %s", alGetString(AL_VENDOR));
-	Logger::Log("OpenAL", LOG_INFORMATION, "Renderer: %s", alGetString(AL_RENDERER));
-	Logger::Log("OpenAL", LOG_INFORMATION, "Version: %s", alVersionStr);
-	Logger::Log("OpenAL", LOG_INFORMATION, "Extensions: %s", alGetString(AL_EXTENSIONS));
+	const char *alVersionStr = nullptr;
+	if (SoundManager::Enabled())
+	{
+		AL_CHECK_FATAL(alVersionStr = (const char *)alGetString(AL_VERSION));
+		Logger::Log("OpenAL", LOG_INFORMATION, "Vendor: %s", alGetString(AL_VENDOR));
+		Logger::Log("OpenAL", LOG_INFORMATION, "Renderer: %s", alGetString(AL_RENDERER));
+		Logger::Log("OpenAL", LOG_INFORMATION, "Version: %s", alVersionStr);
+		Logger::Log("OpenAL", LOG_INFORMATION, "Extensions: %s", alGetString(AL_EXTENSIONS));
+	}
+	else
+		alVersionStr = "OpenAL disabled";
 
 	_renderer->SetClearColor(0.f, 0.f, 0.f, 0.f);
 	_renderer->Clear(R_CLEAR_COLOR | R_CLEAR_DEPTH | R_CLEAR_STENCIL);
@@ -1073,14 +1079,13 @@ void Engine::SaveScreenshot() noexcept
 void Engine::_PrintStats()
 {
 	double diff = GetTime() - _lastTime;
-	static double _frameTime = 0.0, _logic = 0.0, _render = 0.0;
+	static double _frameTime = 0.0;
 	_nFrames++;
 
 	if (diff > 1.f)
 	{
 		_fps = _nFrames;
 		_frameTime = (diff / (double)_fps) * 1000;
-		_render = _renderTime * 1000;
 		_lastTime += diff;
 		_nFrames = 0;
 	}

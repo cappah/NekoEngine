@@ -50,6 +50,8 @@ class SoundManager
 public:
 	ENGINE_API static int Initialize();
 
+	ENGINE_API static bool Enabled();
+
 	ENGINE_API static int SetBackgroundMusic(int clipId) noexcept;
 
 	ENGINE_API static int PlayBackgroundMusic() noexcept;

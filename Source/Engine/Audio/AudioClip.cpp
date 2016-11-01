@@ -41,6 +41,7 @@
 #include <cstring>
 
 #include <Engine/Engine.h>
+#include <Engine/SoundManager.h>
 #include <Audio/AudioClip.h>
 #include <System/AssetLoader/AssetLoader.h>
 
@@ -60,6 +61,9 @@ int AudioClip::Load()
 	ALenum format = 0;
 	ALvoid *data = nullptr;
 	int ret = ENGINE_FAIL;
+
+	if(!SoundManager::Enabled())
+		return ENGINE_OK;
 
 	NString path(GetResourceInfo()->filePath);
 

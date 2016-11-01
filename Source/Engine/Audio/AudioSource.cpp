@@ -42,12 +42,16 @@
 #include <Scene/Object.h>
 #include <Audio/AudioSource.h>
 #include <Engine/ResourceManager.h>
+#include <Engine/SoundManager.h>
 
 using namespace glm;
 
 AudioSource::AudioSource() noexcept
 {
 	_clip = nullptr;
+
+	if(!SoundManager::Enabled())
+		return;
 
 	AL_CHECK_FATAL(alGenSources(1, &_src));
 	AL_CHECK_FATAL(alSourcef(_src, AL_PITCH, 1.f));
@@ -58,84 +62,98 @@ AudioSource::AudioSource() noexcept
 
 int AudioSource::SetPitch(float p) noexcept
 {
+	if(!SoundManager::Enabled()) return ENGINE_OK;
 	AL_CHECK_RET(alSourcef(_src, AL_PITCH, p), ENGINE_FAIL);
 	return ENGINE_OK;
 }
 
 int AudioSource::SetGain(float g) noexcept
 {
+	if(!SoundManager::Enabled()) return ENGINE_OK;
 	AL_CHECK_RET(alSourcef(_src, AL_GAIN, g), ENGINE_FAIL);
 	return ENGINE_OK;
 }
 
 int AudioSource::SetConeInnerAngle(float a) noexcept
 {
+	if(!SoundManager::Enabled()) return ENGINE_OK;
 	AL_CHECK_RET(alSourcef(_src, AL_CONE_INNER_ANGLE, a), ENGINE_FAIL);
 	return ENGINE_OK;
 }
 
 int AudioSource::SetConeOuterAngle(float a) noexcept
 {
+	if(!SoundManager::Enabled()) return ENGINE_OK;
 	AL_CHECK_RET(alSourcef(_src, AL_CONE_OUTER_ANGLE, a), ENGINE_FAIL);
 	return ENGINE_OK;
 }
 
 int AudioSource::SetConeOuterGain(float g) noexcept
 {
+	if(!SoundManager::Enabled()) return ENGINE_OK;
 	AL_CHECK_RET(alSourcef(_src, AL_CONE_OUTER_GAIN, g), ENGINE_FAIL);
 	return ENGINE_OK;
 }
 
 int AudioSource::SetDirection(float x, float y, float z) noexcept
 {
+	if(!SoundManager::Enabled()) return ENGINE_OK;
 	AL_CHECK_RET(alSource3f(_src, AL_DIRECTION, x, y, z), ENGINE_FAIL);
 	return ENGINE_OK;
 }
 
 int AudioSource::SetPosition(float x, float y, float z) noexcept
 {
+	if(!SoundManager::Enabled()) return ENGINE_OK;
 	AL_CHECK_RET(alSource3f(_src, AL_POSITION, x, y, z), ENGINE_FAIL);
 	return ENGINE_OK;
 }
 
 int AudioSource::SetVelocity(float x, float y, float z) noexcept
 {
+	if(!SoundManager::Enabled()) return ENGINE_OK;
 	AL_CHECK_RET(alSource3f(_src, AL_VELOCITY, x, y, z), ENGINE_FAIL);
 	return ENGINE_OK;
 }
 
 int AudioSource::SetDirection(glm::vec3 &dir) noexcept
 {
+	if(!SoundManager::Enabled()) return ENGINE_OK;
 	AL_CHECK_RET(alSource3f(_src, AL_DIRECTION, dir.x, dir.y, dir.z), ENGINE_FAIL);
 	return ENGINE_OK;
 }
 
 int AudioSource::SetPosition(glm::vec3 &pos) noexcept
 {
+	if(!SoundManager::Enabled()) return ENGINE_OK;
 	AL_CHECK_RET(alSource3f(_src, AL_POSITION, pos.x, pos.y, pos.z), ENGINE_FAIL);
 	return ENGINE_OK;
 }
 
 int AudioSource::SetVelocity(glm::vec3 &v) noexcept
 {
+	if(!SoundManager::Enabled()) return ENGINE_OK;
 	AL_CHECK_RET(alSource3f(_src, AL_VELOCITY, v.x, v.y, v.z), ENGINE_FAIL);
 	return ENGINE_OK;
 }
 
 int AudioSource::SetLooping(bool looping) noexcept
 {
+	if(!SoundManager::Enabled()) return ENGINE_OK;
 	AL_CHECK_RET(alSourcei(_src, AL_LOOPING, looping), ENGINE_FAIL);
 	return ENGINE_OK;
 }
 
 int AudioSource::SetMaxDistance(float maxDistance) noexcept
 {
+	if(!SoundManager::Enabled()) return ENGINE_OK;
 	AL_CHECK_RET(alSourcef(_src, AL_MAX_DISTANCE, maxDistance), ENGINE_FAIL);
 	return ENGINE_OK;
 }
 
 int AudioSource::SetReferenceDistance(float referenceDistance) noexcept
 {
+	if(!SoundManager::Enabled()) return ENGINE_OK;
 	AL_CHECK_RET(alSourcef(_src, AL_REFERENCE_DISTANCE, referenceDistance), ENGINE_FAIL);
 	return ENGINE_OK;
 }
@@ -144,6 +162,7 @@ int AudioSource::SetClip(AudioClip *clip) noexcept
 {
 	if (!clip)
 		return ENGINE_INVALID_ARGS;
+	if(!SoundManager::Enabled()) return ENGINE_OK;
 
 	_clip = clip;
 
@@ -154,30 +173,35 @@ int AudioSource::SetClip(AudioClip *clip) noexcept
 
 int AudioSource::Play() noexcept
 {
+	if(!SoundManager::Enabled()) return ENGINE_OK;
 	AL_CHECK_RET(alSourcePlay(_src), ENGINE_FAIL);
 	return ENGINE_OK;
 }
 
 int AudioSource::Pause() noexcept
 {
+	if(!SoundManager::Enabled()) return ENGINE_OK;
 	AL_CHECK_RET(alSourcePause(_src), ENGINE_FAIL);
 	return ENGINE_OK;
 }
 
 int AudioSource::Stop() noexcept
 {
+	if(!SoundManager::Enabled()) return ENGINE_OK;
 	AL_CHECK_RET(alSourceStop(_src), ENGINE_FAIL);
 	return ENGINE_OK;
 }
 
 int AudioSource::Rewind() noexcept
 {
+	if(!SoundManager::Enabled()) return ENGINE_OK;
 	AL_CHECK_RET(alSourceRewind(_src), ENGINE_FAIL);
 	return ENGINE_OK;
 }
 
 bool AudioSource::IsPlaying() noexcept
 {
+	if(!SoundManager::Enabled()) return false;
 	ALenum state;
 	alGetSourcei(_src, AL_SOURCE_STATE, &state);
 	return state == AL_PLAYING;
@@ -185,6 +209,7 @@ bool AudioSource::IsPlaying() noexcept
 
 AudioSource::~AudioSource()
 {
+	if(!SoundManager::Enabled()) return;
 	AL_CHECK(alSourceStop(_src));
 	AL_CHECK(alSourcei(_src, AL_BUFFER, AL_NONE));
 	AL_CHECK(alDeleteSources(1, &_src));
