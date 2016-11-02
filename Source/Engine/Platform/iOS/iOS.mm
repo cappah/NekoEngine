@@ -42,6 +42,7 @@
 #include <Platform/Platform.h>
 
 #import <Foundation/Foundation.h>
+#import <CoreMotion/CoreMotion.h>
 #import <UIKit/UIKit.h>
 
 #import "EngineAppDelegate.h"
@@ -67,6 +68,8 @@ static EngineAppDelegate *_engineAppDelegate;
 static EngineInputDelegate *_engineInputDelegate;
 
 PlatformWindowType Platform::_activeWindow = nullptr;
+CMMotionManager *_motionManager = nullptr;
+bool _haveAccelerometer = false, _haveGyroscope = false;
 
 PlatformWindowType Platform::CreateWindow(int width, int height, bool fullscreen)
 {
@@ -80,6 +83,26 @@ PlatformWindowType Platform::CreateWindow(int width, int height, bool fullscreen
     
 	Engine::GetConfiguration().Engine.ScreenWidth = rect.size.width;
 	Engine::GetConfiguration().Engine.ScreenHeight = rect.size.height;
+	
+	_motionManager = [[CMMotionManager alloc] init];
+	
+	if ([_motionManager isAccelerometerAvailable])
+	{
+		[_motionManager setAccelerometerUpdateInterval:1.0/60.0];
+		[_motionManager startAccelerometerUpdates];
+		_haveAccelerometer = true;
+	}
+	else
+		Logger::Log("iOS_Input", LOG_WARNING, "No accelerometer available");
+	
+	if ([_motionManager isGyroAvailable])
+	{
+		[_motionManager setGyroUpdateInterval:1.0/60.0];
+		[_motionManager startGyroUpdates];
+		_haveGyroscope = true;
+	}
+	else
+		Logger::Log("iOS_Input", LOG_WARNING, "No gyroscope available");
 	
 	return [[[UIApplication sharedApplication] delegate] window];
 }
@@ -173,6 +196,8 @@ int Platform::MainLoop()
 
 void Platform::CleanUp()
 {
+	if (_haveAccelerometer) [_motionManager stopAccelerometerUpdates];
+	if (_haveGyroscope) [_motionManager stopGyroUpdates];
 }
 
 // Unused

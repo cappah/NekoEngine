@@ -49,6 +49,8 @@
 
 REGISTER_OBJECT_CLASS(GameController);
 
+using namespace glm;
+
 GameController::GameController(ObjectInitializer *initializer) noexcept : Object(initializer)
 {
 }

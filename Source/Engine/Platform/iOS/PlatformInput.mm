@@ -38,17 +38,34 @@
  */
 
 #include <Engine/Input.h>
+#import <CoreMotion/CoreMotion.h>
+
+extern CMMotionManager *_motionManager;
 
 bool Input::GetAccelerometerAxis(glm::vec3 &axis)
 {
-	(void)axis;
-	return false;
+	CMAccelerometerData *data = [_motionManager accelerometerData];
+	if (!data)
+		return false;
+	
+	axis.x = [data acceleration].x;
+	axis.y = [data acceleration].y;
+	axis.z = [data acceleration].y;
+	
+	return true;
 }
 
 bool Input::GetGyroscopeAxis(glm::vec3 &axis)
 {
-	(void)axis;
-	return false;
+	CMGyroData *data = [_motionManager gyroData];
+	if (!data)
+		return false;
+	
+	axis.x = [data rotationRate].x;
+	axis.y = [data rotationRate].y;
+	axis.z = [data rotationRate].y;
+	
+	return true;
 }
 
 bool Input::GetLightIntensity(float &intensity)

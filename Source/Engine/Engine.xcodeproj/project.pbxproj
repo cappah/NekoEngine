@@ -77,6 +77,8 @@
 		128DBB611D6D7C7F00E7CFFD /* Camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 128DBB601D6D7C7F00E7CFFD /* Camera.cpp */; };
 		128DBB621D6D7C7F00E7CFFD /* Camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 128DBB601D6D7C7F00E7CFFD /* Camera.cpp */; };
 		128DBB641D6D7C9300E7CFFD /* Camera.h in Headers */ = {isa = PBXBuildFile; fileRef = 128DBB631D6D7C9300E7CFFD /* Camera.h */; };
+		129000BC1DCA53D400EBB120 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 129000BB1DCA53D400EBB120 /* CoreMotion.framework */; };
+		129000C01DCA5CB500EBB120 /* PlatformInput.mm in Sources */ = {isa = PBXBuildFile; fileRef = 12D7EF8C1DBF3E9600205B9C /* PlatformInput.mm */; };
 		1296BBD41CDBB6B500D17488 /* PlatformDetect.h in Headers */ = {isa = PBXBuildFile; fileRef = 1296BBD31CDBB6B500D17488 /* PlatformDetect.h */; };
 		1297E3971D69E91500A00959 /* Console.h in Headers */ = {isa = PBXBuildFile; fileRef = 1297E3961D69E91500A00959 /* Console.h */; };
 		1297E3991D69E93100A00959 /* Console.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1297E3981D69E93100A00959 /* Console.cpp */; };
@@ -133,7 +135,6 @@
 		12C8E5D31D59DA76002DD5EE /* NString.h in Headers */ = {isa = PBXBuildFile; fileRef = 12C8E5D01D59DA76002DD5EE /* NString.h */; };
 		12C8E5D41D59DA76002DD5EE /* Runtime.h in Headers */ = {isa = PBXBuildFile; fileRef = 12C8E5D11D59DA76002DD5EE /* Runtime.h */; };
 		12CE01721CC991B900F3D84B /* SkeletalMesh.h in Headers */ = {isa = PBXBuildFile; fileRef = 12CE01711CC991B900F3D84B /* SkeletalMesh.h */; };
-		12D7EF8D1DBF3E9600205B9C /* PlatformInput.mm in Sources */ = {isa = PBXBuildFile; fileRef = 12D7EF8C1DBF3E9600205B9C /* PlatformInput.mm */; };
 		12ECE5D91CEFBE85004F3697 /* AnimationNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 12ECE5D81CEFBE85004F3697 /* AnimationNode.h */; };
 		12ECE5E01CF0FFD1004F3697 /* TransformNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 12ECE5DF1CF0FFD1004F3697 /* TransformNode.h */; };
 		12ECE5E21CF110D2004F3697 /* AudioSourceComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 12ECE5E11CF110D2004F3697 /* AudioSourceComponent.h */; };
@@ -268,6 +269,7 @@
 		12822BB91CC1DB9500EE5D0A /* EngineDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = EngineDelegate.mm; path = Platform/Mac/EngineDelegate.mm; sourceTree = SOURCE_ROOT; };
 		128DBB601D6D7C7F00E7CFFD /* Camera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Camera.cpp; path = Core/Camera.cpp; sourceTree = SOURCE_ROOT; };
 		128DBB631D6D7C9300E7CFFD /* Camera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Camera.h; sourceTree = "<group>"; };
+		129000BB1DCA53D400EBB120 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.1.sdk/System/Library/Frameworks/CoreMotion.framework; sourceTree = DEVELOPER_DIR; };
 		1296BB6F1CDB7EEA00D17488 /* EngineAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EngineAppDelegate.h; path = Platform/iOS/EngineAppDelegate.h; sourceTree = SOURCE_ROOT; };
 		1296BB701CDB7EEA00D17488 /* EngineAppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = EngineAppDelegate.mm; path = Platform/iOS/EngineAppDelegate.mm; sourceTree = SOURCE_ROOT; };
 		1296BB731CDB7F3400D17488 /* iOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = iOS.mm; path = Platform/iOS/iOS.mm; sourceTree = SOURCE_ROOT; };
@@ -324,6 +326,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				129000BC1DCA53D400EBB120 /* CoreMotion.framework in Frameworks */,
 				122A3AB81D338A470047786A /* ogg.framework in Frameworks */,
 				122A3AB91D338A470047786A /* vorbis.framework in Frameworks */,
 			);
@@ -713,6 +716,7 @@
 		12822BAF1CC1B01F00EE5D0A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				129000BB1DCA53D400EBB120 /* CoreMotion.framework */,
 				121482B21D51461E00F804C3 /* libfreetype.6.dylib */,
 				126DE7AF1CC8673B00A9E5AB /* libz.dylib */,
 				126DE7AD1CC8673600A9E5AB /* libsqlite3.dylib */,
@@ -891,6 +895,7 @@
 			files = (
 				12C560B11CFB57B200E25478 /* ResourceManager.cpp in Sources */,
 				124A31F91CDC263600472893 /* SMAA.cpp in Sources */,
+				129000C01DCA5CB500EBB120 /* PlatformInput.mm in Sources */,
 				124A31E01CDC260E00472893 /* AudioClip.cpp in Sources */,
 				12FABB1A1D3256B600D88639 /* FPSControllerComponent.cpp in Sources */,
 				12C560B91CFB57B200E25478 /* SkeletalMesh.cpp in Sources */,
@@ -989,7 +994,6 @@
 				12C560BE1CFB57B200E25478 /* SSAO.cpp in Sources */,
 				12C560BC1CFB57B200E25478 /* SoundManager.cpp in Sources */,
 				12150A201CEB875D0066A044 /* AnimatorComponent.cpp in Sources */,
-				12D7EF8D1DBF3E9600205B9C /* PlatformInput.mm in Sources */,
 				12822B451CC1AE0E00EE5D0A /* Skybox.cpp in Sources */,
 				12822B4F1CC1AE2800EE5D0A /* Logger.cpp in Sources */,
 				12FABB191D3256B600D88639 /* FPSControllerComponent.cpp in Sources */,
@@ -1029,13 +1033,17 @@
 					"\"$(SRCROOT)/../../3rdparty/include_all\"",
 					"\"$(SRCROOT)/../Launcher/Launcher-iOS/Frameworks/freetype/include\"",
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
+				KEEP_PRIVATE_EXTERNS = YES;
+				LD_GENERATE_MAP_FILE = YES;
 				LLVM_LTO = YES;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
+				SEPARATE_STRIP = NO;
 				SKIP_INSTALL = YES;
-				STRIP_INSTALLED_PRODUCT = YES;
+				STRIP_INSTALLED_PRODUCT = NO;
+				STRIP_STYLE = "non-global";
 			};
 			name = Debug;
 		};
@@ -1063,13 +1071,17 @@
 					"\"$(SRCROOT)/../../3rdparty/include_all\"",
 					"\"$(SRCROOT)/../Launcher/Launcher-iOS/Frameworks/freetype/include\"",
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
+				KEEP_PRIVATE_EXTERNS = YES;
+				LD_GENERATE_MAP_FILE = YES;
 				LLVM_LTO = YES;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
+				SEPARATE_STRIP = NO;
 				SKIP_INSTALL = YES;
-				STRIP_INSTALLED_PRODUCT = YES;
+				STRIP_INSTALLED_PRODUCT = NO;
+				STRIP_STYLE = "non-global";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
