@@ -256,3 +256,4 @@ _Pvt_Extensions
 # Xcode
 *.xcuserdata
 *.xcuserdatad
+/Bin32

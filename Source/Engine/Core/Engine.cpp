@@ -48,7 +48,7 @@
 #include <string>
 #include <unordered_map>
 
-#ifndef NE_DEVICE_MOBILE
+#if !defined(NE_DEVICE_MOBILE) && !defined(NE_PLATFORM_WIN32)
 #include <png.h>
 #endif
 
@@ -942,7 +942,7 @@ ObjectComponent *Engine::NewComponent(const std::string &className, ComponentIni
 
 void Engine::SaveScreenshot() noexcept
 {
-#ifndef NE_DEVICE_MOBILE
+#if !defined(NE_DEVICE_MOBILE) && !defined(NE_PLATFORM_WIN32)
 	unsigned char *pixels = nullptr;
 
 	size_t imageSize = 3 /* BPP - RGB */ * _config.Engine.ScreenWidth * _config.Engine.ScreenHeight;
