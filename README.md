@@ -19,6 +19,8 @@ For the features see the [Roadmap](https://github.com/nalexandru/NekoEngine/wiki
   
 **GPU:**
   * Nvidia GeForce GTX 970
+  * Nvidia GeForce GTX 770
+  * Nvidia GeForce GTX 980M
   * Nvidia Quadro K2100M
 
 Howto
