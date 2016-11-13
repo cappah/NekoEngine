@@ -7,11 +7,8 @@ if(NOT CMAKE_BUILD_TYPE)
 set(CMAKE_BUILD_TYPE, DEBUG)
 endif(NOT CMAKE_BUILD_TYPE)
 
-option(GLRenderer "GLRenderer" ON)
-option(NullRenderer "NullRenderer" OFF)
-option(GLESRenderer "GLESRenderer" OFF)
-
 file(GLOB EngineSourceFiles "Source/Engine/*.cpp"
+	"Source/Engine/Animation/*.cpp"
 	"Source/Engine/Audio/*.cpp"
 	"Source/Engine/Core/*.cpp"
 	"Source/Engine/PostEffects/*.cpp"
@@ -22,29 +19,25 @@ file(GLOB EngineSourceFiles "Source/Engine/*.cpp"
 	"Source/Engine/System/VFS/*.cpp"
 	"Source/Engine/Platform/*.cpp"
 	"Source/Engine/Platform/Compat/*.cpp"
+	"Source/Engine/Renderer/*.cpp"
+	"Source/Engine/Script/*.cpp"
+	"Source/Engine/Script/Interface/*.cpp"
 )
 file(GLOB TestGameSourceFiles "Source/TestGame/*.cpp")
-file(GLOB GLRendererSourceFiles "Source/Renderer/GLRenderer/*.cpp"
-	"Source/Renderer/GLRenderer/Loaders/*.cpp"
-)
-file(GLOB NullRendererSourceFiles "Source/Renderer/NullRenderer/*.cpp")
-file(GLOB GLESRendererSourceFiles "Source/Renderer/GLESRenderer/*.cpp"
-	"Source/Renderer/GLRenderer/Loaders/tga.cpp"
-	"Source/Renderer/GLESRenderer/Platform/EGL/*.cpp"
-)
 
 set(OPENAL_LIB openal)
 set(BSD_LIB "")
 
 include_directories(/usr/local/include)
 include_directories(${PROJECT_SOURCE_DIR}/Include)
+include_directories(${PROJECT_SOURCE_DIR}/Source/Include)
 include_directories(${PROJECT_SOURCE_DIR}/3rdparty/include_all)
 include_directories(/usr/include/freetype2)
 include_directories(/usr/local/include/freetype2)
 link_directories(/usr/local/lib)
 
 if(NOT MSVC)
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g2 -D_DEBUG -fno-exceptions -Wall -O0")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g2 -DNE_CONFIG_DEBUG -fno-exceptions -Wall -O0")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Ofast -fno-math-errno -fomit-frame-pointer -funroll-loops -ffast-math -fno-exceptions -flto -Wall -Werror")
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -g -Og -fno-exceptions")
 else(NOT MSVC)
@@ -60,7 +53,6 @@ endif(CMAKE_BUILD_TYPE EQUAL "RELEASE")
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 	file(GLOB ExecutableSourceFile "Source/Launcher/Windows/*.cpp")
-	file(GLOB RendererPlatformSourceFiles "Source/Renderer/GLRenderer/Platform/Windows/*.cpp")
 elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 	set(PLATFORM_UNIX ON)
 	set(PLATFORM_X11 ON)
@@ -103,26 +95,32 @@ endif(PLATFORM_UNIX)
 if(PLATFORM_X11)
 	file(GLOB PlatformSourceFiles "Source/Engine/Platform/X11/*.cpp")
 	file(GLOB ExecutableSourceFile "Source/Launcher/X11/*.cpp")
-	file(GLOB GLRendererPlatformSourceFiles "Source/Renderer/GLRenderer/Platform/X11/*.cpp")
 	set(PLATFORM_LIBS "X11")
 	add_definitions(-DPLATFORM_X11)
 endif(PLATFORM_X11)
+
+if(PLATFORM_WAYLAND)
+	file(GLOB PlatformSourceFiles "Source/Engine/Platform/Wayland/*.cpp")
+	file(GLOB ExecutableSourceFile "Source/Launcher/X11/*.cpp")
+	set(PLATFORM_LIBS "wayland-client")
+	add_definitions(-DPLATFORM_WAYLAND)
+endif(PLATFORM_WAYLAND)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/Bin64")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/Bin64")
 
 # Engine Library
 add_library(Engine SHARED ${EngineSourceFiles} ${PlatformSourceFiles} ${SharedPlatformSourceFiles})
-target_compile_options(Engine PRIVATE -std=c++11)
+target_compile_options(Engine PRIVATE -std=c++1z)
 target_compile_options(Engine PRIVATE -fPIC)
 target_compile_options(Engine PRIVATE -frtti)
 target_compile_options(Engine PRIVATE -DENGINE_INTERNAL)
 target_compile_options(Engine PRIVATE -DPLATFORM_INTERNAL)
-target_link_libraries(Engine ${PLATFORM_LIBS} ${OPENAL_LIB} z sqlite3 png freetype ${BSD_LIB})
+target_link_libraries(Engine X11 ${PLATFORM_LIBS} ${OPENAL_LIB} z sqlite3 png freetype vulkan luajit-5.1 ${BSD_LIB})
 
 # Launcher Executable
 add_executable(Launcher ${ExecutableSourceFile})
-target_compile_options(Launcher PRIVATE -std=c++11)
+target_compile_options(Launcher PRIVATE -std=c++1z)
 target_compile_options(Launcher PRIVATE -frtti)
 target_link_libraries(Launcher Engine)
 
@@ -130,36 +128,8 @@ target_link_libraries(Launcher Engine)
 include_directories(Engine)
 
 add_library(TestGame SHARED ${TestGameSourceFiles})
-target_compile_options(TestGame PRIVATE -std=c++11)
+target_compile_options(TestGame PRIVATE -std=c++1z)
 target_compile_options(TestGame PRIVATE -fPIC)
 target_compile_options(TestGame PRIVATE -frtti)
 target_compile_options(Engine PRIVATE -DTESTGAME_INTERNAL)
 target_link_libraries(TestGame Engine)
-
-# OpenGL Renderer Library
-if(GLRenderer)
-	add_library(GLRenderer SHARED ${GLRendererSourceFiles} ${GLRendererPlatformSourceFiles})
-	target_compile_options(GLRenderer PRIVATE -std=c++11)
-	target_compile_options(GLRenderer PRIVATE -fPIC)
-	target_compile_options(GLRenderer PRIVATE -frtti)
-	target_link_libraries(GLRenderer GL X11)
-endif(GLRenderer)
-
-# Null Renderer Library
-if(NullRenderer)
-	add_library(NullRenderer SHARED ${NullRendererSourceFiles})
-	target_compile_options(NullRenderer PRIVATE -std=c++11)
-	target_compile_options(NullRenderer PRIVATE -fPIC)
-	target_compile_options(NullRenderer PRIVATE -frtti)
-endif(NullRenderer)
-
-# OpenGL|ES Renderer Library
-if(GLESRenderer)
-	include_directories(${PROJECT_SOURCE_DIR}/Source/Renderer/GLRenderer)
-	
-	add_library(GLESRenderer SHARED ${GLESRendererSourceFiles})
-	target_compile_options(GLESRenderer PRIVATE -std=c++11)
-	target_compile_options(GLESRenderer PRIVATE -fPIC)
-	target_compile_options(GLESRenderer PRIVATE -frtti)
-	target_link_libraries(GLESRenderer EGL GLESv2 X11)
-endif(GLESRenderer)

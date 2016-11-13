@@ -40,7 +40,7 @@
 #pragma once
 
 #include <Engine/Engine.h>
-#include <Engine/SkeletalMesh.h>
+#include <Renderer/SkeletalMesh.h>
 #include <Scene/Components/StaticMeshComponent.h>
 
 class SkeletalMeshComponent : public StaticMeshComponent
@@ -51,15 +51,23 @@ public:
 	ENGINE_API SkeletalMesh *GetMesh() noexcept { return _mesh; }
 
 	ENGINE_API virtual int Load() override;
+	ENGINE_API int LoadStatic(std::vector<SkeletalVertex> &vertices, std::vector<uint32_t> &indices, bool createGroup = false) { return _mesh->LoadStatic(vertices, indices, createGroup); }
+	ENGINE_API int LoadDynamic(std::vector<SkeletalVertex> &vertices, std::vector<uint32_t> &indices, bool createGroup = false) { return _mesh->LoadDynamic(vertices, indices, createGroup); }
+	ENGINE_API virtual bool Upload(Buffer *buffer = nullptr) override;
 	ENGINE_API virtual int InitializeComponent() override;
-	
-	ENGINE_API virtual void Draw(RShader *shader, class Camera *camera) noexcept override;
+
 	ENGINE_API virtual void Update(double deltaTime) noexcept override;
+
+	ENGINE_API virtual bool BuildCommandBuffers() override;
 
 	ENGINE_API virtual bool Unload() override;
 
 	ENGINE_API virtual ~SkeletalMeshComponent() { };
+
+	virtual VkDeviceSize GetRequiredMemorySize() override { return _mesh->GetRequiredMemorySize(); }
 	
+	virtual void UpdateData(VkCommandBuffer commandBuffer) noexcept override;
+
 protected:
 	SkeletalMesh *_mesh;
 	std::string _animatorId;

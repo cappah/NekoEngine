@@ -37,8 +37,12 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <algorithm>
+
 #include <Engine/Input.h>
 #include <Engine/Engine.h>
+#include <Engine/Console.h>
+#include <System/Logger.h>
 
 using namespace std;
 
@@ -47,6 +51,7 @@ using namespace std;
 vector<uint8_t> Input::_pressedKeys;
 vector<uint8_t> Input::_keyDown;
 vector<uint8_t> Input::_keyUp;
+NArray<VirtualAxis> Input::_virtualAxes;
 unordered_map<int, uint8_t> Input::_keymap;
 float Input::_screenHalfWidth = 0.f, Input::_screenHalfHeight = 0.f;
 float Input::_mouseAxis[2] = { 0.f, 0.f };
@@ -62,27 +67,53 @@ unordered_map<std::string, uint8_t> Input::_buttonMap;
 unordered_map<std::string, uint8_t> Input::_axisMap;
 int Input::_connectedControllers = 0;
 ControllerState Input::_controllerState[NE_MAX_CONTROLLERS];
-bool Input::_captureMouse = false;
+bool Input::_enableMouseAxis = false;
+bool Input::_pointerCaptured = false;
 
-int Input::Initialize(bool captureMouse)
+int Input::Initialize(bool enableMouseAxis)
 {
 	_InitializeKeymap();
 
-	_screenHalfWidth = (float)Engine::GetScreenWidth() / 2.f;
-	_screenHalfHeight = (float)Engine::GetScreenHeight() / 2.f;
+	_screenHalfWidth = (float)Engine::GetConfiguration().Engine.ScreenWidth / 2.f;
+	_screenHalfHeight = (float)Engine::GetConfiguration().Engine.ScreenHeight / 2.f;
 
 	_connectedControllers = _GetControllerCount();
 
-	_captureMouse = captureMouse;
+	EnableMouseAxis(enableMouseAxis);
 	
 	Logger::Log(INPUT_MODULE, LOG_INFORMATION, "Initialized");
 
 	return ENGINE_OK;
 }
 
+bool Input::EnableMouseAxis(bool enable)
+{
+	if (enable == _enableMouseAxis) return true;
+	else if (!enable)
+	{
+		_enableMouseAxis = false;
+		if (_pointerCaptured) ReleasePointer();
+		return true;
+	}
+
+	if (!_pointerCaptured)
+	{
+		if (!CapturePointer())
+			return false;
+	
+		SetPointerPosition(Engine::GetScreenWidth() / 2, Engine::GetScreenHeight() / 2);
+	}
+
+	_enableMouseAxis = true;
+
+	return true;
+}
+
 void Input::SetAxisSensivity(uint8_t axis, float sensivity)
 {
-	if (axis <= 0x07)
+	if (axis >= NE_VIRT_AXIS)
+		return;
+	else if (axis <= 0x07)
 	{
 		_sensivity[axis] = sensivity;
 		return;
@@ -129,6 +160,8 @@ float Input::GetAxis(uint8_t axis) noexcept
 {
 	if (axis <= 0x01)
 		return _mouseAxis[axis] * _sensivity[axis];
+	else if (axis >= NE_VIRT_AXIS)
+		return _virtualAxes[axis - NE_VIRT_AXIS].val;
 
 	uint8_t id = 0;
 	while (axis >= 0x10)
@@ -159,11 +192,48 @@ void Input::Key(int key, bool isPressed) noexcept
 	{
 		if (Console::IsOpen())
 			Console::HandleKeyDown(code);
+		else if ((code == NE_KEY_TILDE) && Engine::GetConfiguration().Engine.EnableConsole)
+			Console::OpenConsole();
 		else
+		{
 			_keyDown.push_back(code);
+			for (VirtualAxis &v : _virtualAxes)
+			{
+				if (v.min == code)
+				{
+					v.val = -.5f;
+					v.active = true;
+				}
+				else if (v.max == code)
+				{
+					v.val = .5f;
+					v.active = true;
+				}
+			}
+		}
 	}
-	else if(!isPressed)
-		_keyUp.push_back(code);
+	else if (!isPressed)
+	{
+		if (Console::IsOpen())
+			Console::HandleKeyUp(code);
+		else
+		{
+			_keyUp.push_back(code);
+			for (VirtualAxis &v : _virtualAxes)
+			{
+				if (v.min == code)
+				{
+					v.val = -.5f;
+					v.active = false;
+				}
+				else if (v.max == code)
+				{
+					v.val = .5f;
+					v.active = false;
+				}
+			}
+		}
+	}
 }
 
 void Input::Update() noexcept
@@ -176,15 +246,13 @@ void Input::Update() noexcept
 	long x = 0, y = 0;
 	float xDelta = 0.f, yDelta = 0.f;
 
-	if (_captureMouse && Platform::GetPointerPosition(x, y))
+	if (_enableMouseAxis && _pointerCaptured && GetPointerPosition(x, y))
 	{
 		xDelta = _screenHalfWidth - x;
 		yDelta = _screenHalfHeight - y;
 
-		Platform::SetPointerPosition((long)_screenHalfWidth, (long)_screenHalfHeight);
+		SetPointerPosition((long)_screenHalfWidth, (long)_screenHalfHeight);
 	}
-	else if (!Platform::GetTouchMovementDelta(xDelta, yDelta))
-		return;
 
 	_mouseAxis[NE_MOUSE_X] = -(xDelta / _screenHalfWidth);
 	_mouseAxis[NE_MOUSE_Y] = yDelta / _screenHalfHeight;
@@ -198,12 +266,20 @@ void Input::ClearKeyState() noexcept
 	for (uint8_t code : _keyUp)
 		_pressedKeys.erase(remove(_pressedKeys.begin(), _pressedKeys.end(), code), _pressedKeys.end());
 
+	for (VirtualAxis &v : _virtualAxes)
+	{
+		if (v.active && v.val > 0.f) v.val = 1.f;
+		else if (v.active) v.val = -1.f;
+		else v.val = 0.f;
+	}
+
 	_keyDown.clear();
 	_keyUp.clear();
 }
 
 void Input::Release()
 {
+	ReleasePointer();
 	Logger::Log(INPUT_MODULE, LOG_INFORMATION, "Released");
 }
 

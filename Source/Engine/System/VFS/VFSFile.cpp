@@ -42,6 +42,7 @@
 
 #include <Engine/Engine.h>
 #include <Platform/Compat.h>
+#include <System/Logger.h>
 #include <System/VFS/VFSFile.h>
 #include <System/VFS/VFSArchive.h>
 
@@ -208,7 +209,7 @@ size_t VFSFile::Read(void *buffer, size_t size, size_t count)
 	return 0;
 }
 
-void *VFSFile::ReadAll(size_t &size)
+void *VFSFile::ReadAll(size_t &size, bool terminate)
 {
 	void *ret = nullptr;
 
@@ -216,8 +217,12 @@ void *VFSFile::ReadAll(size_t &size)
 	size = Tell();
 	Seek(0, SEEK_SET);
 
+	if (terminate) size++;
+
 	ret = calloc(size, 1);
 	Read(ret, 1, size);
+
+	if (terminate) ((char *)ret)[size - 1] = 0x0;
 
 	return ret;
 }

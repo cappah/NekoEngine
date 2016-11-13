@@ -42,28 +42,43 @@
 #include <string>
 #include <vector>
 
-#include <Engine/Bone.h>
 #include <Engine/Vertex.h>
 #include <Engine/Engine.h>
 #include <Runtime/Runtime.h>
-#include <Renderer/Renderer.h>
-#include <Engine/TransformNode.h>
-#include <Engine/AnimationClip.h>
+#include <Animation/Bone.h>
+#include <Animation/TransformNode.h>
+#include <Animation/AnimationClip.h>
 #include <Resource/MeshResource.h>
+
+#define NMESH1_HEADER	"NMESH1 "
+#define NMESH2_HEADER	"NMESH2 "
+#define NMESH2_FOOTER	"ENDMESH"
+#define NMESH_SKELETAL	"SKELETAL"
+
+#define NANIM1_HEADER	"NANIM1 "
+#define NANIM2_HEADER	"NANIM2 "
+#define NANIM2_FOOTER	"ENDANIM"
 
 class AssetLoader
 {
 public:
 	// Mesh
-	static int LoadMesh(NString &file, MeshType type,
-						std::vector<Vertex> &vertices,
-						std::vector<uint32_t> &indices,
-						std::vector<uint32_t> &groupOffset,
-						std::vector<uint32_t> &groupCount,
-						std::vector<Bone> *bones = nullptr,
-						std::vector<TransformNode> *nodes = nullptr,
-						glm::dmat4 *globalInverseTransform = nullptr);
+	static int LoadStaticMesh(NString &file,
+		std::vector<Vertex> &vertices,
+		std::vector<uint32_t> &indices,
+		std::vector<uint32_t> &groupOffset,
+		std::vector<uint32_t> &groupCount);
+
+	static int LoadSkeletalMesh(NString &file,
+		std::vector<SkeletalVertex> &vertices,
+		std::vector<uint32_t> &indices,
+		std::vector<uint32_t> &groupOffset,
+		std::vector<uint32_t> &groupCount,
+		std::vector<Bone> &bones,
+		std::vector<TransformNode> &nodes,
+		glm::dmat4 &globalInverseTransform);
 	
+	// Animation clip
 	static int LoadAnimation(NString &file,
 							 std::string &name,
 							 double *duration,
@@ -71,170 +86,187 @@ public:
 							 std::vector<AnimationNode> &channels);
 	
 	// Sound
-	static int LoadWAV(NString &file, ALenum *format, ALvoid **data, ALsizei *size, ALsizei *freq);
-	static int LoadOGG(NString &file, ALenum *format, unsigned char **data, ALsizei *size, ALsizei *freq);
-
-private:
+	static int LoadWAV(NString &file, int32_t *format, void **data, int32_t *size, int32_t *freq);
+	static int LoadOGG(NString &file, int32_t *format, unsigned char **data, int32_t *size, int32_t *freq);
+	
+	// Images
+	static int LoadTGA(const uint8_t *data, uint64_t dataSize, uint32_t &width, uint32_t &height, uint8_t &bpp, uint8_t **imgData, uint64_t &imgDataSize);
+	static int LoadDDS(const uint8_t *data, uint64_t dataSize, uint32_t &width, uint32_t &height, uint32_t &depth, uint32_t &format, uint32_t &mipLevels, uint8_t **imgData, uint64_t &imgDataSize);
+	static int LoadASTC(const uint8_t *data, uint64_t dataSize, uint32_t &width, uint32_t &height, uint32_t &depth, uint32_t &format, uint32_t &mipLevels, uint8_t **imgData, uint64_t &imgDataSize);
 
 	/**
-	 * Read a vertex from a mesh file
+	 * Read a unsigned integer array from a comma separated string
 	 */
-	static inline Vertex _ReadVertex(const char *line) noexcept
+	static inline void ReadUIntArray(const char* str, int nInt, unsigned int *intBuff) noexcept
 	{
 		int n = 0, i = 0, i_buff = 0;
-		char c, buff[60] = { 0 }, *pch;		
-		Vertex v;
+		char c, buff[60] = { 0 };
 
-		v.color = glm::vec3(0, 0, 0);
-		v.numBones = 0;
-		v.boneIndices = glm::ivec4(0);
-		v.boneWeights = glm::vec4(0.f);
-
-		while (1)
+		while (n < nInt)
 		{
-			while ((c = line[i]) != ';' && c != ' ' && c != 0x0)
+			while ((c = str[i]) != ',' && c != 0x0)
 			{
 				buff[i_buff++] = c;
 				i++;
 			}
 
-			if (c == 0x0 || c == '\n')
-				break;
-
-			if (c == ' ')
-			{
-				i++;
-				continue;
-			}
-
-			if(i_buff > 0)
-				buff[i_buff - 1] = 0x0;
-
-			if ((pch = strstr(buff, "pos")) != NULL)
-				EngineUtils::ReadFloatArray(buff + 4, 3, &v.pos.x);
-			else if ((pch = strstr(buff, "binorm")) != NULL)
-				goto next;
-			else if ((pch = strstr(buff, "norm")) != NULL)
-				EngineUtils::ReadFloatArray(buff + 5, 3, &v.norm.x);
-			else if ((pch = strstr(buff, "tgt")) != NULL)
-				EngineUtils::ReadFloatArray(buff + 4, 3, &v.tgt.x);
-			else if ((pch = strstr(buff, "uv")) != NULL)
-				EngineUtils::ReadFloatArray(buff + 3, 2, &v.uv.x);
-			else if ((pch = strstr(buff, "bonei")) != NULL)
-				EngineUtils::ReadIntArray(buff + 6, 4, &v.boneIndices.x);
-			else if ((pch = strstr(buff, "bonew")) != NULL)
-				EngineUtils::ReadFloatArray(buff + 6, 4, &v.boneWeights.x);
-			else if ((pch = strstr(buff, "bonen")) != NULL)
-				EngineUtils::ReadIntArray(buff + 6, 1, &v.numBones);
-
-			next:
+			intBuff[n] = (unsigned int)atoi(buff);
 			memset(buff, 0x0, i_buff);
 
 			i_buff = 0;
 			i++;
 			n++;
 		}
-
-		return v;
 	}
-	
-	static inline Bone _ReadBone(const char *line) noexcept
+
+	/**
+	 * Read a integer array from a comma separated string
+	 */
+	static inline void ReadIntArray(const char* str, int nInt, int *intBuff) noexcept
 	{
 		int n = 0, i = 0, i_buff = 0;
-		char c, buff[512] = { 0 }, *pch;
-		Bone b;
-		
-		while (1)
+		char c, buff[60] = { 0 };
+
+		while (n < nInt)
 		{
-			while ((c = line[i]) != ';' && c != ' ' && c != 0x0)
+			while ((c = str[i]) != ',' && c != 0x0)
 			{
-				if(i_buff == 511)
-				{ DIE("Bone string too long"); }
 				buff[i_buff++] = c;
 				i++;
 			}
-			
-			if (c == 0x0 || c == '\n')
-				break;
-			
-			if (c == ' ')
-			{
-				i++;
-				continue;
-			}
-			
-			if(i_buff > 0)
-				buff[i_buff - 1] = 0x0;
-			
-			if ((pch = strstr(buff, "name")) != NULL)
-				b.name = buff + 5;
-			else if ((pch = strstr(buff, "offset")) != NULL)
-				EngineUtils::ReadDoubleArray(buff + 7, 16, &b.offset[0][0]);
-										
+
+			intBuff[n] = atoi(buff);
 			memset(buff, 0x0, i_buff);
-										
+
 			i_buff = 0;
 			i++;
 			n++;
 		}
-		
-		return b;
 	}
-	
-	static inline TransformNode _ReadTransformNode(const char *line) noexcept
+
+	/**
+	 * Read a float array from a comma separated string
+	 */
+	static inline void ReadFloatArray(const char *str, int nFloat, float *floatBuff) noexcept
 	{
 		int n = 0, i = 0, i_buff = 0;
-		char c, buff[512] = { 0 }, *pch;
-		TransformNode t;
-		
-		while (1)
+		char c, buff[60] = { 0 };
+
+		while (n < nFloat)
 		{
-			while ((c = line[i]) != ';' && c != ' ' && c != 0x0)
+			while ((c = str[i]) != ',' && c != 0x0)
 			{
-				if(i_buff == 511)
-				{ DIE("TransformNode string too long"); }
 				buff[i_buff++] = c;
 				i++;
 			}
-			
-			if (c == 0x0 || c == '\n')
-				break;
-			
-			if (c == ' ')
-			{
-				i++;
-				continue;
-			}
-			
-			if(i_buff > 0)
-				buff[i_buff - 1] = 0x0;
-			
-			if ((pch = strstr(buff, "name")) != NULL)
-				t.name = buff + 5;
-			else if ((pch = strstr(buff, "transform")) != NULL)
-				EngineUtils::ReadDoubleArray(buff + 10, 16, &t.transform[0][0]);
-			else if ((pch = strstr(buff, "parent")) != NULL)
-				t.parentId = atoi(buff + 7);
-			else if ((pch = strstr(buff, "childn")) != NULL)
-				t.numChildren = atoi(buff + 7);
-			else if ((pch = strstr(buff, "children")) != NULL)
-			{
-				int *children = (int*)calloc(sizeof(int), t.numChildren);
-				EngineUtils::ReadIntArray(buff + 9, t.numChildren, children);
-				
-				for(int i = 0; i < t.numChildren; ++i)
-					t.childrenIds.push_back(children[i]);
 
-				free(children);
-			}
-				
-			memset(buff, 0x0, i_buff);
-			
+			floatBuff[n] = (float)atof(buff);
+			::memset(buff, 0x0, i_buff);
+
 			i_buff = 0;
 			i++;
 			n++;
 		}
-		
-		return t;
 	}
+
+	/**
+	 * Read a double array from a comma separated string
+	 */
+	static inline void ReadDoubleArray(const char *str, int nDouble, double *doubleBuff) noexcept
+	{
+		int n = 0, i = 0, i_buff = 0;
+		char c, buff[60] = { 0 };
+
+		while (n < nDouble)
+		{
+			while ((c = str[i]) != ',' && c != 0x0)
+			{
+				buff[i_buff++] = c;
+				i++;
+			}
+
+			doubleBuff[n] = atof(buff);
+			::memset(buff, 0x0, i_buff);
+
+			i_buff = 0;
+			i++;
+			n++;
+		}
+	}
+
+	/**
+	 * Remove comments from string. If no comment is found, the string is unchanged.
+	 */
+	static inline char* RemoveComment(char* str) noexcept
+	{
+		char* pos = strchr(str, '#');
+		if (pos)
+			*pos = 0x0;
+		return str;
+	}
+
+	/**
+	 * Remove new line character from string. If no new line character is found, the string is unchanged.
+	 */
+	static inline void RemoveNewline(char* str) noexcept
+	{
+		size_t len = strlen(str);
+
+		for (size_t i = 0; i < len; i++)
+		{
+			if (str[i] == '\n' || str[i] == '\r')
+			{
+				str[i] = 0x0;
+				return;
+			}
+		}
+	}
+
+	/**
+	 * Clamp a number between 2 values.
+	 *
+	 * if(n < lower)
+	 *   return lower;
+	 * else if(n > upper)
+	 *   return upper;
+	 * else
+	 *   return n;
+	 */
+	static inline float clamp(float n, float lower, float upper) noexcept
+	{
+		return n < lower ? lower : n > upper ? upper : n;
+	}
+
+	/**
+	 * Convert cstring to lowercase
+	 */
+	static inline void to_lower(char *str)
+	{
+		while (*str)
+		{
+			*str = tolower(*str); ++str;
+		} // Silence C++14 warning
+	}
+
+private:
+	static int _LoadStaticMeshV2(class VFSFile *file,
+		std::vector<Vertex> &vertices,
+		std::vector<uint32_t> &indices,
+		std::vector<uint32_t> &groupOffset,
+		std::vector<uint32_t> &groupCount);
+
+	static int _LoadSkeletalMeshV2(VFSFile *file,
+		std::vector<SkeletalVertex> &vertices,
+		std::vector<uint32_t> &indices,
+		std::vector<uint32_t> &groupOffset,
+		std::vector<uint32_t> &groupCount,
+		std::vector<Bone> &bones,
+		std::vector<TransformNode> &nodes,
+		glm::dmat4 &globalInverseTransform);
+
+	static int _LoadAnimationV2(VFSFile *file,
+							 std::string &name,
+							 double *duration,
+							 double *ticksPerSecond,
+							 std::vector<AnimationNode> &channels);
 };

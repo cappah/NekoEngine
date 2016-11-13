@@ -37,15 +37,7 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <fstream>
-
-#include <Engine/Engine.h>
-#include <Scene/Scene.h>
-#include <System/Logger.h>
-#include <Engine/EngineUtils.h>
 #include <Engine/CameraManager.h>
-#include <Engine/LoadingScreen.h>
-#include <System/VFS/VFS.h>
 
 #define LINE_BUFF	1024
 #define CM_MODULE	"CameraManager"

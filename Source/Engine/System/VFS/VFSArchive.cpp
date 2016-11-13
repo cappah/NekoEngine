@@ -38,6 +38,7 @@
  */
 
 #include <Engine/Engine.h>
+#include <System/Logger.h>
 #include <System/VFS/VFSArchive.h>
 
 #define VFS_AR_MODULE	"VFS_Archive"

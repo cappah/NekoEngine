@@ -40,16 +40,17 @@
 #include <fstream>
 
 #include <Engine/Engine.h>
-#include <Scene/Scene.h>
-#include <System/Logger.h>
-#include <Engine/EngineUtils.h>
 #include <Engine/SceneManager.h>
-#include <Engine/LoadingScreen.h>
 #include <Engine/ResourceManager.h>
+#include <Scene/Scene.h>
+#include <Scene/LoadingScreen.h>
+#include <System/Logger.h>
 #include <System/VFS/VFS.h>
+#include <System/AssetLoader/AssetLoader.h>
+#include <Renderer/VKUtil.h>
 
-#define LINE_BUFF	1024
-#define SM_MODULE	"SceneManager"
+#define LINE_BUFF		1024
+#define SCNMGR_MODULE	"SceneManager"
 
 using namespace std;
 
@@ -68,62 +69,54 @@ int SceneManager::Initialize()
 
 int SceneManager::_ReadConfigFile(NString file)
 {
-	char lineBuff[LINE_BUFF];
-	memset(lineBuff, 0x0, LINE_BUFF);
+	NString lineBuff(LINE_BUFF);
 
-	Logger::Log(SM_MODULE, LOG_INFORMATION, "Loading configuration...");
+	Logger::Log(SCNMGR_MODULE, LOG_INFORMATION, "Loading configuration...");
 
 	_UnloadScenes();
 
 	VFSFile *f = VFS::Open(file);
 	if (!f)
 	{
-		Logger::Log(SM_MODULE, LOG_CRITICAL, "Failed to open configuration file");
+		Logger::Log(SCNMGR_MODULE, LOG_CRITICAL, "Failed to open configuration file");
 		return ENGINE_IO_FAIL;
 	}
 
 	while (!f->EoF())
 	{
-		memset(lineBuff, 0x0, LINE_BUFF);
+		lineBuff.Clear();
 		f->Gets(lineBuff, LINE_BUFF);
 
-		if (lineBuff[0] == 0x0)
+		if (lineBuff.IsEmpty())
 			continue;
 
-		EngineUtils::RemoveComment(lineBuff);
-		EngineUtils::RemoveNewline(lineBuff);
+		lineBuff.RemoveComment();
+		lineBuff.RemoveNewLine();
 
-		if (lineBuff[0] == 0x0)
+		if (lineBuff.IsEmpty())
 			continue;
 
-		if (!strchr(lineBuff, '='))
+		if (!lineBuff.Contains('='))
 			continue;
 
-		vector<char*> split = EngineUtils::SplitString(lineBuff, '=');
+		NArray<NString> split = lineBuff.Split('=');
 
-		size_t len = strlen(split[0]);
-		if (!strncmp(split[0], "DefaultScene", len))
-			_defaultScene = atoi(split[1]);
-		else if(!strncmp(split[0], "Scene", len))
+		if (split[0] == "DefaultScene")
+			_defaultScene = (int)split[1];
+		else if(split[0] == "Scene")
 		{
-			vector<char*> scnSplit = EngineUtils::SplitString(split[1], ',');
+			NArray<NString> scnSplit = split[1].Split(',');
 
-			if(scnSplit.size() == 3)
-				_scenes.push_back(new Scene(atoi(scnSplit[0]), scnSplit[1], scnSplit[2]));
+			if(scnSplit.Count() == 3)
+				_scenes.push_back(new Scene((int)scnSplit[0], *scnSplit[1], *scnSplit[2]));
 			else
-				_scenes.push_back(new Scene(atoi(scnSplit[0]), scnSplit[1]));
-			
-			for(char* p :scnSplit)
-				free(p);
+				_scenes.push_back(new Scene((int)scnSplit[0], *scnSplit[1]));
 		}
-		
-		for(char* p : split)
-			free(p);
 	}
 
 	f->Close();
 
-	Logger::Log(SM_MODULE, LOG_INFORMATION, "Initialized");
+	Logger::Log(SCNMGR_MODULE, LOG_INFORMATION, "Initialized");
 
 	return ENGINE_OK;
 }
@@ -149,45 +142,6 @@ int SceneManager::LoadNextScene()
 		scene = 0;
 
 	return LoadScene(scene);
-}
-
-int SceneManager::DrawScene(RShader* shader, Camera *camera) noexcept
-{
-	shader->Enable();
-
-	if (_activeScene)
-	{
-		if (_loadingScreen)
-		{
-			_activeScene->CreateArrayBuffers();
-			
-			if (Engine::GetConfiguration().Renderer.Mipmaps)
-			{
-				NArray<Resource *> _textures = ResourceManager::GetResourcesOfType(ResourceType::RES_TEXTURE);
-				for(Resource *r : _textures)
-					((Texture *)r)->GetRTexture()->GenerateMipmaps();
-			}
-				
-			delete _loadingScreen;
-			_loadingScreen = nullptr;
-		}
-
-		_activeScene->Draw(shader, camera);
-	}
-
-	shader->Disable();
-
-	return ENGINE_OK;
-}
-
-void SceneManager::DrawLoadingScreen() noexcept
-{
-	Engine::GetRenderer()->MakeCurrent(R_RENDER_CONTEXT);
-
-	if (_loadingScreen == nullptr)
-		_loadingScreen = new LoadingScreen(LS_DEFAULT_TEXTURE);
-
-	_loadingScreen->Draw();
 }
 
 void SceneManager::UpdateScene(double deltaTime) noexcept
@@ -229,33 +183,33 @@ void SceneManager::_UnloadScenes() noexcept
 
 int SceneManager::_LoadSceneInternal(int id)
 {
-	Logger::Log(SM_MODULE, LOG_INFORMATION, "Loading scene id=%d", id);
+	Logger::Log(SCNMGR_MODULE, LOG_INFORMATION, "Loading scene id=%d", id);
 	Scene *scn = nullptr;
 
 	for (Scene *s : _scenes)
 	{
 		if (s->GetId() == id)
+		{
 			scn = s;
+			break;
+		}
 	}
 
 	if (scn == nullptr)
 		return ENGINE_NOT_FOUND;
 
-	if ((_loadingScreen = new LoadingScreen(scn->GetLoadingScreenTexture())) == nullptr)
+	if ((_loadingScreen = new LoadingScreen(*scn->GetLoadingScreenTextureID())) == nullptr)
 		return ENGINE_OUT_OF_RESOURCES;
 	
-	if (Engine::IsEditor())
-		return _LoadSceneWorker(scn);
+	//if (Engine::IsEditor())
+	return _LoadSceneWorker(scn);
 
-	_loadThread = new thread(_LoadSceneWorker, scn);
-	return ENGINE_OK;
+	//_loadThread = new thread(_LoadSceneWorker, scn);
+	//return ENGINE_OK;
 }
 
 int SceneManager::_LoadSceneWorker(Scene *scn)
 {
-	Engine::GetRenderer()->MakeCurrent(R_LOAD_CONTEXT);
-	RFence *fence = Engine::GetRenderer()->CreateFence();
-
 	if (scn == nullptr)
 		return ENGINE_NOT_FOUND;
 
@@ -265,9 +219,6 @@ int SceneManager::_LoadSceneWorker(Scene *scn)
 		_UnloadScene();
 
 	int ret = scn->Load();
-
-	fence->Wait();
-	delete fence;
 
 	if (ret == ENGINE_OK)
 		_activeScene = scn;
@@ -283,5 +234,5 @@ void SceneManager::Release() noexcept
 {
 	_UnloadScenes();
 	
-	Logger::Log(SM_MODULE, LOG_INFORMATION, "Released");
+	Logger::Log(SCNMGR_MODULE, LOG_INFORMATION, "Released");
 }

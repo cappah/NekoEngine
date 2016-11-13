@@ -1,0 +1,58 @@
+NDOC=NekoEngine Scripting Reference
+
+BeginGroup=Script Files
+	File Format=lua/format.rtf
+	Loading Scripts=lua/loading.rtf
+EndGroup
+
+BeginGroup=Core
+	Platform=lua/core/platform.rtf
+	Engine=lua/core/engine.rtf
+	Input=lua/core/input.rtf
+	Console=lua/core/console.rtf
+	Logger=lua/core/logger.rtf
+	Camera=lua/core/cam.rtf
+	Material=lua/core/mat.rtf
+	ResourceManager=lua/core/rm.rtf
+	EventManager=lua/core/em.rtf
+	SoundManager=lua/core/sm.rtf
+	CameraManager=lua/core/cm.rtf
+	BeginGroup=Virtual File System
+		VFS=lua/core/vfs/vfs.rtf
+		VFile=lua/core/vfs/vfile.rtf
+		VArchive=lua/core/vfs/varchive.rtf
+	EndGroup
+EndGroup
+
+BeginGroup=Audio
+	AudioSource=lua/audio/as.rtf
+EndGroup
+
+BeginGroup=Animation
+	AnimClip=lua/anim/animclip.rtf
+EndGroup
+
+BeginGroup=GUI
+	GUI=lua/gui/gui.rtf
+EndGroup
+
+BeginGroup=Math
+	Constants=lua/math/const.rtf
+	Vectors=lua/math/vec.rtf
+	Matrices=lua/math/mat.rtf
+EndGroup
+
+BeginGroup=Scene
+	Scene=lua/scene/scene.rtf
+	Object=lua/scene/object.rtf
+	ObjectComponent=lua/scene/oc.rtf
+	BeginGroup=Components
+		AnimatorComponent=lua/scene/comp/ac.rtf
+		AudioSourceComponent=lua/scene/comp/asc.rtf
+		CameraComponent=lua/scene/comp/cc.rtf
+		LightComponent=lua/scene/comp/lc.rtf
+		SkeletalMeshComponent=lua/scene/comp/skmc.rtf
+		StaticMeshComponent=lua/scene/comp/stmc.rtf
+	EndGroup
+EndGroup
+

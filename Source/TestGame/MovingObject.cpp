@@ -40,6 +40,7 @@
 
 #include <math.h>
 #include <Engine/Engine.h>
+#include <System/AssetLoader/AssetLoader.h>
 
 #include "TestGame.h"
 #include "MovingObject.h"
@@ -80,7 +81,7 @@ MovingObject::MovingObject(ObjectInitializer *initializer) noexcept : Object(ini
 		_speed = (float)atof(ptr);
 
 	if (((it = initializer->arguments.find("end")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
-		EngineUtils::ReadFloatArray(ptr, 3, &_endPosition.x);
+		AssetLoader::ReadFloatArray(ptr, 3, &_endPosition.x);
 }
 
 int MovingObject::Load()

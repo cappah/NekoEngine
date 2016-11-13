@@ -3,7 +3,7 @@
  * Renderer.h
  * Author: Alexandru Naiman
  *
- * Rendering API abstraction
+ * Forward+ Renderer
  *
  * -----------------------------------------------------------------------------
  *
@@ -39,471 +39,215 @@
 
 #pragma once
 
-#include <stdint.h>
-
-#include <string>
 #include <unordered_map>
+#include <algorithm>
 
-#include <Platform/Platform.h>
-#include <Renderer/RFence.h>
-#include <Renderer/RBuffer.h>
-#include <Renderer/RShader.h>
-#include <Renderer/RTexture.h>
-#include <Renderer/RFramebuffer.h>
-#include <Renderer/RArrayBuffer.h>
+#include <Engine/Defs.h>
+#include <Engine/Engine.h>
+#include <Runtime/Runtime.h>
+#include <Renderer/Buffer.h>
+#include <Renderer/Swapchain.h>
 
-// Conflicts with X11
-#ifdef Always
-#undef Always
+#define MAX_INFLIGHT_COMMAND_BUFFERS	6
+
+#ifdef ENGINE_INTERNAL
+struct QueueFamilyIndices
+{
+	int graphicsFamily = -1;
+	int presentFamily = -1;
+	int computeFamily = -1;
+
+	bool complete() { return graphicsFamily > 0 && presentFamily > 0 && computeFamily > 0; }
+};
 #endif
 
-#define RENDERER_API_VERSION	0x0033
-
-#define R_CLEAR_COLOR			1
-#define R_CLEAR_DEPTH			2
-#define R_CLEAR_STENCIL			4
-
-#define R_RENDER_CONTEXT		0
-#define R_LOAD_CONTEXT			1
-
-typedef void(*RendererDebugLogProc)(const char* msg);
-typedef unsigned int(*RendererAPIVersionProc)(void);
-
-enum class BufferType : uint8_t;
-enum class TextureType : uint8_t;
-
-enum class RendererCapability : uint8_t
+enum LightType : uint32_t
 {
-	MemoryInformation = 0,
-	AnisotropicFiltering = 1,
-	MultisampledFramebuffer,
-	PerSampleShading,
-	DrawBaseVertex
+	LT_Directional = 0,
+	LT_Point = 1,
+	LT_Spot = 2
 };
 
-enum class PolygonMode : uint8_t
+typedef struct LIGHT
 {
-	Triangles = 0,
-	TriangleStrip = 1
-};
+	glm::vec4 position;
+	glm::vec4 direction;
+	glm::vec4 color;
+	glm::vec4 data;
+} Light;
 
-enum class ElementType : uint8_t
+typedef struct OBJECT_DATA
 {
-	UnsignedByte = 0,
-	UnsignedInt = 1
-};
+	glm::mat4 Model;
+	glm::mat4 ModelViewProjection;
+	glm::mat4 Normal;
+	// padding
+	glm::mat4 p2;
+} ObjectData;
 
-enum class PolygonFace : uint8_t
+typedef struct SCENE_DATA
 {
-	Front = 0,
-	Back = 1,
-	FrontAndBack
-};
-
-enum class TestFunc : uint8_t
-{
-	Never = 0,
-	Less = 1,
-	LessOrEqual = 2,
-	Greater = 3,
-	GreaterOrEqual = 4,
-	Equal = 5,
-	NotEqual = 6,
-	Always = 7
-};
-
-enum class TestOp : uint8_t
-{
-	Keep = 0,
-	Zero = 1,
-	Replace = 2,
-	Increment = 3,
-	IncrementWrap = 4,
-	Decrement = 5,
-	DecrementWrap = 6,
-	Invert = 7
-};
-
-enum class BlendFactor : uint8_t
-{
-	Zero = 0,
-	One = 1,
-	SrcColor,
-	OneMinusSrcColor,
-	DstColor,
-	OneMinusDstColor,
-	SrcAlpha,
-	OneMinusSrcAlpha,
-	DstAlpha,
-	OneMinusDstAlpha,
-	ConstantColor,
-	OneMinusConstantColor,
-	ConstantAlpha,
-	OneMinusConstantAlpha,
-	SrcAlphaSaturate,
-	Src1Color,
-	OneMinusSrc1Color,
-	Src1Alpha,
-	OneMinusSrc1Alpha
-};
-
-enum class BlendEquation : uint8_t
-{
-	Add = 0,
-	Subtract = 1,
-	ReverseSubtract,
-};
-
-enum class FrontFace : uint8_t
-{
-	Clockwise = 0,
-	CounterClockwise = 1
-};
-
-enum class TextureFileFormat : uint8_t
-{
-	DDS,
-	KTX,
-	TGA,
-	WIC,
-	PNG,
-	JPG
-};
-
-enum class PixelStoreParameter : uint8_t
-{
-	PackSwapBytes = 0,
-	PackLSBFirst,
-	PackRowLength,
-	PackImageHeight,
-	PackSkipPixels,
-	PackSkipRows,
-	PackSkipImages,
-	PackAlignment,
-	UnpackSwapBytes,
-	UnpackLSBFirst,
-	UnpackRowLength,
-	UnpackImageHeight,
-	UnpackSkipPixels,
-	UnpackSkipRows,
-	UnpackSkipImages,
-	UnpackAlignment	
-};
-
-typedef struct RENDERER_HBAO_ARGS
-{
-	struct Viewport
-	{
-		uint32_t top, left;
-		uint32_t width, height;
-		float zNear, zFar;
-	} viewport;
-	RTexture *depthTexture;
-	RTexture *normalTexture;
-	float projection[16];
-	float worldToView[16];
-} RHBAOArgs;
+	glm::mat4 View;
+	glm::mat4 Projection;
+	glm::vec4 Ambient;
+	glm::vec4 CameraPosition;
+	glm::ivec2 ScreenSize;
+	int32_t LightCount;
+	int32_t NumberOfTilesX;
+	// padding
+	glm::vec4 p0;
+	glm::mat4 p1;
+} SceneData;
 
 class Renderer
 {
 public:
-	
-	/**
-	 * Create a Renderer instance.
-	 * You must call Initialize on this instance before use.
-	 */
-	Renderer() { };
-	
-	/**
-	 * Initialize the rendering context
-	 */
-	virtual bool Initialize(PlatformWindowType hWnd, std::unordered_map<std::string, std::string> *args = nullptr, bool debug = false) = 0;
+	static Renderer *GetInstance();
+	static void Release();
 
-	/**
-	 * Set a custom function for logging debug messages
-	 */
-	virtual void SetDebugLogFunction(RendererDebugLogProc debugLogFunction) = 0;
+	const char *GetAPIName() { return "Vulkan"; }
+	const char *GetAPIVersion();
+	const char *GetDeviceName();
 
-	/**
-	 * The name of the rendering API
-	 */
-	virtual const char* GetName() = 0;
-	
-	/**
-	 * Rendering API major version
-	 */
-	virtual int GetMajorVersion() = 0;
-	
-	/**
-	 * Rendering API minor version
-	 */
-	virtual int GetMinorVersion() = 0;
+	virtual int Initialize(PlatformWindowType window, bool enableValidation = false, bool debug = false);
 
-	/**
-	 * Set the screen clear color
-	 */
-	virtual void SetClearColor(float r, float g, float b, float a) = 0;
-	
-	/**
-	 * Set viewport dimensions
-	 */
-	virtual void SetViewport(int x, int y, int width, int height) = 0;
+	virtual void Update(double deltaTime);
+	virtual void Draw();
 
-	/**
-	 * Enable the depth test
-	 */
-	virtual void EnableDepthTest(bool enable) = 0;
+	virtual void ScreenResized();
 
-	/**
-	 * Specify the value used for depth buffer comparisons
-	 */
-	virtual void SetDepthFunc(TestFunc func) = 0;
+	void WaitIdle() { if (_device != VK_NULL_HANDLE) vkDeviceWaitIdle(_device); }
 
-	/**
-	 * Specify mapping of depth values from normalized device coordinates to window coordinates
-	 */
-	virtual void SetDepthRange(double near, double far) = 0;
+	VkCommandBuffer CreateMeshCommandBuffer();
+	void FreeMeshCommandBuffer(VkCommandBuffer buffer);
 
-	/**
-	 * Specify mapping of depth values from normalized device coordinates to window coordinates
-	*/
-	virtual void SetDepthRangef(float near, float far) = 0;
+	VkDescriptorPool CreateMeshDescriptorPool();
+	VkDescriptorPool CreateAnimatedMeshDescriptorPool();
+	void FreeMeshDescriptorPool(VkDescriptorPool pool);
 
-	/**
-	 * Enable or disable writing into the depth buffer
-	 */
-	virtual void SetDepthMask(bool mask) = 0;
+	Buffer *GetSceneDataBuffer() { return _buffer; }
 
-	/**
-	 * Enable the stencil test
-	 */
-	virtual void EnableStencilTest(bool enable) = 0;
+	VkImage GetRenderTargetImage();
+	VkImage GetDepthStencilImage();
+	VkImage GetNormalBrightImage();
+	VkImage GetMSAANormalBrightImage();
+	VkImageView GetRenderTargetImageView();
+	VkImageView GetDepthStencilImageView();
+	VkImageView GetNormalBrightImageView();
+	VkImageView GetMSAANormalBrightImageView();
 
-	/*
-	 * Set function and reference for stencil testing
-	 */
-	virtual void SetStencilFunc(TestFunc func, int ref, unsigned int mask) = 0;
+	VkImageView GetDepthImageView();
+	VkImageView GetStencilImageView();
 
-	/*
-	 * Set front and/or back function and reference for stencil testing
-	 */
-	virtual void SetStencilFuncSeparate(PolygonFace face, TestFunc func, int ref, unsigned int mask) = 0;
+	VkSampler GetTextureSampler() { return _textureSampler; }
+	VkSampler GetNearestSampler() { return _nearestSampler; }
+	VkSampler GetDepthSampler() { return _depthSampler; }
 
-	/**
-	 * Set front and back stencil test actions
-	 */
-	virtual void SetStencilOp(TestOp sfail, TestOp dpfail, TestOp dppass) = 0;
+	VkFramebuffer GetDepthFramebuffer() { return _depthFramebuffer; }
+	VkFramebuffer GetDrawFramebuffer() { return _framebuffer; }
+	VkFramebuffer GetGUIFramebuffer() { return _guiFramebuffer; }
 
-	/**
-	 * Set front and/or back stencil test actions
-	 */
-	virtual void SetStencilOpSeparate(PolygonFace face, TestOp sfail, TestOp dpfail, TestOp dppass) = 0;
+	VkDescriptorSet GetSceneDescriptorSet() { return _sceneDescriptorSet; }
 
-	/**
-	 * Control the front and back writing of individual bits in the stencil planes
-	 */
-	virtual void SetStencilMask(unsigned int mask) = 0;
+	void AddDepthCommandBuffer(VkCommandBuffer buffer) { _secondaryDepthCommandBuffers.Add(buffer); _rebuildDepthCB = true; }
+	void AddSceneCommandBuffer(VkCommandBuffer buffer) { _secondarySceneCommandBuffers.Add(buffer); _rebuildSceneCB = true; }
+	void AddGUICommandBuffer(VkCommandBuffer buffer) { _secondaryGuiCommandBuffers.Add(buffer); _rebuildGUICB = true; }
 
-	/**
-	 * Control the front and back writing of individual bits in the stencil planes
-	 */
-	virtual void SetStencilMaskSeparate(PolygonFace face, unsigned int mask) = 0;
+//	void RemoveDepthCommandBuffer(VkCommandBuffer buffer)
+//	{ _secondaryDepthCommandBuffers.erase(std::remove(_secondaryDepthCommandBuffers.begin(), _secondaryDepthCommandBuffers.end(), buffer), _secondaryDepthCommandBuffers.end()); _rebuildDepthCB = true; }
+//	void RemoveSceneCommandBuffer(VkCommandBuffer buffer)
+//	{ _secondarySceneCommandBuffers.erase(std::remove(_secondarySceneCommandBuffers.begin(), _secondarySceneCommandBuffers.end(), buffer), _secondarySceneCommandBuffers.end()); _rebuildSceneCB = true; }
+//	void RemoveGUICommandBuffer(VkCommandBuffer buffer)
+//	{ _secondaryGuiCommandBuffers.erase(std::remove(_secondaryGuiCommandBuffers.begin(), _secondaryGuiCommandBuffers.end(), buffer), _secondaryGuiCommandBuffers.end()); _rebuildGUICB = true; }
 
-	/**
-	 * Enable blending
-	 */
-	virtual void EnableBlend(bool enable) = 0;
+	void ResetDepthCommandBuffers() { _secondaryDepthCommandBuffers.Clear(); }
+	void ResetSceneCommandBuffers() { _secondarySceneCommandBuffers.Clear(); }
+	void ResetGUICommandBuffers() { _secondaryGuiCommandBuffers.Clear(); }
 
-	/**
-	 * Specify pixel arithmetic
-	 */
-	virtual void SetBlendFunc(BlendFactor src, BlendFactor dst) = 0;
+	Buffer *GetStagingBuffer(VkDeviceSize size);
+	void FreeStagingBuffer(Buffer *buffer);
 
-	/*
-	 * Specify pixel arithmetic for RGB and alpha components separately
-	 */
-	virtual void SetBlendFuncSeparate(BlendFactor srcColor, BlendFactor dstColor, BlendFactor srcAlpa, BlendFactor dstAlpha) = 0;
+	Light *AllocLight();
+	Light *GetLight(uint32_t id);
+	void FreeLight(Light *light);
+	int32_t GetNumLights() { return _sceneData.LightCount; }
 
-	/*
-	 * Set the blend color
-	 */
-	virtual void SetBlendColor(float r, float g, float b, float a) = 0;
+	void SetAmbientColor(float r, float g, float b, float intensity) { _sceneData.Ambient = glm::vec4(r, g, b, intensity); };
 
-	/**
-	 * Specify the equation used for both the RGB blend equation and the Alpha blend equation
-	 */
-	virtual void SetBlendEquation(BlendEquation eq) = 0;
+protected:
+	Renderer();
 
-	/**
-	 * Set the RGB blend equation and the alpha blend equation separately
-	 */
-	virtual void SetBlendEquationSeparate(BlendEquation color, BlendEquation alpha) = 0;
+	virtual ~Renderer();
 
-	virtual void EnableFaceCulling(bool enable) = 0;
+private:
+	// Vulkan
+	VkInstance _instance;
+	VkDevice _device;
+	VkQueue _graphicsQueue, _computeQueue, _transferQueue, _presentQueue;
+	VkPhysicalDevice _physicalDevice;
+	VkCommandPool _graphicsCommandPool, _computeCommandPool;
+	VkSurfaceKHR _surface;
+	VkAllocationCallbacks *_allocator;
+	VkDebugReportCallbackEXT _debugCB;
+	SwapchainInfo _swapchainInfo;
+	Swapchain *_swapchain;
 
-	virtual void SetFaceCulling(PolygonFace face) = 0;
+	VkFramebuffer _framebuffer, _depthFramebuffer, _guiFramebuffer;
+	VkSampler _textureSampler, _nearestSampler, _depthSampler;
 
-	virtual void SetFrontFace(FrontFace face) = 0;
-	
-	virtual void SetColorMask(bool r, bool g, bool b, bool a) = 0;
+	class Texture *_colorTarget, *_depthTarget, *_normalBrightTarget;
+	class Texture *_msaaColorTarget, *_msaaNormalBrightTarget;
 
-	/**
-	 * Render primitives from array data. Must have vertex buffer bound.
-	 */
-	virtual void DrawArrays(PolygonMode mode, int32_t first, int32_t count) = 0;
-	
-	/**
-	 * Render primitives from array data. Must have vertex & index buffers bound.
-	 */
-	virtual void DrawElements(PolygonMode mode, int32_t count, ElementType type, const void *indices) = 0;
-	
-	virtual void DrawElementsBaseVertex(PolygonMode mode, int32_t count, ElementType type, const void *indices, int32_t baseVertex) = 0;
+	VkDescriptorPool _descriptorPool, _computeDescriptorPool;
+	VkDescriptorSetLayout _sceneDescriptorSetLayout, _cullingDescriptorSetLayout, _loadDescriptorSetLayout;
+	VkDescriptorSet _sceneDescriptorSet, _cullingDescriptorSet, _loadDescriptorSet;
 
-	/**
-	 * Clear the active framebuffer
-	 * Mask: R_CLEAR_COLOR, R_CLEAR_DEPTH, R_CLEAR_STENCIL
-	 */
-	virtual void Clear(uint32_t mask) = 0;
+	VkCommandBuffer _cullingCommandBuffer, _loadingCommandBuffer;
+	NArray<VkCommandBuffer> _presentCommandBuffers;
+	NArrayTS<VkCommandBuffer> _secondaryDepthCommandBuffers, _secondarySceneCommandBuffers, _secondaryGuiCommandBuffers;
 
-	virtual void BindDefaultFramebuffer() = 0;
-	virtual RFramebuffer* GetBoundFramebuffer() = 0;	
+	VkCommandBuffer _depthCommandBuffers[MAX_INFLIGHT_COMMAND_BUFFERS], _sceneCommandBuffers[MAX_INFLIGHT_COMMAND_BUFFERS], _guiCommandBuffers[MAX_INFLIGHT_COMMAND_BUFFERS];
 
-	/**
-	 * Specify the minimum rate at which sample shading takes place
-	 * Functional only if the renderer has the PerSampleShading capability
-	 */
-	virtual void SetMinSampleShading(int32_t samples) = 0;
+	bool _rebuildDepthCB, _rebuildSceneCB, _rebuildGUICB;
+	int _currentDepthCB, _currentSceneCB, _currentGUICB;
 
-	virtual void SetSwapInterval(int swapInterval) = 0;
+	VkSemaphore _imageAvailableSemaphore,
+		_depthFinishedSemaphore,
+		_cullingFinishedSemaphore,
+		_sceneFinishedSemaphore,
+		_renderFinishedSemaphore,
+		_aoReadySemaphore,
+		_aoFinishedSemaphore;
 
-	/**
-	 * Read a block of pixels from the framebuffer
-	 */
-	virtual void ReadPixels(int x, int y, int width, int height, TextureFormat format, TextureInternalType type, void* data) = 0;
+	Buffer *_buffer, *_stagingBuffer;
+	SceneData _sceneData;
 
-	/**
-	 * Set pixel storage mode
-	 */
-	virtual void SetPixelStore(PixelStoreParameter param, int value) = 0;
+	uint32_t _nFrames;
 
-	/**
-	 * Call this function when the drawable size changes
-	 */
-	virtual void ScreenResized() = 0;
-	
-	/**
-	 * Swap the front & back buffers
-	 */
-	virtual void SwapBuffers() = 0;
+	virtual void _RecreateSwapchain();
 
-	/**
-	 * Check available renderer abilities
-	 */
-	virtual bool HasCapability(RendererCapability cap) = 0;
+	// ----
 
-	/**
-	 * Create a buffer object
-	 */
-	virtual class RBuffer *CreateBuffer(BufferType type, bool dynamic, bool persistent) = 0;
-	
-	/**
-	 * Create a shader object
-	 */
-	virtual class RShader *CreateShader() = 0;
-	
-	/**
-	 * Create a texture object
-	 */
-	virtual class RTexture *CreateTexture(TextureType type) = 0;
-	
-	/**
-	 * Create a framebuffer object
-	 */
-	virtual class RFramebuffer *CreateFramebuffer(int width, int height) = 0;
+	bool _CheckDeviceExtension(const char *name);
 
-	/**
-	 * Create an array buffer object
-	 */
-	virtual class RArrayBuffer *CreateArrayBuffer() = 0;
+	bool _CreateInstance(bool debug);
+	bool _SetupDebugCallback();
+	bool _CreateDevice(bool enableValidation, bool debug);
+	bool _CreateCommandPools();
+	bool _CreateFramebuffers();
+	bool _CreateDescriptorSets();
+	bool _CreateBuffer();
+	bool _CreateCommandBuffers();
+	bool _CreateSemaphores();
 
-	/**
-	* Create a fence object
-	*/
-	virtual class RFence *CreateFence() = 0;
-	
-	/**
-	 * Add a define to be inserted into shader source
-	 */
-	virtual void AddShaderDefine(std::string name, std::string value) = 0;
+	bool _BuildDepthCommandBuffer();
+	bool _BuildSceneCommandBuffer();
+	bool _BuildGUICommandBuffer();
 
-	/**
-	 * Check if this renderer supports the specified texture file format
-	 */
-	virtual bool IsTextureFormatSupported(TextureFileFormat format) = 0;
+	void _DestroyFramebuffers();
+	void _DestroyDescriptorSets();
+	void _DestroyCommandBuffers();
 
-	/**
-	* Get the maximum samples supported
-	*/
-	virtual int GetMaxSamples() = 0;
-
-	/**
-	 * Get the maximum amount of anisotropy supported
-	 */
-	virtual int GetMaxAnisotropy() = 0;
-
-	/**
-	 * Enable the specified context for the current thread
-	 */
-	virtual void MakeCurrent(int context) = 0;
-
-	/**
-	 * Reset the number of draw calls
-	 */
-	virtual void ResetDrawCalls() = 0;
-
-	/**
-	 * Get the number of times a Draw* function has been called since the last reset
-	 */
-	virtual uint64_t GetDrawCalls() = 0;
-
-	/**
-	 * Return a string with the shading language name, lowercase (ex: "glsl")
-	 */
-	virtual const char *GetShadingLanguage() = 0;
-
-	// HBAO+ Integration
-	/**
-	 *
-	 */
-	virtual bool IsHBAOSupported() = 0;
-
-	/**
-	 *
-	 */
-	virtual bool InitializeHBAO() = 0;
-
-	/**
-	 *
-	 */
-	virtual bool RenderHBAO(RHBAOArgs *args, RFramebuffer *fbo) = 0;
-	// END HBAO+ Integration
-
-	/**
-	 * Release resources
-	 */
-	virtual ~Renderer() { };
-
-	/**
-	 * Retrieves the total amount of memory available to the renderer
-	 * Functional only if the renderer has the MemoryInformation capability
-	 */
-	virtual uint64_t GetVideoMemorySize() = 0;
-
-	/**
-	 * Retrieves the used amount of video memory
-	 * Functional only if the renderer has the MemoryInformation capability
-	 */
-	virtual uint64_t GetUsedVideoMemorySize() = 0;
+	void _Submit(uint32_t imageIndex);
+	void _SubmitAsync(uint32_t imageIndex);
 };
-
-typedef Renderer*(*CreateRendererProc)();

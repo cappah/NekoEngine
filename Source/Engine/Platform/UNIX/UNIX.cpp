@@ -75,6 +75,11 @@ const char* Platform::GetVersion()
 	return uname_data.release;
 }
 
+int Platform::GetNumberOfProcessors()
+{
+	return sysconf(_SC_NPROCESSORS_ONLN);
+}
+
 PlatformModuleType Platform::LoadModule(const char* module)
 {
 	char path[1024];
@@ -126,9 +131,4 @@ void* Platform::GetProcAddress(PlatformModuleType module, const char* proc)
 void Platform::ReleaseModule(PlatformModuleType module)
 {
 	dlclose(module);
-}
-
-void Platform::Exit()
-{
-	exit(0);
 }

@@ -49,95 +49,81 @@ AudioSource::AudioSource() noexcept
 {
 	_clip = nullptr;
 
-	AL_CHECK_FATAL(alGenSources(1, &_src));
-	AL_CHECK_FATAL(alSourcef(_src, AL_PITCH, 1.f));
-	AL_CHECK_FATAL(alSourcef(_src, AL_GAIN, 1.f));
-	AL_CHECK_FATAL(alSource3f(_src, AL_POSITION, 0.f, 0.f, 0.f));
-	AL_CHECK_FATAL(alSource3f(_src, AL_VELOCITY, 0.f, 0.f, 0.f));
+	alGenSources(1, &_src);
+	alSourcef(_src, AL_PITCH, 1.f);
+	alSourcef(_src, AL_GAIN, 1.f);
+	alSource3f(_src, AL_POSITION, 0.f, 0.f, 0.f);
+	alSource3f(_src, AL_VELOCITY, 0.f, 0.f, 0.f);
 }
 
-int AudioSource::SetPitch(float p) noexcept
+void AudioSource::SetPitch(float p) noexcept
 {
-	AL_CHECK_RET(alSourcef(_src, AL_PITCH, p), ENGINE_FAIL);
-	return ENGINE_OK;
+	alSourcef(_src, AL_PITCH, p);
 }
 
-int AudioSource::SetGain(float g) noexcept
+void AudioSource::SetGain(float g) noexcept
 {
-	AL_CHECK_RET(alSourcef(_src, AL_GAIN, g), ENGINE_FAIL);
-	return ENGINE_OK;
+	alSourcef(_src, AL_GAIN, g);
 }
 
-int AudioSource::SetConeInnerAngle(float a) noexcept
+void AudioSource::SetConeInnerAngle(float a) noexcept
 {
-	AL_CHECK_RET(alSourcef(_src, AL_CONE_INNER_ANGLE, a), ENGINE_FAIL);
-	return ENGINE_OK;
+	alSourcef(_src, AL_CONE_INNER_ANGLE, a);
 }
 
-int AudioSource::SetConeOuterAngle(float a) noexcept
+void AudioSource::SetConeOuterAngle(float a) noexcept
 {
-	AL_CHECK_RET(alSourcef(_src, AL_CONE_OUTER_ANGLE, a), ENGINE_FAIL);
-	return ENGINE_OK;
+	alSourcef(_src, AL_CONE_OUTER_ANGLE, a);
 }
 
-int AudioSource::SetConeOuterGain(float g) noexcept
+void AudioSource::SetConeOuterGain(float g) noexcept
 {
-	AL_CHECK_RET(alSourcef(_src, AL_CONE_OUTER_GAIN, g), ENGINE_FAIL);
-	return ENGINE_OK;
+	alSourcef(_src, AL_CONE_OUTER_GAIN, g);
 }
 
-int AudioSource::SetDirection(float x, float y, float z) noexcept
+void AudioSource::SetDirection(float x, float y, float z) noexcept
 {
-	AL_CHECK_RET(alSource3f(_src, AL_DIRECTION, x, y, z), ENGINE_FAIL);
-	return ENGINE_OK;
+	alSource3f(_src, AL_DIRECTION, x, y, z);
 }
 
-int AudioSource::SetPosition(float x, float y, float z) noexcept
+void AudioSource::SetPosition(float x, float y, float z) noexcept
 {
-	AL_CHECK_RET(alSource3f(_src, AL_POSITION, x, y, z), ENGINE_FAIL);
-	return ENGINE_OK;
+	alSource3f(_src, AL_POSITION, x, y, z);
 }
 
-int AudioSource::SetVelocity(float x, float y, float z) noexcept
+void AudioSource::SetVelocity(float x, float y, float z) noexcept
 {
-	AL_CHECK_RET(alSource3f(_src, AL_VELOCITY, x, y, z), ENGINE_FAIL);
-	return ENGINE_OK;
+	alSource3f(_src, AL_VELOCITY, x, y, z);
 }
 
-int AudioSource::SetDirection(glm::vec3 &dir) noexcept
+void AudioSource::SetDirection(glm::vec3 &dir) noexcept
 {
-	AL_CHECK_RET(alSource3f(_src, AL_DIRECTION, dir.x, dir.y, dir.z), ENGINE_FAIL);
-	return ENGINE_OK;
+	alSource3f(_src, AL_DIRECTION, dir.x, dir.y, dir.z);
 }
 
-int AudioSource::SetPosition(glm::vec3 &pos) noexcept
+void AudioSource::SetPosition(glm::vec3 &pos) noexcept
 {
-	AL_CHECK_RET(alSource3f(_src, AL_POSITION, pos.x, pos.y, pos.z), ENGINE_FAIL);
-	return ENGINE_OK;
+	alSource3f(_src, AL_POSITION, pos.x, pos.y, pos.z);
 }
 
-int AudioSource::SetVelocity(glm::vec3 &v) noexcept
+void AudioSource::SetVelocity(glm::vec3 &v) noexcept
 {
-	AL_CHECK_RET(alSource3f(_src, AL_VELOCITY, v.x, v.y, v.z), ENGINE_FAIL);
-	return ENGINE_OK;
+	alSource3f(_src, AL_VELOCITY, v.x, v.y, v.z);
 }
 
-int AudioSource::SetLooping(bool looping) noexcept
+void AudioSource::SetLooping(bool looping) noexcept
 {
-	AL_CHECK_RET(alSourcei(_src, AL_LOOPING, looping), ENGINE_FAIL);
-	return ENGINE_OK;
+	alSourcei(_src, AL_LOOPING, looping);
 }
 
-int AudioSource::SetMaxDistance(float maxDistance) noexcept
+void AudioSource::SetMaxDistance(float maxDistance) noexcept
 {
-	AL_CHECK_RET(alSourcef(_src, AL_MAX_DISTANCE, maxDistance), ENGINE_FAIL);
-	return ENGINE_OK;
+	alSourcef(_src, AL_MAX_DISTANCE, maxDistance);
 }
 
-int AudioSource::SetReferenceDistance(float referenceDistance) noexcept
+void AudioSource::SetReferenceDistance(float referenceDistance) noexcept
 {
-	AL_CHECK_RET(alSourcef(_src, AL_REFERENCE_DISTANCE, referenceDistance), ENGINE_FAIL);
-	return ENGINE_OK;
+	alSourcef(_src, AL_REFERENCE_DISTANCE, referenceDistance);
 }
 
 int AudioSource::SetClip(AudioClip *clip) noexcept
@@ -147,33 +133,30 @@ int AudioSource::SetClip(AudioClip *clip) noexcept
 
 	_clip = clip;
 
-	AL_CHECK_RET(alSourcei(_src, AL_BUFFER, _clip->GetBufferID()), ENGINE_FAIL);
+	alSourcei(_src, AL_BUFFER, _clip->GetBufferID());
 
 	return ENGINE_OK;
 }
 
-int AudioSource::Play() noexcept
+bool AudioSource::Play() noexcept
 {
-	AL_CHECK_RET(alSourcePlay(_src), ENGINE_FAIL);
-	return ENGINE_OK;
+	alSourcePlay(_src);
+	return IsPlaying();
 }
 
-int AudioSource::Pause() noexcept
+void AudioSource::Pause() noexcept
 {
-	AL_CHECK_RET(alSourcePause(_src), ENGINE_FAIL);
-	return ENGINE_OK;
+	alSourcePause(_src);
 }
 
-int AudioSource::Stop() noexcept
+void AudioSource::Stop() noexcept
 {
-	AL_CHECK_RET(alSourceStop(_src), ENGINE_FAIL);
-	return ENGINE_OK;
+	alSourceStop(_src);
 }
 
-int AudioSource::Rewind() noexcept
+void AudioSource::Rewind() noexcept
 {
-	AL_CHECK_RET(alSourceRewind(_src), ENGINE_FAIL);
-	return ENGINE_OK;
+	alSourceRewind(_src);
 }
 
 bool AudioSource::IsPlaying() noexcept
@@ -185,9 +168,9 @@ bool AudioSource::IsPlaying() noexcept
 
 AudioSource::~AudioSource()
 {
-	AL_CHECK(alSourceStop(_src));
-	AL_CHECK(alSourcei(_src, AL_BUFFER, AL_NONE));
-	AL_CHECK(alDeleteSources(1, &_src));
+	alSourceStop(_src);
+	alSourcei(_src, AL_BUFFER, AL_NONE);
+	alDeleteSources(1, &_src);
 
 	/*if (_clip)
 		ResourceManager::UnloadResource(_clip->GetResourceInfo()->id, ResourceType::RES_AUDIOCLIP);*/

@@ -42,13 +42,13 @@
 #include <Engine/GameModule.h>
 
 #ifdef WIN32
-#ifdef TESTGAME_INTERNAL
-#define TESTGAME_API __declspec(dllexport)
+	#ifdef TESTGAME_INTERNAL
+		#define TESTGAME_API __declspec(dllexport)
+	#else
+		#define TESTGAME_API __declspec(dllimport)
+	#endif
 #else
-#define TESTGAME_API __declspec(dllimport)
-#endif
-#else
-#define TESTGAME_API
+	#define TESTGAME_API
 #endif
 
 NEKO_GAME_MODULE()

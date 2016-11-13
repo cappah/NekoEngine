@@ -42,6 +42,7 @@
 
 #include <Engine/Engine.h>
 #include <Audio/AudioClip.h>
+#include <System/Logger.h>
 #include <System/AssetLoader/AssetLoader.h>
 
 #define AC_MODULE	"AudioClip"
@@ -71,8 +72,8 @@ int AudioClip::Load()
 	if (ret != ENGINE_OK)
 		return ENGINE_FAIL;
 
-	AL_CHECK_FATAL(alGenBuffers(1, &_buffer));
-	AL_CHECK_FATAL(alBufferData(_buffer, format, data, size, freq));
+	alGenBuffers(1, &_buffer);
+	alBufferData(_buffer, format, data, size, freq);
 
 	free(data); data = nullptr;
 
@@ -83,5 +84,5 @@ int AudioClip::Load()
 
 AudioClip::~AudioClip() noexcept
 {
-	alDeleteBuffers(1, &_buffer);
+	if(_buffer) alDeleteBuffers(1, &_buffer);
 }

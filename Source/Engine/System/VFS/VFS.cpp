@@ -42,6 +42,7 @@
 #include <stack>
 
 #include <Engine/Engine.h>
+#include <System/Logger.h>
 #include <System/VFS/VFS.h>
 
 #define VFS_MODULE	"VFS"

@@ -41,15 +41,13 @@
 
 #include <Engine/Engine.h>
 #include <Scene/ObjectComponent.h>
-#include <Engine/AnimationClip.h>
-#include <Engine/Skeleton.h>
+#include <Animation/AnimationClip.h>
+#include <Animation/Skeleton.h>
 
 class AnimatorComponent : public ObjectComponent
 {
 public:
 	ENGINE_API AnimatorComponent(ComponentInitializer *initializer);
-	
-	ENGINE_API void BindSkeleton(RShader *shader) noexcept { _skeleton->UpdateBuffers(); _skeleton->Bind(shader); }
 
 	ENGINE_API virtual int Load() override;
 	
@@ -57,10 +55,13 @@ public:
 	ENGINE_API void PlayAnimation(AnimationClip *clip) noexcept;
 	
 	ENGINE_API virtual void Update(double deltaTime) noexcept override;
+	ENGINE_API void UpdateData(VkCommandBuffer commandBuffer) noexcept override;
 
 	ENGINE_API virtual bool Unload() override;
 
 	ENGINE_API virtual ~AnimatorComponent() { }
+
+	Buffer *GetSkeletonBuffer() { return _skeleton->GetBuffer(); }	
 	
 protected:
 	std::string _defaultAnimId;

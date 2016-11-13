@@ -37,11 +37,16 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <Engine/Input.h>
 #include <Engine/Engine.h>
 #include <Engine/Console.h>
 #include <Engine/Keycodes.h>
+#include <Renderer/GUI.h>
+#include <System/Logger.h>
+#include <Script/Script.h>
 
 #define MAX_SCREEN_LINES	15
+#define CON_MODULE			"Console"
 
 using namespace std;
 using namespace glm;
@@ -52,36 +57,63 @@ map<NString, Console::CVarFuncs> Console::_vars;
 map<NString, function<void()>> Console::_voidFuncs;
 map<NString, function<void(NArray<NString> &)>> Console::_argFuncs;
 
+static lua_State *_consoleState = nullptr;
 static NString _buff;
+static bool _shift = false;
+static map<char, char> _shiftedChars
+{
+	{ 0x2C, 0x3C },
+	{ 0x2D, 0x5F },
+	{ 0x2E, 0x3E },
+	{ 0x2F, 0x3F },
+	{ 0x30, 0x29 },
+	{ 0x31, 0x21 },
+	{ 0x32, 0x40 },
+	{ 0x33, 0x23 },
+	{ 0x34, 0x24 },
+	{ 0x35, 0x25 },
+	{ 0x36, 0x5E },
+	{ 0x37, 0x26 },
+	{ 0x38, 0x2A },
+	{ 0x39, 0x28 },
+	{ 0x2B, 0x3D },
+	{ '\'', '"' }
+};
 
 void eng_setres(NArray<NString> &args)
 {
 	Engine::ScreenResized((int)args[1], (int)args[2]);
 }
 
-void eng_showstats()
+void eng_msgbox(NArray<NString> &args)
 {
-	Engine::DrawStats(!Engine::IsDrawingStats());
-}
-
-void eng_pause()
-{
-	Engine::Pause(!Engine::IsPaused());
+	Platform::MessageBox("Message from console", *args[0], MessageBoxButtons::OK, MessageBoxIcon::Information);
 }
 
 int Console::Initialize()
 {
+	Logger::Log(CON_MODULE, LOG_INFORMATION, "Initializing...");
+
 	_voidFuncs.insert(make_pair("exit", Engine::Exit));
-	_voidFuncs.insert(make_pair("screenshot", Engine::SaveScreenshot));
-	_voidFuncs.insert(make_pair("showstats", eng_showstats));
-	_voidFuncs.insert(make_pair("pause", eng_pause));
+	//_voidFuncs.insert(make_pair("screenshot", Engine::SaveScreenshot));
+	_voidFuncs.insert(make_pair("showStats", Engine::ToggleStats));
+	_voidFuncs.insert(make_pair("pause", Engine::TogglePause));
+	_voidFuncs.insert(make_pair("clear", Console::Clear));
+
+	_voidFuncs.insert(make_pair("capturePointer", Input::CapturePointer));
+	_voidFuncs.insert(make_pair("releasePointer", Input::ReleasePointer));
 	
 	_argFuncs.insert(make_pair("setres", eng_setres));
+	_argFuncs.insert(make_pair("msgbox", eng_msgbox));
 
 	if (!_buff.Resize(100))
 		return ENGINE_FAIL;
 	
 	_buff.Clear();
+
+	_consoleState = Script::NewState();
+
+	Logger::Log(CON_MODULE, LOG_INFORMATION, "Initialized");
 
 	return ENGINE_OK;
 }
@@ -108,20 +140,20 @@ void Console::Clear()
 	_text.Clear();
 }
 
-void Console::Draw()
+void Console::Update()
 {
 	if (!_open)
 		return;
 
 	vec2 pos = vec2(10, Engine::GetScreenHeight() * .9);
 
-	Engine::DrawString(vec2(pos.x, pos.y), vec3(1, 1, 1), "> ");
-	Engine::DrawString(vec2(pos.x + 20, pos.y), vec3(1, 1, 1), _buff);
+	GUI::DrawString(vec2(pos.x, pos.y), vec3(1, 1, 1), "> ");
+	GUI::DrawString(vec2(pos.x + 20, pos.y), vec3(1, 1, 1), _buff);
 	pos.y -= 20 * (_text.Count() + 1);
 
 	for (NString &nstr : _text)
 	{
-		Engine::DrawString(pos, vec3(1, 1, 1), nstr);
+		GUI::DrawString(pos, vec3(1, 1, 1), nstr);
 		pos.y += 20;
 	}
 }
@@ -134,63 +166,39 @@ void Console::HandleKeyDown(uint8_t key)
 		ExecuteCommand(_buff);
 		_buff.Clear();
 	}
-	else if (key == NE_KEY_LEFT)
-	{
-		//
-	}
-	else if (key == NE_KEY_RIGHT)
-	{
-		//
-	}
-	else if (key == NE_KEY_UP)
-	{
-		//
-	}
-	else if (key == NE_KEY_DOWN)
-	{
-		//
-	}
-	else if (key == NE_KEY_BKSPACE)
+	else if ((key == NE_KEY_BKSPACE) || (key == NE_KEY_DELETE))
 		_buff.RemoveLast();
-	else if (key == NE_KEY_DELETE)
-	{
-		//
-	}
 	else if (key == NE_KEY_TILDE)
 		_open = false;
+	else if (key == NE_KEY_RSHIFT || key == NE_KEY_LSHIFT)
+		_shift = true;
 	else
 	{
-		_buff.Append(keycodeToChar[key]);
+		uint8_t ch = keycodeToChar[key];
+
+		if (_shift)
+		{
+			if (ch > 0x60 && ch < 0x7B) ch -= 0x20;
+			else if (ch > 0x5A && ch < 0x5E) ch += 0x20;
+			else if (_shiftedChars.find(ch) != _shiftedChars.end())
+				ch = _shiftedChars[ch];
+		}
+
+		_buff.Append(ch);
 	}
+}
+
+void Console::HandleKeyUp(uint8_t key)
+{
+	if (key == NE_KEY_RSHIFT || key == NE_KEY_LSHIFT)
+		_shift = false;
 }
 
 void Console::ExecuteCommand(NString cmd)
 {
 	NArray<NString> cmdSplit = cmd.Split(' ');
 
-	if (cmdSplit.Count() < 2)
-		return;
-
-	if (cmdSplit[0] == "call")
-	{
-		if (cmdSplit.Count() == 2)
-		{
-			if (_voidFuncs[cmdSplit[1]])
-				_voidFuncs[cmdSplit[1]]();
-			else
-				Print("%s: undefined function", *cmdSplit[1]);
-		}
-		else
-		{
-			cmdSplit.Remove(0);
-
-			if (_argFuncs[cmdSplit[0]])
-				_argFuncs[cmdSplit[0]](cmdSplit);
-			else
-				Print("%s: undefined function", *cmdSplit[1]);
-		}
-	}
-	else if (cmdSplit[0] == "set")
+	if (cmdSplit[0] == "set")
 	{
 		if(_vars[cmdSplit[1]].Set)
 			_vars[cmdSplit[1]].Set(cmdSplit[2]);
@@ -200,4 +208,35 @@ void Console::ExecuteCommand(NString cmd)
 		if (_vars[cmdSplit[1]].Get)
 			Print("%s = %s", *cmdSplit[1], *_vars[cmdSplit[2]].Get());
 	}
+	else if (cmdSplit[0] == "luaExec")
+	{
+		int err = luaL_dostring(_consoleState, *cmd + 8);
+		if (err && lua_gettop(_consoleState))
+		{
+			Print("ERROR: %s", lua_tostring(_consoleState, -1));
+			lua_pop(_consoleState, 1);
+		}
+	}
+	else
+	{
+		if (cmdSplit.Count() < 2)
+		{
+			if (_voidFuncs[cmdSplit[0]])
+				_voidFuncs[cmdSplit[0]]();
+			else
+				Print("%s: undefined function", *cmdSplit[0]);
+		}
+		else
+		{
+			if (_argFuncs[cmdSplit[0]])
+				_argFuncs[cmdSplit[0]](cmdSplit);
+			else
+				Print("%s: undefined function", *cmdSplit[0]);
+		}
+	}
+}
+
+void Console::Release()
+{
+	lua_close(_consoleState);
 }

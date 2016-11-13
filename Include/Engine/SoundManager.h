@@ -43,6 +43,11 @@
 
 #include <Engine/Engine.h>
 
+#ifdef ENGINE_INTERNAL
+	#include <AL/al.h>
+	#include <AL/alc.h>
+#endif
+
 #define BG_MUSIC_NONE	-1
 
 class SoundManager
@@ -51,11 +56,12 @@ public:
 	ENGINE_API static int Initialize();
 
 	ENGINE_API static int SetBackgroundMusic(int clipId) noexcept;
+	ENGINE_API static int SetBackgroundMusic(const char *clipId) noexcept;
 
-	ENGINE_API static int PlayBackgroundMusic() noexcept;
-	ENGINE_API static int StopBackgroundMusic() noexcept;
+	ENGINE_API static bool PlayBackgroundMusic() noexcept;
+	ENGINE_API static void StopBackgroundMusic() noexcept;
 
-	ENGINE_API static int SetBackgroundMusicVolume(float vol) noexcept;
+	ENGINE_API static void SetBackgroundMusicVolume(float vol) noexcept;
 
 	ENGINE_API static void SetListenerPosition(float x, float y, float z) noexcept;
 	ENGINE_API static void SetListenerOrientation(float x, float y, float z) noexcept;

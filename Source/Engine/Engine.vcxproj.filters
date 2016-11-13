@@ -1,734 +1,772 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Resources">
-      <UniqueIdentifier>{64c93967-d0cf-4a43-ad42-2c66dc66c5b8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resources\Data">
-      <UniqueIdentifier>{a42cdde7-4ce1-4d04-9196-cac2a7d5fdb6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resources\Data\Shaders">
-      <UniqueIdentifier>{579c080a-717e-429b-8b01-ae9eccb5ad2f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resources\Data\Scenes">
-      <UniqueIdentifier>{81a17948-b541-40f3-b330-c43573d71be1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resources\Data\Materials">
-      <UniqueIdentifier>{b0d54189-285a-48bc-b8c8-9db03649d690}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Include">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
-    </Filter>
-    <Filter Include="Include\Audio">
-      <UniqueIdentifier>{68d07ca5-28f6-4610-9c3b-acc05f83e6c1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Include\Engine">
-      <UniqueIdentifier>{73da9584-0d6f-485d-a199-d6f3b3eb3ef3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Include\PostEffects">
-      <UniqueIdentifier>{b22a6a2e-e351-4b9c-b5e3-be0dbdf17063}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Include\PostEffects\SMAA">
-      <UniqueIdentifier>{4ab0bee7-8841-4e50-a223-38880a2e2388}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Include\Resource">
-      <UniqueIdentifier>{dd39bd05-9d24-4cab-99b4-b3bc162bb075}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Include\Scene">
-      <UniqueIdentifier>{7e257dfc-2c79-4fb5-846d-14cd87532dac}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Include\System">
-      <UniqueIdentifier>{7c7c9c8d-1f91-48c7-95b9-b015de2d6914}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Include\System\AssetLoader">
-      <UniqueIdentifier>{7666b866-9ac6-43d8-b00a-b5c5dc934fd3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Include\System\VFS">
-      <UniqueIdentifier>{a87eb091-175b-48a3-83ce-2dcffd8add9a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Include\Platform">
-      <UniqueIdentifier>{1f0e70c1-2074-4999-8afc-a5962a9c6ea5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Include\Renderer">
-      <UniqueIdentifier>{9f1686db-5097-4b91-bb0a-bc82030ddca0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source">
+    <Filter Include="Source Files">
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Source\Audio">
-      <UniqueIdentifier>{3389983a-3a2c-45fb-96c4-12de0a5338aa}</UniqueIdentifier>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Source\PostEffects">
-      <UniqueIdentifier>{6d4e2bdb-7637-410b-b43f-7e18cf4ab2a9}</UniqueIdentifier>
+    <Filter Include="Source Files\System">
+      <UniqueIdentifier>{44a2ccda-6849-4eb7-834c-40d2d931d02c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Scene">
-      <UniqueIdentifier>{6dbb038b-f18a-4ff6-aede-7035851e3174}</UniqueIdentifier>
+    <Filter Include="Source Files\Core">
+      <UniqueIdentifier>{c6a9599b-9f6a-404c-8d0b-2e31c4b06b22}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\System">
-      <UniqueIdentifier>{33478db0-3f38-4f3b-8cb5-cd5f5c835f60}</UniqueIdentifier>
+    <Filter Include="Source Files\Platform">
+      <UniqueIdentifier>{ea1868a4-8d81-4a68-82e8-fb7dd83d67b1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\System\AssetLoader">
-      <UniqueIdentifier>{f246476d-97d0-4f52-9f81-f50d8419dd3b}</UniqueIdentifier>
+    <Filter Include="Source Files\Platform\Windows">
+      <UniqueIdentifier>{ec4a72f2-328b-4304-9b13-e9ded2a9d1ea}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\System\VFS">
-      <UniqueIdentifier>{068b40cb-51d1-47b3-b400-b9195fd1272f}</UniqueIdentifier>
+    <Filter Include="Source Files\Renderer">
+      <UniqueIdentifier>{5ed99f0a-693a-40d0-96fe-b3b6031cb27c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Platform">
-      <UniqueIdentifier>{fa308757-c131-46e8-9e90-b6b091c26f45}</UniqueIdentifier>
+    <Filter Include="Source Files\System\VFS">
+      <UniqueIdentifier>{5899642e-33f7-4aea-8718-4dec9b4f792f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Platform\Windows">
-      <UniqueIdentifier>{5ba0d0b8-394f-4fe6-b59e-05d2f9369117}</UniqueIdentifier>
+    <Filter Include="Source Files\Platform\Compat">
+      <UniqueIdentifier>{f9e4ebc4-c067-4aca-addd-434f75b9a4cd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resources\Data\Materials\nyra">
-      <UniqueIdentifier>{ec869461-269a-4d65-8550-9f3eac1923db}</UniqueIdentifier>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{7f0ea861-08c3-4739-b923-cbe2e0918a52}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Platform\Compat">
-      <UniqueIdentifier>{86dcbca2-196c-4c43-b8d6-0b98e47732e8}</UniqueIdentifier>
+    <Filter Include="Source Files\Scene">
+      <UniqueIdentifier>{6fef7929-b793-4bd9-88d5-4f5bdb31233d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resources\Data\StaticMeshes">
-      <UniqueIdentifier>{579ab449-d65c-4faa-89f0-3b8ba74d1ded}</UniqueIdentifier>
+    <Filter Include="Source Files\Scene\Components">
+      <UniqueIdentifier>{bb016995-e38d-4656-b558-1811f48a65b1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resources\Data\SkeletalMeshes">
-      <UniqueIdentifier>{78f1f2f4-ba14-4ea2-a6b9-0e97e09a22e6}</UniqueIdentifier>
+    <Filter Include="Source Files\Animation">
+      <UniqueIdentifier>{528e5c85-ffbb-46ec-bebe-be12f39d46bc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Scene\Components">
-      <UniqueIdentifier>{de87b5f2-2796-4b68-ad6d-2e2eb1eb2b58}</UniqueIdentifier>
+    <Filter Include="Source Files\Audio">
+      <UniqueIdentifier>{607054b5-9185-48e6-8daa-9f9d1a9e1f2d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Include\Scene\Components">
-      <UniqueIdentifier>{864e702a-2452-43d6-adb8-5fd7ab514fe3}</UniqueIdentifier>
+    <Filter Include="Source Files\System\AssetLoader">
+      <UniqueIdentifier>{f4baab81-b3fb-4342-a76c-565285761639}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Core">
-      <UniqueIdentifier>{88e30b42-c75e-4e9c-8198-5e7cc155b077}</UniqueIdentifier>
+    <Filter Include="Private Headers">
+      <UniqueIdentifier>{cb6035c5-5165-4687-9262-e57ec0b7b71d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Include\Runtime">
-      <UniqueIdentifier>{38b5af03-b708-4896-8c68-1cf67528d755}</UniqueIdentifier>
+    <Filter Include="Private Headers\Renderer">
+      <UniqueIdentifier>{c4c23b69-8728-4342-95c7-b81b78789ee1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resources\Data\Shaders\hlsl">
-      <UniqueIdentifier>{afc6efe9-c0a1-4648-b3f4-3a92fd448e27}</UniqueIdentifier>
+    <Filter Include="Public Headers">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
-    <Filter Include="Resources\Data\Shaders\include">
-      <UniqueIdentifier>{876c8610-d343-4ad5-a22f-d73b198ced34}</UniqueIdentifier>
+    <Filter Include="Public Headers\Engine">
+      <UniqueIdentifier>{1fc08f5b-ed18-4c06-89f6-e1c87aa12a3b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resources\Data\Shaders\glsl">
-      <UniqueIdentifier>{3c8f1b62-52ed-4640-81bc-5b9cd21b26a6}</UniqueIdentifier>
+    <Filter Include="Public Headers\System">
+      <UniqueIdentifier>{f9fd6e7d-9350-4f7c-b3e3-e7234540ee84}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resources\Data\Shaders\hlsl\forward">
-      <UniqueIdentifier>{080a6861-2723-4f36-84df-fcec9bf6728f}</UniqueIdentifier>
+    <Filter Include="Public Headers\System\AssetLoader">
+      <UniqueIdentifier>{4d14fc28-f050-4860-af87-80f2e59394b6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resources\Data\Shaders\hlsl\postproc">
-      <UniqueIdentifier>{e9838195-9762-46b2-966a-b47fb69dc3b3}</UniqueIdentifier>
+    <Filter Include="Public Headers\System\VFS">
+      <UniqueIdentifier>{3ba5e4db-3417-4b2c-9d8a-1b6d9ad64331}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resources\Data\Shaders\glsl\forward">
-      <UniqueIdentifier>{2f621e4d-4e30-4e5b-a74f-10cbd3d50438}</UniqueIdentifier>
+    <Filter Include="Public Headers\Platform">
+      <UniqueIdentifier>{1105c3ea-19c5-411f-8d24-bc6ff762a16d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resources\Data\Shaders\glsl\postproc">
-      <UniqueIdentifier>{c022a17b-4f01-49c4-a195-8aed62efe430}</UniqueIdentifier>
+    <Filter Include="Public Headers\Renderer">
+      <UniqueIdentifier>{1ebdc698-2051-4c0d-a40e-af953893029d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Public Headers\Runtime">
+      <UniqueIdentifier>{ac5fbd9a-68d0-48a3-8a51-6272c66c5973}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Public Headers\Resource">
+      <UniqueIdentifier>{e3624db3-4d63-463a-aed2-867119f0e0d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Public Headers\Scene">
+      <UniqueIdentifier>{78f2d53e-d1ec-45d4-98ef-ff1b0f85c39f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Public Headers\Scene\Components">
+      <UniqueIdentifier>{3ed0f935-ca6d-4d14-9b43-d9eb919742f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Public Headers\Audio">
+      <UniqueIdentifier>{11dfdfc0-7383-4540-9fb0-473587e0c661}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Public Headers\Animation">
+      <UniqueIdentifier>{a2a9361c-64b1-40d3-9d44-8ba9fae94d02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Vertex">
+      <UniqueIdentifier>{b6764441-4dab-4d7c-9bef-8f7cf83b5306}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Fragment">
+      <UniqueIdentifier>{3e861e39-27cf-4c7d-b497-1f880c1a909e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Post Process">
+      <UniqueIdentifier>{11bcb4a9-0bf1-4668-b662-7e2bcda1f7b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Compute">
+      <UniqueIdentifier>{4eb29d89-662f-4793-9f46-f601c04f7311}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Private Headers\System">
+      <UniqueIdentifier>{16a684c5-9935-4258-a4a7-00b443339ea1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Private Headers\System\AssetLoader">
+      <UniqueIdentifier>{944abcc7-9709-4325-9bd2-74de0caf36a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Config">
+      <UniqueIdentifier>{fdf0c773-4f84-45ef-816a-d88801ad7f5c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Script">
+      <UniqueIdentifier>{1428936e-557a-4dd2-8f6d-a9151cda4c62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Private Headers\Script">
+      <UniqueIdentifier>{23a4d91a-162e-4bb3-be0a-513c70a41987}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Private Headers\Script\Interface">
+      <UniqueIdentifier>{3d34c9df-3d30-4c4a-aae2-6a0c64a442e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Script\Interface">
+      <UniqueIdentifier>{c36b9856-ffb7-429f-98f6-d42b9371fabb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\include\Audio\AudioSource.h">
-      <Filter>Include\Audio</Filter>
+    <ClCompile Include="System\Logger.cpp">
+      <Filter>Source Files\System</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Engine.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\shared.cpp">
+      <Filter>Source Files\Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\Windows\PlatformInput.cpp">
+      <Filter>Source Files\Platform\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\Windows\Windows.cpp">
+      <Filter>Source Files\Platform\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Input.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\Material.cpp">
+      <Filter>Source Files\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\Buffer.cpp">
+      <Filter>Source Files\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\NFont.cpp">
+      <Filter>Source Files\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\ShaderModule.cpp">
+      <Filter>Source Files\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\Swapchain.cpp">
+      <Filter>Source Files\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\Texture.cpp">
+      <Filter>Source Files\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\PipelineManager.cpp">
+      <Filter>Source Files\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\Renderer.cpp">
+      <Filter>Source Files\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\RenderPassManager.cpp">
+      <Filter>Source Files\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="System\VFS\VFSArchive.cpp">
+      <Filter>Source Files\System\VFS</Filter>
+    </ClCompile>
+    <ClCompile Include="System\VFS\VFSFile.cpp">
+      <Filter>Source Files\System\VFS</Filter>
+    </ClCompile>
+    <ClCompile Include="System\VFS\VFS.cpp">
+      <Filter>Source Files\System\VFS</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\Compat\reallocarray.cpp">
+      <Filter>Source Files\Platform\Compat</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\ResourceDatabase.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\ResourceManager.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Init.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\StaticMesh.cpp">
+      <Filter>Source Files\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Camera.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\CameraManager.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Object.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\ObjectComponent.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Components\StaticMeshComponent.cpp">
+      <Filter>Source Files\Scene\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Components\AnimatorComponent.cpp">
+      <Filter>Source Files\Scene\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Components\AudioSourceComponent.cpp">
+      <Filter>Source Files\Scene\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Components\CameraComponent.cpp">
+      <Filter>Source Files\Scene\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Components\FPSControllerComponent.cpp">
+      <Filter>Source Files\Scene\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Components\LightComponent.cpp">
+      <Filter>Source Files\Scene\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio\AudioSource.cpp">
+      <Filter>Source Files\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio\AudioClip.cpp">
+      <Filter>Source Files\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Animation\AnimationClip.cpp">
+      <Filter>Source Files\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Animation\Skeleton.cpp">
+      <Filter>Source Files\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\SoundManager.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="System\AssetLoader\AssetLoader.cpp">
+      <Filter>Source Files\System\AssetLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Scene.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\LoadingScreen.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\SceneManager.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\GUI.cpp">
+      <Filter>Source Files\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Console.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\SkeletalMesh.cpp">
+      <Filter>Source Files\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Components\SkeletalMeshComponent.cpp">
+      <Filter>Source Files\Scene\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="System\AssetLoader\TGA.cpp">
+      <Filter>Source Files\System\AssetLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Skysphere.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\PostProcessor.cpp">
+      <Filter>Source Files\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\Debug.cpp">
+      <Filter>Source Files\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="System\AssetLoader\DDS.cpp">
+      <Filter>Source Files\System\AssetLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="System\AssetLoader\ASTC.cpp">
+      <Filter>Source Files\System\AssetLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Components\TerrainComponent.cpp">
+      <Filter>Source Files\Scene\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\SSAO.cpp">
+      <Filter>Source Files\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\ShadowRenderer.cpp">
+      <Filter>Source Files\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\EventManager.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Components\ScriptComponent.cpp">
+      <Filter>Source Files\Scene\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Script\Interface\GUIInterface.cpp">
+      <Filter>Source Files\Script\Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="Script\Script.cpp">
+      <Filter>Source Files\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="Script\Interface\EngineInterface.cpp">
+      <Filter>Source Files\Script\Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="Script\Interface\InputInterface.cpp">
+      <Filter>Source Files\Script\Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="Script\Interface\ObjectInterface.cpp">
+      <Filter>Source Files\Script\Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="Script\Interface\SceneInterface.cpp">
+      <Filter>Source Files\Script\Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="Script\Interface\ObjectComponentInterface.cpp">
+      <Filter>Source Files\Script\Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="Script\Interface\LoggerInterface.cpp">
+      <Filter>Source Files\Script\Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="Script\Interface\EventManagerInterface.cpp">
+      <Filter>Source Files\Script\Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="Script\Interface\ResourceManagerInterface.cpp">
+      <Filter>Source Files\Script\Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="Script\Interface\CameraComponentInterface.cpp">
+      <Filter>Source Files\Script\Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="Script\Interface\CameraInterface.cpp">
+      <Filter>Source Files\Script\Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="Script\Interface\CameraManagerInterface.cpp">
+      <Filter>Source Files\Script\Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="Script\Interface\PlatformInterface.cpp">
+      <Filter>Source Files\Script\Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="Script\Interface\MathInterface.cpp">
+      <Filter>Source Files\Script\Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="Script\Interface\ConsoleInterface.cpp">
+      <Filter>Source Files\Script\Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="Script\Interface\AudioSourceInterface.cpp">
+      <Filter>Source Files\Script\Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="Script\Interface\AnimationClipInterface.cpp">
+      <Filter>Source Files\Script\Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="Script\Interface\AnimatorComponentInterface.cpp">
+      <Filter>Source Files\Script\Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="Script\Interface\AudioSourceComponentInterface.cpp">
+      <Filter>Source Files\Script\Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="Script\Interface\LightComponentInterface.cpp">
+      <Filter>Source Files\Script\Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="Script\Interface\SkeletalMeshComponentInterface.cpp">
+      <Filter>Source Files\Script\Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="Script\Interface\SoundManagerInterface.cpp">
+      <Filter>Source Files\Script\Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="Script\Interface\StaticMeshComponentInterface.cpp">
+      <Filter>Source Files\Script\Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="Script\Interface\MaterialInterface.cpp">
+      <Filter>Source Files\Script\Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="Script\Interface\VFSInterface.cpp">
+      <Filter>Source Files\Script\Interface</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Include\Engine\Defs.h">
+      <Filter>Public Headers\Engine</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Audio\AudioClip.h">
-      <Filter>Include\Audio</Filter>
+    <ClInclude Include="..\..\Include\System\Logger.h">
+      <Filter>Public Headers\System</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\Engine\ResourceManager.h">
-      <Filter>Include\Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\Engine\SceneManager.h">
-      <Filter>Include\Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\Engine\Shader.h">
-      <Filter>Include\Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\Engine\SoundManager.h">
-      <Filter>Include\Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\Engine\Texture.h">
-      <Filter>Include\Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\Engine\Version.h">
-      <Filter>Include\Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\Engine\Vertex.h">
-      <Filter>Include\Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\Engine\Engine.h">
-      <Filter>Include\Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\Engine\EngineUtils.h">
-      <Filter>Include\Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\Engine\GameModule.h">
-      <Filter>Include\Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\Engine\LoadingScreen.h">
-      <Filter>Include\Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\Engine\PostProcessor.h">
-      <Filter>Include\Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\Engine\ResourceDatabase.h">
-      <Filter>Include\Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\PostEffects\Effect.h">
-      <Filter>Include\PostEffects</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\PostEffects\SMAA.h">
-      <Filter>Include\PostEffects</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\PostEffects\SMAA\AreaTex.h">
-      <Filter>Include\PostEffects\SMAA</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\PostEffects\SMAA\SearchTex.h">
-      <Filter>Include\PostEffects\SMAA</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\Resource\Resource.h">
-      <Filter>Include\Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\Resource\ResourceInfo.h">
-      <Filter>Include\Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\Resource\ShaderResource.h">
-      <Filter>Include\Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\Resource\TextureResource.h">
-      <Filter>Include\Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\Resource\AudioClipResource.h">
-      <Filter>Include\Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\Resource\MaterialResource.h">
-      <Filter>Include\Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\Scene\Object.h">
-      <Filter>Include\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\Scene\Scene.h">
-      <Filter>Include\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\Scene\Skybox.h">
-      <Filter>Include\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\Scene\Terrain.h">
-      <Filter>Include\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\Scene\Light.h">
-      <Filter>Include\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\System\Logger.h">
-      <Filter>Include\System</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\System\VFS\VFSArchive.h">
-      <Filter>Include\System\VFS</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\System\VFS\VFSFile.h">
-      <Filter>Include\System\VFS</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\System\VFS\VFS.h">
-      <Filter>Include\System\VFS</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\System\AssetLoader\AssetLoader.h">
-      <Filter>Include\System\AssetLoader</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\Engine\Material.h">
-      <Filter>Include\Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\Platform\Platform.h">
-      <Filter>Include\Platform</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\Resource\MeshResource.h">
-      <Filter>Include\Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\Engine\ShadowMap.h">
-      <Filter>Include\Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\Renderer\Renderer.h">
-      <Filter>Include\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\Renderer\RFramebuffer.h">
-      <Filter>Include\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\Renderer\RShader.h">
-      <Filter>Include\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\Renderer\RTexture.h">
-      <Filter>Include\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\Renderer\RBuffer.h">
-      <Filter>Include\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\Renderer\RArrayBuffer.h">
-      <Filter>Include\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\Scene\ObjectComponent.h">
-      <Filter>Include\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\PostEffects\Bloom.h">
-      <Filter>Include\PostEffects</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\PostEffects\FXAA.h">
-      <Filter>Include\PostEffects</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\Engine\SSAO.h">
-      <Filter>Include\Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\Engine\DeferredBuffer.h">
-      <Filter>Include\Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\Platform\Compat.h">
-      <Filter>Include\Platform</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\Engine\SkeletalMesh.h">
-      <Filter>Include\Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\Engine\StaticMesh.h">
-      <Filter>Include\Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\Engine\AnimationClip.h">
-      <Filter>Include\Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\Engine\Skeleton.h">
-      <Filter>Include\Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\Scene\Components\StaticMeshComponent.h">
-      <Filter>Include\Scene\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\Scene\Components\SkeletalMeshComponent.h">
-      <Filter>Include\Scene\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\Engine\EngineClassFactory.h">
-      <Filter>Include\Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\Engine\Bone.h">
-      <Filter>Include\Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\Scene\Components\AnimatorComponent.h">
-      <Filter>Include\Scene\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\Engine\AnimationNode.h">
-      <Filter>Include\Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\Scene\Components\AudioSourceComponent.h">
-      <Filter>Include\Scene\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\Engine\Input.h">
-      <Filter>Include\Engine</Filter>
+    <ClInclude Include="..\..\Include\Engine\Engine.h">
+      <Filter>Public Headers\Engine</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\Engine\Keycodes.h">
-      <Filter>Include\Engine</Filter>
+      <Filter>Public Headers\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Engine\Version.h">
+      <Filter>Public Headers\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Engine\Input.h">
+      <Filter>Public Headers\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Platform\Platform.h">
+      <Filter>Public Headers\Platform</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\Platform\PlatformDetect.h">
-      <Filter>Include\Platform</Filter>
+      <Filter>Public Headers\Platform</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\Scene\Components\CameraComponent.h">
-      <Filter>Include\Scene\Components</Filter>
+    <ClInclude Include="..\..\Include\Platform\Compat.h">
+      <Filter>Public Headers\Platform</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\Engine\CameraManager.h">
-      <Filter>Include\Engine</Filter>
+    <ClInclude Include="..\..\Include\Renderer\Material.h">
+      <Filter>Public Headers\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\Scene\Components\FPSControllerComponent.h">
-      <Filter>Include\Scene\Components</Filter>
+    <ClInclude Include="..\..\Include\Renderer\Buffer.h">
+      <Filter>Public Headers\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\Engine\NFont.h">
-      <Filter>Include\Engine</Filter>
+    <ClInclude Include="..\..\Include\Renderer\NFont.h">
+      <Filter>Public Headers\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\Resource\FontResource.h">
-      <Filter>Include\Resource</Filter>
+    <ClInclude Include="..\..\Include\Renderer\PipelineManager.h">
+      <Filter>Public Headers\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\Runtime\NArray.h">
-      <Filter>Include\Runtime</Filter>
+    <ClInclude Include="..\..\Include\Renderer\ShaderModule.h">
+      <Filter>Public Headers\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Renderer\Swapchain.h">
+      <Filter>Public Headers\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Renderer\Texture.h">
+      <Filter>Public Headers\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Renderer\Renderer.h">
+      <Filter>Public Headers\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Renderer\RenderPassManager.h">
+      <Filter>Public Headers\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\System\VFS\VFSFile.h">
+      <Filter>Public Headers\System\VFS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\System\VFS\VFS.h">
+      <Filter>Public Headers\System\VFS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\System\VFS\VFSArchive.h">
+      <Filter>Public Headers\System\VFS</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\Runtime\NString.h">
-      <Filter>Include\Runtime</Filter>
+      <Filter>Public Headers\Runtime</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\Runtime\Runtime.h">
-      <Filter>Include\Runtime</Filter>
+      <Filter>Public Headers\Runtime</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\Engine\HBAO.h">
-      <Filter>Include\Engine</Filter>
+    <ClInclude Include="..\..\Include\Runtime\NArray.h">
+      <Filter>Public Headers\Runtime</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\Engine\Console.h">
-      <Filter>Include\Engine</Filter>
+    <ClInclude Include="..\..\Include\Renderer\GUI.h">
+      <Filter>Public Headers\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\Renderer\RFence.h">
-      <Filter>Include\Renderer</Filter>
+    <ClInclude Include="..\..\Include\Resource\MeshResource.h">
+      <Filter>Public Headers\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Resource\Resource.h">
+      <Filter>Public Headers\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Resource\ResourceInfo.h">
+      <Filter>Public Headers\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Resource\ShaderModuleResource.h">
+      <Filter>Public Headers\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Resource\TextureResource.h">
+      <Filter>Public Headers\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Resource\AnimationClipResource.h">
+      <Filter>Public Headers\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Resource\AudioClipResource.h">
+      <Filter>Public Headers\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Resource\FontResource.h">
+      <Filter>Public Headers\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Resource\MaterialResource.h">
+      <Filter>Public Headers\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Engine\ResourceDatabase.h">
+      <Filter>Public Headers\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Engine\ResourceManager.h">
+      <Filter>Public Headers\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Engine\Vertex.h">
+      <Filter>Public Headers\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Renderer\StaticMesh.h">
+      <Filter>Public Headers\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\Engine\Camera.h">
-      <Filter>Include\Engine</Filter>
+      <Filter>Public Headers\Engine</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Resources\Data\Shaders\include\Fxaa3_11.h">
-      <Filter>Resources\Data\Shaders\include</Filter>
+    <ClInclude Include="..\..\Include\Engine\CameraManager.h">
+      <Filter>Public Headers\Engine</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Resources\Data\Shaders\include\SMAA.h">
-      <Filter>Resources\Data\Shaders\include</Filter>
+    <ClInclude Include="..\..\Include\Scene\Object.h">
+      <Filter>Public Headers\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Resources\Data\Shaders\include\conditionals.h">
-      <Filter>Resources\Data\Shaders\include</Filter>
+    <ClInclude Include="..\..\Include\Engine\EngineClassFactory.h">
+      <Filter>Public Headers\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Scene\ObjectComponent.h">
+      <Filter>Public Headers\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Scene\Components\StaticMeshComponent.h">
+      <Filter>Public Headers\Scene\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Scene\Components\CameraComponent.h">
+      <Filter>Public Headers\Scene\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Scene\Components\FPSControllerComponent.h">
+      <Filter>Public Headers\Scene\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Scene\Components\LightComponent.h">
+      <Filter>Public Headers\Scene\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Scene\Components\AnimatorComponent.h">
+      <Filter>Public Headers\Scene\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Scene\Components\AudioSourceComponent.h">
+      <Filter>Public Headers\Scene\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Audio\AudioSource.h">
+      <Filter>Public Headers\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Audio\AudioClip.h">
+      <Filter>Public Headers\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Animation\AnimationNode.h">
+      <Filter>Public Headers\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Animation\Bone.h">
+      <Filter>Public Headers\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Animation\Skeleton.h">
+      <Filter>Public Headers\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Animation\TransformNode.h">
+      <Filter>Public Headers\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Animation\AnimationClip.h">
+      <Filter>Public Headers\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Engine\SoundManager.h">
+      <Filter>Public Headers\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\System\AssetLoader\AssetLoader.h">
+      <Filter>Public Headers\System\AssetLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Scene\Scene.h">
+      <Filter>Public Headers\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Scene\LoadingScreen.h">
+      <Filter>Public Headers\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Engine\SceneManager.h">
+      <Filter>Public Headers\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Engine\GameModule.h">
+      <Filter>Public Headers\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Engine\Console.h">
+      <Filter>Public Headers\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Scene\Components\SkeletalMeshComponent.h">
+      <Filter>Public Headers\Scene\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Renderer\SkeletalMesh.h">
+      <Filter>Public Headers\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Scene\Skysphere.h">
+      <Filter>Public Headers\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Renderer\PostProcessor.h">
+      <Filter>Public Headers\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Renderer\Debug.h">
+      <Filter>Private Headers\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\System\AssetLoader\stb_vorbis.h">
+      <Filter>Private Headers\System\AssetLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Renderer\VKUtil.h">
+      <Filter>Private Headers\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Renderer\SSAO.h">
+      <Filter>Public Headers\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Renderer\Effect.h">
+      <Filter>Public Headers\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Scene\Components\TerrainComponent.h">
+      <Filter>Public Headers\Scene\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Renderer\ShadowRenderer.h">
+      <Filter>Public Headers\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Engine\EventManager.h">
+      <Filter>Public Headers\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Engine\Events.h">
+      <Filter>Public Headers\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Scene\Components\ScriptComponent.h">
+      <Filter>Public Headers\Scene\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Script\Interface\GUIInterface.h">
+      <Filter>Private Headers\Script\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Script\Script.h">
+      <Filter>Private Headers\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Script\Interface\EngineInterface.h">
+      <Filter>Private Headers\Script\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Script\Interface\InputInterface.h">
+      <Filter>Private Headers\Script\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Script\Interface\ObjectInterface.h">
+      <Filter>Private Headers\Script\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Script\Interface\SceneInterface.h">
+      <Filter>Private Headers\Script\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Script\Interface\ObjectComponentInterface.h">
+      <Filter>Private Headers\Script\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Script\Interface\LoggerInterface.h">
+      <Filter>Private Headers\Script\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Script\Interface\EventManagerInterface.h">
+      <Filter>Private Headers\Script\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Script\Interface\ResourceManagerInterface.h">
+      <Filter>Private Headers\Script\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Script\Interface\CameraComponentInterface.h">
+      <Filter>Private Headers\Script\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Script\Interface\CameraInterface.h">
+      <Filter>Private Headers\Script\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Script\Interface\CameraManagerInterface.h">
+      <Filter>Private Headers\Script\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Script\Interface\PlatformInterface.h">
+      <Filter>Private Headers\Script\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Script\Interface\MathInterface.h">
+      <Filter>Private Headers\Script\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Script\Interface\ConsoleInterface.h">
+      <Filter>Private Headers\Script\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Script\Interface\AudioSourceInterface.h">
+      <Filter>Private Headers\Script\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Script\Interface\SoundManagerInterface.h">
+      <Filter>Private Headers\Script\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Script\Interface\AnimatorComponentInterface.h">
+      <Filter>Private Headers\Script\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Script\Interface\LightComponentInterface.h">
+      <Filter>Private Headers\Script\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Script\Interface\AudioSourceComponentInterface.h">
+      <Filter>Private Headers\Script\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Script\Interface\StaticMeshComponentInterface.h">
+      <Filter>Private Headers\Script\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Script\Interface\SkeletalMeshComponentInterface.h">
+      <Filter>Private Headers\Script\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Script\Interface\AnimationClipInterface.h">
+      <Filter>Private Headers\Script\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Script\Interface\MaterialInterface.h">
+      <Filter>Private Headers\Script\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Script\Interface\VFSInterface.h">
+      <Filter>Private Headers\Script\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Runtime\NArrayTS.h">
+      <Filter>Public Headers\Runtime</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Runtime\NThreadPool.h">
+      <Filter>Public Headers\Runtime</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\Resources\Data\scenes.cfg">
-      <Filter>Resources\Data</Filter>
+    <None Include="..\Shaders\anim_vertex.vert">
+      <Filter>Shaders\Vertex</Filter>
     </None>
-    <None Include="..\..\Resources\Engine.ini">
-      <Filter>Resources</Filter>
+    <None Include="..\Shaders\depth_anim_vertex.vert">
+      <Filter>Shaders\Vertex</Filter>
     </None>
-    <None Include="..\..\Resources\Engine_Low.ini">
-      <Filter>Resources</Filter>
+    <None Include="..\Shaders\depth_vertex.vert">
+      <Filter>Shaders\Vertex</Filter>
     </None>
-    <None Include="..\..\Resources\Data\Scenes\main.nscene">
-      <Filter>Resources\Data\Scenes</Filter>
+    <None Include="..\Shaders\vertex.vert">
+      <Filter>Shaders\Vertex</Filter>
     </None>
-    <None Include="..\..\Resources\Data\Scenes\scene.nscene">
-      <Filter>Resources\Data\Scenes</Filter>
+    <None Include="..\Shaders\skysphere_vertex.vert">
+      <Filter>Shaders\Vertex</Filter>
     </None>
-    <None Include="..\..\Resources\Data\Materials\bila.nmtl">
-      <Filter>Resources\Data\Materials</Filter>
+    <None Include="..\Shaders\fullscreen_vertex.vert">
+      <Filter>Shaders\Vertex</Filter>
     </None>
-    <None Include="..\..\Resources\Data\Materials\house.nmtl">
-      <Filter>Resources\Data\Materials</Filter>
+    <None Include="..\Shaders\gui_vertex.vert">
+      <Filter>Shaders\Vertex</Filter>
     </None>
-    <None Include="..\..\Resources\Data\Materials\m_house.nmtl">
-      <Filter>Resources\Data\Materials</Filter>
+    <None Include="..\Shaders\depth_fragment.frag">
+      <Filter>Shaders\Fragment</Filter>
     </None>
-    <None Include="..\..\Resources\Data\Materials\skyreflect.nmtl">
-      <Filter>Resources\Data\Materials</Filter>
+    <None Include="..\Shaders\gui_fragment.frag">
+      <Filter>Shaders\Fragment</Filter>
     </None>
-    <None Include="..\..\Resources\Data\Materials\skysphere.nmtl">
-      <Filter>Resources\Data\Materials</Filter>
+    <None Include="..\Shaders\phong.frag">
+      <Filter>Shaders\Fragment</Filter>
     </None>
-    <None Include="..\..\Resources\Data\Materials\terrain.nmtl">
-      <Filter>Resources\Data\Materials</Filter>
+    <None Include="..\Shaders\skysphere_fragment.frag">
+      <Filter>Shaders\Fragment</Filter>
     </None>
-    <None Include="..\..\Resources\Data\Materials\w_girl.nmtl">
-      <Filter>Resources\Data\Materials</Filter>
+    <None Include="..\Shaders\pp_hdr.frag">
+      <Filter>Shaders\Post Process</Filter>
     </None>
-    <None Include="..\..\Resources\Data\Materials\nyra\head.nmtl">
-      <Filter>Resources\Data\Materials\nyra</Filter>
+    <None Include="..\Shaders\light_culling.comp">
+      <Filter>Shaders\Compute</Filter>
     </None>
-    <None Include="..\..\Resources\Data\Materials\nyra\body.nmtl">
-      <Filter>Resources\Data\Materials\nyra</Filter>
+    <None Include="..\Shaders\pp_bw.frag">
+      <Filter>Shaders\Post Process</Filter>
     </None>
-    <None Include="..\..\Resources\Data\Materials\arissa.nmtl">
-      <Filter>Resources\Data\Materials</Filter>
+    <None Include="..\Shaders\terrain_vertex.vert">
+      <Filter>Shaders\Vertex</Filter>
     </None>
-    <None Include="..\..\Resources\Data\StaticMeshes\m_house.nmesh">
-      <Filter>Resources\Data\StaticMeshes</Filter>
+    <None Include="..\Shaders\depth_terrain_vertex.vert">
+      <Filter>Shaders\Vertex</Filter>
     </None>
-    <None Include="..\..\Resources\Data\StaticMeshes\muscle_car.nmesh">
-      <Filter>Resources\Data\StaticMeshes</Filter>
+    <None Include="..\Shaders\pp_blur.frag">
+      <Filter>Shaders\Post Process</Filter>
     </None>
-    <None Include="..\..\Resources\Data\StaticMeshes\nyra.nmesh">
-      <Filter>Resources\Data\StaticMeshes</Filter>
+    <None Include="..\Shaders\ssao.frag">
+      <Filter>Shaders\Fragment</Filter>
     </None>
-    <None Include="..\..\Resources\Data\StaticMeshes\skysphere.nmesh">
-      <Filter>Resources\Data\StaticMeshes</Filter>
+    <None Include="..\Shaders\ssao_blur.frag">
+      <Filter>Shaders\Fragment</Filter>
     </None>
-    <None Include="..\..\Resources\Data\StaticMeshes\w_girl.nmesh">
-      <Filter>Resources\Data\StaticMeshes</Filter>
+    <None Include="..\..\Config\Engine.ini">
+      <Filter>Config</Filter>
     </None>
-    <None Include="..\..\Resources\Data\StaticMeshes\arissa.nmesh">
-      <Filter>Resources\Data\StaticMeshes</Filter>
-    </None>
-    <None Include="..\..\Resources\Data\StaticMeshes\bila.nmesh">
-      <Filter>Resources\Data\StaticMeshes</Filter>
-    </None>
-    <None Include="..\..\Resources\Data\StaticMeshes\house.nmesh">
-      <Filter>Resources\Data\StaticMeshes</Filter>
-    </None>
-    <None Include="..\..\Resources\Data\StaticMeshes\light_sphere.nmesh">
-      <Filter>Resources\Data\StaticMeshes</Filter>
-    </None>
-    <None Include="..\..\Resources\Data\SkeletalMeshes\sophia.nmesh">
-      <Filter>Resources\Data\SkeletalMeshes</Filter>
-    </None>
-    <None Include="..\..\Resources\Data\Scenes\shadow.nscene">
-      <Filter>Resources\Data\Scenes</Filter>
-    </None>
-    <None Include="..\..\Resources\Data\Shaders\glsl\font_fs.glsl">
-      <Filter>Resources\Data\Shaders\glsl</Filter>
-    </None>
-    <None Include="..\..\Resources\Data\Shaders\glsl\font_vs.glsl">
-      <Filter>Resources\Data\Shaders\glsl</Filter>
-    </None>
-    <None Include="..\..\Resources\Data\Shaders\glsl\geometry_fs.glsl">
-      <Filter>Resources\Data\Shaders\glsl</Filter>
-    </None>
-    <None Include="..\..\Resources\Data\Shaders\glsl\geometry_vs.glsl">
-      <Filter>Resources\Data\Shaders\glsl</Filter>
-    </None>
-    <None Include="..\..\Resources\Data\Shaders\glsl\lighting_fs.glsl">
-      <Filter>Resources\Data\Shaders\glsl</Filter>
-    </None>
-    <None Include="..\..\Resources\Data\Shaders\glsl\lighting_vs.glsl">
-      <Filter>Resources\Data\Shaders\glsl</Filter>
-    </None>
-    <None Include="..\..\Resources\Data\Shaders\glsl\loadscreen_fs.glsl">
-      <Filter>Resources\Data\Shaders\glsl</Filter>
-    </None>
-    <None Include="..\..\Resources\Data\Shaders\glsl\loadscreen_vs.glsl">
-      <Filter>Resources\Data\Shaders\glsl</Filter>
-    </None>
-    <None Include="..\..\Resources\Data\Shaders\glsl\postproc_fs.glsl">
-      <Filter>Resources\Data\Shaders\glsl</Filter>
-    </None>
-    <None Include="..\..\Resources\Data\Shaders\glsl\postproc_vs.glsl">
-      <Filter>Resources\Data\Shaders\glsl</Filter>
-    </None>
-    <None Include="..\..\Resources\Data\Shaders\glsl\shadow_fs.glsl">
-      <Filter>Resources\Data\Shaders\glsl</Filter>
-    </None>
-    <None Include="..\..\Resources\Data\Shaders\glsl\shadow_vs.glsl">
-      <Filter>Resources\Data\Shaders\glsl</Filter>
-    </None>
-    <None Include="..\..\Resources\Data\Shaders\glsl\ssao_blur_fs.glsl">
-      <Filter>Resources\Data\Shaders\glsl</Filter>
-    </None>
-    <None Include="..\..\Resources\Data\Shaders\glsl\ssao_fs.glsl">
-      <Filter>Resources\Data\Shaders\glsl</Filter>
-    </None>
-    <None Include="..\..\Resources\Data\Shaders\glsl\postproc\bloom_prepass_fs.glsl">
-      <Filter>Resources\Data\Shaders\glsl\postproc</Filter>
-    </None>
-    <None Include="..\..\Resources\Data\Shaders\glsl\postproc\blur_dof_fs.glsl">
-      <Filter>Resources\Data\Shaders\glsl\postproc</Filter>
-    </None>
-    <None Include="..\..\Resources\Data\Shaders\glsl\postproc\blur_fs.glsl">
-      <Filter>Resources\Data\Shaders\glsl\postproc</Filter>
-    </None>
-    <None Include="..\..\Resources\Data\Shaders\glsl\postproc\bw_fs.glsl">
-      <Filter>Resources\Data\Shaders\glsl\postproc</Filter>
-    </None>
-    <None Include="..\..\Resources\Data\Shaders\glsl\postproc\dof_fs.glsl">
-      <Filter>Resources\Data\Shaders\glsl\postproc</Filter>
-    </None>
-    <None Include="..\..\Resources\Data\Shaders\glsl\postproc\fxaa_fs.glsl">
-      <Filter>Resources\Data\Shaders\glsl\postproc</Filter>
-    </None>
-    <None Include="..\..\Resources\Data\Shaders\glsl\postproc\fxaa_vs.glsl">
-      <Filter>Resources\Data\Shaders\glsl\postproc</Filter>
-    </None>
-    <None Include="..\..\Resources\Data\Shaders\glsl\postproc\gauss_h_fs.glsl">
-      <Filter>Resources\Data\Shaders\glsl\postproc</Filter>
-    </None>
-    <None Include="..\..\Resources\Data\Shaders\glsl\postproc\gauss_v_fs.glsl">
-      <Filter>Resources\Data\Shaders\glsl\postproc</Filter>
-    </None>
-    <None Include="..\..\Resources\Data\Shaders\glsl\postproc\smaa_fs.glsl">
-      <Filter>Resources\Data\Shaders\glsl\postproc</Filter>
-    </None>
-    <None Include="..\..\Resources\Data\Shaders\glsl\postproc\smaa_vs.glsl">
-      <Filter>Resources\Data\Shaders\glsl\postproc</Filter>
-    </None>
-    <None Include="..\..\Resources\Data\Shaders\glsl\postproc\bloom_fs.glsl">
-      <Filter>Resources\Data\Shaders\glsl\postproc</Filter>
-    </None>
-    <None Include="..\..\Resources\Data\Shaders\glsl\forward\skybox_vs.glsl">
-      <Filter>Resources\Data\Shaders\glsl\forward</Filter>
-    </None>
-    <None Include="..\..\Resources\Data\Shaders\glsl\forward\skybox_fs.glsl">
-      <Filter>Resources\Data\Shaders\glsl\forward</Filter>
+    <None Include="..\Shaders\pp_dof.frag">
+      <Filter>Shaders\Post Process</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Engine.rc">
-      <Filter>Resources</Filter>
+      <Filter>Resource Files</Filter>
     </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Audio\AudioClip.cpp">
-      <Filter>Source\Audio</Filter>
-    </ClCompile>
-    <ClCompile Include="Audio\AudioSource.cpp">
-      <Filter>Source\Audio</Filter>
-    </ClCompile>
-    <ClCompile Include="PostEffects\Effect.cpp">
-      <Filter>Source\PostEffects</Filter>
-    </ClCompile>
-    <ClCompile Include="PostEffects\SMAA.cpp">
-      <Filter>Source\PostEffects</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene\Object.cpp">
-      <Filter>Source\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene\Scene.cpp">
-      <Filter>Source\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene\Skybox.cpp">
-      <Filter>Source\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene\Terrain.cpp">
-      <Filter>Source\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene\Light.cpp">
-      <Filter>Source\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="System\Logger.cpp">
-      <Filter>Source\System</Filter>
-    </ClCompile>
-    <ClCompile Include="System\VFS\VFSArchive.cpp">
-      <Filter>Source\System\VFS</Filter>
-    </ClCompile>
-    <ClCompile Include="System\VFS\VFSFile.cpp">
-      <Filter>Source\System\VFS</Filter>
-    </ClCompile>
-    <ClCompile Include="System\VFS\VFS.cpp">
-      <Filter>Source\System\VFS</Filter>
-    </ClCompile>
-    <ClCompile Include="System\AssetLoader\AssetLoader.cpp">
-      <Filter>Source\System\AssetLoader</Filter>
-    </ClCompile>
-    <ClCompile Include="Platform\Windows\Windows.cpp">
-      <Filter>Source\Platform\Windows</Filter>
-    </ClCompile>
-    <ClCompile Include="Platform\shared.cpp">
-      <Filter>Source\Platform</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene\ObjectComponent.cpp">
-      <Filter>Source\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Platform\Compat\reallocarray.cpp">
-      <Filter>Source\Platform\Compat</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene\Components\SkeletalMeshComponent.cpp">
-      <Filter>Source\Scene\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene\Components\StaticMeshComponent.cpp">
-      <Filter>Source\Scene\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene\Components\AnimatorComponent.cpp">
-      <Filter>Source\Scene\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene\Components\AudioSourceComponent.cpp">
-      <Filter>Source\Scene\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Skeleton.cpp">
-      <Filter>Source\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\SoundManager.cpp">
-      <Filter>Source\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\SSAO.cpp">
-      <Filter>Source\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\StaticMesh.cpp">
-      <Filter>Source\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Texture.cpp">
-      <Filter>Source\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\AnimationClip.cpp">
-      <Filter>Source\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\DeferredBuffer.cpp">
-      <Filter>Source\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Engine.cpp">
-      <Filter>Source\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\LoadingScreen.cpp">
-      <Filter>Source\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Material.cpp">
-      <Filter>Source\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\PostProcessor.cpp">
-      <Filter>Source\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\ResourceDatabase.cpp">
-      <Filter>Source\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\ResourceManager.cpp">
-      <Filter>Source\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\SceneManager.cpp">
-      <Filter>Source\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Shader.cpp">
-      <Filter>Source\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\ShadowMap.cpp">
-      <Filter>Source\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\SkeletalMesh.cpp">
-      <Filter>Source\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Input.cpp">
-      <Filter>Source\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Platform\Windows\PlatformInput.cpp">
-      <Filter>Source\Platform\Windows</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene\Components\CameraComponent.cpp">
-      <Filter>Source\Scene\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\CameraManager.cpp">
-      <Filter>Source\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene\Components\FPSControllerComponent.cpp">
-      <Filter>Source\Scene\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\NFont.cpp">
-      <Filter>Source\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\HBAO.cpp">
-      <Filter>Source\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Console.cpp">
-      <Filter>Source\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Camera.cpp">
-      <Filter>Source\Core</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="..\..\Resources\Data\Shaders\hlsl\font_vs.hlsl">
-      <Filter>Resources\Data\Shaders\hlsl</Filter>
-    </FxCompile>
-    <FxCompile Include="..\..\Resources\Data\Shaders\hlsl\lighting_fs.hlsl">
-      <Filter>Resources\Data\Shaders\hlsl</Filter>
-    </FxCompile>
-    <FxCompile Include="..\..\Resources\Data\Shaders\hlsl\lighting_vs.hlsl">
-      <Filter>Resources\Data\Shaders\hlsl</Filter>
-    </FxCompile>
-    <FxCompile Include="..\..\Resources\Data\Shaders\hlsl\geometry_fs.hlsl">
-      <Filter>Resources\Data\Shaders\hlsl</Filter>
-    </FxCompile>
-    <FxCompile Include="..\..\Resources\Data\Shaders\hlsl\geometry_vs.hlsl">
-      <Filter>Resources\Data\Shaders\hlsl</Filter>
-    </FxCompile>
-    <FxCompile Include="..\..\Resources\Data\Shaders\hlsl\postproc_fs.hlsl">
-      <Filter>Resources\Data\Shaders\hlsl</Filter>
-    </FxCompile>
-    <FxCompile Include="..\..\Resources\Data\Shaders\hlsl\postproc_vs.hlsl">
-      <Filter>Resources\Data\Shaders\hlsl</Filter>
-    </FxCompile>
-    <FxCompile Include="..\..\Resources\Data\Shaders\hlsl\forward\skybox_vs.hlsl">
-      <Filter>Resources\Data\Shaders\hlsl\forward</Filter>
-    </FxCompile>
-    <FxCompile Include="..\..\Resources\Data\Shaders\hlsl\forward\skybox_fs.hlsl">
-      <Filter>Resources\Data\Shaders\hlsl\forward</Filter>
-    </FxCompile>
-    <FxCompile Include="..\..\Resources\Data\Shaders\hlsl\shadow_fs.hlsl">
-      <Filter>Resources\Data\Shaders\hlsl</Filter>
-    </FxCompile>
-    <FxCompile Include="..\..\Resources\Data\Shaders\hlsl\shadow_vs.hlsl">
-      <Filter>Resources\Data\Shaders\hlsl</Filter>
-    </FxCompile>
-    <FxCompile Include="..\..\Resources\Data\Shaders\hlsl\ssao_fs.hlsl">
-      <Filter>Resources\Data\Shaders\hlsl</Filter>
-    </FxCompile>
-    <FxCompile Include="..\..\Resources\Data\Shaders\hlsl\ssao_blur_fs.hlsl">
-      <Filter>Resources\Data\Shaders\hlsl</Filter>
-    </FxCompile>
-    <FxCompile Include="..\..\Resources\Data\Shaders\hlsl\font_fs.hlsl">
-      <Filter>Resources\Data\Shaders\hlsl</Filter>
-    </FxCompile>
-    <FxCompile Include="..\..\Resources\Data\Shaders\hlsl\loadscreen_fs.hlsl">
-      <Filter>Resources\Data\Shaders\hlsl</Filter>
-    </FxCompile>
   </ItemGroup>
 </Project>

@@ -37,16 +37,17 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <Scene/Object.h>
 #include <Scene/Components/StaticMeshComponent.h>
-#include <Scene/Components/CameraComponent.h>
-#include <Engine/SceneManager.h>
-#include <Engine/CameraManager.h>
 #include <Engine/ResourceManager.h>
+#include <System/Logger.h>
+
 #include <glm/gtc/matrix_transform.hpp>
 
 using namespace glm;
+using namespace std;
 
-#define SMCOMPONENT_MODULE	"StaticMeshComponent"
+#define SM_COMPONENT_MODULE		"StaticMeshComponent"
 
 ENGINE_REGISTER_COMPONENT_CLASS(StaticMeshComponent);
 
@@ -62,41 +63,12 @@ StaticMeshComponent::StaticMeshComponent(ComponentInitializer *initializer)
 	for (ArgumentMapType::iterator it = range.first; it != range.second; ++it)
 		_materialIds.push_back(ResourceManager::GetResourceID(it->second.c_str(), ResourceType::RES_MATERIAL));
 
-	_renderer = Engine::GetRenderer();
-
-	_matrixUbo = nullptr;
-	_matrixBlock.Model = _parent->GetModelMatrix();
-	_mmNeedsUpdate = false;
 	_blend = false;
-}
 
-void StaticMeshComponent::SetLocalPosition(vec3 &position) noexcept
-{
-	ObjectComponent::SetLocalPosition(position);
-	_translationMatrix = translate(mat4(), _localPosition);
-	_mmNeedsUpdate = true;
-}
-
-void StaticMeshComponent::SetLocalRotation(vec3 &rotation) noexcept
-{
-	ObjectComponent::SetLocalRotation(rotation);
-
-	mat4 rotXMatrix = rotate(mat4(), DEG2RAD(_localRotation.x), vec3(1.f, 0.f, 0.f));
-	mat4 rotYMatrix = rotate(mat4(), DEG2RAD(_localRotation.y), vec3(0.f, 1.f, 0.f));
-	mat4 rotZMatrix = rotate(mat4(), DEG2RAD(_localRotation.z), vec3(0.f, 0.f, 1.f));
-
-	_rotationMatrix = rotZMatrix * rotXMatrix * rotYMatrix;
-//	SetForwardDirection(_objectForward);
-
-	_mmNeedsUpdate = true;
-}
-
-void StaticMeshComponent::SetLocalScale(vec3 &newScale) noexcept
-{
-	ObjectComponent::SetLocalScale(newScale);
-
-	_scaleMatrix = scale(mat4(), newScale);
-	_mmNeedsUpdate = true;
+	_depthDrawBuffer = VK_NULL_HANDLE;
+	_sceneDrawBuffer = VK_NULL_HANDLE;
+	_descriptorPool = VK_NULL_HANDLE;
+	_descriptorSet = VK_NULL_HANDLE;
 }
 
 int StaticMeshComponent::Load()
@@ -105,108 +77,51 @@ int StaticMeshComponent::Load()
 	if(ret != ENGINE_OK)
 		return ret;
 	
-	bool noMaterial = _materialIds.size() == 0;
-
 	for (int id : _materialIds)
 	{
-		Material* mat = (Material*)ResourceManager::GetResource(id, ResourceType::RES_MATERIAL);
+		Material *mat = (Material *)ResourceManager::GetResource(id, ResourceType::RES_MATERIAL);
 
 		if (mat == nullptr)
 		{
 			Unload();
-			Logger::Log(SMCOMPONENT_MODULE, LOG_CRITICAL, "Failed to load material id %d", id);
+			Logger::Log(SM_COMPONENT_MODULE, LOG_CRITICAL, "Failed to load material id %d", id);
 			return ENGINE_INVALID_RES;
 		}
 
-		_blend |= mat->EnableBlend();
-		mat->SetAnimatedMesh(0);
-		_materials.push_back(mat);
+		_materials.Add(mat);
 	}
 	
 	if(!_mesh)
 	{
-		if(!strncmp(_meshId.c_str(), "generated", 9))
-		{
+		if(_meshId == SM_GENERATED)
 			_mesh = new StaticMesh(nullptr);
-			noMaterial = true; // skip material size check
-		}
 		else
-			_mesh = (StaticMesh*)ResourceManager::GetResourceByName(_meshId.c_str(), ResourceType::RES_STATIC_MESH);
+			_mesh = (StaticMesh *)ResourceManager::GetResourceByName(*_meshId, ResourceType::RES_STATIC_MESH);
 	}
-    
+
 	if (!_mesh)
 	{
-		Logger::Log(SMCOMPONENT_MODULE, LOG_CRITICAL, "Failed to load StaticMesh %s", _meshId.c_str());
+		Logger::Log(SM_COMPONENT_MODULE, LOG_CRITICAL, "Failed to load StaticMesh %s", *_meshId);
 		return ENGINE_INVALID_RES;
 	}
 	
-	if (!noMaterial && (_materials.size() != _mesh->GetGroupCount()))
+	if ((_materials.Count() != _mesh->GetGroupCount()) && (_meshId != SM_GENERATED))
 	{
-		Logger::Log(SMCOMPONENT_MODULE, LOG_CRITICAL, "Failed to load StaticMesh %s. The mesh requires %d materials, but only %d are set", _meshId.c_str(), _mesh->GetGroupCount(), _materials.size());
+		Logger::Log(SM_COMPONENT_MODULE, LOG_CRITICAL, "Failed to load StaticMesh %s. The mesh requires %d materials, but %d are set", *_meshId, _mesh->GetGroupCount(), _materials.Count());
 		return ENGINE_INVALID_RES;
 	}
-	
-	if((_matrixUbo = _renderer->CreateBuffer(BufferType::Uniform, true, false)) == nullptr)
-	{
-		Unload();
-		return ENGINE_OUT_OF_RESOURCES;
-	}
-	_matrixUbo->SetStorage(sizeof(MatrixBlock), nullptr);
 
 	_loaded = true;
 
 	return ENGINE_OK;
 }
 
-int StaticMeshComponent::CreateArrayBuffer()
+bool StaticMeshComponent::Upload(Buffer *buffer)
 {
-	return _mesh->CreateBuffers(false);
-}
+	if (!ObjectComponent::Upload(buffer))
+		return false;
 
-void StaticMeshComponent::Draw(RShader *shader, Camera *camera) noexcept
-{
-	if (!_loaded)
-		return;
-
-	_renderer->EnableDepthTest(true);
-
-	_mesh->Bind();
-	
-	if (!_materials.size()) // used only for lighting pass
-		_mesh->Draw(_renderer, 0);
-	else
-	{
-		if(_mmNeedsUpdate)
-		{
-			_matrixBlock.Model = (_translationMatrix * _rotationMatrix) * _scaleMatrix;
-			_matrixBlock.Model *= _parent->GetModelMatrix();
-			_mmNeedsUpdate = false;
-		}	
-
-		_matrixBlock.View = camera->GetView();
-		_matrixBlock.ModelViewProjection = (camera->GetProjectionMatrix() * camera->GetView()) * _matrixBlock.Model;
-		
-		shader->VSSetUniformBuffer(0, 0, sizeof(MatrixBlock), _matrixUbo);
-		_matrixUbo->UpdateData(0, sizeof(MatrixBlock), &_matrixBlock);
-		_parent->BindUniformBuffer(shader);
-        
-		for (size_t i = 0; i < _materials.size(); i++)
-		{
-			_materials[i]->Enable(shader);
-			if (_materials[i]->DisableCulling())
-				Engine::GetRenderer()->EnableFaceCulling(false);
-
-			shader->BindUniformBuffers();
-			_mesh->Draw(_renderer, i);
-		
-			if (_materials[i]->DisableCulling())
-				Engine::GetRenderer()->EnableFaceCulling(true);
-		}
-	}
-
-	_mesh->Unbind();
-
-	_renderer->EnableDepthTest(false);
+	return _mesh->Upload(buffer);
 }
 
 void StaticMeshComponent::Update(double deltaTime) noexcept
@@ -214,32 +129,118 @@ void StaticMeshComponent::Update(double deltaTime) noexcept
 	ObjectComponent::Update(deltaTime);
 }
 
+void StaticMeshComponent::UpdateData(VkCommandBuffer commandBuffer) noexcept
+{
+	ObjectComponent::UpdateData(commandBuffer);
+}
+
 bool StaticMeshComponent::Unload()
 {
 	if(!ObjectComponent::Unload())
 		return false;
 	
-	for(Material *mat : _materials)
-		ResourceManager::UnloadResource(mat->GetResourceInfo()->id, ResourceType::RES_MATERIAL);
+	if (_depthDrawBuffer != VK_NULL_HANDLE)
+		Renderer::GetInstance()->FreeMeshCommandBuffer(_depthDrawBuffer);
 
-	_materials.clear();
+	if (_sceneDrawBuffer != VK_NULL_HANDLE)
+		Renderer::GetInstance()->FreeMeshCommandBuffer(_sceneDrawBuffer);
+
+	for(NString matId : _materialIds)
+		ResourceManager::UnloadResourceByName(*matId, ResourceType::RES_MATERIAL);
+
+	_materials.Clear();
 	_materialIds.clear();
 
-	if (_mesh)
+	if (_mesh && _meshId != SM_GENERATED)
 	{
-		if (_mesh->GetResourceInfo() != nullptr)
-			ResourceManager::UnloadResourceByName(_meshId.c_str(),
-			_mesh->GetResourceInfo()->meshType == MeshType::Static ?
+		ResourceManager::UnloadResourceByName(*_meshId, _mesh->GetResourceInfo()->meshType == MeshType::Static ?
 			ResourceType::RES_STATIC_MESH : ResourceType::RES_SKELETAL_MESH);
-		else
-			delete _mesh;
-
-		_mesh = nullptr;
 	}
+	else
+		delete _mesh;
 
-	delete _matrixUbo;
-	
+	_mesh = nullptr;
+
+	Renderer::GetInstance()->FreeMeshDescriptorPool(_descriptorPool);
+
 	_loaded = false;
 
 	return true;
+}
+
+bool StaticMeshComponent::BuildCommandBuffers()
+{
+	if (_depthDrawBuffer != VK_NULL_HANDLE)
+		Renderer::GetInstance()->FreeMeshCommandBuffer(_depthDrawBuffer);
+
+	if (_sceneDrawBuffer != VK_NULL_HANDLE)
+		Renderer::GetInstance()->FreeMeshCommandBuffer(_sceneDrawBuffer);
+
+	if (_materials[0]->GetType() != MT_Skysphere)
+		_depthDrawBuffer = Renderer::GetInstance()->CreateMeshCommandBuffer();
+	_sceneDrawBuffer = Renderer::GetInstance()->CreateMeshCommandBuffer();
+
+	if (_descriptorPool == VK_NULL_HANDLE)
+	{
+		_descriptorPool = Renderer::GetInstance()->CreateMeshDescriptorPool();
+		_descriptorSet = _mesh->CreateDescriptorSet(_descriptorPool, _parent->GetUniformBuffer());
+
+		for (Material *mat : _materials)
+		{
+			if (!mat->HasDescriptorSet() && !mat->CreateDescriptorSet())
+			{
+				Logger::Log(SM_COMPONENT_MODULE, LOG_CRITICAL, "Failed to create descriptor set for material %s", mat->GetResourceInfo()->name.c_str());
+				return false;
+			}
+		}
+	}
+
+	_SortGroups();
+
+	return _mesh->BuildCommandBuffers(_materials, _descriptorSet, _depthDrawBuffer, _sceneDrawBuffer);
+}
+
+void StaticMeshComponent::RegisterCommandBuffers()
+{
+	if (!_enabled) return;
+
+	if(_depthDrawBuffer != VK_NULL_HANDLE)
+		Renderer::GetInstance()->AddDepthCommandBuffer(_depthDrawBuffer);
+	Renderer::GetInstance()->AddSceneCommandBuffer(_sceneDrawBuffer);
+}
+
+void StaticMeshComponent::_SortGroups()
+{
+	struct GroupInfo
+	{
+		uint32_t offset;
+		uint32_t count;
+		Material *mat;
+	};
+
+	vector<GroupInfo> opaque;
+	vector<GroupInfo> transparent;
+
+	for(uint32_t i = 0; i < _materials.Count(); ++i)
+	{
+		if (_materials[i]->IsTransparent())
+			transparent.push_back({ _mesh->GetGroupOffset(i), _mesh->GetIndexCount(i), _materials[i] });
+		else
+			opaque.push_back({ _mesh->GetGroupOffset(i), _mesh->GetIndexCount(i), _materials[i] });
+	}
+	
+	_materials.Clear();
+	_mesh->ResetGroups();
+
+	for (GroupInfo &gi : opaque)
+	{
+		_materials.Add(gi.mat);
+		_mesh->AddGroup(gi.offset, gi.count);
+	}
+
+	for (GroupInfo &gi : transparent)
+	{
+		_materials.Add(gi.mat);
+		_mesh->AddGroup(gi.offset, gi.count);
+	}
 }

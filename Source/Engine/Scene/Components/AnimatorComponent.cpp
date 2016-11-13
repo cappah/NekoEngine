@@ -40,9 +40,9 @@
 #include <Scene/Components/AnimatorComponent.h>
 #include <Scene/Components/SkeletalMeshComponent.h>
 #include <Scene/Object.h>
-#include <Engine/Skeleton.h>
+#include <Animation/Skeleton.h>
+#include <Renderer/SkeletalMesh.h>
 #include <Engine/SceneManager.h>
-#include <Engine/SkeletalMesh.h>
 #include <Engine/ResourceManager.h>
 
 ENGINE_REGISTER_COMPONENT_CLASS(AnimatorComponent);
@@ -60,16 +60,16 @@ AnimatorComponent::AnimatorComponent(ComponentInitializer *initializer)
 int AnimatorComponent::Load()
 {
 	int ret = ObjectComponent::Load();
-
+	
 	if (ret != ENGINE_OK)
 		return ret;
-
+	
 	_defaultAnim = (AnimationClip*)ResourceManager::GetResourceByName(_defaultAnimId.c_str(), ResourceType::RES_ANIMCLIP);
 	
 	if(!_defaultAnim)
 		return ENGINE_INVALID_RES;
 	
-	SkeletalMeshComponent *comp = dynamic_cast<SkeletalMeshComponent*>(_parent->GetComponent(_targetMesh.c_str()));
+	SkeletalMeshComponent *comp = dynamic_cast<SkeletalMeshComponent *>(_parent->GetComponent(_targetMesh.c_str()));
 	if(!comp)
 		return ENGINE_INVALID_ARGS;
 	
@@ -77,7 +77,7 @@ int AnimatorComponent::Load()
 	if(!mesh)
 		return ENGINE_INVALID_ARGS;
 	
-	_skeleton = mesh->GetSkeleton();
+	_skeleton = mesh->CreateSkeleton();
 	if(!_skeleton)
 		return ENGINE_FAIL;
 	
@@ -116,6 +116,11 @@ void AnimatorComponent::Update(double deltaTime) noexcept
 	}
 }
 
+void AnimatorComponent::UpdateData(VkCommandBuffer commandBuffer) noexcept
+{
+	_skeleton->UpdateData(commandBuffer);
+}
+
 bool AnimatorComponent::Unload()
 {
 	if (!ObjectComponent::Unload())
@@ -123,6 +128,8 @@ bool AnimatorComponent::Unload()
 
 	if (_defaultAnim)
 		ResourceManager::UnloadResource(_defaultAnim->GetResourceInfo()->id, ResourceType::RES_ANIMCLIP);
+
+	delete _skeleton;
 
 	return true;
 }

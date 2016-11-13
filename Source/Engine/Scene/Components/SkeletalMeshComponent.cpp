@@ -43,7 +43,7 @@
 #include <Engine/SceneManager.h>
 #include <Engine/ResourceManager.h>
 
-#define SKCOMPONENT_MODULE	"SkeletalMeshComponent"
+#define SK_COMPONENT_MODULE		"SkeletalMeshComponent"
 
 ENGINE_REGISTER_COMPONENT_CLASS(SkeletalMeshComponent);
 
@@ -58,11 +58,8 @@ SkeletalMeshComponent::SkeletalMeshComponent(ComponentInitializer *initializer)
 int SkeletalMeshComponent::Load()
 {
 	int ret = ObjectComponent::Load();
-	
-	if(ret != ENGINE_OK)
+	if (ret != ENGINE_OK)
 		return ret;
-	
-	bool noMaterial = _materialIds.size() == 0;
 
 	for (int id : _materialIds)
 	{
@@ -71,38 +68,36 @@ int SkeletalMeshComponent::Load()
 		if (mat == nullptr)
 		{
 			Unload();
-			Logger::Log(SKCOMPONENT_MODULE, LOG_CRITICAL, "Failed to load material id %d", id);
+			Logger::Log(SK_COMPONENT_MODULE, LOG_CRITICAL, "Failed to load material id %d", id);
 			return ENGINE_INVALID_RES;
 		}
 
-		_blend |= mat->EnableBlend();
-		mat->SetAnimatedMesh(0);
-		_materials.push_back(mat);
+		mat->SetAnimated(true);
+
+		_materials.Add(mat);
 	}
-	
-	if(!_mesh)
-		_mesh = (SkeletalMesh*)ResourceManager::GetResourceByName(_meshId.c_str(), ResourceType::RES_SKELETAL_MESH);
 
 	if (!_mesh)
 	{
-		Logger::Log(SKCOMPONENT_MODULE, LOG_CRITICAL, "Failed to load SkeletalMesh %s", _meshId.c_str());
+		if (_meshId == SM_GENERATED)
+			_mesh = new SkeletalMesh(nullptr);
+		else
+			_mesh = (SkeletalMesh*)ResourceManager::GetResourceByName(*_meshId, ResourceType::RES_SKELETAL_MESH);
+	}
+
+	if (!_mesh)
+	{
+		Logger::Log(SK_COMPONENT_MODULE, LOG_CRITICAL, "Failed to load SkeletalMesh %s", *_meshId);
 		return ENGINE_INVALID_RES;
 	}
-	
+
 	StaticMeshComponent::_mesh = (StaticMesh*)_mesh;
-	
-	if (!noMaterial && (_materials.size() != _mesh->GetGroupCount()))
+
+	if ((_materials.Count() != _mesh->GetGroupCount()) && (_meshId != SM_GENERATED))
 	{
-		Logger::Log(SKCOMPONENT_MODULE, LOG_CRITICAL, "Failed to load SkeletalMesh %s. The mesh requires %d materials, but only %d are set", _meshId.c_str(), _mesh->GetGroupCount(), _materials.size());
+		Logger::Log(SK_COMPONENT_MODULE, LOG_CRITICAL, "Failed to load SkeletalMesh %s. The mesh requires %d materials, but %d are set", *_meshId, _mesh->GetGroupCount(), _materials.Count());
 		return ENGINE_INVALID_RES;
 	}
-	
-	if((_matrixUbo = _renderer->CreateBuffer(BufferType::Uniform, true, false)) == nullptr)
-	{
-		Unload();
-		return ENGINE_OUT_OF_RESOURCES;
-	}
-	_matrixUbo->SetStorage(sizeof(MatrixBlock), nullptr);
 
 	_loaded = true;
 
@@ -123,22 +118,83 @@ int SkeletalMeshComponent::InitializeComponent()
 	return ENGINE_OK;
 }
 
-void SkeletalMeshComponent::Draw(RShader *shader, Camera *camera) noexcept
+bool SkeletalMeshComponent::Upload(Buffer *buffer)
 {
-	if (!_loaded)
-		return;
-	
-	_animator->BindSkeleton(shader);
-	
-	StaticMeshComponent::Draw(shader, camera);
+	if (!ObjectComponent::Upload(buffer))
+		return false;
+
+	return _mesh->Upload(buffer);
 }
 
 void SkeletalMeshComponent::Update(double deltaTime) noexcept
 {
-	StaticMeshComponent::Update(deltaTime);
+	ObjectComponent::Update(deltaTime);
+}
+
+void SkeletalMeshComponent::UpdateData(VkCommandBuffer commandBuffer) noexcept
+{
+	ObjectComponent::UpdateData(commandBuffer);
+}
+
+bool SkeletalMeshComponent::BuildCommandBuffers()
+{
+	if (_depthDrawBuffer != VK_NULL_HANDLE)
+		Renderer::GetInstance()->FreeMeshCommandBuffer(_depthDrawBuffer);
+
+	if (_sceneDrawBuffer != VK_NULL_HANDLE)
+		Renderer::GetInstance()->FreeMeshCommandBuffer(_sceneDrawBuffer);
+
+	_depthDrawBuffer = Renderer::GetInstance()->CreateMeshCommandBuffer();
+	_sceneDrawBuffer = Renderer::GetInstance()->CreateMeshCommandBuffer();
+
+	if (_descriptorPool == VK_NULL_HANDLE)
+	{
+		_descriptorPool = Renderer::GetInstance()->CreateAnimatedMeshDescriptorPool();
+		_descriptorSet = _mesh->CreateDescriptorSet(_descriptorPool, _parent->GetUniformBuffer(), _animator->GetSkeletonBuffer());
+
+		for (Material *mat : _materials)
+		{
+			if (!mat->HasDescriptorSet() && !mat->CreateDescriptorSet())
+			{
+				Logger::Log(SK_COMPONENT_MODULE, LOG_CRITICAL, "Failed to create descriptor set for material %s", mat->GetResourceInfo()->name.c_str());
+				return false;
+			}
+		}
+	}
+
+	return _mesh->BuildCommandBuffers(_materials, _descriptorSet, _depthDrawBuffer, _sceneDrawBuffer);
 }
 
 bool SkeletalMeshComponent::Unload()
 {
-	return StaticMeshComponent::Unload();
+	if (!ObjectComponent::Unload())
+		return false;
+
+	if (_depthDrawBuffer != VK_NULL_HANDLE)
+		Renderer::GetInstance()->FreeMeshCommandBuffer(_depthDrawBuffer);
+
+	if (_sceneDrawBuffer != VK_NULL_HANDLE)
+		Renderer::GetInstance()->FreeMeshCommandBuffer(_sceneDrawBuffer);
+
+	for (NString matId : _materialIds)
+		ResourceManager::UnloadResourceByName(*matId, ResourceType::RES_MATERIAL);
+
+	_materials.Clear();
+	_materialIds.clear();
+
+	if (_mesh && _meshId != SM_GENERATED)
+	{
+		ResourceManager::UnloadResourceByName(*_meshId, _mesh->GetResourceInfo()->meshType == MeshType::Static ?
+			ResourceType::RES_STATIC_MESH : ResourceType::RES_SKELETAL_MESH);
+	}
+	else
+		delete _mesh;
+
+	_mesh = nullptr;
+
+	Renderer::GetInstance()->FreeMeshDescriptorPool(_descriptorPool);
+
+	_loaded = false;
+
+	return true;
 }

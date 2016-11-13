@@ -39,178 +39,85 @@
 
 #pragma once
 
-#include <Platform/Platform.h>
+#include <Engine/Defs.h>
 
-#ifdef ENGINE_INTERNAL
-	#if defined(NE_PLATFORM_MAC) || defined(NE_PLATFORM_IOS)
-		#include <OpenAL/al.h>
-		#include <OpenAL/alc.h>
-	#else
-		#include <AL/al.h>
-		#include <AL/alc.h>
-	#endif
-
-	#include <ft2build.h>
-	#include FT_FREETYPE_H
-#endif
-
-#ifdef NE_PLATFORM_WINDOWS
-	#ifdef ENGINE_INTERNAL
-		#define ENGINE_API	__declspec(dllexport)
-	#else
-		#define ENGINE_API	__declspec(dllimport)
-	#endif
-#else
-	#define ENGINE_API
-#endif
-
-#include <map>
-#include <string>
-#include <vector>
-#include <chrono>
 #include <stdint.h>
 
+#define GLM_FORCE_RADIANS
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include <glm/glm.hpp>
-#include <Engine/Console.h>
-#include <Runtime/Runtime.h>
-#include <Renderer/Renderer.h>
-#include <Engine/EngineUtils.h>
-#include <Engine/Version.h>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
+#include <Engine/Vertex.h>
 #include <Engine/EngineClassFactory.h>
-#include <System/Logger.h>
+#include <Renderer/Renderer.h>
+#include <Platform/Platform.h>
+#include <Runtime/Runtime.h>
 
-#define ENGINE_OK			 0
-#define ENGINE_FAIL			-1
-#define ENGINE_LOAD_VS_FAIL		-2
-#define ENGINE_LOAD_FS_FAIL		-3
-#define ENGINE_LOAD_SHADER_FAIL 	-4
-#define ENGINE_ATTR_MISSING		-5
-#define ENGINE_UNIF_MISSING		-6
-#define ENGINE_NO_SCENE			-7
-#define ENGINE_NOT_FOUND		-8
-#define ENGINE_IN_USE			-9
-#define ENGINE_INVALID_RES		-10
-#define ENGINE_IO_FAIL			-11
-#define ENGINE_NO_CAMERA		-12
-#define ENGINE_INVALID_ARGS		-13
-#define ENGINE_NOT_LOADED		-14
-#define ENGINE_MEM_FAIL			-15
-#define ENGINE_LOAD_GS_FAIL		-16
-#define ENGINE_OUT_OF_RESOURCES	-17
-
-#define PATH_SIZE			1024
-
-#define RENDER_QUALITY_LOW		0
-#define RENDER_QUALITY_HIGH		1
-
-#define RENDER_SSAO_LOW			0
-#define RENDER_SSAO_MEDIUM		1
-#define RENDER_SSAO_HIGH		2
-
-#define RENDER_TEX_Q_LOW		0
-#define RENDER_TEX_Q_MED		1
-#define RENDER_TEX_Q_HIGH		2
-
-#ifdef _DEBUG
-/**
- * Check alGetError() and log a warning message if an error has occured
- */
-#define AL_CHECK(x)																									\
-	x;																												\
-	if(ALenum err = alGetError())																					\
-		Logger::Log("OpenAL", LOG_WARNING, "%s call from %s, line %d returned 0x%x", #x, __FILE__, __LINE__, err)
-
-/**
- * Check alGetError() and log a warning message if an error has occured
- * The message will be saved in the logger queue. Use this function for checking errors in Draw().
- * The logger queue will be written to the file at the end of the frame
- */
-#define AL_CHECK_QUEUE(x)																											\
-	x;																																\
-	if(ALenum err = alGetError())																									\
-		Logger::EnqueueLogMessage("OpenAL", LOG_WARNING, "%s call from %s, line %d returned 0x%x", #x, __FILE__, __LINE__, err)
-
-/**
- * Check alGetError() log a critical message and close the program if an error has occured
- */
-#define AL_CHECK_FATAL(x)																														\
-	x;																																			\
-	if(ALenum err = alGetError())																												\
-	{																																			\
-		Logger::Log("OpenAL", LOG_CRITICAL, "%s call from %s, line %d returned 0x%x. Shutting down.", #x, __FILE__, __LINE__, err);				\
-		Platform::MessageBox("Fatal Error", "OpenAL call failed. Please check the log file for details.\nThe program will now exit.", MessageBoxButtons::OK, MessageBoxIcon::Error); \
-		exit(-1);																																\
-	}
-
-/**
- * Check alGetError() log a critical message and return from the current function with the specified exit code if an error has occured
- */
-#define AL_CHECK_RET(x, y)																								\
-	x;																													\
-	if(ALenum err = alGetError())																						\
-	{																													\
-		Logger::Log("OpenAL", LOG_CRITICAL, "%s call from %s, line %d returned 0x%x.", #x, __FILE__, __LINE__, err);	\
-		return y;																										\
-	}
-#else
-#define GL_CHECK(x) x;
-#define AL_CHECK(x) x;
-#define AL_CHECK_QUEUE(x) x;
-#define AL_CHECK_FATAL(x) x;
-#define AL_CHECK_RET(x, y) x;
-#endif
-
-#define DIE(x)											\
+#define DIE(x)																					\
 	Platform::MessageBox("Fatal Error", x, MessageBoxButtons::OK, MessageBoxIcon::Error);		\
 	exit(-1);
 
-/**
+ /**
  * Engine configuration information
  */
 struct EngineConfig
 {
-	int ScreenHeight;
-	int ScreenWidth;
+	uint32_t ScreenHeight;
+	uint32_t ScreenWidth;
 	bool Fullscreen;
 	bool LoadLooseFiles;
 	bool EnableConsole;
-	char DataDirectory[PATH_SIZE];
-	char LogFile[PATH_SIZE];
+	char DataDirectory[NE_PATH_SIZE];
+	char LogFile[NE_PATH_SIZE];
 };
 
 /**
- * Renderer configuration information
- */
+* Renderer configuration information
+*/
 struct RendererConfig
 {
-	int Quality;
 	bool Supersampling;
-	bool Mipmaps;
-	bool Anisotropic;
-	int Aniso;
-	bool VerticalSync;
-	bool SSAO;
-	int SSAOQuality;
 	bool Multisampling;
 	int Samples;
+
 	int TextureQuality;
+	bool Anisotropic;
+	int Aniso;
+
+	int MaxLights;
 	int ShadowMapSize;
-	bool HBAO;
+
+	bool VerticalSync;
+
+	bool EnableAsyncCompute;
+
+	struct
+	{
+		bool Enable;
+		int KernelSize;
+		float Radius;
+		float PowerExponent;
+		float Threshold;
+	} SSAO;
 };
 
 /**
- * Post processor configuration information
- */
+* Post processor configuration information
+*/
 struct PostProcessorConfig
 {
+	bool Enable;
+	bool HDR;
 	bool Bloom;
-	bool SMAA;
-	bool FXAA;
+	int BloomIntensity;
+	bool DepthOfField;
 };
 
 /**
- * Configuration information
- */
+* Configuration information
+*/
 struct Configuration
 {
 	EngineConfig Engine;
@@ -218,136 +125,75 @@ struct Configuration
 	PostProcessorConfig PostProcessor;
 };
 
-class GameModule;
-class NFont;
-
-/**
- * NekoEngine
- */
 class ENGINE_API Engine
 {
 public:
-	/**
-	 * Must be called on program startup, before any other Engine functions
-	 */
-	static int Initialize(std::string cmdLine, bool editor);
+	static int Initialize(const char *cmdLine, bool editor);
 
-	/**
-	 * Main engine loop. Call this after the initialization.
-	 * This function will return after the Engine has been shutdown.
-	 */
-	static int Run();
-
-	static void Pause(bool pause);
+	static bool IsEditor() { return /*_editor*/false; }
 	static bool IsPaused() { return _paused; }
 
-	static bool IsEditor() { return _editor; }
+	static void ToggleStats() { _drawStats = !_drawStats; }
+	static void TogglePause() { _paused = !_paused; }
 
-	/**
-	 * Run one frame
-	 */
 	static void Frame() noexcept;
 
-	/**
-	 * Draw the loaded scene
-	 */
-	static void Draw() noexcept;
-
-	/**
-	 * Update the loaded scene. Called once per frame.
-	 */
-	static void Update(double deltaTime) noexcept;
-
-	/**
-	 * Release all resources used by the Engine.
-	 * Must be called on program exit.
-	 */
-	static void CleanUp() noexcept;
-
-	static void DrawStats(bool draw) noexcept { _printStats = draw; }
-	static bool IsDrawingStats() noexcept { return _printStats; }
-
-	static void DrawString(glm::vec2 pos, glm::vec3 color, NString text) noexcept;
-	static void DrawString(glm::vec2 pos, glm::vec3 color, const char *fmt, ...) noexcept;
-
-	static double GetTime() noexcept;
-
-	static int GetScreenHeight() noexcept { return _config.Engine.ScreenHeight; }
-	static int GetScreenWidth() noexcept { return _config.Engine.ScreenWidth; }
+	static int Run();
+	
+	static uint32_t GetScreenWidth() noexcept { return (uint32_t)(_config.Engine.ScreenWidth * _scaleFactor.x); }
+	static uint32_t GetScreenHeight() noexcept { return (uint32_t)(_config.Engine.ScreenHeight * _scaleFactor.y); }
 	static void ScreenResized(int width, int height) noexcept;
 
-	static GameModule *GetGameModule() noexcept { return _gameModule; }
+	static double GetTime() noexcept;
 
 	static Object *NewObject(const std::string &className, ObjectInitializer *initializer = nullptr);
 	static ObjectComponent *NewComponent(const std::string &className, ComponentInitializer *initializer);
 
-	static Renderer *GetRenderer() noexcept { return _renderer; }
+	static void CleanUp() noexcept;
 
-	static void SaveScreenshot() noexcept;
-
-	static void Exit() noexcept { Platform::Exit(); }
+	static void Exit() { Platform::Exit(); }
 
 #ifdef ENGINE_INTERNAL
 	/**
-	 * Get the engine configuration information
-	 */
+	* Get the engine configuration information
+	*/
 	static Configuration &GetConfiguration() noexcept { return _config; }
 
-	static void BindQuadVAO() noexcept { _quadVAO->Bind(); };
-
-	static FT_Library &GetFTLibrary() noexcept { return _ftLibrary; }
-
-	/**
-	 * Swap buffers
-	 */
-	static void SwapBuffers() noexcept { _renderer->SwapBuffers(); }
-
-#ifdef _DEBUG
-	static unsigned long _drawCalls;
+	static GameModule *GetGameModule() noexcept { return _gameModule; }
 #endif
-#endif
-
+	
 private:
-	static PlatformWindowType _engineWindow;
 	static Configuration _config;
-	static bool _disposed;
-	static bool _printStats;
-	static NFont *_engineFont;
 	static GameModule *_gameModule;
-	static Renderer *_renderer;
-	static bool _paused;
-	static bool _editor;
-
-#ifdef ENGINE_INTERNAL
-	static int _nFrames;
-	static double _lastTime;
-	static int _fps;
 	static PlatformModuleType _gameModuleLibrary;
-	static PlatformModuleType _rendererLibrary;
-	static char _gameModuleFile[PATH_SIZE];
-	static char _rendererFile[PATH_SIZE];
-	static bool _graphicsDebug;
-	static RArrayBuffer* _quadVAO;
-	static RBuffer* _quadVBO;
-	static std::chrono::high_resolution_clock::time_point _prevTime;
-	static bool _haveMemoryInfo;
-	static bool _startup;
-	static FT_Library _ftLibrary;
-#endif
+	static bool _iniFileLoaded;
+	static bool _editor;
+	static bool _paused;
+	static bool _disposed;
+	static bool _drawStats;
+	static glm::vec2 _scaleFactor;
 
-	static void _PrintStats();
-	static void _ParseArgs(std::string cmdLine);
+	static void _Update(double deltaTime);
+	static void _Draw();
+	static void _DrawStats();
+
+	static void _ParseArgs(NString &cmdLine);
+	static void _ReadINIFile(const char *file);
 	static void _ReadEffectConfig(const char *file);
 	static void _ReadInputConfig(const char *file);
 	static void _ReadRendererConfig(const char *file);
-	static void _ReadINIFile(const char *file);
-	static void _InitializeQuadVAO();
-	static bool _InitRenderer();
-	static bool _InitSystem();
+
+	static int _InitSystem();
 	static bool _InitGame();
 };
 
 #if defined(_MSC_VER)
+// GLM
+template struct ENGINE_API glm::tvec2<float, glm::highp>;
+template struct ENGINE_API glm::tvec3<float, glm::highp>;
+template struct ENGINE_API glm::tvec4<float, glm::highp>;
+template struct ENGINE_API glm::tmat4x4<float, glm::highp>;
+
 // Base types
 template class ENGINE_API NArray<char>;
 template class ENGINE_API NArray<short>;

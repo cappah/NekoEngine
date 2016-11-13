@@ -52,7 +52,7 @@ string Logger::_logFile = "Engine.log";
 unsigned int Logger::_logSeverity = 0;
 vector<LogMessage> Logger::_logQueue;
 
-string SeverityStr[4] =
+static string _SeverityStr[4] =
 {
 	"Debug",
 	"Information",
@@ -121,17 +121,17 @@ void Logger::Flush()
 void Logger::_WriteMessage(LogMessage &msg)
 {
     FILE *fp = nullptr;
-
+	
 	// Log all messages in debug mode
-#ifndef _DEBUG
+#if !defined(NE_CONFIG_DEBUG) && !defined(NE_CONFIG_DEVELOPMENT) 
 	if (msg.Severity < _logSeverity)
 		return;
 #else
 	if (msg.Severity == LOG_CRITICAL)
-		fprintf(stderr, "[%s][%s]: %s", msg.Module.c_str(), SeverityStr[msg.Severity].c_str(), msg.Message.c_str());
+		fprintf(stderr, "[%s][%s]: %s", msg.Module.c_str(), _SeverityStr[msg.Severity].c_str(), msg.Message.c_str());
 
 	char buff[2048];
-	if (snprintf(buff, 2048, "[%s][%s]: %s", msg.Module.c_str(), SeverityStr[msg.Severity].c_str(), msg.Message.c_str()) >= 1024)
+	if (snprintf(buff, 2048, "[%s][%s]: %s", msg.Module.c_str(), _SeverityStr[msg.Severity].c_str(), msg.Message.c_str()) >= 1024)
 		Platform::LogDebugMessage("MESSAGE TRUNCATED");
 	Platform::LogDebugMessage(buff);
 #endif
@@ -151,7 +151,7 @@ void Logger::_WriteMessage(LogMessage &msg)
 	fprintf(fp, "%d-%d-%d-%d:%d:%d [%s][%s]: %s",
 	        tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday,
 	        tm->tm_hour, tm->tm_min, tm->tm_sec,
-	        msg.Module.c_str(), SeverityStr[msg.Severity].c_str(), msg.Message.c_str());
+	        msg.Module.c_str(), _SeverityStr[msg.Severity].c_str(), msg.Message.c_str());
 
 	if(msg.Message[msg.Message.size() - 1] != '\n')
 	    fprintf(fp, "\n");

@@ -43,6 +43,8 @@
 #include <Engine/Camera.h>
 #include <Scene/ObjectComponent.h>
 
+#define GLM_FORCE_RADIANS
+#define GLM_FORCE_DEPTH_ZERO_TO_ON
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 

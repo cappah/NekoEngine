@@ -41,7 +41,6 @@
 
 #include <map>
 #include <functional>
-#include <glm/glm.hpp>
 
 #include <Engine/Engine.h>
 #include <Runtime/Runtime.h>
@@ -66,11 +65,14 @@ public:
 	ENGINE_API static void CloseConsole() { _open = false; }
 	ENGINE_API static bool IsOpen() { return _open; }
 
-	static void Draw();
+	static void Update();
 
 	static void HandleKeyDown(uint8_t key);
+	static void HandleKeyUp(uint8_t key);
 
 	ENGINE_API static void ExecuteCommand(NString cmd);
+
+	static void Release();
 
 private:
 	struct CVarFuncs

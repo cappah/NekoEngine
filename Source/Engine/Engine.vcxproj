@@ -5,419 +5,397 @@
       <Configuration>Debug</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Development|x64">
+      <Configuration>Development</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Release|x64">
       <Configuration>Release</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <PropertyGroup Label="Globals">
-    <ProjectGuid>{FC024EC8-32F4-4657-A2CB-14D2B3A931F8}</ProjectGuid>
-    <RootNamespace>NewTrainingFramework</RootNamespace>
-    <Keyword>Win32Proj</Keyword>
-    <ProjectName>Engine</ProjectName>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
-  </PropertyGroup>
-  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <CharacterSet>MultiByte</CharacterSet>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-    <PlatformToolset>v140</PlatformToolset>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v140</PlatformToolset>
-  </PropertyGroup>
-  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <ImportGroup Label="ExtensionSettings">
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\Projects\VS2015\NekoEngine.props" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\Projects\VS2015\NekoEngine.props" />
-  </ImportGroup>
-  <PropertyGroup Label="UserMacros" />
-  <PropertyGroup>
-    <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
-    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
-    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(SolutionDir)..\..\Bin64\</OutDir>
-    <IntDir>$(Configuration)\</IntDir>
-    <UseMultiToolTask>true</UseMultiToolTask>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(SolutionDir)..\..\Bin64\</OutDir>
-    <IntDir>$(Configuration)\</IntDir>
-    <UseMultiToolTask>true</UseMultiToolTask>
-  </PropertyGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <ClCompile>
-      <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>ENGINE_INTERNAL;PLATFORM_INTERNAL;_CRT_SECURE_NO_WARNINGS;NOMINMAX;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <RuntimeTypeInfo>true</RuntimeTypeInfo>
-      <PrecompiledHeaderFile />
-      <CppLanguageStandard>c++11</CppLanguageStandard>
-      <CLanguageStandard>c11</CLanguageStandard>
-      <OmitFramePointers>false</OmitFramePointers>
-      <FunctionLevelLinking>false</FunctionLevelLinking>
-      <DataLevelLinking>false</DataLevelLinking>
-      <UseShortEnums>true</UseShortEnums>
-      <CompileAs>CompileAsCpp</CompileAs>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
-      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
-      <OpenMPSupport>true</OpenMPSupport>
-      <FloatingPointModel>Fast</FloatingPointModel>
-      <DisableSpecificWarnings>4251</DisableSpecificWarnings>
-    </ClCompile>
-    <Link>
-      <AdditionalDependencies>freetype.lib;Xinput9_1_0.lib;libpng16d.lib;sqlited.lib;zlibstatic.lib;OpenAL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <SubSystem>Console</SubSystem>
-      <IgnoreSpecificDefaultLibraries>MSVCRT;LIBCMT</IgnoreSpecificDefaultLibraries>
-      <FullProgramDatabaseFile>true</FullProgramDatabaseFile>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <ClCompile>
-      <Optimization>Full</Optimization>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>ENGINE_INTERNAL;PLATFORM_INTERNAL;_CRT_SECURE_NO_WARNINGS;NOMINMAX;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
-      <DebugInformationFormat>None</DebugInformationFormat>
-      <StringPooling>true</StringPooling>
-      <ExceptionHandling>Sync</ExceptionHandling>
-      <StructMemberAlignment>8Bytes</StructMemberAlignment>
-      <ControlFlowGuard>false</ControlFlowGuard>
-      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
-      <FloatingPointModel>Fast</FloatingPointModel>
-      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
-      <InlineFunctionExpansion>Default</InlineFunctionExpansion>
-      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <OmitFramePointers>true</OmitFramePointers>
-      <CompileAs>CompileAsCpp</CompileAs>
-      <RuntimeTypeInfo>true</RuntimeTypeInfo>
-      <CLanguageStandard>c11</CLanguageStandard>
-      <CppLanguageStandard>c++11</CppLanguageStandard>
-      <PrecompiledHeaderFile />
-      <MSExtensions>true</MSExtensions>
-      <DataLevelLinking>true</DataLevelLinking>
-      <UseShortEnums>true</UseShortEnums>
-      <TreatWarningAsError>true</TreatWarningAsError>
-      <DisableSpecificWarnings>4251;4275</DisableSpecificWarnings>
-      <OpenMPSupport>true</OpenMPSupport>
-      <WholeProgramOptimization>true</WholeProgramOptimization>
-    </ClCompile>
-    <Link>
-      <AdditionalDependencies>freetype.lib;Xinput9_1_0.lib;libpng16.lib;sqlite.lib;zlibstatic.lib;OpenAL32.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <GenerateDebugInformation>No</GenerateDebugInformation>
-      <SubSystem>Windows</SubSystem>
-      <OptimizeReferences>true</OptimizeReferences>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <IgnoreSpecificDefaultLibraries>LIBCMT</IgnoreSpecificDefaultLibraries>
-    </Link>
-  </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\include\Audio\AudioClip.h" />
-    <ClInclude Include="..\..\include\Audio\AudioSource.h" />
-    <ClInclude Include="..\..\Include\Engine\AnimationClip.h" />
-    <ClInclude Include="..\..\Include\Engine\AnimationNode.h" />
-    <ClInclude Include="..\..\Include\Engine\Bone.h" />
-    <ClInclude Include="..\..\Include\Engine\Camera.h" />
-    <ClInclude Include="..\..\Include\Engine\CameraManager.h" />
-    <ClInclude Include="..\..\Include\Engine\Console.h" />
-    <ClInclude Include="..\..\Include\Engine\DeferredBuffer.h" />
-    <ClInclude Include="..\..\include\Engine\Engine.h" />
-    <ClInclude Include="..\..\Include\Engine\EngineClassFactory.h" />
-    <ClInclude Include="..\..\include\Engine\EngineUtils.h" />
-    <ClInclude Include="..\..\include\Engine\GameModule.h" />
-    <ClInclude Include="..\..\Include\Engine\HBAO.h" />
-    <ClInclude Include="..\..\Include\Engine\Input.h" />
-    <ClInclude Include="..\..\Include\Engine\Keycodes.h" />
-    <ClInclude Include="..\..\include\Engine\LoadingScreen.h" />
-    <ClInclude Include="..\..\include\Engine\Material.h" />
-    <ClInclude Include="..\..\Include\Engine\NFont.h" />
-    <ClInclude Include="..\..\include\Engine\PostProcessor.h" />
-    <ClInclude Include="..\..\include\Engine\ResourceDatabase.h" />
-    <ClInclude Include="..\..\include\Engine\ResourceManager.h" />
-    <ClInclude Include="..\..\include\Engine\SceneManager.h" />
-    <ClInclude Include="..\..\include\Engine\Shader.h" />
-    <ClInclude Include="..\..\Include\Engine\ShadowMap.h" />
-    <ClInclude Include="..\..\Include\Engine\SkeletalMesh.h" />
-    <ClInclude Include="..\..\Include\Engine\Skeleton.h" />
-    <ClInclude Include="..\..\include\Engine\SoundManager.h" />
-    <ClInclude Include="..\..\Include\Engine\SSAO.h" />
-    <ClInclude Include="..\..\Include\Engine\StaticMesh.h" />
-    <ClInclude Include="..\..\include\Engine\Texture.h" />
-    <ClInclude Include="..\..\include\Engine\Version.h" />
-    <ClInclude Include="..\..\include\Engine\Vertex.h" />
-    <ClInclude Include="..\..\Include\Platform\Compat.h" />
-    <ClInclude Include="..\..\include\Platform\Platform.h" />
-    <ClInclude Include="..\..\Include\Platform\PlatformDetect.h" />
-    <ClInclude Include="..\..\Include\PostEffects\Bloom.h" />
-    <ClInclude Include="..\..\include\PostEffects\Effect.h" />
-    <ClInclude Include="..\..\Include\PostEffects\FXAA.h" />
-    <ClInclude Include="..\..\include\PostEffects\SMAA.h" />
-    <ClInclude Include="..\..\include\PostEffects\SMAA\AreaTex.h" />
-    <ClInclude Include="..\..\include\PostEffects\SMAA\SearchTex.h" />
-    <ClInclude Include="..\..\Include\Renderer\RArrayBuffer.h" />
-    <ClInclude Include="..\..\Include\Renderer\RBuffer.h" />
-    <ClInclude Include="..\..\Include\Renderer\Renderer.h" />
-    <ClInclude Include="..\..\Include\Renderer\RFence.h" />
-    <ClInclude Include="..\..\Include\Renderer\RFramebuffer.h" />
-    <ClInclude Include="..\..\Include\Renderer\RShader.h" />
-    <ClInclude Include="..\..\Include\Renderer\RTexture.h" />
-    <ClInclude Include="..\..\include\Resource\AudioClipResource.h" />
-    <ClInclude Include="..\..\include\Resource\MaterialResource.h" />
-    <ClInclude Include="..\..\Include\Resource\MeshResource.h" />
-    <ClInclude Include="..\..\Include\Resource\FontResource.h" />
-    <ClInclude Include="..\..\include\Resource\Resource.h" />
-    <ClInclude Include="..\..\include\Resource\ResourceInfo.h" />
-    <ClInclude Include="..\..\include\Resource\ShaderResource.h" />
-    <ClInclude Include="..\..\include\Resource\TextureResource.h" />
-    <ClInclude Include="..\..\Include\Runtime\NArray.h" />
-    <ClInclude Include="..\..\Include\Runtime\NString.h" />
-    <ClInclude Include="..\..\Include\Runtime\Runtime.h" />
-    <ClInclude Include="..\..\Include\Scene\Components\AnimatorComponent.h" />
-    <ClInclude Include="..\..\Include\Scene\Components\AudioSourceComponent.h" />
-    <ClInclude Include="..\..\Include\Scene\Components\CameraComponent.h" />
-    <ClInclude Include="..\..\Include\Scene\Components\FPSControllerComponent.h" />
-    <ClInclude Include="..\..\Include\Scene\Components\SkeletalMeshComponent.h" />
-    <ClInclude Include="..\..\Include\Scene\Components\StaticMeshComponent.h" />
-    <ClInclude Include="..\..\include\Scene\Light.h" />
-    <ClInclude Include="..\..\include\Scene\Object.h" />
-    <ClInclude Include="..\..\Include\Scene\ObjectComponent.h" />
-    <ClInclude Include="..\..\include\Scene\Scene.h" />
-    <ClInclude Include="..\..\include\Scene\Skybox.h" />
-    <ClInclude Include="..\..\include\Scene\Terrain.h" />
-    <ClInclude Include="..\..\include\System\AssetLoader\AssetLoader.h" />
-    <ClInclude Include="..\..\include\System\Logger.h" />
-    <ClInclude Include="..\..\include\System\VFS\VFS.h" />
-    <ClInclude Include="..\..\include\System\VFS\VFSArchive.h" />
-    <ClInclude Include="..\..\include\System\VFS\VFSFile.h" />
-    <ClInclude Include="..\..\Resources\Data\Shaders\include\conditionals.h" />
-    <ClInclude Include="..\..\Resources\Data\Shaders\include\Fxaa3_11.h" />
-    <ClInclude Include="..\..\Resources\Data\Shaders\include\SMAA.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\Resources\Data\Materials\arissa.nmtl" />
-    <None Include="..\..\Resources\Data\Materials\bila.nmtl" />
-    <None Include="..\..\Resources\Data\Materials\house.nmtl" />
-    <None Include="..\..\Resources\Data\Materials\m_house.nmtl" />
-    <None Include="..\..\Resources\Data\Materials\nyra\body.nmtl" />
-    <None Include="..\..\Resources\Data\Materials\nyra\head.nmtl" />
-    <None Include="..\..\Resources\Data\Materials\skyreflect.nmtl" />
-    <None Include="..\..\Resources\Data\Materials\skysphere.nmtl" />
-    <None Include="..\..\Resources\Data\Materials\terrain.nmtl" />
-    <None Include="..\..\Resources\Data\Materials\w_girl.nmtl" />
-    <None Include="..\..\Resources\Data\scenes.cfg" />
-    <None Include="..\..\Resources\Data\Scenes\main.nscene" />
-    <None Include="..\..\Resources\Data\Scenes\scene.nscene" />
-    <None Include="..\..\Resources\Data\Scenes\shadow.nscene" />
-    <None Include="..\..\Resources\Data\Shaders\glsl\font_fs.glsl" />
-    <None Include="..\..\Resources\Data\Shaders\glsl\font_vs.glsl" />
-    <None Include="..\..\Resources\Data\Shaders\glsl\forward\skybox_fs.glsl" />
-    <None Include="..\..\Resources\Data\Shaders\glsl\forward\skybox_vs.glsl" />
-    <None Include="..\..\Resources\Data\Shaders\glsl\geometry_fs.glsl" />
-    <None Include="..\..\Resources\Data\Shaders\glsl\geometry_vs.glsl" />
-    <None Include="..\..\Resources\Data\Shaders\glsl\lighting_fs.glsl" />
-    <None Include="..\..\Resources\Data\Shaders\glsl\lighting_vs.glsl" />
-    <None Include="..\..\Resources\Data\Shaders\glsl\loadscreen_fs.glsl" />
-    <None Include="..\..\Resources\Data\Shaders\glsl\loadscreen_vs.glsl" />
-    <None Include="..\..\Resources\Data\Shaders\glsl\postproc\bloom_fs.glsl" />
-    <None Include="..\..\Resources\Data\Shaders\glsl\postproc\bloom_prepass_fs.glsl" />
-    <None Include="..\..\Resources\Data\Shaders\glsl\postproc\blur_dof_fs.glsl" />
-    <None Include="..\..\Resources\Data\Shaders\glsl\postproc\blur_fs.glsl" />
-    <None Include="..\..\Resources\Data\Shaders\glsl\postproc\bw_fs.glsl" />
-    <None Include="..\..\Resources\Data\Shaders\glsl\postproc\dof_fs.glsl" />
-    <None Include="..\..\Resources\Data\Shaders\glsl\postproc\fxaa_fs.glsl" />
-    <None Include="..\..\Resources\Data\Shaders\glsl\postproc\fxaa_vs.glsl" />
-    <None Include="..\..\Resources\Data\Shaders\glsl\postproc\gauss_h_fs.glsl" />
-    <None Include="..\..\Resources\Data\Shaders\glsl\postproc\gauss_v_fs.glsl" />
-    <None Include="..\..\Resources\Data\Shaders\glsl\postproc\smaa_fs.glsl" />
-    <None Include="..\..\Resources\Data\Shaders\glsl\postproc\smaa_vs.glsl" />
-    <None Include="..\..\Resources\Data\Shaders\glsl\postproc_fs.glsl" />
-    <None Include="..\..\Resources\Data\Shaders\glsl\postproc_vs.glsl" />
-    <None Include="..\..\Resources\Data\Shaders\glsl\shadow_fs.glsl" />
-    <None Include="..\..\Resources\Data\Shaders\glsl\shadow_vs.glsl" />
-    <None Include="..\..\Resources\Data\Shaders\glsl\ssao_blur_fs.glsl" />
-    <None Include="..\..\Resources\Data\Shaders\glsl\ssao_fs.glsl" />
-    <None Include="..\..\Resources\Data\SkeletalMeshes\sophia.nmesh" />
-    <None Include="..\..\Resources\Data\StaticMeshes\arissa.nmesh" />
-    <None Include="..\..\Resources\Data\StaticMeshes\bila.nmesh" />
-    <None Include="..\..\Resources\Data\StaticMeshes\house.nmesh" />
-    <None Include="..\..\Resources\Data\StaticMeshes\light_sphere.nmesh" />
-    <None Include="..\..\Resources\Data\StaticMeshes\muscle_car.nmesh" />
-    <None Include="..\..\Resources\Data\StaticMeshes\m_house.nmesh" />
-    <None Include="..\..\Resources\Data\StaticMeshes\nyra.nmesh" />
-    <None Include="..\..\Resources\Data\StaticMeshes\skysphere.nmesh" />
-    <None Include="..\..\Resources\Data\StaticMeshes\w_girl.nmesh" />
-    <None Include="..\..\Resources\Engine.ini" />
-    <None Include="..\..\Resources\Engine_Low.ini" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="Engine.rc" />
-  </ItemGroup>
-  <ItemGroup>
+    <ClCompile Include="Animation\AnimationClip.cpp" />
+    <ClCompile Include="Animation\Skeleton.cpp" />
     <ClCompile Include="Audio\AudioClip.cpp" />
     <ClCompile Include="Audio\AudioSource.cpp" />
     <ClCompile Include="Core\Camera.cpp" />
-    <ClCompile Include="Core\AnimationClip.cpp" />
     <ClCompile Include="Core\CameraManager.cpp" />
     <ClCompile Include="Core\Console.cpp" />
-    <ClCompile Include="Core\DeferredBuffer.cpp" />
     <ClCompile Include="Core\Engine.cpp" />
-    <ClCompile Include="Core\HBAO.cpp" />
+    <ClCompile Include="Core\EventManager.cpp" />
+    <ClCompile Include="Core\Init.cpp" />
     <ClCompile Include="Core\Input.cpp" />
-    <ClCompile Include="Core\LoadingScreen.cpp" />
-    <ClCompile Include="Core\Material.cpp" />
-    <ClCompile Include="Core\NFont.cpp" />
-    <ClCompile Include="Core\PostProcessor.cpp" />
     <ClCompile Include="Core\ResourceDatabase.cpp" />
     <ClCompile Include="Core\ResourceManager.cpp" />
     <ClCompile Include="Core\SceneManager.cpp" />
-    <ClCompile Include="Core\Shader.cpp" />
-    <ClCompile Include="Core\ShadowMap.cpp" />
-    <ClCompile Include="Core\SkeletalMesh.cpp" />
-    <ClCompile Include="Core\Skeleton.cpp" />
     <ClCompile Include="Core\SoundManager.cpp" />
-    <ClCompile Include="Core\SSAO.cpp" />
-    <ClCompile Include="Core\StaticMesh.cpp" />
-    <ClCompile Include="Core\Texture.cpp" />
     <ClCompile Include="Platform\Compat\reallocarray.cpp" />
     <ClCompile Include="Platform\shared.cpp" />
     <ClCompile Include="Platform\Windows\PlatformInput.cpp" />
     <ClCompile Include="Platform\Windows\Windows.cpp" />
-    <ClCompile Include="PostEffects\Effect.cpp" />
-    <ClCompile Include="PostEffects\SMAA.cpp" />
+    <ClCompile Include="Renderer\Buffer.cpp" />
+    <ClCompile Include="Renderer\Debug.cpp" />
+    <ClCompile Include="Renderer\GUI.cpp" />
+    <ClCompile Include="Renderer\Material.cpp" />
+    <ClCompile Include="Renderer\PostProcessor.cpp" />
+    <ClCompile Include="Renderer\ShadowRenderer.cpp" />
+    <ClCompile Include="Renderer\SkeletalMesh.cpp" />
+    <ClCompile Include="Renderer\SSAO.cpp" />
+    <ClCompile Include="Renderer\StaticMesh.cpp" />
+    <ClCompile Include="Renderer\NFont.cpp" />
+    <ClCompile Include="Renderer\PipelineManager.cpp" />
+    <ClCompile Include="Renderer\Renderer.cpp" />
+    <ClCompile Include="Renderer\RenderPassManager.cpp" />
+    <ClCompile Include="Renderer\ShaderModule.cpp" />
+    <ClCompile Include="Renderer\Swapchain.cpp" />
+    <ClCompile Include="Renderer\Texture.cpp" />
     <ClCompile Include="Scene\Components\AnimatorComponent.cpp" />
     <ClCompile Include="Scene\Components\AudioSourceComponent.cpp" />
     <ClCompile Include="Scene\Components\CameraComponent.cpp" />
     <ClCompile Include="Scene\Components\FPSControllerComponent.cpp" />
+    <ClCompile Include="Scene\Components\LightComponent.cpp" />
+    <ClCompile Include="Scene\Components\ScriptComponent.cpp" />
     <ClCompile Include="Scene\Components\SkeletalMeshComponent.cpp" />
     <ClCompile Include="Scene\Components\StaticMeshComponent.cpp" />
-    <ClCompile Include="Scene\Light.cpp" />
+    <ClCompile Include="Scene\Components\TerrainComponent.cpp" />
+    <ClCompile Include="Scene\LoadingScreen.cpp" />
     <ClCompile Include="Scene\Object.cpp" />
     <ClCompile Include="Scene\ObjectComponent.cpp" />
     <ClCompile Include="Scene\Scene.cpp" />
-    <ClCompile Include="Scene\Skybox.cpp" />
-    <ClCompile Include="Scene\Terrain.cpp" />
+    <ClCompile Include="Scene\Skysphere.cpp" />
+    <ClCompile Include="Script\Interface\AnimationClipInterface.cpp" />
+    <ClCompile Include="Script\Interface\AnimatorComponentInterface.cpp" />
+    <ClCompile Include="Script\Interface\AudioSourceComponentInterface.cpp" />
+    <ClCompile Include="Script\Interface\AudioSourceInterface.cpp" />
+    <ClCompile Include="Script\Interface\CameraComponentInterface.cpp" />
+    <ClCompile Include="Script\Interface\CameraInterface.cpp" />
+    <ClCompile Include="Script\Interface\CameraManagerInterface.cpp" />
+    <ClCompile Include="Script\Interface\ConsoleInterface.cpp" />
+    <ClCompile Include="Script\Interface\EngineInterface.cpp" />
+    <ClCompile Include="Script\Interface\EventManagerInterface.cpp" />
+    <ClCompile Include="Script\Interface\GUIInterface.cpp" />
+    <ClCompile Include="Script\Interface\InputInterface.cpp" />
+    <ClCompile Include="Script\Interface\LightComponentInterface.cpp" />
+    <ClCompile Include="Script\Interface\LoggerInterface.cpp" />
+    <ClCompile Include="Script\Interface\MaterialInterface.cpp" />
+    <ClCompile Include="Script\Interface\MathInterface.cpp" />
+    <ClCompile Include="Script\Interface\ObjectComponentInterface.cpp" />
+    <ClCompile Include="Script\Interface\ObjectInterface.cpp" />
+    <ClCompile Include="Script\Interface\PlatformInterface.cpp" />
+    <ClCompile Include="Script\Interface\ResourceManagerInterface.cpp" />
+    <ClCompile Include="Script\Interface\SceneInterface.cpp" />
+    <ClCompile Include="Script\Interface\SkeletalMeshComponentInterface.cpp" />
+    <ClCompile Include="Script\Interface\SoundManagerInterface.cpp" />
+    <ClCompile Include="Script\Interface\StaticMeshComponentInterface.cpp" />
+    <ClCompile Include="Script\Interface\VFSInterface.cpp" />
+    <ClCompile Include="Script\Script.cpp" />
     <ClCompile Include="System\AssetLoader\AssetLoader.cpp" />
+    <ClCompile Include="System\AssetLoader\ASTC.cpp" />
+    <ClCompile Include="System\AssetLoader\DDS.cpp" />
+    <ClCompile Include="System\AssetLoader\TGA.cpp" />
     <ClCompile Include="System\Logger.cpp" />
     <ClCompile Include="System\VFS\VFS.cpp" />
     <ClCompile Include="System\VFS\VFSArchive.cpp" />
     <ClCompile Include="System\VFS\VFSFile.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="..\..\Resources\Data\Shaders\hlsl\font_fs.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-    </FxCompile>
-    <FxCompile Include="..\..\Resources\Data\Shaders\hlsl\font_vs.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-    </FxCompile>
-    <FxCompile Include="..\..\Resources\Data\Shaders\hlsl\forward\skybox_fs.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-    </FxCompile>
-    <FxCompile Include="..\..\Resources\Data\Shaders\hlsl\forward\skybox_vs.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-    </FxCompile>
-    <FxCompile Include="..\..\Resources\Data\Shaders\hlsl\geometry_fs.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-    </FxCompile>
-    <FxCompile Include="..\..\Resources\Data\Shaders\hlsl\geometry_vs.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-    </FxCompile>
-    <FxCompile Include="..\..\Resources\Data\Shaders\hlsl\lighting_fs.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-    </FxCompile>
-    <FxCompile Include="..\..\Resources\Data\Shaders\hlsl\lighting_vs.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-    </FxCompile>
-    <FxCompile Include="..\..\Resources\Data\Shaders\hlsl\loadscreen_fs.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-    </FxCompile>
-    <FxCompile Include="..\..\Resources\Data\Shaders\hlsl\postproc_fs.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-    </FxCompile>
-    <FxCompile Include="..\..\Resources\Data\Shaders\hlsl\postproc_vs.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-    </FxCompile>
-    <FxCompile Include="..\..\Resources\Data\Shaders\hlsl\shadow_fs.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-    </FxCompile>
-    <FxCompile Include="..\..\Resources\Data\Shaders\hlsl\shadow_vs.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-    </FxCompile>
-    <FxCompile Include="..\..\Resources\Data\Shaders\hlsl\ssao_blur_fs.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-    </FxCompile>
-    <FxCompile Include="..\..\Resources\Data\Shaders\hlsl\ssao_fs.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-    </FxCompile>
+    <ClInclude Include="..\..\Include\Animation\AnimationClip.h" />
+    <ClInclude Include="..\..\Include\Animation\AnimationNode.h" />
+    <ClInclude Include="..\..\Include\Animation\Bone.h" />
+    <ClInclude Include="..\..\Include\Animation\Skeleton.h" />
+    <ClInclude Include="..\..\Include\Animation\TransformNode.h" />
+    <ClInclude Include="..\..\Include\Audio\AudioClip.h" />
+    <ClInclude Include="..\..\Include\Audio\AudioSource.h" />
+    <ClInclude Include="..\..\Include\Engine\Camera.h" />
+    <ClInclude Include="..\..\Include\Engine\CameraManager.h" />
+    <ClInclude Include="..\..\Include\Engine\Console.h" />
+    <ClInclude Include="..\..\Include\Engine\Defs.h" />
+    <ClInclude Include="..\..\Include\Engine\Engine.h" />
+    <ClInclude Include="..\..\Include\Engine\EngineClassFactory.h" />
+    <ClInclude Include="..\..\Include\Engine\EventManager.h" />
+    <ClInclude Include="..\..\Include\Engine\Events.h" />
+    <ClInclude Include="..\..\Include\Engine\GameModule.h" />
+    <ClInclude Include="..\..\Include\Engine\Input.h" />
+    <ClInclude Include="..\..\Include\Engine\Keycodes.h" />
+    <ClInclude Include="..\..\Include\Engine\ResourceDatabase.h" />
+    <ClInclude Include="..\..\Include\Engine\ResourceManager.h" />
+    <ClInclude Include="..\..\Include\Engine\SceneManager.h" />
+    <ClInclude Include="..\..\Include\Engine\SoundManager.h" />
+    <ClInclude Include="..\..\Include\Engine\Version.h" />
+    <ClInclude Include="..\..\Include\Engine\Vertex.h" />
+    <ClInclude Include="..\..\Include\Platform\Compat.h" />
+    <ClInclude Include="..\..\Include\Platform\Platform.h" />
+    <ClInclude Include="..\..\Include\Platform\PlatformDetect.h" />
+    <ClInclude Include="..\..\Include\Renderer\Buffer.h" />
+    <ClInclude Include="..\..\Include\Renderer\Effect.h" />
+    <ClInclude Include="..\..\Include\Renderer\GUI.h" />
+    <ClInclude Include="..\..\Include\Renderer\Material.h" />
+    <ClInclude Include="..\..\Include\Renderer\PostProcessor.h" />
+    <ClInclude Include="..\..\Include\Renderer\ShadowRenderer.h" />
+    <ClInclude Include="..\..\Include\Renderer\SkeletalMesh.h" />
+    <ClInclude Include="..\..\Include\Renderer\StaticMesh.h" />
+    <ClInclude Include="..\..\Include\Renderer\NFont.h" />
+    <ClInclude Include="..\..\Include\Renderer\PipelineManager.h" />
+    <ClInclude Include="..\..\Include\Renderer\Renderer.h" />
+    <ClInclude Include="..\..\Include\Renderer\RenderPassManager.h" />
+    <ClInclude Include="..\..\Include\Renderer\ShaderModule.h" />
+    <ClInclude Include="..\..\Include\Renderer\Swapchain.h" />
+    <ClInclude Include="..\..\Include\Renderer\Texture.h" />
+    <ClInclude Include="..\..\Include\Resource\AnimationClipResource.h" />
+    <ClInclude Include="..\..\Include\Resource\AudioClipResource.h" />
+    <ClInclude Include="..\..\Include\Resource\FontResource.h" />
+    <ClInclude Include="..\..\Include\Resource\MaterialResource.h" />
+    <ClInclude Include="..\..\Include\Resource\MeshResource.h" />
+    <ClInclude Include="..\..\Include\Resource\Resource.h" />
+    <ClInclude Include="..\..\Include\Resource\ResourceInfo.h" />
+    <ClInclude Include="..\..\Include\Resource\ShaderModuleResource.h" />
+    <ClInclude Include="..\..\Include\Resource\TextureResource.h" />
+    <ClInclude Include="..\..\Include\Runtime\NArray.h" />
+    <ClInclude Include="..\..\Include\Runtime\NArrayTS.h" />
+    <ClInclude Include="..\..\Include\Runtime\NString.h" />
+    <ClInclude Include="..\..\Include\Runtime\NThreadPool.h" />
+    <ClInclude Include="..\..\Include\Runtime\Runtime.h" />
+    <ClInclude Include="..\..\Include\Scene\Components\AnimatorComponent.h" />
+    <ClInclude Include="..\..\Include\Scene\Components\AudioSourceComponent.h" />
+    <ClInclude Include="..\..\Include\Scene\Components\CameraComponent.h" />
+    <ClInclude Include="..\..\Include\Scene\Components\FPSControllerComponent.h" />
+    <ClInclude Include="..\..\Include\Scene\Components\LightComponent.h" />
+    <ClInclude Include="..\..\Include\Scene\Components\ScriptComponent.h" />
+    <ClInclude Include="..\..\Include\Scene\Components\SkeletalMeshComponent.h" />
+    <ClInclude Include="..\..\Include\Scene\Components\StaticMeshComponent.h" />
+    <ClInclude Include="..\..\Include\Scene\Components\TerrainComponent.h" />
+    <ClInclude Include="..\..\Include\Scene\LoadingScreen.h" />
+    <ClInclude Include="..\..\Include\Scene\Object.h" />
+    <ClInclude Include="..\..\Include\Scene\ObjectComponent.h" />
+    <ClInclude Include="..\..\Include\Scene\Scene.h" />
+    <ClInclude Include="..\..\Include\Scene\Skysphere.h" />
+    <ClInclude Include="..\..\Include\System\AssetLoader\AssetLoader.h" />
+    <ClInclude Include="..\..\Include\System\Logger.h" />
+    <ClInclude Include="..\..\Include\System\VFS\VFS.h" />
+    <ClInclude Include="..\..\Include\System\VFS\VFSArchive.h" />
+    <ClInclude Include="..\..\Include\System\VFS\VFSFile.h" />
+    <ClInclude Include="..\Include\Renderer\Debug.h" />
+    <ClInclude Include="..\Include\Renderer\SSAO.h" />
+    <ClInclude Include="..\Include\Renderer\VKUtil.h" />
+    <ClInclude Include="..\Include\Script\Interface\AnimationClipInterface.h" />
+    <ClInclude Include="..\Include\Script\Interface\AnimatorComponentInterface.h" />
+    <ClInclude Include="..\Include\Script\Interface\AudioSourceComponentInterface.h" />
+    <ClInclude Include="..\Include\Script\Interface\AudioSourceInterface.h" />
+    <ClInclude Include="..\Include\Script\Interface\CameraComponentInterface.h" />
+    <ClInclude Include="..\Include\Script\Interface\CameraInterface.h" />
+    <ClInclude Include="..\Include\Script\Interface\CameraManagerInterface.h" />
+    <ClInclude Include="..\Include\Script\Interface\ConsoleInterface.h" />
+    <ClInclude Include="..\Include\Script\Interface\EngineInterface.h" />
+    <ClInclude Include="..\Include\Script\Interface\EventManagerInterface.h" />
+    <ClInclude Include="..\Include\Script\Interface\GUIInterface.h" />
+    <ClInclude Include="..\Include\Script\Interface\InputInterface.h" />
+    <ClInclude Include="..\Include\Script\Interface\LightComponentInterface.h" />
+    <ClInclude Include="..\Include\Script\Interface\LoggerInterface.h" />
+    <ClInclude Include="..\Include\Script\Interface\MathInterface.h" />
+    <ClInclude Include="..\Include\Script\Interface\ObjectComponentInterface.h" />
+    <ClInclude Include="..\Include\Script\Interface\ObjectInterface.h" />
+    <ClInclude Include="..\Include\Script\Interface\PlatformInterface.h" />
+    <ClInclude Include="..\Include\Script\Interface\ResourceManagerInterface.h" />
+    <ClInclude Include="..\Include\Script\Interface\SceneInterface.h" />
+    <ClInclude Include="..\Include\Script\Interface\SkeletalMeshComponentInterface.h" />
+    <ClInclude Include="..\Include\Script\Interface\MaterialInterface.h" />
+    <ClInclude Include="..\Include\Script\Interface\SoundManagerInterface.h" />
+    <ClInclude Include="..\Include\Script\Interface\StaticMeshComponentInterface.h" />
+    <ClInclude Include="..\Include\Script\Interface\VFSInterface.h" />
+    <ClInclude Include="..\Include\Script\Script.h" />
+    <ClInclude Include="..\Include\System\AssetLoader\stb_vorbis.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\Config\Engine.ini">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\Shaders\anim_vertex.vert" />
+    <None Include="..\Shaders\depth_anim_vertex.vert" />
+    <None Include="..\Shaders\depth_fragment.frag" />
+    <None Include="..\Shaders\depth_terrain_vertex.vert" />
+    <None Include="..\Shaders\depth_vertex.vert" />
+    <None Include="..\Shaders\fullscreen_vertex.vert" />
+    <None Include="..\Shaders\gui_fragment.frag" />
+    <None Include="..\Shaders\gui_vertex.vert" />
+    <None Include="..\Shaders\light_culling.comp" />
+    <None Include="..\Shaders\phong.frag" />
+    <None Include="..\Shaders\pp_blur.frag" />
+    <None Include="..\Shaders\pp_bw.frag" />
+    <None Include="..\Shaders\pp_dof.frag" />
+    <None Include="..\Shaders\pp_hdr.frag" />
+    <None Include="..\Shaders\skysphere_fragment.frag" />
+    <None Include="..\Shaders\skysphere_vertex.vert" />
+    <None Include="..\Shaders\ssao.frag" />
+    <None Include="..\Shaders\ssao_blur.frag" />
+    <None Include="..\Shaders\terrain_vertex.vert" />
+    <None Include="..\Shaders\vertex.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Engine.rc" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{53d8cf9f-41aa-4329-a236-aa7f841e88f1}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>Vulkan_Triangle</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <ProjectName>Engine</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Development|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\NekoEngine.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\NekoEngine.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Development|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\NekoEngine.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(SolutionDir)Source\Include;$(SolutionDir)3rdparty\include;$(SolutionDir)Include;$(VK_SDK_PATH)\include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(SolutionDir)Source\Include;$(SolutionDir)3rdparty\include;$(SolutionDir)Include;$(VK_SDK_PATH)\include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Development|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(SolutionDir)Source\Include;$(SolutionDir)3rdparty\include;$(SolutionDir)Include;$(VK_SDK_PATH)\include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>NE_CONFIG_DEBUG;NOMINMAX;ENGINE_INTERNAL;_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <DisableSpecificWarnings>4251;4800</DisableSpecificWarnings>
+      <OpenMPSupport>true</OpenMPSupport>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>lua.lib;OpenAL32.lib;sqlite.lib;zlibstatic.lib;Xinput9_1_0.lib;freetype.lib;vulkan-1.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>LIBCMT;MSVCRT</IgnoreSpecificDefaultLibraries>
+    </Link>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+    </CustomBuildStep>
+    <PostBuildEvent>
+      <Command>cd $(SolutionDir)Source\Shaders
+compile.cmd</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Compiling shaders</Message>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>NE_CONFIG_RELEASE;NOMINMAX;ENGINE_INTERNAL;_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <OmitFramePointers>true</OmitFramePointers>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <DisableSpecificWarnings>4251;4800</DisableSpecificWarnings>
+      <OpenMPSupport>true</OpenMPSupport>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>lua.lib;OpenAL32.lib;sqlite.lib;zlibstatic.lib;Xinput9_1_0.lib;freetype.lib;vulkan-1.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>LIBCMT</IgnoreSpecificDefaultLibraries>
+    </Link>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+    </CustomBuildStep>
+    <PostBuildEvent>
+      <Command>cd $(SolutionDir)Source\Shaders
+compile.cmd</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Compiling shaders</Message>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Development|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>NE_CONFIG_DEVELOPMENT;NOMINMAX;ENGINE_INTERNAL;_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <OmitFramePointers>false</OmitFramePointers>
+      <DisableSpecificWarnings>4251;4800</DisableSpecificWarnings>
+      <OpenMPSupport>true</OpenMPSupport>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>lua.lib;OpenAL32.lib;sqlite.lib;zlibstatic.lib;Xinput9_1_0.lib;freetype.lib;vulkan-1.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>LIBCMT</IgnoreSpecificDefaultLibraries>
+    </Link>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+    </CustomBuildStep>
+    <PostBuildEvent>
+      <Command>cd $(SolutionDir)Source\Shaders
+compile.cmd</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Compiling shaders</Message>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

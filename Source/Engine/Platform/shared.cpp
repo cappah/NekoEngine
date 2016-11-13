@@ -37,10 +37,15 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <assert.h>
+
 #include <Engine/Engine.h>
+#include <Platform/Compat.h>
 #include <Platform/Platform.h>
 
 #define INI_LINE_BUFF	512
+
+bool Platform::_exit = false;
 
 size_t Platform::GetConfigString(const char *section, const char *entry, const char *def, char *buffer, int buffer_len, const char *file)
 {
@@ -226,4 +231,9 @@ size_t Platform::GetConfigSection(const char *section, char *out, size_t size, c
 int Platform::Rand()
 {
 	return NE_RANDOM();
+}
+
+void Platform::Exit()
+{
+	_exit = true;
 }

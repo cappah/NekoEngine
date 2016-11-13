@@ -41,8 +41,8 @@
 #include <math.h>
 #include <Engine/Engine.h>
 #include <Engine/Input.h>
-#include <Engine/SceneManager.h>
 #include <Engine/Console.h>
+#include <Engine/SceneManager.h>
 
 #include "TestGame.h"
 #include "GameController.h"
@@ -68,17 +68,14 @@ void GameController::Update(double deltaTime) noexcept
 	Object::Update(deltaTime);
 
 	if (Input::GetButtonDown("exit"))
-		Console::ExecuteCommand("call exit");
+		Console::ExecuteCommand("luaExec E_Exit()");
 
 	if (Input::GetButtonDown("show_stats"))
-		Console::ExecuteCommand("call showstats");
+		Console::ExecuteCommand("luaExec E_ToggleStats()");
 
 	if (Input::GetButtonDown("next_scene"))
 		SceneManager::LoadNextScene();
 
-	if (Input::GetButtonDown("draw_lights"))
-		SceneManager::GetActiveScene()->SetDrawLights(!SceneManager::GetActiveScene()->GetDrawLights());
-
 	if (Input::GetButtonDown("screenshot"))
-		Console::ExecuteCommand("call screenshot");
+		Console::ExecuteCommand("screenshot");
 }

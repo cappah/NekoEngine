@@ -42,12 +42,12 @@
 #include <Platform/Platform.h>
 
 #define	ENGINE_VERSION_MAJOR	0
-#define ENGINE_VERSION_MINOR	3
+#define ENGINE_VERSION_MINOR	4
 #define ENGINE_VERSION_REVISION 0
-#define ENGINE_VERSION_BUILD	294
+#define ENGINE_VERSION_BUILD	400
 #define ENGINE_VERSION_PATCH	0
 
-#define ENGINE_VERSION_STRING	"0.3.0.294"
+#define ENGINE_VERSION_STRING	"0.4.0.400"
 
 #if defined(NE_PLATFORM_WINDOWS)
 	#if defined(NE_ARCH_X8664)
@@ -118,18 +118,6 @@
 		#define ENGINE_PLATFORM_STRING		"macOS x86_64"
 	#else
 		#define ENGINE_PLATFORM_STRING		"macOS x86"
-	#endif
-#elif defined(NE_PLATFORM_BB10)
-	#if defined(NE_ARCH_ARM)
-		#define ENGINE_PLATFORM_STRING		"BB10 arm"
-	#elif defined(NE_ARCH_ARM64)
-		#define ENGINE_PLATFORM_STRING		"BB10 arm64"
-	#elif defined(NE_ARCH_X86)
-		#define ENGINE_PLATFORM_STRING		"BB10 x86"
-	#elif defined(NE_ARCH_X8664)
-		#define ENGINE_PLATFORM_STRING		"BB10 x86_64"
-	#else
-		#define ENGINE_PLATFORM_STRING		"BB10 unknown"
 	#endif
 #elif defined(NE_PLATFORM_SUNOS)
 	#if defined(NE_ARCH_SPARC64)

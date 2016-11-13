@@ -81,14 +81,15 @@ FPSControllerComponent::FPSControllerComponent(ComponentInitializer *initializer
 
 	ComponentInitializer init;
 	init.parent = _parent;
-	init.arguments.insert(make_pair("near", "1.0"));
-	init.arguments.insert(make_pair("far", "4000.0"));
+	init.arguments.insert(make_pair("near", "0.1"));
+	init.arguments.insert(make_pair("far", "1000.0"));
+	init.arguments.insert(make_pair("fov", "90"));
 	init.arguments.insert(make_pair("projection", "perspective"));
-	init.arguments.insert(make_pair("position", "-50.0, 47.0, -50.0"));
+	init.arguments.insert(make_pair("position", "-40.0, 30.0, 0.0"));
 	init.arguments.insert(make_pair("rotation", "0.0, 0.0, 0.0"));
 	init.arguments.insert(make_pair("fog_color", "0.207, 0.255, 0.349"));
-	init.arguments.insert(make_pair("view_distance", "1200"));
-	init.arguments.insert(make_pair("fog_distance", "2500"));
+	init.arguments.insert(make_pair("view_distance", "300"));
+	init.arguments.insert(make_pair("fog_distance", "500"));
 
 	_cameraComponent = (CameraComponent *)Engine::NewComponent("CameraComponent", &init);
 	_cameraComponent->Load();
@@ -101,16 +102,17 @@ void FPSControllerComponent::Update(double deltaTime) noexcept
 {
 	ObjectComponent::Update(deltaTime);
 
+	if (!_cameraComponent) _cameraComponent = (CameraComponent *)_parent->GetComponent("FPSCamera");
 	Camera *cam = _cameraComponent->GetCamera();
-
-	float vAngle = _verticalSensivity * Input::GetAxis("vertical") * (float)deltaTime;
-	float hAngle = _horizontalSensivity * Input::GetAxis("horizontal") * (float)deltaTime;
+	
+	float vAngle = _verticalSensivity * Input::GetAxis("vertical");
+	float hAngle = _horizontalSensivity * Input::GetAxis("horizontal");
 
 	vec3 pos = _parent->GetPosition();
 	vec3 rot = _parent->GetRotation();
 
-	rot.x += RAD2DEG(vAngle);
-	rot.y += RAD2DEG(hAngle);
+	rot.x += radians(vAngle);
+	rot.y += radians(hAngle);
 
 	float speed = _moveSpeed;
 

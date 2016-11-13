@@ -1,7 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file>../LICENSE</file>
-        <file>icons/editor_icon.png</file>
-        <file>splash.png</file>
-    </qresource>
-</RCC>

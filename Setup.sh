@@ -12,14 +12,13 @@ SU=sudo
 InstallDepsFail()
 {
 	echo "Failed to install dependencies. You will have to install them manually"
-	exit;
 }
 
 InstallDepsPacman()
 {
 	echo "Attempting to install dependencies using pacman"
 
-	PACKAGES="gcc make cmake sqlite openal libpng zlib libx11 libbsd mesa-libgl freetype2"
+	PACKAGES="gcc make cmake sqlite openal libpng zlib libx11 libbsd vulkan-headers vulkan-icd-loader vulkan-validation-layers vulkan-extra-layers vulkan-trace freetype2 luajit"
 
 	if ! type sudo 2> /dev/null; then
 		su -c "pacman --noconfirm -Syy $PACKAGES"		
@@ -42,7 +41,7 @@ InstallDepsAptGet()
 	VER=`lsb_release -r | awk '{print $2}'`
 	
 	if [ "$VER" = "14.04" ]; then
-		PACKAGES="build-essential libsqlite3-dev libpng-dev libx11-dev libopenal-dev libgl1-mesa-dev libfreetype6-dev"
+		PACKAGES="build-essential libsqlite3-dev libpng-dev libx11-dev libopenal-dev libfreetype6-dev"
 
 		# Manually install libbsd & cmake
 		echo "Ubuntu 14.04 detected, installing libbsd from source & cmake from binary tarball. Please upgrade your OS"
@@ -61,7 +60,7 @@ InstallDepsAptGet()
 		cd $DIR;
 		echo "Done"
 	else
-		PACKAGES="build-essential cmake libsqlite3-dev libpng-dev libx11-dev libopenal-dev libvorbis-dev libgl1-mesa-dev libbsd-dev"
+		PACKAGES="build-essential cmake libsqlite3-dev libpng-dev libx11-dev libx11-xcb-dev libopenal-dev libvorbis-dev libvulkan-dev libbsd-dev libfreetype6-dev"
 	fi
 
 
@@ -81,30 +80,14 @@ InstallDepsAptGet()
 InstallDepsDnf()
 {
 	echo "Attempting to install dependencies using dnf"
-	PACKAGES="gcc gcc-c++ make cmake sqlite-devel libpng-devel libX11-devel openal-devel mesa-libGL-devel libbsd-devel freetype-devel"
+	PACKAGES="gcc gcc-c++ make cmake sqlite-devel libpng-devel libX11-devel openal-devel vulkan libbsd-devel freetype-devel"
 
 	if ! type sudo 2> /dev/null; then
+		su -c "dnf copr enable ajax/vulkan"
 		su -c "dnf -y install $PACKAGES"		
 	else
+		sudo dnf copr enable ajax/vulkan
 		sudo dnf -y install $PACKAGES
-	fi
-
-	if [ $? -ne 0 ]; then
-		InstallDepsFail
-	fi
-
-	echo "Dependencies installed."
-}
-
-InstallDepsYum()
-{
-	echo "Attempting to install dependencies using yum"
-	PACKAGES="gcc gcc-c++ make cmake sqlite-devel libpng-devel libX11-devel openal-devel mesa-libGL-devel libbsd-devel freetype-devel"
-
-	if ! type sudo 2> /dev/null; then
-		su -c "yum -y install $PACKAGES"		
-	else
-		sudo yum -y install $PACKAGES
 	fi
 
 	if [ $? -ne 0 ]; then
@@ -206,8 +189,18 @@ case $OS in
 		GenerateMakefile
 	;;
 	'FreeBSD')
+		echo "WARNING: There is no official support for Vulkan on FreeBSD. 3D graphics will most likely not work."
+		echo "WARNING: FreeBSD is supported as a server platform only"
+
+		read -p "Continue ? " -n 1 -r
+		echo
+		if [ ! $REPLY =! ^[Yy]$ ]
+		then
+			exit 1;
+		fi
+
 		echo "Attempting to install dependencies using pkg"
-		sudo pkg install -y llvm38 gmake cmake sqlite3 png libX11 openal-soft libGL freetype2;
+		sudo pkg install -y llvm38 gmake cmake sqlite3 png libX11 openal-soft freetype2;
 
 		if [ $? -ne 0 ]; then
 			InstallDepsFail
@@ -220,6 +213,16 @@ case $OS in
 		GenerateMakefile
 	;;
 	'SunOS')
+		echo "WARNING: There is no official support for Vulkan on Solaris. 3D graphics will most likely not work"
+		echo "WARNING: Solaris is supported as a server platform only"
+
+		read -p "Continue ? " -n 1 -r
+		echo
+		if [ ! $REPLY =! ^[Yy]$ ]
+		then
+			exit 1;
+		fi
+
 		if ! type cmake 2>/dev/null; then
 			if ! type pkgutil  2>/dev/null; then
 				echo "CMake not found and pkgutil is unavailable. Please install CMake or OpenCSW";
@@ -264,6 +267,16 @@ case $OS in
 		GenerateMakefile
 	;;
 	'Darwin')
+		echo "WARNING: There is no official support for Vulkan on Darwin. 3D graphics will most likely not work."
+		echo "WARNING: Darwin is supported as a server platform only"
+
+		read -p "Continue ? " -n 1 -r
+		echo
+		if [ ! $REPLY =! ^[Yy]$ ]
+		then
+			exit 1;
+		fi
+
 		if [ hash brew 2>/dev/null ]; then
 			echo "Homebrew not found. Attempting to install..."
 			/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
@@ -284,6 +297,16 @@ case $OS in
 		open Projects/Xcode/NekoEngine.xcworkspace
 	;;
 	'OpenBSD')
+		echo "WARNING: There is no official support for Vulkan on OpenBSD. 3D graphics will most likely not work."
+		echo "WARNING: OpenBSD is supported as a server platform only"
+
+		read -p "Continue ? " -n 1 -r
+		echo
+		if [ ! $REPLY =! ^[Yy]$ ]
+		then
+			exit 1;
+		fi
+
 		echo "Attempting to install dependencies using pkg"
 		sudo pkg_add gcc g++ gmake cmake png openal freetype;
 

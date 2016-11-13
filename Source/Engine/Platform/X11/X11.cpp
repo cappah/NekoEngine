@@ -37,21 +37,26 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#define VK_USE_PLATFORM_XLIB_KHR
+
 #include <stdio.h>
 
 #include <X11/X.h>
-#include <X11/Xlib.h>
+#include <X11/Xlib-xcb.h>
 #include <X11/Xatom.h>
 #include <X11/Xutil.h>
 #include <X11/keysymdef.h>
 #include <Engine/Input.h>
 #include <Engine/Engine.h>
+#include <System/Logger.h>
 #include <Platform/Platform.h>
 
 #include "x11_icon.h"
 #include "MessageBoxX11.h"
 
-Display* x_display;
+using namespace std;
+
+Display *x_display;
 PlatformWindowType Platform::_activeWindow;
 extern bool _pointerCaptured;
 
@@ -60,7 +65,6 @@ bool UserInterrupt()
 	XEvent xev;
 	bool userInterrupt = false;
 
-	// Pump all messages from X server. Keypresses are directed to keyfunc (if defined)
 	while (XPending(x_display))
 	{
 		XNextEvent(x_display, &xev);
@@ -84,7 +88,7 @@ bool UserInterrupt()
 		{
 			XConfigureEvent xce = xev.xconfigure;
 
-			if (xce.width != Engine::GetConfiguration().Engine.ScreenWidth || xce.height != Engine::GetConfiguration().Engine.ScreenHeight)
+			if ((uint32_t)xce.width != Engine::GetConfiguration().Engine.ScreenWidth || (uint32_t)xce.height != Engine::GetConfiguration().Engine.ScreenHeight)
 				Engine::ScreenResized(xce.width, xce.height);
 		}
 
@@ -105,8 +109,6 @@ PlatformWindowType Platform::CreateWindow(int width, int height, bool fullscreen
 	XWMHints hints;
 	XEvent xev;
 	Window win;
-
-	XInitThreads();
 
 	x_display = XOpenDisplay(NULL);
 	
@@ -177,39 +179,39 @@ MessageBoxResult Platform::MessageBox(const char* title, const char* message, Me
 	
 	switch (buttons)
 	{
-	case MessageBoxButtons::YesNo:
-		type = X11_MSG_BOX_BTN_YESNO;
+		case MessageBoxButtons::YesNo:
+			type = X11_MSG_BOX_BTN_YESNO;
 		break;
-	case MessageBoxButtons::OK:
-	default:
-		type = X11_MSG_BOX_BTN_OK;
+		case MessageBoxButtons::OK:
+		default:
+			type = X11_MSG_BOX_BTN_OK;
 		break;
 	}
 
 	switch (icon)
 	{
-	case MessageBoxIcon::Warning:
-		type |= X11_MSG_BOX_ICON_WARNING;
+		case MessageBoxIcon::Warning:
+			type |= X11_MSG_BOX_ICON_WARNING;
 		break;
-	case MessageBoxIcon::Error:
-		type |= X11_MSG_BOX_ICON_ERROR;
+		case MessageBoxIcon::Error:
+			type |= X11_MSG_BOX_ICON_ERROR;
 		break;
-	case MessageBoxIcon::Question:
-		type |= X11_MSG_BOX_ICON_QUESTION;
+		case MessageBoxIcon::Question:
+			type |= X11_MSG_BOX_ICON_QUESTION;
 		break;
-	case MessageBoxIcon::Information:
-	default:
+		case MessageBoxIcon::Information:
+		default:
 		type |= X11_MSG_BOX_ICON_INFORMATION;
 		break;
 	}
 
 	if(_pointerCaptured)
-		ReleasePointer();
+		Input::ReleasePointer();
 
 	int x = MessageBoxX11(title, message, type);
 
 	if(capture)
-		CapturePointer();
+		Input::CapturePointer();
 
 	if (x == X11_MSG_BOX_RET_YES)
 		return MessageBoxResult::Yes;
@@ -227,7 +229,7 @@ void Platform::LogDebugMessage(const char* message)
 
 int Platform::MainLoop()
 {
-	while(!UserInterrupt())
+	while(!_exit && !UserInterrupt())
 		Engine::Frame();
 
 	XFlush(x_display);
@@ -235,8 +237,46 @@ int Platform::MainLoop()
 	return 0;
 }
 
+vector<const char*> Platform::GetRequiredExtensions(bool debug)
+{
+	vector<const char*> extensions;
+	extensions.push_back(VK_KHR_SURFACE_EXTENSION_NAME);
+	extensions.push_back(VK_KHR_XLIB_SURFACE_EXTENSION_NAME);
+
+	if (debug)
+		extensions.push_back(VK_EXT_DEBUG_REPORT_EXTENSION_NAME);
+
+	return extensions;
+}
+
+bool Platform::CreateSurface(VkInstance instance, VkSurfaceKHR &surface, PlatformWindowType hWnd, VkAllocationCallbacks *allocator)
+{
+	VkResult err;
+	VkXlibSurfaceCreateInfoKHR createInfo{};
+	PFN_vkCreateXlibSurfaceKHR vkCreateXlibSurfaceKHR;
+
+	vkCreateXlibSurfaceKHR = (PFN_vkCreateXlibSurfaceKHR)vkGetInstanceProcAddr(instance, "vkCreateXlibSurfaceKHR");
+	if (!vkCreateXlibSurfaceKHR)
+	{
+		Logger::Log("Platform", LOG_CRITICAL, "Vulkan instance missing %s extension", VK_KHR_XLIB_SURFACE_EXTENSION_NAME);
+		return false;
+	}
+
+	createInfo.sType = VK_STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR;
+	createInfo.dpy = x_display;
+	createInfo.window = hWnd;
+
+	if ((err = vkCreateXlibSurfaceKHR(instance, &createInfo, allocator, &surface)))
+	{
+		Logger::Log("Platform", LOG_CRITICAL, "Failed to create Vulkan surface: %d", err);
+		return false;
+	}
+
+	return true;
+}
+
 void Platform::CleanUp()
 {
 	XDestroyWindow(x_display, _activeWindow);
-	XCloseDisplay(x_display);
+//	XCloseDisplay(x_display); <-- segfaults
 }

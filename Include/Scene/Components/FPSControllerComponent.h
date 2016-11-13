@@ -45,10 +45,10 @@
 #include <Scene/ObjectComponent.h>
 #include <Scene/Components/CameraComponent.h>
 
-#define DEFAULT_VSENS		25.0f
-#define DEFAULT_HSENS		25.0f
-#define DEFAULT_MOVE_SPD	250.f
-#define DEFAULT_SPRINT_SPD	370.f
+#define DEFAULT_VSENS		2500.f
+#define DEFAULT_HSENS		2500.f
+#define DEFAULT_MOVE_SPD	40.f
+#define DEFAULT_SPRINT_SPD	60.f
 #define DEFAULT_ROTS		40.f
 
 class FPSControllerComponent : public ObjectComponent

@@ -58,7 +58,7 @@ public:
 		_data = (uint8_t *)realloc(nullptr, sizeof(T) * _size);
 	}
 
-	NArray(const NArray &other)
+	NArray(const NArray<T> &other)
 	{
 		_count = other._count;
 		_size = other._size;
@@ -67,7 +67,7 @@ public:
 			new (_data + sizeof(T) * _count++)T(((T*)other._data)[i]);
 	}
 
-	NArray(NArray &&other)
+	NArray(NArray<T> &&other)
 	{
 		_count = other._count;
 		_size = other._size;
@@ -136,12 +136,17 @@ public:
 		return true;
 	}
 
+	void Fill()
+	{
+		_count = _size;
+	}
+
 	void Clear()
 	{
-		_count = _size = 0;
-
 		for (size_t i = 0; i < _count; ++i)
 			((T*)_data)[i].~T();
+
+		_count = _size = 0;
 
 		free(_data);
 		_data = nullptr;
@@ -155,9 +160,22 @@ public:
 	T &operator [](const size_t i) { return ((T*)_data)[i]; }
 	T *operator *() { return (T*)_data; }
 
+	NArray<T> &operator =(const NArray<T> &other)
+	{
+		_count = other._count;
+		_size = other._size;
+
+		Resize(other._size);
+
+		for (size_t i = 0; i < _count; ++i)
+			new (_data + sizeof(T) * i)T(((T*)other._data)[i]);
+
+		return *this;
+	}
+
 	static constexpr size_t NotFound = -1;
 
-private:
+protected:
 	uint8_t *_data;
 	size_t _count, _size;
 };

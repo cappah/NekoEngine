@@ -40,7 +40,6 @@
 #include <Engine/Engine.h>
 #include <Engine/ResourceManager.h>
 #include <Engine/ResourceDatabase.h>
-#include <Engine/EngineUtils.h>
 #include <System/Logger.h>
 
 #include <algorithm>
@@ -52,7 +51,7 @@ static const char* _resourceTypes[] =
 	"mesh",
 	"skeletalmesh",
 	"texture",
-	"shader",
+	"shadermodule",
 	"audioclip",
 	"font",
 	"material",
@@ -160,6 +159,52 @@ Resource* ResourceManager::GetResourceByName(const char* name, ResourceType type
 	return res;
 }
 
+NString ResourceManager::GetPathForResource(const char *name, ResourceType type)
+{
+	Resource *res = nullptr;
+
+	if (name == nullptr)
+		return nullptr;
+
+	size_t len = strlen(name);
+	if (len <= 0)
+		return nullptr;
+
+	for (Resource *r : _resources)
+	{
+		if (r->GetResourceInfo()->type != type)
+			continue;
+
+		if (strncmp(r->GetResourceInfo()->name.c_str(), name, len))
+			continue;
+
+		res = r;
+		break;
+	}
+
+	if(!res) return NString();
+
+	if (type == ResourceType::RES_STATIC_MESH || type == ResourceType::RES_SKELETAL_MESH)
+		return ((MeshResource *)res)->filePath;
+
+	if (type == ResourceType::RES_TEXTURE)
+		return ((TextureResource *)res)->filePath;
+
+	if (type == ResourceType::RES_MATERIAL)
+		return ((MaterialResource *)res)->filePath;
+
+	if (type == ResourceType::RES_ANIMCLIP)
+		return ((AnimationClipResource *)res)->filePath;
+
+	if (type == ResourceType::RES_AUDIOCLIP)
+		return ((AudioClipResource *)res)->filePath;
+
+	if (type == ResourceType::RES_SHADERMODULE)
+		return ((ShaderModuleResource *)res)->filePath;
+	
+	return NString();
+}
+
 Resource* ResourceManager::_LoadResourceByID(int id, ResourceType type)
 {
 	if (id < 0)
@@ -217,8 +262,8 @@ Resource* ResourceManager::_LoadResourceInternal(ResourceInfo *ri)
 		case ResourceType::RES_TEXTURE:
 			res = new Texture((TextureResource *)ri);
 		break;
-		case ResourceType::RES_SHADER:
-			res = new Shader((ShaderResource *)ri);
+		case ResourceType::RES_SHADERMODULE:
+			res = new ShaderModule((ShaderModuleResource *)ri);
 		break;
 		case ResourceType::RES_AUDIOCLIP:
 			res = new AudioClip((AudioClipResource *)ri);

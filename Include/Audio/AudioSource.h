@@ -63,32 +63,32 @@ public:
 
 	ENGINE_API bool HasClip() noexcept { return _clip != nullptr; }
 
-	ENGINE_API int SetPitch(float p) noexcept;
-	ENGINE_API int SetGain(float g) noexcept;
+	ENGINE_API void SetPitch(float p) noexcept;
+	ENGINE_API void SetGain(float g) noexcept;
 
-	ENGINE_API int SetConeInnerAngle(float a) noexcept;
-	ENGINE_API int SetConeOuterAngle(float a) noexcept;
-	ENGINE_API int SetConeOuterGain(float g) noexcept;
+	ENGINE_API void SetConeInnerAngle(float a) noexcept;
+	ENGINE_API void SetConeOuterAngle(float a) noexcept;
+	ENGINE_API void SetConeOuterGain(float g) noexcept;
 	
-	ENGINE_API int SetDirection(float x, float y, float z) noexcept;
-	ENGINE_API int SetPosition(float x, float y, float z) noexcept;
-	ENGINE_API int SetVelocity(float x, float y, float z) noexcept;
+	ENGINE_API void SetDirection(float x, float y, float z) noexcept;
+	ENGINE_API void SetPosition(float x, float y, float z) noexcept;
+	ENGINE_API void SetVelocity(float x, float y, float z) noexcept;
 
-	ENGINE_API int SetDirection(glm::vec3 &dir) noexcept;
-	ENGINE_API int SetPosition(glm::vec3 &pos) noexcept;
-	ENGINE_API int SetVelocity(glm::vec3 &v) noexcept;
+	ENGINE_API void SetDirection(glm::vec3 &dir) noexcept;
+	ENGINE_API void SetPosition(glm::vec3 &pos) noexcept;
+	ENGINE_API void SetVelocity(glm::vec3 &v) noexcept;
 
-	ENGINE_API int SetLooping(bool looping) noexcept;
+	ENGINE_API void SetLooping(bool looping) noexcept;
 
-	ENGINE_API int SetMaxDistance(float maxDistance) noexcept;
-	ENGINE_API int SetReferenceDistance(float referenceDistance) noexcept;
+	ENGINE_API void SetMaxDistance(float maxDistance) noexcept;
+	ENGINE_API void SetReferenceDistance(float referenceDistance) noexcept;
 
 	ENGINE_API int SetClip(AudioClip *clip) noexcept;
 
-	ENGINE_API int Play() noexcept;
-	ENGINE_API int Pause() noexcept;
-	ENGINE_API int Stop() noexcept;
-	ENGINE_API int Rewind() noexcept;
+	ENGINE_API bool Play() noexcept;
+	ENGINE_API void Pause() noexcept;
+	ENGINE_API void Stop() noexcept;
+	ENGINE_API void Rewind() noexcept;
 	ENGINE_API bool IsPlaying() noexcept;
 
 	virtual ~AudioSource();
@@ -98,6 +98,7 @@ private:
 	ALuint _src;
 #endif
 
+private:
 	AudioClip *_clip;
 };
 

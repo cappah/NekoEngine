@@ -43,6 +43,8 @@
 #include <vector>
 #include <stdarg.h>
 
+#include <Engine/Defs.h>
+
 #define LOG_DEBUG		0
 #define LOG_INFORMATION		1
 #define LOG_WARNING		2
@@ -68,13 +70,13 @@ struct LogMessage
 class Logger
 {
 public:
-	static void Initialize(std::string file, unsigned int severity) noexcept;
-	static void Log(std::string Module, unsigned int severity, const char* format, ...);
-	static void Log(std::string Module, unsigned int severity, std::string Message);
-	static void LogRendererDebugMessage(const char* message) noexcept;
-	static void EnqueueLogMessage(std::string Module, unsigned int severity, std::string Message) noexcept;
-	static void EnqueueLogMessage(std::string Module, unsigned int severity, const char* format, ...) noexcept;
-	static void Flush();
+	ENGINE_API static void Initialize(std::string file, unsigned int severity) noexcept;
+	ENGINE_API static void Log(std::string Module, unsigned int severity, const char* format, ...);
+	ENGINE_API static void Log(std::string Module, unsigned int severity, std::string Message);
+	ENGINE_API static void LogRendererDebugMessage(const char* message) noexcept;
+	ENGINE_API static void EnqueueLogMessage(std::string Module, unsigned int severity, std::string Message) noexcept;
+	ENGINE_API static void EnqueueLogMessage(std::string Module, unsigned int severity, const char* format, ...) noexcept;
+	ENGINE_API static void Flush();
 
 private:
 	static std::string _logFile;

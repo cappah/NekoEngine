@@ -45,7 +45,7 @@
 
 #include <Resource/MeshResource.h>
 #include <Resource/TextureResource.h>
-#include <Resource/ShaderResource.h>
+#include <Resource/ShaderModuleResource.h>
 #include <Resource/AudioClipResource.h>
 #include <Resource/FontResource.h>
 #include <Resource/MaterialResource.h>
@@ -58,7 +58,7 @@ char resource_to_table_map[10][40] =
 	{ 's', 't', 'm', 'e', 's', 'h', 'e', 's', 0x0 },
 	{ 's', 'k', 'm', 'e', 's', 'h', 'e', 's', 0x0 },
 	{ 't', 'e', 'x', 't', 'u', 'r', 'e', 's', 0x0 },
-	{ 's', 'h', 'a', 'd', 'e', 'r', 's', 0x0 },
+	{ 's', 'h', 'a', 'd', 'e', 'r', 'm', 'o', 'd', 'u', 'l', 'e', 's', 0x0 },
 	{ 'a', 'u', 'd', 'i', 'o', 'c', 'l', 'i', 'p', 's', 0x0 },
 	{ 'f', 'o', 'n', 't', 's', 0x0 },
 	{ 'm', 'a', 't', 'e', 'r', 'i', 'a', 'l', 's', 0x0 },
@@ -145,26 +145,19 @@ bool ResourceDatabase::GetResources(vector<ResourceInfo *> &vec)
 				}
 			}
 			break;
-			case ResourceType::RES_SHADER:
+			case ResourceType::RES_SHADERMODULE:
 			{
 				while (sqlite3_step(stmt) == SQLITE_ROW)
 				{
-					ShaderResource *res = new ShaderResource();
+					ShaderModuleResource *res = new ShaderModuleResource();
 					res->id = sqlite3_column_int(stmt, 0);
-					res->vsFilePath = (const char *)sqlite3_column_text(stmt, 1);
-					res->fsFilePath = (const char *)sqlite3_column_text(stmt, 2);
+					res->filePath = (const char *)sqlite3_column_text(stmt, 1);
 
-					const unsigned char *ptr = sqlite3_column_text(stmt, 5);
-					if(ptr)
-						res->gsFilePath = (const char *)ptr;
-
-					res->numTextures = sqlite3_column_int(stmt, 3);
-
-					ptr = sqlite3_column_text(stmt, 4);
+					const unsigned char *ptr = sqlite3_column_text(stmt, 2);
 					if (ptr)
 						res->comment = (const char *)ptr;
 
-					ptr = sqlite3_column_text(stmt, 6);
+					ptr = sqlite3_column_text(stmt, 3);
 					if (ptr)
 						res->name = (const char *)ptr;
 
@@ -263,7 +256,7 @@ bool ResourceDatabase::_CheckDatabase() noexcept
 	if (!_TableExists("textures"))
 		return false;
 
-	if (!_TableExists("shaders"))
+	if (!_TableExists("shadermodules"))
 		return false;
 
 	if (!_TableExists("audioclips"))

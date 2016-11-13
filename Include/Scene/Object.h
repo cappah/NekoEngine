@@ -41,14 +41,14 @@
 
 #include <vector>
 
+#define GLM_FORCE_RADIANS
+#define GLM_FORCE_DEPTH_ZERO_TO_ON
 #include <glm/glm.hpp>
 
 #include <Engine/Engine.h>
-#include <Engine/StaticMesh.h>
-#include <Engine/SkeletalMesh.h>
-#include <Engine/Shader.h>
-#include <Engine/Texture.h>
-#include <Engine/Material.h>
+#include <Renderer/Renderer.h>
+#include <Renderer/StaticMesh.h>
+#include <Renderer/Material.h>
 #include <Scene/ObjectComponent.h>
 
 #define OBJ_NO_MATERIAL	-1
@@ -61,21 +61,6 @@ enum class ForwardDirection : unsigned short
 	NegativeX = 3
 };
 
-typedef struct OBJECT_MATRIX_BLOCK
-{
-	glm::mat4 ModelViewProjection;
-	glm::mat4 Model;
-	glm::mat4 View;
-} ObjectMatrixBlock;
-
-typedef struct OBJECT_BLOCK
-{
-	glm::vec3 CameraPosition;
-	float padding;
-	glm::vec3 ObjectColor;
-	float padding1;
-} ObjectBlock;
-
 typedef std::multimap<std::string, std::string> ArgumentMapType;
 typedef std::pair<ArgumentMapType::iterator, ArgumentMapType::iterator> ArgumentMapRangeType;
 	
@@ -84,6 +69,7 @@ class ObjectInitializer
 public:
 	ObjectInitializer() :
 		id(8000),
+		parent(nullptr),
 		name("unnamed"),
 		position(0.f),
 		rotation(0.f),
@@ -91,7 +77,8 @@ public:
 		color(0.f)
 	{ }
 
-	int id;
+	int32_t id;
+	class Object *parent;
 	std::string name;
 	glm::vec3 position;
 	glm::vec3 rotation;
@@ -106,15 +93,18 @@ public:
 	ENGINE_API Object() noexcept;
 	ENGINE_API Object(ObjectInitializer *initializer) noexcept;
 	 
-	ENGINE_API int GetId() noexcept { return _id; }
+	ENGINE_API Object *GetParent() { return _parent; }
+	ENGINE_API int32_t GetId() noexcept { return _id; }
+	ENGINE_API NString &GetName() noexcept { return _name; }
+	ENGINE_API bool GetNoCull() { return _noCull; }
 	ENGINE_API bool GetUpdateWhilePaused() noexcept { return _updateWhilePaused; }
 
 	ENGINE_API void SetId(int id) noexcept { _id = id; }
 	ENGINE_API void SetPosition(glm::vec3& position) noexcept;
 	ENGINE_API void SetRotation(glm::vec3& rotation) noexcept;
 	ENGINE_API void SetScale(glm::vec3& scale) noexcept;
-	ENGINE_API void SetColor(glm::vec3& color) noexcept { _objectBlock.ObjectColor = color; }
 	ENGINE_API void SetForwardDirection(ForwardDirection dir) noexcept;
+	ENGINE_API void SetNoCull(bool noCull) { _noCull = noCull; }
 	ENGINE_API void SetUpdateWhilePaused(bool update) { _updateWhilePaused = update; }
 
 	ENGINE_API void LookAt(glm::vec3& point) noexcept;
@@ -126,20 +116,26 @@ public:
 	ENGINE_API glm::vec3 &GetPosition() noexcept { return _position; }
 	ENGINE_API glm::vec3 &GetRotation() noexcept { return _rotation; }
 	ENGINE_API glm::vec3 &GetScale() noexcept { return _scale; }
-	ENGINE_API glm::vec3 &GetColor() noexcept { return _objectBlock.ObjectColor; }
-	ENGINE_API glm::mat4 &GetModelMatrix() noexcept { return _modelMatrix; }
+	ENGINE_API glm::mat4 &GetModelMatrix() noexcept { return _objectData.Model; }
 
-	ENGINE_API void BindUniformBuffer(RShader *shader) { shader->FSSetUniformBuffer(0, 0, sizeof(ObjectBlock), _objectUbo); }
-    
 	ENGINE_API virtual int Load();
-	ENGINE_API virtual int CreateArrayBuffer();
-	ENGINE_API virtual void Draw(RShader* shader, class Camera *camera) noexcept;
+	ENGINE_API virtual int CreateBuffers();
 	ENGINE_API virtual void Update(double deltaTime) noexcept;
 	ENGINE_API virtual bool Unload() noexcept;
 	ENGINE_API virtual bool CanUnload() noexcept;
 
+	ENGINE_API virtual bool BuildCommandBuffers();
+	ENGINE_API virtual void RegisterCommandBuffers();
+
 	ENGINE_API void AddComponent(const char *name, ObjectComponent *comp);
-	ENGINE_API ObjectComponent *GetComponent(const char *name) { return _components[name]; }
+	ENGINE_API ObjectComponent *GetComponent(const char *name)
+	{
+		if (_components.find(name) == _components.end())
+			return nullptr;
+
+		return _components[name];
+	}
+
 	template<typename T>
 	std::vector<T *> GetComponentsOfType()
 	{
@@ -161,20 +157,33 @@ public:
 
 	ENGINE_API virtual ~Object() noexcept;
 
+	VkDeviceSize GetRequiredMemorySize();
+
+	ENGINE_API virtual void UpdateData(VkCommandBuffer commandBuffer) noexcept;
+	
+	Buffer *GetUniformBuffer() { return _buffer; }
+	void SetUniformBuffer(Buffer *buffer);
+
 protected:
-	int _id;
-	Renderer* _renderer;
+	Object *_parent;
+	int32_t _id;
+	NString _name;
 	glm::vec3 _position, _rotation, _scale;
 	glm::vec3 _center, _forward, _right;
 	ForwardDirection _objectForward;
-	bool _loaded;	
+	bool _loaded;
 	std::map<std::string, ObjectComponent*> _components;
-	RBuffer *_objectUbo;
-	ObjectBlock _objectBlock;
-	glm::mat4 _translationMatrix, _scaleMatrix, _rotationMatrix, _modelMatrix;
-	bool _updateWhilePaused;
+	ObjectData _objectData;
+	glm::mat4 _translationMatrix, _scaleMatrix, _rotationMatrix;
+	bool _updateWhilePaused, _noCull;
+	Buffer *_buffer;
 
-	void _UpdateModelMatrix() noexcept { _modelMatrix = (_translationMatrix * _rotationMatrix) * _scaleMatrix; for(std::pair<std::string, ObjectComponent *> kvp : _components) kvp.second->UpdatePosition(); }
+	void _UpdateModelMatrix() noexcept
+	{
+		_objectData.Model = (_translationMatrix * _rotationMatrix) * _scaleMatrix;
+		if (_parent) _objectData.Model = _objectData.Model * _parent->GetModelMatrix();
+		for(std::pair<std::string, ObjectComponent *> kvp : _components) kvp.second->UpdatePosition();
+	}
 };
 
 #if defined(_MSC_VER)

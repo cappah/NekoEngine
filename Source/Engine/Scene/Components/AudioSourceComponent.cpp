@@ -85,7 +85,7 @@ void AudioSourceComponent::PlayDefaultClip() noexcept
 	//
 }
 
-void AudioSourceComponent::PlaySound(AudioClip *clip) noexcept
+void AudioSourceComponent::PlayClip(AudioClip *clip) noexcept
 {
 	//
 }
@@ -97,7 +97,7 @@ void AudioSourceComponent::Update(double deltaTime) noexcept
 
 	ObjectComponent::Update(deltaTime);
 
-	glm::vec3 pos = _parent->GetPosition() + _localPosition;
+	glm::vec3 pos = _parent->GetPosition();
 	
 	_src->SetPosition(pos.x, pos.y, pos.z);
 }

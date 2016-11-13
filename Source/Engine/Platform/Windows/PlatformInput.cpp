@@ -37,6 +37,8 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <algorithm>
+
 #include <Engine/Engine.h>
 #include <Engine/Input.h>
 #include <Platform/Platform.h>
@@ -166,7 +168,7 @@ void Input::_InitializeKeymap()
 	_keymap.insert(make_pair(VK_OEM_4, NE_KEY_LBRACKET));
 	_keymap.insert(make_pair(VK_OEM_5, NE_KEY_BKSLASH));
 	_keymap.insert(make_pair(VK_OEM_6, NE_KEY_RBRACKET));
-	_keymap.insert(make_pair(VK_OEM_6, NE_KEY_QUOTE));
+	_keymap.insert(make_pair(VK_OEM_7, NE_KEY_QUOTE));
 	/* End */
 
 	_keymap.insert(make_pair(VK_F1, NE_KEY_F1));
@@ -325,27 +327,31 @@ bool Input::_GetControllerState(int n, ControllerState *state)
 	return true;
 }
 
-bool Platform::CapturePointer()
+bool Input::CapturePointer()
 {
 	ShowCursor(FALSE);
-	SetCapture(_activeWindow);
+	SetCapture(Platform::GetActiveWindow());
+
+	_pointerCaptured = true;
 
 	return true;
 }
 
-void Platform::ReleasePointer()
+void Input::ReleasePointer()
 {
 	ReleaseCapture();
 	ShowCursor(TRUE);
+
+	_pointerCaptured = false;
 }
 
-bool Platform::GetPointerPosition(long& x, long& y)
+bool Input::GetPointerPosition(long &x, long &y)
 {
 	POINT pt;
 	bool ret;
 
 	ret = GetCursorPos(&pt) == TRUE ? true : false;
-	ret &= ScreenToClient(_activeWindow, &pt) == TRUE ? true : false;
+	ret &= ScreenToClient(Platform::GetActiveWindow(), &pt) == TRUE ? true : false;
 
 	if (ret)
 	{
@@ -356,7 +362,7 @@ bool Platform::GetPointerPosition(long& x, long& y)
 	return ret;
 }
 
-bool Platform::SetPointerPosition(long x, long y)
+bool Input::SetPointerPosition(long x, long y)
 {
 	POINT pt;
 	bool ret;
@@ -364,13 +370,8 @@ bool Platform::SetPointerPosition(long x, long y)
 	pt.x = x;
 	pt.y = y;
 
-	ret = ClientToScreen(_activeWindow, &pt) == TRUE ? true : false;
+	ret = ClientToScreen(Platform::GetActiveWindow(), &pt) == TRUE ? true : false;
 	ret &= SetCursorPos(pt.x, pt.y) == TRUE ? true : false;
 
 	return ret;
-}
-
-bool Platform::GetTouchMovementDelta(float &x, float &y)
-{
-	return false;
 }

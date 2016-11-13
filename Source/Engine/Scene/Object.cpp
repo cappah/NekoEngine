@@ -47,8 +47,10 @@
 #include <Engine/Engine.h>
 #include <Engine/CameraManager.h>
 #include <Engine/ResourceManager.h>
+#include <Engine/EventManager.h>
 #include <Engine/SceneManager.h>
 #include <Scene/Object.h>
+#include <System/Logger.h>
 
 #define OBJ_MODULE	"Object"
 
@@ -69,31 +71,26 @@ Object::Object(ObjectInitializer *initializer) noexcept
 		++_objDefaultInitializer.id;
 	}
 	
-	std::vector<Texture *> _Textures;
-	std::vector<int> _TextureIds;
-	std::vector<TextureParams> _TextureParams;
 	_id = -1;
+	_parent = initializer->parent;
 	_translationMatrix = mat4();
 	_rotationMatrix = mat4();
 	_scaleMatrix = mat4();
-	_modelMatrix = mat4();
 	_loaded = false;
 	_updateWhilePaused = false;
-	
-	_renderer = Engine::GetRenderer();
+	_noCull = false;
+	_buffer = nullptr;
 
-	memset(&_objectBlock, 0x0, sizeof(_objectBlock));
-
-	_objectUbo = nullptr;
+	memset(&_objectData, 0x0, sizeof(ObjectData));
 	
 	SetForwardDirection(ForwardDirection::PositiveZ);
 	SetPosition(initializer->position);
 	SetRotation(initializer->rotation);
 	SetScale(initializer->scale);
-	SetColor(initializer->color);
 	
 	_id = initializer->id;
-	
+	_name = initializer->name;
+
 	ArgumentMapType::iterator it = initializer->arguments.find("type");
 
 	if (it == initializer->arguments.end())
@@ -128,9 +125,9 @@ void Object::SetRotation(vec3 &rotation) noexcept
 {
 	_rotation = rotation;
 
-	mat4 rotXMatrix = rotate(mat4(), DEG2RAD(_rotation.x), vec3(1.f, 0.f, 0.f));
-	mat4 rotYMatrix = rotate(mat4(), DEG2RAD(_rotation.y), vec3(0.f, 1.f, 0.f));
-	mat4 rotZMatrix = rotate(mat4(), DEG2RAD(_rotation.z), vec3(0.f, 0.f, 1.f));
+	mat4 rotXMatrix = rotate(mat4(), radians(_rotation.x), vec3(1.f, 0.f, 0.f));
+	mat4 rotYMatrix = rotate(mat4(), radians(_rotation.y), vec3(0.f, 1.f, 0.f));
+	mat4 rotZMatrix = rotate(mat4(), radians(_rotation.z), vec3(0.f, 0.f, 1.f));
 
 	_rotationMatrix = rotZMatrix * rotXMatrix * rotYMatrix;
 	SetForwardDirection(_objectForward);
@@ -208,7 +205,7 @@ void Object::LookAt(vec3 &point) noexcept
 		axis = normalize(cross(dirFwd, fwd));
 	}
 
-	vec3 rotation = vec3(RAD2DEG(angle * axis.x), RAD2DEG(angle * axis.y), RAD2DEG(angle * axis.z));
+	vec3 rotation = vec3(radians(angle * axis.x), radians(angle * axis.y), radians(angle * axis.z));
 	SetRotation(rotation);
 }
 
@@ -242,13 +239,6 @@ size_t Object::GetTriangleCount() noexcept
 
 int Object::Load()
 {
-	if((_objectUbo = _renderer->CreateBuffer(BufferType::Uniform, true, false)) == nullptr)
-	{
-		Unload();
-		return ENGINE_OUT_OF_RESOURCES;
-	}
-	_objectUbo->SetStorage(sizeof(ObjectBlock), &_objectBlock);
-	
 	for(pair<string, ObjectComponent*> kvp : _components)
 	{
 		int ret = kvp.second->InitializeComponent();
@@ -261,25 +251,14 @@ int Object::Load()
 	return ENGINE_OK;
 }
 
-int Object::CreateArrayBuffer()
+int Object::CreateBuffers()
 {
 	int ret = ENGINE_OK;
 
 	for (pair<string, ObjectComponent*> kvp : _components)
-		ret = kvp.second->CreateArrayBuffer();
+		ret = kvp.second->CreateBuffers();
 
 	return ret;
-}
-
-void Object::Draw(RShader *shader, Camera *camera) noexcept
-{
-	if (!_loaded)
-		return;
-
-	_objectUbo->UpdateData(0, sizeof(vec3), &camera->GetPosition().x);
-
-	for (pair<string, ObjectComponent*> kvp : _components)
-		kvp.second->Draw(shader, camera);
 }
 
 void Object::Update(double deltaTime) noexcept
@@ -288,7 +267,7 @@ void Object::Update(double deltaTime) noexcept
 		return;
 	
 	for (pair<string, ObjectComponent*> kvp : _components)
-		kvp.second->Update(deltaTime);
+		if (kvp.second->IsEnabled()) kvp.second->Update(deltaTime);
 }
 
 bool Object::Unload() noexcept
@@ -296,7 +275,7 @@ bool Object::Unload() noexcept
 	if(!_loaded)
 		return false;
 
-	delete _objectUbo;
+	delete _buffer;
 	
 	for(pair<string, ObjectComponent*> kvp : _components)
 	{
@@ -352,6 +331,53 @@ void Object::Destroy()
 	if (!s)
 		return;
 	s->RemoveObject(this);
+}
+
+bool Object::BuildCommandBuffers()
+{
+	for (std::pair<std::string, ObjectComponent *> kvp : _components)
+		if (!kvp.second->BuildCommandBuffers())
+			return false;
+	return true;
+}
+
+void Object::RegisterCommandBuffers()
+{
+	for (std::pair<std::string, ObjectComponent *> kvp : _components)
+		kvp.second->RegisterCommandBuffers();
+}
+
+VkDeviceSize Object::GetRequiredMemorySize()
+{
+	VkDeviceSize size = 0;
+	for (std::pair<std::string, ObjectComponent *> kvp : _components)
+		size += kvp.second->GetRequiredMemorySize();
+	return size;
+}
+
+void Object::UpdateData(VkCommandBuffer commandBuffer) noexcept
+{
+	/*if (GetComponent("Mesh") != nullptr)
+	{
+		_objectData.Model = rotate(_objectData.Model, 10.f, vec3(0, 1, 0));
+	}*/
+
+	if (_buffer)
+	{
+		Camera *cam = CameraManager::GetActiveCamera();
+		_objectData.ModelViewProjection = cam->GetProjectionMatrix() * (cam->GetView() * _objectData.Model);
+		_objectData.Normal = glm::transpose(glm::inverse(_objectData.Model));
+		_buffer->UpdateData((uint8_t *)&_objectData, 0, sizeof(_objectData), commandBuffer);
+	}
+
+	for (pair<string, ObjectComponent*> kvp : _components)
+		kvp.second->UpdateData(commandBuffer);
+}
+
+void Object::SetUniformBuffer(Buffer *buffer)
+{
+	_buffer = buffer;
+	_buffer->UpdateData((uint8_t *)&_objectData, 0, sizeof(_objectData), VK_NULL_HANDLE);
 }
 
 Object::~Object() noexcept

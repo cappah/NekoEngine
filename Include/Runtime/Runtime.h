@@ -41,3 +41,5 @@
 
 #include <Runtime/NArray.h>
 #include <Runtime/NString.h>
+#include <Runtime/NArrayTS.h>
+#include <Runtime/NThreadPool.h>

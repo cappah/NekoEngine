@@ -40,6 +40,7 @@
 #pragma once
 
 #include <Engine/Engine.h>
+#include <Runtime/Runtime.h>
 #include <Resource/ResourceInfo.h>
 
 struct ENGINE_API Resource
@@ -54,7 +55,7 @@ public:
 	void IncrementReferenceCount() noexcept { _refCount++; }
 	void DecrementReferenceCount() noexcept { _refCount--; }
     
-	virtual ~Resource() noexcept { /*delete _resourceInfo;*/ }
+	virtual ~Resource() noexcept { }
 
 protected:
 	ResourceInfo *_resourceInfo;

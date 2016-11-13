@@ -40,10 +40,6 @@
 #pragma once
 
 #include <Engine/Engine.h>
-#include <Scene/ObjectComponent.h>
-
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 
 enum class ProjectionType : unsigned short
 {
@@ -54,7 +50,7 @@ enum class ProjectionType : unsigned short
 class ENGINE_API Camera
 {
 public:
-	Camera();
+	Camera(bool noRegister = false);
 
 	glm::vec3 &GetFogColor() noexcept { return _fogColor; }
 	glm::vec3 &GetForward() noexcept { return _front; }
@@ -80,6 +76,7 @@ public:
 	void SetViewDistance(float distance) noexcept { _viewDistance = distance; }
 	void SetFogDistance(float distance) noexcept { _fogDistance = distance; }
 	void SetProjection(ProjectionType projection) noexcept { _projection = projection; }
+	void SetView(glm::mat4 &matrix) noexcept { _view = matrix; }
 
 	void EnableSkybox(bool enable) { _drawSkybox = enable; }
 
@@ -120,5 +117,5 @@ protected:
 	glm::mat4 _view, _skyboxView, _model;
 	glm::mat4 _projectionMatrix, _skyboxProjectionMatrix;
 
-	bool _noRegister, _drawSkybox;
+	bool _drawSkybox;
 };

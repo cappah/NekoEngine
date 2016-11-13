@@ -46,8 +46,6 @@
 #include <X11/keysym.h>
 #include <X11/cursorfont.h>
 
-#define	None		0
-
 using namespace std;
 
 extern Display *x_display;
@@ -75,7 +73,6 @@ void ShowCursor(Display *dpy, Window win)
 	XDefineCursor(dpy, win, cur);
 	XFreeCursor(dpy, cur);
 }
-
 
 bool Input::SetControllerVibration(int n, float left, float right)
 {
@@ -216,15 +213,15 @@ bool Input::_GetControllerState(int n, ControllerState *state)
 	return false;
 }
 
-bool Platform::CapturePointer()
+bool Input::CapturePointer()
 {
 	if(!x_display)
 		return false;
 
-	HideCursor(x_display, _activeWindow);
+	HideCursor(x_display, Platform::GetActiveWindow());
 	
-	XSetInputFocus(x_display, _activeWindow, RevertToPointerRoot, CurrentTime);
-	XGrabPointer(x_display, _activeWindow, False, ButtonPressMask | ButtonReleaseMask | PointerMotionMask, GrabModeAsync, GrabModeAsync, _activeWindow, None, CurrentTime);	
+	XSetInputFocus(x_display, Platform::GetActiveWindow(), RevertToPointerRoot, CurrentTime);
+	XGrabPointer(x_display, Platform::GetActiveWindow(), False, ButtonPressMask | ButtonReleaseMask | PointerMotionMask, GrabModeAsync, GrabModeAsync, Platform::GetActiveWindow(), None, CurrentTime);	
 
 	XFlush(x_display);
 	_pointerCaptured = true;
@@ -232,26 +229,26 @@ bool Platform::CapturePointer()
 	return true;
 }
 
-void Platform::ReleasePointer()
+void Input::ReleasePointer()
 {
 	if(!x_display)
 		return;
 
 	XUngrabPointer(x_display, CurrentTime);
 
-	ShowCursor(x_display, _activeWindow);
+	ShowCursor(x_display, Platform::GetActiveWindow());
 
 	XFlush(x_display);
 	_pointerCaptured = false;
 }
 
-bool Platform::GetPointerPosition(long& x, long& y)
+bool Input::GetPointerPosition(long& x, long& y)
 {
 	Window retWindow;
 	int root_x, root_y, win_x, win_y;
 	unsigned int mask;
 
-	bool ret = XQueryPointer(x_display, _activeWindow, &retWindow, &retWindow, &root_x, &root_y, &win_x, &win_y, &mask);
+	bool ret = XQueryPointer(x_display, Platform::GetActiveWindow(), &retWindow, &retWindow, &root_x, &root_y, &win_x, &win_y, &mask);
 
 	x = win_x;
 	y = win_y;
@@ -259,14 +256,9 @@ bool Platform::GetPointerPosition(long& x, long& y)
 	return ret;
 }
 
-bool Platform::SetPointerPosition(long x, long y)
+bool Input::SetPointerPosition(long x, long y)
 {
-	bool ret = XWarpPointer(x_display, None, _activeWindow, 0, 0, 0, 0, (int)x, (int)y);
+	bool ret = XWarpPointer(x_display, None, Platform::GetActiveWindow(), 0, 0, 0, 0, (int)x, (int)y);
 	XFlush(x_display);
 	return ret;
-}
-
-bool Platform::GetTouchMovementDelta(float &x, float &y)
-{
-	return false;
 }

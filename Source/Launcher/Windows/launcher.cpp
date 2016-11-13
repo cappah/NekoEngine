@@ -40,6 +40,10 @@
 #include <Windows.h>
 #include <Engine/Engine.h>
 
+#include <stdexcept>
+
+using namespace std;
+
 void CleanUp()
 {
 	Engine::CleanUp();
@@ -56,8 +60,10 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	{
 		atexit(CleanUp);
 
+		string str(lpCmdLine);
+
 #ifdef _DEBUG
-		if (!IsDebuggerPresent())
+		if (!IsDebuggerPresent() && (str.find("--noconsole") == string::npos))
 		{
 			FreeConsole();
 			AllocConsole();
@@ -69,6 +75,12 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 			system("title NekoEngine Debug Console");
 		}
 #endif
+
+		_CrtSetDbgFlag(0);
+
+		if(str.find("--waitrdoc") != string::npos)
+			MessageBoxA(HWND_DESKTOP, "Press OK after RenderDoc injection", "Waiting for RenderDoc", MB_OK);
+
 		if (Engine::Initialize(lpCmdLine, false) != ENGINE_OK)
 		{
 			MessageBoxA(HWND_DESKTOP, "Failed to initialize engine. The application will now exit.", "Fatal error", MB_ICONERROR | MB_OK);
@@ -77,9 +89,11 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 
 		return Engine::Run();
 	}
-	catch (...)
+	catch (exception e)
 	{
-		MessageBoxA(HWND_DESKTOP, "Runtime exception. The application will now exit.", "Fatal error", MB_ICONERROR | MB_OK);
+		char buff[4096];
+		snprintf(buff, 4096, "Runtime error: %s\nThe application will now exit.", e.what());
+		MessageBoxA(HWND_DESKTOP, buff, "Fatal error", MB_ICONERROR | MB_OK);
 		return -1;
 	}
 }

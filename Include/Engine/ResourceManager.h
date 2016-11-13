@@ -46,35 +46,36 @@
 #include <Resource/Resource.h>
 #include <Resource/MeshResource.h>
 #include <Resource/TextureResource.h>
-#include <Resource/ShaderResource.h>
+#include <Resource/ShaderModuleResource.h>
 #include <Resource/AudioClipResource.h>
 #include <Resource/FontResource.h>
 #include <Resource/MaterialResource.h>
 #include <Resource/AnimationClipResource.h>
 
-#include <Engine/StaticMesh.h>
-#include <Engine/SkeletalMesh.h>
-#include <Engine/Texture.h>
-#include <Engine/Shader.h>
+#include <Renderer/NFont.h>
+#include <Renderer/Texture.h>
+#include <Renderer/Material.h>
+#include <Renderer/StaticMesh.h>
+#include <Renderer/SkeletalMesh.h>
+#include <Renderer/ShaderModule.h>
 #include <Audio/AudioClip.h>
-#include <Engine/NFont.h>
-#include <Engine/Material.h>
-#include <Engine/AnimationClip.h>
+#include <Animation/AnimationClip.h>
 
 class ResourceManager
 {
 public:
 	ENGINE_API static int Initialize();
-	ENGINE_API static Resource* GetResource(int id, ResourceType type);
-	ENGINE_API static Resource* GetResourceByName(const char* name, ResourceType type);
-	ENGINE_API static int GetResourceID(const char* name, ResourceType type);
+	ENGINE_API static Resource *GetResource(int id, ResourceType type);
+	ENGINE_API static Resource *GetResourceByName(const char *name, ResourceType type);
+	ENGINE_API static int GetResourceID(const char *name, ResourceType type);
+	ENGINE_API static NString GetPathForResource(const char *name, ResourceType type);
 	ENGINE_API static int UnloadResource(int id, ResourceType type) noexcept;
 	ENGINE_API static int UnloadResourceByName(const char* name, ResourceType type) noexcept;
 
 	ENGINE_API static size_t LoadedStaticMeshes() noexcept { return _loadedResources[ResourceType::RES_STATIC_MESH]; }
 	ENGINE_API static size_t LoadedSkeletalMeshes() noexcept { return _loadedResources[ResourceType::RES_SKELETAL_MESH]; }
 	ENGINE_API static size_t LoadedTextures() noexcept { return _loadedResources[ResourceType::RES_TEXTURE]; }
-	ENGINE_API static size_t LoadedShaders() noexcept { return _loadedResources[ResourceType::RES_SHADER]; }
+	ENGINE_API static size_t LoadedShaderModules() noexcept { return _loadedResources[ResourceType::RES_SHADERMODULE]; }
 	ENGINE_API static size_t LoadedMaterials() noexcept { return _loadedResources[ResourceType::RES_MATERIAL]; }
 	ENGINE_API static size_t LoadedSounds() noexcept { return _loadedResources[ResourceType::RES_AUDIOCLIP]; }
 	ENGINE_API static size_t LoadedFonts() noexcept { return _loadedResources[ResourceType::RES_FONT]; }

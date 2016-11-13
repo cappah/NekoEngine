@@ -40,6 +40,9 @@
 #pragma once
 
 #include <map>
+
+#define GLM_FORCE_RADIANS
+#define GLM_FORCE_DEPTH_ZERO_TO_ON
 #include <glm/glm.hpp>
 
 #include <Engine/Engine.h>
@@ -60,39 +63,37 @@ public:
 	ObjectComponent(ComponentInitializer *initializer);
 
 	virtual class Object *GetParent() noexcept { return _parent; }
-	virtual glm::vec3 &GetLocalPosition() noexcept { return _localPosition; }
-	virtual glm::vec3 &GetLocalRotation() noexcept { return _localRotation; }
-	virtual glm::vec3 &GetLocalScale() noexcept { return _localScale; }
-	virtual glm::vec3 &GetPosition() noexcept { return _position; }
-	virtual glm::vec3 &GetRotation() noexcept { return _rotation; }
-	virtual glm::vec3 &GetScale() noexcept { return _scale; }
 	virtual size_t GetVertexCount() noexcept { return 0; }
 	virtual size_t GetTriangleCount() noexcept { return 0; }
 	
 	virtual void SetParent(class Object *obj) { _parent = obj; }
-	virtual void SetLocalPosition(glm::vec3& position) noexcept;
-	virtual void SetLocalRotation(glm::vec3& rotation) noexcept;
-	virtual void SetLocalScale(glm::vec3& scale) noexcept;
 
-	virtual void UpdatePosition() noexcept;
+	virtual void Enable(bool enable) { _enabled = enable; }
+	virtual bool IsEnabled() { return _enabled; }
 
 	virtual int Load() { _loaded = true; return ENGINE_OK; }
-	virtual int CreateArrayBuffer() { return ENGINE_OK; }
+	virtual int CreateBuffers() { return ENGINE_OK; }
 	virtual int InitializeComponent() { return ENGINE_OK; }
-	
-	virtual void Draw(RShader *shader, class Camera *camera) noexcept { (void)shader; (void)camera; }
+	virtual bool Upload(Buffer *buffer) { (void)buffer; return true; }
 	virtual void Update(double deltaTime) noexcept { (void)deltaTime; }
+	virtual void UpdatePosition() { }
 	
+	virtual bool BuildCommandBuffers() { return true; }
+	virtual void RegisterCommandBuffers() { }
+
 	virtual bool Unload();
 	virtual bool CanUnload() { return true; }
 
 	virtual ~ObjectComponent() { Unload(); }
 
+	virtual VkDeviceSize GetRequiredMemorySize() { return 0; }
+	virtual void UpdateData(VkCommandBuffer commandBuffer) noexcept { (void)commandBuffer; }
+
 protected:
 	class Object* _parent;
-	glm::vec3 _localPosition, _localRotation, _localScale;
-	glm::vec3 _position, _rotation, _scale;
-	bool _loaded;
+	bool _loaded, _enabled;
+
+	VkCommandBuffer _cmdBuffer;
 };
 
 #if defined(_MSC_VER)

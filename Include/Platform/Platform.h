@@ -39,18 +39,15 @@
 
 #pragma once
 
+#include <Engine/Defs.h>
 #include <Platform/PlatformDetect.h>
 
 #include <stddef.h>
 
-#ifdef NE_PLATFORM_WINDOWS
-	#ifdef PLATFORM_INTERNAL
-		#define PLATFORM_API	__declspec(dllexport)
-	#else
-		#define PLATFORM_API	__declspec(dllimport)
-	#endif
-#else
-	#define PLATFORM_API
+#include <vector>
+
+#ifdef ENGINE_INTERNAL
+	#include <vulkan/vulkan.h>
 #endif
 
 #ifdef _WIN32
@@ -110,13 +107,13 @@ typedef void* PlatformModuleType;
 
 enum class MessageBoxButtons : unsigned char
 {
-	OK,
+	OK = 0,
 	YesNo
 };
 
 enum class MessageBoxIcon : unsigned char
 {
-	Information,
+	Information = 0,
 	Warning,
 	Error,
 	Question
@@ -124,7 +121,7 @@ enum class MessageBoxIcon : unsigned char
 
 enum class MessageBoxResult : unsigned char
 {
-	OK,
+	OK = 0,
 	Yes,
 	No
 };
@@ -134,43 +131,39 @@ class Platform
 public:
 
 	// Platform specific public functions
-	PLATFORM_API static const char* GetName();
-	PLATFORM_API static const char* GetMachineName();
-	PLATFORM_API static const char* GetMachineArchitecture();
-	PLATFORM_API static const char* GetVersion();
+	ENGINE_API static const char* GetName();
+	ENGINE_API static const char* GetMachineName();
+	ENGINE_API static const char* GetMachineArchitecture();
+	ENGINE_API static const char* GetVersion();
+	ENGINE_API static int32_t GetNumberOfProcessors();
 
-	PLATFORM_API static PlatformWindowType GetActiveWindow() { return _activeWindow; }
+	ENGINE_API static PlatformWindowType GetActiveWindow() { return _activeWindow; }
 
-	PLATFORM_API static void SetWindowTitle(PlatformWindowType hWnd, const char* title);
-	PLATFORM_API static bool EnterFullscreen(int width, int height);
+	ENGINE_API static void SetWindowTitle(PlatformWindowType hWnd, const char* title);
+	ENGINE_API static bool EnterFullscreen(int width, int height);
 
-	PLATFORM_API static bool CapturePointer();
-	PLATFORM_API static void ReleasePointer();
-	PLATFORM_API static bool GetPointerPosition(long &x, long &y);
-	PLATFORM_API static bool SetPointerPosition(long x, long y);
-	PLATFORM_API static bool GetTouchMovementDelta(float &x, float &y);
+	ENGINE_API static MessageBoxResult MessageBox(const char* title, const char* message, MessageBoxButtons buttons, MessageBoxIcon icon);
 
-	PLATFORM_API static MessageBoxResult MessageBox(const char* title, const char* message, MessageBoxButtons buttons, MessageBoxIcon icon);
-
-	PLATFORM_API static void LogDebugMessage(const char* message);
-
-	PLATFORM_API static void Exit();
+	ENGINE_API static void LogDebugMessage(const char* message);
 
 	// Shared
-	PLATFORM_API static size_t GetConfigString(const char *section, const char *entry, const char *def, char *buffer, int buffer_len, const char *file);
-	PLATFORM_API static int GetConfigInt(const char *section, const char *entry, int def, const char *file);
-	PLATFORM_API static float GetConfigFloat(const char *section, const char *entry, float def, const char *file);
-	PLATFORM_API static double GetConfigDouble(const char *section, const char *entry, double def, const char *file);
-	PLATFORM_API static size_t GetConfigSection(const char *section, char *out, size_t size, const char *file);
-	PLATFORM_API static int Rand();
+	ENGINE_API static size_t GetConfigString(const char *section, const char *entry, const char *def, char *buffer, int buffer_len, const char *file);
+	ENGINE_API static int GetConfigInt(const char *section, const char *entry, int def, const char *file);
+	ENGINE_API static float GetConfigFloat(const char *section, const char *entry, float def, const char *file);
+	ENGINE_API static double GetConfigDouble(const char *section, const char *entry, double def, const char *file);
+	ENGINE_API static size_t GetConfigSection(const char *section, char *out, size_t size, const char *file);
+	ENGINE_API static int Rand();
+	ENGINE_API static void Exit();
 
-#ifdef PLATFORM_INTERNAL // Platform specific private functions
+#ifdef ENGINE_INTERNAL // Platform specific private functions
 	static void SetActiveWindow(PlatformWindowType hWnd) { _activeWindow = hWnd; }
 	static PlatformWindowType CreateWindow(int width, int height, bool fullscreen);
 
 	static PlatformModuleType LoadModule(const char* module);
 	static void* GetProcAddress(PlatformModuleType module, const char* proc);
 	static void ReleaseModule(PlatformModuleType module);
+	static std::vector<const char*> GetRequiredExtensions(bool debug);
+	static bool CreateSurface(VkInstance instance, VkSurfaceKHR &surface, PlatformWindowType hWnd, VkAllocationCallbacks *allocator = nullptr);
 
 	static int MainLoop();
 	static void CleanUp();	
@@ -178,4 +171,5 @@ public:
 
 private:
 	static PlatformWindowType _activeWindow;
+	static bool _exit;
 };

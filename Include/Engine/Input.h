@@ -39,6 +39,8 @@
 
 #pragma once
 
+// TODO: Virtual axis
+
 #include <math.h>
 #include <vector>
 #include <string>
@@ -78,6 +80,8 @@
 #define NE_GPAD3_TL			0x36
 #define NE_GPAD_TR			0x37
 
+#define NE_VIRT_AXIS		0x40
+
 #ifdef ENGINE_INTERNAL
 #define NE_MAX_CONTROLLERS	4
 
@@ -92,14 +96,25 @@ typedef struct CTRL_STATE
 } ControllerState;
 #endif
 
+struct VirtualAxis
+{
+	uint8_t min;
+	uint8_t max;
+	float val;
+	bool active;
+};
+
 class Input
 {
 public:
-	static int Initialize(bool captureMouse);
+	static int Initialize(bool enableMouseAxis);
+
+	ENGINE_API static bool EnableMouseAxis(bool enable);
 
 	ENGINE_API static void AddButtonMapping(std::string map, uint8_t button) { _buttonMap.insert(std::make_pair(map, button)); }
 	ENGINE_API static void AddAxisMapping(std::string map, uint8_t axis) { _axisMap.insert(std::make_pair(map, axis)); }
-	ENGINE_API static void SetAxisSensivity(uint8_t axis, float horizontal);
+	ENGINE_API static void AddVirtualAxis(uint8_t min, uint8_t max) { _virtualAxes.Add({ min, max, 0.f, false }); }
+	ENGINE_API static void SetAxisSensivity(uint8_t axis, float sensivity);
 
 	ENGINE_API static bool GetButton(uint8_t key) noexcept;
 	ENGINE_API static bool GetButtonUp(uint8_t key) noexcept;
@@ -115,6 +130,9 @@ public:
 
 	ENGINE_API static int GetConnectedControllerCount() noexcept { return _connectedControllers; }
 
+	/*ENGINE_API static bool CaptureMouse() { _captureMouse = Platform::CapturePointer(); return _captureMouse; }
+	ENGINE_API static void ReleaseMouse() { _captureMouse = false; Platform::ReleasePointer(); }*/
+
 	static void Release();
 
 #if defined(ENGINE_INTERNAL) || defined(EDITOR_INTERNAL)
@@ -124,11 +142,16 @@ public:
 	ENGINE_API static void ClearKeyState() noexcept;
 #endif
 
-	// Platform-specific functions
+	// Platform-specific functions (Implemented in PlatformInput.cpp)
+	ENGINE_API static bool CapturePointer();
+	ENGINE_API static void ReleasePointer();
+	ENGINE_API static bool GetPointerPosition(long &x, long &y);
+	ENGINE_API static bool SetPointerPosition(long x, long y);
 	ENGINE_API static bool SetControllerVibration(int n, float left, float right);
 
 private:
 	static std::vector<uint8_t> _pressedKeys, _keyDown, _keyUp;
+	static NArray<VirtualAxis> _virtualAxes;
 	static std::unordered_map<int, uint8_t> _keymap;
 	static float _screenHalfWidth, _screenHalfHeight;
 	static float _mouseAxis[2];
@@ -136,7 +159,8 @@ private:
 	static std::unordered_map<std::string, uint8_t> _buttonMap;
 	static std::unordered_map<std::string, uint8_t> _axisMap;
 	static int _connectedControllers;
-	static bool _captureMouse;
+	static bool _enableMouseAxis;
+	static bool _pointerCaptured;
 	
 #ifdef ENGINE_INTERNAL
 	static ControllerState _controllerState[NE_MAX_CONTROLLERS];
@@ -163,3 +187,7 @@ private:
 	}
 #endif
 };
+
+#if defined(_MSC_VER)
+template class ENGINE_API NArray<VirtualAxis>;
+#endif

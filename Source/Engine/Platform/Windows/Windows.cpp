@@ -37,11 +37,16 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#define VK_USE_PLATFORM_WIN32_KHR
+
 #include <Engine/Engine.h>
 #include <Engine/Input.h>
+#include <System/Logger.h>
 #include <Platform/Platform.h>
 
 #include "../Source/Launcher/resource.h"
+
+using namespace std;
 
 PlatformWindowType Platform::_activeWindow = nullptr;
 
@@ -122,6 +127,8 @@ LRESULT CALLBACK EngineWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
 			EndPaint(hWnd, &ps);
 		}
 		break;
+		case WM_ERASEBKGND:
+			return 0; // ignore
 		case WM_DESTROY:
 		{
 			PostQuitMessage(0);
@@ -268,6 +275,13 @@ const char* Platform::GetVersion()
 	return _version;
 }
 
+int32_t Platform::GetNumberOfProcessors()
+{
+	SYSTEM_INFO sysInfo{};
+	GetSystemInfo(&sysInfo);
+	return sysInfo.dwNumberOfProcessors;
+}
+
 PlatformWindowType Platform::CreateWindow(int width, int height, bool fullscreen)
 {
 	HWND hWnd;
@@ -279,7 +293,7 @@ PlatformWindowType Platform::CreateWindow(int width, int height, bool fullscreen
 
 	hEngineInstance = GetModuleHandle(NULL);
 
-	wndclass.style = CS_HREDRAW | CS_VREDRAW;
+	wndclass.style = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
 	wndclass.lpfnWndProc = (WNDPROC)EngineWindowProc;
 	wndclass.hInstance = hEngineInstance;
 	wndclass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
@@ -441,7 +455,7 @@ int Platform::MainLoop()
 
 	PeekMessage(&msg, nullptr, 0, 0, PM_NOREMOVE);
 
-	while (msg.message != WM_QUIT)
+	while (!_exit && msg.message != WM_QUIT)
 	{
 		if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
 		{
@@ -461,7 +475,40 @@ void Platform::CleanUp()
 	UnregisterClass(WindowClassName, hEngineInstance);
 }
 
-void Platform::Exit()
+vector<const char*> Platform::GetRequiredExtensions(bool debug)
 {
-	PostQuitMessage(0);
+	vector<const char*> extensions;
+	extensions.push_back(VK_KHR_SURFACE_EXTENSION_NAME);
+	extensions.push_back("VK_KHR_win32_surface");
+
+	if (debug)
+		extensions.push_back(VK_EXT_DEBUG_REPORT_EXTENSION_NAME);
+
+	return extensions;
+}
+
+bool Platform::CreateSurface(VkInstance instance, VkSurfaceKHR &surface, PlatformWindowType hWnd, VkAllocationCallbacks *allocator)
+{
+	VkResult err;
+	VkWin32SurfaceCreateInfoKHR createInfo{};
+	PFN_vkCreateWin32SurfaceKHR vkCreateWin32SurfaceKHR;
+
+	vkCreateWin32SurfaceKHR = (PFN_vkCreateWin32SurfaceKHR)vkGetInstanceProcAddr(instance, "vkCreateWin32SurfaceKHR");
+	if (!vkCreateWin32SurfaceKHR)
+	{
+		Logger::Log("Platform", LOG_CRITICAL, "Vulkan instance missing VK_KHR_win32_surface extension");
+		return false;
+	}
+
+	createInfo.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;
+	createInfo.hinstance = GetModuleHandle(NULL);
+	createInfo.hwnd = hWnd;
+
+	if ((err = vkCreateWin32SurfaceKHR(instance, &createInfo, allocator, &surface)))
+	{
+		Logger::Log("Platform", LOG_CRITICAL, "Failed to create Vulkan surface: %d", err);
+		return false;
+	}
+
+	return true;
 }

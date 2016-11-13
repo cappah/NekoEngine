@@ -47,8 +47,9 @@
 
 #include <Platform/Compat.h>
 #include <Runtime/NArray.h>
+#include <Engine/Defs.h>
 
-class NString
+class ENGINE_API NString
 {
 public:
 	NString() :
@@ -113,6 +114,13 @@ public:
 	}
 
 	size_t Length() { return _length; }
+	size_t Count() { _length = 0; char *ptr = _str; while (*ptr++) ++_length; return _length; }
+	bool IsEmpty() { return _str[0] == 0x0; }
+
+	bool Contains(char c) { char f[2] = { c, 0x0 }; return Contains(f); }
+	bool Contains(NString &str) { return Contains(*str); }
+	bool Contains(std::string &str) { return Contains(str.c_str()); }
+	bool Contains(const char *str) { return Find(str) != NotFound; }
 
 	void Append(NString &str) { Append(*str); }
 	void Append(std::string &str) { Append(str.c_str()); }
@@ -146,7 +154,21 @@ public:
 		_str[_length] = 0x0;
 	}
 
-	size_t Find(char c) { return Find(&c); }
+	void AppendFormat(size_t len, const char *fmt, ...)
+	{
+		NString str(len);
+		va_list args;
+
+		va_start(args, fmt);
+		vsnprintf(*str, len, fmt, args);
+		va_end(args);
+
+		str._length = strlen(*str);
+
+		Append(str);
+	}
+
+	size_t Find(char c) { char f[2] = { c, 0x0 }; return Find(f); }
 	size_t Find(NString &str) { return Find(*str); }
 	size_t Find(std::string &str) { return Find(str.c_str()); }
 	size_t Find(const char *str)
@@ -232,7 +254,28 @@ public:
 		return true;
 	}
 
-	void RemoveLast() { _str[--_length] = 0x0; }
+	void RemoveLast() { if(_length) _str[--_length] = 0x0; }
+
+	void RemoveNewLine()
+	{
+		size_t len = strlen(_str);
+
+		for (size_t i = 0; i < len; i++)
+		{
+			if (_str[i] == '\n' || _str[i] == '\r')
+			{
+				_str[i] = 0x0;
+				return;
+			}
+		}
+	}
+
+	void RemoveComment()
+	{
+		char* pos = strchr(_str, '#');
+		if (pos)
+			*pos = 0x0;
+	}
 
 	void Clear()
 	{

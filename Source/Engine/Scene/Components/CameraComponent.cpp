@@ -42,14 +42,13 @@
 
 #include <glm/glm.hpp>
 
+#include <Scene/Object.h>
 #include <Scene/Components/CameraComponent.h>
 #include <Engine/Engine.h>
-#include <Engine/DeferredBuffer.h>
-#include <Engine/EngineUtils.h>
 #include <Engine/ResourceManager.h>
-#include <Engine/SoundManager.h>
 #include <Engine/Input.h>
 #include <Engine/CameraManager.h>
+#include <System/AssetLoader/AssetLoader.h>
 
 using namespace glm;
 
@@ -83,7 +82,7 @@ CameraComponent::CameraComponent(ComponentInitializer *initializer) : ObjectComp
 
 	if (((it = initializer->arguments.find("fog_color")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
 	{
-		EngineUtils::ReadFloatArray(ptr, 3, &tmp.x);
+		AssetLoader::ReadFloatArray(ptr, 3, &tmp.x);
 		_cam->SetFogColor(tmp);
 	}
 
@@ -113,14 +112,11 @@ int CameraComponent::Load()
 
 void CameraComponent::_UpdateView() noexcept
 {
-	vec3 tmp = _parent->GetPosition() + _localPosition;
+	vec3 tmp = _parent->GetPosition();
 	_cam->SetPosition(tmp, false);
 
-	tmp = _parent->GetRotation() + _localRotation;
+	tmp = _parent->GetRotation();
 	_cam->SetRotation(tmp, false);
 
 	_cam->UpdateView();
-
-	/*SoundManager::SetListenerPosition(pos.x, pos.y, pos.z);
-	SoundManager::SetListenerOrientation(_front.x, _front.y, _front.z);*/
 }

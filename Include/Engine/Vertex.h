@@ -39,7 +39,15 @@
 
 #pragma once
 
+#ifdef ENGINE_INTERNAL
+	#include <vulkan/vulkan.h>
+	#include <Runtime/Runtime.h>
+#endif
+
 #include <stddef.h>
+
+#define GLM_FORCE_RADIANS
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include <glm/glm.hpp>
 
 #define VERTEX_POSITION_OFFSET		offsetof(Vertex, pos)
@@ -55,15 +63,17 @@
 struct Vertex 
 {
 	Vertex() :
-		pos(glm::vec3(0.f)),
-		color(glm::vec3(0.f)),
-		norm(glm::vec3(0.f)),
-		tgt(glm::vec3(0.f)),
+		position(glm::vec3(0.f)),
 		uv(glm::vec2(0.f)),
-		terrainUv(glm::vec2(0.f)),
-        boneIndices(glm::ivec4(0)),
-        boneWeights(glm::vec4(0)),
-		numBones(0)
+		normal(glm::vec3(0.f)),
+		tangent(glm::vec3(0.f))
+	{ }
+
+	Vertex(glm::vec3 inPos) :
+		position(inPos),
+		uv(glm::vec2(0.f)),
+		normal(glm::vec3(0.f)),
+		tangent(glm::vec3(0.f))
 	{ }
 
 	/*Vertex(const Vertex& vert) :
@@ -79,13 +89,210 @@ struct Vertex
 		numBones(vert.numBones)
 	{ }*/
 
-	glm::vec3 pos;
-	glm::vec3 color;
-	glm::vec3 norm;
-	glm::vec3 tgt;
+	glm::vec3 position;
 	glm::vec2 uv;
-	glm::vec2 terrainUv;
-    glm::ivec4 boneIndices;
-    glm::vec4 boneWeights;
-	int numBones;
+	glm::vec3 normal;
+	glm::vec3 tangent;
+
+#ifdef ENGINE_INTERNAL
+	static VkVertexInputBindingDescription GetBindingDescription()
+	{
+		VkVertexInputBindingDescription desc = {};
+
+		desc.binding = 0;
+		desc.stride = sizeof(Vertex);
+		desc.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+
+		return desc;
+	}
+
+	static NArray<VkVertexInputAttributeDescription> GetAttributeDescriptions()
+	{
+		NArray<VkVertexInputAttributeDescription> desc;
+		desc.Resize(4);
+		desc.Fill();
+
+		desc[0].binding = 0;
+		desc[0].location = 0;
+		desc[0].format = VK_FORMAT_R32G32B32_SFLOAT;
+		desc[0].offset = offsetof(Vertex, position);
+
+		desc[1].binding = 0;
+		desc[1].location = 1;
+		desc[1].format = VK_FORMAT_R32G32_SFLOAT;
+		desc[1].offset = offsetof(Vertex, uv);
+
+		desc[2].binding = 0;
+		desc[2].location = 2;
+		desc[2].format = VK_FORMAT_R32G32B32_SFLOAT;
+		desc[2].offset = offsetof(Vertex, normal);
+
+		desc[3].binding = 0;
+		desc[3].location = 3;
+		desc[3].format = VK_FORMAT_R32G32B32_SFLOAT;
+		desc[3].offset = offsetof(Vertex, tangent);
+
+		return desc;
+	}
+#endif
+};
+
+struct SkeletalVertex 
+{
+	SkeletalVertex() :
+		position(glm::vec3(0.f)),
+		uv(glm::vec2(0.f)),
+		normal(glm::vec3(0.f)),
+		tangent(glm::vec3(0.f)),
+		boneIndices(glm::ivec4(0)),
+		boneWeights(glm::vec4(0)),
+		numBones(0)
+	{ }
+
+	SkeletalVertex(glm::vec3 inPos) :
+		position(inPos),
+		uv(glm::vec2(0.f)),
+		normal(glm::vec3(0.f)),
+		tangent(glm::vec3(0.f)),
+		boneIndices(glm::ivec4(0)),
+		boneWeights(glm::vec4(0)),
+		numBones(0)
+	{ }
+
+	glm::vec3 position;
+	glm::vec2 uv;
+	glm::vec3 normal;
+	glm::vec3 tangent;
+	glm::ivec4 boneIndices;
+	glm::vec4 boneWeights;
+	int32_t numBones;
+
+#ifdef ENGINE_INTERNAL
+	static VkVertexInputBindingDescription GetBindingDescription()
+	{
+		VkVertexInputBindingDescription desc = {};
+
+		desc.binding = 0;
+		desc.stride = sizeof(SkeletalVertex);
+		desc.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+
+		return desc;
+	}
+
+	static NArray<VkVertexInputAttributeDescription> GetAttributeDescriptions()
+	{
+		NArray<VkVertexInputAttributeDescription> desc;
+		desc.Resize(7);
+		desc.Fill();
+
+		desc[0].binding = 0;
+		desc[0].location = 0;
+		desc[0].format = VK_FORMAT_R32G32B32_SFLOAT;
+		desc[0].offset = offsetof(SkeletalVertex, position);
+
+		desc[1].binding = 0;
+		desc[1].location = 1;
+		desc[1].format = VK_FORMAT_R32G32_SFLOAT;
+		desc[1].offset = offsetof(SkeletalVertex, uv);
+
+		desc[2].binding = 0;
+		desc[2].location = 2;
+		desc[2].format = VK_FORMAT_R32G32B32_SFLOAT;
+		desc[2].offset = offsetof(SkeletalVertex, normal);
+
+		desc[3].binding = 0;
+		desc[3].location = 3;
+		desc[3].format = VK_FORMAT_R32G32B32_SFLOAT;
+		desc[3].offset = offsetof(SkeletalVertex, tangent);
+
+		desc[4].binding = 0;
+		desc[4].location = 4;
+		desc[4].format = VK_FORMAT_R32G32B32A32_SINT;
+		desc[4].offset = offsetof(SkeletalVertex, boneIndices);
+
+		desc[5].binding = 0;
+		desc[5].location = 5;
+		desc[5].format = VK_FORMAT_R32G32B32A32_SFLOAT;
+		desc[5].offset = offsetof(SkeletalVertex, boneWeights);
+
+		desc[6].binding = 0;
+		desc[6].location = 6;
+		desc[6].format = VK_FORMAT_R32_SINT;
+		desc[6].offset = offsetof(SkeletalVertex, numBones);
+
+		return desc;
+	}
+#endif
+};
+
+struct TerrainVertex
+{
+	TerrainVertex() :
+		position(glm::vec3(0.f)),
+		uv(glm::vec2(0.f)),
+		normal(glm::vec3(0.f)),
+		tangent(glm::vec3(0.f)),
+		heightmapUV(glm::vec2(0.f))
+	{ }
+
+	TerrainVertex(glm::vec3 inPos) :
+		position(inPos),
+		uv(glm::vec2(0.f)),
+		normal(glm::vec3(0.f)),
+		tangent(glm::vec3(0.f)),
+		heightmapUV(glm::vec2(0.f))
+	{ }
+
+	glm::vec3 position;
+	glm::vec2 uv;
+	glm::vec3 normal;
+	glm::vec3 tangent;
+	glm::vec2 heightmapUV;
+
+#ifdef ENGINE_INTERNAL
+	static VkVertexInputBindingDescription GetBindingDescription()
+	{
+		VkVertexInputBindingDescription desc = {};
+
+		desc.binding = 0;
+		desc.stride = sizeof(TerrainVertex);
+		desc.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+
+		return desc;
+	}
+
+	static NArray<VkVertexInputAttributeDescription> GetAttributeDescriptions()
+	{
+		NArray<VkVertexInputAttributeDescription> desc;
+		desc.Resize(5);
+		desc.Fill();
+
+		desc[0].binding = 0;
+		desc[0].location = 0;
+		desc[0].format = VK_FORMAT_R32G32B32_SFLOAT;
+		desc[0].offset = offsetof(TerrainVertex, position);
+
+		desc[1].binding = 0;
+		desc[1].location = 1;
+		desc[1].format = VK_FORMAT_R32G32_SFLOAT;
+		desc[1].offset = offsetof(TerrainVertex, uv);
+
+		desc[2].binding = 0;
+		desc[2].location = 2;
+		desc[2].format = VK_FORMAT_R32G32B32_SFLOAT;
+		desc[2].offset = offsetof(TerrainVertex, normal);
+
+		desc[3].binding = 0;
+		desc[3].location = 3;
+		desc[3].format = VK_FORMAT_R32G32B32_SFLOAT;
+		desc[3].offset = offsetof(TerrainVertex, tangent);
+
+		desc[4].binding = 0;
+		desc[4].location = 4;
+		desc[4].format = VK_FORMAT_R32G32_SFLOAT;
+		desc[4].offset = offsetof(TerrainVertex, heightmapUV);
+
+		return desc;
+	}
+#endif
 };

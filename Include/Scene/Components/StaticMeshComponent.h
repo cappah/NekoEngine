@@ -40,51 +40,56 @@
 #pragma once
 
 #include <Engine/Engine.h>
-#include <Engine/Material.h>
-#include <Engine/StaticMesh.h>
+#include <Renderer/Material.h>
+#include <Renderer/StaticMesh.h>
 #include <Scene/ObjectComponent.h>
 
-typedef struct MATRIX_BLOCK
-{
-	glm::mat4 ModelViewProjection;
-	glm::mat4 Model;
-	glm::mat4 View;
-} MatrixBlock;
+#define SM_GENERATED	"generated"
 
 class StaticMeshComponent : public ObjectComponent
 {
 public:
 	ENGINE_API StaticMeshComponent(ComponentInitializer *initializer);
 
+	ENGINE_API NString &GetMeshID() noexcept { return _meshId; }
 	ENGINE_API StaticMesh *GetMesh() noexcept { return _mesh; }
 	ENGINE_API virtual size_t GetVertexCount() noexcept override { return _mesh->GetVertexCount(); }
 	ENGINE_API virtual size_t GetTriangleCount() noexcept override { return _mesh->GetTriangleCount(); }
 
-	ENGINE_API virtual void SetLocalPosition(glm::vec3& position) noexcept override;
-	ENGINE_API virtual void SetLocalRotation(glm::vec3& rotation) noexcept override;
-	ENGINE_API virtual void SetLocalScale(glm::vec3& scale) noexcept override;
-
-	ENGINE_API virtual void UpdatePosition() noexcept override { ObjectComponent::UpdatePosition(); _mmNeedsUpdate = true; }
-
 	ENGINE_API virtual int Load() override;
-	ENGINE_API virtual int CreateArrayBuffer() override;
-	
-	ENGINE_API virtual void Draw(RShader *shader, class Camera *camera) noexcept override;
+	ENGINE_API int LoadStatic(std::vector<Vertex> &vertices, std::vector<uint32_t> &indices, bool createGroup = false) { return _mesh->LoadStatic(vertices, indices, createGroup); }
+	ENGINE_API int LoadDynamic(std::vector<Vertex> &vertices, std::vector<uint32_t> &indices, bool createGroup = false) { return _mesh->LoadDynamic(vertices, indices, createGroup); }
+	ENGINE_API virtual bool Upload(Buffer *buffer = nullptr) override;
+	ENGINE_API virtual int CreateBuffer(bool dynamic) { return _mesh->CreateBuffer(dynamic); }
 	ENGINE_API virtual void Update(double deltaTime) noexcept override;
+
+	ENGINE_API virtual bool BuildCommandBuffers() override;
+	ENGINE_API virtual void RegisterCommandBuffers() override;
+
+	ENGINE_API virtual void AddGroup(uint32_t offset, uint32_t count, Material *mat) { _mesh->AddGroup(offset, count); _materials.Add(mat); }
+	ENGINE_API virtual void ResetGroups() { _mesh->ResetGroups(); }
 
 	ENGINE_API virtual bool Unload() override;
 	
 	ENGINE_API virtual ~StaticMeshComponent() { };
+
+	virtual VkDeviceSize GetRequiredMemorySize() override { return _mesh->GetRequiredMemorySize(); }
 	
+	virtual void UpdateData(VkCommandBuffer commandBuffer) noexcept override;
+	void SetUniformBuffer(Buffer *buffer) { _ubo = buffer; }
+
 protected:
-	std::string _meshId;
+	NString _meshId;
 	StaticMesh *_mesh;
 	bool _blend;
-	Renderer* _renderer;
-	glm::mat4 _translationMatrix, _scaleMatrix, _rotationMatrix;
 	std::vector<int> _materialIds;
-	std::vector<Material*> _materials;
-	MatrixBlock _matrixBlock;
-	RBuffer *_matrixUbo;
-	bool _mmNeedsUpdate;
+	NArray<Material *> _materials;
+
+	VkCommandBuffer _sceneDrawBuffer, _depthDrawBuffer;
+	VkDescriptorSet _descriptorSet;
+	VkDescriptorPool _descriptorPool;
+
+	Buffer *_ubo;
+
+	void _SortGroups();
 };
