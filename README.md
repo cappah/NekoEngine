@@ -3,7 +3,7 @@ NekoEngine
 
 Vulkan Game Engine
 
-<img src="https://raw.githubusercontent.com/wiki/nalexandru/NekoEngine/images/sponza.png" alt="Screenshot" width="840px"/>
+<img src="https://raw.githubusercontent.com/wiki/nalexandru/NekoEngine/images/sponza.png" alt="Screenshot" width="900px"/>
 
 For the features see the [Roadmap](https://github.com/nalexandru/NekoEngine/wiki/Roadmap)
 
