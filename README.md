@@ -1,12 +1,9 @@
 NekoEngine
 ============
 
-|**System**|**Status**|
-|---|---|
-|**Linux, macOS** |[![Build Status](https://travis-ci.org/nalexandru/NekoEngine.svg?branch=master)](https://travis-ci.org/nalexandru/NekoEngine)|
-|**Windows**      |[![Build status](https://ci.appveyor.com/api/projects/status/843uw7e81ruf7qaa?svg=true)](https://ci.appveyor.com/project/nalexandru/nekoengine)|
+Vulkan Game Engine
 
-Cross-platform 3D Game Engine
+<img src="https://raw.githubusercontent.com/wiki/nalexandru/NekoEngine/images/sponza.png" alt="Screenshot" width="840px"/>
 
 For the features see the [Roadmap](https://github.com/nalexandru/NekoEngine/wiki/Roadmap)
 
@@ -14,10 +11,15 @@ For the features see the [Roadmap](https://github.com/nalexandru/NekoEngine/wiki
 
        A PC with a graphics card capable of Vulkan
 
-**The engine has been tested on the following systems:**
+**The engine has been tested with:**
 
-* Windows 7 & 10
-* Linux
+**OS:**
+  * Windows 7 & 10
+  * Linux
+  
+**GPU:**
+  * Nvidia GeForce GTX 970
+  * Nvidia Quadro K2100M
 
 Howto
 ===============================
