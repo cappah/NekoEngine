@@ -46,9 +46,7 @@
 
 #include <stddef.h>
 
-#define GLM_FORCE_RADIANS
-#define GLM_FORCE_DEPTH_ZERO_TO_ONE
-#include <glm/glm.hpp>
+#include <Engine/Defs.h>
 
 #define VERTEX_POSITION_OFFSET		offsetof(Vertex, pos)
 #define VERTEX_COLOR_OFFSET			offsetof(Vertex, color)

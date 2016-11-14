@@ -41,10 +41,6 @@
 
 #include <map>
 
-#define GLM_FORCE_RADIANS
-#define GLM_FORCE_DEPTH_ZERO_TO_ON
-#include <glm/glm.hpp>
-
 #include <Engine/Engine.h>
 
 typedef std::multimap<std::string, std::string> ArgumentMapType;

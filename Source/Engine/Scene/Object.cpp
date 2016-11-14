@@ -41,9 +41,6 @@
 #include <math.h>
 #include <vector>
 
-#include <glm/glm.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
 #include <Engine/Engine.h>
 #include <Engine/CameraManager.h>
 #include <Engine/ResourceManager.h>
@@ -125,11 +122,10 @@ void Object::SetRotation(vec3 &rotation) noexcept
 {
 	_rotation = rotation;
 
-	mat4 rotXMatrix = rotate(mat4(), radians(_rotation.x), vec3(1.f, 0.f, 0.f));
-	mat4 rotYMatrix = rotate(mat4(), radians(_rotation.y), vec3(0.f, 1.f, 0.f));
-	mat4 rotZMatrix = rotate(mat4(), radians(_rotation.z), vec3(0.f, 0.f, 1.f));
-
-	_rotationMatrix = rotZMatrix * rotXMatrix * rotYMatrix;
+	_rotationMatrix = rotate(mat4(), radians(_rotation.z), vec3(0.f, 0.f, 1.f));
+	_rotationMatrix = rotate(_rotationMatrix, radians(_rotation.x), vec3(1.f, 0.f, 0.f));
+	_rotationMatrix = rotate(_rotationMatrix, radians(_rotation.y), vec3(0.f, 1.f, 0.f));
+	
 	SetForwardDirection(_objectForward);
 
 	_UpdateModelMatrix();
@@ -357,11 +353,6 @@ VkDeviceSize Object::GetRequiredMemorySize()
 
 void Object::UpdateData(VkCommandBuffer commandBuffer) noexcept
 {
-	/*if (GetComponent("Mesh") != nullptr)
-	{
-		_objectData.Model = rotate(_objectData.Model, 10.f, vec3(0, 1, 0));
-	}*/
-
 	if (_buffer)
 	{
 		Camera *cam = CameraManager::GetActiveCamera();

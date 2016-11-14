@@ -40,8 +40,6 @@
 #include <Scene/Object.h>
 #include <Scene/ObjectComponent.h>
 
-#include <glm/gtc/matrix_transform.hpp>
-
 using namespace glm;
 
 ObjectComponent::ObjectComponent(ComponentInitializer *initializer)

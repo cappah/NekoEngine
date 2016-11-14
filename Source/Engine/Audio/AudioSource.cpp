@@ -37,8 +37,6 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <glm/glm.hpp>
-
 #include <Scene/Object.h>
 #include <Audio/AudioSource.h>
 #include <Engine/ResourceManager.h>

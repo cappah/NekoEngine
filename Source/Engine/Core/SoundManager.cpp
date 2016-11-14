@@ -44,8 +44,6 @@
 #include <Audio/AudioClip.h>
 #include <Audio/AudioSource.h>
 
-#include <glm/glm.hpp>
-
 #define SNDMGR_MODULE	"SoundManager"
 
 using namespace std;

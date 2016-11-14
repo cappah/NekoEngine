@@ -44,11 +44,6 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-#define GLM_FORCE_RADIANS
-#define GLM_FORCE_DEPTH_ZERO_TO_ONE
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-
 using namespace glm;
 
 Camera::Camera(bool noRegister) :
@@ -119,12 +114,8 @@ void Camera::UpdateView() noexcept
 	_view = lookAt(_position, _position + _front, _up);
 	_skyboxView = mat4(mat3(_view));
 
-	mat4 rotXMatrix = rotate(mat4(), radians(_rotation.x), vec3(1.f, 0.f, 0.f));
-	mat4 rotYMatrix = rotate(mat4(), radians(_rotation.y), vec3(0.f, 1.f, 0.f));
-	mat4 rotZMatrix = rotate(mat4(), radians(_rotation.z), vec3(0.f, 0.f, 1.f));
-
-	mat4 rotationMatrix = rotZMatrix * rotXMatrix * rotYMatrix;
-	mat4 translationMatrix = translate(mat4(), _position);
-
-	_model = (translationMatrix * rotationMatrix);
+	_model = translate(mat4(), _position);
+	_model = rotate(_model, radians(_rotation.z), vec3(0.f, 0.f, 1.f));
+	_model = rotate(_model, radians(_rotation.x), vec3(1.f, 0.f, 0.f));
+	_model = rotate(_model, radians(_rotation.y), vec3(0.f, 1.f, 0.f));
 }

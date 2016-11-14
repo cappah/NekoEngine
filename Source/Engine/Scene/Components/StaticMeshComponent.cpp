@@ -42,8 +42,6 @@
 #include <Engine/ResourceManager.h>
 #include <System/Logger.h>
 
-#include <glm/gtc/matrix_transform.hpp>
-
 using namespace glm;
 using namespace std;
 

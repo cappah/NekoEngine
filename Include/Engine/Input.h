@@ -39,8 +39,6 @@
 
 #pragma once
 
-// TODO: Virtual axis
-
 #include <math.h>
 #include <vector>
 #include <string>

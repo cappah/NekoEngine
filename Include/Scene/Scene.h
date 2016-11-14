@@ -45,10 +45,6 @@
 
 #include <stdint.h>
 
-#define GLM_FORCE_RADIANS
-#define GLM_FORCE_DEPTH_ZERO_TO_ONE
-#include <glm/glm.hpp>
-
 #include <Renderer/Buffer.h>
 #include <Renderer/Renderer.h>
 #include <Engine/Engine.h>

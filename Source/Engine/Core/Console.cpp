@@ -46,7 +46,7 @@
 #include <Script/Script.h>
 
 #define MAX_SCREEN_LINES	15
-#define CON_MODULE			"Console"
+#define CON_MODULE		"Console"
 
 using namespace std;
 using namespace glm;

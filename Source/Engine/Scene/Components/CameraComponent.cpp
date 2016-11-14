@@ -40,8 +40,6 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-#include <glm/glm.hpp>
-
 #include <Scene/Object.h>
 #include <Scene/Components/CameraComponent.h>
 #include <Engine/Engine.h>

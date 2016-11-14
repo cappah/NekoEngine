@@ -49,7 +49,7 @@
 #include <System/AssetLoader/AssetLoader.h>
 #include <Renderer/VKUtil.h>
 
-#define LINE_BUFF		1024
+#define LINE_BUFF	1024
 #define SCNMGR_MODULE	"SceneManager"
 
 using namespace std;

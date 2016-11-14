@@ -45,8 +45,6 @@
 #include <Engine/CameraManager.h>
 #include <Scene/Object.h>
 
-#include <glm/glm.hpp>
-
 using namespace glm;
 using namespace std;
 

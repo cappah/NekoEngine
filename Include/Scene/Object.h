@@ -41,10 +41,6 @@
 
 #include <vector>
 
-#define GLM_FORCE_RADIANS
-#define GLM_FORCE_DEPTH_ZERO_TO_ON
-#include <glm/glm.hpp>
-
 #include <Engine/Engine.h>
 #include <Renderer/Renderer.h>
 #include <Renderer/StaticMesh.h>

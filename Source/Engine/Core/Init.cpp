@@ -59,7 +59,7 @@
 using namespace std;
 using namespace std::chrono;
 
-#define INI_BUFF_SZ				4096
+#define INI_BUFF_SZ		4096
 #define VFS_ARCHIVE_LIST_SIZE	4096
 
 #define ENGINE_MODULE	"Engine"

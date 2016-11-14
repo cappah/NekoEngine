@@ -49,8 +49,6 @@
 	#endif
 #endif
 
-#include <glm/glm.hpp>
-
 #include <Engine/Engine.h>
 #include <Audio/AudioClip.h>
 
