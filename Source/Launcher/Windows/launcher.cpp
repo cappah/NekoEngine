@@ -62,7 +62,7 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 
 		string str(lpCmdLine);
 
-#ifdef _DEBUG
+#if defined(NE_CONFIG_DEBUG) || defined(NE_CONFIG_DEVELOPMENT)
 		if (!IsDebuggerPresent() && (str.find("--noconsole") == string::npos))
 		{
 			FreeConsole();

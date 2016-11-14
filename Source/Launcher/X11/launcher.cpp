@@ -38,7 +38,10 @@
  */
 
 #include <Engine/Engine.h>
+#include <Platform/Platform.h>
 #include <string>
+
+using namespace std;
 
 void CleanUp()
 {
@@ -56,11 +59,13 @@ int main(int argc, char *argv[])
 		args.append(argv[i]);
 		args.append(" ");
 	}
+	
+	if(args.find("--waitrdoc") != string::npos)
+			Platform::MessageBox("Waiting for RenderDoc", "Press OK after RenderDoc injection", MessageBoxButtons::OK, MessageBoxIcon::Information);
 
 	if (Engine::Initialize(args.c_str(), false) != ENGINE_OK)
 	{
 		printf("Failed to initialize engine.\n");
-		//esMessageBox("Fatal error", "Failed to initialize engine. The program will now exit.", ES_MSG_ERROR);
 		return -1;
 	}
 
