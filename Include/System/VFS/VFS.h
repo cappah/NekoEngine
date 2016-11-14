@@ -53,7 +53,8 @@ public:
 	
 	ENGINE_API static int LoadArchive(NString path);
 
-	ENGINE_API static VFSFile* Open(NString &path);
+	ENGINE_API static VFSFile* Open(NString &path);	
+	ENGINE_API static bool Exists(NString &path);
 
 	static void Release();
 

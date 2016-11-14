@@ -132,3 +132,13 @@ void Platform::ReleaseModule(PlatformModuleType module)
 {
 	dlclose(module);
 }
+
+void Platform::Sleep(uint32_t seconds)
+{
+	(void)sleep(seconds);
+}
+
+void Platform::USleep(uint32_t microseconds)
+{
+	(void)usleep(microseconds);
+}

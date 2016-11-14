@@ -146,6 +146,9 @@ public:
 
 	ENGINE_API static void LogDebugMessage(const char* message);
 
+	ENGINE_API static void Sleep(uint32_t seconds);
+	ENGINE_API static void USleep(uint32_t microseconds);
+	
 	// Shared
 	ENGINE_API static size_t GetConfigString(const char *section, const char *entry, const char *def, char *buffer, int buffer_len, const char *file);
 	ENGINE_API static int GetConfigInt(const char *section, const char *entry, int def, const char *file);

@@ -512,3 +512,13 @@ bool Platform::CreateSurface(VkInstance instance, VkSurfaceKHR &surface, Platfor
 
 	return true;
 }
+
+void Platform::Sleep(uint32_t seconds)
+{
+	::Sleep(seconds * 1000);
+}
+
+void Platform::USleep(uint32_t microseconds)
+{
+	::Sleep(seconds / 1000);
+}

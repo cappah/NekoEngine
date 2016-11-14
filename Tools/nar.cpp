@@ -52,12 +52,12 @@
 #define stat _stat
 #endif
 
-#define VFS_MAGIC			0xB16B00B5
+#define VFS_MAGIC		0xB16B00B5
 #define VFS_AR_VERSION		0x00000001
 #define VFS_MAX_FILES		10000
 
-#define VFS_MAX_FILE_NAME		1024
-#define VFS_MAX_DIR_NAME		1024
+#define VFS_MAX_FILE_NAME	1024
+#define VFS_MAX_DIR_NAME	1024
 
 #define COPY_BUFF_SIZE	524288	// 512k
 

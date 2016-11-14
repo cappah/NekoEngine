@@ -78,8 +78,7 @@ int ResourceManager::Initialize()
 
 int ResourceManager::_LoadResources()
 {
-	string databaseFile = Engine::GetConfiguration().Engine.DataDirectory;
-	databaseFile.append("/resources.db");
+	string databaseFile = "/resources.db";
 
 	_db = new ResourceDatabase();
 
