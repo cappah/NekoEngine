@@ -41,6 +41,12 @@
 
 #include <Platform/PlatformDetect.h>
 
+#define GLM_FORCE_RADIANS
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 #ifdef NE_PLATFORM_WINDOWS
 	#ifdef ENGINE_INTERNAL
 		#define ENGINE_API	__declspec(dllexport)

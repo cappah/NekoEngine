@@ -66,6 +66,7 @@ int main(int argc, char *argv[])
 	if (Engine::Initialize(args.c_str(), false) != ENGINE_OK)
 	{
 		printf("Failed to initialize engine.\n");
+		Platform::MessageBox("Fatal Error", "Failed to initialize engine. The application will now exit.", MessageBoxButtons::OK, MessageBoxIcon::Error);
 		return -1;
 	}
 

@@ -43,12 +43,6 @@
 
 #include <stdint.h>
 
-#define GLM_FORCE_RADIANS
-#define GLM_FORCE_DEPTH_ZERO_TO_ONE
-#include <glm/glm.hpp>
-#include <glm/gtc/type_ptr.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-
 #include <Engine/Vertex.h>
 #include <Engine/EngineClassFactory.h>
 #include <Renderer/Renderer.h>

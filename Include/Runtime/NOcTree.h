@@ -1,6 +1,6 @@
 /* NekoEngine
  *
- * Runtime.h
+ * NOcTree.h
  * Author: Alexandru Naiman
  *
  * NekoEngine Runtime
@@ -39,8 +39,40 @@
 
 #pragma once
 
-#include <Runtime/NArray.h>
-#include <Runtime/NOcTree.h>
-#include <Runtime/NString.h>
-#include <Runtime/NArrayTS.h>
-#include <Runtime/NThreadPool.h>
+#include <stdint.h>
+#include <Engine/Defs.h>
+
+class NOcTreeNode
+{
+private:
+	glm::vec3 _center;
+};
+
+class NOcTree
+{
+public:
+	NOcTree()
+	{
+		_rootNode = new NOcTreeNode();
+		_count = 0;
+	}
+	
+	uint32_t Count() { return _count; }
+	
+	void Add() { }
+	void Remove() { }
+	
+	void Grow(glm::vec3 direction) { (void)direction; }
+	void Shrink();
+	
+	virtual ~NOcTree()
+	{
+		delete _rootNode;
+		_rootNode = nullptr;
+		_count = 0;
+	}
+	
+private:
+	NOcTreeNode *_rootNode;
+	uint32_t _count;
+};
