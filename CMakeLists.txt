@@ -118,6 +118,9 @@ target_compile_options(Engine PRIVATE -DENGINE_INTERNAL)
 target_compile_options(Engine PRIVATE -DPLATFORM_INTERNAL)
 target_link_libraries(Engine X11 ${PLATFORM_LIBS} ${OPENAL_LIB} z sqlite3 png freetype vulkan luajit-5.1 ${BSD_LIB})
 
+add_custom_command(TARGET Engine POST_BUILD COMMAND mkdir -p ${PROJECT_SOURCE_DIR}/Resources/Data/Shaders)
+add_custom_command(TARGET Engine POST_BUILD COMMAND ${PROJECT_SOURCE_DIR}/Source/Shaders/compile.sh WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/Source/Shaders)
+
 # Launcher Executable
 add_executable(Launcher ${ExecutableSourceFile})
 target_compile_options(Launcher PRIVATE -std=c++1z)

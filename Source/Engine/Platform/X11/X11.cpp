@@ -137,6 +137,8 @@ PlatformWindowType Platform::CreateWindow(int width, int height, bool fullscreen
 	XMapWindow(x_display, win);
 	XStoreName(x_display, win, "NekoEngine");
 	
+	XSync(x_display, false);
+	
 	// get identifiers for the provided atom name strings
 	wm_state = XInternAtom (x_display, "_NET_WM_STATE", False);
 
