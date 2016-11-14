@@ -127,6 +127,8 @@ target_compile_options(Launcher PRIVATE -std=c++1z)
 target_compile_options(Launcher PRIVATE -frtti)
 target_link_libraries(Launcher Engine)
 
+add_custom_command(TARGET Launcher POST_BUILD COMMAND cp ${PROJECT_SOURCE_DIR}/Config/Engine.ini ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Engine.ini)
+
 # Test Game Module
 include_directories(Engine)
 
