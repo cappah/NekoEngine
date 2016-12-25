@@ -1,9 +1,9 @@
 /* NekoEngine
  *
- * NFont.h
+ * GUIManager.h
  * Author: Alexandru Naiman
  *
- * FreeType font renderer
+ * GUI system
  *
  * -----------------------------------------------------------------------------
  *
@@ -28,7 +28,7 @@
  * THIS SOFTWARE IS PROVIDED BY ALEXANDRU NAIMAN "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARANTIES OF
  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
- * IN NO EVENT SHALL ALEXANDRU NAIMAN BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * IN NO EVENT SHALL ALEXANDRU NAIMAN BE LIABLE FOR ANY DIRECT, INDIRECT, 
  * INCIDENTAL, SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
  * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
@@ -39,72 +39,68 @@
 
 #pragma once
 
-#include <glm/glm.hpp>
+#include <vector>
 
+#include <GUI/GUIDefs.h>
+#include <Engine/Vertex.h>
 #include <Engine/Engine.h>
-#include <Engine/Shader.h>
 #include <Runtime/Runtime.h>
-#include <Resource/Resource.h>
-#include <Resource/FontResource.h>
+#include <Renderer/Renderer.h>
 
-#define NFONT_START_CHAR	32
-#define NFONT_NUM_CHARS		128
+class NFont;
 
-typedef struct NFONT_CHARACTER_INFO
+struct GUIVertex
 {
-	glm::ivec2 size;
-	glm::ivec2 bearing;
-	unsigned int advance;
-	float offset;
-} NFontCharacterInfo;
+	float x;
+	float y;
+	float s;
+	float t;
+};
 
-typedef struct NFONT_VERTEX
+struct GUIDrawInfo
 {
-	glm::vec4 pos;
-	glm::vec3 color;
-} NFontVertex;
+	Renderer *renderer;
+	RShader *shader;
+	NFont *guiFont;
+	int offset;
+};
 
-class NFont : public Resource
+class GUIManager
 {
 public:
-	ENGINE_API NFont(FontResource *res);
+	static int Initialize();
 
-	ENGINE_API FontResource* GetResourceInfo() noexcept { return (FontResource*)_resourceInfo; }
-	ENGINE_API int GetCharacterHeight() noexcept { return _texHeight; }
+	ENGINE_API static NFont *GetGUIFont() noexcept;
+	ENGINE_API static int GetCharacterHeight() noexcept;
+	ENGINE_API static void DrawString(glm::vec2 pos, glm::vec3 color, NString text) noexcept;
+	ENGINE_API static void DrawString(glm::vec2 pos, glm::vec3 color, const char *fmt, ...) noexcept;
 
-	ENGINE_API int SetPixelSize(int size);
+	ENGINE_API static void SetFocus(class Control *ctl);
 
-	ENGINE_API virtual int Load() override;
-	
-	ENGINE_API void ScreenResized(int width, int height);
+	static void Draw();
+	static void Update(double deltaTime);
 
-	ENGINE_API void Draw(NString text, glm::vec2& pos) noexcept { glm::vec3 white(1.f, 1.f, 1.f); Draw(text, pos, white); }
-	ENGINE_API void Draw(NString text, glm::vec2& pos, glm::vec3& color) noexcept;
-	ENGINE_API void Render();
+	ENGINE_API static void RegisterControl(class Control *ctl);
+	ENGINE_API static void RegisterFont(class NFont *font);
 
-	ENGINE_API virtual ~NFont();
+	static void ScreenResized();
+
+	static void Release();
+
+#ifdef ENGINE_INTERNAL
+
+	//static void BindDescriptorSet(VkCommandBuffer buffer) { vkCmdBindDescriptorSets(buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, PipelineManager::GetPipelineLayout(PIPE_LYT_GUI), 0, 1, &_descriptorSet, 0, nullptr); }
 
 private:
-	NArray<NFontVertex> _vertices;
-	NArray<uint32_t> _indices;
-	glm::mat4 _projection;
-	NFontCharacterInfo _characterInfo[NFONT_NUM_CHARS];
-	size_t _vboSize;
-	size_t _iboSize;
-	uint32_t _texWidth;
-	uint32_t _texHeight;
-	RTexture *_texture;
-	RBuffer *_vertexBuffer;
-	RBuffer *_indexBuffer;
-	RBuffer *_uniformBuffer;
-	RArrayBuffer *_arrayBuffer;
-	Shader *_shader;
-	int _pixelSize;
-
-	int _BuildAtlas();
+	static RBuffer *_uniformBuffer;
+	static GUIDrawInfo _drawInfo;
+	static glm::mat4 _projection;
+	static bool _needUpdate;
+	static std::vector<class NFont *> _fonts;
+	static std::vector<class Control*> _controls;
+#endif
 };
 
 #if defined(_MSC_VER)
-template class ENGINE_API NArray<NFont*>;
-template class ENGINE_API NArray<NFontVertex>;
+template class ENGINE_API NArray<GUIVertex>;
 #endif

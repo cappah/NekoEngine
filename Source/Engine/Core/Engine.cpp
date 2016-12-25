@@ -69,6 +69,7 @@
 #include <System/Logger.h>
 #include <PostEffects/Effect.h>
 #include <System/VFS/VFS.h>
+#include <GUI/GUIManager.h>
 
 #include <PostEffects/Bloom.h>
 #include <PostEffects/SMAA.h>
@@ -78,8 +79,6 @@
 
 // 60 Hz logic update
 #define UPDATE_DELTA		.01666
-
-#define FONT_BUFF		8192
 
 #define OGL_CTX_REQ_MAJOR	4
 #define OGL_CTX_REQ_MINOR	5
@@ -104,7 +103,6 @@ PlatformWindowType Engine::_engineWindow;
 Configuration Engine::_config;
 bool Engine::_disposed = false;
 bool Engine::_printStats = false;
-NFont* Engine::_engineFont = nullptr;
 int Engine::_nFrames = 0;
 double Engine::_lastTime = 0.f;
 int Engine::_fps = 0;
@@ -678,8 +676,6 @@ int Engine::Initialize(string cmdLine, bool editor)
 	_renderer->SetClearColor(0.f, 0.f, 0.f, 0.f);
 	_renderer->Clear(R_CLEAR_COLOR | R_CLEAR_DEPTH | R_CLEAR_STENCIL);
 
-	_engineFont = (NFont*)ResourceManager::GetResourceByName("fnt_system", ResourceType::RES_FONT);
-
 	Logger::Log(ENGINE_MODULE, LOG_INFORMATION, "Engine startup complete");
 
 	// make sure the resources are released
@@ -698,6 +694,8 @@ int Engine::Initialize(string cmdLine, bool editor)
 		_renderer->SetSwapInterval(1);
 	else
 		_renderer->SetSwapInterval(0);
+
+	GUIManager::Initialize();
 
 	if (!_InitGame())
 	{
@@ -754,24 +752,6 @@ void Engine::Pause(bool pause)
 	// TODO: let objects know the game was paused
 }
 
-void Engine::DrawString(vec2 pos, vec3 color, NString text) noexcept
-{
-	_engineFont->Draw(text, pos, color);
-}
-
-void Engine::DrawString(vec2 pos, vec3 color, const char *fmt, ...) noexcept
-{
-	va_list args;
-	char buff[FONT_BUFF];
-	memset(buff, 0x0, FONT_BUFF);
-
-	va_start(args, fmt);
-	vsnprintf(buff, FONT_BUFF, fmt, args);
-	va_end(args);
-
-	_engineFont->Draw(buff, pos, color);
-}
-
 void Engine::Frame() noexcept
 {
 	if(_startup)
@@ -794,20 +774,15 @@ void Engine::Frame() noexcept
 			lastTime = curTime;
 		}
 
+		if (_printStats)
+			_PrintStats();
+
 		temp = GetTime();
 		if (SceneManager::IsSceneLoaded())
 			Draw();
 		else
 			SceneManager::DrawLoadingScreen();
 		_renderTime = GetTime() - temp;
-	}
-
-	if (_engineFont)
-	{
-		if (_printStats)
-			_PrintStats();
-
-		_engineFont->Render();
 	}
 
 	_renderer->SwapBuffers();
@@ -867,6 +842,10 @@ void Engine::Draw() noexcept
 
 	if (Console::IsOpen())
 		Console::Draw();
+
+	// GUI
+
+	GUIManager::Draw();
 }
 
 void Engine::Update(double deltaTime) noexcept
@@ -880,6 +859,7 @@ void Engine::Update(double deltaTime) noexcept
 		if (Input::GetButtonDown(NE_KEY_TILDE))
 			Console::OpenConsole();
 
+	GUIManager::Update(deltaTime);
 	SceneManager::UpdateScene(deltaTime);
 
 	Input::ClearKeyState();
@@ -904,11 +884,10 @@ void Engine::ScreenResized(int width, int height) noexcept
 	DeferredBuffer::ScreenResized(width, height);
 	PostProcessor::ScreenResized();
 
+	GUIManager::ScreenResized();
+
 	if(SceneManager::IsSceneLoaded())
 		CameraManager::GetActiveCamera()->UpdateProjection();
-
-	if(_engineFont)
-		_engineFont->ScreenResized(width, height);
 
 	_renderer->SetViewport(0, 0, width, height);
 	_renderer->ScreenResized();
@@ -1095,27 +1074,27 @@ void Engine::_PrintStats()
 	_frameTime = (esGetTime() - _lastFrameTime) * 1000;
 	_lastFrameTime = esGetTime();*/
 
-	float charHeight = (float)_engineFont->GetCharacterHeight();
+	float charHeight = (float)GUIManager::GetCharacterHeight();
 	vec3 color = vec3(1.f, 1.f, 1.f);
 
-	DrawString(vec2(0.f, 0.f), color, "FPS:       %d (%.02f ms)", _fps, _frameTime);
-	DrawString(vec2(0.f, charHeight * 1), color, "DrawCalls: %ld", _renderer->GetDrawCalls());
+	GUIManager::DrawString(vec2(0.f, 0.f), color, "FPS:       %d (%.02f ms)", _fps, _frameTime);
+	GUIManager::DrawString(vec2(0.f, charHeight * 1), color, "DrawCalls: %ld", _renderer->GetDrawCalls());
 	_renderer->ResetDrawCalls();
-	DrawString(vec2(0.f, charHeight * 2), color, "Renderer:  %s %d.%d", _renderer->GetName(), _renderer->GetMajorVersion(), _renderer->GetMinorVersion());
-	DrawString(vec2(0.f, charHeight * 3), color, "Screen:    %dx%d (FBO: %dx%d)",
+	GUIManager::DrawString(vec2(0.f, charHeight * 2), color, "Renderer:  %s %d.%d", _renderer->GetName(), _renderer->GetMajorVersion(), _renderer->GetMinorVersion());
+	GUIManager::DrawString(vec2(0.f, charHeight * 3), color, "Screen:    %dx%d (FBO: %dx%d)",
 		_config.Engine.ScreenWidth, _config.Engine.ScreenHeight, DeferredBuffer::GetWidth(), DeferredBuffer::GetHeight());
-	DrawString(vec2(0.f, charHeight * 4), color, "Scene:     %s", SceneManager::GetActiveScene()->GetName().c_str());
-	DrawString(vec2(0.f, charHeight * 5), color, "Verts:     %d", SceneManager::GetActiveScene()->GetVertexCount());
-	DrawString(vec2(0.f, charHeight * 6), color, "Tris:      %d", SceneManager::GetActiveScene()->GetTriangleCount());
-	DrawString(vec2(0.f, charHeight * 7), color, "Objects:   %d", SceneManager::GetActiveScene()->GetObjectCount());
-	DrawString(vec2(0.f, charHeight * 8), color, "Lights:    %d", SceneManager::GetActiveScene()->GetNumLights());
-	DrawString(vec2(0.f, charHeight * 9), color, "StMeshes:  %d", ResourceManager::LoadedStaticMeshes());
-	DrawString(vec2(0.f, charHeight * 10), color, "SkMeshes:  %d", ResourceManager::LoadedSkeletalMeshes());
-	DrawString(vec2(0.f, charHeight * 11), color, "Textures:  %d", ResourceManager::LoadedTextures());
-	DrawString(vec2(0.f, charHeight * 12), color, "Shaders:   %d", ResourceManager::LoadedShaders());
-	DrawString(vec2(0.f, charHeight * 13), color, "Materials: %d", ResourceManager::LoadedMaterials());
-	DrawString(vec2(0.f, charHeight * 14), color, "Sounds:    %d", ResourceManager::LoadedSounds());
-	DrawString(vec2(0.f, charHeight * 15), color, "Fonts:     %d", ResourceManager::LoadedFonts());
+	GUIManager::DrawString(vec2(0.f, charHeight * 4), color, "Scene:     %s", SceneManager::GetActiveScene()->GetName().c_str());
+	GUIManager::DrawString(vec2(0.f, charHeight * 5), color, "Verts:     %d", SceneManager::GetActiveScene()->GetVertexCount());
+	GUIManager::DrawString(vec2(0.f, charHeight * 6), color, "Tris:      %d", SceneManager::GetActiveScene()->GetTriangleCount());
+	GUIManager::DrawString(vec2(0.f, charHeight * 7), color, "Objects:   %d", SceneManager::GetActiveScene()->GetObjectCount());
+	GUIManager::DrawString(vec2(0.f, charHeight * 8), color, "Lights:    %d", SceneManager::GetActiveScene()->GetNumLights());
+	GUIManager::DrawString(vec2(0.f, charHeight * 9), color, "StMeshes:  %d", ResourceManager::LoadedStaticMeshes());
+	GUIManager::DrawString(vec2(0.f, charHeight * 10), color, "SkMeshes:  %d", ResourceManager::LoadedSkeletalMeshes());
+	GUIManager::DrawString(vec2(0.f, charHeight * 11), color, "Textures:  %d", ResourceManager::LoadedTextures());
+	GUIManager::DrawString(vec2(0.f, charHeight * 12), color, "Shaders:   %d", ResourceManager::LoadedShaders());
+	GUIManager::DrawString(vec2(0.f, charHeight * 13), color, "Materials: %d", ResourceManager::LoadedMaterials());
+	GUIManager::DrawString(vec2(0.f, charHeight * 14), color, "Sounds:    %d", ResourceManager::LoadedSounds());
+	GUIManager::DrawString(vec2(0.f, charHeight * 15), color, "Fonts:     %d", ResourceManager::LoadedFonts());
 
 	if (_haveMemoryInfo)
 	{
@@ -1124,14 +1103,14 @@ void Engine::_PrintStats()
 		totalMem = _renderer->GetVideoMemorySize();
 		availableMem = _renderer->GetUsedVideoMemorySize();
 
-		DrawString(vec2(0.f, charHeight * 16), color, "VRAM:      %d/%d MB", (totalMem - availableMem) / 1024, totalMem / 1024);
+		GUIManager::DrawString(vec2(0.f, charHeight * 16), color, "VRAM:      %d/%d MB", (totalMem - availableMem) / 1024, totalMem / 1024);
 	}
 
-	DrawString(vec2(0.f, _config.Engine.ScreenHeight - charHeight * 2), color, "NekoEngine");
+	GUIManager::DrawString(vec2(0.f, _config.Engine.ScreenHeight - charHeight * 2), color, "NekoEngine");
 #ifdef _DEBUG
-	DrawString(vec2(0.f, _config.Engine.ScreenHeight - charHeight), color, "Version: %s [%s] [Debug]", ENGINE_VERSION_STRING, ENGINE_PLATFORM_STRING);
+	GUIManager::DrawString(vec2(0.f, _config.Engine.ScreenHeight - charHeight), color, "Version: %s [%s] [Debug]", ENGINE_VERSION_STRING, ENGINE_PLATFORM_STRING);
 #else
-	DrawString(vec2(0.f, _config.Engine.ScreenHeight - charHeight), color, "Version: %s [%s]", ENGINE_VERSION_STRING, ENGINE_PLATFORM_STRING);
+	GUIManager::DrawString(vec2(0.f, _config.Engine.ScreenHeight - charHeight), color, "Version: %s [%s]", ENGINE_VERSION_STRING, ENGINE_PLATFORM_STRING);
 #endif
 }
 
@@ -1148,12 +1127,7 @@ void Engine::CleanUp() noexcept
 	if(_gameModule)
 		_gameModule->CleanUp();
 
-	if (_engineFont)
-	{
-		ResourceManager::UnloadResourceByName("fnt_system", ResourceType::RES_FONT);
-		_engineFont = nullptr;
-	}
-
+	GUIManager::Release();
 	DeferredBuffer::Release();
 	PostProcessor::Release();
 	SceneManager::Release();

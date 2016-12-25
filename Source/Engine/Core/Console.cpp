@@ -40,6 +40,7 @@
 #include <Engine/Engine.h>
 #include <Engine/Console.h>
 #include <Engine/Keycodes.h>
+#include <GUI/GUIManager.h>
 
 #define MAX_SCREEN_LINES	15
 
@@ -115,13 +116,13 @@ void Console::Draw()
 
 	vec2 pos = vec2(10, Engine::GetScreenHeight() * .9);
 
-	Engine::DrawString(vec2(pos.x, pos.y), vec3(1, 1, 1), "> ");
-	Engine::DrawString(vec2(pos.x + 20, pos.y), vec3(1, 1, 1), _buff);
+	GUIManager::DrawString(vec2(pos.x, pos.y), vec3(1, 1, 1), "> ");
+	GUIManager::DrawString(vec2(pos.x + 20, pos.y), vec3(1, 1, 1), _buff);
 	pos.y -= 20 * (_text.Count() + 1);
 
 	for (NString &nstr : _text)
 	{
-		Engine::DrawString(pos, vec3(1, 1, 1), nstr);
+		GUIManager::DrawString(pos, vec3(1, 1, 1), nstr);
 		pos.y += 20;
 	}
 }

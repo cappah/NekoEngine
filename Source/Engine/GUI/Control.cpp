@@ -1,9 +1,9 @@
 /* NekoEngine
  *
- * NFont.h
+ * Control.cpp
  * Author: Alexandru Naiman
  *
- * FreeType font renderer
+ * Control base
  *
  * -----------------------------------------------------------------------------
  *
@@ -37,74 +37,29 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#pragma once
+#include <GUI/Control.h>
 
-#include <glm/glm.hpp>
-
-#include <Engine/Engine.h>
-#include <Engine/Shader.h>
-#include <Runtime/Runtime.h>
-#include <Resource/Resource.h>
-#include <Resource/FontResource.h>
-
-#define NFONT_START_CHAR	32
-#define NFONT_NUM_CHARS		128
-
-typedef struct NFONT_CHARACTER_INFO
+Control::Control(int x, int y, int width, int height) :
+	_controlRect{ Point(x, y), Point(width, height) },
+	_enabled(true), _hovered(false), _visible(true),
+	_text(""),
+	_textColor(0.f), _hoveredTextColor(1.f, 0.f, 0.f),
+	_font(GUIManager::GetGUIFont()),
+	_vertexBuffer(nullptr), _indexBuffer(nullptr),
+	_arrayBuffer(nullptr),
+	_focused(false),
+	_onClick(nullptr), _onRightClick(nullptr), _onMiddleClick(nullptr),
+	_onMouseEnter(nullptr), _onMouseLeave(nullptr),
+	_onMouseUp(nullptr), _onMouseDown(nullptr),
+	_onMouseMoved(nullptr),
+	_onKeyUp(nullptr), _onKeyDown(nullptr)
 {
-	glm::ivec2 size;
-	glm::ivec2 bearing;
-	unsigned int advance;
-	float offset;
-} NFontCharacterInfo;
+	GUIManager::RegisterControl(this);
+}
 
-typedef struct NFONT_VERTEX
+Control::~Control()
 {
-	glm::vec4 pos;
-	glm::vec3 color;
-} NFontVertex;
-
-class NFont : public Resource
-{
-public:
-	ENGINE_API NFont(FontResource *res);
-
-	ENGINE_API FontResource* GetResourceInfo() noexcept { return (FontResource*)_resourceInfo; }
-	ENGINE_API int GetCharacterHeight() noexcept { return _texHeight; }
-
-	ENGINE_API int SetPixelSize(int size);
-
-	ENGINE_API virtual int Load() override;
-	
-	ENGINE_API void ScreenResized(int width, int height);
-
-	ENGINE_API void Draw(NString text, glm::vec2& pos) noexcept { glm::vec3 white(1.f, 1.f, 1.f); Draw(text, pos, white); }
-	ENGINE_API void Draw(NString text, glm::vec2& pos, glm::vec3& color) noexcept;
-	ENGINE_API void Render();
-
-	ENGINE_API virtual ~NFont();
-
-private:
-	NArray<NFontVertex> _vertices;
-	NArray<uint32_t> _indices;
-	glm::mat4 _projection;
-	NFontCharacterInfo _characterInfo[NFONT_NUM_CHARS];
-	size_t _vboSize;
-	size_t _iboSize;
-	uint32_t _texWidth;
-	uint32_t _texHeight;
-	RTexture *_texture;
-	RBuffer *_vertexBuffer;
-	RBuffer *_indexBuffer;
-	RBuffer *_uniformBuffer;
-	RArrayBuffer *_arrayBuffer;
-	Shader *_shader;
-	int _pixelSize;
-
-	int _BuildAtlas();
-};
-
-#if defined(_MSC_VER)
-template class ENGINE_API NArray<NFont*>;
-template class ENGINE_API NArray<NFontVertex>;
-#endif
+	delete _vertexBuffer;
+	delete _indexBuffer;
+	delete _arrayBuffer;
+}

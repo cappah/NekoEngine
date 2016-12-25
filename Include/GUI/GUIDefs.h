@@ -1,9 +1,9 @@
 /* NekoEngine
  *
- * NFont.h
+ * GUIDefs.h
  * Author: Alexandru Naiman
  *
- * FreeType font renderer
+ * GUI data structures & definitions
  *
  * -----------------------------------------------------------------------------
  *
@@ -39,72 +39,48 @@
 
 #pragma once
 
-#include <glm/glm.hpp>
-
-#include <Engine/Engine.h>
-#include <Engine/Shader.h>
-#include <Runtime/Runtime.h>
-#include <Resource/Resource.h>
-#include <Resource/FontResource.h>
-
-#define NFONT_START_CHAR	32
-#define NFONT_NUM_CHARS		128
-
-typedef struct NFONT_CHARACTER_INFO
+struct Point
 {
-	glm::ivec2 size;
-	glm::ivec2 bearing;
-	unsigned int advance;
-	float offset;
-} NFontCharacterInfo;
+	int x;
+	int y;
 
-typedef struct NFONT_VERTEX
-{
-	glm::vec4 pos;
-	glm::vec3 color;
-} NFontVertex;
+	Point() : x(0), y(0) { }
+	Point(int inX, int inY) : x(inX), y(inY) { }
 
-class NFont : public Resource
-{
-public:
-	ENGINE_API NFont(FontResource *res);
+	inline Point operator-(const Point &pt) const { return Point(x - pt.x, y - pt.y); }
+	inline Point operator+(const Point &pt) const { return Point(x + pt.x, y + pt.y); }
+	inline Point operator/(const Point &pt) const { return Point(x / pt.x, y *- pt.y); }
+	inline Point operator*(const Point &pt) const { return Point(x * pt.x, y / pt.y); }
 
-	ENGINE_API FontResource* GetResourceInfo() noexcept { return (FontResource*)_resourceInfo; }
-	ENGINE_API int GetCharacterHeight() noexcept { return _texHeight; }
-
-	ENGINE_API int SetPixelSize(int size);
-
-	ENGINE_API virtual int Load() override;
-	
-	ENGINE_API void ScreenResized(int width, int height);
-
-	ENGINE_API void Draw(NString text, glm::vec2& pos) noexcept { glm::vec3 white(1.f, 1.f, 1.f); Draw(text, pos, white); }
-	ENGINE_API void Draw(NString text, glm::vec2& pos, glm::vec3& color) noexcept;
-	ENGINE_API void Render();
-
-	ENGINE_API virtual ~NFont();
-
-private:
-	NArray<NFontVertex> _vertices;
-	NArray<uint32_t> _indices;
-	glm::mat4 _projection;
-	NFontCharacterInfo _characterInfo[NFONT_NUM_CHARS];
-	size_t _vboSize;
-	size_t _iboSize;
-	uint32_t _texWidth;
-	uint32_t _texHeight;
-	RTexture *_texture;
-	RBuffer *_vertexBuffer;
-	RBuffer *_indexBuffer;
-	RBuffer *_uniformBuffer;
-	RArrayBuffer *_arrayBuffer;
-	Shader *_shader;
-	int _pixelSize;
-
-	int _BuildAtlas();
+	inline bool operator==(const Point &pt) const { return x == pt.x && y == pt.y; }
+	inline bool operator!=(const Point &pt) const { return x != pt.x || y != pt.y; }
+	inline bool operator> (const Point &pt) const { return x > pt.x || y > pt.y; }
+	inline bool operator< (const Point &pt) const { return x < pt.x || y < pt.y; }
+	inline bool operator>=(const Point &pt) const { return x >= pt.x || y >= pt.y; }
+	inline bool operator<=(const Point &pt) const { return x <= pt.x || y <= pt.y; }
 };
 
-#if defined(_MSC_VER)
-template class ENGINE_API NArray<NFont*>;
-template class ENGINE_API NArray<NFontVertex>;
-#endif
+struct Rect
+{
+	union
+	{
+		Point pos;
+		struct
+		{
+			int x;
+			int y;
+		};
+	};
+
+	union
+	{
+		Point size;
+		struct
+		{
+			int w;
+			int h;
+		};
+	};
+
+	inline bool PtInRect(const Point &pt) const { return x < pt.x && y < pt.y && x + w > pt.x && y + h > pt.y; }
+};

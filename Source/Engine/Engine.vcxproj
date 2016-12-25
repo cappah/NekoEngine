@@ -293,6 +293,9 @@
     <ClInclude Include="..\..\include\Engine\Texture.h" />
     <ClInclude Include="..\..\include\Engine\Version.h" />
     <ClInclude Include="..\..\include\Engine\Vertex.h" />
+    <ClInclude Include="..\..\Include\GUI\Control.h" />
+    <ClInclude Include="..\..\Include\GUI\GUIDefs.h" />
+    <ClInclude Include="..\..\Include\GUI\GUIManager.h" />
     <ClInclude Include="..\..\Include\Platform\Compat.h" />
     <ClInclude Include="..\..\include\Platform\Platform.h" />
     <ClInclude Include="..\..\Include\Platform\PlatformDetect.h" />
@@ -427,6 +430,8 @@
     <ClCompile Include="Core\SSAO.cpp" />
     <ClCompile Include="Core\StaticMesh.cpp" />
     <ClCompile Include="Core\Texture.cpp" />
+    <ClCompile Include="GUI\Control.cpp" />
+    <ClCompile Include="GUI\GUIManager.cpp" />
     <ClCompile Include="Platform\Compat\reallocarray.cpp" />
     <ClCompile Include="Platform\shared.cpp" />
     <ClCompile Include="Platform\Windows\PlatformInput.cpp" />

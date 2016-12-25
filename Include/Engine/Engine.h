@@ -219,7 +219,6 @@ struct Configuration
 };
 
 class GameModule;
-class NFont;
 
 /**
  * NekoEngine
@@ -267,9 +266,6 @@ public:
 	static void DrawStats(bool draw) noexcept { _printStats = draw; }
 	static bool IsDrawingStats() noexcept { return _printStats; }
 
-	static void DrawString(glm::vec2 pos, glm::vec3 color, NString text) noexcept;
-	static void DrawString(glm::vec2 pos, glm::vec3 color, const char *fmt, ...) noexcept;
-
 	static double GetTime() noexcept;
 
 	static int GetScreenHeight() noexcept { return _config.Engine.ScreenHeight; }
@@ -312,7 +308,6 @@ private:
 	static Configuration _config;
 	static bool _disposed;
 	static bool _printStats;
-	static NFont *_engineFont;
 	static GameModule *_gameModule;
 	static Renderer *_renderer;
 	static bool _paused;

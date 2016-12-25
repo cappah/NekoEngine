@@ -126,6 +126,12 @@
     <Filter Include="Resources\Data\Shaders\glsl\postproc">
       <UniqueIdentifier>{c022a17b-4f01-49c4-a195-8aed62efe430}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Include\GUI">
+      <UniqueIdentifier>{fcbbdd97-6cc1-445a-b609-2e0558136bae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\GUI">
+      <UniqueIdentifier>{f9c93b57-d6b9-44d2-b7b6-ee9383033057}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\Audio\AudioSource.h">
@@ -373,6 +379,15 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\Engine\Events.h">
       <Filter>Include\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\GUI\GUIManager.h">
+      <Filter>Include\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\GUI\Control.h">
+      <Filter>Include\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\GUI\GUIDefs.h">
+      <Filter>Include\GUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -691,6 +706,12 @@
     </ClCompile>
     <ClCompile Include="Core\EventManager.cpp">
       <Filter>Source\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI\GUIManager.cpp">
+      <Filter>Source\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI\Control.cpp">
+      <Filter>Source\GUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
