@@ -163,7 +163,7 @@ void GUIManager::Update(double deltaTime)
 			}
 		}
 
-		ctl->_Update();
+		ctl->_Update(deltaTime);
 	}
 }
 

@@ -389,6 +389,21 @@
     <ClInclude Include="..\..\Include\GUI\GUIDefs.h">
       <Filter>Include\GUI</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Include\GUI\Box.h">
+      <Filter>Include\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\GUI\Button.h">
+      <Filter>Include\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\GUI\Label.h">
+      <Filter>Include\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\GUI\Slider.h">
+      <Filter>Include\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\GUI\TextBox.h">
+      <Filter>Include\GUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Resources\Data\scenes.cfg">
@@ -711,6 +726,21 @@
       <Filter>Source\GUI</Filter>
     </ClCompile>
     <ClCompile Include="GUI\Control.cpp">
+      <Filter>Source\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI\Box.cpp">
+      <Filter>Source\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI\Slider.cpp">
+      <Filter>Source\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI\TextBox.cpp">
+      <Filter>Source\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI\Button.cpp">
+      <Filter>Source\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI\Label.cpp">
       <Filter>Source\GUI</Filter>
     </ClCompile>
   </ItemGroup>

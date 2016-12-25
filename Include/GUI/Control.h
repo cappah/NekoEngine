@@ -101,7 +101,7 @@ protected:
 	std::function <void(const Point &, const Point &)> _onMouseMoved;
 	std::function<void(uint8_t)> _onKeyUp, _onKeyDown;
 
-	virtual void _InitializeControl(Renderer *renderer) { (void)renderer; }
+	virtual int _InitializeControl(Renderer *renderer) { (void)renderer; return ENGINE_OK; }
 	virtual void _Draw(GUIDrawInfo *drawInfo) { (void)drawInfo; }
-	virtual void _Update() { }
+	virtual void _Update(double deltaTime) { (void)deltaTime; }
 };
