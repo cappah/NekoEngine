@@ -38,16 +38,16 @@
  */
 
 #include <Engine/Engine.h>
-#include <Platform/Platform.h>
+#include <System/Logger.h>
 
 #include <sys/stat.h>
 
+#include <curl/curl.h>
+
 #include <android/log.h>
 #include <android/sensor.h>
-#include <android/configuration.h>
-#include <android/log.h>
-#include <android_native_app_glue.h>
-#include <sys/system_properties.h>
+
+#define ANDROID_PLATFORM_MODULE	"AndroidPlatform"
 
 static struct android_app *_app;
 static ASensorManager *_sensorManager;
@@ -66,6 +66,13 @@ static NString _externalDataPath;
 int32_t _android_handle_input_event(struct android_app* app, AInputEvent* event);
 void _android_handle_sensor_event(ASensorEventQueue *queue, const ASensor *_accelerometer, const ASensor *_gyroscope, const ASensor *_lightSensor);
 
+bool _android_download_data()
+{
+
+
+	return true;
+}
+
 void _android_handle_app_cmd(struct android_app *app, int32_t cmd)
 {
 	switch (cmd)
@@ -75,6 +82,8 @@ void _android_handle_app_cmd(struct android_app *app, int32_t cmd)
 			NString args = "--log=";
 			args.Append(_externalDataPath);
 			args.Append("/engine.log");
+
+			// check data directory
 
 			if(Engine::Initialize(*args, false) != ENGINE_OK)
 				Platform::Exit();
