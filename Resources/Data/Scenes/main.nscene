@@ -105,41 +105,41 @@ EndObject
 #EndObject
 
 # Sophia
-Object
-id=5
-Component=SkeletalMeshComponent=Mesh
-	mesh=skm_sophia
-	material=mat_sophia
-	animator=Animator
-EndComponent
-Component=AnimatorComponent=Animator
-	defaultanim=ac_sophia_idle
-	targetmesh=Mesh
-EndComponent
-position=-127.5, -30.0, -145.0
-rotation=0.0, 0.0, 0.0
-scale=0.45, 0.45, 0.45
-EndObject
+#Object
+#id=5
+#Component=SkeletalMeshComponent=Mesh
+#	mesh=skm_sophia
+#	material=mat_sophia
+#	animator=Animator
+#EndComponent
+#Component=AnimatorComponent=Animator
+#	defaultanim=ac_sophia_idle
+#	targetmesh=Mesh
+#EndComponent
+#position=-127.5, -30.0, -145.0
+#rotation=0.0, 0.0, 0.0
+#scale=0.45, 0.45, 0.45
+#EndObject
 
 # Sophia Demo
-Object
-id=51
-Component=SkeletalMeshComponent=Mesh
-	mesh=skm_sophia
-	material=mat_sophia
-	animator=Animator
-EndComponent
-Component=DemoAnimatorComponent=Animator
-	defaultanim=ac_sophia_idle
-	targetmesh=Mesh
-	clip0=ac_sophia_skintest
-	clip1=ac_sophia_samba
-	clip2=ac_sophia_jump
-EndComponent
-position=-77.5, -30.0, -115.0
-rotation=0.0, 0.0, 0.0
-scale=0.45, 0.45, 0.45
-EndObject
+#Object
+#id=51
+#Component=SkeletalMeshComponent=Mesh
+#	mesh=skm_sophia
+#	material=mat_sophia
+#	animator=Animator
+#EndComponent
+#Component=DemoAnimatorComponent=Animator
+#	defaultanim=ac_sophia_idle
+#	targetmesh=Mesh
+#	clip0=ac_sophia_skintest
+#	clip1=ac_sophia_samba
+#	clip2=ac_sophia_jump
+#EndComponent
+#position=-77.5, -30.0, -115.0
+#rotation=0.0, 0.0, 0.0
+#scale=0.45, 0.45, 0.45
+#EndObject
 
 # Muscle Car
 Object=MovingObject
