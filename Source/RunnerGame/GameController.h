@@ -1,9 +1,9 @@
 /* NekoEngine
  *
- * DemoAnimatorComponent.h
+ * GameController.h
  * Author: Alexandru Naiman
  *
- * DemoAnimatorComponent class definition
+ * GameController class definition
  *
  * -----------------------------------------------------------------------------
  *
@@ -39,24 +39,19 @@
 
 #pragma once
 
-#include "TestGame.h"
-#include <Scene/Components/AnimatorComponent.h>
+#include <glm/glm.hpp>
 
-class DemoAnimatorComponent : public AnimatorComponent
+#include "RunnerGame.h"
+#include <Scene/Object.h>
+
+class GameController :
+	public Object
 {
 public:
-	TESTGAME_API DemoAnimatorComponent(ComponentInitializer *initializer);
+	RUNNERGAME_API GameController(ObjectInitializer *initializer) noexcept;
 
-	TESTGAME_API virtual int Load() override;
+	virtual int RUNNERGAME_API Load() override;
+	virtual void RUNNERGAME_API Update(double deltaTime) noexcept override;
 
-	TESTGAME_API virtual void Update(double deltaTime) noexcept override;
-
-	TESTGAME_API virtual bool Unload() override;
-
-	TESTGAME_API ~DemoAnimatorComponent() { }
-
-private:
-	std::string _clipIds[3];
-	AnimationClip *_clips[3];
-	AnimationClip *_initialAnim;
+	virtual RUNNERGAME_API ~GameController() noexcept {};
 };

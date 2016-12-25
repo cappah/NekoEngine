@@ -44,7 +44,7 @@
 #include <Engine/SceneManager.h>
 #include <Engine/Console.h>
 
-#include "TestGame.h"
+#include "RunnerGame.h"
 #include "GameController.h"
 
 REGISTER_OBJECT_CLASS(GameController);

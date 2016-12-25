@@ -10,7 +10,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Launcher", "..\..\Source\La
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Engine", "..\..\Source\Engine\Engine.vcxproj", "{FC024EC8-32F4-4657-A2CB-14D2B3A931F8}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestGame", "..\..\Source\TestGame\TestGame.vcxproj", "{8E393A6F-DC1C-4DB4-8A20-2FB1FCBCA29A}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RunnerGame", "..\..\Source\RunnerGame\RunnerGame.vcxproj", "{8E393A6F-DC1C-4DB4-8A20-2FB1FCBCA29A}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GLRenderer", "..\..\Source\Renderer\GLRenderer\GLRenderer.vcxproj", "{3DD5A636-6EC2-4CE3-82A8-E43068C321C4}"
 EndProject

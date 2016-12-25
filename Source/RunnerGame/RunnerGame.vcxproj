@@ -18,11 +18,33 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="DemoAnimatorComponent.h" />
+    <ClInclude Include="GameController.h" />
+    <ClInclude Include="MovingObject.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="RunnerGame.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="DemoAnimatorComponent.cpp" />
+    <ClCompile Include="GameController.cpp" />
+    <ClCompile Include="MovingObject.cpp" />
+    <ClCompile Include="RunnerGame.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Engine\Engine.vcxproj">
+      <Project>{fc024ec8-32f4-4657-a2cb-14d2b3a931f8}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="RunnerGame.rc" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{E3988136-901F-4968-B8AA-D82602ECE679}</ProjectGuid>
+    <ProjectGuid>{8E393A6F-DC1C-4DB4-8A20-2FB1FCBCA29A}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>D3D11Renderer</RootNamespace>
+    <RootNamespace>Game</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <ProjectName>RunnerGame</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
@@ -56,29 +78,31 @@
   </ImportGroup>
   <ImportGroup Label="Shared">
   </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\..\Projects\VS2017\NekoEngine.props" />
+    <Import Project="..\..\Projects\VS2017\NekoEngine.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\..\Projects\VS2017\NekoEngine_x86.props" />
+    <Import Project="..\..\Projects\VS2017\NekoEngine_x86.props" />
   </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\..\Projects\VS2017\NekoEngine.props" />
+    <Import Project="..\..\Projects\VS2017\NekoEngine.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\..\Projects\VS2017\NekoEngine_x86.props" />
+    <Import Project="..\..\Projects\VS2017\NekoEngine_x86.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)..\..\Bin64\</OutDir>
     <IntDir>$(Configuration)\</IntDir>
+    <UseMultiToolTask>true</UseMultiToolTask>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <UseMultiToolTask>true</UseMultiToolTask>
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)..\..\Bin32\</OutDir>
     <IntDir>$(Configuration)\32\</IntDir>
@@ -87,8 +111,10 @@
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)..\..\Bin64\</OutDir>
     <IntDir>$(Configuration)\</IntDir>
+    <UseMultiToolTask>false</UseMultiToolTask>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <UseMultiToolTask>false</UseMultiToolTask>
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)..\..\Bin32\</OutDir>
     <IntDir>$(Configuration)\32\</IntDir>
@@ -99,12 +125,17 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_DEBUG;_WINDOWS;_USRDLL;D3D11RENDERER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>RUNNERGAME_INTERNAL;NOMINMAX;_DEBUG;_WINDOWS;_USRDLL;GAME_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeaderFile />
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <CppLanguageStandard>c++11</CppLanguageStandard>
+      <CLanguageStandard>c11</CLanguageStandard>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <UseShortEnums>true</UseShortEnums>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>DirectXTexd.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -113,12 +144,18 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_DEBUG;_WINDOWS;_USRDLL;D3D11RENDERER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GLM_FORCE_SSE2;RUNNERGAME_INTERNAL;NOMINMAX;_DEBUG;_WINDOWS;_USRDLL;GAME_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeaderFile>
+      </PrecompiledHeaderFile>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <CppLanguageStandard>c++11</CppLanguageStandard>
+      <CLanguageStandard>c11</CLanguageStandard>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <UseShortEnums>true</UseShortEnums>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>DirectXTexd.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -126,20 +163,27 @@
       <WarningLevel>Level3</WarningLevel>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <Optimization>Full</Optimization>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <Optimization>Custom</Optimization>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>NDEBUG;_WINDOWS;_USRDLL;D3D11RENDERER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
-      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <OmitFramePointers>true</OmitFramePointers>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;RUNNERGAME_INTERNAL;NOMINMAX;NDEBUG;_WINDOWS;_USRDLL;GAME_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <DebugInformationFormat>None</DebugInformationFormat>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <CLanguageStandard>c11</CLanguageStandard>
+      <CppLanguageStandard>c++11</CppLanguageStandard>
+      <PrecompiledHeaderFile />
+      <CompileAs>CompileAsCpp</CompileAs>
+      <MSExtensions>true</MSExtensions>
+      <DataLevelLinking>false</DataLevelLinking>
+      <UseShortEnums>true</UseShortEnums>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <DisableSpecificWarnings>4251;4275</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>DirectXTex.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -147,48 +191,30 @@
       <WarningLevel>Level3</WarningLevel>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <Optimization>Full</Optimization>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <Optimization>Custom</Optimization>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>NDEBUG;_WINDOWS;_USRDLL;D3D11RENDERER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
-      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <OmitFramePointers>true</OmitFramePointers>
+      <PreprocessorDefinitions>GLM_FORCE_SSE2;_CRT_SECURE_NO_WARNINGS;RUNNERGAME_INTERNAL;NOMINMAX;NDEBUG;_WINDOWS;_USRDLL;GAME_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <DebugInformationFormat>None</DebugInformationFormat>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <CLanguageStandard>c11</CLanguageStandard>
+      <CppLanguageStandard>c++11</CppLanguageStandard>
+      <PrecompiledHeaderFile>
+      </PrecompiledHeaderFile>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <MSExtensions>true</MSExtensions>
+      <DataLevelLinking>false</DataLevelLinking>
+      <UseShortEnums>true</UseShortEnums>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <DisableSpecificWarnings>4251;4275</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>DirectXTex.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="D3D11ArrayBuffer.cpp" />
-    <ClCompile Include="D3D11Buffer.cpp" />
-    <ClCompile Include="D3D11Fence.cpp" />
-    <ClCompile Include="D3D11Framebuffer.cpp" />
-    <ClCompile Include="D3D11HBAO.cpp" />
-    <ClCompile Include="D3D11Renderer.cpp" />
-    <ClCompile Include="D3D11Shader.cpp" />
-    <ClCompile Include="D3D11Texture.cpp" />
-    <ClCompile Include="renderer.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="config.h" />
-    <ClInclude Include="D3D11ArrayBuffer.h" />
-    <ClInclude Include="D3D11Buffer.h" />
-    <ClInclude Include="D3D11Context.h" />
-    <ClInclude Include="D3D11Fence.h" />
-    <ClInclude Include="D3D11Framebuffer.h" />
-    <ClInclude Include="D3D11Renderer.h" />
-    <ClInclude Include="D3D11Shader.h" />
-    <ClInclude Include="D3D11Texture.h" />
-    <ClInclude Include="resource.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="D3D11Renderer.rc" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

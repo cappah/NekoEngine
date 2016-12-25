@@ -53,19 +53,19 @@
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\Projects\VS2015\NekoEngine.props" />
+    <Import Project="..\..\Projects\VS2017\NekoEngine.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\Projects\VS2015\NekoEngine_x86.props" />
+    <Import Project="..\..\Projects\VS2017\NekoEngine_x86.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\Projects\VS2015\NekoEngine.props" />
+    <Import Project="..\..\Projects\VS2017\NekoEngine.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\Projects\VS2015\NekoEngine_x86.props" />
+    <Import Project="..\..\Projects\VS2017\NekoEngine_x86.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
@@ -270,6 +270,8 @@
     <ClInclude Include="..\..\include\Engine\Engine.h" />
     <ClInclude Include="..\..\Include\Engine\EngineClassFactory.h" />
     <ClInclude Include="..\..\include\Engine\EngineUtils.h" />
+    <ClInclude Include="..\..\Include\Engine\EventManager.h" />
+    <ClInclude Include="..\..\Include\Engine\Events.h" />
     <ClInclude Include="..\..\include\Engine\GameModule.h" />
     <ClInclude Include="..\..\Include\Engine\HBAO.h" />
     <ClInclude Include="..\..\Include\Engine\Input.h" />
@@ -407,6 +409,7 @@
     <ClCompile Include="Core\Console.cpp" />
     <ClCompile Include="Core\DeferredBuffer.cpp" />
     <ClCompile Include="Core\Engine.cpp" />
+    <ClCompile Include="Core\EventManager.cpp" />
     <ClCompile Include="Core\HBAO.cpp" />
     <ClCompile Include="Core\Input.cpp" />
     <ClCompile Include="Core\LoadingScreen.cpp" />
