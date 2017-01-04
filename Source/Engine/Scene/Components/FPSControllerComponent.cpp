@@ -139,7 +139,7 @@ void FPSControllerComponent::Update(double deltaTime) noexcept
 	else if (Input::GetButton("rot_down"))
 		rot.x += _rotateSpeed * (float)deltaTime;
 
-	rot.x = clamp(rot.x, -60.f, 85.f);
+	rot.x = glm::clamp(rot.x, -60.f, 85.f);
 
 	_parent->SetPosition(pos);
 	_parent->SetRotation(rot);

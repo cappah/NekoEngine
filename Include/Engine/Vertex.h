@@ -89,3 +89,9 @@ struct Vertex
     glm::vec4 boneWeights;
 	int numBones;
 };
+
+struct GUIVertex
+{
+	glm::vec4 posAndUV;
+	glm::vec4 color;
+};

@@ -49,7 +49,7 @@ int Button::_InitializeControl(Renderer *renderer)
 	if (ret != ENGINE_OK)
 		return ret;
 
-	//_vertices[0].color = _vertices[1].color = _vertices[2].color = _vertices[3].color = vec4(.9f, .9f, .9f, 1.f);
+	_vertices[0].color = _vertices[1].color = _vertices[2].color = _vertices[3].color = vec4(.9f, .9f, .9f, 1.f);
 
 	return ENGINE_OK;
 }
@@ -66,4 +66,22 @@ void Button::_Update(double deltaTime)
 //	vec2 pos = vec2(_controlRect.x + x, _controlRect.y + y);
 	
 //	_font->Draw(_text, pos, _hovered ? _hoveredTextColor : _textColor);
+}
+
+void Button::_Draw(GUIDrawInfo *drawInfo)
+{
+	drawInfo->renderer->SetBlendFunc(BlendFactor::SrcAlpha, BlendFactor::OneMinusSrcAlpha);
+	drawInfo->renderer->EnableBlend(true);
+
+	_arrayBuffer->Bind();
+
+	drawInfo->shader->SetTexture(0, _texture->GetRTexture());
+	drawInfo->renderer->DrawElements(PolygonMode::Triangles, 6, ElementType::UnsignedInt, 0);
+
+	int textY = (_controlRect.h - drawInfo->guiFont->GetCharacterHeight()) / 2;
+	drawInfo->guiFont->Draw(_text, glm::vec2(_controlRect.x + 10, _controlRect.y + textY), glm::vec3(0.0, 0.0, 0.0));
+
+	_arrayBuffer->Unbind();
+
+	drawInfo->renderer->EnableBlend(false);
 }

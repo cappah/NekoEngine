@@ -52,7 +52,7 @@
 using namespace std;
 using namespace glm;
 
-RBuffer *GUIManager::_uniformBuffer;
+RBuffer *GUIManager::_uniformBuffer{ nullptr }, *GUIManager::_indexBuffer{ nullptr };
 GUIDrawInfo GUIManager::_drawInfo;
 mat4 GUIManager::_projection;
 vector<class NFont *> GUIManager::_fonts;
@@ -62,12 +62,16 @@ static Control *_focusedControl{ nullptr };
 
 int GUIManager::Initialize()
 {
+	uint32_t indices[6]{ 0, 1, 2, 0, 2, 3 };
 	_drawInfo.renderer = Engine::GetRenderer();
 
 	_projection = ortho(0.f, 512.f, 0.f, 512.f);
 	_uniformBuffer = _drawInfo.renderer->CreateBuffer(BufferType::Uniform, true, false);
 	_uniformBuffer->SetNumBuffers(1);
 	_uniformBuffer->SetStorage(sizeof(mat4), value_ptr(_projection));
+
+	_indexBuffer = _drawInfo.renderer->CreateBuffer(BufferType::Index, false, false);
+	_indexBuffer->SetStorage(sizeof(indices), indices);
 
 	//_drawInfo.shader = _drawInfo.renderer->CreateShader();
 	//_drawInfo.shader->LoadFromSource(ShaderType::Vertex, 1, vs, (int)strlen(vs));
@@ -170,7 +174,7 @@ void GUIManager::Update(double deltaTime)
 void GUIManager::RegisterControl(Control *ctl)
 {
 	ctl->_vertexBuffer = _drawInfo.renderer->CreateBuffer(BufferType::Vertex, true, true);
-	ctl->_indexBuffer = _drawInfo.renderer->CreateBuffer(BufferType::Index, true, true);
+	ctl->_indexBuffer = _indexBuffer;
 	ctl->_arrayBuffer = _drawInfo.renderer->CreateArrayBuffer();
 	ctl->_InitializeControl(_drawInfo.renderer);
 

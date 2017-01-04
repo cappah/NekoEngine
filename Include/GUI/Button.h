@@ -50,4 +50,5 @@ public:
 protected:
 	virtual int _InitializeControl(Renderer *renderer) override;
 	virtual void _Update(double deltaTime) override;
+	virtual void _Draw(GUIDrawInfo *drawInfo) override;
 };

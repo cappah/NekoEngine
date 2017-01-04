@@ -120,6 +120,7 @@
       <OpenMPSupport>true</OpenMPSupport>
       <FloatingPointModel>Fast</FloatingPointModel>
       <DisableSpecificWarnings>4251</DisableSpecificWarnings>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <AdditionalDependencies>freetype.lib;Xinput9_1_0.lib;libpng16d.lib;sqlited.lib;zlibstatic.lib;OpenAL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -156,6 +157,7 @@
       <OpenMPSupport>true</OpenMPSupport>
       <FloatingPointModel>Fast</FloatingPointModel>
       <DisableSpecificWarnings>4251</DisableSpecificWarnings>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <AdditionalDependencies>freetype.lib;Xinput9_1_0.lib;sqlite.lib;zlibstatic.lib;OpenAL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -200,6 +202,7 @@
       <DisableSpecificWarnings>4251;4275</DisableSpecificWarnings>
       <OpenMPSupport>true</OpenMPSupport>
       <WholeProgramOptimization>true</WholeProgramOptimization>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <AdditionalDependencies>freetype.lib;Xinput9_1_0.lib;libpng16.lib;sqlite.lib;zlibstatic.lib;OpenAL32.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -245,6 +248,7 @@
       <DisableSpecificWarnings>4251;4275</DisableSpecificWarnings>
       <OpenMPSupport>true</OpenMPSupport>
       <WholeProgramOptimization>true</WholeProgramOptimization>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <AdditionalDependencies>freetype.lib;Xinput9_1_0.lib;sqlite.lib;zlibstatic.lib;OpenAL32.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>

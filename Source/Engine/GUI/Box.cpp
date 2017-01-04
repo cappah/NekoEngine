@@ -38,6 +38,7 @@
  */
 
 #include <GUI/Box.h>
+#include <Engine/ResourceManager.h>
 
 #define BOX_MODULE	"GUI_Box"
 
@@ -47,20 +48,40 @@ void Box::_UpdateVertices()
 {
 	float y = (float)Engine::GetScreenHeight() - _controlRect.y - _controlRect.h;
 
-	//_vertices[0].posAndUV = vec4((float)_controlRect.x, (float)(y + _controlRect.h), 0, 0);
-	//_vertices[1].posAndUV = vec4((float)_controlRect.x, y, 0, 1);
-	//_vertices[2].posAndUV = vec4((float)(_controlRect.x + _controlRect.w), y, 1, 1);
-	//_vertices[3].posAndUV = vec4((float)(_controlRect.x + _controlRect.w), (float)(y + _controlRect.h), 1, 0);
+	_vertices[0].posAndUV = vec4((float)_controlRect.x, (float)(y + _controlRect.h), 0, 0);
+	_vertices[1].posAndUV = vec4((float)_controlRect.x, y, 0, 1);
+	_vertices[2].posAndUV = vec4((float)(_controlRect.x + _controlRect.w), y, 1, 1);
+	_vertices[3].posAndUV = vec4((float)(_controlRect.x + _controlRect.w), (float)(y + _controlRect.h), 1, 0);
 }
 
 int Box::_InitializeControl(Renderer *renderer)
 {
-	/*_UpdateVertices();
+	_UpdateVertices();
 	_vertices[0].color = _vertices[1].color = _vertices[2].color = _vertices[3].color = vec4(.3f, .3f, .3f, 1.f);
+	_vertexBuffer->SetStorage(sizeof(_vertices), _vertices);
 
-	_buffer = GUIManager::CreateVertexBuffer(sizeof(GUIVertex) * 4, (uint8_t *)_vertices);
+	BufferAttribute attrib;
+	attrib.name = "POSITION";
+	attrib.index = 0;
+	attrib.size = 4;
+	attrib.type = BufferDataType::Float;
+	attrib.normalize = false;
+	attrib.stride = sizeof(GUIVertex);
+	attrib.ptr = (void *)0;
+	_vertexBuffer->AddAttribute(attrib);
 
-	_tex = Renderer::GetInstance()->GetBlankTexture();*/
+	_arrayBuffer->SetVertexBuffer(_vertexBuffer);
+	_arrayBuffer->SetIndexBuffer(_indexBuffer);
+	_arrayBuffer->CommitBuffers();
+
+	_texture = (Texture *)ResourceManager::GetResourceByName("tex_blank", ResourceType::RES_TEXTURE);
+	_texture->GetRTexture()->LoadFromFile("Resources/button.tga");
+	_texture->GetRTexture()->GenerateMipmaps();
+	_texture->GetRTexture()->SetMinFilter(TextureFilter::Trilinear);
+	_texture->GetRTexture()->SetMagFilter(TextureFilter::Linear);
+	_texture->GetRTexture()->SetWrapS(TextureWrap::Repeat);
+	_texture->GetRTexture()->SetWrapT(TextureWrap::Repeat);
+	_texture->GetRTexture()->SetAnisotropic(16);
 
 	return ENGINE_OK;
 }
@@ -112,7 +133,19 @@ int Box::_InitializeControl(Renderer *renderer)
 
 void Box::_Draw(GUIDrawInfo *drawInfo)
 {
-	//
+	drawInfo->renderer->SetBlendFunc(BlendFactor::SrcAlpha, BlendFactor::OneMinusSrcAlpha);
+	drawInfo->renderer->EnableBlend(true);
+
+	_arrayBuffer->Bind();
+
+	drawInfo->shader->SetTexture(0, _texture->GetRTexture());
+	drawInfo->renderer->DrawElements(PolygonMode::Triangles, 6, ElementType::UnsignedInt, 0);
+
+	int textY = (_controlRect.h - drawInfo->guiFont->GetCharacterHeight()) / 2;
+
+	_arrayBuffer->Unbind();
+
+	drawInfo->renderer->EnableBlend(false);
 }
 
 void Box::_Update(double deltaTime)

@@ -40,12 +40,13 @@
 #pragma once
 
 #include <GUI/Control.h>
+#include <Engine/Texture.h>
 #include <Renderer/Renderer.h>
 
 class Box : public Control
 {
 public:
-	ENGINE_API Box(int x = 0, int y = 0, int width = 75, int height = 24) : Control(x, y, width, height) { }
+	ENGINE_API Box(int x = 0, int y = 0, int width = 75, int height = 24) : Control(x, y, width, height), _texture(nullptr) { }
 	ENGINE_API virtual void SetPosition(int x, int y) { Control::SetPosition(x, y); _UpdateVertices(); }
 	ENGINE_API virtual void SetPosition(Point pt) { Control::SetPosition(pt); _UpdateVertices(); }
 	ENGINE_API virtual void SetSize(int width, int height) { Control::SetSize(width, height); _UpdateVertices(); }
@@ -54,7 +55,7 @@ public:
 
 protected:
 	GUIVertex _vertices[4];
-	RTexture *_tex;
+	Texture *_texture;
 
 	void _UpdateVertices();
 

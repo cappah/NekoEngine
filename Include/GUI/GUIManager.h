@@ -42,20 +42,11 @@
 #include <vector>
 
 #include <GUI/GUIDefs.h>
+#include <Engine/NFont.h>
 #include <Engine/Vertex.h>
 #include <Engine/Engine.h>
 #include <Runtime/Runtime.h>
 #include <Renderer/Renderer.h>
-
-class NFont;
-
-struct GUIVertex
-{
-	float x;
-	float y;
-	float s;
-	float t;
-};
 
 struct GUIDrawInfo
 {
@@ -72,6 +63,8 @@ public:
 
 	ENGINE_API static NFont *GetGUIFont() noexcept;
 	ENGINE_API static int GetCharacterHeight() noexcept;
+	ENGINE_API static RBuffer *GetIndexBuffer() noexcept { return _indexBuffer; }
+
 	ENGINE_API static void DrawString(glm::vec2 pos, glm::vec3 color, NString text) noexcept;
 	ENGINE_API static void DrawString(glm::vec2 pos, glm::vec3 color, const char *fmt, ...) noexcept;
 
@@ -92,7 +85,7 @@ public:
 	//static void BindDescriptorSet(VkCommandBuffer buffer) { vkCmdBindDescriptorSets(buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, PipelineManager::GetPipelineLayout(PIPE_LYT_GUI), 0, 1, &_descriptorSet, 0, nullptr); }
 
 private:
-	static RBuffer *_uniformBuffer;
+	static RBuffer *_uniformBuffer, *_indexBuffer;
 	static GUIDrawInfo _drawInfo;
 	static glm::mat4 _projection;
 	static bool _needUpdate;
