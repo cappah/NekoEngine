@@ -185,6 +185,7 @@ void StaticMeshComponent::Draw(RShader *shader, Camera *camera) noexcept
 
 		_matrixBlock.View = camera->GetView();
 		_matrixBlock.ModelViewProjection = (camera->GetProjectionMatrix() * camera->GetView()) * _matrixBlock.Model;
+		_matrixBlock.Normal = transpose(inverse(_matrixBlock.Model));
 		
 		shader->VSSetUniformBuffer(0, 0, sizeof(MatrixBlock), _matrixUbo);
 		_matrixUbo->UpdateData(0, sizeof(MatrixBlock), &_matrixBlock);

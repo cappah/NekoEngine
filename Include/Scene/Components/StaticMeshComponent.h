@@ -49,6 +49,7 @@ typedef struct MATRIX_BLOCK
 	glm::mat4 ModelViewProjection;
 	glm::mat4 Model;
 	glm::mat4 View;
+	glm::mat4 Normal;
 } MatrixBlock;
 
 class StaticMeshComponent : public ObjectComponent

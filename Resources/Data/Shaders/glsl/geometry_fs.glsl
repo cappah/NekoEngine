@@ -16,9 +16,9 @@ in VertexData
 	vec3 Position;
 	vec3 Normal;
 	vec3 Color;
-	vec3 Tangent;
 	vec3 CubemapUV;
 	vec3 ViewSpacePosition;
+	mat3 TBN;
 } vertexData;
 
 layout(std140) uniform ObjectBlock
@@ -61,18 +61,9 @@ vec2 encodeNormal(vec3 n)
 
 vec3 calculateMappedNormal()
 {
-	vec3 norm = normalize(vertexData.Normal);
-	vec3 tgt = normalize(vertexData.Tangent);
-	tgt = normalize(tgt - dot(tgt, norm) * norm);
-	vec3 bitgt = cross(tgt, norm);
-
 	vec4 norm_tex = texture(GET_TEX_2D(u_texture1), vertexData.UV);
-	vec3 map_norm = norm_tex.xyz * 2.0 - vec3(1.0);
-
-	mat3 tbn = mat3(tgt, bitgt, norm);
-	vec3 new_norm = tbn * normalize(map_norm); //normalize(tbn * map_norm);
-
-	return new_norm;
+	vec3 map_norm = normalize(norm_tex.xyz * 2.0 - vec3(1.0));
+	return normalize(vertexData.TBN * map_norm);
 }
 
 SUBROUTINE_FUNC(SH_SUB_C_SPEC_MAP, setColorSub)

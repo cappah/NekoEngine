@@ -66,6 +66,9 @@ typedef struct OBJECT_MATRIX_BLOCK
 	glm::mat4 ModelViewProjection;
 	glm::mat4 Model;
 	glm::mat4 View;
+	glm::mat3 Normal;
+	glm::vec3 _padding0;
+	glm::vec4 _padding1;
 } ObjectMatrixBlock;
 
 typedef struct OBJECT_BLOCK
@@ -174,7 +177,12 @@ protected:
 	glm::mat4 _translationMatrix, _scaleMatrix, _rotationMatrix, _modelMatrix;
 	bool _updateWhilePaused;
 
-	void _UpdateModelMatrix() noexcept { _modelMatrix = (_translationMatrix * _rotationMatrix) * _scaleMatrix; for(std::pair<std::string, ObjectComponent *> kvp : _components) kvp.second->UpdatePosition(); }
+	void _UpdateModelMatrix() noexcept
+	{
+		_modelMatrix = (_translationMatrix * _rotationMatrix) * _scaleMatrix;
+		for(std::pair<std::string, ObjectComponent *> kvp : _components)
+			kvp.second->UpdatePosition();
+	}
 };
 
 #if defined(_MSC_VER)

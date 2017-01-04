@@ -83,18 +83,25 @@ void blinnPhong()
 	vec3 light_color = LightColor.xyz * LightAttenuationAndData.z;
 	vec3 view_direction = normalize(CameraPositionAndAmbient.xyz - fragmentPosition.xyz);
 
-	float diffuse_coef = max(0.0, dot(normal.xyz, lightDirection));
+	float diffuse_coef = max(0.0, dot(normal, lightDirection));
+	
+	if (diffuse_coef <= 0.0)
+	{
+		o_FragColor.rgb = vec3(0.0);
+		return;
+	}
+	
 	vec3 diffuse = (kDiffuse * diffuse_coef * light_color);
 		
 	// Blinn-Phong
-	vec3 half_vec = normalize(lightDirection + view_direction);
-	float spec_coef = pow(max(dot(half_vec, normal.xyz), 0.0), shininess * 4.0);
+	//vec3 half_vec = normalize(lightDirection + view_direction);
+	//float spec_coef = pow(max(dot(normal, half_vec), 0.0), shininess);
 
 	// Phong
-	//spec_coef = pow(max(0.0, dot(view_direction, reflect(-light_direction, norm))), shininess);
+	float spec_coef = pow(max(0.0, dot(view_direction, reflect(-lightDirection, normal))), shininess);
 
 	vec3 specular = (kSpecular * light_color * spec_coef);
-	o_FragColor.rgb = attenuation * (diffuse + specular) * getShadow();
+	o_FragColor.rgb = attenuation * (diffuse + specular);// * getShadow();
 }
 
 SUBROUTINE_FUNC(LT_POINT, calculateLightingSub)
@@ -149,7 +156,7 @@ void readGBuffer()
 	
 	fragmentPosition = gb0;
 	
-	normal = normalize(decodeNormal(gb1.xy));
+	normal = decodeNormal(gb1.xy);
 	bloom = gb1.w;
 	
 	color = gb2.rgb;

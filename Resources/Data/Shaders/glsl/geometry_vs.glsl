@@ -13,6 +13,7 @@ layout(std140) uniform MatrixBlock
 	mat4 ModelViewProjection;
 	mat4 Model;
 	mat4 View;
+	mat4 Normal;
 };
 
 layout(std140) uniform MaterialBlock
@@ -38,9 +39,9 @@ out VertexData
 	vec3 Position;
 	vec3 Normal;
 	vec3 Color;
-	vec3 Tangent;
 	vec3 CubemapUV;
 	vec3 ViewSpacePosition;
+	mat3 TBN;
 } vertexData;
 
 vec3 get_position()
@@ -58,7 +59,9 @@ vec3 get_position()
 void main()
 {
 	vec4 l_pos = vec4(1.0);
-
+	vec3 normal = vec3(0.0);
+	mat3 normalMatrix = mat3(Normal);
+	
 	if(a_num_bones > 0)
 	{
 		mat4 boneTransform = BoneMatrices[a_bone_index.x] * a_bone_weight.x;
@@ -68,24 +71,32 @@ void main()
 		
 		l_pos = boneTransform * vec4(a_pos, 1.0);
 		
-		vec4 new_normal = boneTransform * vec4(a_norm, 0.0);
-		vertexData.Normal = (Model * new_normal).xyz;
+		vec3 new_normal = (boneTransform * vec4(a_norm, 0.0)).xyz;
+		normal = normalize(normalMatrix * new_normal);
 	}
 	else
 	{
 		l_pos = vec4(get_position(), 1.0);
-		vertexData.Normal = (Model * vec4(a_norm, 0.0)).xyz;
+		normal = normalize(normalMatrix * a_norm);
+	}
+	
+	if (MaterialType == SH_NM || MaterialType == SH_NM_SPEC)
+	{
+		vec3 t = normalize(normalMatrix * a_tgt);
+		vec3 n = normal;
+		vec3 bitgt = cross(t, n);
+		vec3 b = normalize(normalMatrix * bitgt);
+		
+		vertexData.TBN = mat3(t, b, n);
 	}
 
 	vertexData.Color = a_color;
 	vertexData.CubemapUV = a_pos;
-
+	vertexData.Normal = normal;
 	vertexData.UV = a_uv;
 	vertexData.TerrainUV = a_uv_terrain;
 	vertexData.Position = (Model * l_pos).xyz;
 	vertexData.ViewSpacePosition = (View * Model * l_pos).xyz;
-
-	vertexData.Tangent = (Model * vec4(a_tgt, 0.0)).xyz;	
 
 	gl_Position = ModelViewProjection * l_pos;
 }
