@@ -92,7 +92,9 @@ enum class TextureSizedFormat : uint8_t
 	R_8UI,
 	RG_8UI,
 	RGB_8UI,
-	RGBA_8UI
+	RGBA_8UI,
+	RGB10_A2,
+	R11F_G11F_B10F
 };
 
 enum class TextureFormat : uint8_t

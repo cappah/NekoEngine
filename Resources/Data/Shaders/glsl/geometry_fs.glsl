@@ -5,9 +5,9 @@ SUBROUTINE(0, setColorSub, setColor)
 SUBROUTINE(1, setNormalSub, setNormal)
 
 layout(location = O_POSITION) out vec4 o_Position;
-layout(location = O_NORMAL) out vec4 o_Normal;
-layout(location = O_COLORSPECULAR) out vec4 o_ColorSpecular;
-layout(location = O_MATERIALINFO) out vec4 o_MaterialInfo;
+layout(location = O_NORMAL) out vec4 o_GBuffer1;
+layout(location = O_COLORSPECULAR) out vec4 o_GBuffer2;
+layout(location = O_MATERIALINFO) out vec2 o_GBuffer3;
 
 in VertexData
 {
@@ -49,6 +49,16 @@ layout(location=U_TEXTURE2) uniform TEXTURE_2D u_texture2;
 layout(location=U_TEXTURE3) uniform TEXTURE_2D u_texture3;
 layout(location=U_TEXTURE_CUBE) uniform TEXTURE_CUBE u_texture_cube;
 
+vec3 normal;
+vec3 color;
+float shininess;
+
+vec2 encodeNormal(vec3 n)
+{
+	float p = sqrt(n.z * 8.0 + 8.0);
+	return vec2(n.xy / p + 0.5);
+}
+
 vec3 calculateMappedNormal()
 {
 	vec3 norm = normalize(vertexData.Normal);
@@ -68,58 +78,58 @@ vec3 calculateMappedNormal()
 SUBROUTINE_FUNC(SH_SUB_C_SPEC_MAP, setColorSub)
 void setColorSpecularMap()
 {
-	o_ColorSpecular = texture(GET_TEX_2D(u_texture0), vertexData.UV);
+	vec4 tex = texture(GET_TEX_2D(u_texture0), vertexData.UV);
 
-	o_ColorSpecular.a += NoDiscard;
-	if(o_ColorSpecular.a < 0.1)
+	tex.a += NoDiscard;
+	if(tex.a < 0.1)
 		discard;
 
-	o_ColorSpecular.a = texture(GET_TEX_2D(u_texture2), vertexData.UV).r;
-	o_ColorSpecular.rgb = pow(o_ColorSpecular.rgb, vec3(2.2));
-	o_ColorSpecular.rgb += ObjectColor.xyz;
+	color = pow(tex.xyz, vec3(2.2));
+	color += ObjectColor.xyz;
+	shininess = texture(GET_TEX_2D(u_texture2), vertexData.UV).r;
 }
 
 SUBROUTINE_FUNC(SH_SUB_C_SPEC_ARG, setColorSub)
 void setColorSpecularArg()
 {
-	o_ColorSpecular = texture(GET_TEX_2D(u_texture0), vertexData.UV);
-
-	o_ColorSpecular.a += NoDiscard;
-	if(o_ColorSpecular.a < 0.1)
+	vec4 tex = texture(GET_TEX_2D(u_texture0), vertexData.UV);
+	
+	tex.a += NoDiscard;
+	if(tex.a < 0.1)
 		discard;
-
-	o_ColorSpecular.a = Shininess;
-	o_ColorSpecular.rgb = pow(o_ColorSpecular.rgb, vec3(2.2));
-	o_ColorSpecular.rgb += ObjectColor.xyz;
+	
+	color = pow(tex.xyz, vec3(2.2));
+	color += ObjectColor.xyz;
+	shininess = Shininess;
 }
 
 SUBROUTINE_FUNC(SH_SUB_C_TERRAIN, setColorSub)
 void setColorTerrain()
 {
-	vec4 c0, c1, c2, c_map;
+	vec3 c0, c1, c2, c_map;
 	
-	c0 = texture(GET_TEX_2D(u_texture0), vertexData.UV);
-	c1 = texture(GET_TEX_2D(u_texture1), vertexData.UV);
-	c2 = texture(GET_TEX_2D(u_texture2), vertexData.UV);
-	c_map = texture(GET_TEX_2D(u_texture3), vertexData.TerrainUV);
+	c0 = texture(GET_TEX_2D(u_texture0), vertexData.UV).rgb;
+	c1 = texture(GET_TEX_2D(u_texture1), vertexData.UV).rgb;
+	c2 = texture(GET_TEX_2D(u_texture2), vertexData.UV).rgb;
+	c_map = texture(GET_TEX_2D(u_texture3), vertexData.TerrainUV).rgb;
 
-	o_ColorSpecular = c0 * c_map.r + c1 * c_map.g + c2 * c_map.b;
-	o_ColorSpecular.a = Shininess;
-	o_ColorSpecular.rgb = pow(o_ColorSpecular.rgb, vec3(2.2));
-	o_ColorSpecular.rgb += ObjectColor.xyz;
+	color = c0 * c_map.r + c1 * c_map.g + c2 * c_map.b;
+	color = pow(color, vec3(2.2));
+	color += ObjectColor.xyz;
+	shininess = Shininess;
 }
 
 SUBROUTINE_FUNC(SH_SUB_C_SKYREFLECT, setColorSub)
 void setColorSkyReflection()
 {
 	vec3 eye = normalize(vertexData.Position - CameraPosition.xyz);
-	vec3 r = reflect(eye, o_Normal.xyz);
+	vec3 r = reflect(eye, normal);
 
 	// refraction - use index of 1 for transparent objects ?
 	/*float ratio = 1.0 / 1.33;
 	vec3 r = refract(eye, o_Normal.xyz, ratio);*/
 
-	vec3 color = texture(GET_TEX_CUBE(u_texture_cube), r).rgb;
+	color = texture(GET_TEX_CUBE(u_texture_cube), r).rgb;
 
 	color = pow(color, vec3(2.2));
 	color += ObjectColor.xyz;
@@ -127,20 +137,19 @@ void setColorSkyReflection()
 	vec3 x = max(vec3(0.0), color - 0.004);
 	color.rgb = (x * (6.2 * x + 0.5)) / (x * (6.2 * x + 1.7) + 0.06);
 
-	o_ColorSpecular.rgb = color;
-	o_ColorSpecular.a = Shininess;
+	shininess = Shininess;
 }
 
 SUBROUTINE_FUNC(SH_SUB_N_MAP, setNormalSub)
 void setNormalMap()
 {
-	o_Normal.xyz = calculateMappedNormal();
+	normal = calculateMappedNormal();
 }
 
 SUBROUTINE_FUNC(SH_SUB_N_ARG, setNormalSub)
 void setNormalArg()
 {
-	o_Normal.xyz = normalize(vertexData.Normal);
+	normal = normalize(vertexData.Normal);
 }
 
 void main()
@@ -167,5 +176,8 @@ void main()
 	#endif
 
 	o_Position = vec4(vertexData.Position, MaterialType);
-	o_MaterialInfo = vec4(DiffuseConstant, SpecularConstant, Shininess, Bloom);
+	
+	o_GBuffer1 = vec4(encodeNormal(normal), 0.f, Bloom);
+	o_GBuffer2 = vec4(color, shininess);
+	o_GBuffer3 = vec2(DiffuseConstant, SpecularConstant);
 }

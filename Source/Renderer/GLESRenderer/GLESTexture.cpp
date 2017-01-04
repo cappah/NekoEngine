@@ -78,7 +78,7 @@ GLenum GL_TexWrap[4] =
     0
 };
 
-GLenum GL_TexFormatSized[22] =
+GLenum GL_TexFormatSized[24] =
 {
     GL_R8,
     GL_RG8,
@@ -101,7 +101,9 @@ GLenum GL_TexFormatSized[22] =
     GL_R8UI,
     GL_RG8UI,
     GL_RGB8UI,
-    GL_RGBA8UI
+    GL_RGBA8UI,
+	GL_RGB10_A2,
+	GL_R11F_G11F_B10F
 };
 
 GLenum GL_TexFormat[10] =

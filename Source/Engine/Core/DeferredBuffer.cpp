@@ -342,6 +342,9 @@ void DeferredBuffer::RenderLighting() noexcept
 	_sceneLightUbo->BeginUpdate();
 	{
 		_sceneData.CameraPositionAndAmbient = vec4(cam->GetPosition(), _sceneData.CameraPositionAndAmbient.w);
+		_sceneData.InverseViewProjection = inverse(cam->GetProjectionMatrix() * cam->GetView());
+		_sceneData.Near = cam->GetNear();
+		_sceneData.Far = cam->GetFar();
 		_sceneLightUbo->UpdateData(0, sizeof(LightSceneData), &_sceneData);
 	}
 	_sceneLightUbo->EndUpdate();
@@ -522,17 +525,17 @@ bool DeferredBuffer::_GenerateTextures() noexcept
 		_gbTextures[GB_TEX_NORMAL] = r->CreateTexture(TextureType::Tex2DMultisample);
 		if(!_gbTextures[GB_TEX_NORMAL])
 			return false;
-		_gbTextures[GB_TEX_NORMAL]->SetStorage2DMS(_samples, _fboWidth, _fboHeight, internalFormat, true);
+		_gbTextures[GB_TEX_NORMAL]->SetStorage2DMS(_samples, _fboWidth, _fboHeight, TextureSizedFormat::RGB10_A2, true);
 
 		_gbTextures[GB_TEX_COLOR_SPECULAR] = r->CreateTexture(TextureType::Tex2DMultisample);
 		if(!_gbTextures[GB_TEX_COLOR_SPECULAR])
 			return false;
-		_gbTextures[GB_TEX_COLOR_SPECULAR]->SetStorage2DMS(_samples, _fboWidth, _fboHeight, TextureSizedFormat::RGBA_16F, true);
+		_gbTextures[GB_TEX_COLOR_SPECULAR]->SetStorage2DMS(_samples, _fboWidth, _fboHeight, TextureSizedFormat::RGBA_8U, true);
 
 		_gbTextures[GB_TEX_MATERIAL_INFO] = r->CreateTexture(TextureType::Tex2DMultisample);
 		if(!_gbTextures[GB_TEX_MATERIAL_INFO])
 			return false;
-		_gbTextures[GB_TEX_MATERIAL_INFO]->SetStorage2DMS(_samples, _fboWidth, _fboHeight, TextureSizedFormat::RGBA_16F, true);
+		_gbTextures[GB_TEX_MATERIAL_INFO]->SetStorage2DMS(_samples, _fboWidth, _fboHeight, TextureSizedFormat::RG_8U, true);
 
 		_gbTextures[GB_TEX_DEPTH_STENCIL] = r->CreateTexture(TextureType::Tex2DMultisample);
 		if(!_gbTextures[GB_TEX_DEPTH_STENCIL])
@@ -564,17 +567,17 @@ bool DeferredBuffer::_GenerateTextures() noexcept
 		_gbTextures[GB_TEX_NORMAL] = r->CreateTexture(TextureType::Tex2D);
 		if(!_gbTextures[GB_TEX_NORMAL])
 			return false;
-		_gbTextures[GB_TEX_NORMAL]->SetStorage2D(1, internalFormat, _fboWidth, _fboHeight);
+		_gbTextures[GB_TEX_NORMAL]->SetStorage2D(1, TextureSizedFormat::RGB10_A2, _fboWidth, _fboHeight);
 
 		_gbTextures[GB_TEX_COLOR_SPECULAR] = r->CreateTexture(TextureType::Tex2D);
 		if(!_gbTextures[GB_TEX_COLOR_SPECULAR])
 			return false;
-		_gbTextures[GB_TEX_COLOR_SPECULAR]->SetStorage2D(1, TextureSizedFormat::RGBA_16F, _fboWidth, _fboHeight);
+		_gbTextures[GB_TEX_COLOR_SPECULAR]->SetStorage2D(1, TextureSizedFormat::RGBA_8U, _fboWidth, _fboHeight);
 
 		_gbTextures[GB_TEX_MATERIAL_INFO] = r->CreateTexture(TextureType::Tex2D);
 		if(!_gbTextures[GB_TEX_MATERIAL_INFO])
 			return false;
-		_gbTextures[GB_TEX_MATERIAL_INFO]->SetStorage2D(1, TextureSizedFormat::RGBA_16F, _fboWidth, _fboHeight);
+		_gbTextures[GB_TEX_MATERIAL_INFO]->SetStorage2D(1, TextureSizedFormat::RG_8U, _fboWidth, _fboHeight);
 
 		_gbTextures[GB_TEX_DEPTH_STENCIL] = r->CreateTexture(TextureType::Tex2D);
 		if(!_gbTextures[GB_TEX_DEPTH_STENCIL])

@@ -28,20 +28,6 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "127011EE1CC313D7001840A7"
-               BuildableName = "libTestGame.dylib"
-               BlueprintName = "TestGame"
-               ReferencedContainer = "container:../../Source/TestGame/TestGame.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "12B748261CC6E7C600825D36"
                BuildableName = "Launcher.app"
                BlueprintName = "Launcher"
@@ -60,6 +46,20 @@
                BuildableName = "libGLRenderer.dylib"
                BlueprintName = "GLRenderer"
                ReferencedContainer = "container:../../Source/Renderer/GLRenderer/GLRenderer.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "127011EE1CC313D7001840A7"
+               BuildableName = "libRunnerGame.dylib"
+               BlueprintName = "RunnerGame"
+               ReferencedContainer = "container:../../Source/RunnerGame/RunnerGame.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>

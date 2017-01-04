@@ -137,7 +137,7 @@ void GUIManager::Draw()
 void GUIManager::Update(double deltaTime)
 {
 	NPoint _mousePos;
-	long x = 0, y = 0;
+	int x = 0, y = 0;
 	bool _lmbDown = false;// Platform_GetMouseDown(MOUSE_1);
 
 	//Platform_GetPointerPosition(x, y);

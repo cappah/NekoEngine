@@ -67,9 +67,12 @@ typedef struct LIGHT_SCENE_DATA
 	glm::vec4 AmbientColorAndRClear;
 	glm::vec4 FogColorAndRFog;
 	glm::vec4 FrameSizeAndSSAO;
-	glm::mat4 _padding;
-	glm::mat4 _padding1;
-	glm::mat4 _padding2;
+	glm::mat4 InverseViewProjection;
+	float Near;
+	float Far;
+	glm::vec2 _padding0;
+	glm::vec4 _padding1, _padding2, _padding3;
+	glm::mat4 _padding4;
 } LightSceneData;
 
 typedef struct LIGHT_DATA
