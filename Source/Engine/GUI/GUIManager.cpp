@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -136,7 +136,7 @@ void GUIManager::Draw()
 
 void GUIManager::Update(double deltaTime)
 {
-	Point _mousePos;
+	NPoint _mousePos;
 	long x = 0, y = 0;
 	bool _lmbDown = false;// Platform_GetMouseDown(MOUSE_1);
 

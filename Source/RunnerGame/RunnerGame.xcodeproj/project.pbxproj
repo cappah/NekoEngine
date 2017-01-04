@@ -8,15 +8,15 @@
 
 /* Begin PBXBuildFile section */
 		124A31CD1CDC253900472893 /* MovingObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 127012011CC31417001840A7 /* MovingObject.cpp */; };
-		124A31CE1CDC253900472893 /* TestGame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 127012021CC31417001840A7 /* TestGame.cpp */; };
 		12615D661CF40C8D006FB6DB /* DemoAnimatorComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 12615D651CF40C8D006FB6DB /* DemoAnimatorComponent.h */; };
 		12615D691CF40C91006FB6DB /* DemoAnimatorComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12615D681CF40C91006FB6DB /* DemoAnimatorComponent.cpp */; };
 		12615D6A1CF40C91006FB6DB /* DemoAnimatorComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12615D681CF40C91006FB6DB /* DemoAnimatorComponent.cpp */; };
 		127012031CC31417001840A7 /* MovingObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 127012011CC31417001840A7 /* MovingObject.cpp */; };
-		127012041CC31417001840A7 /* TestGame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 127012021CC31417001840A7 /* TestGame.cpp */; };
 		127012071CC3141C001840A7 /* MovingObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 127012051CC3141C001840A7 /* MovingObject.h */; };
-		127012081CC3141C001840A7 /* TestGame.h in Headers */ = {isa = PBXBuildFile; fileRef = 127012061CC3141C001840A7 /* TestGame.h */; };
 		1270125E1CC31645001840A7 /* libEngine.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1270125B1CC31615001840A7 /* libEngine.dylib */; };
+		12BE4CD71E1D74DC00BDD467 /* RunnerGame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12BE4CD61E1D74DC00BDD467 /* RunnerGame.cpp */; };
+		12BE4CD81E1D74DC00BDD467 /* RunnerGame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12BE4CD61E1D74DC00BDD467 /* RunnerGame.cpp */; };
+		12BE4CDA1E1D74E800BDD467 /* RunnerGame.h in Headers */ = {isa = PBXBuildFile; fileRef = 12BE4CD91E1D74E800BDD467 /* RunnerGame.h */; };
 		12C058981D2AF8FF0042023D /* GameController.h in Headers */ = {isa = PBXBuildFile; fileRef = 12C058971D2AF8FF0042023D /* GameController.h */; };
 		12C0589B1D2AF9020042023D /* GameController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12C0589A1D2AF9020042023D /* GameController.cpp */; };
 		12C0589C1D2AF9020042023D /* GameController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12C0589A1D2AF9020042023D /* GameController.cpp */; };
@@ -59,14 +59,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		124A31C41CDC252200472893 /* libTestGame_iOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libTestGame_iOS.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		124A31C41CDC252200472893 /* libRunnerGame_iOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRunnerGame_iOS.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		12615D651CF40C8D006FB6DB /* DemoAnimatorComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoAnimatorComponent.h; sourceTree = "<group>"; };
 		12615D681CF40C91006FB6DB /* DemoAnimatorComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DemoAnimatorComponent.cpp; sourceTree = "<group>"; };
-		127011EF1CC313D7001840A7 /* libTestGame.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libTestGame.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		127011EF1CC313D7001840A7 /* libRunnerGame.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libRunnerGame.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		127012011CC31417001840A7 /* MovingObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MovingObject.cpp; sourceTree = "<group>"; };
-		127012021CC31417001840A7 /* TestGame.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TestGame.cpp; sourceTree = "<group>"; };
 		127012051CC3141C001840A7 /* MovingObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MovingObject.h; sourceTree = "<group>"; };
-		127012061CC3141C001840A7 /* TestGame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestGame.h; sourceTree = "<group>"; };
 		1270120B1CC3143F001840A7 /* AudioClip.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioClip.h; sourceTree = "<group>"; };
 		1270120C1CC3143F001840A7 /* AudioSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioSource.h; sourceTree = "<group>"; };
 		1270120E1CC3143F001840A7 /* DeferredBuffer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DeferredBuffer.h; sourceTree = "<group>"; };
@@ -125,6 +123,8 @@
 		1270124C1CC3143F001840A7 /* VFSArchive.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VFSArchive.h; sourceTree = "<group>"; };
 		1270124D1CC3143F001840A7 /* VFSFile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VFSFile.h; sourceTree = "<group>"; };
 		127012561CC31615001840A7 /* Engine.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Engine.xcodeproj; path = ../Engine/Engine.xcodeproj; sourceTree = "<group>"; };
+		12BE4CD61E1D74DC00BDD467 /* RunnerGame.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RunnerGame.cpp; sourceTree = "<group>"; };
+		12BE4CD91E1D74E800BDD467 /* RunnerGame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RunnerGame.h; sourceTree = "<group>"; };
 		12C058971D2AF8FF0042023D /* GameController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameController.h; sourceTree = "<group>"; };
 		12C0589A1D2AF9020042023D /* GameController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameController.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -161,8 +161,8 @@
 		127011F01CC313D7001840A7 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				127011EF1CC313D7001840A7 /* libTestGame.dylib */,
-				124A31C41CDC252200472893 /* libTestGame_iOS.a */,
+				127011EF1CC313D7001840A7 /* libRunnerGame.dylib */,
+				124A31C41CDC252200472893 /* libRunnerGame_iOS.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -180,7 +180,7 @@
 			children = (
 				12C0589A1D2AF9020042023D /* GameController.cpp */,
 				127012011CC31417001840A7 /* MovingObject.cpp */,
-				127012021CC31417001840A7 /* TestGame.cpp */,
+				12BE4CD61E1D74DC00BDD467 /* RunnerGame.cpp */,
 				12615D681CF40C91006FB6DB /* DemoAnimatorComponent.cpp */,
 			);
 			name = Source;
@@ -200,7 +200,7 @@
 			children = (
 				12C058971D2AF8FF0042023D /* GameController.h */,
 				127012051CC3141C001840A7 /* MovingObject.h */,
-				127012061CC3141C001840A7 /* TestGame.h */,
+				12BE4CD91E1D74E800BDD467 /* RunnerGame.h */,
 				12615D651CF40C8D006FB6DB /* DemoAnimatorComponent.h */,
 			);
 			name = Include;
@@ -376,8 +376,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				12C058981D2AF8FF0042023D /* GameController.h in Headers */,
-				127012081CC3141C001840A7 /* TestGame.h in Headers */,
 				12615D661CF40C8D006FB6DB /* DemoAnimatorComponent.h in Headers */,
+				12BE4CDA1E1D74E800BDD467 /* RunnerGame.h in Headers */,
 				127012071CC3141C001840A7 /* MovingObject.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -385,9 +385,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		124A31C31CDC252200472893 /* TestGame_iOS */ = {
+		124A31C31CDC252200472893 /* RunnerGame_iOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 124A31CA1CDC252200472893 /* Build configuration list for PBXNativeTarget "TestGame_iOS" */;
+			buildConfigurationList = 124A31CA1CDC252200472893 /* Build configuration list for PBXNativeTarget "RunnerGame_iOS" */;
 			buildPhases = (
 				124A31C01CDC252200472893 /* Sources */,
 				124A31C11CDC252200472893 /* Frameworks */,
@@ -397,14 +397,14 @@
 			);
 			dependencies = (
 			);
-			name = TestGame_iOS;
+			name = RunnerGame_iOS;
 			productName = TestGame_iOS;
-			productReference = 124A31C41CDC252200472893 /* libTestGame_iOS.a */;
+			productReference = 124A31C41CDC252200472893 /* libRunnerGame_iOS.a */;
 			productType = "com.apple.product-type.library.static";
 		};
-		127011EE1CC313D7001840A7 /* TestGame */ = {
+		127011EE1CC313D7001840A7 /* RunnerGame */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 127011FA1CC313D7001840A7 /* Build configuration list for PBXNativeTarget "TestGame" */;
+			buildConfigurationList = 127011FA1CC313D7001840A7 /* Build configuration list for PBXNativeTarget "RunnerGame" */;
 			buildPhases = (
 				127011EB1CC313D7001840A7 /* Sources */,
 				127011EC1CC313D7001840A7 /* Frameworks */,
@@ -415,9 +415,9 @@
 			dependencies = (
 				1270125D1CC3161F001840A7 /* PBXTargetDependency */,
 			);
-			name = TestGame;
+			name = RunnerGame;
 			productName = TestGame;
-			productReference = 127011EF1CC313D7001840A7 /* libTestGame.dylib */;
+			productReference = 127011EF1CC313D7001840A7 /* libRunnerGame.dylib */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
 /* End PBXNativeTarget section */
@@ -438,7 +438,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 127011EA1CC313D6001840A7 /* Build configuration list for PBXProject "TestGame" */;
+			buildConfigurationList = 127011EA1CC313D6001840A7 /* Build configuration list for PBXProject "RunnerGame" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -456,8 +456,8 @@
 			);
 			projectRoot = "";
 			targets = (
-				127011EE1CC313D7001840A7 /* TestGame */,
-				124A31C31CDC252200472893 /* TestGame_iOS */,
+				127011EE1CC313D7001840A7 /* RunnerGame */,
+				124A31C31CDC252200472893 /* RunnerGame_iOS */,
 			);
 		};
 /* End PBXProject section */
@@ -486,8 +486,8 @@
 			files = (
 				124A31CD1CDC253900472893 /* MovingObject.cpp in Sources */,
 				12C0589C1D2AF9020042023D /* GameController.cpp in Sources */,
-				124A31CE1CDC253900472893 /* TestGame.cpp in Sources */,
 				12615D6A1CF40C91006FB6DB /* DemoAnimatorComponent.cpp in Sources */,
+				12BE4CD81E1D74DC00BDD467 /* RunnerGame.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -497,8 +497,8 @@
 			files = (
 				127012031CC31417001840A7 /* MovingObject.cpp in Sources */,
 				12C0589B1D2AF9020042023D /* GameController.cpp in Sources */,
-				127012041CC31417001840A7 /* TestGame.cpp in Sources */,
 				12615D691CF40C91006FB6DB /* DemoAnimatorComponent.cpp in Sources */,
+				12BE4CD71E1D74DC00BDD467 /* RunnerGame.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -706,7 +706,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		124A31CA1CDC252200472893 /* Build configuration list for PBXNativeTarget "TestGame_iOS" */ = {
+		124A31CA1CDC252200472893 /* Build configuration list for PBXNativeTarget "RunnerGame_iOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				124A31CB1CDC252200472893 /* Debug */,
@@ -715,7 +715,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		127011EA1CC313D6001840A7 /* Build configuration list for PBXProject "TestGame" */ = {
+		127011EA1CC313D6001840A7 /* Build configuration list for PBXProject "RunnerGame" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				127011F81CC313D7001840A7 /* Debug */,
@@ -724,7 +724,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		127011FA1CC313D7001840A7 /* Build configuration list for PBXNativeTarget "TestGame" */ = {
+		127011FA1CC313D7001840A7 /* Build configuration list for PBXNativeTarget "RunnerGame" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				127011FB1CC313D7001840A7 /* Debug */,

@@ -21,6 +21,23 @@
 		12F96E831D5B8BFA002B4B5C /* IGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 12F96E821D5B8BFA002B4B5C /* IGLView.mm */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		12BE4CAA1E1D726E00BDD467 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 12BE4CA41E1D726E00BDD467 /* RunnerGame.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 127011EF1CC313D7001840A7;
+			remoteInfo = TestGame;
+		};
+		12BE4CAC1E1D726E00BDD467 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 12BE4CA41E1D726E00BDD467 /* RunnerGame.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 124A31C41CDC252200472893;
+			remoteInfo = TestGame_iOS;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXCopyFilesBuildPhase section */
 		124A321E1CDC283900472893 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -47,6 +64,7 @@
 		126220971D33865400E10E08 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		1297E39B1D6D110800A00959 /* GLESFence.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GLESFence.cpp; sourceTree = SOURCE_ROOT; };
 		1297E39D1D6D111600A00959 /* GLESFence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLESFence.h; sourceTree = "<group>"; };
+		12BE4CA41E1D726E00BDD467 /* RunnerGame.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RunnerGame.xcodeproj; path = ../../RunnerGame/RunnerGame.xcodeproj; sourceTree = "<group>"; };
 		12F0E9611D5B9464005F89F3 /* iOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = iOS.mm; path = Platform/iOS/iOS.mm; sourceTree = SOURCE_ROOT; };
 		12F96E821D5B8BFA002B4B5C /* IGLView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = IGLView.mm; path = Platform/iOS/IGLView.mm; sourceTree = SOURCE_ROOT; };
 		12F96E841D5B8C18002B4B5C /* IGLView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = IGLView.h; path = Platform/iOS/IGLView.h; sourceTree = "<group>"; };
@@ -73,6 +91,7 @@
 		124A32171CDC283900472893 = {
 			isa = PBXGroup;
 			children = (
+				12BE4CA41E1D726E00BDD467 /* RunnerGame.xcodeproj */,
 				124A32431CDC28D500472893 /* Include */,
 				124A32221CDC283900472893 /* GLESRenderer */,
 				126220991D33867500E10E08 /* Frameworks */,
@@ -136,6 +155,15 @@
 				126220971D33865400E10E08 /* UIKit.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		12BE4CA51E1D726E00BDD467 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				12BE4CAB1E1D726E00BDD467 /* libTestGame.dylib */,
+				12BE4CAD1E1D726E00BDD467 /* libTestGame_iOS.a */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		12F96E561D5B8A77002B4B5C /* Platform */ = {
@@ -216,12 +244,35 @@
 			mainGroup = 124A32171CDC283900472893;
 			productRefGroup = 124A32211CDC283900472893 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 12BE4CA51E1D726E00BDD467 /* Products */;
+					ProjectRef = 12BE4CA41E1D726E00BDD467 /* RunnerGame.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				124A321F1CDC283900472893 /* GLESRenderer */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		12BE4CAB1E1D726E00BDD467 /* libTestGame.dylib */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.dylib";
+			path = libTestGame.dylib;
+			remoteRef = 12BE4CAA1E1D726E00BDD467 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		12BE4CAD1E1D726E00BDD467 /* libTestGame_iOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libTestGame_iOS.a;
+			remoteRef = 12BE4CAC1E1D726E00BDD467 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXSourcesBuildPhase section */
 		124A321C1CDC283900472893 /* Sources */ = {

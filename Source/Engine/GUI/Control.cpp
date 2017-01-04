@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -40,7 +40,7 @@
 #include <GUI/Control.h>
 
 Control::Control(int x, int y, int width, int height) :
-	_controlRect{ Point(x, y), Point(width, height) },
+	_controlRect{ NPoint(x, y), NPoint(width, height) },
 	_enabled(true), _hovered(false), _visible(true),
 	_text(""),
 	_textColor(0.f), _hoveredTextColor(1.f, 0.f, 0.f),

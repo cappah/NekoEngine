@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -47,10 +47,10 @@ class Box : public Control
 {
 public:
 	ENGINE_API Box(int x = 0, int y = 0, int width = 75, int height = 24) : Control(x, y, width, height), _texture(nullptr) { }
-	ENGINE_API virtual void SetPosition(int x, int y) { Control::SetPosition(x, y); _UpdateVertices(); }
-	ENGINE_API virtual void SetPosition(Point pt) { Control::SetPosition(pt); _UpdateVertices(); }
-	ENGINE_API virtual void SetSize(int width, int height) { Control::SetSize(width, height); _UpdateVertices(); }
-	ENGINE_API virtual void SetSize(Point pt) { Control::SetSize(pt); _UpdateVertices(); }
+	ENGINE_API virtual void SetPosition(int x, int y) override { Control::SetPosition(x, y); _UpdateVertices(); }
+	ENGINE_API virtual void SetPosition(NPoint pt) override { Control::SetPosition(pt); _UpdateVertices(); }
+	ENGINE_API virtual void SetSize(int width, int height) override { Control::SetSize(width, height); _UpdateVertices(); }
+	ENGINE_API virtual void SetSize(NPoint pt) override { Control::SetSize(pt); _UpdateVertices(); }
 	ENGINE_API virtual ~Box();
 
 protected:

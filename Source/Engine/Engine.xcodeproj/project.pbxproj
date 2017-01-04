@@ -92,6 +92,28 @@
 		12B0CF601CEB4A9700E5D2FE /* StaticMeshComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12B0CF5C1CEB4A9700E5D2FE /* StaticMeshComponent.cpp */; };
 		12B0CF641CEB4AB400E5D2FE /* SkeletalMeshComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 12B0CF621CEB4AB400E5D2FE /* SkeletalMeshComponent.h */; };
 		12B0CF651CEB4AB400E5D2FE /* StaticMeshComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 12B0CF631CEB4AB400E5D2FE /* StaticMeshComponent.h */; };
+		12BE4CB71E1D737A00BDD467 /* Box.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12BE4CB01E1D737A00BDD467 /* Box.cpp */; };
+		12BE4CB81E1D737A00BDD467 /* Box.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12BE4CB01E1D737A00BDD467 /* Box.cpp */; };
+		12BE4CB91E1D737A00BDD467 /* Button.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12BE4CB11E1D737A00BDD467 /* Button.cpp */; };
+		12BE4CBA1E1D737A00BDD467 /* Button.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12BE4CB11E1D737A00BDD467 /* Button.cpp */; };
+		12BE4CBB1E1D737A00BDD467 /* Control.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12BE4CB21E1D737A00BDD467 /* Control.cpp */; };
+		12BE4CBC1E1D737A00BDD467 /* Control.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12BE4CB21E1D737A00BDD467 /* Control.cpp */; };
+		12BE4CBD1E1D737A00BDD467 /* GUIManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12BE4CB31E1D737A00BDD467 /* GUIManager.cpp */; };
+		12BE4CBE1E1D737A00BDD467 /* GUIManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12BE4CB31E1D737A00BDD467 /* GUIManager.cpp */; };
+		12BE4CBF1E1D737A00BDD467 /* Label.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12BE4CB41E1D737A00BDD467 /* Label.cpp */; };
+		12BE4CC01E1D737A00BDD467 /* Label.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12BE4CB41E1D737A00BDD467 /* Label.cpp */; };
+		12BE4CC11E1D737A00BDD467 /* Slider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12BE4CB51E1D737A00BDD467 /* Slider.cpp */; };
+		12BE4CC21E1D737A00BDD467 /* Slider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12BE4CB51E1D737A00BDD467 /* Slider.cpp */; };
+		12BE4CC31E1D737A00BDD467 /* TextBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12BE4CB61E1D737A00BDD467 /* TextBox.cpp */; };
+		12BE4CC41E1D737A00BDD467 /* TextBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12BE4CB61E1D737A00BDD467 /* TextBox.cpp */; };
+		12BE4CCE1E1D73B700BDD467 /* Box.h in Headers */ = {isa = PBXBuildFile; fileRef = 12BE4CC61E1D73B700BDD467 /* Box.h */; };
+		12BE4CCF1E1D73B700BDD467 /* Button.h in Headers */ = {isa = PBXBuildFile; fileRef = 12BE4CC71E1D73B700BDD467 /* Button.h */; };
+		12BE4CD01E1D73B700BDD467 /* Control.h in Headers */ = {isa = PBXBuildFile; fileRef = 12BE4CC81E1D73B700BDD467 /* Control.h */; };
+		12BE4CD11E1D73B700BDD467 /* GUIDefs.h in Headers */ = {isa = PBXBuildFile; fileRef = 12BE4CC91E1D73B700BDD467 /* GUIDefs.h */; };
+		12BE4CD21E1D73B700BDD467 /* GUIManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 12BE4CCA1E1D73B700BDD467 /* GUIManager.h */; };
+		12BE4CD31E1D73B700BDD467 /* Label.h in Headers */ = {isa = PBXBuildFile; fileRef = 12BE4CCB1E1D73B700BDD467 /* Label.h */; };
+		12BE4CD41E1D73B700BDD467 /* Slider.h in Headers */ = {isa = PBXBuildFile; fileRef = 12BE4CCC1E1D73B700BDD467 /* Slider.h */; };
+		12BE4CD51E1D73B700BDD467 /* TextBox.h in Headers */ = {isa = PBXBuildFile; fileRef = 12BE4CCD1E1D73B700BDD467 /* TextBox.h */; };
 		12C0588F1D2AF4E90042023D /* Input.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12C0588E1D2AF4E90042023D /* Input.cpp */; };
 		12C058901D2AF4E90042023D /* Input.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12C0588E1D2AF4E90042023D /* Input.cpp */; };
 		12C058931D2AF5360042023D /* Input.h in Headers */ = {isa = PBXBuildFile; fileRef = 12C058911D2AF5360042023D /* Input.h */; };
@@ -282,6 +304,21 @@
 		12B0CF5C1CEB4A9700E5D2FE /* StaticMeshComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = StaticMeshComponent.cpp; path = Scene/Components/StaticMeshComponent.cpp; sourceTree = SOURCE_ROOT; };
 		12B0CF621CEB4AB400E5D2FE /* SkeletalMeshComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SkeletalMeshComponent.h; path = Components/SkeletalMeshComponent.h; sourceTree = "<group>"; };
 		12B0CF631CEB4AB400E5D2FE /* StaticMeshComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StaticMeshComponent.h; path = Components/StaticMeshComponent.h; sourceTree = "<group>"; };
+		12BE4CB01E1D737A00BDD467 /* Box.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Box.cpp; sourceTree = "<group>"; };
+		12BE4CB11E1D737A00BDD467 /* Button.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Button.cpp; sourceTree = "<group>"; };
+		12BE4CB21E1D737A00BDD467 /* Control.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Control.cpp; sourceTree = "<group>"; };
+		12BE4CB31E1D737A00BDD467 /* GUIManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GUIManager.cpp; sourceTree = "<group>"; };
+		12BE4CB41E1D737A00BDD467 /* Label.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Label.cpp; sourceTree = "<group>"; };
+		12BE4CB51E1D737A00BDD467 /* Slider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Slider.cpp; sourceTree = "<group>"; };
+		12BE4CB61E1D737A00BDD467 /* TextBox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TextBox.cpp; sourceTree = "<group>"; };
+		12BE4CC61E1D73B700BDD467 /* Box.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Box.h; sourceTree = "<group>"; };
+		12BE4CC71E1D73B700BDD467 /* Button.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Button.h; sourceTree = "<group>"; };
+		12BE4CC81E1D73B700BDD467 /* Control.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Control.h; sourceTree = "<group>"; };
+		12BE4CC91E1D73B700BDD467 /* GUIDefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GUIDefs.h; sourceTree = "<group>"; };
+		12BE4CCA1E1D73B700BDD467 /* GUIManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GUIManager.h; sourceTree = "<group>"; };
+		12BE4CCB1E1D73B700BDD467 /* Label.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Label.h; sourceTree = "<group>"; };
+		12BE4CCC1E1D73B700BDD467 /* Slider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Slider.h; sourceTree = "<group>"; };
+		12BE4CCD1E1D73B700BDD467 /* TextBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextBox.h; sourceTree = "<group>"; };
 		12C0588E1D2AF4E90042023D /* Input.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Input.cpp; path = Core/Input.cpp; sourceTree = SOURCE_ROOT; };
 		12C058911D2AF5360042023D /* Input.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Input.h; sourceTree = "<group>"; };
 		12C058921D2AF5360042023D /* Keycodes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Keycodes.h; sourceTree = "<group>"; };
@@ -395,6 +432,7 @@
 			children = (
 				12822B051CC1AD9400EE5D0A /* Audio */,
 				12822B0A1CC1AD9F00EE5D0A /* Core */,
+				12BE4CAF1E1D737A00BDD467 /* GUI */,
 				12822B291CC1ADB100EE5D0A /* Platform */,
 				12822B341CC1ADF400EE5D0A /* PostEffects */,
 				12822B331CC1ADF000EE5D0A /* Scene */,
@@ -532,6 +570,7 @@
 			children = (
 				12822B581CC1AE4E00EE5D0A /* Audio */,
 				12822B5B1CC1AE4E00EE5D0A /* Engine */,
+				12BE4CC51E1D73B700BDD467 /* GUI */,
 				12822B701CC1AE4E00EE5D0A /* Platform */,
 				12822B721CC1AE4E00EE5D0A /* PostEffects */,
 				12822B7A1CC1AE4E00EE5D0A /* Renderer */,
@@ -766,6 +805,36 @@
 			name = Components;
 			sourceTree = "<group>";
 		};
+		12BE4CAF1E1D737A00BDD467 /* GUI */ = {
+			isa = PBXGroup;
+			children = (
+				12BE4CB01E1D737A00BDD467 /* Box.cpp */,
+				12BE4CB11E1D737A00BDD467 /* Button.cpp */,
+				12BE4CB21E1D737A00BDD467 /* Control.cpp */,
+				12BE4CB31E1D737A00BDD467 /* GUIManager.cpp */,
+				12BE4CB41E1D737A00BDD467 /* Label.cpp */,
+				12BE4CB51E1D737A00BDD467 /* Slider.cpp */,
+				12BE4CB61E1D737A00BDD467 /* TextBox.cpp */,
+			);
+			path = GUI;
+			sourceTree = SOURCE_ROOT;
+		};
+		12BE4CC51E1D73B700BDD467 /* GUI */ = {
+			isa = PBXGroup;
+			children = (
+				12BE4CC61E1D73B700BDD467 /* Box.h */,
+				12BE4CC71E1D73B700BDD467 /* Button.h */,
+				12BE4CC81E1D73B700BDD467 /* Control.h */,
+				12BE4CC91E1D73B700BDD467 /* GUIDefs.h */,
+				12BE4CCA1E1D73B700BDD467 /* GUIManager.h */,
+				12BE4CCB1E1D73B700BDD467 /* Label.h */,
+				12BE4CCC1E1D73B700BDD467 /* Slider.h */,
+				12BE4CCD1E1D73B700BDD467 /* TextBox.h */,
+			);
+			name = GUI;
+			path = ../../Include/GUI;
+			sourceTree = "<group>";
+		};
 		12C8E5CE1D59DA57002DD5EE /* Runtime */ = {
 			isa = PBXGroup;
 			children = (
@@ -783,12 +852,17 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				12BE4CD01E1D73B700BDD467 /* Control.h in Headers */,
+				12BE4CCE1E1D73B700BDD467 /* Box.h in Headers */,
 				12B0CF641CEB4AB400E5D2FE /* SkeletalMeshComponent.h in Headers */,
 				12549D681D7699AF00F77CEB /* AudioSource.h in Headers */,
 				1279C0FE1CC91E5800E521AD /* Compat.h in Headers */,
 				127DF8B01CCB13AD005F2693 /* AnimationClipResource.h in Headers */,
 				121482B51D51465000F804C3 /* NFont.h in Headers */,
+				12BE4CD51E1D73B700BDD467 /* TextBox.h in Headers */,
 				12FABB111D32567200D88639 /* FPSControllerComponent.h in Headers */,
+				12BE4CD11E1D73B700BDD467 /* GUIDefs.h in Headers */,
+				12BE4CD41E1D73B700BDD467 /* Slider.h in Headers */,
 				12A4ABCA1D648CEC00D22B76 /* HBAO.h in Headers */,
 				12ECE5D91CEFBE85004F3697 /* AnimationNode.h in Headers */,
 				12150A251CEB87A10066A044 /* AnimatorComponent.h in Headers */,
@@ -798,12 +872,15 @@
 				12C8E5D31D59DA76002DD5EE /* NString.h in Headers */,
 				12FABB1F1D3256D200D88639 /* CameraManager.h in Headers */,
 				126DB02F1CE42C0600FB6B77 /* Skeleton.h in Headers */,
+				12BE4CD21E1D73B700BDD467 /* GUIManager.h in Headers */,
 				127DF8B21CCB14DA005F2693 /* AnimationClip.h in Headers */,
 				1296BBD41CDBB6B500D17488 /* PlatformDetect.h in Headers */,
 				12CE01721CC991B900F3D84B /* SkeletalMesh.h in Headers */,
 				1255C57C1CD24CF60036E1DA /* Bone.h in Headers */,
+				12BE4CD31E1D73B700BDD467 /* Label.h in Headers */,
 				12FABB101D32567200D88639 /* CameraComponent.h in Headers */,
 				12C058931D2AF5360042023D /* Input.h in Headers */,
+				12BE4CCF1E1D73B700BDD467 /* Button.h in Headers */,
 				12C8E5D41D59DA76002DD5EE /* Runtime.h in Headers */,
 				12C058941D2AF5360042023D /* Keycodes.h in Headers */,
 				1297E3971D69E91500A00959 /* Console.h in Headers */,
@@ -894,6 +971,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				12C560B11CFB57B200E25478 /* ResourceManager.cpp in Sources */,
+				12BE4CB81E1D737A00BDD467 /* Box.cpp in Sources */,
 				124A31F91CDC263600472893 /* SMAA.cpp in Sources */,
 				129000C01DCA5CB500EBB120 /* PlatformInput.mm in Sources */,
 				124A31E01CDC260E00472893 /* AudioClip.cpp in Sources */,
@@ -908,7 +986,9 @@
 				12C560AF1CFB57B200E25478 /* ResourceDatabase.cpp in Sources */,
 				124A32041CDC264100472893 /* VFSArchive.cpp in Sources */,
 				124A32061CDC264100472893 /* Logger.cpp in Sources */,
+				12BE4CC21E1D737A00BDD467 /* Slider.cpp in Sources */,
 				124A31FC1CDC264100472893 /* Object.cpp in Sources */,
+				12BE4CBC1E1D737A00BDD467 /* Control.cpp in Sources */,
 				124A31F51CDC263000472893 /* iOS.mm in Sources */,
 				12C560B31CFB57B200E25478 /* SceneManager.cpp in Sources */,
 				12C560AB1CFB57B200E25478 /* Material.cpp in Sources */,
@@ -925,6 +1005,8 @@
 				12ECE5E51CF110F1004F3697 /* AudioSourceComponent.cpp in Sources */,
 				124A32011CDC264100472893 /* AssetLoader.cpp in Sources */,
 				12C560B71CFB57B200E25478 /* ShadowMap.cpp in Sources */,
+				12BE4CC01E1D737A00BDD467 /* Label.cpp in Sources */,
+				12BE4CC41E1D737A00BDD467 /* TextBox.cpp in Sources */,
 				12FABB181D3256B600D88639 /* CameraComponent.cpp in Sources */,
 				12C560BB1CFB57B200E25478 /* Skeleton.cpp in Sources */,
 				12C560C11CFB57B200E25478 /* StaticMesh.cpp in Sources */,
@@ -932,11 +1014,13 @@
 				12C560A71CFB57B200E25478 /* Engine.cpp in Sources */,
 				12C560A51CFB57B200E25478 /* DeferredBuffer.cpp in Sources */,
 				124A31E11CDC260E00472893 /* AudioSource.cpp in Sources */,
+				12BE4CBE1E1D737A00BDD467 /* GUIManager.cpp in Sources */,
 				12C560BF1CFB57B200E25478 /* SSAO.cpp in Sources */,
 				12C560BD1CFB57B200E25478 /* SoundManager.cpp in Sources */,
 				12B0CF5E1CEB4A9700E5D2FE /* SkeletalMeshComponent.cpp in Sources */,
 				12150A211CEB875D0066A044 /* AnimatorComponent.cpp in Sources */,
 				124A31F31CDC262800472893 /* UNIX.cpp in Sources */,
+				12BE4CBA1E1D737A00BDD467 /* Button.cpp in Sources */,
 				1243C8931CDCE15A00BA692E /* EngineInputDelegate.mm in Sources */,
 				124A32001CDC264100472893 /* Terrain.cpp in Sources */,
 				128DBB621D6D7C7F00E7CFFD /* Camera.cpp in Sources */,
@@ -952,6 +1036,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				128DBB611D6D7C7F00E7CFFD /* Camera.cpp in Sources */,
+				12BE4CB71E1D737A00BDD467 /* Box.cpp in Sources */,
 				12C560B01CFB57B200E25478 /* ResourceManager.cpp in Sources */,
 				12822B081CC1AD9C00EE5D0A /* AudioClip.cpp in Sources */,
 				12B0CF5F1CEB4A9700E5D2FE /* StaticMeshComponent.cpp in Sources */,
@@ -966,7 +1051,9 @@
 				12C560AE1CFB57B200E25478 /* ResourceDatabase.cpp in Sources */,
 				12822B541CC1AE2E00EE5D0A /* VFS.cpp in Sources */,
 				12C058961D2AF55A0042023D /* PlatformInput.mm in Sources */,
+				12BE4CC11E1D737A00BDD467 /* Slider.cpp in Sources */,
 				12822B381CC1AE0600EE5D0A /* SMAA.cpp in Sources */,
+				12BE4CBB1E1D737A00BDD467 /* Control.cpp in Sources */,
 				12822B421CC1AE0E00EE5D0A /* Object.cpp in Sources */,
 				12C560B21CFB57B200E25478 /* SceneManager.cpp in Sources */,
 				12C560AA1CFB57B200E25478 /* Material.cpp in Sources */,
@@ -983,6 +1070,8 @@
 				12822B091CC1AD9C00EE5D0A /* AudioSource.cpp in Sources */,
 				12C560B61CFB57B200E25478 /* ShadowMap.cpp in Sources */,
 				12C560BA1CFB57B200E25478 /* Skeleton.cpp in Sources */,
+				12BE4CBF1E1D737A00BDD467 /* Label.cpp in Sources */,
+				12BE4CC31E1D737A00BDD467 /* TextBox.cpp in Sources */,
 				12822B411CC1AE0E00EE5D0A /* Light.cpp in Sources */,
 				12C560C01CFB57B200E25478 /* StaticMesh.cpp in Sources */,
 				12C560AC1CFB57B200E25478 /* PostProcessor.cpp in Sources */,
@@ -990,11 +1079,13 @@
 				12C560A61CFB57B200E25478 /* Engine.cpp in Sources */,
 				12822B371CC1AE0600EE5D0A /* Effect.cpp in Sources */,
 				12C560A41CFB57B200E25478 /* DeferredBuffer.cpp in Sources */,
+				12BE4CBD1E1D737A00BDD467 /* GUIManager.cpp in Sources */,
 				12B0CF5D1CEB4A9700E5D2FE /* SkeletalMeshComponent.cpp in Sources */,
 				12C560BE1CFB57B200E25478 /* SSAO.cpp in Sources */,
 				12C560BC1CFB57B200E25478 /* SoundManager.cpp in Sources */,
 				12150A201CEB875D0066A044 /* AnimatorComponent.cpp in Sources */,
 				12822B451CC1AE0E00EE5D0A /* Skybox.cpp in Sources */,
+				12BE4CB91E1D737A00BDD467 /* Button.cpp in Sources */,
 				12822B4F1CC1AE2800EE5D0A /* Logger.cpp in Sources */,
 				12FABB191D3256B600D88639 /* FPSControllerComponent.cpp in Sources */,
 				12822BBB1CC1DB9500EE5D0A /* EngineDelegate.mm in Sources */,

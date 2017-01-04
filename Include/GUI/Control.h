@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -51,18 +51,18 @@ class Control
 public:
 	ENGINE_API Control(int x = 0, int y = 0, int width = 10, int height = 10);
 
-	ENGINE_API virtual const Point &GetPosition() const { return _controlRect.pos; }
-	ENGINE_API virtual const Point &GetSize() const { return _controlRect.size; }
-	ENGINE_API virtual const Rect &GetControlRect() const { return _controlRect; }
+	ENGINE_API virtual const NPoint &GetPosition() const { return _controlRect.pos; }
+	ENGINE_API virtual const NPoint &GetSize() const { return _controlRect.size; }
+	ENGINE_API virtual const NRect &GetControlRect() const { return _controlRect; }
 	ENGINE_API virtual NString &GetText() { return _text; }
 	ENGINE_API virtual bool IsEnabled() { return _enabled; }
 	ENGINE_API virtual bool IsVisible() { return _visible; }
 	ENGINE_API virtual bool IsFocused() { return _focused; }
 
 	ENGINE_API virtual void SetPosition(int x, int y) { _controlRect.x = x; _controlRect.y = y; }
-	ENGINE_API virtual void SetPosition(Point pt) { _controlRect.x = pt.x; _controlRect.y = pt.y; }
+	ENGINE_API virtual void SetPosition(NPoint pt) { _controlRect.x = pt.x; _controlRect.y = pt.y; }
 	ENGINE_API virtual void SetSize(int width, int height) { _controlRect.w = width; _controlRect.h = height; }
-	ENGINE_API virtual void SetSize(Point pt) { _controlRect.w = pt.x; _controlRect.h = pt.y; }
+	ENGINE_API virtual void SetSize(NPoint pt) { _controlRect.w = pt.x; _controlRect.h = pt.y; }
 	ENGINE_API virtual void SetText(std::string text) { _text = text; }
 	ENGINE_API virtual void SetTextColor(glm::vec3 &color) { _textColor = color; }
 	ENGINE_API virtual void SetEnabled(bool enable) { _enabled = enable; }
@@ -75,11 +75,11 @@ public:
 	ENGINE_API virtual void SetRightClickHandler(std::function<void(void)> onRightClick) { _onRightClick = onRightClick; }
 	ENGINE_API virtual void SetMiddleClickHandler(std::function<void(void)> onMiddleClick) { _onMiddleClick = onMiddleClick; }
 
-	ENGINE_API virtual void SetMouseDownUp(std::function<void(uint8_t, const Point &)> onMouseUp) { _onMouseUp = onMouseUp; }
-	ENGINE_API virtual void SetMouseDownHandler(std::function<void(uint8_t, const Point &)> onMouseDown) { _onMouseDown = onMouseDown; }
+	ENGINE_API virtual void SetMouseDownUp(std::function<void(uint8_t, const NPoint &)> onMouseUp) { _onMouseUp = onMouseUp; }
+	ENGINE_API virtual void SetMouseDownHandler(std::function<void(uint8_t, const NPoint &)> onMouseDown) { _onMouseDown = onMouseDown; }
 	ENGINE_API virtual void SetMouseEnterHandler(std::function<void(void)> onMouseEnter) { _onMouseEnter = onMouseEnter; }
 	ENGINE_API virtual void SetMouseLeaveHandler(std::function<void(void)> onMouseLeave) { _onMouseLeave = onMouseLeave; }
-	ENGINE_API virtual void SetMouseMovedHandler(std::function<void(const Point &, const Point &)> onMouseMoved) { _onMouseMoved = onMouseMoved; }
+	ENGINE_API virtual void SetMouseMovedHandler(std::function<void(const NPoint &, const NPoint &)> onMouseMoved) { _onMouseMoved = onMouseMoved; }
 
 	ENGINE_API virtual void SetKeyUpHandler(std::function<void(uint8_t)> onKeyUp) { _onKeyUp = onKeyUp; }
 	ENGINE_API virtual void SetKeyDownHandler(std::function<void(uint8_t)> onKeyDown) { _onKeyDown = onKeyDown; }
@@ -87,7 +87,7 @@ public:
 	ENGINE_API virtual ~Control();
 
 protected:
-	Rect _controlRect;
+	NRect _controlRect;
 	bool _enabled, _hovered, _visible;
 	NString _text;
 	glm::vec3 _textColor, _hoveredTextColor;
@@ -97,8 +97,8 @@ protected:
 	bool _focused;
 
 	std::function <void(void)> _onClick, _onRightClick, _onMiddleClick, _onMouseEnter, _onMouseLeave;
-	std::function <void(uint8_t, const Point &)> _onMouseUp, _onMouseDown;
-	std::function <void(const Point &, const Point &)> _onMouseMoved;
+	std::function <void(uint8_t, const NPoint &)> _onMouseUp, _onMouseDown;
+	std::function <void(const NPoint &, const NPoint &)> _onMouseMoved;
 	std::function<void(uint8_t)> _onKeyUp, _onKeyDown;
 
 	virtual int _InitializeControl(Renderer *renderer) { (void)renderer; return ENGINE_OK; }

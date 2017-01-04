@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -64,13 +64,13 @@ void Slider::_Update(double deltaTime)
 	(void)deltaTime;
 }
 
-void Slider::_MouseUp(uint8_t button, const Point &pos)
+void Slider::_MouseUp(uint8_t button, const NPoint &pos)
 {
 	if (button == NE_MOUSE_LMB)
 		_dragging = false;
 }
 
-void Slider::_MouseDown(uint8_t button, const Point &pos)
+void Slider::_MouseDown(uint8_t button, const NPoint &pos)
 {
 	if (button == NE_MOUSE_LMB && _sliderBox->GetControlRect().PtInRect(pos))
 		_dragging = true;
@@ -81,13 +81,13 @@ void Slider::_MouseLeave()
 	_dragging = false;
 }
 
-void Slider::_MouseMoved(const Point &mousePos, const Point &lastMousePos)
+void Slider::_MouseMoved(const NPoint &mousePos, const NPoint &lastMousePos)
 {
 	if (!_dragging)
 		return;
 
-	Point offset{ lastMousePos - mousePos };
-	Point boxPosition{ _sliderBox->GetPosition() };
+	NPoint offset{ lastMousePos - mousePos };
+	NPoint boxPosition{ _sliderBox->GetPosition() };
 	int sliderPosition{ 0 };
 
 	offset.x = -offset.x;

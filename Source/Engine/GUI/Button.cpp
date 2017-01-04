@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -79,7 +79,7 @@ void Button::_Draw(GUIDrawInfo *drawInfo)
 	drawInfo->renderer->DrawElements(PolygonMode::Triangles, 6, ElementType::UnsignedInt, 0);
 
 	int textY = (_controlRect.h - drawInfo->guiFont->GetCharacterHeight()) / 2;
-	drawInfo->guiFont->Draw(_text, glm::vec2(_controlRect.x + 10, _controlRect.y + textY), glm::vec3(0.0, 0.0, 0.0));
+	//drawInfo->guiFont->Draw(_text, glm::vec2(_controlRect.x + 10, _controlRect.y + textY), glm::vec3(0.0, 0.0, 0.0));
 
 	_arrayBuffer->Unbind();
 

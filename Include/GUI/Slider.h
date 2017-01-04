@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -74,8 +74,8 @@ protected:
 
 	virtual int _InitializeControl(Renderer *renderer) override;
 	virtual void _Update(double deltaTime) override;
-	virtual void _MouseUp(uint8_t button, const Point &pos);
-	virtual void _MouseDown(uint8_t button, const Point &pos);
+	virtual void _MouseUp(uint8_t button, const NPoint &pos);
+	virtual void _MouseDown(uint8_t button, const NPoint &pos);
 	virtual void _MouseLeave();
-	virtual void _MouseMoved(const Point &mousePos, const Point &lastMousePos);
+	virtual void _MouseMoved(const NPoint &mousePos, const NPoint &lastMousePos);
 };

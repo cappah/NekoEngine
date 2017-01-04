@@ -14,7 +14,7 @@
       location = "group:../../Source/Renderer/GLESRenderer/GLESRenderer.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:../../Source/TestGame/TestGame.xcodeproj">
+      location = "absolute:/Users/racetrack/Projects/NekoEngine/Source/Renderer/GLESRenderer/../../RunnerGame/RunnerGame.xcodeproj">
    </FileRef>
    <Group
       location = "container:"

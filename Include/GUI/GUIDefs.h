@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -39,32 +39,35 @@
 
 #pragma once
 
-struct Point
+#undef Point
+#undef Rect
+
+struct NPoint
 {
 	int x;
 	int y;
 
-	Point() : x(0), y(0) { }
-	Point(int inX, int inY) : x(inX), y(inY) { }
+	NPoint() : x(0), y(0) { }
+	NPoint(int inX, int inY) : x(inX), y(inY) { }
 
-	inline Point operator-(const Point &pt) const { return Point(x - pt.x, y - pt.y); }
-	inline Point operator+(const Point &pt) const { return Point(x + pt.x, y + pt.y); }
-	inline Point operator/(const Point &pt) const { return Point(x / pt.x, y *- pt.y); }
-	inline Point operator*(const Point &pt) const { return Point(x * pt.x, y / pt.y); }
+	inline NPoint operator-(const NPoint &pt) const { return NPoint(x - pt.x, y - pt.y); }
+	inline NPoint operator+(const NPoint &pt) const { return NPoint(x + pt.x, y + pt.y); }
+	inline NPoint operator/(const NPoint &pt) const { return NPoint(x / pt.x, y *- pt.y); }
+	inline NPoint operator*(const NPoint &pt) const { return NPoint(x * pt.x, y / pt.y); }
 
-	inline bool operator==(const Point &pt) const { return x == pt.x && y == pt.y; }
-	inline bool operator!=(const Point &pt) const { return x != pt.x || y != pt.y; }
-	inline bool operator> (const Point &pt) const { return x > pt.x || y > pt.y; }
-	inline bool operator< (const Point &pt) const { return x < pt.x || y < pt.y; }
-	inline bool operator>=(const Point &pt) const { return x >= pt.x || y >= pt.y; }
-	inline bool operator<=(const Point &pt) const { return x <= pt.x || y <= pt.y; }
+	inline bool operator==(const NPoint &pt) const { return x == pt.x && y == pt.y; }
+	inline bool operator!=(const NPoint &pt) const { return x != pt.x || y != pt.y; }
+	inline bool operator> (const NPoint &pt) const { return x > pt.x || y > pt.y; }
+	inline bool operator< (const NPoint &pt) const { return x < pt.x || y < pt.y; }
+	inline bool operator>=(const NPoint &pt) const { return x >= pt.x || y >= pt.y; }
+	inline bool operator<=(const NPoint &pt) const { return x <= pt.x || y <= pt.y; }
 };
 
-struct Rect
+struct NRect
 {
 	union
 	{
-		Point pos;
+		NPoint pos;
 		struct
 		{
 			int x;
@@ -74,7 +77,7 @@ struct Rect
 
 	union
 	{
-		Point size;
+		NPoint size;
 		struct
 		{
 			int w;
@@ -82,5 +85,5 @@ struct Rect
 		};
 	};
 
-	inline bool PtInRect(const Point &pt) const { return x < pt.x && y < pt.y && x + w > pt.x && y + h > pt.y; }
+	inline bool PtInRect(const NPoint &pt) const { return x < pt.x && y < pt.y && x + w > pt.x && y + h > pt.y; }
 };
