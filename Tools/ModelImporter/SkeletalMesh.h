@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -115,6 +115,7 @@ public:
 	void SetGlobalInverseTransform(glm::dmat4 &m) { _globalInverseTransform = m; }
 
 	int GetBoneIndex(std::string name);
+	uint32_t GetGroupStartVertex() { return _startVertex; }
 
 	void BeginGroup() { _startIndex = (uint32_t)_indices.size(); _startVertex = (uint32_t)_vertices.size(); _groupCount = 0; }
 	void SetMaterialID(int32_t index) { _materialId = index; }

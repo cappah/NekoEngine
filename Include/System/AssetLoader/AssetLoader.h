@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -49,11 +49,13 @@
 #include <Animation/TransformNode.h>
 #include <Animation/AnimationClip.h>
 #include <Resource/MeshResource.h>
+#include <Audio/AudioBuffer.h>
 
 #define NMESH1_HEADER	"NMESH1 "
 #define NMESH2_HEADER	"NMESH2 "
 #define NMESH2_FOOTER	"ENDMESH"
 #define NMESH_SKELETAL	"SKELETAL"
+#define NMESH2A_HEADER	"NMESH2A"
 
 #define NANIM1_HEADER	"NANIM1 "
 #define NANIM2_HEADER	"NANIM2 "
@@ -66,14 +68,12 @@ public:
 	static int LoadStaticMesh(NString &file,
 		std::vector<Vertex> &vertices,
 		std::vector<uint32_t> &indices,
-		std::vector<uint32_t> &groupOffset,
-		std::vector<uint32_t> &groupCount);
+		std::vector<struct MeshGroup> &groups);
 
 	static int LoadSkeletalMesh(NString &file,
 		std::vector<SkeletalVertex> &vertices,
 		std::vector<uint32_t> &indices,
-		std::vector<uint32_t> &groupOffset,
-		std::vector<uint32_t> &groupCount,
+		std::vector<struct MeshGroup> &groups,
 		std::vector<Bone> &bones,
 		std::vector<TransformNode> &nodes,
 		glm::dmat4 &globalInverseTransform);
@@ -86,13 +86,13 @@ public:
 							 std::vector<AnimationNode> &channels);
 	
 	// Sound
-	static int LoadWAV(NString &file, int32_t *format, void **data, int32_t *size, int32_t *freq);
-	static int LoadOGG(NString &file, int32_t *format, unsigned char **data, int32_t *size, int32_t *freq);
+	ENGINE_API static int LoadWAV(NString &file, AudioFormat *format, void **data, size_t *size, size_t *freq);
+	ENGINE_API static int LoadOGG(NString &file, AudioFormat *format, unsigned char **data, size_t *size, size_t *freq);
 	
 	// Images
-	static int LoadTGA(const uint8_t *data, uint64_t dataSize, uint32_t &width, uint32_t &height, uint8_t &bpp, uint8_t **imgData, uint64_t &imgDataSize);
-	static int LoadDDS(const uint8_t *data, uint64_t dataSize, uint32_t &width, uint32_t &height, uint32_t &depth, uint32_t &format, uint32_t &mipLevels, uint8_t **imgData, uint64_t &imgDataSize);
-	static int LoadASTC(const uint8_t *data, uint64_t dataSize, uint32_t &width, uint32_t &height, uint32_t &depth, uint32_t &format, uint32_t &mipLevels, uint8_t **imgData, uint64_t &imgDataSize);
+	ENGINE_API static int LoadTGA(const uint8_t *data, uint64_t dataSize, uint32_t &width, uint32_t &height, uint8_t &bpp, uint8_t **imgData, uint64_t &imgDataSize);
+	ENGINE_API static int LoadDDS(const uint8_t *data, uint64_t dataSize, uint32_t &width, uint32_t &height, uint32_t &depth, uint32_t &format, uint32_t &mipLevels, uint8_t **imgData, uint64_t &imgDataSize);
+	ENGINE_API static int LoadASTC(const uint8_t *data, uint64_t dataSize, uint32_t &width, uint32_t &height, uint32_t &depth, uint32_t &format, uint32_t &mipLevels, uint8_t **imgData, uint64_t &imgDataSize);
 
 	/**
 	 * Read a unsigned integer array from a comma separated string
@@ -252,17 +252,17 @@ private:
 	static int _LoadStaticMeshV2(class VFSFile *file,
 		std::vector<Vertex> &vertices,
 		std::vector<uint32_t> &indices,
-		std::vector<uint32_t> &groupOffset,
-		std::vector<uint32_t> &groupCount);
+		std::vector<struct MeshGroup> &groups,
+		bool readVertexGroup);
 
 	static int _LoadSkeletalMeshV2(VFSFile *file,
 		std::vector<SkeletalVertex> &vertices,
 		std::vector<uint32_t> &indices,
-		std::vector<uint32_t> &groupOffset,
-		std::vector<uint32_t> &groupCount,
+		std::vector<struct MeshGroup> &groups,
 		std::vector<Bone> &bones,
 		std::vector<TransformNode> &nodes,
-		glm::dmat4 &globalInverseTransform);
+		glm::dmat4 &globalInverseTransform,
+		bool readVertexGroup);
 
 	static int _LoadAnimationV2(VFSFile *file,
 							 std::string &name,

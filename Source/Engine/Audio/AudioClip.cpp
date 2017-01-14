@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -40,6 +40,7 @@
 #include <string>
 #include <cstring>
 
+#include <Audio/AudioSystem.h>
 #include <Engine/Engine.h>
 #include <Audio/AudioClip.h>
 #include <System/Logger.h>
@@ -51,16 +52,16 @@ using namespace std;
 
 AudioClip::AudioClip(AudioClipResource *res) noexcept
 {
-	_buffer = 0;
+	_buffer = nullptr;
 	_resourceInfo = res;
 }
 
 int AudioClip::Load()
 {
-	ALsizei size = 0, freq = 0;
-	ALenum format = 0;
-	ALvoid *data = nullptr;
-	int ret = ENGINE_FAIL;
+	size_t size{ 0 }, freq{ 0 };
+	AudioFormat format{};
+	void *data{ nullptr };
+	int ret{ ENGINE_FAIL };
 
 	NString path(GetResourceInfo()->filePath);
 
@@ -72,8 +73,10 @@ int AudioClip::Load()
 	if (ret != ENGINE_OK)
 		return ENGINE_FAIL;
 
-	alGenBuffers(1, &_buffer);
-	alBufferData(_buffer, format, data, size, freq);
+	if ((_buffer = AudioSystem::GetInstance()->CreateBuffer(size)) == nullptr)
+		return ENGINE_OUT_OF_RESOURCES;
+
+	_buffer->SetData(format, freq, size, data);
 
 	free(data); data = nullptr;
 
@@ -84,5 +87,5 @@ int AudioClip::Load()
 
 AudioClip::~AudioClip() noexcept
 {
-	if(_buffer) alDeleteBuffers(1, &_buffer);
+	delete _buffer;
 }

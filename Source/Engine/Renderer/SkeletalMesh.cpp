@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -37,11 +37,10 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <glm/glm.hpp>
-
-#include <Renderer/Debug.h>
 #include <Renderer/VKUtil.h>
+#include <Renderer/DebugMarker.h>
 #include <Renderer/SkeletalMesh.h>
+#include <Renderer/ShadowRenderer.h>
 #include <Renderer/PipelineManager.h>
 #include <Renderer/RenderPassManager.h>
 #include <Engine/Vertex.h>
@@ -63,7 +62,7 @@ SkeletalMesh::SkeletalMesh(MeshResource *res) noexcept :
 
 Skeleton *SkeletalMesh::CreateSkeleton()
 {
-	Skeleton *skel = new Skeleton(_bones, _nodes, _globalInverseTransform);
+	Skeleton *skel{ new Skeleton(_bones, _nodes, _globalInverseTransform) };
 	
 	if(skel->Load() != ENGINE_OK)
 	{
@@ -76,9 +75,7 @@ Skeleton *SkeletalMesh::CreateSkeleton()
 
 int SkeletalMesh::Load()
 {	
-	_groupOffset.push_back(0);
-
-	if (AssetLoader::LoadSkeletalMesh(GetResourceInfo()->filePath, _vertices, _indices, _groupOffset, _groupCount, _bones, _nodes, _globalInverseTransform) != ENGINE_OK)
+	if (AssetLoader::LoadSkeletalMesh(GetResourceInfo()->filePath, _vertices, _indices, _groups, _bones, _nodes, _globalInverseTransform) != ENGINE_OK)
 	{
 		Logger::Log(SK_MESH_MODULE, LOG_CRITICAL, "Failed to load mesh id=%s", _resourceInfo->name.c_str());
 		return ENGINE_FAIL;
@@ -87,49 +84,71 @@ int SkeletalMesh::Load()
 	_indexCount = (uint32_t)_indices.size();
 	_vertexCount = (uint32_t)_vertices.size();
 	_triangleCount = _indexCount / 3;
+
+	CreateBounds();
 	
 	Logger::Log(SK_MESH_MODULE, LOG_DEBUG, "Loaded mesh id %d from %s, %d vertices, %d indices", _resourceInfo->id, *GetResourceInfo()->filePath, _vertexCount, _indexCount);
 	
 	return ENGINE_OK;
 }
 
-int SkeletalMesh::LoadStatic(std::vector<SkeletalVertex> &vertices, std::vector<uint32_t> &indices, bool createGroup, bool calculateTangents)
+int SkeletalMesh::LoadStatic(std::vector<SkeletalVertex> &vertices, std::vector<uint32_t> &indices, bool createGroup, bool calculateTangents, bool createBounds)
 {
 	if (createGroup)
 	{
-		_groupOffset.push_back(0);
-		_groupCount.push_back((uint32_t)indices.size());
+		MeshGroup group{ 0, (uint32_t)vertices.size(), 0, (uint32_t)indices.size() };
+		_groups.push_back(group);
 	}
 
 	_vertices = vertices;
 	_indices = indices;
 
-	if(calculateTangents) _CalculateTangents();
+	if (calculateTangents) _CalculateTangents();
+	if (createBounds) CreateBounds();
 
 	return CreateBuffer(false);
 }
 
-int SkeletalMesh::LoadDynamic(std::vector<SkeletalVertex> &vertices, std::vector<uint32_t> &indices, bool createGroup, bool calculateTangents)
+int SkeletalMesh::LoadDynamic(std::vector<SkeletalVertex> &vertices, std::vector<uint32_t> &indices, bool createGroup, bool calculateTangents, bool createBounds)
 {
 	if (createGroup)
 	{
-		_groupOffset.push_back(0);
-		_groupCount.push_back((uint32_t)indices.size());
+		MeshGroup group{ 0, (uint32_t)vertices.size(), 0, (uint32_t)indices.size() };
+		_groups.push_back(group);
 	}
 
 	_vertices = vertices;
 	_indices = indices;
 
-	if(calculateTangents) _CalculateTangents();
+	if (calculateTangents) _CalculateTangents();
+	if (createBounds) CreateBounds();
 
 	_dynamic = true;
 
 	return CreateBuffer(true);
 }
 
+void SkeletalMesh::CreateBounds()
+{
+	vec3 max{ 0.f };
+	vec3 min{ 0.f };
+
+	for (SkeletalVertex &v : _vertices)
+	{
+		if (v.position.x < min.x) min.x = v.position.x;
+		if (v.position.x > max.x) max.x = v.position.x;
+		if (v.position.y < min.y) min.y = v.position.y;
+		if (v.position.y > max.y) max.y = v.position.y;
+		if (v.position.z < min.z) min.z = v.position.z;
+		if (v.position.z > max.z) max.z = v.position.z;
+	}
+
+	_bounds.InitBox(min, max);
+}
+
 VkDeviceSize SkeletalMesh::GetRequiredMemorySize()
 {
-	VkDeviceSize size = sizeof(SkeletalVertex) * _vertices.size() + sizeof(uint32_t) * _indices.size();
+	VkDeviceSize size{ sizeof(SkeletalVertex) * _vertices.size() + sizeof(uint32_t) * _indices.size() };
 	if (size % 256)
 	{
 		size = size / 256;
@@ -177,8 +196,8 @@ bool SkeletalMesh::Upload(Buffer *buffer)
 
 VkDescriptorSet SkeletalMesh::CreateDescriptorSet(VkDescriptorPool pool, Buffer *uniform, Buffer *boneBuffer)
 {
-	VkDescriptorSet ret;
-	VkDescriptorSetLayout objectDSL = PipelineManager::GetDescriptorSetLayout(DESC_LYT_Anim_Object);
+	VkDescriptorSet ret{};
+	VkDescriptorSetLayout objectDSL{ PipelineManager::GetDescriptorSetLayout(DESC_LYT_Anim_Object) };
 
 	VkDescriptorSetAllocateInfo allocInfo{};
 	allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
@@ -203,112 +222,130 @@ VkDescriptorSet SkeletalMesh::CreateDescriptorSet(VkDescriptorPool pool, Buffer 
 	boneInfo.range = boneBuffer->GetSize();
 
 	VkWriteDescriptorSet descriptorWrite[2]{};
-	descriptorWrite[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-	descriptorWrite[0].dstSet = ret;
-	descriptorWrite[0].dstBinding = 0;
-	descriptorWrite[0].dstArrayElement = 0;
-	descriptorWrite[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-	descriptorWrite[0].descriptorCount = 1;
-	descriptorWrite[0].pBufferInfo = &bufferInfo;
-	descriptorWrite[0].pImageInfo = nullptr;
-	descriptorWrite[0].pTexelBufferView = nullptr;
-	descriptorWrite[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-	descriptorWrite[1].dstSet = ret;
-	descriptorWrite[1].dstBinding = 1;
-	descriptorWrite[1].dstArrayElement = 0;
-	descriptorWrite[1].descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
-	descriptorWrite[1].descriptorCount = 1;
-	descriptorWrite[1].pBufferInfo = &boneInfo;
-	descriptorWrite[1].pImageInfo = nullptr;
-	descriptorWrite[1].pTexelBufferView = nullptr;
-
+	VKUtil::WriteDS(&descriptorWrite[0], 1, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, &bufferInfo, ret, 0);
+	VKUtil::WriteDS(&descriptorWrite[1], 1, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, &boneInfo, ret, 1);
 	vkUpdateDescriptorSets(VKUtil::GetDevice(), 2, descriptorWrite, 0, nullptr);
 
 	return ret;
 }
 
-bool SkeletalMesh::BuildCommandBuffers(NArray<Material *> &_materials, VkDescriptorSet descriptorSet, VkCommandBuffer &depthCmdBuffer, VkCommandBuffer &sceneCmdBuffer)
+bool SkeletalMesh::BuildDrawables(NArray<Material *> &materials, VkDescriptorSet descriptorSet, NArray<Drawable> &drawables, bool buildDepth, bool buildBounds)
 {
-	VkDescriptorSet sceneDescriptorSet = Renderer::GetInstance()->GetSceneDescriptorSet();
+	VkDescriptorSet sceneDescriptorSet{ Renderer::GetInstance()->GetSceneDescriptorSet() };
 
-	VkCommandBufferInheritanceInfo depthInheritanceInfo = {};
-	depthInheritanceInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO;
-	depthInheritanceInfo.occlusionQueryEnable = VK_FALSE;
-	depthInheritanceInfo.renderPass = RenderPassManager::GetRenderPass(RP_Depth);
-	depthInheritanceInfo.subpass = 0;
-	depthInheritanceInfo.framebuffer = Renderer::GetInstance()->GetDepthFramebuffer();
-
-	VkCommandBufferBeginInfo beginInfo = {};
+	VkCommandBufferBeginInfo beginInfo{};
 	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 	beginInfo.flags = VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT | VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT;
-	beginInfo.pInheritanceInfo = &depthInheritanceInfo;
-
-	if (depthCmdBuffer != VK_NULL_HANDLE)
+	
+	for (size_t i = 0; i < _groups.size(); ++i)
 	{
-		if (vkBeginCommandBuffer(depthCmdBuffer, &beginInfo) != VK_SUCCESS)
+		Drawable drawable{};
+		drawable.sceneCommandBuffer = Renderer::GetInstance()->CreateMeshCommandBuffer();
+		drawable.depthCommandBuffer = VK_NULL_HANDLE;
+		drawable.transparent = materials[i]->IsTransparent();
+
+		if (buildBounds)
+			_BuildBounds((uint32_t)i, drawable.bounds);
+
+		if (buildDepth)
 		{
-			Logger::Log(SK_MESH_MODULE, LOG_CRITICAL, "vkBeginCommandBuffer (depth) call failed");
+			drawable.depthCommandBuffer = Renderer::GetInstance()->CreateMeshCommandBuffer();
+
+			VkCommandBufferInheritanceInfo depthInheritanceInfo = {};
+			depthInheritanceInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO;
+			depthInheritanceInfo.occlusionQueryEnable = VK_FALSE;
+			depthInheritanceInfo.renderPass = RenderPassManager::GetRenderPass(RP_Depth);
+			depthInheritanceInfo.subpass = 0;
+			depthInheritanceInfo.framebuffer = Renderer::GetInstance()->GetDepthFramebuffer();
+
+			beginInfo.pInheritanceInfo = &depthInheritanceInfo;
+
+			if (vkBeginCommandBuffer(drawable.depthCommandBuffer, &beginInfo) != VK_SUCCESS)
+			{
+				Logger::Log(SK_MESH_MODULE, LOG_CRITICAL, "vkBeginCommandBuffer (depth) call failed");
+				return false;
+			}
+
+			VK_DBG_MARKER_INSERT(drawable.depthCommandBuffer, _resourceInfo ? _resourceInfo->name.c_str() : "generated mesh", vec4(0.0, 0.5, 1.0, 1.0));
+
+			vkCmdBindVertexBuffers(drawable.depthCommandBuffer, 0, 1, &_buffer->GetHandle(), &_vertexOffset);
+			vkCmdBindIndexBuffer(drawable.depthCommandBuffer, _buffer->GetHandle(), _indexOffset, VK_INDEX_TYPE_UINT32);
+
+			PipelineId id{ _depthPipelineId };
+			if (materials[i]->HasNormalMap())
+				id = (PipelineId)(_depthPipelineId + 1);
+
+			vkCmdBindPipeline(drawable.depthCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, PipelineManager::GetPipeline(id));
+			vkCmdBindDescriptorSets(drawable.depthCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, PipelineManager::GetPipelineLayout(PIPE_LYT_Anim_Depth), 0, 1, &sceneDescriptorSet, 0, nullptr);
+			vkCmdBindDescriptorSets(drawable.depthCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, PipelineManager::GetPipelineLayout(PIPE_LYT_Anim_Depth), 1, 1, &descriptorSet, 0, nullptr);
+
+			materials[i]->BindNormal(drawable.depthCommandBuffer);
+
+			vkCmdDrawIndexed(drawable.depthCommandBuffer, _groups[i].indexCount, 1, _groups[i].indexOffset, 0, 0);
+
+			if (vkEndCommandBuffer(drawable.depthCommandBuffer) != VK_SUCCESS)
+			{
+				Logger::Log(SK_MESH_MODULE, LOG_CRITICAL, "vkEndCommandBuffer (depth) call failed");
+				return false;
+			}
+		}
+
+		VkCommandBufferInheritanceInfo inheritanceInfo = {};
+		inheritanceInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO;
+		inheritanceInfo.occlusionQueryEnable = VK_FALSE;
+		inheritanceInfo.renderPass = RenderPassManager::GetRenderPass(RP_Graphics);
+		inheritanceInfo.subpass = 0;
+		inheritanceInfo.framebuffer = Renderer::GetInstance()->GetDrawFramebuffer();
+
+		beginInfo.pInheritanceInfo = &inheritanceInfo;
+
+		if (vkBeginCommandBuffer(drawable.sceneCommandBuffer, &beginInfo) != VK_SUCCESS)
+		{
+			Logger::Log(SK_MESH_MODULE, LOG_CRITICAL, "vkBeginCommandBuffer (scene) call failed");
 			return false;
 		}
 
-		DBG_MARKER_INSERT(depthCmdBuffer, _resourceInfo ? _resourceInfo->name.c_str() : "generated mesh", vec4(0.0, 0.5, 1.0, 1.0));
+		VK_DBG_MARKER_INSERT(drawable.sceneCommandBuffer, _resourceInfo ? _resourceInfo->name.c_str() : "generated mesh", vec4(1.0, 0.5, 0.0, 1.0));
 
-		vkCmdBindVertexBuffers(depthCmdBuffer, 0, 1, &_buffer->GetHandle(), &_vertexOffset);
-		vkCmdBindIndexBuffer(depthCmdBuffer, _buffer->GetHandle(), _indexOffset, VK_INDEX_TYPE_UINT32);
+		vkCmdBindVertexBuffers(drawable.sceneCommandBuffer, 0, 1, &_buffer->GetHandle(), &_vertexOffset);
+		vkCmdBindIndexBuffer(drawable.sceneCommandBuffer, _buffer->GetHandle(), _indexOffset, VK_INDEX_TYPE_UINT32);
 
-		vkCmdBindPipeline(depthCmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, PipelineManager::GetPipeline(PIPE_Anim_Depth));
-		vkCmdBindDescriptorSets(depthCmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, PipelineManager::GetPipelineLayout(PIPE_LYT_Anim_Depth), 0, 1, &sceneDescriptorSet, 0, nullptr);
-		vkCmdBindDescriptorSets(depthCmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, PipelineManager::GetPipelineLayout(PIPE_LYT_Anim_Depth), 1, 1, &descriptorSet, 0, nullptr);
+		materials[i]->Enable(drawable.sceneCommandBuffer);
 
-		for (size_t i = 0; i < _groupCount.size(); ++i)
-			vkCmdDrawIndexed(depthCmdBuffer, _groupCount[i], 1, _groupOffset[i], 0, 0);
+		vkCmdBindDescriptorSets(drawable.sceneCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, materials[i]->GetPipelineLayout(), 0, 1, &sceneDescriptorSet, 0, nullptr);
+		vkCmdBindDescriptorSets(drawable.sceneCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, materials[i]->GetPipelineLayout(), 1, 1, &descriptorSet, 0, nullptr);
 
-		if (vkEndCommandBuffer(depthCmdBuffer) != VK_SUCCESS)
+		vkCmdDrawIndexed(drawable.sceneCommandBuffer, _groups[i].indexCount, 1, _groups[i].indexOffset, 0, 0);
+
+		if (vkEndCommandBuffer(drawable.sceneCommandBuffer) != VK_SUCCESS)
 		{
-			Logger::Log(SK_MESH_MODULE, LOG_CRITICAL, "vkEndCommandBuffer (depth) call failed");
+			Logger::Log(SK_MESH_MODULE, LOG_CRITICAL, "vkEndCommandBuffer (scene) call failed");
 			return false;
 		}
-	}
 
-	// Draw command buffer
-
-	VkCommandBufferInheritanceInfo inheritanceInfo = {};
-	inheritanceInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO;
-	inheritanceInfo.occlusionQueryEnable = VK_FALSE;
-	inheritanceInfo.renderPass = RenderPassManager::GetRenderPass(RP_Graphics);
-	inheritanceInfo.subpass = 0;
-	inheritanceInfo.framebuffer = Renderer::GetInstance()->GetDrawFramebuffer();
-
-	beginInfo.pInheritanceInfo = &inheritanceInfo;
-
-	if (vkBeginCommandBuffer(sceneCmdBuffer, &beginInfo) != VK_SUCCESS)
-	{
-		Logger::Log(SK_MESH_MODULE, LOG_CRITICAL, "vkBeginCommandBuffer (scene) call failed");
-		return false;
-	}
-
-	DBG_MARKER_INSERT(sceneCmdBuffer, _resourceInfo ? _resourceInfo->name.c_str() : "generated mesh", vec4(1.0, 0.5, 0.0, 1.0));
-
-	vkCmdBindVertexBuffers(sceneCmdBuffer, 0, 1, &_buffer->GetHandle(), &_vertexOffset);
-	vkCmdBindIndexBuffer(sceneCmdBuffer, _buffer->GetHandle(), _indexOffset, VK_INDEX_TYPE_UINT32);
-
-	for (size_t i = 0; i < _groupCount.size(); ++i)
-	{
-		_materials[i]->Enable(sceneCmdBuffer);
-
-		vkCmdBindDescriptorSets(sceneCmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, _materials[i]->GetPipelineLayout(), 0, 1, &sceneDescriptorSet, 0, nullptr);
-		vkCmdBindDescriptorSets(sceneCmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, _materials[i]->GetPipelineLayout(), 1, 1, &descriptorSet, 0, nullptr);
-
-		vkCmdDrawIndexed(sceneCmdBuffer, _groupCount[i], 1, _groupOffset[i], 0, 0);
-	}
-
-	if (vkEndCommandBuffer(sceneCmdBuffer) != VK_SUCCESS)
-	{
-		Logger::Log(SK_MESH_MODULE, LOG_CRITICAL, "vkEndCommandBuffer (scene) call failed");
-		return false;
+		drawables.Add(drawable);
 	}
 
 	return true;
+}
+
+void SkeletalMesh::DrawShadow(VkCommandBuffer commandBuffer, uint32_t shadowId, VkDescriptorSet descriptorSet) noexcept
+{
+	VK_DBG_MARKER_INSERT(commandBuffer, _resourceInfo ? _resourceInfo->name.c_str() : "generated mesh", vec4(0.0, 0.5, 1.0, 1.0));
+
+	vkCmdBindVertexBuffers(commandBuffer, 0, 1, &_buffer->GetHandle(), &_vertexOffset);
+	vkCmdBindIndexBuffer(commandBuffer, _buffer->GetHandle(), _indexOffset, VK_INDEX_TYPE_UINT32);
+
+	vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, PipelineManager::GetPipeline(PIPE_Anim_Shadow));
+
+	VkDescriptorSet matricesDS = ShadowRenderer::GetMatricesDescriptorSet();
+	vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, PipelineManager::GetPipelineLayout(PIPE_LYT_Anim_Shadow), 0, 1, &matricesDS, 0, nullptr);
+	vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, PipelineManager::GetPipelineLayout(PIPE_LYT_Anim_Shadow), 1, 1, &descriptorSet, 0, nullptr);
+
+	vkCmdPushConstants(commandBuffer, PipelineManager::GetPipelineLayout(PIPE_LYT_Anim_Shadow), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(uint32_t), &shadowId);
+
+	for (size_t i = 0; i < _groups.size(); ++i)
+		vkCmdDrawIndexed(commandBuffer, _groups[i].indexCount, 1, _groups[i].indexOffset, 0, 0);
 }
 
 void SkeletalMesh::_CalculateTangents()
@@ -342,6 +379,24 @@ void SkeletalMesh::_CalculateTangents()
 
 	for (size_t i = 0; i < _vertices.size(); i++)
 		_vertices[i].tangent = normalize(_vertices[i].tangent);
+}
+
+void SkeletalMesh::_BuildBounds(uint32_t group, NBounds &bounds)
+{
+	vec3 boxMin{ 0.f }, boxMax{ 0.f };
+
+	if (!_vertices.size())
+		return;
+
+	for (uint32_t i = 0; i < _groups[group].indexCount; ++i)
+	{
+		SkeletalVertex &vert = _vertices[_indices[_groups[group].indexOffset + i]];
+
+		boxMin = min(boxMin, vert.position);
+		boxMax = max(boxMax, vert.position);
+	}
+
+	bounds.InitBox(boxMin, boxMax);
 }
 
 SkeletalMesh::~SkeletalMesh() noexcept

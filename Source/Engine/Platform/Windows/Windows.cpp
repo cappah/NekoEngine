@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -44,38 +44,40 @@
 #include <System/Logger.h>
 #include <Platform/Platform.h>
 
+#include <dbt.h>
+#include <Psapi.h>
+#include <ShlObj.h>
+#include <Wbemidl.h>
+
 #include "../Source/Launcher/resource.h"
 
 using namespace std;
+
+#define _WIN32_TOTAL_MEMORY			0
+#define _WIN32_USED_MEMORY			1
+#define _WIN32_FREE_MEMORY			2
+#define _WIN32_PROCESS_MEMORY		3
+
+#define WIN32_PLATFORM_MODULE		"Win32_Platform"
+
+REGISTER_USER_MESSAGE(NWM_SHOWCURSOR);
+REGISTER_USER_MESSAGE(NWM_HIDECURSOR);
 
 PlatformWindowType Platform::_activeWindow = nullptr;
 
 static LPCSTR WindowClassName = "NekoEngineWindowClass";
 static HINSTANCE hEngineInstance;
 
-static char _name[512] = { 0 };
-static char _machineName[512] = { 0 };
-static char _version[512] = { 0 };
-
-PIXELFORMATDESCRIPTOR pfd =
-{
-	sizeof(PIXELFORMATDESCRIPTOR),
-	1,
-	PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER,    //Flags
-	PFD_TYPE_RGBA,            //The kind of framebuffer. RGBA or palette.
-	32,                        //Colordepth of the framebuffer.
-	0, 0, 0, 0, 0, 0,
-	0,
-	0,
-	0,
-	0, 0, 0, 0,
-	24,                        //Number of bits for the depthbuffer
-	8,                        //Number of bits for the stencilbuffer
-	0,                        //Number of Aux buffers in the framebuffer.
-	PFD_MAIN_PLANE,
-	0,
-	0, 0, 0
-};
+static char _win32_name[512]{ 0x0 };
+static char _win32_machineName[512]{ 0x0 };
+static char _win32_version[512]{ 0x0 };
+static char _win32_processorName[512]{ 0x0 };
+static char _win32_architecture[512]{ 0x0 };
+static uint32_t _win32_numberOfProcessors{ 0 };
+static uint32_t _win32_processorFrequency{ 0 };
+static uint64_t _win32_totalSystemMemory{ 0 };
+static IWbemLocator *_win32_wbemLocator{ nullptr };
+static IWbemServices *_win32_wbemServices{ nullptr };
 
 static inline WPARAM _win32MapKeys(WPARAM vk, LPARAM lParam)
 {
@@ -93,8 +95,8 @@ static inline WPARAM _win32MapKeys(WPARAM vk, LPARAM lParam)
 
 int _win32Rand()
 {
-	HCRYPTPROV hCtx;
-	int ret;
+	HCRYPTPROV hCtx = 0;
+	int ret = 0;
 
 	if (!CryptAcquireContext(&hCtx, NULL, NULL, PROV_RSA_FULL, 0))
 	{
@@ -113,11 +115,36 @@ int _win32Rand()
 	return ret;
 }
 
+static inline uint64_t _win32_GetMemoryStatus(int type)
+{
+	if (type == _WIN32_PROCESS_MEMORY)
+	{
+		PROCESS_MEMORY_COUNTERS pmc{};
+		GetProcessMemoryInfo(GetCurrentProcess(), &pmc, sizeof(pmc));
+
+		return pmc.WorkingSetSize / 1024;
+	}
+
+	MEMORYSTATUSEX memStatus{};
+	memStatus.dwLength = sizeof(memStatus);
+
+	GlobalMemoryStatusEx(&memStatus);
+
+	if (type == _WIN32_TOTAL_MEMORY)
+		return memStatus.ullTotalPhys / 1024;
+	else if (type == _WIN32_FREE_MEMORY)
+		return memStatus.ullAvailPhys / 1024;
+	else if (type == _WIN32_USED_MEMORY)
+		return (memStatus.ullTotalPhys - memStatus.ullAvailPhys) / 1024;
+
+	return 0;
+}
+
 LRESULT CALLBACK EngineWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	LRESULT lRet = 0;
-	PAINTSTRUCT ps;
-	HDC hdc;
+	LRESULT lRet{ 0 };
+	PAINTSTRUCT ps{};
+	HDC hdc{};
 
 	switch (uMsg)
 	{
@@ -198,109 +225,289 @@ LRESULT CALLBACK EngineWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lP
 		break;
 		case WM_DEVICECHANGE:
 		{
-			// Will be used for controller support
+			if (wParam != DBT_DEVNODES_CHANGED)
+				break;
+
+			// TODO: update controller list
 		}
 		default:
+		{
+			if (uMsg == NWM_SHOWCURSOR)
+			{
+				ShowCursor(true);
+				return 0;
+			}
+			else if (uMsg == NWM_HIDECURSOR)
+			{
+				ShowCursor(false);
+				return 0;
+			}
+		}
 		break;
 	}
 
 	return DefWindowProc(hWnd, uMsg, wParam, lParam);
 }
 
-const char* Platform::GetName()
+int Platform::Initialize()
 {
-	if (_name[0] != 0)
-		return _name;
+	HRESULT hr{ 0 };
 
-	HKEY key;
-	DWORD size = sizeof(_name);
+	hr = CoInitializeEx(0, COINIT_MULTITHREADED);
+	if (FAILED(hr))
+	{
+		Logger::Log(WIN32_PLATFORM_MODULE, LOG_CRITICAL, "Failed to initialize the COM library: 0x%x", hr);
+		return ENGINE_FAIL;
+	}
 
-	RegOpenKeyExA(HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", 0, KEY_READ, &key);
-	RegQueryValueExA(key, "ProductName", 0, NULL, (LPBYTE)_name, &size);
-	RegCloseKey(key);
+	hr = CoInitializeSecurity(NULL, -1, NULL, NULL,
+							  RPC_C_AUTHN_LEVEL_DEFAULT,
+							  RPC_C_IMP_LEVEL_IMPERSONATE,
+							  NULL, EOAC_NONE, NULL);
+	if (FAILED(hr))
+	{
+		Logger::Log(WIN32_PLATFORM_MODULE, LOG_CRITICAL, "Failed to initialize COM security: 0x%x", hr);
+		return ENGINE_FAIL;
+	}
 
-	return _name;
-}
+	// Initialize WMI
+	hr = CoCreateInstance(CLSID_WbemLocator, 0, CLSCTX_INPROC_SERVER, IID_IWbemLocator, (LPVOID *)&_win32_wbemLocator);
+	if (FAILED(hr))
+	{
+		Logger::Log(WIN32_PLATFORM_MODULE, LOG_CRITICAL, "Failed to create IWbemLocator: 0x%x", hr);
+		return ENGINE_FAIL;
+	}
 
-const char* Platform::GetMachineName()
-{
-	if (_machineName[0] != 0)
-		return _machineName;
+	hr = _win32_wbemLocator->ConnectServer(L"ROOT\\CIMV2", NULL, NULL, 0, NULL, 0, 0, &_win32_wbemServices);
+	if (FAILED(hr))
+	{
+		Logger::Log(WIN32_PLATFORM_MODULE, LOG_CRITICAL, "Failed to connect IWbemServices: 0x%x", hr);
+		return ENGINE_FAIL;
+	}
 
+	hr = CoSetProxyBlanket(_win32_wbemServices, RPC_C_AUTHN_WINNT, RPC_C_AUTHZ_NONE, NULL,
+						   RPC_C_AUTHN_LEVEL_CALL, RPC_C_IMP_LEVEL_IMPERSONATE, NULL, EOAC_NONE);
+	if (FAILED(hr))
+	{
+		Logger::Log(WIN32_PLATFORM_MODULE, LOG_CRITICAL, "Failed to set proxy blanket: 0x%x", hr);
+		return ENGINE_FAIL;
+	}
+
+	IEnumWbemClassObject *enumerator{ nullptr };
+	hr = _win32_wbemServices->ExecQuery(L"WQL", L"SELECT * FROM Win32_Processor",
+										WBEM_FLAG_FORWARD_ONLY | WBEM_FLAG_RETURN_IMMEDIATELY,
+										NULL, &enumerator);
+	if (FAILED(hr))
+	{
+		Logger::Log(WIN32_PLATFORM_MODULE, LOG_CRITICAL, "Failed to query processor name: 0x%x", hr);
+		return ENGINE_FAIL;
+	}
+
+	IWbemClassObject *classObject{ nullptr };
+	ULONG ret{ 0 };
+
+	while (enumerator)
+	{
+		hr = enumerator->Next(WBEM_INFINITE, 1, &classObject, &ret);
+		if (ret == 0)
+			break;
+
+		VARIANT vt{};
+
+		classObject->Get(L"Name", 0, &vt, 0, 0);
+		wcstombs(_win32_processorName, vt.bstrVal, 512);
+		VariantClear(&vt);
+
+		classObject->Get(L"MaxClockSpeed", 0, &vt, 0, 0);
+		_win32_processorFrequency = vt.uintVal;
+		VariantClear(&vt);
+
+		classObject->Release();
+	}
+
+	enumerator->Release();
+
+	// Load platform info
+
+	// Machine name
 	DWORD size = 512;
-	GetComputerNameA(_machineName, &size);
+	GetComputerNameA(_win32_machineName, &size);
 
-	return _machineName;
-}
-
-const char* Platform::GetMachineArchitecture()
-{
-	SYSTEM_INFO sysInfo;
-	GetSystemInfo(&sysInfo);
-	
-	switch(sysInfo.wProcessorArchitecture)
+	// Platform version
 	{
-		case PROCESSOR_ARCHITECTURE_AMD64: return "x86_64";
-		case PROCESSOR_ARCHITECTURE_ARM: return "arm";
-		case PROCESSOR_ARCHITECTURE_IA64: return "ia64";
-		case PROCESSOR_ARCHITECTURE_INTEL: return "x86";
-		default: return "Unknown";
-	}
-}
+		char ver[256], build[256];
+		memset(ver, 0x0, 256);
+		memset(build, 0x0, 256);
 
-const char* Platform::GetVersion()
-{
-	if (_version[0] != 0)
-		return _version;
+		HKEY key{ 0 };
+		DWORD size{ sizeof(ver) };
 
-	char ver[256], build[256];
+		RegOpenKeyExA(HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", 0, KEY_READ, &key);
+		RegQueryValueExA(key, "CurrentVersion", 0, NULL, (LPBYTE)ver, &size);
 
-	HKEY key;
-	DWORD size = sizeof(ver);
+		size = sizeof(build);
+		RegQueryValueExA(key, "CurrentBuild", 0, NULL, (LPBYTE)build, &size);
+		RegCloseKey(key);
 
-	RegOpenKeyExA(HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", 0, KEY_READ, &key);
-	RegQueryValueExA(key, "CurrentVersion", 0, NULL, (LPBYTE)ver, &size);
-
-	size = sizeof(build);
-	RegQueryValueExA(key, "CurrentBuild", 0, NULL, (LPBYTE)build, &size);
-	RegCloseKey(key);
-
-	if (snprintf(_version, 512, "%s.%s", ver, build) >= 512)
-	{
-#ifdef _DEBUG
-		OutputDebugStringA("ERROR: Platform version too long");
-#endif
+		if (snprintf(_win32_version, 512, "%s.%s", ver, build) >= 512)
+		{
+			#ifdef _DEBUG
+			OutputDebugStringA("ERROR: Platform version too long");
+			#endif
+		}
 	}
 
-	return _version;
+	// Machine architecture
+	{
+		SYSTEM_INFO sysInfo;
+		GetSystemInfo(&sysInfo);
+
+		switch (sysInfo.wProcessorArchitecture)
+		{
+			case PROCESSOR_ARCHITECTURE_AMD64: snprintf(_win32_architecture, 512, "x86_64"); break;
+			case PROCESSOR_ARCHITECTURE_ARM: snprintf(_win32_architecture, 512, "arm"); break;
+			case PROCESSOR_ARCHITECTURE_IA64: snprintf(_win32_architecture, 512, "ia64"); break;
+			case PROCESSOR_ARCHITECTURE_INTEL: snprintf(_win32_architecture, 512, "x86"); break;
+			default: snprintf(_win32_architecture, 512, "Unknown"); break;
+		}
+
+		// Number of processors
+		_win32_numberOfProcessors = sysInfo.dwNumberOfProcessors;
+	}
+
+	// Platform name
+	{
+		char *platform{ nullptr }, *type{ nullptr }, *suite{ nullptr };
+		OSVERSIONINFOEXA ver{};
+		ver.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEXA);
+		GetVersionExA((OSVERSIONINFOA *)&ver);
+
+		if (ver.dwPlatformId == VER_PLATFORM_WIN32s)
+			platform = "Win32s";
+		else if (ver.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS)
+			platform = "Windows";
+		else if (ver.dwPlatformId == VER_PLATFORM_WIN32_NT)
+			platform = "Windows NT";
+
+		if (ver.wSuiteMask & VER_SUITE_EMBEDDEDNT)
+			suite = " Embedded";
+
+		if (ver.wProductType != VER_NT_WORKSTATION)
+			type = " Server";
+
+		snprintf(_win32_name, 512, "%s%s%s", platform, type ? type : "", suite ? suite : "");
+	}
+
+	_win32_totalSystemMemory = _win32_GetMemoryStatus(_WIN32_TOTAL_MEMORY);
+
+	return ENGINE_OK;
+}
+
+const char *Platform::GetName()
+{
+	return _win32_name;
+}
+
+const char *Platform::GetMachineName()
+{
+	return _win32_machineName;
+}
+
+const char *Platform::GetMachineArchitecture()
+{
+	return _win32_architecture;
+}
+
+const char *Platform::GetVersion()
+{
+	return _win32_version;
+}
+
+const char *Platform::GetProcessorName()
+{
+	return _win32_processorName;
+}
+
+uint32_t Platform::GetProcessorFrequency()
+{
+	return _win32_processorFrequency;
 }
 
 int32_t Platform::GetNumberOfProcessors()
 {
-	SYSTEM_INFO sysInfo{};
-	GetSystemInfo(&sysInfo);
-	return sysInfo.dwNumberOfProcessors;
+	return _win32_numberOfProcessors;
+}
+
+uint64_t Platform::GetProcessMemory()
+{
+	return _win32_GetMemoryStatus(_WIN32_PROCESS_MEMORY);
+}
+
+uint64_t Platform::GetUsedSystemMemory()
+{
+	return _win32_GetMemoryStatus(_WIN32_USED_MEMORY);
+}
+
+uint64_t Platform::GetFreeSystemMemory()
+{
+	return _win32_GetMemoryStatus(_WIN32_FREE_MEMORY);
+}
+
+uint64_t Platform::GetTotalSystemMemory()
+{
+	return _win32_totalSystemMemory;
+}
+
+int Platform::GetSpecialDirectoryPath(SpecialDirectory directory, char *buff, uint32_t buffLen)
+{
+	int csidl{};
+	
+	if (directory == SpecialDirectory::Temp)
+	{
+		if (!GetTempPathA(buffLen, buff))
+			return ENGINE_FAIL;
+
+		return ENGINE_OK;
+	}
+
+	switch(directory)
+	{
+		case SpecialDirectory::ApplicationData: csidl = CSIDL_LOCAL_APPDATA; break;
+		case SpecialDirectory::Documents: csidl = CSIDL_MYDOCUMENTS; break;
+		case SpecialDirectory::Pictures: csidl = CSIDL_MYPICTURES; break;
+		case SpecialDirectory::Desktop: csidl = CSIDL_DESKTOP; break;
+		case SpecialDirectory::Music: csidl = CSIDL_MYMUSIC; break;
+		case SpecialDirectory::Home: csidl = CSIDL_PROFILE; break;
+		default: return ENGINE_FAIL;
+	};
+
+	HRESULT hr{ SHGetFolderPathA(NULL, csidl, NULL, SHGFP_TYPE_CURRENT, buff) };
+	
+	if (FAILED(hr))
+		return ENGINE_FAIL;
+
+	return ENGINE_OK;
 }
 
 PlatformWindowType Platform::CreateWindow(int width, int height, bool fullscreen)
 {
-	HWND hWnd;
-	WNDCLASS wndclass = { 0 };
-	DWORD    wStyle = 0;
-	DWORD    wExStyle = 0;
-	RECT     windowRect;
-	int posX = 0, posY = 0;
+	HWND hWnd{ 0 };
+	WNDCLASS wndClass{ 0 };
+	DWORD    wStyle{ 0 };
+	DWORD    wExStyle{ 0 };
+	RECT     windowRect{};
+	int posX{ 0 }, posY{ 0 };
 
 	hEngineInstance = GetModuleHandle(NULL);
 
-	wndclass.style = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
-	wndclass.lpfnWndProc = (WNDPROC)EngineWindowProc;
-	wndclass.hInstance = hEngineInstance;
-	wndclass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
-	wndclass.lpszClassName = WindowClassName;
-	wndclass.hIcon = LoadIcon(hEngineInstance, MAKEINTRESOURCE(IDI_APPICON));
+	wndClass.style = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
+	wndClass.lpfnWndProc = (WNDPROC)EngineWindowProc;
+	wndClass.hInstance = hEngineInstance;
+	wndClass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
+	wndClass.lpszClassName = WindowClassName;
+	wndClass.hIcon = LoadIcon(hEngineInstance, MAKEINTRESOURCE(IDI_APPICON));
 
-	if (!RegisterClass(&wndclass))
+	if (!RegisterClass(&wndClass))
 		return nullptr;
 
 	if (fullscreen)
@@ -311,7 +518,7 @@ PlatformWindowType Platform::CreateWindow(int width, int height, bool fullscreen
 	else
 	{
 		wExStyle = WS_EX_APPWINDOW | WS_EX_WINDOWEDGE;
-		wStyle = WS_VISIBLE | WS_OVERLAPPEDWINDOW;
+		wStyle = WS_VISIBLE | WS_OVERLAPPEDWINDOW ^ WS_THICKFRAME;
 
 		int screenX = GetSystemMetrics(SM_CXSCREEN),
 			screenY = GetSystemMetrics(SM_CYSCREEN);
@@ -346,7 +553,8 @@ PlatformWindowType Platform::CreateWindow(int width, int height, bool fullscreen
 	if (hWnd == NULL)
 		return nullptr;
 
-	ShowWindow(hWnd, Engine::IsEditor() ? SW_SHOWMINIMIZED : SW_SHOWDEFAULT);
+	ShowWindow(hWnd, Engine::IsEditor() ? SW_SHOWMINIMIZED : SW_SHOW);
+	SetForegroundWindow(hWnd);
 
 	if (fullscreen)
 		EnterFullscreen(width, height);
@@ -378,33 +586,33 @@ bool Platform::EnterFullscreen(int width, int height)
 
 MessageBoxResult Platform::MessageBox(const char* title, const char* message, MessageBoxButtons buttons, MessageBoxIcon icon)
 {
-	UINT x, type = 0;
+	UINT x{ 0 }, type{ 0 };
 
 	switch (buttons)
 	{
-	case MessageBoxButtons::YesNo:
-		type = MB_YESNO;
+		case MessageBoxButtons::YesNo:
+			type = MB_YESNO;
 		break;
-	case MessageBoxButtons::OK:
-	default:
-		type = MB_OK;
+		case MessageBoxButtons::OK:
+		default:
+			type = MB_OK;
 		break;
 	}
 
 	switch (icon)
 	{
-	case MessageBoxIcon::Warning:
-		type |= MB_ICONWARNING;
+		case MessageBoxIcon::Warning:
+			type |= MB_ICONWARNING;
 		break;
-	case MessageBoxIcon::Error:
-		type |= MB_ICONERROR;
+		case MessageBoxIcon::Error:
+			type |= MB_ICONERROR;
 		break;
-	case MessageBoxIcon::Question:
-		type |= MB_ICONQUESTION;
+		case MessageBoxIcon::Question:
+			type |= MB_ICONQUESTION;
 		break;
-	case MessageBoxIcon::Information:
-	default:
-		type |= MB_ICONINFORMATION;
+		case MessageBoxIcon::Information:
+		default:
+			type |= MB_ICONINFORMATION;
 		break;
 	}
 
@@ -471,6 +679,8 @@ int Platform::MainLoop()
 
 void Platform::CleanUp()
 {
+	CoUninitialize();
+
 	DestroyWindow(_activeWindow);
 	UnregisterClass(WindowClassName, hEngineInstance);
 }
@@ -489,9 +699,9 @@ vector<const char*> Platform::GetRequiredExtensions(bool debug)
 
 bool Platform::CreateSurface(VkInstance instance, VkSurfaceKHR &surface, PlatformWindowType hWnd, VkAllocationCallbacks *allocator)
 {
-	VkResult err;
+	VkResult err{};
 	VkWin32SurfaceCreateInfoKHR createInfo{};
-	PFN_vkCreateWin32SurfaceKHR vkCreateWin32SurfaceKHR;
+	PFN_vkCreateWin32SurfaceKHR vkCreateWin32SurfaceKHR{ nullptr };
 
 	vkCreateWin32SurfaceKHR = (PFN_vkCreateWin32SurfaceKHR)vkGetInstanceProcAddr(instance, "vkCreateWin32SurfaceKHR");
 	if (!vkCreateWin32SurfaceKHR)
@@ -520,5 +730,10 @@ void Platform::Sleep(uint32_t seconds)
 
 void Platform::USleep(uint32_t microseconds)
 {
-	::Sleep(seconds / 1000);
+	::Sleep(microseconds / 1000);
+}
+
+void Platform::Terminate()
+{
+	TerminateProcess(GetCurrentProcess(), -1);
 }

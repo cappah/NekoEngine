@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -128,16 +128,21 @@ public:
 
 	ENGINE_API static int GetConnectedControllerCount() noexcept { return _connectedControllers; }
 
-	/*ENGINE_API static bool CaptureMouse() { _captureMouse = Platform::CapturePointer(); return _captureMouse; }
-	ENGINE_API static void ReleaseMouse() { _captureMouse = false; Platform::ReleasePointer(); }*/
+	ENGINE_API static bool PointerCaptured() noexcept { return _pointerCaptured; }
+
+	ENGINE_API static char KeycodeToChar(uint8_t keyCode, bool shift) noexcept;
 
 	static void Release();
 
 #if defined(ENGINE_INTERNAL) || defined(EDITOR_INTERNAL)
 	// Internal functions
-	ENGINE_API static void Key(int key, bool isPressed) noexcept;
-	ENGINE_API static void Update() noexcept;
-	ENGINE_API static void ClearKeyState() noexcept;
+	static void Key(int key, bool isPressed) noexcept;
+	static void Update() noexcept;
+	static void ClearKeyState() noexcept;
+
+	static const std::vector<uint8_t> &GetKeyUpList() { return _keyUp; }
+	static const std::vector<uint8_t> &GetKeyDownList() { return _keyDown; }
+	static const std::vector<uint8_t> &GetPressedKeysList() { return _pressedKeys; }
 #endif
 
 	// Platform-specific functions (Implemented in PlatformInput.cpp)

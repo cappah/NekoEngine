@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -139,7 +139,7 @@ void FPSControllerComponent::Update(double deltaTime) noexcept
 	else if (Input::GetButton("rot_down"))
 		rot.x += _rotateSpeed * (float)deltaTime;
 
-	rot.x = clamp(rot.x, -60.f, 85.f);
+	rot.x = glm::clamp(rot.x, -60.f, 85.f);
 
 	_parent->SetPosition(pos);
 	_parent->SetRotation(rot);

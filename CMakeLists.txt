@@ -7,6 +7,12 @@ if(NOT CMAKE_BUILD_TYPE)
 set(CMAKE_BUILD_TYPE, DEBUG)
 endif(NOT CMAKE_BUILD_TYPE)
 
+option(NullAudio "NullAudio" ON)
+option(OpenALAudio "OpenALAudio" ON)
+option(NullPhysics "NullPhysics" ON)
+option(BulletPhysics "BulletPhysics" OFF)
+option(NEPhysX "NEPhysX" OFF)
+
 file(GLOB EngineSourceFiles "Source/Engine/*.cpp"
 	"Source/Engine/Animation/*.cpp"
 	"Source/Engine/Audio/*.cpp"
@@ -20,10 +26,21 @@ file(GLOB EngineSourceFiles "Source/Engine/*.cpp"
 	"Source/Engine/Platform/*.cpp"
 	"Source/Engine/Platform/Compat/*.cpp"
 	"Source/Engine/Renderer/*.cpp"
+	"Source/Engine/Physics/*.cpp"
+	"Source/Engine/Profiler/*.cpp"
+	"Source/Engine/Runtime/*.cpp"
+	"Source/Engine/GUI/*.cpp"
 	"Source/Engine/Script/*.cpp"
 	"Source/Engine/Script/Interface/*.cpp"
 )
 file(GLOB TestGameSourceFiles "Source/TestGame/*.cpp")
+
+file(GLOB NullAudioSourceFiles "Source/NullAudio/*.cpp")
+file(GLOB OpenALAudioSourceFiles "Source/OpenALAudio/*.cpp")
+
+file(GLOB NullPhysicsSourceFiles "Source/NullPhysics/*.cpp")
+file(GLOB BulletPhysicsSourceFiles "Source/BulletPhysics/*.cpp")
+file(GLOB NEPhysXSourceFiles "Source/NEPhysX/*.cpp")
 
 set(OPENAL_LIB openal)
 set(BSD_LIB "")
@@ -116,7 +133,7 @@ target_compile_options(Engine PRIVATE -fPIC)
 target_compile_options(Engine PRIVATE -frtti)
 target_compile_options(Engine PRIVATE -DENGINE_INTERNAL)
 target_compile_options(Engine PRIVATE -DPLATFORM_INTERNAL)
-target_link_libraries(Engine X11 ${PLATFORM_LIBS} ${OPENAL_LIB} z sqlite3 png freetype vulkan luajit-5.1 ${BSD_LIB})
+target_link_libraries(Engine X11 ${PLATFORM_LIBS} bz2 z sqlite3 png freetype vulkan luajit-5.1 vorbisfile ${BSD_LIB})
 
 add_custom_command(TARGET Engine POST_BUILD COMMAND mkdir -p ${PROJECT_SOURCE_DIR}/Resources/Data/Shaders)
 add_custom_command(TARGET Engine POST_BUILD COMMAND ${PROJECT_SOURCE_DIR}/Source/Shaders/compile.sh WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/Source/Shaders)
@@ -128,6 +145,48 @@ target_compile_options(Launcher PRIVATE -frtti)
 target_link_libraries(Launcher Engine)
 
 add_custom_command(TARGET Launcher POST_BUILD COMMAND cp ${PROJECT_SOURCE_DIR}/Config/Engine.ini ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Engine.ini)
+
+# Audio Modules
+if(NullAudio)
+	add_library(NullAudio SHARED ${NullAudioSourceFiles})
+	target_compile_options(NullAudio PRIVATE -std=c++1z)
+	target_compile_options(NullAudio PRIVATE -fPIC)
+	target_compile_options(NullAudio PRIVATE -frtti)
+	target_link_libraries(NullAudio Engine)
+endif(NullAudio)
+
+if(OpenALAudio)
+	add_library(OpenALAudio SHARED ${OpenALAudioSourceFiles})
+	target_compile_options(OpenALAudio PRIVATE -std=c++1z)
+	target_compile_options(OpenALAudio PRIVATE -fPIC)
+	target_compile_options(OpenALAudio PRIVATE -frtti)
+	target_link_libraries(OpenALAudio Engine ${OPENAL_LIB})
+endif(OpenALAudio)
+
+# Physics Modules
+if(NullPhysics)
+	add_library(NullPhysics SHARED ${NullPhysicsSourceFiles})
+	target_compile_options(NullPhysics PRIVATE -std=c++1z)
+	target_compile_options(NullPhysics PRIVATE -fPIC)
+	target_compile_options(NullPhysics PRIVATE -frtti)
+	target_link_libraries(NullPhysics Engine)
+endif(NullPhysics)
+
+if(BulletPhysics)
+	add_library(BulletPhysics SHARED ${BulletPhysicsSourceFiles})
+	target_compile_options(BulletPhysics PRIVATE -std=c++1z)
+	target_compile_options(BulletPhysics PRIVATE -fPIC)
+	target_compile_options(BulletPhysics PRIVATE -frtti)
+	target_link_libraries(BulletPhysics Engine BulletCollision BulletDynamics BulletSoftBody)
+endif(BulletPhysics)
+
+if(NEPhysX)
+	add_library(NEPhysX SHARED ${NEPhysXSourceFiles})
+	target_compile_options(NEPhysX PRIVATE -std=c++1z)
+	target_compile_options(NEPhysX PRIVATE -fPIC)
+	target_compile_options(NEPhysX PRIVATE -frtti)
+	target_link_libraries(NEPhysX Engine)
+endif(NEPhysX)
 
 # Test Game Module
 include_directories(Engine)

@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -39,7 +39,10 @@
 
 #include <Scene/Components/AudioSourceComponent.h>
 #include <Engine/ResourceManager.h>
+#include <Audio/AudioSystem.h>
 #include <Scene/Object.h>
+
+using namespace glm;
 
 ENGINE_REGISTER_COMPONENT_CLASS(AudioSourceComponent);
 
@@ -50,7 +53,7 @@ AudioSourceComponent::AudioSourceComponent(ComponentInitializer *initializer)
 	_defaultClip = nullptr;
 	_defaultClipId = initializer->arguments.find("defaultclip")->second;
 
-	if((_src = new AudioSource()) == nullptr)
+	if((_src = AudioSystem::GetInstance()->CreateSource()) == nullptr)
 	{ DIE("Out of resources"); }
 
 	_src->SetLooping(!initializer->arguments.find("loop")->second.compare("true") ? true : false);
@@ -92,14 +95,9 @@ void AudioSourceComponent::PlayClip(AudioClip *clip) noexcept
 
 void AudioSourceComponent::Update(double deltaTime) noexcept
 {
-	if (!_src)
-		return;
-
 	ObjectComponent::Update(deltaTime);
-
-	glm::vec3 pos = _parent->GetPosition();
-	
-	_src->SetPosition(pos.x, pos.y, pos.z);
+	vec3 pos = _parent->GetPosition() + _position;
+	if (_src) _src->SetPosition(pos);
 }
 
 bool AudioSourceComponent::Unload()

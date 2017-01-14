@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -43,11 +43,6 @@
 
 #include <Engine/Engine.h>
 
-#ifdef ENGINE_INTERNAL
-	#include <AL/al.h>
-	#include <AL/alc.h>
-#endif
-
 #define BG_MUSIC_NONE	-1
 
 class SoundManager
@@ -63,9 +58,6 @@ public:
 
 	ENGINE_API static void SetBackgroundMusicVolume(float vol) noexcept;
 
-	ENGINE_API static void SetListenerPosition(float x, float y, float z) noexcept;
-	ENGINE_API static void SetListenerOrientation(float x, float y, float z) noexcept;
-
 	static void Release() noexcept;
 
 private:
@@ -75,9 +67,4 @@ private:
 	static void _UnsetBackgroundMusic() noexcept;
 	
 	SoundManager() { }
-
-#ifdef ENGINE_INTERNAL
-	static ALCdevice* _device;
-	static ALCcontext* _context;
-#endif
 };

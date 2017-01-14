@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -40,6 +40,7 @@
 #pragma once
 
 #include <Engine/Engine.h>
+#include <Runtime/Runtime.h>
 
 enum class ProjectionType : unsigned short
 {
@@ -59,13 +60,13 @@ public:
 	glm::vec3 &GetRotation() noexcept { return _rotation; }
 	glm::mat4 &GetView() noexcept { return _drawSkybox ? _skyboxView : _view; }
 	glm::mat4 &GetProjectionMatrix() noexcept { return _drawSkybox ? _skyboxProjectionMatrix : _projectionMatrix; }
-	glm::mat4 &GetModel() noexcept { return _model; }
 	float GetNear() noexcept { return _near; }
 	float GetFar() noexcept { return _far; }
 	float GetFOV() noexcept { return _fov; }
 	float GetViewDistance() noexcept { return _viewDistance; }
 	float GetFogDistance() noexcept { return _fogDistance; }
 	ProjectionType GetProjection() noexcept { return _projection; }
+	NFrustum &GetFrustum() noexcept { return _frustum; }
 
 	void SetPosition(glm::vec3 &position, bool update = true) noexcept { _position = position; if(update) UpdateView(); }
 	void SetRotation(glm::vec3 &rotation, bool update = true) noexcept { _rotation = rotation; if(update) UpdateView(); }
@@ -76,6 +77,7 @@ public:
 	void SetViewDistance(float distance) noexcept { _viewDistance = distance; }
 	void SetFogDistance(float distance) noexcept { _fogDistance = distance; }
 	void SetProjection(ProjectionType projection) noexcept { _projection = projection; }
+	void SetProjectionMatrix(glm::mat4 &matrix) noexcept { _projectionMatrix = matrix; }
 	void SetView(glm::mat4 &matrix) noexcept { _view = matrix; }
 
 	void EnableSkybox(bool enable) { _drawSkybox = enable; }
@@ -114,8 +116,9 @@ protected:
 
 	ProjectionType _projection;
 
-	glm::mat4 _view, _skyboxView, _model;
+	glm::mat4 _view, _skyboxView;
 	glm::mat4 _projectionMatrix, _skyboxProjectionMatrix;
+	NFrustum _frustum;
 
 	bool _drawSkybox;
 };

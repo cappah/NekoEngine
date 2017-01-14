@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -136,7 +136,7 @@ int SkeletalMeshComponentInterface::AddGroup(lua_State *state)
 	if (args != 4)
 		return luaL_error(state, "Invalid arguments");
 
-	((SkeletalMeshComponent *)lua_touserdata(state, 1))->AddGroup((uint32_t)lua_tointeger(state, 2), (uint32_t)lua_tointeger(state, 3), (Material *)lua_touserdata(state, 4));
+//	((SkeletalMeshComponent *)lua_touserdata(state, 1))->AddGroup((uint32_t)lua_tointeger(state, 2), (uint32_t)lua_tointeger(state, 3), (Material *)lua_touserdata(state, 4));
 
 	return 0;
 }

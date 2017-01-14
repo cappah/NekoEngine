@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -125,13 +125,17 @@ void Input::SetAxisSensivity(uint8_t axis, float sensivity)
 		axis -= 0x10;
 		id++;
 	}
-	
-	_sensivity[axis + id * 6] = sensivity;
+
+	int axisId = axis + id * 6;
+	if (axisId > 25)
+		return;
+
+	_sensivity[axisId] = sensivity;
 }
 
 bool Input::GetButton(uint8_t key) noexcept
 {
-	for (uint8_t a : _pressedKeys)
+	for (const uint8_t a : _pressedKeys)
 		if (a == key)
 			return true;
 
@@ -140,7 +144,7 @@ bool Input::GetButton(uint8_t key) noexcept
 
 bool Input::GetButtonUp(uint8_t key) noexcept
 {
-	for (uint8_t a : _keyUp)
+	for (const uint8_t a : _keyUp)
 		if (a == key)
 			return true;
 
@@ -149,7 +153,7 @@ bool Input::GetButtonUp(uint8_t key) noexcept
 
 bool Input::GetButtonDown(uint8_t key) noexcept
 {
-	for (uint8_t a : _keyDown)
+	for (const uint8_t a : _keyDown)
 		if (a == key)
 			return true;
 
@@ -170,7 +174,7 @@ float Input::GetAxis(uint8_t axis) noexcept
 		id++;
 	}
 	
-	int sensivityOffset =  id * 6;
+	const int sensivityOffset =  id * 6;
 
 	switch (axis)
 	{
@@ -186,7 +190,24 @@ float Input::GetAxis(uint8_t axis) noexcept
 
 void Input::Key(int key, bool isPressed) noexcept
 {
-	int code = _keymap[key];
+	int code = key;
+	
+	switch (key)
+	{
+		case NE_MOUSE_LMB:
+		case NE_MOUSE_RMB:
+		case NE_MOUSE_MMB:
+		case NE_MOUSE_BTN4:
+		case NE_MOUSE_BTN5:
+		{
+			if (isPressed) _keyDown.push_back(key);
+			else _keyUp.push_back(key);
+			return;
+		}
+		break;
+	}
+
+	code = _keymap[key];
 
 	if (isPressed && !GetButton(code))
 	{
@@ -223,13 +244,23 @@ void Input::Key(int key, bool isPressed) noexcept
 			{
 				if (v.min == code)
 				{
-					v.val = -.5f;
-					v.active = false;
+					if (GetButton(v.max))
+						v.val = 1.f;
+					else
+					{
+						v.val = -.5f;
+						v.active = false;
+					}
 				}
 				else if (v.max == code)
 				{
-					v.val = .5f;
-					v.active = false;
+					if (GetButton(v.min))
+						v.val = -1.f;
+					else
+					{
+						v.val = .5f;
+						v.active = false;
+					}
 				}
 			}
 		}
@@ -277,13 +308,28 @@ void Input::ClearKeyState() noexcept
 	_keyUp.clear();
 }
 
+char Input::KeycodeToChar(uint8_t keyCode, bool shift) noexcept
+{
+	uint8_t ch = keycodeToChar[keyCode];
+
+	if (shift)
+	{
+		if (ch > 0x60 && ch < 0x7B) ch -= 0x20;
+		else if (ch > 0x5A && ch < 0x5E) ch += 0x20;
+		else if (shiftedChars.find(ch) != shiftedChars.end())
+			ch = shiftedChars[ch];
+	}
+
+	return ch;
+}
+
 void Input::Release()
 {
 	ReleasePointer();
 	Logger::Log(INPUT_MODULE, LOG_INFORMATION, "Released");
 }
 
-map<uint8_t, char> keycodeToChar =
+map<uint8_t, char> keycodeToChar
 {
 	{ NE_KEY_A, 'a' },
 	{ NE_KEY_B, 'b' },
@@ -347,4 +393,24 @@ map<uint8_t, char> keycodeToChar =
 	{ NE_KEY_NUM_7, '7' },
 	{ NE_KEY_NUM_8, '8' },
 	{ NE_KEY_NUM_9, '9' }
+};
+
+map<char, char> shiftedChars
+{
+	{ 0x2C, 0x3C },
+	{ 0x2D, 0x5F },
+	{ 0x2E, 0x3E },
+	{ 0x2F, 0x3F },
+	{ 0x30, 0x29 },
+	{ 0x31, 0x21 },
+	{ 0x32, 0x40 },
+	{ 0x33, 0x23 },
+	{ 0x34, 0x24 },
+	{ 0x35, 0x25 },
+	{ 0x36, 0x5E },
+	{ 0x37, 0x26 },
+	{ 0x38, 0x2A },
+	{ 0x39, 0x28 },
+	{ 0x2B, 0x3D },
+	{ '\'', '"' }
 };

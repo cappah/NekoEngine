@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -41,13 +41,14 @@
 
 #include <System/Logger.h>
 #include <System/VFS/VFS.h>
-#include <System/AssetLoader/stb_vorbis.h>
 #include <System/AssetLoader/AssetLoader.h>
 
 #include <Platform/Compat.h>
+#include <Renderer/StaticMesh.h>
 
 #include <AL/al.h>
 #include <AL/alc.h>
+#include <vorbis/vorbisfile.h>
 
 #define AL_MODULE	"AssetLoader"
 
@@ -81,12 +82,12 @@ typedef struct RIFF_HEADER
 typedef struct WAVE_FORMAT
 {
 	char sub_chunk_id[4];	///< Contains the letters "fmt " (0x666d7420)
-	int sub_chunk_size;	///< 16 for PCM. This is the size of the rest of the Subchunk which follows this number.
-	short audio_format;	///< PCM = 1 (i.e. Linear quantization). Values other than 1 indicate some form of compression.
-	short num_channels;	///< Mono = 1, Stereo = 2, etc.
-	int sample_rate;	///< 8000, 44100, etc.
-	int byte_rate;		///< == SampleRate * NumChannels * BitsPerSample/8
-	short block_align;	///< == NumChannels + BitsPerSample/8
+	int sub_chunk_size;		///< 16 for PCM. This is the size of the rest of the Subchunk which follows this number.
+	short audio_format;		///< PCM = 1 (i.e. Linear quantization). Values other than 1 indicate some form of compression.
+	short num_channels;		///< Mono = 1, Stereo = 2, etc.
+	int sample_rate;		///< 8000, 44100, etc.
+	int byte_rate;			///< == SampleRate * NumChannels * BitsPerSample/8
+	short block_align;		///< == NumChannels + BitsPerSample/8
 	short bits_per_sample;	///< 8 bits = 8, 16 bits = 16, etc.
 } wave_fmt_t;
 
@@ -107,19 +108,38 @@ typedef struct WAVE_DATA
 
 using namespace glm;
 
+size_t _al_ovCbRead(void *ptr, size_t size, size_t nmemb, void *datasource)
+{
+	return (size_t)((VFSFile *)datasource)->Read(ptr, size, nmemb);
+}
+
+int _al_ovCbSeek(void *datasource, ogg_int64_t offset, int whence)
+{
+	return ((VFSFile *)datasource)->Seek((size_t)offset, whence);
+}
+
+int _al_ovCbClose(void *datasource)
+{
+	((VFSFile *)datasource)->Close();
+	return 0;
+}
+
+long _al_ovCvTell(void *datasource)
+{
+	return (long)((VFSFile *)datasource)->Tell();
+}
+
 int AssetLoader::LoadStaticMesh(NString &file,
 	vector<Vertex> &vertices,
 	vector<uint32_t> &indices,
-	vector<uint32_t> &groupOffset,
-	vector<uint32_t> &groupCount)
+	vector<MeshGroup> &groups)
 {
 	char idBuff[8]{ 0x0 };
 	int ret{ ENGINE_FAIL };
 
 	vertices.clear();
 	indices.clear();
-	groupOffset.clear();
-	groupCount.clear();
+	groups.clear();
 
 	if (VFSFile *f = VFS::Open(file))
 	{
@@ -127,7 +147,9 @@ int AssetLoader::LoadStaticMesh(NString &file,
 		idBuff[7] = 0x0;
 
 		if (!strncmp(idBuff, NMESH2_HEADER, 7))
-			ret = _LoadStaticMeshV2(f, vertices, indices, groupOffset, groupCount);
+			ret = _LoadStaticMeshV2(f, vertices, indices, groups, false);
+		else if (!strncmp(idBuff, NMESH2A_HEADER, 7))
+			ret = _LoadStaticMeshV2(f, vertices, indices, groups, true);
 		else
 		{
 			f->Close();
@@ -147,8 +169,8 @@ int AssetLoader::LoadStaticMesh(NString &file,
 int AssetLoader::_LoadStaticMeshV2(VFSFile *file,
 	vector<Vertex> &vertices,
 	vector<uint32_t> &indices,
-	vector<uint32_t> &groupOffset,
-	vector<uint32_t> &groupCount)
+	vector<MeshGroup> &groups,
+	bool readVertexGroup)
 {
 	uint32_t num{ 0 };
 	char idBuff[8]{ 0x0 };
@@ -165,11 +187,18 @@ int AssetLoader::_LoadStaticMeshV2(VFSFile *file,
 
 	for (uint32_t i = 0; i < num; ++i)
 	{
-		uint32_t val = 0;
-		file->Read(&val, sizeof(uint32_t), 1);
-		groupOffset.push_back(val);
-		file->Read(&val, sizeof(uint32_t), 1);
-		groupCount.push_back(val);
+		MeshGroup group{};
+
+		if (readVertexGroup)
+		{
+			file->Read(&group.vertexOffset, sizeof(uint32_t), 1);
+			file->Read(&group.vertexCount, sizeof(uint32_t), 1);
+		}
+
+		file->Read(&group.indexOffset, sizeof(uint32_t), 1);
+		file->Read(&group.indexCount, sizeof(uint32_t), 1);
+
+		groups.push_back(group);
 	}
 
 	file->Read(idBuff, sizeof(char), 7);
@@ -184,8 +213,7 @@ int AssetLoader::_LoadStaticMeshV2(VFSFile *file,
 int AssetLoader::LoadSkeletalMesh(NString &file,
 	vector<SkeletalVertex> &vertices,
 	vector<uint32_t> &indices,
-	vector<uint32_t> &groupOffset,
-	vector<uint32_t> &groupCount,
+	vector<MeshGroup> &groups,
 	vector<Bone> &bones,
 	vector<TransformNode> &nodes,
 	dmat4 &globalInverseTransform)
@@ -195,8 +223,7 @@ int AssetLoader::LoadSkeletalMesh(NString &file,
 
 	vertices.clear();
 	indices.clear();
-	groupOffset.clear();
-	groupCount.clear();
+	groups.clear();
 	bones.clear();
 	nodes.clear();
 	globalInverseTransform = dmat4();
@@ -217,7 +244,9 @@ int AssetLoader::LoadSkeletalMesh(NString &file,
 		}
 
 		if (!strncmp(idBuff, NMESH2_HEADER, 7))
-			ret = _LoadSkeletalMeshV2(f, vertices, indices, groupOffset, groupCount, bones, nodes, globalInverseTransform);
+			ret = _LoadSkeletalMeshV2(f, vertices, indices, groups, bones, nodes, globalInverseTransform, false);
+		else if (!strncmp(idBuff, NMESH2A_HEADER, 7))
+			ret = _LoadSkeletalMeshV2(f, vertices, indices, groups, bones, nodes, globalInverseTransform, true);
 		else
 		{
 			f->Close();
@@ -237,11 +266,11 @@ int AssetLoader::LoadSkeletalMesh(NString &file,
 int AssetLoader::_LoadSkeletalMeshV2(VFSFile *file,
 	vector<SkeletalVertex> &vertices,
 	vector<uint32_t> &indices,
-	vector<uint32_t> &groupOffset,
-	vector<uint32_t> &groupCount,
+	vector<MeshGroup> &groups,
 	vector<Bone> &bones,
 	vector<TransformNode> &nodes,
-	dmat4 &globalInverseTransform)
+	dmat4 &globalInverseTransform,
+	bool readVertexGroup)
 {
 	uint32_t num{ 0 };
 	char idBuff[8]{ 0x0 };
@@ -258,11 +287,18 @@ int AssetLoader::_LoadSkeletalMeshV2(VFSFile *file,
 
 	for (uint32_t i = 0; i < num; ++i)
 	{
-		uint32_t val = 0;
-		file->Read(&val, sizeof(uint32_t), 1);
-		groupOffset.push_back(val);
-		file->Read(&val, sizeof(uint32_t), 1);
-		groupCount.push_back(val);
+		MeshGroup group{};
+
+		if (readVertexGroup)
+		{
+			file->Read(&group.vertexOffset, sizeof(uint32_t), 1);
+			file->Read(&group.vertexCount, sizeof(uint32_t), 1);
+		}
+
+		file->Read(&group.indexOffset, sizeof(uint32_t), 1);
+		file->Read(&group.indexCount, sizeof(uint32_t), 1);
+
+		groups.push_back(group);
 	}
 
 	file->Read(value_ptr(globalInverseTransform), sizeof(dmat4), 1);
@@ -409,11 +445,11 @@ int AssetLoader::_LoadAnimationV2(VFSFile *file,
 	return ENGINE_OK;
 }
 
-int AssetLoader::LoadWAV(NString &file, int32_t *format, void **data, int32_t *size, int32_t *freq)
+int AssetLoader::LoadWAV(NString &file, AudioFormat *format, void **data, size_t *size, size_t *freq)
 {
-	wave_fmt_t wave_fmt;
-	riff_hdr_t riff_hdr;
-	wave_data_t wave_data;
+	wave_fmt_t wave_fmt{};
+	riff_hdr_t riff_hdr{};
+	wave_data_t wave_data{};
 	int ret = ENGINE_FAIL;
 
 	if(format == NULL)
@@ -484,18 +520,18 @@ int AssetLoader::LoadWAV(NString &file, int32_t *format, void **data, int32_t *s
 	if(wave_fmt.num_channels == 1)
 	{
 		if(wave_fmt.bits_per_sample == 8)
-			*format = AL_FORMAT_MONO8;
+			*format = AudioFormat::Mono_8Bit;
 		else if(wave_fmt.bits_per_sample == 16)
-			*format = AL_FORMAT_MONO16;
+			*format = AudioFormat::Mono_16Bit;
 		else
 		{ ret = ENGINE_INVALID_RES; goto exit; }
 	}
 	else if(wave_fmt.num_channels == 2)
 	{
 		if(wave_fmt.bits_per_sample == 8)
-			*format = AL_FORMAT_STEREO8;
+			*format = AudioFormat::Stereo_8Bit;
 		else if(wave_fmt.bits_per_sample == 16)
-			*format = AL_FORMAT_STEREO16;
+			*format = AudioFormat::Stereo_16Bit;
 		else
 		{ ret = ENGINE_INVALID_RES; goto exit; }
 	}
@@ -515,31 +551,78 @@ exit:
 	return ret;
 }
 
-int AssetLoader::LoadOGG(NString &file, ALenum *format, unsigned char **data, ALsizei *size, ALsizei *freq)
+int AssetLoader::LoadOGG(NString &file, AudioFormat *format, unsigned char **data, size_t *size, size_t *freq)
 {
-	int channels, sampleRate;
-	size_t len;
-	uint8_t *buff;
+	int bitStream{ 0 };
+	long bytes{ 0 };
+	char *buff{ nullptr };
+	long dataSize{ DATA_SIZE };
+	long dataUsed{ 0 };
+
+	buff = (char*)calloc(AL_BUFFER_SIZE, sizeof(char));
+	if (!buff)
+		return ENGINE_FAIL;
 
 	VFSFile *f = VFS::Open(file);
 	if (!f)
-		return ENGINE_FAIL;
-
-	buff = (uint8_t *)f->ReadAll(len);
-	if (!buff)
-		return ENGINE_IO_FAIL;
-
-	len = stb_vorbis_decode_memory(buff, (int)len, &channels, &sampleRate, (short **)data);
-
-	if (!len)
 	{
 		free(buff);
 		return ENGINE_FAIL;
 	}
 
-	*format = channels == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16;
-	*freq = sampleRate;
-	*size = (ALsizei)len;
+	vorbis_info *info{ nullptr };
+	OggVorbis_File oggFile{};
+
+	ov_callbacks callbacks;
+	callbacks.read_func = _al_ovCbRead;
+	callbacks.seek_func = _al_ovCbSeek;
+	callbacks.close_func = _al_ovCbClose;
+	callbacks.tell_func = _al_ovCvTell;
+
+	if (ov_open_callbacks(f, &oggFile, NULL, 0, callbacks) < 0)
+	{
+		free(buff);
+		return ENGINE_IO_FAIL;
+	}
+
+	info = ov_info(&oggFile, -1);
+
+	if (info->channels == 1)
+		*format = AudioFormat::Mono_16Bit;
+	else
+		*format = AudioFormat::Stereo_16Bit;
+
+	*freq = (int)info->rate;
+	*data = (unsigned char *)reallocarray(NULL, dataSize, sizeof(unsigned char));
+
+	do
+	{
+		memset(buff, 0x0, AL_BUFFER_SIZE);
+		bytes = ov_read(&oggFile, buff, AL_BUFFER_SIZE, 0, 2, 1, &bitStream);
+
+		if (dataUsed + bytes >= dataSize)
+		{
+			unsigned char *newptr = (unsigned char *)reallocarray(*data, dataSize + DATA_SIZE, sizeof(unsigned char));
+
+			if (newptr == nullptr)
+			{
+				free(buff);
+				free(*data);
+				return ENGINE_FAIL;
+			}
+
+			*data = newptr;
+			dataSize += DATA_SIZE;
+		}
+
+		memcpy(*data + dataUsed, buff, bytes);
+		dataUsed += bytes;
+	}
+	while (bytes > 0);
+
+	ov_clear(&oggFile);
+
+	*size = (int)dataUsed;
 
 	f->Close();
 	free(buff);

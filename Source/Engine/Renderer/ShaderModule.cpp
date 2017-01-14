@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -38,8 +38,8 @@
  */
 
 #include <Engine/Engine.h>
-#include <Renderer/Debug.h>
 #include <Renderer/VKUtil.h>
+#include <Renderer/DebugMarker.h>
 #include <Renderer/ShaderModule.h>
 #include <System/VFS/VFS.h>
 #include <Platform/Compat.h>
@@ -56,7 +56,7 @@ ShaderModule::ShaderModule(ShaderModuleResource* res) noexcept
 
 int ShaderModule::Load()
 {	
-	size_t size;
+	size_t size{};
 	void *data = nullptr;
 	VFSFile *f = VFS::Open(GetResourceInfo()->filePath);
 
@@ -81,7 +81,7 @@ int ShaderModule::Load()
 		return ENGINE_FAIL;
 	}
 
-	DBG_SET_OBJECT_NAME((uint64_t)_module, VK_DEBUG_REPORT_OBJECT_TYPE_SHADER_MODULE_EXT, GetResourceInfo()->name.c_str());
+	VK_DBG_SET_OBJECT_NAME((uint64_t)_module, VK_DEBUG_REPORT_OBJECT_TYPE_SHADER_MODULE_EXT, GetResourceInfo()->name.c_str());
 
 	free(data);
 

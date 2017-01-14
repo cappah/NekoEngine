@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -181,4 +181,5 @@
 #include <map>
 
 extern std::map<uint8_t, char> keycodeToChar;
+extern std::map<char, char> shiftedChars;
 #endif

@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -39,13 +39,8 @@
 
 #pragma once
 
-#define GLM_FORCE_RADIANS
-#define GLM_FORCE_DEPTH_ZERO_TO_ONE
-#include <glm/glm.hpp>
-
-#include <Renderer/GUI.h>
-#include <Renderer/Buffer.h>
 #include <Engine/Engine.h>
+#include <Renderer/Buffer.h>
 #include <Runtime/Runtime.h>
 #include <Resource/Resource.h>
 #include <Resource/FontResource.h>
@@ -68,6 +63,9 @@ public:
 
 	ENGINE_API FontResource* GetResourceInfo() noexcept { return (FontResource*)_resourceInfo; }
 	ENGINE_API uint32_t GetCharacterHeight() { return _texHeight; }
+	ENGINE_API uint32_t GetTextLength(NString &text);
+
+	ENGINE_API int SetPixelSize(int pixelSize);
 
 	ENGINE_API virtual int Load() override;
 
@@ -94,7 +92,7 @@ private:
 	VkImage _image;
 	VkImageView _view;
 	VkDeviceMemory _imageMemory;
-	VkCommandBuffer _cmdBuffer;
+	VkCommandBuffer _cmdBuffer, _oldCmdBuffer;
 	VkDescriptorSet _descriptorSet;
 	VkDescriptorPool _descriptorPool;
 	VkDeviceSize _vboOffset, _iboOffset, _bufferSize;
@@ -102,6 +100,7 @@ private:
 
 	int _BuildAtlas();
 	int _CreateDescriptorSet();
+	void _UpdateDescriptorSet();
 	int _BuildCommandBuffer();
 #endif
 };

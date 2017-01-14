@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -68,8 +68,8 @@ struct EngineConfig
 };
 
 /**
-* Renderer configuration information
-*/
+ * Renderer configuration information
+ */
 struct RendererConfig
 {
 	bool Supersampling;
@@ -82,10 +82,15 @@ struct RendererConfig
 
 	int MaxLights;
 	int ShadowMapSize;
+	int MaxShadowMaps;
+	bool ShadowMultisampling;
+	int ShadowSamples;
 
 	bool VerticalSync;
 
 	bool EnableAsyncCompute;
+
+	float Gamma;
 
 	struct
 	{
@@ -94,29 +99,37 @@ struct RendererConfig
 		float Radius;
 		float PowerExponent;
 		float Threshold;
+		bool Multisampling;
 	} SSAO;
 };
 
 /**
-* Post processor configuration information
-*/
+ * Post processor configuration information
+ */
 struct PostProcessorConfig
 {
-	bool Enable;
-	bool HDR;
 	bool Bloom;
 	int BloomIntensity;
 	bool DepthOfField;
+	bool FilmGrain;
 };
 
 /**
-* Configuration information
-*/
+ * Configuration information
+ */
 struct Configuration
 {
 	EngineConfig Engine;
 	RendererConfig Renderer;
 	PostProcessorConfig PostProcessor;
+};
+
+/**
+ * Debug variables
+ */
+struct DebugVariables
+{
+	bool DrawBounds;
 };
 
 class ENGINE_API Engine
@@ -126,6 +139,7 @@ public:
 
 	static bool IsEditor() { return /*_editor*/false; }
 	static bool IsPaused() { return _paused; }
+	static bool StatsVisible() { return _drawStats; }
 
 	static void ToggleStats() { _drawStats = !_drawStats; }
 	static void TogglePause() { _paused = !_paused; }
@@ -149,15 +163,21 @@ public:
 
 #ifdef ENGINE_INTERNAL
 	/**
-	* Get the engine configuration information
-	*/
+	 * Get the engine configuration information
+	 */
 	static Configuration &GetConfiguration() noexcept { return _config; }
+
+	/**
+	 * Get the engine debug variables
+	 */
+	static DebugVariables &GetDebugVariables() noexcept { return _debugVariables; }
 
 	static GameModule *GetGameModule() noexcept { return _gameModule; }
 #endif
 	
 private:
 	static Configuration _config;
+	static DebugVariables _debugVariables;
 	static GameModule *_gameModule;
 	static PlatformModuleType _gameModuleLibrary;
 	static bool _iniFileLoaded;
@@ -165,8 +185,10 @@ private:
 	static bool _paused;
 	static bool _disposed;
 	static bool _drawStats;
+	static bool _startup;
 	static glm::vec2 _scaleFactor;
 
+	static void _FixedUpdate();
 	static void _Update(double deltaTime);
 	static void _Draw();
 	static void _DrawStats();

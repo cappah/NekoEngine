@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -111,7 +111,6 @@ int EngineInterface::NewObject(lua_State *state)
 	ObjectInitializer oi{};
 
 	oi.name = lua_tostring(state, 2);
-	oi.parent = (Object *)lua_touserdata(state, 3);
 
 	if (args > 3)
 	{

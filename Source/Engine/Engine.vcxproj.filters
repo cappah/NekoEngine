@@ -106,12 +106,6 @@
     <Filter Include="Shaders\Compute">
       <UniqueIdentifier>{4eb29d89-662f-4793-9f46-f601c04f7311}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Private Headers\System">
-      <UniqueIdentifier>{16a684c5-9935-4258-a4a7-00b443339ea1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Private Headers\System\AssetLoader">
-      <UniqueIdentifier>{944abcc7-9709-4325-9bd2-74de0caf36a9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Config">
       <UniqueIdentifier>{fdf0c773-4f84-45ef-816a-d88801ad7f5c}</UniqueIdentifier>
     </Filter>
@@ -127,6 +121,33 @@
     <Filter Include="Source Files\Script\Interface">
       <UniqueIdentifier>{c36b9856-ffb7-429f-98f6-d42b9371fabb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\GUI">
+      <UniqueIdentifier>{3d679903-ed14-45ad-9a40-3cb0a130be03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Public Headers\GUI">
+      <UniqueIdentifier>{baf6f09e-3119-48bc-bffe-ce4bfda8275b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Runtime">
+      <UniqueIdentifier>{ba194bd3-04f5-4a9c-bf62-596e950a67fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Geometry">
+      <UniqueIdentifier>{91e2d852-49e2-4b71-ad64-8f66f2e5048b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Include">
+      <UniqueIdentifier>{b2bbaac2-fdc3-4708-ace1-01671ac79fca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Public Headers\Profiler">
+      <UniqueIdentifier>{10295d5c-1863-4fc9-9247-a3f7838f3828}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Profiler">
+      <UniqueIdentifier>{50225dac-62cd-42f7-8bd9-c0251e2dc972}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Public Headers\Physics">
+      <UniqueIdentifier>{9277627a-638b-4d3e-8451-05541cbb6be7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Physics">
+      <UniqueIdentifier>{8f540e08-5ffa-4116-b90c-56ff690264e7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="System\Logger.cpp">
@@ -134,9 +155,6 @@
     </ClCompile>
     <ClCompile Include="Core\Engine.cpp">
       <Filter>Source Files\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Platform\shared.cpp">
-      <Filter>Source Files\Platform</Filter>
     </ClCompile>
     <ClCompile Include="Platform\Windows\PlatformInput.cpp">
       <Filter>Source Files\Platform\Windows</Filter>
@@ -228,9 +246,6 @@
     <ClCompile Include="Scene\Components\LightComponent.cpp">
       <Filter>Source Files\Scene\Components</Filter>
     </ClCompile>
-    <ClCompile Include="Audio\AudioSource.cpp">
-      <Filter>Source Files\Audio</Filter>
-    </ClCompile>
     <ClCompile Include="Audio\AudioClip.cpp">
       <Filter>Source Files\Audio</Filter>
     </ClCompile>
@@ -255,9 +270,6 @@
     <ClCompile Include="Core\SceneManager.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Renderer\GUI.cpp">
-      <Filter>Source Files\Renderer</Filter>
-    </ClCompile>
     <ClCompile Include="Core\Console.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
@@ -270,13 +282,7 @@
     <ClCompile Include="System\AssetLoader\TGA.cpp">
       <Filter>Source Files\System\AssetLoader</Filter>
     </ClCompile>
-    <ClCompile Include="Scene\Skysphere.cpp">
-      <Filter>Source Files\Scene</Filter>
-    </ClCompile>
     <ClCompile Include="Renderer\PostProcessor.cpp">
-      <Filter>Source Files\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer\Debug.cpp">
       <Filter>Source Files\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="System\AssetLoader\DDS.cpp">
@@ -378,6 +384,87 @@
     <ClCompile Include="Script\Interface\VFSInterface.cpp">
       <Filter>Source Files\Script\Interface</Filter>
     </ClCompile>
+    <ClCompile Include="GUI\GUIManager.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI\Control.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI\Button.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI\Label.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI\Box.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Script\Interface\DebugInterface.cpp">
+      <Filter>Source Files\Script\Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\Windows\CrashHandler.cpp">
+      <Filter>Source Files\Platform\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\Shared.cpp">
+      <Filter>Source Files\Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\DebugMarker.cpp">
+      <Filter>Source Files\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Components\SkysphereComponent.cpp">
+      <Filter>Source Files\Scene\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Runtime\Runtime.cpp">
+      <Filter>Source Files\Runtime</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI\TextBox.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI\Slider.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Components\GPUParticleSystemComponent.cpp">
+      <Filter>Source Files\Scene\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Profiler\Profiler.cpp">
+      <Filter>Source Files\Profiler</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Components\CPUParticleSystemComponent.cpp">
+      <Filter>Source Files\Scene\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\Primitives.cpp">
+      <Filter>Source Files\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Debug.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="System\VFS\LooseFile.cpp">
+      <Filter>Source Files\System\VFS</Filter>
+    </ClCompile>
+    <ClCompile Include="System\VFS\GZipFile.cpp">
+      <Filter>Source Files\System\VFS</Filter>
+    </ClCompile>
+    <ClCompile Include="System\VFS\PackedFile.cpp">
+      <Filter>Source Files\System\VFS</Filter>
+    </ClCompile>
+    <ClCompile Include="System\VFS\BZip2File.cpp">
+      <Filter>Source Files\System\VFS</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\OcTree.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\TaskManager.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\Physics.cpp">
+      <Filter>Source Files\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio\AudioSystem.cpp">
+      <Filter>Source Files\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Components\ColliderComponent.cpp">
+      <Filter>Source Files\Scene\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\Engine\Defs.h">
@@ -451,9 +538,6 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\Runtime\NArray.h">
       <Filter>Public Headers\Runtime</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\Renderer\GUI.h">
-      <Filter>Public Headers\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\Resource\MeshResource.h">
       <Filter>Public Headers\Resource</Filter>
@@ -578,17 +662,8 @@
     <ClInclude Include="..\..\Include\Renderer\SkeletalMesh.h">
       <Filter>Public Headers\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\Scene\Skysphere.h">
-      <Filter>Public Headers\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\Renderer\PostProcessor.h">
       <Filter>Public Headers\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Include\Renderer\Debug.h">
-      <Filter>Private Headers\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Include\System\AssetLoader\stb_vorbis.h">
-      <Filter>Private Headers\System\AssetLoader</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\Renderer\VKUtil.h">
       <Filter>Private Headers\Renderer</Filter>
@@ -695,73 +770,274 @@
     <ClInclude Include="..\..\Include\Runtime\NArrayTS.h">
       <Filter>Public Headers\Runtime</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Include\GUI\GUIManager.h">
+      <Filter>Public Headers\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\GUI\GUIDefs.h">
+      <Filter>Public Headers\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\GUI\Control.h">
+      <Filter>Public Headers\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\GUI\GUI.h">
+      <Filter>Public Headers\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\GUI\Button.h">
+      <Filter>Public Headers\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Runtime\NBounds.h">
+      <Filter>Public Headers\Runtime</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\GUI\Label.h">
+      <Filter>Public Headers\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\GUI\Box.h">
+      <Filter>Public Headers\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Runtime\NFrustum.h">
+      <Filter>Public Headers\Runtime</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Script\Interface\DebugInterface.h">
+      <Filter>Private Headers\Script\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Renderer\Drawable.h">
+      <Filter>Public Headers\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Platform\CrashHandler.h">
+      <Filter>Public Headers\Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Engine\Debug.h">
+      <Filter>Public Headers\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Renderer\DebugMarker.h">
+      <Filter>Private Headers\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\Include\Runtime\NThreadPool.h">
       <Filter>Public Headers\Runtime</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Include\Scene\Components\SkysphereComponent.h">
+      <Filter>Public Headers\Scene\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\GUI\TextBox.h">
+      <Filter>Public Headers\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\GUI\Slider.h">
+      <Filter>Public Headers\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Scene\Components\GPUParticleSystemComponent.h">
+      <Filter>Public Headers\Scene\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shaders\vertex\bounds_vertex.vert">
+      <Filter>Shaders\Vertex</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Profiler\Profiler.h">
+      <Filter>Public Headers\Profiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Scene\Components\CPUParticleSystemComponent.h">
+      <Filter>Public Headers\Scene\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Renderer\Primitives.h">
+      <Filter>Public Headers\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\System\VFS\LooseFile.h">
+      <Filter>Public Headers\System\VFS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\System\VFS\GZipFile.h">
+      <Filter>Public Headers\System\VFS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\System\VFS\PackedFile.h">
+      <Filter>Public Headers\System\VFS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\System\VFS\BZip2File.h">
+      <Filter>Public Headers\System\VFS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Scene\OcTree.h">
+      <Filter>Public Headers\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Physics\Physics.h">
+      <Filter>Public Headers\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Engine\TaskManager.h">
+      <Filter>Public Headers\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Physics\Collider.h">
+      <Filter>Public Headers\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Audio\AudioSystem.h">
+      <Filter>Public Headers\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Audio\AudioBuffer.h">
+      <Filter>Public Headers\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Scene\Components\ColliderComponent.h">
+      <Filter>Public Headers\Scene\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Physics\Ray.h">
+      <Filter>Public Headers\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Physics\RigidBody.h">
+      <Filter>Public Headers\Physics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Shaders\anim_vertex.vert">
-      <Filter>Shaders\Vertex</Filter>
-    </None>
-    <None Include="..\Shaders\depth_anim_vertex.vert">
-      <Filter>Shaders\Vertex</Filter>
-    </None>
-    <None Include="..\Shaders\depth_vertex.vert">
-      <Filter>Shaders\Vertex</Filter>
-    </None>
-    <None Include="..\Shaders\vertex.vert">
-      <Filter>Shaders\Vertex</Filter>
-    </None>
-    <None Include="..\Shaders\skysphere_vertex.vert">
-      <Filter>Shaders\Vertex</Filter>
-    </None>
-    <None Include="..\Shaders\fullscreen_vertex.vert">
-      <Filter>Shaders\Vertex</Filter>
-    </None>
-    <None Include="..\Shaders\gui_vertex.vert">
-      <Filter>Shaders\Vertex</Filter>
-    </None>
-    <None Include="..\Shaders\depth_fragment.frag">
-      <Filter>Shaders\Fragment</Filter>
-    </None>
-    <None Include="..\Shaders\gui_fragment.frag">
-      <Filter>Shaders\Fragment</Filter>
-    </None>
-    <None Include="..\Shaders\phong.frag">
-      <Filter>Shaders\Fragment</Filter>
-    </None>
-    <None Include="..\Shaders\skysphere_fragment.frag">
-      <Filter>Shaders\Fragment</Filter>
-    </None>
-    <None Include="..\Shaders\pp_hdr.frag">
-      <Filter>Shaders\Post Process</Filter>
-    </None>
-    <None Include="..\Shaders\light_culling.comp">
-      <Filter>Shaders\Compute</Filter>
-    </None>
-    <None Include="..\Shaders\pp_bw.frag">
-      <Filter>Shaders\Post Process</Filter>
-    </None>
-    <None Include="..\Shaders\terrain_vertex.vert">
-      <Filter>Shaders\Vertex</Filter>
-    </None>
-    <None Include="..\Shaders\depth_terrain_vertex.vert">
-      <Filter>Shaders\Vertex</Filter>
-    </None>
-    <None Include="..\Shaders\pp_blur.frag">
-      <Filter>Shaders\Post Process</Filter>
-    </None>
-    <None Include="..\Shaders\ssao.frag">
-      <Filter>Shaders\Fragment</Filter>
-    </None>
-    <None Include="..\Shaders\ssao_blur.frag">
-      <Filter>Shaders\Fragment</Filter>
-    </None>
     <None Include="..\..\Config\Engine.ini">
       <Filter>Config</Filter>
     </None>
-    <None Include="..\Shaders\pp_dof.frag">
+    <None Include="..\Shaders\include\penner.glh">
+      <Filter>Shaders\Include</Filter>
+    </None>
+    <None Include="..\Shaders\geometry\billboard_geometry.geom">
+      <Filter>Shaders\Geometry</Filter>
+    </None>
+    <None Include="..\Shaders\fragment\gui_fragment.frag">
+      <Filter>Shaders\Fragment</Filter>
+    </None>
+    <None Include="..\Shaders\fragment\phong.frag">
+      <Filter>Shaders\Fragment</Filter>
+    </None>
+    <None Include="..\Shaders\fragment\shadow_fragment.frag">
+      <Filter>Shaders\Fragment</Filter>
+    </None>
+    <None Include="..\Shaders\fragment\ssao.frag">
+      <Filter>Shaders\Fragment</Filter>
+    </None>
+    <None Include="..\Shaders\fragment\ssao_blur.frag">
+      <Filter>Shaders\Fragment</Filter>
+    </None>
+    <None Include="..\Shaders\fragment\skysphere_fragment.frag">
+      <Filter>Shaders\Fragment</Filter>
+    </None>
+    <None Include="..\Shaders\fragment\billboard_fragment.frag">
+      <Filter>Shaders\Fragment</Filter>
+    </None>
+    <None Include="..\Shaders\fragment\depth_fragment.frag">
+      <Filter>Shaders\Fragment</Filter>
+    </None>
+    <None Include="..\Shaders\vertex\anim_vertex.vert">
+      <Filter>Shaders\Vertex</Filter>
+    </None>
+    <None Include="..\Shaders\vertex\billboard_vertex.vert">
+      <Filter>Shaders\Vertex</Filter>
+    </None>
+    <None Include="..\Shaders\vertex\depth_anim_vertex.vert">
+      <Filter>Shaders\Vertex</Filter>
+    </None>
+    <None Include="..\Shaders\vertex\depth_terrain_vertex.vert">
+      <Filter>Shaders\Vertex</Filter>
+    </None>
+    <None Include="..\Shaders\vertex\depth_vertex.vert">
+      <Filter>Shaders\Vertex</Filter>
+    </None>
+    <None Include="..\Shaders\vertex\fullscreen_vertex.vert">
+      <Filter>Shaders\Vertex</Filter>
+    </None>
+    <None Include="..\Shaders\vertex\gui_vertex.vert">
+      <Filter>Shaders\Vertex</Filter>
+    </None>
+    <None Include="..\Shaders\vertex\shadow_anim_vertex.vert">
+      <Filter>Shaders\Vertex</Filter>
+    </None>
+    <None Include="..\Shaders\vertex\shadow_terrain_vertex.vert">
+      <Filter>Shaders\Vertex</Filter>
+    </None>
+    <None Include="..\Shaders\vertex\shadow_vertex.vert">
+      <Filter>Shaders\Vertex</Filter>
+    </None>
+    <None Include="..\Shaders\vertex\skysphere_vertex.vert">
+      <Filter>Shaders\Vertex</Filter>
+    </None>
+    <None Include="..\Shaders\vertex\terrain_vertex.vert">
+      <Filter>Shaders\Vertex</Filter>
+    </None>
+    <None Include="..\Shaders\vertex\vertex.vert">
+      <Filter>Shaders\Vertex</Filter>
+    </None>
+    <None Include="..\Shaders\compute\light_culling.comp">
+      <Filter>Shaders\Compute</Filter>
+    </None>
+    <None Include="..\Shaders\pp\pp_bw.frag">
       <Filter>Shaders\Post Process</Filter>
+    </None>
+    <None Include="..\Shaders\pp\pp_dof.frag">
+      <Filter>Shaders\Post Process</Filter>
+    </None>
+    <None Include="..\Shaders\pp\pp_filmgrain.frag">
+      <Filter>Shaders\Post Process</Filter>
+    </None>
+    <None Include="..\Shaders\pp\pp_hdr.frag">
+      <Filter>Shaders\Post Process</Filter>
+    </None>
+    <None Include="..\Shaders\pp\pp_blur.frag">
+      <Filter>Shaders\Post Process</Filter>
+    </None>
+    <None Include="..\Shaders\include\math.glh">
+      <Filter>Shaders\Include</Filter>
+    </None>
+    <None Include="..\Shaders\compute\particle_update.comp">
+      <Filter>Shaders\Compute</Filter>
+    </None>
+    <None Include="..\Shaders\compute\particle_sort.comp">
+      <Filter>Shaders\Compute</Filter>
+    </None>
+    <None Include="..\Shaders\include\random.glh">
+      <Filter>Shaders\Include</Filter>
+    </None>
+    <None Include="..\Shaders\compute\particle_emit.comp">
+      <Filter>Shaders\Compute</Filter>
+    </None>
+    <None Include="..\Shaders\include\particle_bindings.glh">
+      <Filter>Shaders\Include</Filter>
+    </None>
+    <None Include="..\Shaders\include\scenedata.glh">
+      <Filter>Shaders\Include</Filter>
+    </None>
+    <None Include="..\Shaders\include\light.glh">
+      <Filter>Shaders\Include</Filter>
+    </None>
+    <None Include="..\Shaders\include\matrixblock.glh">
+      <Filter>Shaders\Include</Filter>
+    </None>
+    <None Include="..\Shaders\include\animblock.glh">
+      <Filter>Shaders\Include</Filter>
+    </None>
+    <None Include="..\Shaders\include\shadowmatrices.glh">
+      <Filter>Shaders\Include</Filter>
+    </None>
+    <None Include="..\Shaders\include\lightbuffers.glh">
+      <Filter>Shaders\Include</Filter>
+    </None>
+    <None Include="..\Shaders\include\anim_vertex_attribs.glh">
+      <Filter>Shaders\Include</Filter>
+    </None>
+    <None Include="..\Shaders\include\terrain_vertex_attribs.glh">
+      <Filter>Shaders\Include</Filter>
+    </None>
+    <None Include="..\Shaders\include\vertex_attribs.glh">
+      <Filter>Shaders\Include</Filter>
+    </None>
+    <None Include="..\Shaders\include\shadow_pconst.glh">
+      <Filter>Shaders\Include</Filter>
+    </None>
+    <None Include="..\Shaders\include\fs_data.glh">
+      <Filter>Shaders\Include</Filter>
+    </None>
+    <None Include="..\Shaders\include\depth_fs_data.glh">
+      <Filter>Shaders\Include</Filter>
+    </None>
+    <None Include="..\Shaders\include\kawase.glh">
+      <Filter>Shaders\Include</Filter>
+    </None>
+    <None Include="..\Shaders\fragment\shadow_filter.frag">
+      <Filter>Shaders\Fragment</Filter>
+    </None>
+    <None Include="..\Shaders\include\util.glh">
+      <Filter>Shaders\Include</Filter>
+    </None>
+    <None Include="..\Shaders\include\normal.glh">
+      <Filter>Shaders\Include</Filter>
+    </None>
+    <None Include="..\Shaders\fragment\bounds_fragment.frag">
+      <Filter>Shaders\Fragment</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

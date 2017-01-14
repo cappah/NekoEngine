@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -51,6 +51,8 @@
 #endif
 
 #ifdef _WIN32
+#define VC_EXTRALEAN
+#define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
 #undef CreateWindow
@@ -59,6 +61,11 @@
 typedef HWND PlatformWindowType;
 typedef HDC PlatformDisplayType;
 typedef HMODULE PlatformModuleType;
+
+#define NWM_SHOWCURSOR_MSG_GUID	"NWM_SHOWCURSOR_{916fcbf2-b4be-4df8-884b-f0dc086e03ad}"
+#define NWM_HIDECURSOR_MSG_GUID	"NWM_HIDECURSOR_{916fcbf2-b4be-4df8-884b-f0dc086e03ad}"
+
+#define REGISTER_USER_MESSAGE(name) UINT name = RegisterWindowMessage(name##_MSG_GUID)
 
 #elif defined(PLATFORM_X11)
 #include <X11/Xlib.h>
@@ -126,16 +133,35 @@ enum class MessageBoxResult : unsigned char
 	No
 };
 
+enum SpecialDirectory : uint8_t
+{
+	ApplicationData = 0,
+	Documents,
+	Pictures,
+	Desktop,
+	Music,
+	Home,
+	Temp
+};
+
 class Platform
 {
 public:
 
 	// Platform specific public functions
-	ENGINE_API static const char* GetName();
-	ENGINE_API static const char* GetMachineName();
-	ENGINE_API static const char* GetMachineArchitecture();
-	ENGINE_API static const char* GetVersion();
+	ENGINE_API static const char *GetName();
+	ENGINE_API static const char *GetMachineName();
+	ENGINE_API static const char *GetMachineArchitecture();
+	ENGINE_API static const char *GetVersion();
+	ENGINE_API static const char *GetProcessorName();
+	ENGINE_API static uint32_t GetProcessorFrequency();
 	ENGINE_API static int32_t GetNumberOfProcessors();
+	ENGINE_API static uint64_t GetProcessMemory();
+	ENGINE_API static uint64_t GetUsedSystemMemory();
+	ENGINE_API static uint64_t GetFreeSystemMemory();
+	ENGINE_API static uint64_t GetTotalSystemMemory();
+
+	ENGINE_API static int GetSpecialDirectoryPath(SpecialDirectory directory, char *buff, uint32_t buffLen);
 
 	ENGINE_API static PlatformWindowType GetActiveWindow() { return _activeWindow; }
 
@@ -149,6 +175,8 @@ public:
 	ENGINE_API static void Sleep(uint32_t seconds);
 	ENGINE_API static void USleep(uint32_t microseconds);
 	
+	ENGINE_API static void Terminate();
+
 	// Shared
 	ENGINE_API static size_t GetConfigString(const char *section, const char *entry, const char *def, char *buffer, int buffer_len, const char *file);
 	ENGINE_API static int GetConfigInt(const char *section, const char *entry, int def, const char *file);
@@ -159,11 +187,13 @@ public:
 	ENGINE_API static void Exit();
 
 #ifdef ENGINE_INTERNAL // Platform specific private functions
+	static int Initialize();
+
 	static void SetActiveWindow(PlatformWindowType hWnd) { _activeWindow = hWnd; }
 	static PlatformWindowType CreateWindow(int width, int height, bool fullscreen);
 
-	static PlatformModuleType LoadModule(const char* module);
-	static void* GetProcAddress(PlatformModuleType module, const char* proc);
+	static PlatformModuleType LoadModule(const char *module);
+	static void *GetProcAddress(PlatformModuleType module, const char *proc);
 	static void ReleaseModule(PlatformModuleType module);
 	static std::vector<const char*> GetRequiredExtensions(bool debug);
 	static bool CreateSurface(VkInstance instance, VkSurfaceKHR &surface, PlatformWindowType hWnd, VkAllocationCallbacks *allocator = nullptr);

@@ -1,6 +1,9 @@
 OpenAL Soft 1.17.2
 Assimp 3.3.1
 FreeType 2.7
-SQlite 3.14.2
-zlib 1.2.8
-LUA 5.3.3
+SQlite 3.16.1
+zlib 1.2.10
+LuaJIT-2.1-b2
+libvorbis 1.3.5
+libogg 1.3.2
+bzip2 1.0.6

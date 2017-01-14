@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -103,8 +103,8 @@ static inline bool _ASTC_VerifyHeader(ASTCHeader *hdr, uint32_t &width, uint32_t
 
 int AssetLoader::LoadASTC(const uint8_t *data, uint64_t dataSize, uint32_t &width, uint32_t &height, uint32_t &depth, uint32_t &format, uint32_t &mipLevels, uint8_t **imgData, uint64_t &imgDataSize)
 {
-	ASTCHeader hdr;
-	size_t offset = 0;
+	ASTCHeader hdr{};
+	size_t offset{ 0 };
 	imgDataSize = (uint32_t)(dataSize - sizeof(ASTCHeader));
 
 	memcpy(&hdr, data + offset, sizeof(ASTCHeader));

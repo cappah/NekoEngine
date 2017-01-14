@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -37,15 +37,7 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
-#include <vector>
-
-#include <glm/glm.hpp>
-
-#include "MovingObject.h"
-
-using namespace std;
-using namespace glm;
+#include "TestGame.h"
 
 NEKO_GAME_MODULE_IMPL(TestGame);
 

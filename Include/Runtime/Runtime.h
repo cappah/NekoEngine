@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -40,7 +40,21 @@
 #pragma once
 
 #include <Runtime/NArray.h>
-#include <Runtime/NOcTree.h>
+#include <Runtime/NBounds.h>
 #include <Runtime/NString.h>
 #include <Runtime/NArrayTS.h>
+#include <Runtime/NFrustum.h>
 #include <Runtime/NThreadPool.h>
+
+// STL reverse iterator
+template <typename T>
+struct reversion_wrapper { T& iterable; };
+
+template <typename T>
+auto begin (reversion_wrapper<T> w) { return rbegin(w.iterable); }
+
+template <typename T>
+auto end (reversion_wrapper<T> w) { return rend(w.iterable); }
+
+template <typename T>
+reversion_wrapper<T> reverse (T&& iterable) { return { iterable }; }

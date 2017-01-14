@@ -1,0 +1,99 @@
+/* NekoEngine
+ *
+ * random.glh
+ * Author: Alexandru Naiman
+ *
+ * Random number generators
+ * http://www.reedbeta.com/blog/quick-and-easy-gpu-random-numbers-in-d3d11/
+ *
+ * -----------------------------------------------------------------------------
+ *
+ * Copyright (c) 2015-2017, Alexandru Naiman
+ *
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ * this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyrig]ht notice,
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
+ *
+ * 3. Neither the name of the copyright holder nor the names of its contributors
+ * may be used to endorse or promote products derived from this software without
+ * specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ALEXANDRU NAIMAN "AS IS" AND ANY EXPRESS OR
+ * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ * IN NO EVENT SHALL ALEXANDRU NAIMAN BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
+ * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+ * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+uint rng_state;
+float rng_state_f;
+
+void srand(uint seed)
+{
+	rng_state = seed;
+	rng_state_f = float(seed);
+}
+
+uint rand_lcg()
+{
+	// LCG values from Numerical Recipes
+	rng_state = 1664525 * rng_state + 1013904223;
+	return rng_state;
+}
+
+float rand_lcg_f()
+{
+	rng_state_f = 1664525.0 * rng_state_f + 1013904223.0;
+	return rng_state / 4294967296.0;
+}
+
+uint rand_xorshift()
+{
+	// Xorshift algorithm from George Marsaglia's paper
+    rng_state ^= (rng_state << 13);
+    rng_state ^= (rng_state >> 17);
+    rng_state ^= (rng_state << 5);
+    return rng_state;
+}
+
+uint rand_wanghash(uint seed)
+{
+	seed = (seed ^ 61) ^ (seed >> 16);
+    seed *= 9;
+    seed = seed ^ (seed >> 4);
+    seed *= 0x27d4eb2d;
+    seed = seed ^ (seed >> 15);
+    return seed;
+}
+
+#if RAND_ENABLE_NOISE
+
+uint rand_noise(vec2 uv, float max)
+{
+	vec4 r = texture(noiseTexture, uv);
+
+	if (uv.x > 0.75) return uint(r.x * max);
+	else if (uv.x > 0.5) return uint(r.y * max);
+	else if (uv.x > 0.25) return uint(r.z * max);
+	else return uint(r.w * max);
+}
+
+#endif
+
+uint rand_range(uint rand, uint max)
+{
+	return uint(float(rand) * (float(max) / 4294967296.0));
+}

@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -37,9 +37,10 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <Renderer/Debug.h>
 #include <Renderer/VKUtil.h>
 #include <Renderer/StaticMesh.h>
+#include <Renderer/DebugMarker.h>
+#include <Renderer/ShadowRenderer.h>
 #include <Renderer/PipelineManager.h>
 #include <Renderer/RenderPassManager.h>
 #include <System/Logger.h>
@@ -69,7 +70,7 @@ StaticMesh::StaticMesh(MeshResource *res) noexcept :
 
 int StaticMesh::Load()
 {
-	if (AssetLoader::LoadStaticMesh(GetResourceInfo()->filePath, _vertices, _indices, _groupOffset, _groupCount) != ENGINE_OK)
+	if (AssetLoader::LoadStaticMesh(GetResourceInfo()->filePath, _vertices, _indices, _groups) != ENGINE_OK)
 	{
 		Logger::Log(SM_MESH_MODULE, LOG_CRITICAL, "Failed to load mesh id=%s", _resourceInfo->name.c_str());
 		return ENGINE_FAIL;
@@ -79,39 +80,43 @@ int StaticMesh::Load()
 	_vertexCount = (uint32_t)_vertices.size();
 	_triangleCount = _indexCount / 3;
 
+	CreateBounds();
+
 	Logger::Log(SM_MESH_MODULE, LOG_DEBUG, "Loaded mesh id %d from %s, %d vertices, %d indices", _resourceInfo->id, *GetResourceInfo()->filePath, _vertexCount, _indexCount);
 
 	return ENGINE_OK;
 }
 
-int StaticMesh::LoadStatic(std::vector<Vertex> &vertices, std::vector<uint32_t> &indices, bool createGroup, bool calculateTangents)
+int StaticMesh::LoadStatic(std::vector<Vertex> &vertices, std::vector<uint32_t> &indices, bool createGroup, bool calculateTangents, bool createBounds)
 {
 	if (createGroup)
 	{
-		_groupOffset.push_back(0);
-		_groupCount.push_back((uint32_t)indices.size());
+		MeshGroup group{ 0, (uint32_t)vertices.size(), 0, (uint32_t)indices.size() };
+		_groups.push_back(group);
 	}
 
 	_vertices = vertices;
 	_indices = indices;
 
 	if (calculateTangents) _CalculateTangents();
+	if (createBounds) CreateBounds();
 
 	return CreateBuffer(false);
 }
 
-int StaticMesh::LoadDynamic(std::vector<Vertex> &vertices, std::vector<uint32_t> &indices, bool createGroup, bool calculateTangents)
+int StaticMesh::LoadDynamic(std::vector<Vertex> &vertices, std::vector<uint32_t> &indices, bool createGroup, bool calculateTangents, bool createBounds)
 {
 	if (createGroup)
 	{
-		_groupOffset.push_back(0);
-		_groupCount.push_back((uint32_t)indices.size());
+		MeshGroup group{ 0, (uint32_t)vertices.size(), 0, (uint32_t)indices.size() };
+		_groups.push_back(group);
 	}
 
 	_vertices = vertices;
 	_indices = indices;
 
 	if (calculateTangents) _CalculateTangents();
+	if (createBounds) CreateBounds();
 
 	_dynamic = true;
 
@@ -127,9 +132,34 @@ int StaticMesh::CreateBuffer(bool dynamic)
 		nullptr, dynamic ? VK_MEMORY_PROPERTY_HOST_COHERENT_BIT | VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT : VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT)) == nullptr)
 		return ENGINE_OUT_OF_RESOURCES;
 
-	DBG_SET_OBJECT_NAME((uint64_t)_buffer->GetHandle(), VK_DEBUG_REPORT_OBJECT_TYPE_BUFFER_EXT, *NString::StringWithFormat(100, "Vertex/Index buffer for %s", GetResourceInfo() ? GetResourceInfo()->name.c_str() : "generated mesh"));
+	VK_DBG_SET_OBJECT_NAME((uint64_t)_buffer->GetHandle(), VK_DEBUG_REPORT_OBJECT_TYPE_BUFFER_EXT, *NString::StringWithFormat(100, "Vertex/Index buffer for %s", GetResourceInfo() ? GetResourceInfo()->name.c_str() : "generated mesh"));
 
 	return ENGINE_OK;
+}
+
+void StaticMesh::CreateBounds()
+{
+	vec3 boxMax{ 0.f };
+	vec3 boxMin{ 0.f };
+	vec3 center{ 0.f };
+	float radius2{ 0.f };
+
+	for (Vertex &v : _vertices)
+	{
+		center += v.position;
+		boxMax = min(boxMax, v.position);
+		boxMax = max(boxMax, v.position);
+	}
+
+	center /= (float)_vertices.size();
+
+	for (Vertex &v : _vertices)
+	{
+		float dist = distance2(center, v.position);
+		if (dist > radius2) radius2 = dist;
+	}
+
+	_bounds.Init(center, boxMin, boxMax, sqrtf(radius2));
 }
 
 void StaticMesh::UpdateIndices(std::vector<uint32_t> &indices)
@@ -156,7 +186,7 @@ StaticMesh::~StaticMesh() noexcept
 
 VkDeviceSize StaticMesh::GetRequiredMemorySize()
 {
-	VkDeviceSize size = sizeof(Vertex) * _vertices.size() + sizeof(uint32_t) * _indices.size();
+	VkDeviceSize size{ sizeof(Vertex) * _vertices.size() + sizeof(uint32_t) * _indices.size() };
 	if (size % 256)
 	{
 		size = size / 256;
@@ -169,8 +199,11 @@ bool StaticMesh::Upload(Buffer *buffer)
 {
 	if (buffer == nullptr)
 	{
-		if(_buffer == nullptr)
+		if (_buffer == nullptr)
+		{
+			Logger::Log(SM_MESH_MODULE, LOG_CRITICAL, "Upload failed: no buffer available and none supplied");
 			return false;
+		}
 	}
 	else
 		_buffer = buffer;
@@ -204,10 +237,10 @@ bool StaticMesh::Upload(Buffer *buffer)
 
 VkDescriptorSet StaticMesh::CreateDescriptorSet(VkDescriptorPool pool, Buffer *uniform)
 {
-	VkDescriptorSet ret;
-	VkDescriptorSetLayout objectDSL = PipelineManager::GetDescriptorSetLayout(DESC_LYT_Object);
+	VkDescriptorSet ret{};
+	VkDescriptorSetLayout objectDSL{ PipelineManager::GetDescriptorSetLayout(DESC_LYT_Object) };
 
-	VkDescriptorSetAllocateInfo allocInfo = {};
+	VkDescriptorSetAllocateInfo allocInfo{};
 	allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
 	allocInfo.descriptorPool = pool;
 	allocInfo.descriptorSetCount = 1;
@@ -219,109 +252,137 @@ VkDescriptorSet StaticMesh::CreateDescriptorSet(VkDescriptorPool pool, Buffer *u
 		return VK_NULL_HANDLE;
 	}
 
-	VkDescriptorBufferInfo bufferInfo = {};
+	VkDescriptorBufferInfo bufferInfo{};
 	bufferInfo.buffer = uniform->GetHandle();
 	bufferInfo.offset = uniform->GetParentOffset();
 	bufferInfo.range = sizeof(ObjectData);
 
-	VkWriteDescriptorSet descriptorWrite = {};
-	descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-	descriptorWrite.dstSet = ret;
-	descriptorWrite.dstBinding = 0;
-	descriptorWrite.dstArrayElement = 0;
-	descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-	descriptorWrite.descriptorCount = 1;
-	descriptorWrite.pBufferInfo = &bufferInfo;
-	descriptorWrite.pImageInfo = nullptr;
-	descriptorWrite.pTexelBufferView = nullptr;
-
+	VkWriteDescriptorSet descriptorWrite{};
+	VKUtil::WriteDS(&descriptorWrite, 1, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, &bufferInfo, ret, 0);	
 	vkUpdateDescriptorSets(VKUtil::GetDevice(), 1, &descriptorWrite, 0, nullptr);
 
 	return ret;
 }
 
-bool StaticMesh::BuildCommandBuffers(NArray<Material *> &_materials, VkDescriptorSet descriptorSet, VkCommandBuffer &depthCmdBuffer, VkCommandBuffer &sceneCmdBuffer)
+bool StaticMesh::BuildDrawables(NArray<Material *> &materials, VkDescriptorSet descriptorSet, NArray<Drawable> &drawables, bool buildDepth, bool buildBounds)
 {
-	VkDescriptorSet sceneDescriptorSet = Renderer::GetInstance()->GetSceneDescriptorSet();
+	bool add{ drawables.Count() == 0 };
+	Drawable tempDrawable{};
+	VkDescriptorSet sceneDescriptorSet{ Renderer::GetInstance()->GetSceneDescriptorSet() };
 
-	VkCommandBufferInheritanceInfo depthInheritanceInfo = {};
-	depthInheritanceInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO;
-	depthInheritanceInfo.occlusionQueryEnable = VK_FALSE;
-	depthInheritanceInfo.renderPass = RenderPassManager::GetRenderPass(RP_Depth);
-	depthInheritanceInfo.subpass = 0;
-	depthInheritanceInfo.framebuffer = Renderer::GetInstance()->GetDepthFramebuffer();
-
-	VkCommandBufferBeginInfo beginInfo = {};
+	VkCommandBufferBeginInfo beginInfo{};
 	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 	beginInfo.flags = VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT | VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT;
-	beginInfo.pInheritanceInfo = &depthInheritanceInfo;
-
-	if (depthCmdBuffer != VK_NULL_HANDLE)
+	
+	for (size_t i = 0; i < _groups.size(); ++i)
 	{
-		if (vkBeginCommandBuffer(depthCmdBuffer, &beginInfo) != VK_SUCCESS)
+		Drawable &drawable = add ? tempDrawable : drawables[i];
+		drawable.sceneCommandBuffer = Renderer::GetInstance()->CreateMeshCommandBuffer();
+		drawable.depthCommandBuffer = VK_NULL_HANDLE;
+		drawable.transparent = materials[i]->IsTransparent();
+
+		if (buildBounds)
+			_BuildBounds((uint32_t)i, drawable.bounds);
+
+		if (buildDepth)
 		{
-			Logger::Log(SM_MESH_MODULE, LOG_CRITICAL, "vkBeginCommandBuffer (depth) call failed");
+			drawable.depthCommandBuffer = Renderer::GetInstance()->CreateMeshCommandBuffer();
+
+			VkCommandBufferInheritanceInfo depthInheritanceInfo{};
+			depthInheritanceInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO;
+			depthInheritanceInfo.occlusionQueryEnable = VK_FALSE;
+			depthInheritanceInfo.renderPass = RenderPassManager::GetRenderPass(RP_Depth);
+			depthInheritanceInfo.subpass = 0;
+			depthInheritanceInfo.framebuffer = Renderer::GetInstance()->GetDepthFramebuffer();
+
+			beginInfo.pInheritanceInfo = &depthInheritanceInfo;
+
+			if (vkBeginCommandBuffer(drawable.depthCommandBuffer, &beginInfo) != VK_SUCCESS)
+			{
+				Logger::Log(SM_MESH_MODULE, LOG_CRITICAL, "vkBeginCommandBuffer (depth) call failed");
+				return false;
+			}
+
+			VK_DBG_MARKER_INSERT(drawable.depthCommandBuffer, _resourceInfo ? _resourceInfo->name.c_str() : "generated mesh", vec4(0.0, 0.5, 1.0, 1.0));
+
+			vkCmdBindVertexBuffers(drawable.depthCommandBuffer, 0, 1, &_buffer->GetHandle(), &_vertexOffset);
+			vkCmdBindIndexBuffer(drawable.depthCommandBuffer, _buffer->GetHandle(), _indexOffset, VK_INDEX_TYPE_UINT32);
+
+			PipelineId id{ _depthPipelineId };
+			if (materials[i]->HasNormalMap())
+				id = (PipelineId)(_depthPipelineId + 1);
+
+			vkCmdBindPipeline(drawable.depthCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, PipelineManager::GetPipeline(id));
+			vkCmdBindDescriptorSets(drawable.depthCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, PipelineManager::GetPipelineLayout(_depthPipelineLayoutId), 0, 1, &sceneDescriptorSet, 0, nullptr);
+			vkCmdBindDescriptorSets(drawable.depthCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, PipelineManager::GetPipelineLayout(_depthPipelineLayoutId), 1, 1, &descriptorSet, 0, nullptr);
+			
+			materials[i]->BindNormal(drawable.depthCommandBuffer);
+
+			vkCmdDrawIndexed(drawable.depthCommandBuffer, _groups[i].indexCount, 1, _groups[i].indexOffset, 0, 0);
+
+			if (vkEndCommandBuffer(drawable.depthCommandBuffer) != VK_SUCCESS)
+			{
+				Logger::Log(SM_MESH_MODULE, LOG_CRITICAL, "vkEndCommandBuffer (depth) call failed");
+				return false;
+			}
+		}
+
+		VkCommandBufferInheritanceInfo inheritanceInfo{};
+		inheritanceInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO;
+		inheritanceInfo.occlusionQueryEnable = VK_FALSE;
+		inheritanceInfo.renderPass = RenderPassManager::GetRenderPass(RP_Graphics);
+		inheritanceInfo.subpass = 0;
+		inheritanceInfo.framebuffer = Renderer::GetInstance()->GetDrawFramebuffer();
+
+		beginInfo.pInheritanceInfo = &inheritanceInfo;
+
+		if (vkBeginCommandBuffer(drawable.sceneCommandBuffer, &beginInfo) != VK_SUCCESS)
+		{
+			Logger::Log(SM_MESH_MODULE, LOG_CRITICAL, "vkBeginCommandBuffer (scene) call failed");
 			return false;
 		}
 
-		DBG_MARKER_INSERT(depthCmdBuffer, _resourceInfo ? _resourceInfo->name.c_str() : "generated mesh", vec4(0.0, 0.5, 1.0, 1.0));
+		VK_DBG_MARKER_INSERT(drawable.sceneCommandBuffer, _resourceInfo ? _resourceInfo->name.c_str() : "generated mesh", vec4(1.0, 0.5, 0.0, 1.0));
 
-		vkCmdBindVertexBuffers(depthCmdBuffer, 0, 1, &_buffer->GetHandle(), &_vertexOffset);
-		vkCmdBindIndexBuffer(depthCmdBuffer, _buffer->GetHandle(), _indexOffset, VK_INDEX_TYPE_UINT32);
+		vkCmdBindVertexBuffers(drawable.sceneCommandBuffer, 0, 1, &_buffer->GetHandle(), &_vertexOffset);
+		vkCmdBindIndexBuffer(drawable.sceneCommandBuffer, _buffer->GetHandle(), _indexOffset, VK_INDEX_TYPE_UINT32);
 
-		vkCmdBindPipeline(depthCmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, PipelineManager::GetPipeline(_depthPipelineId));
-		vkCmdBindDescriptorSets(depthCmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, PipelineManager::GetPipelineLayout(_depthPipelineLayoutId), 0, 1, &sceneDescriptorSet, 0, nullptr);
-		vkCmdBindDescriptorSets(depthCmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, PipelineManager::GetPipelineLayout(_depthPipelineLayoutId), 1, 1, &descriptorSet, 0, nullptr);
+		materials[i]->Enable(drawable.sceneCommandBuffer);
 
-		for (size_t i = 0; i < _groupCount.size(); ++i)
-			vkCmdDrawIndexed(depthCmdBuffer, _groupCount[i], 1, _groupOffset[i], 0, 0);
+		vkCmdBindDescriptorSets(drawable.sceneCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, materials[i]->GetPipelineLayout(), 0, 1, &sceneDescriptorSet, 0, nullptr);
+		vkCmdBindDescriptorSets(drawable.sceneCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, materials[i]->GetPipelineLayout(), 1, 1, &descriptorSet, 0, nullptr);
 
-		if (vkEndCommandBuffer(depthCmdBuffer) != VK_SUCCESS)
+		vkCmdDrawIndexed(drawable.sceneCommandBuffer, _groups[i].indexCount, 1, _groups[i].indexOffset, 0, 0);
+
+		if (vkEndCommandBuffer(drawable.sceneCommandBuffer) != VK_SUCCESS)
 		{
-			Logger::Log(SM_MESH_MODULE, LOG_CRITICAL, "vkEndCommandBuffer (depth) call failed");
+			Logger::Log(SM_MESH_MODULE, LOG_CRITICAL, "vkEndCommandBuffer (scene) call failed");
 			return false;
 		}
-	}
 
-	// Draw command buffer
-
-	VkCommandBufferInheritanceInfo inheritanceInfo = {};
-	inheritanceInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO;
-	inheritanceInfo.occlusionQueryEnable = VK_FALSE;
-	inheritanceInfo.renderPass = RenderPassManager::GetRenderPass(RP_Graphics);
-	inheritanceInfo.subpass = 0;
-	inheritanceInfo.framebuffer = Renderer::GetInstance()->GetDrawFramebuffer();
-
-	beginInfo.pInheritanceInfo = &inheritanceInfo;
-
-	if (vkBeginCommandBuffer(sceneCmdBuffer, &beginInfo) != VK_SUCCESS)
-	{
-		Logger::Log(SM_MESH_MODULE, LOG_CRITICAL, "vkBeginCommandBuffer (scene) call failed");
-		return false;
-	}
-
-	DBG_MARKER_INSERT(sceneCmdBuffer, _resourceInfo ? _resourceInfo->name.c_str() : "generated mesh", vec4(1.0, 0.5, 0.0, 1.0));
-
-	vkCmdBindVertexBuffers(sceneCmdBuffer, 0, 1, &_buffer->GetHandle(), &_vertexOffset);
-	vkCmdBindIndexBuffer(sceneCmdBuffer, _buffer->GetHandle(), _indexOffset, VK_INDEX_TYPE_UINT32);
-
-	for (size_t i = 0; i < _groupCount.size(); ++i)
-	{
-		_materials[i]->Enable(sceneCmdBuffer);
-
-		vkCmdBindDescriptorSets(sceneCmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, _materials[i]->GetPipelineLayout(), 0, 1, &sceneDescriptorSet, 0, nullptr);
-		vkCmdBindDescriptorSets(sceneCmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, _materials[i]->GetPipelineLayout(), 1, 1, &descriptorSet, 0, nullptr);
-
-		vkCmdDrawIndexed(sceneCmdBuffer, _groupCount[i], 1, _groupOffset[i], 0, 0);
-	}
-
-	if (vkEndCommandBuffer(sceneCmdBuffer) != VK_SUCCESS)
-	{
-		Logger::Log(SM_MESH_MODULE, LOG_CRITICAL, "vkEndCommandBuffer (scene) call failed");
-		return false;
+		if (add) drawables.Add(drawable);
 	}
 
 	return true;
+}
+
+void StaticMesh::DrawShadow(VkCommandBuffer commandBuffer, uint32_t shadowId, VkDescriptorSet descriptorSet) noexcept
+{
+	VK_DBG_MARKER_INSERT(commandBuffer, _resourceInfo ? _resourceInfo->name.c_str() : "generated mesh", vec4(0.0, 0.5, 1.0, 1.0));
+
+	vkCmdBindVertexBuffers(commandBuffer, 0, 1, &_buffer->GetHandle(), &_vertexOffset);
+	vkCmdBindIndexBuffer(commandBuffer, _buffer->GetHandle(), _indexOffset, VK_INDEX_TYPE_UINT32);
+
+	vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, PipelineManager::GetPipeline(PIPE_Shadow));
+
+	VkDescriptorSet matricesDS = ShadowRenderer::GetMatricesDescriptorSet();
+	vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, PipelineManager::GetPipelineLayout(PIPE_LYT_Shadow), 0, 1, &matricesDS, 0, nullptr);
+	vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, PipelineManager::GetPipelineLayout(PIPE_LYT_Shadow), 1, 1, &descriptorSet, 0, nullptr);
+
+	vkCmdPushConstants(commandBuffer, PipelineManager::GetPipelineLayout(PIPE_LYT_Shadow), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(uint32_t), &shadowId);
+
+	for (size_t i = 0; i < _groups.size(); ++i)
+		vkCmdDrawIndexed(commandBuffer, _groups[i].indexCount, 1, _groups[i].indexOffset, 0, 0);
 }
 
 void StaticMesh::_CalculateTangents()
@@ -355,4 +416,33 @@ void StaticMesh::_CalculateTangents()
 
 	for (size_t i = 0; i < _vertices.size(); i++)
 		_vertices[i].tangent = normalize(_vertices[i].tangent);
+}
+
+void StaticMesh::_BuildBounds(uint32_t group, NBounds &bounds)
+{
+	vec3 boxMax{ 0.f };
+	vec3 boxMin{ 0.f };
+	vec3 center{ 0.f };
+	float radius2{ 0.f };
+
+	if (!_vertices.size())
+		return;
+
+	for (Vertex &v : _vertices)
+	{
+		center += v.position;
+		boxMax = min(boxMax, v.position);
+		boxMax = max(boxMax, v.position);
+	}
+
+	center /= (float)_vertices.size();
+
+	for (uint32_t i = 0; i < _groups[group].indexCount; ++i)
+	{
+		Vertex &v = _vertices[_indices[_groups[group].indexOffset + i]];
+		float dist = distance2(center, v.position);
+		if (dist > radius2) radius2 = dist;
+	}
+
+	bounds.Init(center, boxMin, boxMax, sqrtf(radius2));
 }

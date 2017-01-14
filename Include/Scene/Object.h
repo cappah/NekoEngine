@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -42,7 +42,9 @@
 #include <vector>
 
 #include <Engine/Engine.h>
+#include <Runtime/NBounds.h>
 #include <Renderer/Renderer.h>
+#include <Renderer/Drawable.h>
 #include <Renderer/StaticMesh.h>
 #include <Renderer/Material.h>
 #include <Scene/ObjectComponent.h>
@@ -63,23 +65,13 @@ typedef std::pair<ArgumentMapType::iterator, ArgumentMapType::iterator> Argument
 class ObjectInitializer
 {
 public:
-	ObjectInitializer() :
-		id(8000),
-		parent(nullptr),
-		name("unnamed"),
-		position(0.f),
-		rotation(0.f),
-		scale(1.f),
-		color(0.f)
-	{ }
+	ENGINE_API ObjectInitializer();
 
-	int32_t id;
-	class Object *parent;
+	uint32_t id;
 	std::string name;
 	glm::vec3 position;
 	glm::vec3 rotation;
 	glm::vec3 scale;
-	glm::vec3 color;
 	ArgumentMapType arguments;
 };
 
@@ -89,11 +81,16 @@ public:
 	ENGINE_API Object() noexcept;
 	ENGINE_API Object(ObjectInitializer *initializer) noexcept;
 	 
-	ENGINE_API Object *GetParent() { return _parent; }
-	ENGINE_API int32_t GetId() noexcept { return _id; }
+	ENGINE_API uint32_t GetId() const noexcept { return _id; }
 	ENGINE_API NString &GetName() noexcept { return _name; }
-	ENGINE_API bool GetNoCull() { return _noCull; }
-	ENGINE_API bool GetUpdateWhilePaused() noexcept { return _updateWhilePaused; }
+	ENGINE_API bool GetNoCull() const { return _noCull; }
+	ENGINE_API bool GetUpdateWhilePaused() const noexcept { return _updateWhilePaused; }
+	ENGINE_API NArray<Drawable> *GetDrawables() const noexcept
+	{
+		for (std::pair<std::string, ObjectComponent *> kvp : _components)
+			if (kvp.second->GetDrawables()) return kvp.second->GetDrawables();
+		return nullptr;
+	}
 
 	ENGINE_API void SetId(int id) noexcept { _id = id; }
 	ENGINE_API void SetPosition(glm::vec3& position) noexcept;
@@ -102,8 +99,9 @@ public:
 	ENGINE_API void SetForwardDirection(ForwardDirection dir) noexcept;
 	ENGINE_API void SetNoCull(bool noCull) { _noCull = noCull; }
 	ENGINE_API void SetUpdateWhilePaused(bool update) { _updateWhilePaused = update; }
+	ENGINE_API void SetBounds(const NBounds &bounds) noexcept;
 
-	ENGINE_API void LookAt(glm::vec3& point) noexcept;
+	ENGINE_API void LookAt(const glm::vec3 &point) noexcept;
 	ENGINE_API void MoveForward(float distance) noexcept;
 	ENGINE_API void MoveRight(float distance) noexcept;
 
@@ -112,16 +110,21 @@ public:
 	ENGINE_API glm::vec3 &GetPosition() noexcept { return _position; }
 	ENGINE_API glm::vec3 &GetRotation() noexcept { return _rotation; }
 	ENGINE_API glm::vec3 &GetScale() noexcept { return _scale; }
-	ENGINE_API glm::mat4 &GetModelMatrix() noexcept { return _objectData.Model; }
+	ENGINE_API glm::mat4 &GetModelMatrix() noexcept { return _modelMatrix; }
+	ENGINE_API const NBounds &GetBounds() const noexcept { return _bounds; }
+	ENGINE_API const NBounds &GetTransformedBounds() const noexcept { return _transformedBounds; }
 
 	ENGINE_API virtual int Load();
 	ENGINE_API virtual int CreateBuffers();
+	ENGINE_API virtual void FixedUpdate() noexcept;
 	ENGINE_API virtual void Update(double deltaTime) noexcept;
 	ENGINE_API virtual bool Unload() noexcept;
 	ENGINE_API virtual bool CanUnload() noexcept;
 
+	ENGINE_API virtual void OnHit(Object *other, glm::vec3 &position);
+
 	ENGINE_API virtual bool BuildCommandBuffers();
-	ENGINE_API virtual void RegisterCommandBuffers();
+	ENGINE_API virtual bool RebuildCommandBuffers();
 
 	ENGINE_API void AddComponent(const char *name, ObjectComponent *comp);
 	ENGINE_API ObjectComponent *GetComponent(const char *name)
@@ -155,30 +158,43 @@ public:
 
 	VkDeviceSize GetRequiredMemorySize();
 
+	ENGINE_API virtual void DrawShadow(VkCommandBuffer commandBuffer, uint32_t shadowId) const noexcept;
 	ENGINE_API virtual void UpdateData(VkCommandBuffer commandBuffer) noexcept;
-	
-	Buffer *GetUniformBuffer() { return _buffer; }
-	void SetUniformBuffer(Buffer *buffer);
 
 protected:
-	Object *_parent;
 	int32_t _id;
 	NString _name;
 	glm::vec3 _position, _rotation, _scale;
 	glm::vec3 _center, _forward, _right;
+	glm::quat _rotationQuaternion;
 	ForwardDirection _objectForward;
 	bool _loaded;
 	std::map<std::string, ObjectComponent*> _components;
-	ObjectData _objectData;
-	glm::mat4 _translationMatrix, _scaleMatrix, _rotationMatrix;
-	bool _updateWhilePaused, _noCull;
+	glm::mat4 _translationMatrix, _scaleMatrix, _modelMatrix;
+	bool _updateWhilePaused, _noCull, _updateModelMatrix, _haveMesh;
 	Buffer *_buffer;
+	NBounds _bounds, _transformedBounds;
 
-	void _UpdateModelMatrix() noexcept
+	void _UpdateModelMatrix()
 	{
-		_objectData.Model = (_translationMatrix * _rotationMatrix) * _scaleMatrix;
-		if (_parent) _objectData.Model = _objectData.Model * _parent->GetModelMatrix();
-		for(std::pair<std::string, ObjectComponent *> kvp : _components) kvp.second->UpdatePosition();
+		if (_haveMesh)
+			_modelMatrix = (_translationMatrix * mat4_cast(_rotationQuaternion)) * _scaleMatrix;
+
+		for (std::pair<std::string, ObjectComponent *> kvp : _components)
+			kvp.second->UpdatePosition();
+
+		_updateModelMatrix = false;
+
+		if (!_bounds.IsValid())
+			return;
+
+		_bounds.Transform(_modelMatrix, &_transformedBounds);
+	}
+
+	inline void _UpdateTransformedBounds() noexcept
+	{
+		if (!_bounds.IsValid()) return;
+		_bounds.Transform(_modelMatrix, &_transformedBounds);
 	}
 };
 

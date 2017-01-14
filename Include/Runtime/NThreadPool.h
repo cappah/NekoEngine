@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -45,22 +45,29 @@
 #include <assert.h>
 #include <condition_variable>
 
+#include <Engine/Debug.h>
+
 class NThreadPool
 {
 public:
-	NThreadPool(size_t numWorkers) :
+	NThreadPool(int32_t numWorkers) :
 		_stop(false),
 		_numWorkers(numWorkers)
 	{
 		assert(numWorkers > 0);
 
 		_stop = false;
+		_active = (bool *)calloc(numWorkers, sizeof(bool));
 		_workers.resize(_numWorkers);
 
-		for (size_t i = 0; i < _numWorkers; ++i)
+		for (int32_t i = 0; i < _numWorkers; ++i)
 		{
-			_workers[i] = std::thread([this]()
+			_workers[i] = std::thread([this, i]()
 			{
+				char name[11];
+				snprintf(name, 11, "Worker #%02d", i);
+				DBG_SET_THREAD_NAME(name);
+
 				while (!this->_stop)
 				{
 					std::function<void(void)> task;
@@ -73,17 +80,20 @@ public:
 						if (this->_stop)
 							return;
 
+						this->_active[i] = true;
+
 						task = std::move(this->_tasks.front());
 						this->_tasks.pop();
 					}
 
 					if (task) task();
+					this->_active[i] = false;
 				}
 			});
 		}
 	}
 
-	size_t GetWorkerCount() { return _numWorkers; }
+	int32_t GetWorkerCount() { return _numWorkers; }
 
 	void Stop()
 	{
@@ -99,7 +109,21 @@ public:
 
 	void Wait()
 	{
-		while (!_tasks.empty());
+		bool working = true;
+
+		while (!_tasks.empty() || working)
+		{
+			working = false;
+
+			for (int32_t i = 0; i < _numWorkers; ++i)
+				if (_active[i]) working = true;
+
+			if (!working && !_tasks.empty())
+			{
+				_condition.notify_one();
+				working = true;
+			}
+		}
 	}
 
 	void Enqueue(std::function<void(void)> task)
@@ -114,13 +138,15 @@ public:
 	{
 		Stop();
 		Join();
+
+		free(_active);
 	}
 
 private:
 	std::vector<std::thread> _workers;
 	std::queue<std::function<void(void)>> _tasks;
-	bool _stop;
-	size_t _numWorkers;
+	bool _stop, *_active;
+	int32_t _numWorkers;
 	std::mutex _taskMutex;
 	std::condition_variable _condition;
 };

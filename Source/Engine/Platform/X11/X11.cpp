@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -42,7 +42,7 @@
 #include <stdio.h>
 
 #include <X11/X.h>
-#include <X11/Xlib-xcb.h>
+#include <X11/Xlib.h>
 #include <X11/Xatom.h>
 #include <X11/Xutil.h>
 #include <X11/keysymdef.h>
@@ -275,6 +275,11 @@ bool Platform::CreateSurface(VkInstance instance, VkSurfaceKHR &surface, Platfor
 	}
 
 	return true;
+}
+
+int Platform::GetSpecialDirectoryPath(SpecialDirectory directory, char *buff, uint32_t buffLen)
+{
+	return ENGINE_FAIL;
 }
 
 void Platform::CleanUp()

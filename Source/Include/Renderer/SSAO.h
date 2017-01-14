@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -76,21 +76,20 @@ public:
 	static VkImageView GetAOImageView();
 
 	static int BuildCommandBuffer();
-	static void Resize(int width, int height) noexcept;
 	static void UpdateData(VkCommandBuffer cmdBuffer) noexcept;
 
 	static VkCommandBuffer GetCommandBuffer() noexcept;
+
+	static void ScreenResized() noexcept;
 
 	static void Release();
 
 private:
 	static void _CreateTextures();
-	static int _CreatePipelines();
+	static int _CreatePipeline();
+	static int _CreatePipelineLayout();
 	static int _CreateDescriptorSets();
+	static void _UpdateDescriptorSets();
 	static bool _CreateRenderPass();
 	static bool _CreateFramebuffers();
-
-	bool _GenerateTextures();
-	bool _AttachTextures();
-	void _DeleteTextures(bool noise);
 };

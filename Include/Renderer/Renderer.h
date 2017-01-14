@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -48,7 +48,8 @@
 #include <Renderer/Buffer.h>
 #include <Renderer/Swapchain.h>
 
-#define MAX_INFLIGHT_COMMAND_BUFFERS	6
+#define MAX_INFLIGHT_COMMAND_BUFFERS	12
+#define TEMPORARY_BUFFER_SIZE			2097152		// 2 MB
 
 #ifdef ENGINE_INTERNAL
 struct QueueFamilyIndices
@@ -78,24 +79,28 @@ typedef struct LIGHT
 
 typedef struct OBJECT_DATA
 {
-	glm::mat4 Model;
-	glm::mat4 ModelViewProjection;
-	glm::mat4 Normal;
+	glm::mat4 model;
+	glm::mat4 modelViewProjection;
+	glm::mat4 normal;
+	uint32_t objectId;
 	// padding
-	glm::mat4 p2;
+	glm::vec3 p0;
+	glm::vec4 p1, p2, p3;
 } ObjectData;
 
 typedef struct SCENE_DATA
 {
-	glm::mat4 View;
-	glm::mat4 Projection;
-	glm::vec4 Ambient;
-	glm::vec4 CameraPosition;
-	glm::ivec2 ScreenSize;
-	int32_t LightCount;
-	int32_t NumberOfTilesX;
+	glm::mat4 view;
+	glm::mat4 projection;
+	glm::vec4 ambient;
+	glm::vec4 cameraPosition;
+	glm::ivec2 screenSize;
+	int32_t lightCount;
+	int32_t numberOfTilesX;
+	int32_t numSamples;
+	float gamma;
 	// padding
-	glm::vec4 p0;
+	glm::vec2 p0;
 	glm::mat4 p1;
 } SceneData;
 
@@ -126,15 +131,21 @@ public:
 	void FreeMeshDescriptorPool(VkDescriptorPool pool);
 
 	Buffer *GetSceneDataBuffer() { return _buffer; }
+	class Texture *GetBlankTexture() { return _blankTexture; }
+	VkDescriptorSet GetBlankTextureDescriptorSet() { return _blankTextureDescriptorSet; }
 
 	VkImage GetRenderTargetImage();
 	VkImage GetDepthStencilImage();
-	VkImage GetNormalBrightImage();
-	VkImage GetMSAANormalBrightImage();
+	VkImage GetNormalImage();
+	VkImage GetMSAANormalImage();
+	VkImage GetBrightnessImage();
+	VkImage GetMSAABrightnessImage();
 	VkImageView GetRenderTargetImageView();
 	VkImageView GetDepthStencilImageView();
-	VkImageView GetNormalBrightImageView();
-	VkImageView GetMSAANormalBrightImageView();
+	VkImageView GetNormalImageView();
+	VkImageView GetMSAANormalImageView();
+	VkImageView GetBrightnessImageView();
+	VkImageView GetMSAABrightnessImageView();
 
 	VkImageView GetDepthImageView();
 	VkImageView GetStencilImageView();
@@ -149,30 +160,34 @@ public:
 
 	VkDescriptorSet GetSceneDescriptorSet() { return _sceneDescriptorSet; }
 
-	void AddDepthCommandBuffer(VkCommandBuffer buffer) { _secondaryDepthCommandBuffers.Add(buffer); _rebuildDepthCB = true; }
-	void AddSceneCommandBuffer(VkCommandBuffer buffer) { _secondarySceneCommandBuffers.Add(buffer); _rebuildSceneCB = true; }
-	void AddGUICommandBuffer(VkCommandBuffer buffer) { _secondaryGuiCommandBuffers.Add(buffer); _rebuildGUICB = true; }
+	void AddDepthCommandBuffer(VkCommandBuffer buffer) { _secondaryDepthCommandBuffers.Add(buffer); }
+	void AddSceneCommandBuffer(VkCommandBuffer buffer) { _secondarySceneCommandBuffers.Add(buffer); }
+	void AddGUICommandBuffer(VkCommandBuffer buffer) { _secondaryGuiCommandBuffers.Add(buffer); }
 
-//	void RemoveDepthCommandBuffer(VkCommandBuffer buffer)
-//	{ _secondaryDepthCommandBuffers.erase(std::remove(_secondaryDepthCommandBuffers.begin(), _secondaryDepthCommandBuffers.end(), buffer), _secondaryDepthCommandBuffers.end()); _rebuildDepthCB = true; }
-//	void RemoveSceneCommandBuffer(VkCommandBuffer buffer)
-//	{ _secondarySceneCommandBuffers.erase(std::remove(_secondarySceneCommandBuffers.begin(), _secondarySceneCommandBuffers.end(), buffer), _secondarySceneCommandBuffers.end()); _rebuildSceneCB = true; }
-//	void RemoveGUICommandBuffer(VkCommandBuffer buffer)
-//	{ _secondaryGuiCommandBuffers.erase(std::remove(_secondaryGuiCommandBuffers.begin(), _secondaryGuiCommandBuffers.end(), buffer), _secondaryGuiCommandBuffers.end()); _rebuildGUICB = true; }
+	void AddParticleDrawCommandBuffer(VkCommandBuffer buffer) { _particleDrawCommandBuffers.Add(buffer); }
+	void RemoveParticleDrawCommandBuffer(VkCommandBuffer buffer) { size_t id = _particleDrawCommandBuffers.Find(buffer); if(id != NArray<VkCommandBuffer>::NotFound) _particleDrawCommandBuffers.Remove(id); }
 
-	void ResetDepthCommandBuffers() { _secondaryDepthCommandBuffers.Clear(); }
-	void ResetSceneCommandBuffers() { _secondarySceneCommandBuffers.Clear(); }
-	void ResetGUICommandBuffers() { _secondaryGuiCommandBuffers.Clear(); }
+	void AddComputeCommandBuffer(VkCommandBuffer buffer) { _computeCommandBuffers.Add(buffer); }
+	void RemoveComputeCommandBuffer(VkCommandBuffer buffer) { size_t id = _computeCommandBuffers.Find(buffer); if(id != NArray<VkCommandBuffer>::NotFound) _computeCommandBuffers.Remove(id); }
+
+	void ResetDepthCommandBuffers() { _secondaryDepthCommandBuffers.Clear(false); }
+	void ResetSceneCommandBuffers() { _secondarySceneCommandBuffers.Clear(false); }
+	void ResetGUICommandBuffers() { _secondaryGuiCommandBuffers.Clear(false); }
+
+	void DrawBounds(const NBounds &bounds) { _drawBoundsList.Add(&bounds); }
+
+	// WARNING: THE RETURNED BUFFER MUST NOT BE FREED. IT WILL BE FREED WHEN THE NEXT FRAME STARTS
+	Buffer *GetTemporaryBuffer(VkDeviceSize size);
 
 	Buffer *GetStagingBuffer(VkDeviceSize size);
 	void FreeStagingBuffer(Buffer *buffer);
 
-	Light *AllocLight();
-	Light *GetLight(uint32_t id);
-	void FreeLight(Light *light);
-	int32_t GetNumLights() { return _sceneData.LightCount; }
+	int32_t AllocLight();
+	Light *GetLight(int32_t id);
+	void FreeLight(int32_t id);
+	int32_t GetNumLights() { return _sceneData.lightCount; }
 
-	void SetAmbientColor(float r, float g, float b, float intensity) { _sceneData.Ambient = glm::vec4(r, g, b, intensity); };
+	void SetAmbientColor(float r, float g, float b, float intensity) { _sceneData.ambient = glm::vec4(r, g, b, intensity); };
 
 protected:
 	Renderer();
@@ -195,21 +210,26 @@ private:
 	VkFramebuffer _framebuffer, _depthFramebuffer, _guiFramebuffer;
 	VkSampler _textureSampler, _nearestSampler, _depthSampler;
 
-	class Texture *_colorTarget, *_depthTarget, *_normalBrightTarget;
-	class Texture *_msaaColorTarget, *_msaaNormalBrightTarget;
+	class Texture *_colorTarget, *_depthTarget, *_normalTarget, *_brightnessTarget;
+	class Texture *_msaaColorTarget, *_msaaNormalTarget, *_msaaBrightnessTarget;
 
 	VkDescriptorPool _descriptorPool, _computeDescriptorPool;
 	VkDescriptorSetLayout _sceneDescriptorSetLayout, _cullingDescriptorSetLayout, _loadDescriptorSetLayout;
-	VkDescriptorSet _sceneDescriptorSet, _cullingDescriptorSet, _loadDescriptorSet;
+	VkDescriptorSet _sceneDescriptorSet, _cullingDescriptorSet, _loadDescriptorSet, _blankTextureDescriptorSet;
 
 	VkCommandBuffer _cullingCommandBuffer, _loadingCommandBuffer;
-	NArray<VkCommandBuffer> _presentCommandBuffers;
-	NArrayTS<VkCommandBuffer> _secondaryDepthCommandBuffers, _secondarySceneCommandBuffers, _secondaryGuiCommandBuffers;
+	NArray<VkCommandBuffer> _presentCommandBuffers, _computeCommandBuffers;
+	NArray<VkCommandBuffer> _secondaryDepthCommandBuffers, _secondarySceneCommandBuffers, _secondaryGuiCommandBuffers;
 
-	VkCommandBuffer _depthCommandBuffers[MAX_INFLIGHT_COMMAND_BUFFERS], _sceneCommandBuffers[MAX_INFLIGHT_COMMAND_BUFFERS], _guiCommandBuffers[MAX_INFLIGHT_COMMAND_BUFFERS];
+	VkCommandBuffer _shadowCommandBuffers[MAX_INFLIGHT_COMMAND_BUFFERS], _depthCommandBuffers[MAX_INFLIGHT_COMMAND_BUFFERS], _sceneCommandBuffers[MAX_INFLIGHT_COMMAND_BUFFERS],
+		_guiCommandBuffers[MAX_INFLIGHT_COMMAND_BUFFERS], _updateCommandBuffers[MAX_INFLIGHT_COMMAND_BUFFERS], _drawBoundsCommandBuffers[MAX_INFLIGHT_COMMAND_BUFFERS];
+	Buffer *_temporaryBuffer, *_tempBuffers[MAX_INFLIGHT_COMMAND_BUFFERS];
+	VkDeviceSize _tempBufferOffsets[MAX_INFLIGHT_COMMAND_BUFFERS];
+	NArray<Buffer *> _allocatedBuffers[MAX_INFLIGHT_COMMAND_BUFFERS];
 
-	bool _rebuildDepthCB, _rebuildSceneCB, _rebuildGUICB;
-	int _currentDepthCB, _currentSceneCB, _currentGUICB;
+	NArray<VkCommandBuffer> _particleDrawCommandBuffers;
+
+	int _currentBufferIndex;
 
 	VkSemaphore _imageAvailableSemaphore,
 		_depthFinishedSemaphore,
@@ -221,8 +241,11 @@ private:
 
 	Buffer *_buffer, *_stagingBuffer;
 	SceneData _sceneData;
+	class Texture *_blankTexture;
 
 	uint32_t _nFrames;
+
+	NArray<const NBounds *> _drawBoundsList;
 
 	virtual void _RecreateSwapchain();
 
@@ -243,9 +266,11 @@ private:
 	bool _BuildDepthCommandBuffer();
 	bool _BuildSceneCommandBuffer();
 	bool _BuildGUICommandBuffer();
+	bool _BuildBoundsDrawCommandBuffer();
+
+	void _UpdateDescriptorSets();
 
 	void _DestroyFramebuffers();
-	void _DestroyDescriptorSets();
 	void _DestroyCommandBuffers();
 
 	void _Submit(uint32_t imageIndex);

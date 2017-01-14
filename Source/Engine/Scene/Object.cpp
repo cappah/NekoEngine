@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -42,6 +42,7 @@
 #include <vector>
 
 #include <Engine/Engine.h>
+#include <Engine/EventManager.h>
 #include <Engine/CameraManager.h>
 #include <Engine/ResourceManager.h>
 #include <Engine/EventManager.h>
@@ -55,8 +56,17 @@ using namespace std;
 using namespace glm;
 
 static ObjectInitializer _objDefaultInitializer;
+static uint32_t _nextObjectId{ 0 };
 
 ENGINE_REGISTER_OBJECT_CLASS(Object)
+
+ObjectInitializer::ObjectInitializer() :
+	id(_nextObjectId),
+	name("unnamed_" + _nextObjectId++),
+	position(0.f),
+	rotation(0.f),
+	scale(1.f)
+{ }
 
 Object::Object(ObjectInitializer *initializer) noexcept
 {
@@ -69,22 +79,21 @@ Object::Object(ObjectInitializer *initializer) noexcept
 	}
 	
 	_id = -1;
-	_parent = initializer->parent;
+	_rotationQuaternion = quat();
 	_translationMatrix = mat4();
-	_rotationMatrix = mat4();
 	_scaleMatrix = mat4();
 	_loaded = false;
 	_updateWhilePaused = false;
 	_noCull = false;
 	_buffer = nullptr;
+	_updateModelMatrix = false;
+	_haveMesh = false;
 
-	memset(&_objectData, 0x0, sizeof(ObjectData));
-	
 	SetForwardDirection(ForwardDirection::PositiveZ);
 	SetPosition(initializer->position);
 	SetRotation(initializer->rotation);
 	SetScale(initializer->scale);
-	
+
 	_id = initializer->id;
 	_name = initializer->name;
 
@@ -115,27 +124,26 @@ void Object::SetPosition(vec3 &position) noexcept
 {
 	_position = position;
 	_translationMatrix = translate(mat4(), _position);
-	_UpdateModelMatrix();
+	_updateModelMatrix = true;
+
+	EventManager::Broadcast(NE_EVT_OBJ_MOVED, this);
 }
 
 void Object::SetRotation(vec3 &rotation) noexcept
 {
 	_rotation = rotation;
-
-	_rotationMatrix = rotate(mat4(), radians(_rotation.z), vec3(0.f, 0.f, 1.f));
-	_rotationMatrix = rotate(_rotationMatrix, radians(_rotation.x), vec3(1.f, 0.f, 0.f));
-	_rotationMatrix = rotate(_rotationMatrix, radians(_rotation.y), vec3(0.f, 1.f, 0.f));
+	_rotationQuaternion = rotate(quat(), radians(rotation));
 	
 	SetForwardDirection(_objectForward);
 
-	_UpdateModelMatrix();
+	_updateModelMatrix = true;
 }
 
 void Object::SetScale(vec3 &newScale) noexcept
 {
 	_scale = newScale;
 	_scaleMatrix = scale(mat4(), newScale);
-	_UpdateModelMatrix();
+	_updateModelMatrix = true;
 }
 
 void Object::SetForwardDirection(ForwardDirection dir) noexcept
@@ -170,14 +178,22 @@ void Object::SetForwardDirection(ForwardDirection dir) noexcept
 	
 	_objectForward = dir;
 
-	vec4 fwd = vec4(_forward, 1.f) * _rotationMatrix;
-	vec4 right = vec4(_right, 1.f) * _rotationMatrix;
+	mat4 rotationMatrix = mat4_cast(_rotationQuaternion);
+
+	vec4 fwd = vec4(_forward, 1.f) * rotationMatrix;
+	vec4 right = vec4(_right, 1.f) * rotationMatrix;
 
 	_forward = vec3(fwd.x, fwd.y, fwd.z);
 	_right = vec3(right.x, right.y, right.z);
 }
 
-void Object::LookAt(vec3 &point) noexcept
+void Object::SetBounds(const NBounds &bounds) noexcept
+{
+	_bounds = bounds;
+	_bounds.Transform(_modelMatrix, &_transformedBounds);
+}
+
+void Object::LookAt(const vec3 &point) noexcept
 {
 	vec3 fwd = normalize(point - _position);
 	vec3 dirFwd = vec3(0.f, 0.f, 1.f);
@@ -242,6 +258,8 @@ int Object::Load()
 			return ret;
 	}
 
+	_UpdateModelMatrix();
+
 	_loaded = true;
 
 	return ENGINE_OK;
@@ -255,6 +273,15 @@ int Object::CreateBuffers()
 		ret = kvp.second->CreateBuffers();
 
 	return ret;
+}
+
+void Object::FixedUpdate() noexcept
+{
+	if (!_loaded)
+		return;
+
+	/*for (pair<string, ObjectComponent*> kvp : _components)
+		if (kvp.second->IsEnabled()) kvp.second->Update(deltaTime);*/
 }
 
 void Object::Update(double deltaTime) noexcept
@@ -291,6 +318,15 @@ bool Object::CanUnload() noexcept
 	for (pair<string, ObjectComponent *> kvp : _components)
 		ret = ret && kvp.second->CanUnload();
 	return ret;
+}
+
+void Object::OnHit(Object *other, glm::vec3 &position)
+{
+	if (!_loaded)
+		return;
+
+	for (pair<string, ObjectComponent*> kvp : _components)
+		if (kvp.second->IsEnabled()) kvp.second->OnHit(other, position);
 }
 
 void Object::AddComponent(const char *name, ObjectComponent *comp)
@@ -332,15 +368,21 @@ void Object::Destroy()
 bool Object::BuildCommandBuffers()
 {
 	for (std::pair<std::string, ObjectComponent *> kvp : _components)
-		if (!kvp.second->BuildCommandBuffers())
+		if (!kvp.second->InitDrawables())
 			return false;
+
+	_haveMesh = true;
+	_UpdateModelMatrix();
+
 	return true;
 }
 
-void Object::RegisterCommandBuffers()
+bool Object::RebuildCommandBuffers()
 {
 	for (std::pair<std::string, ObjectComponent *> kvp : _components)
-		kvp.second->RegisterCommandBuffers();
+		if (!kvp.second->RebuildCommandBuffers())
+			return false;
+	return true;
 }
 
 VkDeviceSize Object::GetRequiredMemorySize()
@@ -351,24 +393,19 @@ VkDeviceSize Object::GetRequiredMemorySize()
 	return size;
 }
 
+void Object::DrawShadow(VkCommandBuffer commandBuffer, uint32_t shadowId) const noexcept
+{
+	for (std::pair<std::string, ObjectComponent *> kvp : _components)
+		kvp.second->DrawShadow(commandBuffer, shadowId);
+}
+
 void Object::UpdateData(VkCommandBuffer commandBuffer) noexcept
 {
-	if (_buffer)
-	{
-		Camera *cam = CameraManager::GetActiveCamera();
-		_objectData.ModelViewProjection = cam->GetProjectionMatrix() * (cam->GetView() * _objectData.Model);
-		_objectData.Normal = glm::transpose(glm::inverse(_objectData.Model));
-		_buffer->UpdateData((uint8_t *)&_objectData, 0, sizeof(_objectData), commandBuffer);
-	}
+	if (_updateModelMatrix)
+		_UpdateModelMatrix();
 
 	for (pair<string, ObjectComponent*> kvp : _components)
 		kvp.second->UpdateData(commandBuffer);
-}
-
-void Object::SetUniformBuffer(Buffer *buffer)
-{
-	_buffer = buffer;
-	_buffer->UpdateData((uint8_t *)&_objectData, 0, sizeof(_objectData), VK_NULL_HANDLE);
 }
 
 Object::~Object() noexcept

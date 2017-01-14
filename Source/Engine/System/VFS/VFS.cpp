@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -39,13 +39,21 @@
 
 #include <sys/stat.h>
 #include <dirent.h>
+#include <zlib.h>
 #include <stack>
 
 #include <Engine/Engine.h>
 #include <System/Logger.h>
 #include <System/VFS/VFS.h>
+#include <System/VFS/GZipFile.h>
+#include <System/VFS/BZip2File.h>
+#include <System/VFS/LooseFile.h>
 
-#define VFS_MODULE	"VFS"
+#define COMPRESSED_GZIP		1
+#define COMPRESSED_BZIP2	2
+
+#define VFS_MODULE					"VFS"
+#define VFS_DECOMPRESS_BUFF_SIZE	524288
 
 #if defined(NE_PLATFORM_WINDOWS)
 // Really, M$ ?
@@ -60,18 +68,135 @@ typedef struct DIR_INFO
 	NString prefix;
 } DirInfo;
 
-vector<VFSFile> VFS::_looseFiles;
-vector<VFSArchive *> VFS::_archives;
+static vector<VFSFile *> _looseFiles;
+static vector<VFSArchive *> _archives;
+
+static map<NString, NString> _mountPoints{};
+
+bool __vfs_isCompressed(const char *path, uint8_t *type = NULL)
+{
+	// Try to open normal file
+	FILE *fp{ fopen(path, "rb") };
+
+	if (!fp)
+		return false;
+
+	unsigned char hdr[2];
+
+	if (fread(hdr, sizeof(unsigned char) * 2, 1, fp) != 1)
+	{
+		fclose(fp);
+		return false;
+	}
+
+	fclose(fp);
+	fp = nullptr;
+
+	// Check for GZip header
+	if (hdr[0] == 31 && hdr[1] == 139)
+	{
+		if (type)
+			*type = COMPRESSED_GZIP;
+		return true;
+	}
+
+	// Check for BZip2 header
+	if (hdr[0] == 66 && hdr[1] == 90)
+	{
+		if (type)
+			*type = COMPRESSED_BZIP2;
+		return true;
+	}
+
+	return false;
+}
+
+int __vfs_getLoosePath(const char *vfsPath, char *buff, int32_t buffSize)
+{
+	NString vfsPathStr(vfsPath);
+	char *realDirectory = Engine::GetConfiguration().Engine.DataDirectory;
+
+	memset(buff, 0x0, buffSize);
+
+	for (pair<const NString, NString> &kvp : _mountPoints)
+	{
+		if (vfsPathStr.Contains(kvp.first))
+		{
+			realDirectory = *kvp.second;
+			vfsPathStr = vfsPathStr.Substring(kvp.first.Length());
+			break;
+		}
+	}
+
+	if (snprintf(buff, buffSize, "%s%s", realDirectory, *vfsPathStr) >= buffSize)
+		return ENGINE_FAIL;
+
+	return ENGINE_OK;
+}
 
 int VFS::Initialize()
 {
+	char buff[VFS_MAX_FILE_NAME]{};
+
+	{ // Special directory mount points
+		if (Platform::GetSpecialDirectoryPath(SpecialDirectory::ApplicationData, buff, VFS_MAX_FILE_NAME) != ENGINE_OK)
+		{
+			Logger::Log(VFS_MODULE, LOG_CRITICAL, "Failed to get ApplicationData path");
+			return ENGINE_FAIL;
+		}
+		_mountPoints.insert({ NString("/AppData"), buff });
+		memset(buff, 0x0, VFS_MAX_FILE_NAME);
+
+		if (Platform::GetSpecialDirectoryPath(SpecialDirectory::Documents, buff, VFS_MAX_FILE_NAME) != ENGINE_OK)
+		{
+			Logger::Log(VFS_MODULE, LOG_CRITICAL, "Failed to get Documents path");
+			return ENGINE_FAIL;
+		}
+		_mountPoints.insert({ NString("/Home/Documents"), buff });
+		memset(buff, 0x0, VFS_MAX_FILE_NAME);
+
+		if (Platform::GetSpecialDirectoryPath(SpecialDirectory::Pictures, buff, VFS_MAX_FILE_NAME) != ENGINE_OK)
+		{
+			Logger::Log(VFS_MODULE, LOG_CRITICAL, "Failed to get Pictures path");
+			return ENGINE_FAIL;
+		}
+		_mountPoints.insert({ NString("/Home/Pictures"), buff });
+		memset(buff, 0x0, VFS_MAX_FILE_NAME);
+
+		if (Platform::GetSpecialDirectoryPath(SpecialDirectory::Music, buff, VFS_MAX_FILE_NAME) != ENGINE_OK)
+		{
+			Logger::Log(VFS_MODULE, LOG_CRITICAL, "Failed to get Music path");
+			return ENGINE_FAIL;
+		}
+		_mountPoints.insert({ NString("/Home/Music"), buff });
+		memset(buff, 0x0, VFS_MAX_FILE_NAME);
+
+		if (Platform::GetSpecialDirectoryPath(SpecialDirectory::Home, buff, VFS_MAX_FILE_NAME) != ENGINE_OK)
+		{
+			Logger::Log(VFS_MODULE, LOG_CRITICAL, "Failed to get Home path");
+			return ENGINE_FAIL;
+		}
+		_mountPoints.insert({ NString("/Home"), buff });
+		memset(buff, 0x0, VFS_MAX_FILE_NAME);
+
+		if (Platform::GetSpecialDirectoryPath(SpecialDirectory::Temp, buff, VFS_MAX_FILE_NAME) != ENGINE_OK)
+		{
+			Logger::Log(VFS_MODULE, LOG_CRITICAL, "Failed to get Temp path");
+			return ENGINE_FAIL;
+		}
+		_mountPoints.insert({ NString("/Temp"), buff });
+		memset(buff, 0x0, VFS_MAX_FILE_NAME);
+	}
+
+	memset(buff, 0x0, VFS_MAX_FILE_NAME);
+
 	if (Engine::GetConfiguration().Engine.LoadLooseFiles)
 	{
-		DIR *dir;
-		struct dirent *ent;
-		VFSFile f(FileType::Loose);
-		stack<DirInfo> directories;
-		struct stat st;
+		DIR *dir{ nullptr };
+		struct dirent *ent{ nullptr };
+		VFSFile *f{ nullptr };
+		stack<DirInfo> directories{};
+		struct stat st{};
 
 		directories.push({ Engine::GetConfiguration().Engine.DataDirectory, "" });
 
@@ -109,13 +234,39 @@ int VFS::Initialize()
 					}
 					else if (S_ISREG(st.st_mode))
 					{
-						if (snprintf(f.GetHeader().name, VFS_MAX_FILE_NAME, "%s/%s", *info.prefix, ent->d_name) >= VFS_MAX_FILE_NAME)
+						// check if file is compressed		
+						uint8_t compressedType = 0;
+
+						memset(buff, 0x0, VFS_MAX_FILE_NAME);
+						if (snprintf(buff, VFS_MAX_FILE_NAME, "%s/%s/%s", Engine::GetConfiguration().Engine.DataDirectory, *info.prefix, ent->d_name) >= VFS_MAX_FILE_NAME)
+							return ENGINE_FAIL;
+
+						if (__vfs_isCompressed(buff, &compressedType))
+						{
+							if (compressedType == COMPRESSED_GZIP)
+								f = new GZipFile();
+							else if (compressedType == COMPRESSED_BZIP2)
+								f = new BZip2File();
+							else
+							{
+								Logger::Log(VFS_MODULE, LOG_CRITICAL, "Unknown compression type");
+								closedir(dir);
+								return ENGINE_FAIL;
+							}
+						}
+						else
+							f = new LooseFile();
+
+						if (snprintf(f->GetHeader().name, VFS_MAX_FILE_NAME, "%s/%s", *info.prefix, ent->d_name) >= VFS_MAX_FILE_NAME)
 						{
 							Logger::Log(VFS_MODULE, LOG_CRITICAL, "snprintf() call failed");
 							closedir(dir);
 							return ENGINE_FAIL;
 						}
+
 						_looseFiles.push_back(f);
+
+						f = nullptr;
 					}
 				}
 
@@ -156,14 +307,14 @@ VFSFile *VFS::Open(NString &path)
 	{
 		size_t len = strlen(*path);
 
-		for (VFSFile &file : _looseFiles)
+		for (VFSFile *file : _looseFiles)
 		{
-			if (!strncmp(*path, file.GetHeader().name, len))
+			if (!strncmp(*path, file->GetHeader().name, len))
 			{
-				if (file.Open() != ENGINE_OK)
+				if (file->Open() != ENGINE_OK)
 					return nullptr;
 
-				return &file;
+				return file;
 			}
 		}
 	}
@@ -178,6 +329,27 @@ VFSFile *VFS::Open(NString &path)
 	return nullptr;
 }
 
+VFSFile *VFS::Create(NString &path, bool compress)
+{
+	VFSFile *f{ compress ? (VFSFile *)new GZipFile() : (VFSFile *)new LooseFile() };
+
+	if (snprintf(f->GetHeader().name, VFS_MAX_FILE_NAME, "%s", *path) >= VFS_MAX_FILE_NAME)
+	{
+		Logger::Log(VFS_MODULE, LOG_CRITICAL, "snprintf() call failed");
+		delete f;
+		return nullptr;
+	}
+
+	if (f->Create() != ENGINE_OK)
+	{
+		Logger::Log(VFS_MODULE, LOG_CRITICAL, "Failed to create file [%s]%s", *path, compress ? " (compressed)" : "");
+		delete f;
+		return nullptr;
+	}
+
+	return f;
+}
+
 bool VFS::Exists(NString &path)
 {
 	VFSFile *f = nullptr;
@@ -190,8 +362,22 @@ bool VFS::Exists(NString &path)
 	return false;
 }
 
+void VFS::GetFilesInDirectory(const NString &directory, NArray<VFSFile *> files)
+{
+	for (VFSFile *file : _looseFiles)
+		if (!strncmp(file->GetHeader().name, *directory, directory.Length()))
+			files.Add(file);
+
+	for (VFSArchive *archive : _archives)
+		archive->GetFilesInDirectory(directory, files);
+}
+
 void VFS::Release()
 {
+	for (VFSFile *file : _looseFiles)
+		delete file;
+	_looseFiles.clear();
+
 	for (VFSArchive *archive : _archives)
 		delete archive;
 	_archives.clear();

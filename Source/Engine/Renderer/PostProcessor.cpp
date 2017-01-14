@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -39,9 +39,9 @@
 
 #include <Engine/Engine.h>
 #include <Engine/ResourceManager.h>
-#include <Renderer/Debug.h>
 #include <Renderer/VKUtil.h>
 #include <Renderer/Texture.h>
+#include <Renderer/DebugMarker.h>
 #include <Renderer/PostProcessor.h>
 #include <Renderer/PipelineManager.h>
 #include <Renderer/RenderPassManager.h>
@@ -54,19 +54,26 @@
 
 using namespace glm;
 
+struct FilmGrainData
+{
+	float time;
+};
+
 VkCommandBuffer PostProcessor::_commandBuffer = VK_NULL_HANDLE;
 
 static int _bloomIntensity[3]{ BLOOM_LOW, BLOOM_MED, BLOOM_HIGH };
 
-static VkRenderPass _renderPass = VK_NULL_HANDLE, _dofRenderPass = VK_NULL_HANDLE;
+static VkRenderPass _renderPass = VK_NULL_HANDLE, _dofRenderPass = VK_NULL_HANDLE, _fgRenderPass = VK_NULL_HANDLE;;
 static VkFramebuffer _framebuffer = VK_NULL_HANDLE;
 static VkDescriptorSet _ds[2]{ VK_NULL_HANDLE, VK_NULL_HANDLE };
 static VkDescriptorSet _ppDS[2]{ VK_NULL_HANDLE, VK_NULL_HANDLE };
 static VkDescriptorSet _brightDS{ VK_NULL_HANDLE };
 static VkDescriptorSet _dofDS{ VK_NULL_HANDLE };
+static VkDescriptorSet _fgDS{ VK_NULL_HANDLE };
 static VkDescriptorPool _pool = VK_NULL_HANDLE;
-static VkPipeline _pipeline = VK_NULL_HANDLE, _blurPipeline = VK_NULL_HANDLE, _dofPipeline = VK_NULL_HANDLE;
+static VkPipeline _pipeline = VK_NULL_HANDLE, _blurPipeline = VK_NULL_HANDLE, _dofPipeline = VK_NULL_HANDLE, _fgPipeline = VK_NULL_HANDLE;
 static int _bloomBlurPasses = BLOOM_HIGH;
+static FilmGrainData _filmGrainData{ 0.f };
 
 static Texture *_ppTexture0, *_ppTexture1;
 
@@ -100,7 +107,7 @@ int PostProcessor::Initialize()
 
 bool PostProcessor::BuildCommandBuffer()
 {
-	VkResult result;
+	VkResult result{};
 	bool odd = false;
 	
 	if (_commandBuffer != VK_NULL_HANDLE)
@@ -118,7 +125,7 @@ bool PostProcessor::BuildCommandBuffer()
 		return false;
 	}
 
-	DBG_MARKER_BEGIN(_commandBuffer, "Post processing", vec4(0.56, 0.76, 0.83, 1.0));
+	VK_DBG_MARKER_BEGIN(_commandBuffer, "Post processing", vec4(0.56, 0.76, 0.83, 1.0));
 
 	VkClearValue clearValues[2]{};
 	clearValues[0].color = { { 0.f, 0.f, 0.f, 0.f } };
@@ -214,10 +221,31 @@ bool PostProcessor::BuildCommandBuffer()
 			odd = !odd;
 		}
 
+		// Film Grain
+		if (Engine::GetConfiguration().PostProcessor.FilmGrain)
+		{
+			VKUtil::TransitionImageLayout(odd ? _ppTexture0->GetImage() : _ppTexture1->GetImage(), VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_ASPECT_COLOR_BIT, _commandBuffer);
+			vkCmdClearColorImage(_commandBuffer, odd ? _ppTexture0->GetImage() : _ppTexture1->GetImage(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, &clearColor, 1, &range);
+			VKUtil::TransitionImageLayout(odd ? _ppTexture0->GetImage() : _ppTexture1->GetImage(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, VK_IMAGE_ASPECT_COLOR_BIT, _commandBuffer);
+
+			rpInfo.renderPass = _fgRenderPass;
+			vkCmdBeginRenderPass(_commandBuffer, &rpInfo, VK_SUBPASS_CONTENTS_INLINE);
+
+			vkCmdBindPipeline(_commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, _fgPipeline);
+			vkCmdBindDescriptorSets(_commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, PipelineManager::GetPipelineLayout(PIPE_LYT_FilmGrain), 0, 1, odd ? &_ds[1] : &_ds[0], 0, nullptr);
+			vkCmdBindDescriptorSets(_commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, PipelineManager::GetPipelineLayout(PIPE_LYT_FilmGrain), 1, 1, odd ? &_ppDS[1] : &_ppDS[0], 0, nullptr);
+			vkCmdPushConstants(_commandBuffer, PipelineManager::GetPipelineLayout(PIPE_LYT_FilmGrain), VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(FilmGrainData), &_filmGrainData);
+			vkCmdDraw(_commandBuffer, 3, 1, 0, 0);
+
+			vkCmdEndRenderPass(_commandBuffer);
+
+			odd = !odd;
+		}
+
 		VKUtil::BlitImage(odd ? _ppTexture1->GetImage() : _ppTexture0->GetImage(), Renderer::GetInstance()->GetRenderTargetImage(), Engine::GetScreenWidth(), Engine::GetScreenHeight(), Engine::GetScreenWidth(), Engine::GetScreenHeight(), VK_FILTER_NEAREST, _commandBuffer);
 	}
 
-	DBG_MARKER_END(_commandBuffer);
+	VK_DBG_MARKER_END(_commandBuffer);
 
 	if ((result = vkEndCommandBuffer(_commandBuffer)) != VK_SUCCESS)
 	{
@@ -226,6 +254,41 @@ bool PostProcessor::BuildCommandBuffer()
 	}
 
 	return true;
+}
+
+void PostProcessor::ScreenResized() noexcept
+{
+	if (_renderPass != VK_NULL_HANDLE)
+		vkDestroyRenderPass(VKUtil::GetDevice(), _renderPass, VKUtil::GetAllocator());
+
+	if (_dofRenderPass != VK_NULL_HANDLE)
+		vkDestroyRenderPass(VKUtil::GetDevice(), _dofRenderPass, VKUtil::GetAllocator());
+
+	if (_pipeline != VK_NULL_HANDLE)
+		vkDestroyPipeline(VKUtil::GetDevice(), _pipeline, VKUtil::GetAllocator());
+
+	if (_blurPipeline != VK_NULL_HANDLE)
+		vkDestroyPipeline(VKUtil::GetDevice(), _blurPipeline, VKUtil::GetAllocator());
+
+	if (_dofPipeline != VK_NULL_HANDLE)
+		vkDestroyPipeline(VKUtil::GetDevice(), _dofPipeline, VKUtil::GetAllocator());
+
+	if (_framebuffer != VK_NULL_HANDLE)
+		vkDestroyFramebuffer(VKUtil::GetDevice(), _framebuffer, VKUtil::GetAllocator());
+
+	if (!_CreateRenderPass())
+	{ DIE("Failed to create render pass"); }
+
+	if (_CreatePipeline() != ENGINE_OK)
+	{ DIE("Failed to create pipeline"); }
+
+	if (!_CreateFramebuffers())
+	{ DIE("Failed to create framebuffers"); }
+
+	_UpdateDescriptorSets();
+
+	if (!BuildCommandBuffer())
+	{ DIE("Failed to create command buffer"); }
 }
 
 bool PostProcessor::_CreateRenderPass()
@@ -362,8 +425,8 @@ bool PostProcessor::_CreateRenderPass()
 		return false;
 	}
 
-	subpassDesc.Clear();
-	subpassDepend.Clear();
+	subpassDesc.Clear(false);
+	subpassDepend.Clear(false);
 	
 	{
 		if (Engine::GetConfiguration().PostProcessor.DepthOfField)
@@ -396,6 +459,40 @@ bool PostProcessor::_CreateRenderPass()
 			}
 		}
 	}
+	subpassDesc.Clear(false);
+	subpassDepend.Clear(false);
+
+	{
+		if (Engine::GetConfiguration().PostProcessor.FilmGrain)
+		{
+			subpassDepend.Add(startDependency);
+
+			VkSubpassDescription subpass{};
+			subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+			subpass.colorAttachmentCount = 1;
+			subpass.pColorAttachments = subpassDesc.Count() % 2 ? &ppAttachmentRef0Out : &ppAttachmentRef1Out;
+			subpass.inputAttachmentCount = 2;
+			subpass.pInputAttachments = subpassDesc.Count() % 2 ? ppInAttachments1 : ppInAttachments0;
+			subpass.pDepthStencilAttachment = nullptr;
+			subpass.preserveAttachmentCount = 1;
+			subpass.pPreserveAttachments = &preserve;
+			subpassDesc.Add(subpass);
+
+			endDependency.srcSubpass = (uint32_t)subpassDesc.Count() - 1;
+			subpassDepend.Add(endDependency);
+
+			renderPassInfo.subpassCount = (uint32_t)subpassDesc.Count();
+			renderPassInfo.pSubpasses = *subpassDesc;
+			renderPassInfo.dependencyCount = (uint32_t)subpassDepend.Count();
+			renderPassInfo.pDependencies = *subpassDepend;
+
+			if (vkCreateRenderPass(VKUtil::GetDevice(), &renderPassInfo, VKUtil::GetAllocator(), &_fgRenderPass) != VK_SUCCESS)
+			{
+				Logger::Log(PP_MODULE, LOG_CRITICAL, "Failed to create render pass");
+				return false;
+			}
+		}
+	}
 	
 	return true;
 }
@@ -414,16 +511,10 @@ int PostProcessor::_CreatePipeline()
 	}
 
 	VkPipelineShaderStageCreateInfo fsVertShaderStageInfo{};
-	fsVertShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-	fsVertShaderStageInfo.stage = VK_SHADER_STAGE_VERTEX_BIT;
-	fsVertShaderStageInfo.module = vs->GetHandle();
-	fsVertShaderStageInfo.pName = "main";
+	VKUtil::InitShaderStage(&fsVertShaderStageInfo, VK_SHADER_STAGE_VERTEX_BIT, vs->GetHandle());
 
 	VkPipelineShaderStageCreateInfo hdrFragShaderStageInfo{};
-	hdrFragShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-	hdrFragShaderStageInfo.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
-	hdrFragShaderStageInfo.module = fs->GetHandle();
-	hdrFragShaderStageInfo.pName = "main";
+	VKUtil::InitShaderStage(&hdrFragShaderStageInfo, VK_SHADER_STAGE_FRAGMENT_BIT, fs->GetHandle());
 
 	VkPipelineShaderStageCreateInfo hdrShaderStages[]{ fsVertShaderStageInfo, hdrFragShaderStageInfo };
 
@@ -431,76 +522,34 @@ int PostProcessor::_CreatePipeline()
 	pipelineInfo.pStages = hdrShaderStages;
 
 	VkPipelineVertexInputStateCreateInfo emptyVertexInputInfo{};
-	emptyVertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-	emptyVertexInputInfo.vertexAttributeDescriptionCount = 0;
-	emptyVertexInputInfo.pVertexAttributeDescriptions = nullptr;
-	emptyVertexInputInfo.vertexBindingDescriptionCount = 0;
-	emptyVertexInputInfo.pVertexBindingDescriptions = nullptr;
+	VKUtil::InitVertexInput(&emptyVertexInputInfo);
 	
 	VkPipelineInputAssemblyStateCreateInfo inputAssembly{};
-	inputAssembly.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
-	inputAssembly.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
-	inputAssembly.primitiveRestartEnable = VK_FALSE;
+	VKUtil::InitInputAssembly(&inputAssembly, VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST);
 
 	VkViewport viewport{};
-	viewport.x = 0.f;
-	viewport.y = 0.f;
-	viewport.width = (float)Engine::GetScreenWidth();
-	viewport.height = (float)Engine::GetScreenHeight();
-	viewport.minDepth = 0.f;
-	viewport.maxDepth = 1.f;
+	VKUtil::InitViewport(&viewport, (float)Engine::GetScreenWidth(), (float)Engine::GetScreenHeight());
 
 	VkRect2D scissor{};
-	scissor.offset = { 0, 0 };
-	scissor.extent.width = Engine::GetScreenWidth();
-	scissor.extent.height = Engine::GetScreenHeight();
+	VKUtil::InitScissor(&scissor, Engine::GetScreenWidth(), Engine::GetScreenHeight());
 
 	VkPipelineViewportStateCreateInfo viewportState{};
-	viewportState.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
-	viewportState.viewportCount = 1;
-	viewportState.pViewports = &viewport;
-	viewportState.scissorCount = 1;
-	viewportState.pScissors = &scissor;
+	VKUtil::InitViewportState(&viewportState, 1, &viewport, 1, &scissor);
 
 	VkPipelineRasterizationStateCreateInfo rasterizer{};
-	rasterizer.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
-	rasterizer.depthClampEnable = VK_TRUE;
-	rasterizer.rasterizerDiscardEnable = VK_FALSE;
-	rasterizer.polygonMode = VK_POLYGON_MODE_FILL;
-	rasterizer.lineWidth = 1.f;
-	rasterizer.cullMode = VK_CULL_MODE_NONE;
-	rasterizer.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
-	rasterizer.depthBiasEnable = VK_FALSE;
-	rasterizer.depthBiasConstantFactor = 0.f;
-	rasterizer.depthBiasClamp = 0.f;
-	rasterizer.depthBiasSlopeFactor = 0.f;
+	VKUtil::InitRasterizationState(&rasterizer, VK_POLYGON_MODE_FILL, VK_CULL_MODE_NONE);
 
 	VkPipelineMultisampleStateCreateInfo multisampling{};
-	multisampling.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
-	multisampling.sampleShadingEnable = VK_FALSE;
-	multisampling.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;
+	VKUtil::InitMultisampleState(&multisampling, VK_SAMPLE_COUNT_1_BIT);
 
 	VkPipelineDepthStencilStateCreateInfo depthStencil{};
-	depthStencil.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
-	depthStencil.depthTestEnable = VK_FALSE;
-	depthStencil.depthWriteEnable = VK_FALSE;
-	depthStencil.depthCompareOp = VK_COMPARE_OP_LESS_OR_EQUAL;
-	depthStencil.depthBoundsTestEnable = VK_FALSE;
-	depthStencil.minDepthBounds = 0.0f;
-	depthStencil.maxDepthBounds = 1.0f;
-	depthStencil.stencilTestEnable = VK_FALSE;
-	depthStencil.front = {};
-	depthStencil.back = {};
+	VKUtil::InitDepthState(&depthStencil, VK_FALSE, VK_FALSE);
 
 	VkPipelineColorBlendAttachmentState colorBlendAttachment{};
-	colorBlendAttachment.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
-	colorBlendAttachment.blendEnable = VK_FALSE;
+	VKUtil::InitColorBlendAttachmentState(&colorBlendAttachment, VK_FALSE);
 
 	VkPipelineColorBlendStateCreateInfo colorBlending{};
-	colorBlending.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
-	colorBlending.logicOpEnable = VK_FALSE;
-	colorBlending.attachmentCount = 1;
-	colorBlending.pAttachments = &colorBlendAttachment;
+	VKUtil::InitColorBlendState(&colorBlending, 1, &colorBlendAttachment);
 
 	pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
 	pipelineInfo.flags = VK_PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT;
@@ -523,7 +572,7 @@ int PostProcessor::_CreatePipeline()
 		Logger::Log(PP_MODULE, LOG_CRITICAL, "Failed to create pipeline (HDR)");
 		return false;
 	}
-	DBG_SET_OBJECT_NAME((uint64_t)_pipeline, VK_DEBUG_REPORT_OBJECT_TYPE_PIPELINE_EXT, "HDR");
+	VK_DBG_SET_OBJECT_NAME((uint64_t)_pipeline, VK_DEBUG_REPORT_OBJECT_TYPE_PIPELINE_EXT, "HDR");
 
 	if (Engine::GetConfiguration().PostProcessor.Bloom)
 	{
@@ -536,10 +585,7 @@ int PostProcessor::_CreatePipeline()
 		}
 
 		VkPipelineShaderStageCreateInfo blurFragShaderStageInfo{};
-		blurFragShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-		blurFragShaderStageInfo.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
-		blurFragShaderStageInfo.module = blur->GetHandle();
-		blurFragShaderStageInfo.pName = "main";
+		VKUtil::InitShaderStage(&blurFragShaderStageInfo, VK_SHADER_STAGE_FRAGMENT_BIT, blur->GetHandle());
 
 		pipelineInfo.flags = VK_PIPELINE_CREATE_DERIVATIVE_BIT;
 		pipelineInfo.basePipelineHandle = _pipeline;
@@ -553,7 +599,7 @@ int PostProcessor::_CreatePipeline()
 			Logger::Log(PP_MODULE, LOG_CRITICAL, "Failed to create pipeline (blur)");
 			return false;
 		}
-		DBG_SET_OBJECT_NAME((uint64_t)_blurPipeline, VK_DEBUG_REPORT_OBJECT_TYPE_PIPELINE_EXT, "Blur");
+		VK_DBG_SET_OBJECT_NAME((uint64_t)_blurPipeline, VK_DEBUG_REPORT_OBJECT_TYPE_PIPELINE_EXT, "Blur");
 	}
 
 	if (Engine::GetConfiguration().PostProcessor.DepthOfField)
@@ -567,10 +613,7 @@ int PostProcessor::_CreatePipeline()
 		}
 
 		VkPipelineShaderStageCreateInfo dofFragShaderStageInfo{};
-		dofFragShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-		dofFragShaderStageInfo.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
-		dofFragShaderStageInfo.module = dof->GetHandle();
-		dofFragShaderStageInfo.pName = "main";
+		VKUtil::InitShaderStage(&dofFragShaderStageInfo, VK_SHADER_STAGE_FRAGMENT_BIT, dof->GetHandle());
 
 		pipelineInfo.flags = VK_PIPELINE_CREATE_DERIVATIVE_BIT;
 		pipelineInfo.basePipelineHandle = _pipeline;
@@ -585,7 +628,36 @@ int PostProcessor::_CreatePipeline()
 			Logger::Log(PP_MODULE, LOG_CRITICAL, "Failed to create pipeline (DoF)");
 			return false;
 		}
-		DBG_SET_OBJECT_NAME((uint64_t)_dofPipeline, VK_DEBUG_REPORT_OBJECT_TYPE_PIPELINE_EXT, "DoF");
+		VK_DBG_SET_OBJECT_NAME((uint64_t)_dofPipeline, VK_DEBUG_REPORT_OBJECT_TYPE_PIPELINE_EXT, "DoF");
+	}
+
+	if (Engine::GetConfiguration().PostProcessor.FilmGrain)
+	{
+		ShaderModule *filmgrain{ (ShaderModule *)ResourceManager::GetResourceByName("sh_pp_filmgrain", ResourceType::RES_SHADERMODULE) };
+
+		if (!filmgrain)
+		{
+			Logger::Log(PP_MODULE, LOG_CRITICAL, "Failed to load post process shaders");
+			return ENGINE_LOAD_SHADER_FAIL;
+		}
+
+		VkPipelineShaderStageCreateInfo fgFragShaderStageInfo{};
+		VKUtil::InitShaderStage(&fgFragShaderStageInfo, VK_SHADER_STAGE_FRAGMENT_BIT, filmgrain->GetHandle());
+
+		pipelineInfo.flags = VK_PIPELINE_CREATE_DERIVATIVE_BIT;
+		pipelineInfo.basePipelineHandle = _pipeline;
+		pipelineInfo.renderPass = _fgRenderPass;
+		pipelineInfo.layout = PipelineManager::GetPipelineLayout(PIPE_LYT_FilmGrain);
+
+		VkPipelineShaderStageCreateInfo fgShaderStages[]{ fsVertShaderStageInfo, fgFragShaderStageInfo };
+		pipelineInfo.pStages = fgShaderStages;
+
+		if (vkCreateGraphicsPipelines(VKUtil::GetDevice(), VK_NULL_HANDLE, 1, &pipelineInfo, VKUtil::GetAllocator(), &_dofPipeline) != VK_SUCCESS)
+		{
+			Logger::Log(PP_MODULE, LOG_CRITICAL, "Failed to create pipeline (FilmGrain)");
+			return false;
+		}
+		VK_DBG_SET_OBJECT_NAME((uint64_t)_dofPipeline, VK_DEBUG_REPORT_OBJECT_TYPE_PIPELINE_EXT, "FilmGrain");
 	}
 
 	return ENGINE_OK;
@@ -603,8 +675,8 @@ bool PostProcessor::_CreateFramebuffers()
 	VKUtil::TransitionImageLayout(_ppTexture0->GetImage(), VK_IMAGE_LAYOUT_PREINITIALIZED, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, VK_IMAGE_ASPECT_COLOR_BIT);
 	VKUtil::TransitionImageLayout(_ppTexture1->GetImage(), VK_IMAGE_LAYOUT_PREINITIALIZED, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, VK_IMAGE_ASPECT_COLOR_BIT);
 
-	DBG_SET_OBJECT_NAME((uint64_t)_ppTexture0->GetImage(), VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_EXT, "Post process texture 0");
-	DBG_SET_OBJECT_NAME((uint64_t)_ppTexture1->GetImage(), VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_EXT, "Post process texture 1");
+	VK_DBG_SET_OBJECT_NAME((uint64_t)_ppTexture0->GetImage(), VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_EXT, "Post process texture 0");
+	VK_DBG_SET_OBJECT_NAME((uint64_t)_ppTexture1->GetImage(), VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_EXT, "Post process texture 1");
 
 	VkImageView attachments[]{ _ppTexture0->GetImageView(), _ppTexture1->GetImageView(), Renderer::GetInstance()->GetRenderTargetImageView() };
 
@@ -623,7 +695,7 @@ bool PostProcessor::_CreateFramebuffers()
 		return false;
 	}
 
-	DBG_SET_OBJECT_NAME((uint64_t)_framebuffer, VK_DEBUG_REPORT_OBJECT_TYPE_FRAMEBUFFER_EXT, "Post process framebuffer");
+	VK_DBG_SET_OBJECT_NAME((uint64_t)_framebuffer, VK_DEBUG_REPORT_OBJECT_TYPE_FRAMEBUFFER_EXT, "Post process framebuffer");
 
 	return true;
 }
@@ -694,6 +766,13 @@ bool PostProcessor::_CreateDescriptorSets()
 		}
 	}
 
+	_UpdateDescriptorSets();
+
+	return true;
+}
+
+void PostProcessor::_UpdateDescriptorSets()
+{
 	VkDescriptorImageInfo img0Info{};
 	img0Info.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 	img0Info.imageView = _ppTexture0->GetImageView();
@@ -711,7 +790,7 @@ bool PostProcessor::_CreateDescriptorSets()
 
 	VkDescriptorImageInfo brightInfo{};
 	brightInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-	brightInfo.imageView = Renderer::GetInstance()->GetNormalBrightImageView();
+	brightInfo.imageView = Renderer::GetInstance()->GetBrightnessImageView();
 	brightInfo.sampler = Renderer::GetInstance()->GetNearestSampler();
 
 	VkDescriptorImageInfo depthInfo{};
@@ -719,83 +798,17 @@ bool PostProcessor::_CreateDescriptorSets()
 	depthInfo.imageView = Renderer::GetInstance()->GetDepthImageView();
 	depthInfo.sampler = Renderer::GetInstance()->GetDepthSampler();
 
-	VkWriteDescriptorSet writeDS[9]{};
-	writeDS[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-	writeDS[0].dstArrayElement = 0;
-	writeDS[0].descriptorType = VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT;
-	writeDS[0].descriptorCount = 1;
-	writeDS[0].dstBinding = 0;
-	writeDS[0].dstSet = _ds[0];
-	writeDS[0].pBufferInfo = nullptr;
-	writeDS[0].pTexelBufferView = nullptr;
-	writeDS[0].pImageInfo = &img0Info;
-	writeDS[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-	writeDS[1].dstArrayElement = 0;
-	writeDS[1].descriptorType = VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT;
-	writeDS[1].descriptorCount = 1;
-	writeDS[1].dstBinding = 1;
-	writeDS[1].dstSet = _ds[0];
-	writeDS[1].pBufferInfo = nullptr;
-	writeDS[1].pTexelBufferView = nullptr;
-	writeDS[1].pImageInfo = &colorInfo;
-	writeDS[2].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-	writeDS[2].dstArrayElement = 0;
-	writeDS[2].descriptorType = VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT;
-	writeDS[2].descriptorCount = 1;
-	writeDS[2].dstBinding = 0;
-	writeDS[2].dstSet = _ds[1];
-	writeDS[2].pBufferInfo = nullptr;
-	writeDS[2].pTexelBufferView = nullptr;
-	writeDS[2].pImageInfo = &img1Info;
-	writeDS[3].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-	writeDS[3].dstArrayElement = 0;
-	writeDS[3].descriptorType = VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT;
-	writeDS[3].descriptorCount = 1;
-	writeDS[3].dstBinding = 1;
-	writeDS[3].dstSet = _ds[1];
-	writeDS[3].pBufferInfo = nullptr;
-	writeDS[3].pTexelBufferView = nullptr;
-	writeDS[3].pImageInfo = &colorInfo;
-	writeDS[4].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-	writeDS[4].dstArrayElement = 0;
-	writeDS[4].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-	writeDS[4].descriptorCount = 1;
-	writeDS[4].dstBinding = 0;
-	writeDS[4].dstSet = _brightDS;
-	writeDS[4].pBufferInfo = nullptr;
-	writeDS[4].pTexelBufferView = nullptr;
-	writeDS[4].pImageInfo = &brightInfo;
-	writeDS[5].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-	writeDS[5].dstArrayElement = 0;
-	writeDS[5].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-	writeDS[5].descriptorCount = 1;
-	writeDS[5].dstBinding = 0;
-	writeDS[5].dstSet = _ppDS[0];
-	writeDS[5].pBufferInfo = nullptr;
-	writeDS[5].pTexelBufferView = nullptr;
-	writeDS[5].pImageInfo = &img0Info;
-	writeDS[6].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-	writeDS[6].dstArrayElement = 0;
-	writeDS[6].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-	writeDS[6].descriptorCount = 1;
-	writeDS[6].dstBinding = 0;
-	writeDS[6].dstSet = _ppDS[1];
-	writeDS[6].pBufferInfo = nullptr;
-	writeDS[6].pTexelBufferView = nullptr;
-	writeDS[6].pImageInfo = &img1Info;
-	writeDS[7].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-	writeDS[7].dstArrayElement = 0;
-	writeDS[7].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-	writeDS[7].descriptorCount = 1;
-	writeDS[7].dstBinding = 0;
-	writeDS[7].dstSet = _dofDS;
-	writeDS[7].pBufferInfo = nullptr;
-	writeDS[7].pTexelBufferView = nullptr;
-	writeDS[7].pImageInfo = &depthInfo;
+	VkWriteDescriptorSet writeDS[8]{};
+	VKUtil::WriteDS(&writeDS[0], 1, VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, &img0Info, _ds[0], 0);
+	VKUtil::WriteDS(&writeDS[1], 1, VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, &colorInfo, _ds[0], 1);
+	VKUtil::WriteDS(&writeDS[2], 1, VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, &img1Info, _ds[1], 0);
+	VKUtil::WriteDS(&writeDS[3], 1, VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, &colorInfo, _ds[1], 1);
+	VKUtil::WriteDS(&writeDS[4], 1, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, &brightInfo, _brightDS, 0);
+	VKUtil::WriteDS(&writeDS[5], 1, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, &img0Info, _ppDS[0], 0);
+	VKUtil::WriteDS(&writeDS[6], 1, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, &img1Info, _ppDS[1], 0);
+	VKUtil::WriteDS(&writeDS[7], 1, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, &depthInfo, _dofDS, 0);
 
 	vkUpdateDescriptorSets(VKUtil::GetDevice(), 8, writeDS, 0, nullptr);
-
-	return true;
 }
 
 Texture *PostProcessor::_GetPPTexture0() { return _ppTexture0; }

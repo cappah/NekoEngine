@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -95,7 +95,7 @@ struct Vertex
 #ifdef ENGINE_INTERNAL
 	static VkVertexInputBindingDescription GetBindingDescription()
 	{
-		VkVertexInputBindingDescription desc = {};
+		VkVertexInputBindingDescription desc{};
 
 		desc.binding = 0;
 		desc.stride = sizeof(Vertex);
@@ -168,7 +168,7 @@ struct SkeletalVertex
 #ifdef ENGINE_INTERNAL
 	static VkVertexInputBindingDescription GetBindingDescription()
 	{
-		VkVertexInputBindingDescription desc = {};
+		VkVertexInputBindingDescription desc{};
 
 		desc.binding = 0;
 		desc.stride = sizeof(SkeletalVertex);
@@ -250,7 +250,7 @@ struct TerrainVertex
 #ifdef ENGINE_INTERNAL
 	static VkVertexInputBindingDescription GetBindingDescription()
 	{
-		VkVertexInputBindingDescription desc = {};
+		VkVertexInputBindingDescription desc{};
 
 		desc.binding = 0;
 		desc.stride = sizeof(TerrainVertex);
@@ -293,4 +293,94 @@ struct TerrainVertex
 		return desc;
 	}
 #endif
+};
+
+struct GUIVertex
+{
+	glm::vec4 posAndUV;
+	glm::vec4 color;
+
+#ifdef ENGINE_INTERNAL
+	static VkVertexInputBindingDescription GetBindingDescription()
+	{
+		VkVertexInputBindingDescription desc{};
+
+		desc.binding = 0;
+		desc.stride = sizeof(GUIVertex);
+		desc.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+
+		return desc;
+	}
+
+	static NArray<VkVertexInputAttributeDescription> GetAttributeDescriptions()
+	{
+		NArray<VkVertexInputAttributeDescription> ret;
+		ret.Resize(2);
+
+		VkVertexInputAttributeDescription desc;
+		desc.binding = 0;
+		desc.location = 0;
+		desc.format = VK_FORMAT_R32G32B32A32_SFLOAT;
+		desc.offset = offsetof(GUIVertex, posAndUV);
+		ret.Add(desc);
+
+		desc.location = 1;
+		desc.format = VK_FORMAT_R32G32B32A32_SFLOAT;
+		desc.offset = offsetof(GUIVertex, color);
+		ret.Add(desc);
+
+		return ret;
+	}
+#endif
+};
+
+struct ParticleVertex
+{
+	glm::vec4 positionAndAge;
+	glm::vec4 velocityAndWeight;
+	glm::vec4 destinationAndScale;
+	glm::vec4 color;
+
+	#ifdef ENGINE_INTERNAL
+	static VkVertexInputBindingDescription GetBindingDescription()
+	{
+		VkVertexInputBindingDescription desc{};
+
+		desc.binding = 0;
+		desc.stride = sizeof(ParticleVertex);
+		desc.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+
+		return desc;
+	}
+
+	static NArray<VkVertexInputAttributeDescription> GetAttributeDescriptions()
+	{
+		NArray<VkVertexInputAttributeDescription> ret;
+		ret.Resize(4);
+
+		VkVertexInputAttributeDescription desc;
+		desc.binding = 0;
+		desc.location = 0;
+		desc.format = VK_FORMAT_R32G32B32A32_SFLOAT;
+		desc.offset = offsetof(ParticleVertex, positionAndAge);
+		ret.Add(desc);
+
+		desc.location = 1;
+		desc.format = VK_FORMAT_R32G32B32A32_SFLOAT;
+		desc.offset = offsetof(ParticleVertex, velocityAndWeight);
+		ret.Add(desc);
+
+		desc.location = 2;
+		desc.format = VK_FORMAT_R32G32B32A32_SFLOAT;
+		desc.offset = offsetof(ParticleVertex, destinationAndScale);
+		ret.Add(desc);
+
+		desc.location = 3;
+		desc.format = VK_FORMAT_R32G32B32A32_SFLOAT;
+		desc.offset = offsetof(ParticleVertex, color);
+		ret.Add(desc);
+
+		return ret;
+	}
+	#endif
 };

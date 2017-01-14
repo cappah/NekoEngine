@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -105,8 +105,8 @@ lua_State *Script::NewState()
 
 bool Script::LoadScript(lua_State *state, NString &scriptFile)
 {
-	size_t sz;
-	VFSFile *file = VFS::Open(scriptFile);
+	size_t sz{ 0 };
+	VFSFile *file{ VFS::Open(scriptFile) };
 	if (!file)
 	{
 		Logger::Log(SCRIPT_MODULE, LOG_CRITICAL, "Cannot script file %s", *scriptFile);

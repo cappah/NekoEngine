@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -94,7 +94,7 @@ int Skeleton::Load()
 	if((_buffer = new Buffer(_bufferSize, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT, nullptr, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT)) == nullptr)
 	{ DIE("Out of resources"); }
 
-	TrMat t =
+	constexpr TrMat t =
 	{ {
 		1.f, 0.f, 0.f, 0.f,
 		0.f, 1.f, 0.f, 0.f,
@@ -121,9 +121,9 @@ void Skeleton::TransformBones(double time)
 
 	dmat4 ident = dmat4();
 
-	double ticks = _animationClip->GetTicksPerSecond() != 0 ? _animationClip->GetTicksPerSecond() : 25.f;
-	double timeInTicks = time * ticks;
-	double animTime = mod(timeInTicks, _animationClip->GetDuration());
+	const double ticks = _animationClip->GetTicksPerSecond() != 0 ? _animationClip->GetTicksPerSecond() : 25.f;
+	const double timeInTicks = time * ticks;
+	const double animTime = mod(timeInTicks, _animationClip->GetDuration());
 
 	_TransformHierarchy(animTime, _rootNode, ident);
 }
@@ -135,7 +135,7 @@ void Skeleton::UpdateData(VkCommandBuffer commandBuffer) noexcept
 
 void Skeleton::_CalculatePosition(dvec3 &out, double time, const AnimationNode *node)
 {
-	size_t numKeys = node->positionKeys.size();
+	const size_t numKeys = node->positionKeys.size();
 
 	if(numKeys == 1)
 	{
@@ -154,21 +154,21 @@ void Skeleton::_CalculatePosition(dvec3 &out, double time, const AnimationNode *
 		}
 	}
 
-	uint16_t nextPosIndex = posIndex + 1;
+	const uint16_t nextPosIndex = posIndex + 1;
 
-	double dt = node->positionKeys[nextPosIndex].time - node->positionKeys[posIndex].time;
-	double factor = (time - node->positionKeys[posIndex].time) / dt;
+	const double dt = node->positionKeys[nextPosIndex].time - node->positionKeys[posIndex].time;
+	const double factor = (time - node->positionKeys[posIndex].time) / dt;
 
 	const dvec3 &start = node->positionKeys[posIndex].value;
 	const dvec3 &end = node->positionKeys[nextPosIndex].value;
 
-	dvec3 delta = end - start;
+	const dvec3 delta = end - start;
 	out = start + factor * delta;
 }
 
 void Skeleton::_CalculateRotation(dquat &out, double time, const AnimationNode *node)
 {
-	size_t numKeys = node->rotationKeys.size();
+	const size_t numKeys = node->rotationKeys.size();
 
 	if(numKeys == 1)
 	{
@@ -187,10 +187,10 @@ void Skeleton::_CalculateRotation(dquat &out, double time, const AnimationNode *
 		}
 	}
 
-	uint16_t nextRotIndex = rotIndex + 1;
+	const uint16_t nextRotIndex = rotIndex + 1;
 
-	double dt = node->rotationKeys[nextRotIndex].time - node->rotationKeys[rotIndex].time;
-	double factor = (time - node->rotationKeys[rotIndex].time) / dt;
+	const double dt = node->rotationKeys[nextRotIndex].time - node->rotationKeys[rotIndex].time;
+	const double factor = (time - node->rotationKeys[rotIndex].time) / dt;
 
 	const dquat &start = node->rotationKeys[rotIndex].value;
 	const dquat &end = node->rotationKeys[nextRotIndex].value;
@@ -201,7 +201,7 @@ void Skeleton::_CalculateRotation(dquat &out, double time, const AnimationNode *
 
 void Skeleton::_CalculateScaling(dvec3 &out, double time, const AnimationNode *node)
 {
-	size_t numKeys = node->scalingKeys.size();
+	const size_t numKeys = node->scalingKeys.size();
 
 	if(numKeys == 1)
 	{
@@ -220,15 +220,15 @@ void Skeleton::_CalculateScaling(dvec3 &out, double time, const AnimationNode *n
 		}
 	}
 
-	uint16_t nextScaleIndex = scaleIndex + 1;
+	const uint16_t nextScaleIndex = scaleIndex + 1;
 
-	double dt = node->scalingKeys[nextScaleIndex].time - node->scalingKeys[scaleIndex].time;
-	double factor = (time - node->scalingKeys[scaleIndex].time) / dt;
+	const double dt = node->scalingKeys[nextScaleIndex].time - node->scalingKeys[scaleIndex].time;
+	const double factor = (time - node->scalingKeys[scaleIndex].time) / dt;
 
 	const dvec3 &start = node->scalingKeys[scaleIndex].value;
 	const dvec3 &end = node->scalingKeys[nextScaleIndex].value;
 
-	dvec3 delta = end - start;
+	const dvec3 delta = end - start;
 	out = start + factor * delta;
 }
 
@@ -268,7 +268,7 @@ void Skeleton::_TransformHierarchy(double time, const TransformNode *node, dmat4
 
 	if(_boneMap.find(node->name) != _boneMap.end())
 	{
-		uint16_t index = _boneMap[node->name];
+		const uint16_t index = _boneMap[node->name];
 		mat4 m = (mat4)(_globalInverseTransform * globalTransform * _bones[index].offset);
 		memcpy(&_transforms[index], &m[0][0], sizeof(TrMat));
 	}

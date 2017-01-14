@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -39,6 +39,7 @@
 
 #include <Scene/Object.h>
 #include <Scene/Components/StaticMeshComponent.h>
+#include <Engine/CameraManager.h>
 #include <Engine/ResourceManager.h>
 #include <System/Logger.h>
 
@@ -52,21 +53,56 @@ ENGINE_REGISTER_COMPONENT_CLASS(StaticMeshComponent);
 StaticMeshComponent::StaticMeshComponent(ComponentInitializer *initializer)
 	: ObjectComponent(initializer)
 {
+	_ubo = nullptr;
 	_mesh = nullptr;
+
 	_loaded = false;
+	_blend = false;
+	_updateModelMatrix = false;
+
+	_descriptorPool = VK_NULL_HANDLE;
+	_descriptorSet = VK_NULL_HANDLE;
+
+	_rotationQuaternion = quat();
+	_translationMatrix = mat4();
+	_scaleMatrix = mat4();
+
 	_meshId = initializer->arguments.find("mesh")->second;
+
+	memset(&_objectData, 0x0, sizeof(ObjectData));
 	
 	ArgumentMapRangeType range = initializer->arguments.equal_range("material");
 		
 	for (ArgumentMapType::iterator it = range.first; it != range.second; ++it)
 		_materialIds.push_back(ResourceManager::GetResourceID(it->second.c_str(), ResourceType::RES_MATERIAL));
 
-	_blend = false;
+	SetPosition(_position);
+	SetRotation(_rotation);
+	SetScale(_scale);
+}
 
-	_depthDrawBuffer = VK_NULL_HANDLE;
-	_sceneDrawBuffer = VK_NULL_HANDLE;
-	_descriptorPool = VK_NULL_HANDLE;
-	_descriptorSet = VK_NULL_HANDLE;
+void StaticMeshComponent::SetPosition(vec3 &position) noexcept
+{
+	ObjectComponent::SetPosition(position);
+
+	_translationMatrix = translate(mat4(), _position);
+	_updateModelMatrix = true;
+}
+
+void StaticMeshComponent::SetRotation(vec3 &rotation) noexcept
+{
+	ObjectComponent::SetRotation(rotation);
+	
+	_rotationQuaternion = rotate(quat(), radians(rotation));
+	_updateModelMatrix = true;
+}
+
+void StaticMeshComponent::SetScale(vec3 &newScale) noexcept
+{
+	ObjectComponent::SetScale(newScale);
+
+	_scaleMatrix = scale(mat4(), newScale);
+	_updateModelMatrix = true;
 }
 
 int StaticMeshComponent::Load()
@@ -93,6 +129,10 @@ int StaticMeshComponent::Load()
 	{
 		if(_meshId == SM_GENERATED)
 			_mesh = new StaticMesh(nullptr);
+		else if (_meshId.Contains("pr_"))
+		{
+			// Primitive mesh
+		}
 		else
 			_mesh = (StaticMesh *)ResourceManager::GetResourceByName(*_meshId, ResourceType::RES_STATIC_MESH);
 	}
@@ -111,6 +151,11 @@ int StaticMeshComponent::Load()
 
 	_loaded = true;
 
+	if (_meshId != SM_GENERATED)
+		_parent->SetBounds(_mesh->GetBounds());
+
+	_objectData.objectId = _parent->GetId();
+
 	return ENGINE_OK;
 }
 
@@ -127,9 +172,29 @@ void StaticMeshComponent::Update(double deltaTime) noexcept
 	ObjectComponent::Update(deltaTime);
 }
 
+void StaticMeshComponent::UpdatePosition() noexcept
+{
+	ObjectComponent::UpdatePosition();
+	_updateModelMatrix = true;
+}
+
 void StaticMeshComponent::UpdateData(VkCommandBuffer commandBuffer) noexcept
 {
 	ObjectComponent::UpdateData(commandBuffer);
+
+	if (_updateModelMatrix)
+		_UpdateModelMatrix();
+
+	Camera *cam = CameraManager::GetActiveCamera();
+	_objectData.modelViewProjection = cam->GetProjectionMatrix() * (cam->GetView() * _objectData.model);
+
+	_ubo->UpdateData((uint8_t *)&_objectData, 0, sizeof(_objectData), commandBuffer);
+}
+
+void StaticMeshComponent::DrawShadow(VkCommandBuffer commandBuffer, uint32_t shadowId) const noexcept
+{
+	ObjectComponent::DrawShadow(commandBuffer, shadowId);
+	_mesh->DrawShadow(commandBuffer, shadowId, _descriptorSet);
 }
 
 bool StaticMeshComponent::Unload()
@@ -137,11 +202,12 @@ bool StaticMeshComponent::Unload()
 	if(!ObjectComponent::Unload())
 		return false;
 	
-	if (_depthDrawBuffer != VK_NULL_HANDLE)
-		Renderer::GetInstance()->FreeMeshCommandBuffer(_depthDrawBuffer);
-
-	if (_sceneDrawBuffer != VK_NULL_HANDLE)
-		Renderer::GetInstance()->FreeMeshCommandBuffer(_sceneDrawBuffer);
+	for (Drawable &drawable : _drawables)
+	{
+		if (drawable.depthCommandBuffer != VK_NULL_HANDLE)
+			Renderer::GetInstance()->FreeMeshCommandBuffer(drawable.depthCommandBuffer);
+		Renderer::GetInstance()->FreeMeshCommandBuffer(drawable.sceneCommandBuffer);
+	}
 
 	for(NString matId : _materialIds)
 		ResourceManager::UnloadResourceByName(*matId, ResourceType::RES_MATERIAL);
@@ -166,22 +232,24 @@ bool StaticMeshComponent::Unload()
 	return true;
 }
 
-bool StaticMeshComponent::BuildCommandBuffers()
+bool StaticMeshComponent::InitDrawables()
 {
-	if (_depthDrawBuffer != VK_NULL_HANDLE)
-		Renderer::GetInstance()->FreeMeshCommandBuffer(_depthDrawBuffer);
+	bool buildDepth = true;
 
-	if (_sceneDrawBuffer != VK_NULL_HANDLE)
-		Renderer::GetInstance()->FreeMeshCommandBuffer(_sceneDrawBuffer);
+	for (Drawable &drawable : _drawables)
+	{
+		if (drawable.depthCommandBuffer != VK_NULL_HANDLE)
+			Renderer::GetInstance()->FreeMeshCommandBuffer(drawable.depthCommandBuffer);
+		Renderer::GetInstance()->FreeMeshCommandBuffer(drawable.sceneCommandBuffer);
+	}
 
-	if (_materials[0]->GetType() != MT_Skysphere)
-		_depthDrawBuffer = Renderer::GetInstance()->CreateMeshCommandBuffer();
-	_sceneDrawBuffer = Renderer::GetInstance()->CreateMeshCommandBuffer();
+	if (_materials[0]->GetType() == MT_Skysphere)
+		buildDepth = false;
 
 	if (_descriptorPool == VK_NULL_HANDLE)
 	{
 		_descriptorPool = Renderer::GetInstance()->CreateMeshDescriptorPool();
-		_descriptorSet = _mesh->CreateDescriptorSet(_descriptorPool, _parent->GetUniformBuffer());
+		_descriptorSet = _mesh->CreateDescriptorSet(_descriptorPool, _ubo);
 
 		for (Material *mat : _materials)
 		{
@@ -195,24 +263,31 @@ bool StaticMeshComponent::BuildCommandBuffers()
 
 	_SortGroups();
 
-	return _mesh->BuildCommandBuffers(_materials, _descriptorSet, _depthDrawBuffer, _sceneDrawBuffer);
+	return _mesh->BuildDrawables(_materials, _descriptorSet, _drawables, buildDepth, true);
 }
 
-void StaticMeshComponent::RegisterCommandBuffers()
+bool StaticMeshComponent::RebuildCommandBuffers()
 {
-	if (!_enabled) return;
+	bool buildDepth = true;
 
-	if(_depthDrawBuffer != VK_NULL_HANDLE)
-		Renderer::GetInstance()->AddDepthCommandBuffer(_depthDrawBuffer);
-	Renderer::GetInstance()->AddSceneCommandBuffer(_sceneDrawBuffer);
+	for (Drawable &drawable : _drawables)
+	{
+		if (drawable.depthCommandBuffer != VK_NULL_HANDLE)
+			Renderer::GetInstance()->FreeMeshCommandBuffer(drawable.depthCommandBuffer);
+		Renderer::GetInstance()->FreeMeshCommandBuffer(drawable.sceneCommandBuffer);
+	}
+
+	if (_materials[0]->GetType() == MT_Skysphere)
+		buildDepth = false;
+
+	return _mesh->BuildDrawables(_materials, _descriptorSet, _drawables, buildDepth, false);
 }
 
 void StaticMeshComponent::_SortGroups()
 {
 	struct GroupInfo
 	{
-		uint32_t offset;
-		uint32_t count;
+		MeshGroup group;
 		Material *mat;
 	};
 
@@ -222,9 +297,9 @@ void StaticMeshComponent::_SortGroups()
 	for(uint32_t i = 0; i < _materials.Count(); ++i)
 	{
 		if (_materials[i]->IsTransparent())
-			transparent.push_back({ _mesh->GetGroupOffset(i), _mesh->GetIndexCount(i), _materials[i] });
+			transparent.push_back({ _mesh->GetGroup(i), _materials[i] });
 		else
-			opaque.push_back({ _mesh->GetGroupOffset(i), _mesh->GetIndexCount(i), _materials[i] });
+			opaque.push_back({ _mesh->GetGroup(i), _materials[i] });
 	}
 	
 	_materials.Clear();
@@ -233,12 +308,23 @@ void StaticMeshComponent::_SortGroups()
 	for (GroupInfo &gi : opaque)
 	{
 		_materials.Add(gi.mat);
-		_mesh->AddGroup(gi.offset, gi.count);
+		_mesh->AddGroup(gi.group);
 	}
 
 	for (GroupInfo &gi : transparent)
 	{
 		_materials.Add(gi.mat);
-		_mesh->AddGroup(gi.offset, gi.count);
+		_mesh->AddGroup(gi.group);
 	}
+}
+
+void StaticMeshComponent::_UpdateModelMatrix()
+{
+	_objectData.model = ((_translationMatrix * mat4_cast(_rotationQuaternion)) * _scaleMatrix) * _parent->GetModelMatrix();
+	_objectData.normal = transpose(inverse(_objectData.model));
+
+	for (Drawable &drawable : _drawables)
+		drawable.bounds.Transform(_objectData.model, &drawable.transformedBounds);
+
+	_updateModelMatrix = false;
 }

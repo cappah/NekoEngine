@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -48,7 +48,7 @@ class ENGINE_API CameraComponent : public ObjectComponent
 public:
 	CameraComponent(ComponentInitializer *initializer);
 
-	Camera *GetCamera() noexcept { return _cam; }
+	Camera *GetCamera() const noexcept { return _cam; }
 
 	virtual void UpdatePosition() noexcept override { ObjectComponent::UpdatePosition(); _UpdateView(); }
 

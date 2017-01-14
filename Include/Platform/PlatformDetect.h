@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -49,6 +49,7 @@
 #define NE_ARCH_X86
 #elif defined(__linux__)
 #define NE_PLATFORM_LINUX
+#define NE_PLATFORM_UNIX
 #define NE_PLATFORM_X11
 #if defined(__arm__)
 #ifdef __LP64__
@@ -92,6 +93,7 @@
 #endif
 #endif
 #elif defined(__APPLE__) && defined(__MACH__)
+#define NE_PLATFORM_UNIX
 #include <TargetConditionals.h>
 #if TARGET_IPHONE_SIMULATOR == 1
 #define NE_PLATFORM_IOS
@@ -115,6 +117,7 @@
 #endif
 #endif
 #elif defined(__QNX__)
+#define NE_PLATFORM_UNIX
 #define NE_DEVICE_MOBILE
 #ifdef __arm__
 #define NE_PLATFORM_BB10
@@ -132,6 +135,7 @@
 #endif
 #endif
 #elif defined(__FreeBSD__)
+#define NE_PLATFORM_UNIX
 #define NE_PLATFORM_FREEBSD
 #define NE_PLATFORM_X11
 #if defined(__arm__)
@@ -152,6 +156,7 @@
 #endif
 #endif
 #elif defined(__DragonFly__)
+#define NE_PLATFORM_UNIX
 #define NE_PLATFORM_DRAGONFLY
 #define NE_PLATFORM_X11
 #if defined(__arm__)
@@ -172,6 +177,7 @@
 #endif
 #endif
 #elif defined(__NetBSD__)
+#define NE_PLATFORM_UNIX
 #define NE_PLATFORM_NETBSD
 #define NE_PLATFORM_X11
 #if defined(__arm__)
@@ -192,6 +198,7 @@
 #endif
 #endif
 #elif defined(__OpenBSD__)
+#define NE_PLATFORM_UNIX
 #define NE_PLATFORM_OPENBSD
 #define NE_PLATFORM_X11
 #if defined(__arm__)
@@ -212,6 +219,7 @@
 #endif
 #endif
 #elif defined(sun) || defined(__sun)
+#define NE_PLATFORM_UNIX
 #define NE_PLATFORM_SUNOS
 #define NE_PLATFORM_X11
 #if defined(__sparc)
@@ -233,4 +241,5 @@
 #endif
 #elif defined(__ANDROID__)
 #define NE_PLATFORM_ANDROID
+#define NE_PLATFORM_UNIX
 #endif

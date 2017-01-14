@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -64,6 +64,10 @@ protected:
 	std::unordered_map<std::string, float*> _options;
 	glm::vec4 _effectData;
 	//RBuffer *_effectUbo;
+
+	#ifdef ENGINE_INTERNAL
+	VkRenderPass _renderPass;
+	#endif
 };
 
 #if defined(_MSC_VER)

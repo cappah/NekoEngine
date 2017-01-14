@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -46,7 +46,6 @@ class ObjectInterface
 public:
 	static void Register(lua_State *state);
 
-	static int GetParent(lua_State *state);
 	static int GetPosition(lua_State *state);
 	static int GetRotation(lua_State *state);
 	static int GetScale(lua_State *state);

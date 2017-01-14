@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -44,6 +44,8 @@
 #include <Engine/ResourceManager.h>
 
 #define SK_COMPONENT_MODULE		"SkeletalMeshComponent"
+
+using namespace glm;
 
 ENGINE_REGISTER_COMPONENT_CLASS(SkeletalMeshComponent);
 
@@ -99,6 +101,9 @@ int SkeletalMeshComponent::Load()
 		return ENGINE_INVALID_RES;
 	}
 
+	if (_meshId != SM_GENERATED)
+		_parent->SetBounds(_mesh->GetBounds());
+
 	_loaded = true;
 
 	return ENGINE_OK;
@@ -106,7 +111,7 @@ int SkeletalMeshComponent::Load()
 
 int SkeletalMeshComponent::InitializeComponent()
 {
-	int ret = ObjectComponent::InitializeComponent();
+	int ret = StaticMeshComponent::InitializeComponent();
 	
 	if(ret != ENGINE_OK)
 		return ret;
@@ -120,7 +125,7 @@ int SkeletalMeshComponent::InitializeComponent()
 
 bool SkeletalMeshComponent::Upload(Buffer *buffer)
 {
-	if (!ObjectComponent::Upload(buffer))
+	if (!StaticMeshComponent::Upload(buffer))
 		return false;
 
 	return _mesh->Upload(buffer);
@@ -128,29 +133,33 @@ bool SkeletalMeshComponent::Upload(Buffer *buffer)
 
 void SkeletalMeshComponent::Update(double deltaTime) noexcept
 {
-	ObjectComponent::Update(deltaTime);
+	StaticMeshComponent::Update(deltaTime);
 }
 
 void SkeletalMeshComponent::UpdateData(VkCommandBuffer commandBuffer) noexcept
 {
-	ObjectComponent::UpdateData(commandBuffer);
+	StaticMeshComponent::UpdateData(commandBuffer);
 }
 
-bool SkeletalMeshComponent::BuildCommandBuffers()
+void SkeletalMeshComponent::DrawShadow(VkCommandBuffer commandBuffer, uint32_t shadowId) const noexcept
 {
-	if (_depthDrawBuffer != VK_NULL_HANDLE)
-		Renderer::GetInstance()->FreeMeshCommandBuffer(_depthDrawBuffer);
+	ObjectComponent::DrawShadow(commandBuffer, shadowId);
+	_mesh->DrawShadow(commandBuffer, shadowId, _descriptorSet);
+}
 
-	if (_sceneDrawBuffer != VK_NULL_HANDLE)
-		Renderer::GetInstance()->FreeMeshCommandBuffer(_sceneDrawBuffer);
-
-	_depthDrawBuffer = Renderer::GetInstance()->CreateMeshCommandBuffer();
-	_sceneDrawBuffer = Renderer::GetInstance()->CreateMeshCommandBuffer();
+bool SkeletalMeshComponent::InitDrawables()
+{
+	for (Drawable &drawable : _drawables)
+	{
+		if (drawable.depthCommandBuffer != VK_NULL_HANDLE)
+			Renderer::GetInstance()->FreeMeshCommandBuffer(drawable.depthCommandBuffer);
+		Renderer::GetInstance()->FreeMeshCommandBuffer(drawable.sceneCommandBuffer);
+	}
 
 	if (_descriptorPool == VK_NULL_HANDLE)
 	{
 		_descriptorPool = Renderer::GetInstance()->CreateAnimatedMeshDescriptorPool();
-		_descriptorSet = _mesh->CreateDescriptorSet(_descriptorPool, _parent->GetUniformBuffer(), _animator->GetSkeletonBuffer());
+		_descriptorSet = _mesh->CreateDescriptorSet(_descriptorPool, _ubo, _animator->GetSkeletonBuffer());
 
 		for (Material *mat : _materials)
 		{
@@ -162,7 +171,19 @@ bool SkeletalMeshComponent::BuildCommandBuffers()
 		}
 	}
 
-	return _mesh->BuildCommandBuffers(_materials, _descriptorSet, _depthDrawBuffer, _sceneDrawBuffer);
+	return _mesh->BuildDrawables(_materials, _descriptorSet, _drawables, true);
+}
+
+bool SkeletalMeshComponent::RebuildCommandBuffers()
+{
+	for (Drawable &drawable : _drawables)
+	{
+		if (drawable.depthCommandBuffer != VK_NULL_HANDLE)
+			Renderer::GetInstance()->FreeMeshCommandBuffer(drawable.depthCommandBuffer);
+		Renderer::GetInstance()->FreeMeshCommandBuffer(drawable.sceneCommandBuffer);
+	}
+
+	return _mesh->BuildDrawables(_materials, _descriptorSet, _drawables, false);
 }
 
 bool SkeletalMeshComponent::Unload()
@@ -170,11 +191,12 @@ bool SkeletalMeshComponent::Unload()
 	if (!ObjectComponent::Unload())
 		return false;
 
-	if (_depthDrawBuffer != VK_NULL_HANDLE)
-		Renderer::GetInstance()->FreeMeshCommandBuffer(_depthDrawBuffer);
-
-	if (_sceneDrawBuffer != VK_NULL_HANDLE)
-		Renderer::GetInstance()->FreeMeshCommandBuffer(_sceneDrawBuffer);
+	for (Drawable &drawable : _drawables)
+	{
+		if (drawable.depthCommandBuffer != VK_NULL_HANDLE)
+			Renderer::GetInstance()->FreeMeshCommandBuffer(drawable.depthCommandBuffer);
+		Renderer::GetInstance()->FreeMeshCommandBuffer(drawable.sceneCommandBuffer);
+	}
 
 	for (NString matId : _materialIds)
 		ResourceManager::UnloadResourceByName(*matId, ResourceType::RES_MATERIAL);

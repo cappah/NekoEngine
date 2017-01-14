@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -43,61 +43,32 @@
 #include <System/Logger.h>
 #include <Audio/AudioClip.h>
 #include <Audio/AudioSource.h>
+#include <Audio/AudioSystem.h>
 
 #define SNDMGR_MODULE	"SoundManager"
 
 using namespace std;
 using namespace glm;
 
-bool _soundEnabled{ false };
-ALCdevice *SoundManager::_device{ nullptr };
-ALCcontext *SoundManager::_context{ nullptr };
 AudioSource *SoundManager::_bgMusicSource{ nullptr };
 AudioClip *SoundManager::_bgMusicClip{ nullptr };
-ALfloat listenerOrientation[] = { 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f };
 
 int SoundManager::Initialize()
 {
-	string configFile = Engine::GetConfiguration().Engine.DataDirectory;
-	configFile.append("\\sounds.cfg");
+	Logger::Log(SNDMGR_MODULE, LOG_INFORMATION, "Initializing sound manager...");
 
-	//return ReadConfigFile(configFile);
+	AudioSystem::GetInstance()->SetDistanceModel(AudioDistanceModel::LinearClamped);
 
-	Logger::Log(SNDMGR_MODULE, LOG_INFORMATION, "Initializing OpenAL...");
-
-	if ((_device = alcOpenDevice(NULL)) == nullptr)
-	{
-		Logger::Log(SNDMGR_MODULE, LOG_WARNING, "Failed to open device. Sound disabled");
-		return ENGINE_OK;
-	}
-
-	if ((_context = alcCreateContext(_device, NULL)) == nullptr)
-		return ENGINE_FAIL;
-
-	if (!alcMakeContextCurrent(_context))
-		return ENGINE_FAIL;
-
-	alListener3f(AL_POSITION, 0.f, 0.f, 0.f);
-	alListener3f(AL_VELOCITY, 0.f, 0.f, 0.f);
-	alListenerfv(AL_ORIENTATION, listenerOrientation);
-
-	alDistanceModel(AL_LINEAR_DISTANCE_CLAMPED);
-
-	_bgMusicSource = new AudioSource();
+	_bgMusicSource = AudioSystem::GetInstance()->CreateSource();
 	_bgMusicSource->SetLooping(true);
 
 	Logger::Log(SNDMGR_MODULE, LOG_INFORMATION, "Initialized");
-
-	_soundEnabled = true;
 
 	return ENGINE_OK;
 }
 
 int SoundManager::SetBackgroundMusic(int clipId) noexcept
 {
-	if(!_soundEnabled)
-		return ENGINE_OK;
-
 	StopBackgroundMusic();
 	
 	if (_bgMusicClip)
@@ -132,28 +103,8 @@ void SoundManager::SetBackgroundMusicVolume(float vol) noexcept
 	if (_bgMusicSource) _bgMusicSource->SetGain(vol);
 }
 
-void SoundManager::SetListenerPosition(float x, float y, float z) noexcept
-{
-	if(!_soundEnabled)
-		return;
-
-	_bgMusicSource->SetPosition(x, y, z);
-	alListener3f(AL_POSITION, x, y, z);
-}
-
-void SoundManager::SetListenerOrientation(float x, float y, float z) noexcept
-{
-	if(!_soundEnabled)
-		return;
-
-	alListener3f(AL_ORIENTATION, x, y, z);
-}
-
 void SoundManager::_UnsetBackgroundMusic() noexcept
 {
-	if(!_soundEnabled)
-		return;
-
 	StopBackgroundMusic();
 	
 	ResourceManager::UnloadResource(_bgMusicClip->GetResourceInfo()->id, ResourceType::RES_AUDIOCLIP);
@@ -165,12 +116,5 @@ void SoundManager::Release() noexcept
 	delete _bgMusicSource;
 	_bgMusicSource = nullptr;
 
-	alcMakeContextCurrent(NULL);
-	alcDestroyContext(_context);
-	_context = nullptr;
-
-	alcCloseDevice(_device);
-	_device = nullptr;
-	
 	Logger::Log(SNDMGR_MODULE, LOG_INFORMATION, "Released");
 }

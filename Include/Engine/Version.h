@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -39,15 +39,18 @@
 
 #pragma once
 
-#include <Platform/Platform.h>
+#define	ENGINE_VERSION_MAJOR				0
+#define ENGINE_VERSION_MINOR				4
+#define ENGINE_VERSION_REVISION				0
+#define ENGINE_VERSION_BUILD				478
+#define ENGINE_VERSION_PATCH				0
+#define ENGINE_WORKING_NAME					"Erwin"
 
-#define	ENGINE_VERSION_MAJOR	0
-#define ENGINE_VERSION_MINOR	4
-#define ENGINE_VERSION_REVISION 0
-#define ENGINE_VERSION_BUILD	402
-#define ENGINE_VERSION_PATCH	0
+#define ENGINE_VERSION_STRING				"0.4.0.478"
 
-#define ENGINE_VERSION_STRING	"0.4.0.402"
+#ifndef RC_INVOKED
+
+#include <Platform/PlatformDetect.h>
 
 #if defined(NE_PLATFORM_WINDOWS)
 	#if defined(NE_ARCH_X8664)
@@ -133,4 +136,6 @@
 	#define ENGINE_PLATFORM_STRING			"Android"
 #else
 	#define ENGINE_PLATFORM_STRING			"Unknown"
+#endif
+
 #endif

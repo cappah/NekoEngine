@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -71,7 +71,6 @@ private:
 	void _ProcessAnimation(struct aiAnimation *animation);
 	void _ProcessStaticMesh(struct aiMesh *mesh);
 	void _ProcessSkeletalMesh(struct aiMesh *mesh);
-	void _ProcessBones(struct aiMesh *mesh);
 
 	void _BuildNodeList(struct aiNode *node);
 	glm::dmat4 _ConvertMatrix(aiMatrix4x4 &mat);

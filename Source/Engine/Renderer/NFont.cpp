@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -39,15 +39,14 @@
 
 #include <algorithm>
 
+#include <GUI/GUI.h>
 #include <System/VFS/VFS.h>
 #include <Renderer/NFont.h>
-#include <Renderer/Debug.h>
 #include <Renderer/VKUtil.h>
 #include <Renderer/Renderer.h>
+#include <Renderer/DebugMarker.h>
 #include <Renderer/PipelineManager.h>
 #include <Renderer/RenderPassManager.h>
-
-#include <glm/gtc/type_ptr.hpp>
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -63,7 +62,7 @@ NFont::NFont(FontResource *res)
 {
 	_resourceInfo = res;
 
-	_cmdBuffer = VK_NULL_HANDLE;
+	_cmdBuffer = _oldCmdBuffer = VK_NULL_HANDLE;
 	_descriptorPool = VK_NULL_HANDLE;
 	_image = VK_NULL_HANDLE;
 	_imageMemory = VK_NULL_HANDLE;
@@ -74,6 +73,37 @@ NFont::NFont(FontResource *res)
 	_pixelSize = 20;
 
 	_buffer = _stagingBuffer = nullptr;
+}
+
+uint32_t NFont::GetTextLength(NString &text)
+{
+	uint32_t len = 0;
+
+	for (unsigned int i = 0; i < text.Length(); ++i)
+	{
+		CharacterInfo &info = _characterInfo[(int)text[i]];
+		len += info.bearing.x + info.size.x;
+	}
+
+	return len;
+}
+
+int NFont::SetPixelSize(int pixelSize)
+{
+	_pixelSize = pixelSize;
+
+	FT_Init_FreeType(&_ft);
+
+	int ret = _BuildAtlas();
+
+	FT_Done_FreeType(_ft);
+
+	_UpdateDescriptorSet();
+
+	if (ret == ENGINE_OK)
+		ret = _BuildCommandBuffer();
+
+	return ret;
 }
 
 int NFont::Load()
@@ -92,6 +122,8 @@ int NFont::Load()
 
 	if ((ret = _BuildCommandBuffer()) != ENGINE_OK)
 		return ret;
+
+	GUIManager::RegisterFont(this);
 
 	return ENGINE_OK;
 }
@@ -116,8 +148,8 @@ void NFont::UpdateData(VkCommandBuffer cmdBuffer)
 
 	VKUtil::CopyBuffer(_stagingBuffer->GetHandle(), _buffer->GetHandle(), _bufferSize, 0, _buffer->GetParentOffset(), cmdBuffer);
 
-	_vertices.Clear();
-	_indices.Clear();
+	_vertices.Clear(false);
+	_indices.Clear(false);
 }
 
 void NFont::Draw(NString text, glm::vec2 &pos, glm::vec3 &color) noexcept
@@ -168,8 +200,8 @@ void NFont::AddCommandBuffer()
 
 int NFont::_BuildAtlas()
 {
-	FT_Face face;
-	FT_GlyphSlot glyph;
+	FT_Face face{};
+	FT_GlyphSlot glyph{};
 	VFSFile *file = nullptr;
 	size_t size = 0;
 	uint8_t *mem = nullptr;
@@ -310,9 +342,9 @@ int NFont::_BuildAtlas()
 
 	FT_Done_Face(face);
 
-	DBG_SET_OBJECT_NAME((uint64_t)_buffer->GetHandle(), VK_DEBUG_REPORT_OBJECT_TYPE_BUFFER_EXT, *NString::StringWithFormat(40, "Font %s buffer", _resourceInfo->name.c_str()));
-	DBG_SET_OBJECT_NAME((uint64_t)_stagingBuffer->GetHandle(), VK_DEBUG_REPORT_OBJECT_TYPE_BUFFER_EXT, *NString::StringWithFormat(40, "Font %s staging buffer", _resourceInfo->name.c_str()));
-	DBG_SET_OBJECT_NAME((uint64_t)_image, VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_EXT, *NString::StringWithFormat(40, "Font %s image", _resourceInfo->name.c_str()));
+	VK_DBG_SET_OBJECT_NAME((uint64_t)_buffer->GetHandle(), VK_DEBUG_REPORT_OBJECT_TYPE_BUFFER_EXT, *NString::StringWithFormat(40, "Font %s buffer", _resourceInfo->name.c_str()));
+	VK_DBG_SET_OBJECT_NAME((uint64_t)_stagingBuffer->GetHandle(), VK_DEBUG_REPORT_OBJECT_TYPE_BUFFER_EXT, *NString::StringWithFormat(40, "Font %s staging buffer", _resourceInfo->name.c_str()));
+	VK_DBG_SET_OBJECT_NAME((uint64_t)_image, VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_EXT, *NString::StringWithFormat(40, "Font %s image", _resourceInfo->name.c_str()));
 
 	free(mem);
 
@@ -351,31 +383,30 @@ int NFont::_CreateDescriptorSet()
 		return ENGINE_DESCRIPTOR_SET_CREATE_FAIL;
 	}
 
-	VkDescriptorImageInfo imageInfo = {};
-	imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-	imageInfo.imageView = _view;
-	imageInfo.sampler = GUI::GetSampler();
-
-	VkWriteDescriptorSet textureDescriptorWrite = {};
-	textureDescriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-	textureDescriptorWrite.dstSet = _descriptorSet;
-	textureDescriptorWrite.dstBinding = 0;
-	textureDescriptorWrite.dstArrayElement = 0;
-	textureDescriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-	textureDescriptorWrite.descriptorCount = 1;
-	textureDescriptorWrite.pBufferInfo = nullptr;
-	textureDescriptorWrite.pImageInfo = &imageInfo;
-	textureDescriptorWrite.pTexelBufferView = nullptr;
-
-	vkUpdateDescriptorSets(VKUtil::GetDevice(), 1, &textureDescriptorWrite, 0, nullptr);
+	_UpdateDescriptorSet();
 
 	return ENGINE_OK;
 }
 
+void NFont::_UpdateDescriptorSet()
+{
+	VkDescriptorImageInfo imageInfo = {};
+	imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+	imageInfo.imageView = _view;
+	imageInfo.sampler = GUIManager::GetSampler();
+
+	VkWriteDescriptorSet textureDescriptorWrite{};
+	VKUtil::WriteDS(&textureDescriptorWrite, 1, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, &imageInfo, _descriptorSet, 0);
+
+	vkUpdateDescriptorSets(VKUtil::GetDevice(), 1, &textureDescriptorWrite, 0, nullptr);
+}
+
 int NFont::_BuildCommandBuffer()
 {
-	if (_cmdBuffer != VK_NULL_HANDLE)
-		VKUtil::FreeCommandBuffer(_cmdBuffer);
+	if (_oldCmdBuffer != VK_NULL_HANDLE)
+		VKUtil::FreeCommandBuffer(_oldCmdBuffer);
+
+	_oldCmdBuffer = _cmdBuffer;
 
 	if ((_cmdBuffer = VKUtil::CreateCommandBuffer(VK_COMMAND_BUFFER_LEVEL_SECONDARY)) == VK_NULL_HANDLE)
 		return ENGINE_CMDBUFFER_CREATE_FAIL;
@@ -398,14 +429,14 @@ int NFont::_BuildCommandBuffer()
 		return ENGINE_CMDBUFFER_BEGIN_FAIL;
 	}
 
-	DBG_MARKER_INSERT(_cmdBuffer, "Font", vec4(1.0, 0.5, 1.0, 1.0));
+	VK_DBG_MARKER_INSERT(_cmdBuffer, "Font", vec4(1.0, 0.5, 1.0, 1.0));
 
 	VkDeviceSize offset = _vboOffset;
 	vkCmdBindVertexBuffers(_cmdBuffer, 0, 1, &_buffer->GetHandle(), &offset);
 	vkCmdBindIndexBuffer(_cmdBuffer, _buffer->GetHandle(), _iboOffset, VK_INDEX_TYPE_UINT32);
 
 	vkCmdBindPipeline(_cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, PipelineManager::GetPipeline(PIPE_Font));
-	GUI::BindDescriptorSet(_cmdBuffer);
+	GUIManager::BindDescriptorSet(_cmdBuffer);
 	vkCmdBindDescriptorSets(_cmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, PipelineManager::GetPipelineLayout(PIPE_LYT_GUI), 1, 1, &_descriptorSet, 0, nullptr);
 
 	vkCmdDrawIndexedIndirect(_cmdBuffer, _buffer->GetHandle(), 0, 1, 0);
@@ -421,7 +452,11 @@ int NFont::_BuildCommandBuffer()
 
 NFont::~NFont()
 {
-	VKUtil::FreeCommandBuffer(_cmdBuffer);
+	if (_cmdBuffer != VK_NULL_HANDLE)
+		VKUtil::FreeCommandBuffer(_cmdBuffer);
+
+	if (_oldCmdBuffer != VK_NULL_HANDLE)
+		VKUtil::FreeCommandBuffer(_oldCmdBuffer);
 
 	if (_view != VK_NULL_HANDLE)
 		vkDestroyImageView(VKUtil::GetDevice(), _view, VKUtil::GetAllocator());

@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -53,12 +53,10 @@ public:
 	
 	ENGINE_API static int LoadArchive(NString path);
 
-	ENGINE_API static VFSFile* Open(NString &path);	
+	ENGINE_API static VFSFile *Open(NString &path);
+	ENGINE_API static VFSFile *Create(NString &path, bool compress = false);
 	ENGINE_API static bool Exists(NString &path);
+	ENGINE_API static void GetFilesInDirectory(const NString &directory, NArray<VFSFile *> files);
 
 	static void Release();
-
-private:
-	static std::vector<VFSFile> _looseFiles;
-	static std::vector<VFSArchive*> _archives;
 };

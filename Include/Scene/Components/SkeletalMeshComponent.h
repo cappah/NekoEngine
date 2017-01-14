@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -58,15 +58,17 @@ public:
 
 	ENGINE_API virtual void Update(double deltaTime) noexcept override;
 
-	ENGINE_API virtual bool BuildCommandBuffers() override;
+	ENGINE_API virtual bool InitDrawables() override;
+	ENGINE_API virtual bool RebuildCommandBuffers() override;
 
 	ENGINE_API virtual bool Unload() override;
 
 	ENGINE_API virtual ~SkeletalMeshComponent() { };
 
-	virtual VkDeviceSize GetRequiredMemorySize() override { return _mesh->GetRequiredMemorySize(); }
+	virtual VkDeviceSize GetRequiredMemorySize() const noexcept override { return _mesh->GetRequiredMemorySize(); }
 	
 	virtual void UpdateData(VkCommandBuffer commandBuffer) noexcept override;
+	ENGINE_API virtual void DrawShadow(VkCommandBuffer commandBuffer, uint32_t shadowId) const noexcept override;
 
 protected:
 	SkeletalMesh *_mesh;

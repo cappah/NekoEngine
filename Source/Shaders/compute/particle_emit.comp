@@ -1,0 +1,167 @@
+/* NekoEngine
+ *
+ * particle_update.comp
+ * Author: Alexandru Naiman
+ *
+ * Particle system compute shader
+ *
+ * -----------------------------------------------------------------------------
+ *
+ * Copyright (c) 2015-2017, Alexandru Naiman
+ *
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ * this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
+ *
+ * 3. Neither the name of the copyright holder nor the names of its contributors
+ * may be used to endorse or promote products derived from this software without
+ * specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ALEXANDRU NAIMAN "AS IS" AND ANY EXPRESS OR
+ * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ * IN NO EVENT SHALL ALEXANDRU NAIMAN BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
+ * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+ * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+#version 450 core
+#extension GL_GOOGLE_include_directive : require
+
+#include "math.glh"
+#include "particle_bindings.glh"
+
+#define RAND_ENABLE_NOISE	1
+#include "random.glh"
+
+#define EMITTER_QUAD		0
+#define EMITTER_CIRCLE		1
+#define EMITTER_SPHERE		2
+#define EMITTER_BOX			3
+#define EMITTER_POINT		4
+#define EMITTER_MESH		5
+
+float rand_a(vec3 s)
+{
+	return fract(sin(dot(s, vec3(12.9898, 78.233, 45.5432))) * 43758.5453);
+}
+
+layout(local_size_x = 256, local_size_y = 1, local_size_z = 1) in;
+
+vec3 quadPosition()
+{
+	vec3 pos = emitterData.positionAndLifespan.xyz;
+
+	float x = emitterData.scaleAndFinalSize.x / 2.0;
+	float y = emitterData.scaleAndFinalSize.y / 2.0;
+
+	pos.x += float(rand_range(rand_lcg(), uint(x)));
+	pos.y += float(rand_range(rand_lcg(), uint(y)));
+
+	return pos;
+}
+
+vec3 circlePosition()
+{
+	vec3 pos = emitterData.positionAndLifespan.xyz;
+
+	float d = float(rand_range(rand_lcg(), uint(emitterData.scaleAndFinalSize.x)));
+	float angle = float(rand_range(rand_lcg(), 360)) / float((2 * M_PI));
+
+	pos.x += d * cos(angle);
+	pos.y += d * sin(angle);
+
+	return pos;
+}
+
+vec3 spherePosition()
+{
+	vec3 pos = emitterData.positionAndLifespan.xyz;
+
+	float x = float(rand_range(rand_lcg(), uint(emitterData.scaleAndFinalSize.x)));
+	float z = float(rand_range(rand_lcg(), uint(emitterData.scaleAndFinalSize.x)));
+	float angle = float(rand_range(rand_lcg(), 360)) / float((2 * M_PI));
+
+	pos.x += x * cos(angle);
+	pos.y += x * sin(angle);
+	pos.z += z * cos(angle);
+
+	return pos;
+}
+
+vec3 boxPosition()
+{
+	vec3 pos = emitterData.positionAndLifespan.xyz;
+
+	float x = emitterData.scaleAndFinalSize.x / 2.0;
+	float y = emitterData.scaleAndFinalSize.y / 2.0;
+	float z = emitterData.scaleAndFinalSize.z / 2.0;
+
+	pos.x += float(rand_range(rand_lcg(), uint(x)));
+    pos.y += float(rand_range(rand_lcg(), uint(y)));
+    pos.z += float(rand_range(rand_lcg(), uint(z)));
+
+	return pos;
+}
+
+vec3 meshPosition()
+{
+	vec3 pos = emitterData.positionAndLifespan.xyz;
+	return pos;
+}
+
+void main()
+{
+	if (emitterData.enable != 1 || emitterData.currentParticles >= emitterData.maxParticles || emitterData.deltaTime < 0.0)
+		return;
+
+	if (gl_GlobalInvocationID.x == 0)
+		emitterData.nextEmitTime -= emitterData.deltaTime;
+
+	memoryBarrier(); barrier();
+
+	if (emitterData.nextEmitTime > 0.0)
+		return;
+
+	uint particleId = gl_GlobalInvocationID.x;
+	if (particleId > emitterData.maxParticles || particleBuffer.data[particleId].positionAndAge.w > 0.0)
+		return;
+
+	srand(rand_wanghash(gl_LocalInvocationID.x));
+
+	particleBuffer.data[particleId].velocityAndWeight.xyz = emitterData.initialVelocityAndRate.xyz;
+	particleBuffer.data[particleId].destinationAndSize.w = emitterData.rotationAndInitialSize.w;
+	particleBuffer.data[particleId].color = emitterData.initialColor;
+
+	switch(emitterData.emitterType)
+	{
+		case EMITTER_QUAD: particleBuffer.data[particleId].positionAndAge = vec4(quadPosition(), 0.0); break;
+		case EMITTER_CIRCLE: particleBuffer.data[particleId].positionAndAge = vec4(circlePosition(), 0.0); break;
+		case EMITTER_SPHERE: particleBuffer.data[particleId].positionAndAge = vec4(spherePosition(), 0.0); break;
+		case EMITTER_BOX: particleBuffer.data[particleId].positionAndAge = vec4(boxPosition(), 0.0); break;
+		case EMITTER_POINT: particleBuffer.data[particleId].positionAndAge = vec4(emitterData.positionAndLifespan.xyz, 0.0); break;
+		case EMITTER_MESH: particleBuffer.data[particleId].positionAndAge = vec4(meshPosition(), 0.0); break;
+	}
+
+	particleBuffer.data[particleId].destinationAndSize.xyz = particleBuffer.data[particleId].positionAndAge.xyz + (particleBuffer.data[particleId].velocityAndWeight.xyz * emitterData.positionAndLifespan.w);
+
+	atomicAdd(emitterData.currentParticles, 1);
+	atomicMax(emitterData.currentParticles, emitterData.maxParticles);
+
+	memoryBarrier(); barrier();
+
+	if (gl_GlobalInvocationID.x == 0)
+		emitterData.nextEmitTime = emitterData.initialVelocityAndRate.w;
+}

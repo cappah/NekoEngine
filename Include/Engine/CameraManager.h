@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -60,6 +60,7 @@ public:
 	ENGINE_API static void SetActiveCameraId(int32_t id) noexcept { _activeCamera = _cameras[id]; }
 	ENGINE_API static int32_t AddCamera(Camera *cam) noexcept { _cameras.push_back(cam); return (int32_t)_cameras.size(); }
 	ENGINE_API static size_t Count() noexcept { return _cameras.size(); }
+	ENGINE_API static void RemoveAllCameras() { _cameras.clear(); }
 
 private:
 	static std::vector<Camera *> _cameras;

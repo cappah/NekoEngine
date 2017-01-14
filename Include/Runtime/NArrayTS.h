@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -60,14 +60,14 @@ public:
 		_mutex.unlock();
 	}
 
-	void Insert(uint32_t index, T &item)
+	void Insert(size_t index, T &item)
 	{
 		_mutex.lock();
 		NArray<T>::Insert(index, item);
 		_mutex.unlock();
 	}
 
-	void Remove(uint32_t index)
+	void Remove(size_t index)
 	{
 		_mutex.lock();
 		NArray<T>::Remove(index);
@@ -99,16 +99,16 @@ public:
 		_mutex.unlock();
 	}
 
-	void Clear()
+	void Clear(bool freeMemory = true)
 	{
 		_mutex.lock();
-		NArray<T>::Clear();
+		NArray<T>::Clear(freeMemory);
 		_mutex.unlock();
 	}
 
 	virtual ~NArrayTS()
 	{
-		Clear();
+		Clear(true);
 	}
 
 	NArrayTS<T> &operator =(const NArrayTS<T> &other)

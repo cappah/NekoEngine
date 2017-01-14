@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -50,7 +50,6 @@ void CameraInterface::Register(lua_State *state)
 	lua_register(state, "Cam_GetPosition", GetPosition);
 	lua_register(state, "Cam_GetRotation", GetRotation);
 	lua_register(state, "Cam_GetViewMatrix", GetViewMatrix);
-	lua_register(state, "Cam_GetModelMatirx", GetModelMatrix);
 	lua_register(state, "Cam_GetProjectionMatrix", GetProjectionMatrix);
 	lua_register(state, "Cam_GetNear", GetNear);
 	lua_register(state, "Cam_GetFar", GetFar);
@@ -134,18 +133,6 @@ int CameraInterface::GetViewMatrix(lua_State *state)
 		return luaL_error(state, "Invalid arguments");
 
 	lua_pushlightuserdata(state, value_ptr(((Camera *)lua_touserdata(state, 1))->GetView()));
-
-	return 1;
-}
-
-int CameraInterface::GetModelMatrix(lua_State *state)
-{
-	int argc{ lua_gettop(state) };
-
-	if (argc != 1)
-		return luaL_error(state, "Invalid arguments");
-
-	lua_pushlightuserdata(state, value_ptr(((Camera *)lua_touserdata(state, 1))->GetModel()));
 
 	return 1;
 }

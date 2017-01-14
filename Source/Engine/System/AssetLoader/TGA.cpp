@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -128,6 +128,8 @@ static inline void _loadCompressedImage(uint8_t *dst, const uint8_t *src, TGAHea
 				src += 3;
 				if (header->bits != 24)
 					*dstPtr++ = *src++;
+				else
+					*dstPtr++ = 0;
 				count++;
 			}
 		}
@@ -143,6 +145,8 @@ static inline void _loadCompressedImage(uint8_t *dst, const uint8_t *src, TGAHea
 				*dstPtr++ = src[0];
 				if (header->bits != 24)
 					*dstPtr++ = src[3];
+				else
+					*dstPtr++ = 0;
 				count++;
 			}
 			src += (header->bits >> 3);
@@ -172,6 +176,7 @@ static inline void _loadUncompressedImage(uint8_t *dst, const uint8_t *src, TGAH
 				*dst++ = srcRow[2];
 				*dst++ = srcRow[1];
 				*dst++ = srcRow[0];
+				*dst++ = 0;
 				srcRow += 3;
 			}
 		}
@@ -208,7 +213,7 @@ int AssetLoader::LoadTGA(const uint8_t *data, uint64_t dataSize, uint32_t &width
 	if (imgSize < header.width || imgSize < header.height)
 		return ENGINE_INVALID_HEADER;
 
-	uint64_t size = imgSize * header.bits;
+	uint64_t size = imgSize * (header.bits == 8 ? 8 : 32);
 	if (size < imgSize || size < header.bits)
 		return ENGINE_INVALID_HEADER;
 
@@ -222,7 +227,7 @@ int AssetLoader::LoadTGA(const uint8_t *data, uint64_t dataSize, uint32_t &width
 
 	width = header.width;
 	height = header.height;
-	bpp = header.bits;
+	bpp = header.bits == 8 ? 8 : 32;
 
 	return ENGINE_OK;
 }

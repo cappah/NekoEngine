@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -94,6 +94,185 @@ public:
 		return 0;
 	}
 
+	// Initializers
+
+	static inline void InitShaderStage(VkPipelineShaderStageCreateInfo *shci,
+									   VkShaderStageFlagBits stage, VkShaderModule module,
+									   const VkSpecializationInfo *specInfo = nullptr, const char *name = "main")
+	{
+		shci->sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+		shci->stage = stage;
+		shci->module = module;
+		shci->pSpecializationInfo = specInfo;
+		shci->pName = name;
+	}
+
+	static inline void InitVertexInput(VkPipelineVertexInputStateCreateInfo *vici,
+									   uint32_t bindingCount = 0, const VkVertexInputBindingDescription *vertexBindings = nullptr,
+									   uint32_t attributeCount = 0, const VkVertexInputAttributeDescription *attributeDesc = nullptr)
+	{
+		vici->sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
+		vici->vertexBindingDescriptionCount = bindingCount;
+		vici->pVertexBindingDescriptions = vertexBindings;
+		vici->vertexAttributeDescriptionCount = attributeCount;
+		vici->pVertexAttributeDescriptions = attributeDesc;
+	}
+
+	static inline void InitInputAssembly(VkPipelineInputAssemblyStateCreateInfo *iaci,
+										 VkPrimitiveTopology topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST,
+										 VkBool32 primitiveRestartEnable = VK_FALSE)
+	{
+		iaci->sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
+		iaci->topology = topology;
+		iaci->primitiveRestartEnable = primitiveRestartEnable;
+	}
+
+	static inline void InitRasterizationState(VkPipelineRasterizationStateCreateInfo *rsci,
+											  VkPolygonMode polygonMode = VK_POLYGON_MODE_FILL,
+											  VkCullModeFlags cullMode = VK_CULL_MODE_BACK_BIT, VkFrontFace frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE,
+											  VkBool32 discardEnable = VK_FALSE, float lineWidth = 1.f,
+											  VkBool32 depthClampEnable = VK_FALSE, VkBool32 depthBiasEnable = VK_FALSE,
+											  float biasConstant = 0.f, float biasClamp = 0.f, float biasSlope = 0.f)
+	{
+		rsci->sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
+		rsci->polygonMode = polygonMode;
+		rsci->cullMode = cullMode;
+		rsci->frontFace = frontFace;
+		rsci->lineWidth = lineWidth;
+		rsci->depthClampEnable = depthClampEnable;
+		rsci->depthBiasEnable = depthBiasEnable;
+		rsci->depthBiasConstantFactor = biasConstant;
+		rsci->depthBiasClamp = biasClamp;
+		rsci->depthBiasSlopeFactor = biasSlope;
+		rsci->rasterizerDiscardEnable = discardEnable;
+	}
+
+	static inline void InitMultisampleState(VkPipelineMultisampleStateCreateInfo *msci,
+											VkSampleCountFlagBits samples,
+											VkBool32 enableSampleShading = VK_FALSE, float minSampleShading = 0.f,
+											VkBool32 enableAlphaToCoverage = VK_FALSE, VkBool32 enableAlphaToOne = VK_FALSE)
+	{
+		msci->sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
+		msci->rasterizationSamples = samples;
+		msci->sampleShadingEnable = enableSampleShading;
+		msci->minSampleShading = minSampleShading;
+		msci->alphaToCoverageEnable = enableAlphaToCoverage;
+		msci->alphaToOneEnable = enableAlphaToOne;
+	}
+
+	static inline void InitDepthState(VkPipelineDepthStencilStateCreateInfo *dsci,
+										VkBool32 depthTestEnable = VK_TRUE, VkBool32 depthWriteEnable = VK_TRUE, VkCompareOp depthCompare = VK_COMPARE_OP_LESS,
+										VkBool32 depthBoundsEnable = VK_FALSE, float minDepthBounds = 0.f, float maxDepthBounds = 1.f)
+	{
+		dsci->sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
+		dsci->depthTestEnable = depthTestEnable;
+		dsci->depthWriteEnable = depthWriteEnable;
+		dsci->depthCompareOp = depthCompare;
+		dsci->depthBoundsTestEnable = depthBoundsEnable;
+		dsci->minDepthBounds = minDepthBounds;
+		dsci->maxDepthBounds = maxDepthBounds;		
+	}
+
+	static inline void InitStencilState(VkPipelineDepthStencilStateCreateInfo *dsci,
+										VkBool32 stencilTestEnable = VK_FALSE, VkStencilOpState front = {}, VkStencilOpState back = {})
+	{
+		dsci->sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
+		dsci->stencilTestEnable = stencilTestEnable;
+		dsci->front = front;
+		dsci->back = back;
+	}
+
+	static inline void InitColorBlendState(VkPipelineColorBlendStateCreateInfo *cbsci,
+										   uint32_t attachmentCount, const VkPipelineColorBlendAttachmentState *attachments,
+										   VkBool32 enableLogicOp = VK_FALSE, VkLogicOp logicOp = VK_LOGIC_OP_COPY,
+										   float *blendConstants = nullptr)
+	{
+		cbsci->sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
+		cbsci->attachmentCount = attachmentCount;
+		cbsci->pAttachments = attachments;
+		cbsci->logicOpEnable = enableLogicOp;
+		cbsci->logicOp = logicOp;
+
+		if (blendConstants)
+			memcpy(&cbsci->blendConstants[0], blendConstants, sizeof(float) * 4);
+	}
+
+	static inline void InitColorBlendAttachmentState(VkPipelineColorBlendAttachmentState *cbastate,
+													 VkBool32 blendEnable, VkColorComponentFlags writeMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT,
+													 VkBlendOp colorBlendOp = VK_BLEND_OP_ADD, VkBlendFactor srcColor = VK_BLEND_FACTOR_SRC_COLOR, VkBlendFactor dstColor = VK_BLEND_FACTOR_SRC_COLOR,
+													 VkBlendOp alphaBlendOp = VK_BLEND_OP_ADD, VkBlendFactor srcAlpha = VK_BLEND_FACTOR_SRC_ALPHA, VkBlendFactor dstAlpha = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA)
+	{
+		cbastate->blendEnable = blendEnable;
+		cbastate->colorWriteMask = writeMask;
+		cbastate->colorBlendOp = colorBlendOp;
+		cbastate->srcColorBlendFactor = srcColor;
+		cbastate->dstColorBlendFactor = dstColor;
+		cbastate->alphaBlendOp = colorBlendOp;
+		cbastate->srcAlphaBlendFactor = srcAlpha;
+		cbastate->dstAlphaBlendFactor = dstAlpha;
+	}
+
+	static inline void InitViewport(VkViewport *vp, float width, float height,
+									float x = 0.f, float y = 0.f,
+									float minDepth = 0.f, float maxDepth = 1.f)
+	{
+		vp->width = width;
+		vp->height = height;
+		vp->x = x;
+		vp->y = y;
+		vp->minDepth = minDepth;
+		vp->maxDepth = maxDepth;
+	}
+
+	static inline void InitScissor(VkRect2D *scissor, uint32_t width, uint32_t height,
+								   uint32_t x = 0, uint32_t y = 0)
+	{
+		scissor->offset.x = 0;
+		scissor->offset.y = 0;
+		scissor->extent.width = width;
+		scissor->extent.height = height;
+	}
+
+	static inline void InitViewportState(VkPipelineViewportStateCreateInfo *vpci,
+										 uint32_t viewportCount, VkViewport *viewports,
+										 uint32_t scissorCount, VkRect2D *scissors)
+	{
+		vpci->sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
+		vpci->viewportCount = viewportCount;
+		vpci->pViewports = viewports;
+		vpci->scissorCount = scissorCount;
+		vpci->pScissors = scissors;
+	}
+
+	static inline void WriteDS(VkWriteDescriptorSet *wds, uint32_t count, VkDescriptorType type, void *ptr,
+							   VkDescriptorSet set, uint32_t binding, uint32_t arrayElement = 0)
+	{
+		wds->sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+		wds->descriptorCount = count;
+		wds->descriptorType = type;
+		wds->dstSet = set;
+		wds->dstBinding = binding;
+		wds->dstArrayElement = arrayElement;
+
+		switch (type)
+		{
+			case VK_DESCRIPTOR_TYPE_SAMPLER:
+			case VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER:
+			case VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT:
+			case VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE:
+			case VK_DESCRIPTOR_TYPE_STORAGE_IMAGE:
+				wds->pImageInfo = (VkDescriptorImageInfo *)ptr;
+			break;
+			case VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER:
+			case VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER:
+				wds->pTexelBufferView = (VkBufferView *)ptr;
+			break;
+			default:
+				wds->pBufferInfo = (VkDescriptorBufferInfo *)ptr;
+			break;
+		}
+	}
+
 	// Command buffers
 
 	static inline VkCommandBuffer CreateCommandBuffer(VkCommandBufferLevel level, VkCommandPool commandPool = _graphicsCommandPool)
@@ -112,36 +291,8 @@ public:
 		return commandBuffer;
 	}
 
-	static inline void FreeCommandBuffer(VkCommandBuffer commandBuffer, VkCommandPool commandPool = _graphicsCommandPool)
+	static inline void ExecuteCommandBuffer(VkCommandBuffer commandBuffer, VkCommandPool pool = _graphicsCommandPool, VkQueue queue = _graphicsQueue, VkSemaphore wait = VK_NULL_HANDLE, VkPipelineStageFlags waitDst = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT)
 	{
-		vkFreeCommandBuffers(_device, commandPool, 1, &commandBuffer);
-	}
-
-	static inline VkCommandBuffer CreateOneShotCmdBuffer(VkCommandPool pool = _graphicsCommandPool)
-	{
-		VkCommandBufferAllocateInfo allocInfo = {};
-		allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-		allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-		allocInfo.commandPool = pool;
-		allocInfo.commandBufferCount = 1;
-
-		VkCommandBuffer commandBuffer;
-		if(vkAllocateCommandBuffers(_device, &allocInfo, &commandBuffer) != VK_SUCCESS)
-			VKUTIL_ERR_HANDLE("Failed to allocate command buffer");
-
-		VkCommandBufferBeginInfo beginInfo = {};
-		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-		beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
-
-		vkBeginCommandBuffer(commandBuffer, &beginInfo);
-
-		return commandBuffer;
-	}
-
-	static inline void ExecuteOneShotCmdBuffer(VkCommandBuffer commandBuffer, VkCommandPool pool = _graphicsCommandPool, VkQueue queue = _graphicsQueue, VkSemaphore wait = VK_NULL_HANDLE, VkPipelineStageFlags waitDst = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT)
-	{
-		vkEndCommandBuffer(commandBuffer);
-
 		VkSubmitInfo submitInfo = {};
 		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 		submitInfo.commandBufferCount = 1;
@@ -158,7 +309,38 @@ public:
 		vkQueueSubmit(queue, 1, &submitInfo, VK_NULL_HANDLE);
 
 		if (wait == VK_NULL_HANDLE) vkQueueWaitIdle(queue);
+	}
 
+	static inline void FreeCommandBuffer(VkCommandBuffer commandBuffer, VkCommandPool commandPool = _graphicsCommandPool)
+	{
+		vkFreeCommandBuffers(_device, commandPool, 1, &commandBuffer);
+	}
+
+	static inline VkCommandBuffer CreateOneShotCmdBuffer(VkCommandPool pool = _graphicsCommandPool)
+	{
+		VkCommandBufferAllocateInfo allocInfo{};
+		allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+		allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+		allocInfo.commandPool = pool;
+		allocInfo.commandBufferCount = 1;
+
+		VkCommandBuffer commandBuffer;
+		if(vkAllocateCommandBuffers(_device, &allocInfo, &commandBuffer) != VK_SUCCESS)
+			VKUTIL_ERR_HANDLE("Failed to allocate command buffer");
+
+		VkCommandBufferBeginInfo beginInfo{};
+		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+		beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+
+		vkBeginCommandBuffer(commandBuffer, &beginInfo);
+
+		return commandBuffer;
+	}
+
+	static inline void ExecuteOneShotCmdBuffer(VkCommandBuffer commandBuffer, VkCommandPool pool = _graphicsCommandPool, VkQueue queue = _graphicsQueue, VkSemaphore wait = VK_NULL_HANDLE, VkPipelineStageFlags waitDst = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT)
+	{
+		vkEndCommandBuffer(commandBuffer);
+		ExecuteCommandBuffer(commandBuffer, pool, queue, wait, waitDst);
 		vkFreeCommandBuffers(_device, pool, 1, &commandBuffer);
 	}
 
@@ -208,6 +390,20 @@ public:
 		copyRegion.dstOffset = dstOffset;
 		copyRegion.size = size;
 		vkCmdCopyBuffer(cmdBuffer, src, dst, 1, &copyRegion);
+
+		if (submit)
+			ExecuteOneShotCmdBuffer(cmdBuffer, pool, queue);
+	}
+
+	static inline void FillBuffer(VkBuffer buffer, VkDeviceSize offset, VkDeviceSize size, uint32_t data, VkCommandBuffer cmdBuffer = VK_NULL_HANDLE, bool submit = false, VkCommandPool pool = _graphicsCommandPool, VkQueue queue = _graphicsQueue)
+	{
+		if (cmdBuffer == VK_NULL_HANDLE)
+		{
+			cmdBuffer = CreateOneShotCmdBuffer();
+			submit = true;
+		}
+		
+		vkCmdFillBuffer(cmdBuffer, buffer, offset, size, data);
 
 		if (submit)
 			ExecuteOneShotCmdBuffer(cmdBuffer, pool, queue);

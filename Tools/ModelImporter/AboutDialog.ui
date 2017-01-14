@@ -80,7 +80,7 @@
     </font>
    </property>
    <property name="text">
-    <string>Version 0.4.0.400</string>
+    <string>Version 0.4.0.402</string>
    </property>
   </widget>
   <widget class="QPlainTextEdit" name="plainTextEdit">

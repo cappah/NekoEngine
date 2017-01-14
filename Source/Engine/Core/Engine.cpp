@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -39,6 +39,8 @@
 
 #include <chrono>
 
+#include <GUI/GUI.h>
+#include <Engine/Debug.h>
 #include <Engine/Input.h>
 #include <Engine/Engine.h>
 #include <Engine/Events.h>
@@ -49,11 +51,15 @@
 #include <Engine/SceneManager.h>
 #include <Engine/EventManager.h>
 #include <Engine/ResourceManager.h>
+#include <Audio/AudioSystem.h>
 #include <System/Logger.h>
 #include <System/VFS/VFS.h>
 #include <Renderer/SSAO.h>
 #include <Renderer/Renderer.h>
 #include <Renderer/PostProcessor.h>
+#include <Profiler/Profiler.h>
+#include <Physics/Physics.h>
+#include <Platform/CrashHandler.h>
 
  // 60 Hz logic update
 #define UPDATE_DELTA	.01666
@@ -65,13 +71,18 @@ using namespace std;
 using namespace std::chrono;
 
 Configuration Engine::_config;
+DebugVariables Engine::_debugVariables
+{
+	false
+};
 GameModule *Engine::_gameModule = nullptr;
 PlatformModuleType Engine::_gameModuleLibrary = nullptr;
 bool Engine::_iniFileLoaded = false;
 bool Engine::_paused = false;
 bool Engine::_editor = false;
 bool Engine::_disposed = false;
-bool Engine::_drawStats = true;
+bool Engine::_drawStats = false;
+bool Engine::_startup = true;
 vec2 Engine::_scaleFactor{ 1.f,1.f };
 
 high_resolution_clock::time_point _prevTime;
@@ -99,12 +110,12 @@ void Engine::Frame() noexcept
 {
 	static double lastTime = GetTime(), lastFPSTime = GetTime(), nextUpdateTime = 0.0;
 	static int nFrames = 0;
-	double curTime = GetTime();
-	double deltaTime = curTime - lastTime;
-	double deltaFPSTime = curTime - lastFPSTime;
+	const double curTime = GetTime();
+	const double deltaTime = curTime - lastTime;
+	const double deltaFPSTime = curTime - lastFPSTime;
 
-	nFrames++;
-
+	++nFrames;
+	
 	if (deltaFPSTime > 1.f)
 	{
 		_fps = nFrames;
@@ -112,18 +123,15 @@ void Engine::Frame() noexcept
 		lastFPSTime += deltaFPSTime;
 		nFrames = 0;
 	}
+	
+	//if (curTime > nextUpdateTime)
+	//{
+		_Update(deltaTime);
+		lastTime = curTime;
+	//	nextUpdateTime += UPDATE_DELTA;
+//	}
 
-	if (!_paused)
-	{
-		if (curTime > nextUpdateTime)
-		{
-			_Update(deltaTime);
-			lastTime = curTime;
-			nextUpdateTime += UPDATE_DELTA;
-		}
-
-		_Draw();
-	}
+	_Draw();
 
 #if defined(NE_CONFIG_DEBUG) || defined(NE_CONFIG_DEVELOPMENT)
 	Logger::Flush();
@@ -132,12 +140,19 @@ void Engine::Frame() noexcept
 
 void Engine::ScreenResized(int width, int height) noexcept
 {
-	//
+	if (_startup)
+		return;
+
+	_config.Engine.ScreenWidth = width;
+	_config.Engine.ScreenHeight = height;
+
+	Renderer::GetInstance()->ScreenResized();
+	GUIManager::ScreenResized();
 }
 
 double Engine::GetTime() noexcept
 {
-	high_resolution_clock::time_point time = high_resolution_clock::now();
+	const high_resolution_clock::time_point time = high_resolution_clock::now();
 	high_resolution_clock::duration diff = time - _prevTime;
 
 	return (double)diff.count() * high_resolution_clock::period::num / high_resolution_clock::period::den;
@@ -173,7 +188,7 @@ void Engine::CleanUp() noexcept
 {
 	if (_disposed)
 		return;
-
+	
 	Logger::Log(ENGINE_MODULE, LOG_INFORMATION, "Shuting down...");
 
 	EventManager::Broadcast(NE_EVT_SHUTDOWN, nullptr);
@@ -183,14 +198,13 @@ void Engine::CleanUp() noexcept
 	if (_gameModule)
 		_gameModule->CleanUp();
 
-	if (_config.Renderer.SSAO.Enable) SSAO::Release();
-	if (_config.PostProcessor.Enable) PostProcessor::Release();
-
-	GUI::Release();
+	GUIManager::Release();
 	SceneManager::Release();
 	ResourceManager::Release();
 	SoundManager::Release();
 	Renderer::Release();
+	AudioSystem::ReleaseInstance();
+	Physics::ReleaseInstance();
 	VFS::Release();
 	Input::Release();
 	Console::Release();
@@ -202,25 +216,41 @@ void Engine::CleanUp() noexcept
 	_gameModuleLibrary = nullptr;
 
 	EngineClassFactory::CleanUp();
+	Platform::CleanUp();
 
 	Logger::Log(ENGINE_MODULE, LOG_INFORMATION, "Shutdown complete");
 
-	Platform::CleanUp();
+	CrashHandler::Cleanup();
+
+	EngineDebug::LogLeaks();
 
 	_disposed = true;
 }
 
+void Engine::_FixedUpdate()
+{
+	//
+}
+
 void Engine::_Update(double deltaTime)
 {
-	Input::Update();
+	PROF_BEGIN("Update", vec3(1.f, 1.f, 0.f));
 
-	if (!_paused && SceneManager::IsSceneLoaded())
-		SceneManager::UpdateScene(deltaTime);
+	Input::Update();
+	PROF_MARKER("Input", vec3(1.f, 1.f, 0.f));
+
+	Physics::GetInstance()->Update(deltaTime);
+	PROF_MARKER("Physics", vec3(1.f, 1.f, 0.f));
+
+	SceneManager::UpdateScene(deltaTime);
+	PROF_MARKER("Scene", vec3(1.f, 1.f, 0.f));
 
 	if (_drawStats) _DrawStats();
 	if (Console::IsOpen()) Console::Update();
 
-	GUI::Update(deltaTime);
+	GUIManager::Update(deltaTime);
+	PROF_MARKER("GUI", vec3(1.f, 1.f, 0.f));	
+
 	Renderer::GetInstance()->Update(deltaTime);
 
 	Input::ClearKeyState();
@@ -233,30 +263,30 @@ void Engine::_Draw()
 
 void Engine::_DrawStats()
 {
-	float charHeight = (float)GUI::GetCharacterHeight();
-	vec3 color = vec3(1.f, 1.f, 1.f);
+	const float charHeight = (float)GUIManager::GetCharacterHeight();
+	const vec3 color = vec3(1.f, 1.f, 1.f);
 
-	GUI::DrawString(vec2(0.f, 0.f), color, "FPS:       %d (%.02f ms)", _fps, _frameTime);
-	GUI::DrawString(vec2(0.f, charHeight * 1), color, "Renderer:  %s %s", Renderer::GetInstance()->GetAPIName(), Renderer::GetInstance()->GetAPIVersion());
-	GUI::DrawString(vec2(0.f, charHeight * 2), color, "Device:    %s", Renderer::GetInstance()->GetDeviceName());
+	GUIManager::DrawString(vec2(0.f, 0.f), color, "FPS:       %d (%.02f ms)", _fps, _frameTime);
+	GUIManager::DrawString(vec2(0.f, charHeight * 1), color, "Renderer:  %s %s", Renderer::GetInstance()->GetAPIName(), Renderer::GetInstance()->GetAPIVersion());
+	GUIManager::DrawString(vec2(0.f, charHeight * 2), color, "Device:    %s", Renderer::GetInstance()->GetDeviceName());
 
 	if (_config.Renderer.Supersampling)
-		GUI::DrawString(vec2(0.f, charHeight * 3), color, "Screen:    %dx%d (%dx%d)", _config.Engine.ScreenWidth, _config.Engine.ScreenHeight, GetScreenWidth(), GetScreenHeight());
+		GUIManager::DrawString(vec2(0.f, charHeight * 3), color, "Screen:    %dx%d (%dx%d)", _config.Engine.ScreenWidth, _config.Engine.ScreenHeight, GetScreenWidth(), GetScreenHeight());
 	else
-		GUI::DrawString(vec2(0.f, charHeight * 3), color, "Screen:    %dx%d", _config.Engine.ScreenWidth, _config.Engine.ScreenHeight);
+		GUIManager::DrawString(vec2(0.f, charHeight * 3), color, "Screen:    %dx%d", _config.Engine.ScreenWidth, _config.Engine.ScreenHeight);
 
-	GUI::DrawString(vec2(0.f, charHeight * 4), color, "Scene:     %s", SceneManager::IsSceneLoaded() ? *SceneManager::GetActiveScene()->GetName() : "No scene loaded");
-	GUI::DrawString(vec2(0.f, charHeight * 5), color, "Verts:     %d", SceneManager::IsSceneLoaded() ? SceneManager::GetActiveScene()->GetVertexCount() : 0);
-	GUI::DrawString(vec2(0.f, charHeight * 6), color, "Tris:      %d", SceneManager::IsSceneLoaded() ? SceneManager::GetActiveScene()->GetTriangleCount() : 0);
-	GUI::DrawString(vec2(0.f, charHeight * 7), color, "Objects:   %d", SceneManager::IsSceneLoaded() ? SceneManager::GetActiveScene()->GetObjectCount() : 0);
-	GUI::DrawString(vec2(0.f, charHeight * 8), color, "Lights:    %d", Renderer::GetInstance()->GetNumLights());
-	GUI::DrawString(vec2(0.f, charHeight * 9), color, "StMeshes:  %d", ResourceManager::LoadedStaticMeshes());
-	GUI::DrawString(vec2(0.f, charHeight * 10), color, "SkMeshes:  %d", ResourceManager::LoadedSkeletalMeshes());
-	GUI::DrawString(vec2(0.f, charHeight * 11), color, "Textures:  %d", ResourceManager::LoadedTextures());
-	GUI::DrawString(vec2(0.f, charHeight * 12), color, "Shaders:   %d", ResourceManager::LoadedShaderModules());
-	GUI::DrawString(vec2(0.f, charHeight * 13), color, "Materials: %d", ResourceManager::LoadedMaterials());
-	GUI::DrawString(vec2(0.f, charHeight * 14), color, "Sounds:    %d", ResourceManager::LoadedSounds());
-	GUI::DrawString(vec2(0.f, charHeight * 15), color, "Fonts:     %d", ResourceManager::LoadedFonts());
+	GUIManager::DrawString(vec2(0.f, charHeight * 4), color, "Scene:     %s", SceneManager::IsSceneLoaded() ? *SceneManager::GetActiveScene()->GetName() : "No scene loaded");
+	GUIManager::DrawString(vec2(0.f, charHeight * 5), color, "Verts:     %d", SceneManager::IsSceneLoaded() ? SceneManager::GetActiveScene()->GetVertexCount() : 0);
+	GUIManager::DrawString(vec2(0.f, charHeight * 6), color, "Tris:      %d", SceneManager::IsSceneLoaded() ? SceneManager::GetActiveScene()->GetTriangleCount() : 0);
+	GUIManager::DrawString(vec2(0.f, charHeight * 7), color, "Objects:   %d", SceneManager::IsSceneLoaded() ? SceneManager::GetActiveScene()->GetObjectCount() : 0);
+	GUIManager::DrawString(vec2(0.f, charHeight * 8), color, "Lights:    %d", Renderer::GetInstance()->GetNumLights());
+	GUIManager::DrawString(vec2(0.f, charHeight * 9), color, "StMeshes:  %d", ResourceManager::LoadedStaticMeshes());
+	GUIManager::DrawString(vec2(0.f, charHeight * 10), color, "SkMeshes:  %d", ResourceManager::LoadedSkeletalMeshes());
+	GUIManager::DrawString(vec2(0.f, charHeight * 11), color, "Textures:  %d", ResourceManager::LoadedTextures());
+	GUIManager::DrawString(vec2(0.f, charHeight * 12), color, "Shaders:   %d", ResourceManager::LoadedShaderModules());
+	GUIManager::DrawString(vec2(0.f, charHeight * 13), color, "Materials: %d", ResourceManager::LoadedMaterials());
+	GUIManager::DrawString(vec2(0.f, charHeight * 14), color, "Sounds:    %d", ResourceManager::LoadedSounds());
+	GUIManager::DrawString(vec2(0.f, charHeight * 15), color, "Fonts:     %d", ResourceManager::LoadedFonts());
 
 	/*if (_haveMemoryInfo)
 	{
@@ -268,12 +298,12 @@ void Engine::_DrawStats()
 	DrawString(vec2(0.f, charHeight * 16), color, "VRAM:      %d/%d MB", (totalMem - availableMem) / 1024, totalMem / 1024);
 	}*/
 
-	GUI::DrawString(vec2(0.f, _config.Engine.ScreenHeight - charHeight * 2), color, "NekoEngine");
+	GUIManager::DrawString(vec2(0.f, _config.Engine.ScreenHeight - charHeight * 2), color, "NekoEngine");
 #if defined(NE_CONFIG_DEBUG)
-	GUI::DrawString(vec2(0.f, _config.Engine.ScreenHeight - charHeight), color, "Version: %s [%s] [Debug]", ENGINE_VERSION_STRING, ENGINE_PLATFORM_STRING);
+	GUIManager::DrawString(vec2(0.f, _config.Engine.ScreenHeight - charHeight), color, "Version: %s \"%s\" [%s] [Debug]", ENGINE_VERSION_STRING, ENGINE_WORKING_NAME, ENGINE_PLATFORM_STRING);
 #elif defined(NE_CONFIG_DEVELOPMENT)
-	GUI::DrawString(vec2(0.f, _config.Engine.ScreenHeight - charHeight), color, "Version: %s [%s] [Development]", ENGINE_VERSION_STRING, ENGINE_PLATFORM_STRING);
+	GUIManager::DrawString(vec2(0.f, _config.Engine.ScreenHeight - charHeight), color, "Version: %s \"%s\" [%s] [Development]", ENGINE_VERSION_STRING, ENGINE_WORKING_NAME, ENGINE_PLATFORM_STRING);
 #else
-	GUI::DrawString(vec2(0.f, _config.Engine.ScreenHeight - charHeight), color, "Version: %s [%s]", ENGINE_VERSION_STRING, ENGINE_PLATFORM_STRING);
+	GUIManager::DrawString(vec2(0.f, _config.Engine.ScreenHeight - charHeight), color, "Version: %s \"%s\" [%s]", ENGINE_VERSION_STRING, ENGINE_WORKING_NAME, ENGINE_PLATFORM_STRING);
 #endif
 }

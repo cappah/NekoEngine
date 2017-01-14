@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -49,10 +49,10 @@ ENGINE_REGISTER_COMPONENT_CLASS(ScriptComponent);
 ScriptComponent::ScriptComponent(ComponentInitializer *initializer)
 	: ObjectComponent(initializer)
 {
-	_enabled = true;
-
 	ArgumentMapType::iterator it{};
 	const char *ptr{ nullptr };
+
+	_enabled = false;
 
 	if (((it = initializer->arguments.find("script")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
 		_scriptFile = ptr;
@@ -72,6 +72,8 @@ int ScriptComponent::Load()
 	if (!Script::LoadScript(_state, _scriptFile))
 		return ENGINE_FAIL;
 
+	_enabled = true;
+
 	lua_getglobal(_state, "Load");
 
 	if (!lua_isfunction(_state, lua_gettop(_state)))
@@ -80,6 +82,7 @@ int ScriptComponent::Load()
 	if (lua_pcall(_state, 0, 1, 0) && lua_gettop(_state))
 	{
 		Logger::Log(SC_COMP_MODULE, LOG_CRITICAL, "Failed to execute Load() function of script %s: %s", *_scriptFile, lua_tostring(_state, -1));
+		Logger::Log(SC_COMP_MODULE, LOG_DEBUG, "\n%s", *Script::StackDump(_state));
 		lua_pop(_state, 1);
 		return ENGINE_FAIL;
 	}
@@ -107,6 +110,7 @@ int ScriptComponent::InitializeComponent()
 	if (lua_pcall(_state, 0, 1, 0) && lua_gettop(_state))
 	{
 		Logger::Log(SC_COMP_MODULE, LOG_CRITICAL, "Failed to execute InitializeComponent() function of script %s: %s", *_scriptFile, lua_tostring(_state, -1));
+		Logger::Log(SC_COMP_MODULE, LOG_DEBUG, "\n%s", *Script::StackDump(_state));
 		lua_pop(_state, 1);
 		return ENGINE_FAIL;
 	}
@@ -128,8 +132,9 @@ void ScriptComponent::Update(double deltaTime) noexcept
 
 	if (!lua_isfunction(_state, lua_gettop(_state)))
 	{
-		lua_pop(_state, 1);
 		Logger::Log(SC_COMP_MODULE, LOG_CRITICAL, "Script %s missing Update() function.", *_scriptFile);
+		Logger::Log(SC_COMP_MODULE, LOG_DEBUG, "\n%s", *Script::StackDump(_state));
+		lua_pop(_state, 1);
 		_enabled = false;
 		return;
 	}
@@ -160,6 +165,7 @@ void ScriptComponent::UpdatePosition() noexcept
 	if (lua_pcall(_state, 0, 0, 0) && lua_gettop(_state))
 	{
 		Logger::Log(SC_COMP_MODULE, LOG_CRITICAL, "Failed to execute UpdatePosition() function of script %s: %s", *_scriptFile, lua_tostring(_state, -1));
+		Logger::Log(SC_COMP_MODULE, LOG_DEBUG, "\n%s", *Script::StackDump(_state));
 		lua_pop(_state, 1);
 	}
 }
@@ -179,6 +185,7 @@ bool ScriptComponent::Unload()
 	if (lua_pcall(_state, 0, 1, 0) && lua_gettop(_state))
 	{
 		Logger::Log(SC_COMP_MODULE, LOG_CRITICAL, "Failed to execute Unload() function of script %s: %s", *_scriptFile, lua_tostring(_state, -1));
+		Logger::Log(SC_COMP_MODULE, LOG_DEBUG, "\n%s", *Script::StackDump(_state));
 		lua_pop(_state, 1);
 		return true;
 	}
@@ -204,6 +211,7 @@ bool ScriptComponent::CanUnload()
 	if (lua_pcall(_state, 0, 1, 0) && lua_gettop(_state))
 	{
 		Logger::Log(SC_COMP_MODULE, LOG_CRITICAL, "Failed to execute CanUnload() function of script %s: %s", *_scriptFile, lua_tostring(_state, -1));
+		Logger::Log(SC_COMP_MODULE, LOG_DEBUG, "\n%s", *Script::StackDump(_state));
 		lua_pop(_state, 1);
 		return true;
 	}

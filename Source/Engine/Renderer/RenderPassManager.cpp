@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -38,8 +38,8 @@
  */
 
 #include <System/Logger.h>
-#include <Renderer/Debug.h>
 #include <Renderer/VKUtil.h>
+#include <Renderer/DebugMarker.h>
 #include <Renderer/RenderPassManager.h>
 
 #define RPMGR_MODULE	"RenderPassManager"
@@ -50,13 +50,19 @@ unordered_map<uint8_t, VkRenderPass> RenderPassManager::_renderPasses;
 
 bool RenderPassManager::Initialize()
 {
-	return _CreateRenderPass() && _CreateDepthRenderPass() && _CreateGUIRenderPass() && _CreateSSAORenderPass();
+	return _CreateRenderPass() && _CreateDepthRenderPass() && _CreateGUIRenderPass() && _CreateSSAORenderPass() && _CreateShadowRenderPass();
+}
+
+bool RenderPassManager::RecreateRenderPasses()
+{
+	Release();
+	return _CreateRenderPass() && _CreateDepthRenderPass() && _CreateGUIRenderPass() && _CreateSSAORenderPass() && _CreateShadowRenderPass();
 }
 
 bool RenderPassManager::_CreateRenderPass()
 {
-	VkRenderPass renderPass = VK_NULL_HANDLE;
-	VkSampleCountFlagBits samples = VK_SAMPLE_COUNT_1_BIT;
+	VkRenderPass renderPass{ VK_NULL_HANDLE };
+	VkSampleCountFlagBits samples{ VK_SAMPLE_COUNT_1_BIT };
 
 	if (Engine::GetConfiguration().Renderer.Multisampling)
 	{
@@ -91,15 +97,15 @@ bool RenderPassManager::_CreateRenderPass()
 	depthAttachment.initialLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL;
 	depthAttachment.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 
-	VkAttachmentDescription normalBrightAttachment{};
-	normalBrightAttachment.format = VK_FORMAT_R16G16B16A16_SFLOAT;
-	normalBrightAttachment.samples = samples;
-	normalBrightAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-	normalBrightAttachment.storeOp = Engine::GetConfiguration().Renderer.Multisampling ? VK_ATTACHMENT_STORE_OP_DONT_CARE : VK_ATTACHMENT_STORE_OP_STORE; // no longer needed after resolve
-	normalBrightAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-	normalBrightAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-	normalBrightAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-	normalBrightAttachment.finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+	VkAttachmentDescription brightnessAttachment{};
+	brightnessAttachment.format = VK_FORMAT_R16G16B16A16_SFLOAT;
+	brightnessAttachment.samples = samples;
+	brightnessAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+	brightnessAttachment.storeOp = Engine::GetConfiguration().Renderer.Multisampling ? VK_ATTACHMENT_STORE_OP_DONT_CARE : VK_ATTACHMENT_STORE_OP_STORE; // no longer needed after resolve
+	brightnessAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+	brightnessAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+	brightnessAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+	brightnessAttachment.finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
 	VkAttachmentDescription resolveAttachment{};
 	resolveAttachment.format = VK_FORMAT_R16G16B16A16_SFLOAT;
@@ -119,20 +125,20 @@ bool RenderPassManager::_CreateRenderPass()
 	depthAttachmentRef.attachment = 1;
 	depthAttachmentRef.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL;
 
-	VkAttachmentReference normalBrightAttachmentRef{};
-	normalBrightAttachmentRef.attachment = 2;
-	normalBrightAttachmentRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+	VkAttachmentReference brightnessAttachmentRef{};
+	brightnessAttachmentRef.attachment = 2;
+	brightnessAttachmentRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
 	VkAttachmentReference resolveAttachmentRef{};
 	resolveAttachmentRef.attachment = 3;
 	resolveAttachmentRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
-	VkAttachmentReference normalBrightResolveAttachmentRef{};
-	normalBrightResolveAttachmentRef.attachment = 4;
-	normalBrightResolveAttachmentRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+	VkAttachmentReference brightnessResolveAttachmentRef{};
+	brightnessResolveAttachmentRef.attachment = 4;
+	brightnessResolveAttachmentRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
-	VkAttachmentReference colorAttachmentRefs[2]{ colorAttachmentRef, normalBrightAttachmentRef };
-	VkAttachmentReference resolveAttachmentRefs[2]{ resolveAttachmentRef, normalBrightResolveAttachmentRef };
+	VkAttachmentReference colorAttachmentRefs[2]{ colorAttachmentRef, brightnessAttachmentRef };
+	VkAttachmentReference resolveAttachmentRefs[2]{ resolveAttachmentRef, brightnessResolveAttachmentRef };
 	VkSubpassDescription subpass{};
 	subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
 	subpass.colorAttachmentCount = 2;
@@ -156,7 +162,7 @@ bool RenderPassManager::_CreateRenderPass()
 	dependencies[1].dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
 	dependencies[1].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
 
-	VkAttachmentDescription attachments[]{ colorAttachment, depthAttachment, normalBrightAttachment, resolveAttachment, resolveAttachment };
+	VkAttachmentDescription attachments[]{ colorAttachment, depthAttachment, brightnessAttachment, resolveAttachment, resolveAttachment };
 
 	VkRenderPassCreateInfo renderPassInfo{};
 	renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
@@ -172,7 +178,7 @@ bool RenderPassManager::_CreateRenderPass()
 		Logger::Log(RPMGR_MODULE, LOG_CRITICAL, "Failed to create render pass (graphics)");
 		return false;
 	}
-	DBG_SET_OBJECT_NAME((uint64_t)renderPass, VK_DEBUG_REPORT_OBJECT_TYPE_RENDER_PASS_EXT, "graphics");
+	VK_DBG_SET_OBJECT_NAME((uint64_t)renderPass, VK_DEBUG_REPORT_OBJECT_TYPE_RENDER_PASS_EXT, "graphics");
 	_renderPasses.insert(make_pair(RP_Graphics, renderPass));
 
 	return true;
@@ -180,19 +186,19 @@ bool RenderPassManager::_CreateRenderPass()
 
 bool RenderPassManager::_CreateDepthRenderPass()
 {
-	VkRenderPass renderPass = VK_NULL_HANDLE;
-	VkSampleCountFlagBits samples = VK_SAMPLE_COUNT_1_BIT;
+	VkRenderPass renderPass{ VK_NULL_HANDLE };
+	VkSampleCountFlagBits samples{ VK_SAMPLE_COUNT_1_BIT };
 
 	if (Engine::GetConfiguration().Renderer.Multisampling)
 	{
 		switch (Engine::GetConfiguration().Renderer.Samples)
 		{
-		case 2: samples = VK_SAMPLE_COUNT_2_BIT; break;
-		case 4: samples = VK_SAMPLE_COUNT_4_BIT; break;
-		case 8: samples = VK_SAMPLE_COUNT_8_BIT; break;
-		case 16: samples = VK_SAMPLE_COUNT_16_BIT; break;
-		case 32: samples = VK_SAMPLE_COUNT_32_BIT; break;
-		case 64: samples = VK_SAMPLE_COUNT_64_BIT; break;
+			case 2: samples = VK_SAMPLE_COUNT_2_BIT; break;
+			case 4: samples = VK_SAMPLE_COUNT_4_BIT; break;
+			case 8: samples = VK_SAMPLE_COUNT_8_BIT; break;
+			case 16: samples = VK_SAMPLE_COUNT_16_BIT; break;
+			case 32: samples = VK_SAMPLE_COUNT_32_BIT; break;
+			case 64: samples = VK_SAMPLE_COUNT_64_BIT; break;
 		}
 	}
 
@@ -205,9 +211,9 @@ bool RenderPassManager::_CreateDepthRenderPass()
 	depthAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
 	depthAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 	depthAttachment.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL;
-
+	
 	VkAttachmentDescription normalAttachment{};
-	normalAttachment.format = VK_FORMAT_R16G16B16A16_SFLOAT;
+	normalAttachment.format = VK_FORMAT_R8G8_UNORM;
 	normalAttachment.samples = samples;
 	normalAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
 	normalAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
@@ -262,7 +268,7 @@ bool RenderPassManager::_CreateDepthRenderPass()
 		Logger::Log(RPMGR_MODULE, LOG_CRITICAL, "Failed to create render pass (depth)");
 		return false;
 	}
-	DBG_SET_OBJECT_NAME((uint64_t)renderPass, VK_DEBUG_REPORT_OBJECT_TYPE_RENDER_PASS_EXT, "depth");
+	VK_DBG_SET_OBJECT_NAME((uint64_t)renderPass, VK_DEBUG_REPORT_OBJECT_TYPE_RENDER_PASS_EXT, "depth");
 	_renderPasses.insert(make_pair(RP_Depth, renderPass));
 
 	return true;
@@ -270,7 +276,7 @@ bool RenderPassManager::_CreateDepthRenderPass()
 
 bool RenderPassManager::_CreateGUIRenderPass()
 {
-	VkRenderPass renderPass = VK_NULL_HANDLE;
+	VkRenderPass renderPass{ VK_NULL_HANDLE };
 
 	VkAttachmentDescription colorAttachment = {};
 	colorAttachment.format = VK_FORMAT_R16G16B16A16_SFLOAT;
@@ -282,11 +288,11 @@ bool RenderPassManager::_CreateGUIRenderPass()
 	colorAttachment.initialLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 	colorAttachment.finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
-	VkAttachmentReference colorAttachmentRef = {};
+	VkAttachmentReference colorAttachmentRef{};
 	colorAttachmentRef.attachment = 0;
 	colorAttachmentRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
-	VkSubpassDescription subPass = {};
+	VkSubpassDescription subPass{};
 	subPass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
 	subPass.colorAttachmentCount = 1;
 	subPass.pColorAttachments = &colorAttachmentRef;
@@ -308,9 +314,9 @@ bool RenderPassManager::_CreateGUIRenderPass()
 	dependencies[1].dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
 	dependencies[1].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
 
-	VkAttachmentDescription attachments[] = { colorAttachment };
+	VkAttachmentDescription attachments[]{ colorAttachment };
 
-	VkRenderPassCreateInfo renderPassInfo = {};
+	VkRenderPassCreateInfo renderPassInfo{};
 	renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
 	renderPassInfo.attachmentCount = 1;
 	renderPassInfo.pAttachments = attachments;
@@ -324,7 +330,7 @@ bool RenderPassManager::_CreateGUIRenderPass()
 		Logger::Log(RPMGR_MODULE, LOG_CRITICAL, "Failed to create render pass (gui)");
 		return false;
 	}
-	DBG_SET_OBJECT_NAME((uint64_t)renderPass, VK_DEBUG_REPORT_OBJECT_TYPE_RENDER_PASS_EXT, "gui");
+	VK_DBG_SET_OBJECT_NAME((uint64_t)renderPass, VK_DEBUG_REPORT_OBJECT_TYPE_RENDER_PASS_EXT, "gui");
 	_renderPasses.insert(make_pair(RP_GUI, renderPass));
 
 	return true;
@@ -332,9 +338,9 @@ bool RenderPassManager::_CreateGUIRenderPass()
 
 bool RenderPassManager::_CreateSSAORenderPass()
 {
-	VkRenderPass renderPass = VK_NULL_HANDLE;
+	VkRenderPass renderPass{ VK_NULL_HANDLE };
 
-	VkAttachmentDescription aoAttachment = {};
+	VkAttachmentDescription aoAttachment{};
 	aoAttachment.format = VK_FORMAT_R16G16B16A16_SFLOAT;
 	aoAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
 	aoAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
@@ -344,7 +350,7 @@ bool RenderPassManager::_CreateSSAORenderPass()
 	aoAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 	aoAttachment.finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
-	VkAttachmentDescription blurAttachment = {};
+	VkAttachmentDescription blurAttachment{};
 	blurAttachment.format = VK_FORMAT_R16G16B16A16_SFLOAT;
 	blurAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
 	blurAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
@@ -354,22 +360,22 @@ bool RenderPassManager::_CreateSSAORenderPass()
 	blurAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 	blurAttachment.finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
-	VkAttachmentReference aoAttachmentRefOut = {};
+	VkAttachmentReference aoAttachmentRefOut{};
 	aoAttachmentRefOut.attachment = 0;
 	aoAttachmentRefOut.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
-	VkAttachmentReference blurAttachmentRef = {};
+	VkAttachmentReference blurAttachmentRef{};
 	blurAttachmentRef.attachment = 1;
 	blurAttachmentRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
-	VkSubpassDescription aoSubpass = {};
+	VkSubpassDescription aoSubpass{};
 	aoSubpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
 	aoSubpass.colorAttachmentCount = 1;
 	aoSubpass.pColorAttachments = &aoAttachmentRefOut;
 	aoSubpass.pDepthStencilAttachment = nullptr;
 
 	VkAttachmentReference blurRefs[2]{ blurAttachmentRef, aoAttachmentRefOut };
-	VkSubpassDescription blurSubpass = {};
+	VkSubpassDescription blurSubpass{};
 	blurSubpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
 	blurSubpass.colorAttachmentCount = 2;
 	blurSubpass.pColorAttachments = blurRefs;
@@ -409,8 +415,115 @@ bool RenderPassManager::_CreateSSAORenderPass()
 		Logger::Log(RPMGR_MODULE, LOG_CRITICAL, "Failed to create render pass (gui)");
 		return false;
 	}
-	DBG_SET_OBJECT_NAME((uint64_t)renderPass, VK_DEBUG_REPORT_OBJECT_TYPE_RENDER_PASS_EXT, "gui");
+	VK_DBG_SET_OBJECT_NAME((uint64_t)renderPass, VK_DEBUG_REPORT_OBJECT_TYPE_RENDER_PASS_EXT, "gui");
 	_renderPasses.insert(make_pair(RP_SSAO, renderPass));
+
+	return true;
+}
+
+bool RenderPassManager::_CreateShadowRenderPass()
+{
+	VkRenderPass renderPass{ VK_NULL_HANDLE };
+	VkSampleCountFlagBits samples{ VK_SAMPLE_COUNT_1_BIT };
+
+	if (Engine::GetConfiguration().Renderer.ShadowMultisampling)
+	{
+		switch (Engine::GetConfiguration().Renderer.ShadowSamples)
+		{
+			case 2: samples = VK_SAMPLE_COUNT_2_BIT; break;
+			case 4: samples = VK_SAMPLE_COUNT_4_BIT; break;
+			case 8: samples = VK_SAMPLE_COUNT_8_BIT; break;
+			case 16: samples = VK_SAMPLE_COUNT_16_BIT; break;
+			case 32: samples = VK_SAMPLE_COUNT_32_BIT; break;
+			case 64: samples = VK_SAMPLE_COUNT_64_BIT; break;
+		}
+	}
+
+	VkAttachmentDescription mapAttachment{};
+	mapAttachment.format = VK_FORMAT_R32G32_SFLOAT;
+	mapAttachment.samples = samples;
+	mapAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_LOAD;
+	mapAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+	mapAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+	mapAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+	mapAttachment.initialLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+	mapAttachment.finalLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+
+	VkAttachmentDescription depthAttachment{};
+	depthAttachment.format = VK_FORMAT_D32_SFLOAT;
+	depthAttachment.samples = samples;
+	depthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+	depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+	depthAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+	depthAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+	depthAttachment.initialLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+	depthAttachment.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+
+	VkAttachmentReference mapAttachmentRef{};
+	mapAttachmentRef.attachment = 0;
+	mapAttachmentRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+
+	VkAttachmentReference depthAttachmentRef{};
+	depthAttachmentRef.attachment = 1;
+	depthAttachmentRef.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+
+	VkSubpassDescription subpass{};
+	subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+	subpass.colorAttachmentCount = 1;
+	subpass.pColorAttachments = &mapAttachmentRef;
+	subpass.pDepthStencilAttachment = &depthAttachmentRef;
+
+	VkSubpassDependency dependencies[2]{};
+	dependencies[0].srcSubpass = VK_SUBPASS_EXTERNAL;
+	dependencies[0].dstSubpass = 0;
+	dependencies[0].srcStageMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
+	dependencies[0].dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+	dependencies[0].srcAccessMask = VK_ACCESS_MEMORY_READ_BIT;
+	dependencies[0].dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+	dependencies[0].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
+	dependencies[1].srcSubpass = 0;
+	dependencies[1].dstSubpass = VK_SUBPASS_EXTERNAL;
+	dependencies[1].srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+	dependencies[1].dstStageMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
+	dependencies[1].srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+	dependencies[1].dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
+	dependencies[1].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
+
+	VkAttachmentDescription attachments[]{ mapAttachment, depthAttachment };
+
+	VkRenderPassCreateInfo renderPassInfo{};
+	renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
+	renderPassInfo.attachmentCount = 2;
+	renderPassInfo.pAttachments = attachments;
+	renderPassInfo.subpassCount = 1;
+	renderPassInfo.pSubpasses = &subpass;
+	renderPassInfo.dependencyCount = 2;
+	renderPassInfo.pDependencies = dependencies;
+
+	if (vkCreateRenderPass(VKUtil::GetDevice(), &renderPassInfo, VKUtil::GetAllocator(), &renderPass) != VK_SUCCESS)
+	{
+		Logger::Log(RPMGR_MODULE, LOG_CRITICAL, "Failed to create render pass (shadow)");
+		return false;
+	}
+	VK_DBG_SET_OBJECT_NAME((uint64_t)renderPass, VK_DEBUG_REPORT_OBJECT_TYPE_RENDER_PASS_EXT, "shadow");
+	_renderPasses.insert(make_pair(RP_ShadowMap, renderPass));
+
+	VkSubpassDescription filterSubpass{};
+	filterSubpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+	filterSubpass.colorAttachmentCount = 1;
+	filterSubpass.pColorAttachments = &mapAttachmentRef;
+
+	renderPassInfo.attachmentCount = 1;
+	renderPassInfo.pAttachments = &mapAttachment;
+	renderPassInfo.pSubpasses = &filterSubpass;
+
+	if (vkCreateRenderPass(VKUtil::GetDevice(), &renderPassInfo, VKUtil::GetAllocator(), &renderPass) != VK_SUCCESS)
+	{
+		Logger::Log(RPMGR_MODULE, LOG_CRITICAL, "Failed to create render pass (shadow filter)");
+		return false;
+	}
+	VK_DBG_SET_OBJECT_NAME((uint64_t)renderPass, VK_DEBUG_REPORT_OBJECT_TYPE_RENDER_PASS_EXT, "shadow filter");
+	_renderPasses.insert(make_pair(RP_ShadowFilter, renderPass));
 
 	return true;
 }
@@ -419,4 +532,5 @@ void RenderPassManager::Release()
 {
 	for(pair<uint8_t, VkRenderPass> kvp : _renderPasses)
 		vkDestroyRenderPass(VKUtil::GetDevice(), kvp.second, VKUtil::GetAllocator());
+	_renderPasses.clear();
 }

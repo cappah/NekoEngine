@@ -1,0 +1,245 @@
+/* NekoEngine
+ *
+ * penner.glh
+ * Author: Alexandru Naiman
+ *
+ * Robert Penner's Easing Functions
+ *
+ * -----------------------------------------------------------------------------
+ *
+ * Copyright (c) 2015-2017, Alexandru Naiman
+ *
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ * this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
+ *
+ * 3. Neither the name of the copyright holder nor the names of its contributors
+ * may be used to endorse or promote products derived from this software without
+ * specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ALEXANDRU NAIMAN "AS IS" AND ANY EXPRESS OR
+ * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ * IN NO EVENT SHALL ALEXANDRU NAIMAN BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
+ * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+ * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+#include "math.glh"
+
+float quadraticEaseIn(float p)
+{
+	return p * p;
+}
+
+float quadraticEaseOut(float p)
+{
+	return -(p * (p - 2.0));
+}
+
+float quadraticEaseInOut(float p)
+{
+	if (p < 0.5)
+		return 2.0 * p * p;
+	else
+		return (-2.0 * p * p) + (4.0 * p) - 1.0;
+}
+
+float cubicEaseIn(float p)
+{
+	return p * p * p;
+}
+
+float cubicEaseOut(float p)
+{
+	float f = (p - 1.0);
+	return f * f * f + 1.0;
+}
+
+float cubicEaseInOut(float p)
+{
+	if (p < 0.5)
+		return 4.0 * p * p * p;
+	else
+	{
+		float f = ((2.0 * p) - 2.0);
+		return 0.5 * f * f * f + 1.0;
+	}
+}
+
+float quarticEaseIn(float p)
+{
+	return p * p * p * p;
+}
+
+float quarticEaseOut(float p)
+{
+	float f = (p - 1.0);
+	return f * f * f * (1.0 - p) + 1.0;
+}
+
+float quarticEaseInOut(float p)
+{
+	if (p < 0.5)
+		return 8.0 * p * p * p * p;
+	else
+	{
+		float f = (p - 1.0);
+		return -8.0 * f * f * f * f + 1.0;
+	}
+}
+
+float quinticEaseIn(float p)
+{
+	return p * p * p * p * p;
+}
+
+float quinticEaseOut(float p)
+{
+	float f = (p - 1.0);
+	return f * f * f * f * f + 1.0;
+}
+
+float quinticEaseInOut(float p)
+{
+	if (p < 0.5)
+		return 16.0 * p * p * p * p * p;
+	else
+	{
+		float f = ((2.0 * p) - 2.0);
+		return  0.5 * f * f * f * f * f + 1.0;
+	}
+}
+
+float sineEaseIn(float p)
+{
+	return sin((p - 1.0) * M_PI_2) + 1.0;
+}
+
+float sineEaseOut(float p)
+{
+	return sin(p * M_PI_2);
+}
+
+float sineEaseInOut(float p)
+{
+	return 0.5 * (1.0 - cos(p * M_PI));
+}
+
+float circularEaseIn(float p)
+{
+	return 1.0 - sqrt(1.0 - (p * p));
+}
+
+float circularEaseOut(float p)
+{
+	return sqrt((2.0 - p) * p);
+}
+
+float circularEaseInOut(float p)
+{
+	if (p < 0.5)
+		return 0.5 * (1.0 - sqrt(1.0 - 4.0 * (p * p)));
+	else
+		return 0.5 * (sqrt(-((2.0 * p) - 3.0) * ((2.0 * p) - 1.0)) + 1.0);
+}
+
+float exponentialEaseIn(float p)
+{
+	return (p == 0.0) ? p : pow(2.0, 10.0 * (p - 1.0));
+}
+
+float exponentialEaseOut(float p)
+{
+	return (p == 1.0) ? p : 1.0 - pow(2.0, -10.0 * p);
+}
+
+float exponentialEaseInOut(float p)
+{
+	if (p == 0.0 || p == 1.0) return p;
+
+	if (p < 0.5)
+		return 0.5 * pow(2.0, (20.0 * p) - 10.0);
+	else
+		return -0.5 * pow(2.0, (-20.0 * p) + 10.0) + 1.0;
+}
+
+float elasticEaseIn(float p)
+{
+	return sin(13.0 * M_PI_2 * p) * pow(2.0, 10.0 * (p - 1.0));
+}
+
+float elasticEaseOut(float p)
+{
+	return sin(-13.0 * M_PI_2 * (p + 1)) * pow(2.0, -10.0 * p) + 1.0;
+}
+
+float elasticEaseInOut(float p)
+{
+	if (p < 0.5)
+		return 0.5 * sin(13.0 * M_PI_2 * (2.0 * p)) * pow(2.0, 10.0 * ((2.0 * p) - 1.0));
+	else
+		return 0.5 * (sin(-13.0 * M_PI_2 * ((2.0 * p - 1.0) + 1.0)) * pow(2.0, -10.0 * (2.0 * p - 1.0)) + 2.0);
+}
+
+float backEaseIn(float p)
+{
+	return p * p * p - p * sin(p * M_PI);
+}
+
+float backEaseOut(float p)
+{
+	float f = (1.0 - p);
+	return 1.0 - (f * f * f - f * sin(f * M_PI));
+}
+
+float backEaseInOut(float p)
+{
+	if(p < 0.5)
+	{
+		float f = 2.0 * p;
+		return 0.5 * (f * f * f - f * sin(f * M_PI));
+	}
+	else
+	{
+		float f = (1.0 - (2.0 * p - 1.0));
+		return 0.5 * (1.0 - (f * f * f - f * sin(f * M_PI))) + 0.5;
+	}
+}
+
+float bounceEaseOut(float p)
+{
+	if (p < 0.36)
+		return (121.0 * p * p) / 16.0;
+	else if (p < 0.73)
+		return (9.075 * p * p) - (9.9* p) + 3.4;
+	else if (p < 0.9)
+		return (12.06 * p * p) - (19.64 * p) + 8.89;
+	else
+		return (10.8 * p * p) - (20.52 * p) + 10.72;
+}
+
+float bounceEaseIn(float p)
+{
+	return 1.0 - bounceEaseOut(1.0 - p);
+}
+
+float bounceEaseInOut(float p)
+{
+	if (p < 0.5)
+		return 0.5 * bounceEaseIn(p * 2.0);
+	else
+		return 0.5 * bounceEaseOut(p * 2.0 - 1.0) + 0.5;
+}

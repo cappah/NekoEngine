@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -39,8 +39,8 @@
 
 #include <chrono>
 
-#include <AL/al.h>
-
+#include <GUI/GUI.h>
+#include <Engine/Debug.h>
 #include <Engine/Input.h>
 #include <Engine/Engine.h>
 #include <Engine/Console.h>
@@ -52,9 +52,13 @@
 #include <Renderer/SSAO.h>
 #include <Renderer/Renderer.h>
 #include <Renderer/PostProcessor.h>
+#include <Profiler/Profiler.h>
 #include <Platform/Platform.h>
+#include <Platform/CrashHandler.h>
+#include <Physics/Physics.h>
 #include <System/Logger.h>
 #include <System/VFS/VFS.h>
+#include <Audio/AudioSystem.h>
 
 using namespace std;
 using namespace std::chrono;
@@ -70,12 +74,19 @@ extern bool _graphicsDebug;
 
 static NString _vfsArchiveList(VFS_ARCHIVE_LIST_SIZE);
 static bool _enableValidation = false;
-static char _gameModuleFile[NE_PATH_SIZE] = { '\0' };
+static char _gameModuleFile[NE_PATH_SIZE]{ '\0' };
+static char _physicsModuleFile[NE_PATH_SIZE]{ '\0' };
+static char _audioSystemModuleFile[NE_PATH_SIZE]{ '\0' };
 
 int Engine::Initialize(const char *cmdLine, bool editor)
 {
 	int ret = ENGINE_FAIL;
 	
+	DBG_SET_THREAD_NAME("Main Thread");
+
+	if (CrashHandler::Initialize() != ENGINE_OK)
+		return ENGINE_FAIL;
+
 	memset(&_config, 0x0, sizeof(struct Configuration));
 
 	NString cmd(cmdLine);
@@ -87,18 +98,21 @@ int Engine::Initialize(const char *cmdLine, bool editor)
 
 	if (_config.Renderer.Supersampling)
 	{
-		float numPixels = (_config.Engine.ScreenWidth * _config.Engine.ScreenHeight) * 2.f;
-		float wRatio = (float)_config.Engine.ScreenWidth / (float)_config.Engine.ScreenHeight;
-		float hRatio = (float)_config.Engine.ScreenHeight / (float)_config.Engine.ScreenWidth;
+		const float numPixels = (_config.Engine.ScreenWidth * _config.Engine.ScreenHeight) * 2.f;
+		const float wRatio = (float)_config.Engine.ScreenWidth / (float)_config.Engine.ScreenHeight;
+		const float hRatio = (float)_config.Engine.ScreenHeight / (float)_config.Engine.ScreenWidth;
 		
-		float newWidth = sqrt(wRatio * numPixels);
-		float newHeight = sqrt(hRatio * numPixels);
+		const float newWidth = sqrt(wRatio * numPixels);
+		const float newHeight = sqrt(hRatio * numPixels);
 
 		_scaleFactor.x = newWidth / (float)_config.Engine.ScreenWidth;
 		_scaleFactor.y = newHeight / (float)_config.Engine.ScreenHeight;
 	}
 
 	Logger::Initialize(_config.Engine.LogFile, LOG_ALL);
+
+	if (Platform::Initialize() != ENGINE_OK)
+		return ENGINE_FAIL;
 
 	_editor = editor;
 
@@ -126,7 +140,31 @@ int Engine::Initialize(const char *cmdLine, bool editor)
 		return ret;
 
 	if ((ret = Renderer::GetInstance()->Initialize(_engineWindow, _enableValidation, _graphicsDebug)) != ENGINE_OK)
-		return ret;
+	{
+		Platform::MessageBox("Fatal Error", "Failed to initialize the Renderer module !", MessageBoxButtons::OK, MessageBoxIcon::Error);
+		Logger::Log(ENGINE_MODULE, LOG_CRITICAL, "Failed to initialize renderer.");
+		return ENGINE_FAIL;
+	}
+
+	if (Physics::InitInstance(_physicsModuleFile) != ENGINE_OK)
+	{
+		Platform::MessageBox("Fatal Error", "Failed to initialize the Physics module !", MessageBoxButtons::OK, MessageBoxIcon::Error);
+		Logger::Log(ENGINE_MODULE, LOG_CRITICAL, "Failed to initialize physics.");
+		return ENGINE_FAIL;
+	}
+
+	if (AudioSystem::InitInstance(_audioSystemModuleFile) != ENGINE_OK)
+	{
+		Platform::MessageBox("Fatal Error", "Failed to initialize the AudioSystem module !", MessageBoxButtons::OK, MessageBoxIcon::Error);
+		Logger::Log(ENGINE_MODULE, LOG_CRITICAL, "Failed to initialize audio.");
+		return ENGINE_FAIL;
+	}
+
+	if (SoundManager::Initialize() != ENGINE_OK)
+	{
+		Logger::Log(ENGINE_MODULE, LOG_CRITICAL, "Failed to initialize the sound manager");
+		return false;
+	}
 
 	if (SceneManager::Initialize() != ENGINE_OK)
 	{
@@ -134,17 +172,11 @@ int Engine::Initialize(const char *cmdLine, bool editor)
 		return ENGINE_FAIL;
 	}
 
-	if (GUI::Initialize() != ENGINE_OK)
+	if (GUIManager::Initialize() != ENGINE_OK)
 	{
 		Logger::Log(ENGINE_MODULE, LOG_CRITICAL, "Failed to initialize GUI");
 		return ENGINE_FAIL;
 	}
-
-	const char *alVersionStr = (const char *)alGetString(AL_VERSION);
-	Logger::Log("OpenAL", LOG_INFORMATION, "Vendor: %s", alGetString(AL_VENDOR));
-	Logger::Log("OpenAL", LOG_INFORMATION, "Renderer: %s", alGetString(AL_RENDERER));
-	Logger::Log("OpenAL", LOG_INFORMATION, "Version: %s", alVersionStr);
-	Logger::Log("OpenAL", LOG_INFORMATION, "Extensions: %s", alGetString(AL_EXTENSIONS));
 
 	Logger::Log(ENGINE_MODULE, LOG_INFORMATION, "Engine startup complete");
 
@@ -160,16 +192,8 @@ int Engine::Initialize(const char *cmdLine, bool editor)
 	NString title;
 	if (!strncmp(_gameModule->GetModuleName(), "TestGame", 8))
 	{
-		NString alVersion(alVersionStr);
-		if (alVersion.Find("OpenAL") != NString::NotFound)
-			alVersion = "[";
-		else
-			alVersion = "[OpenAL ";
-		alVersion.Append(alVersionStr);
-		alVersion = alVersion.Substring(0, alVersion.FindFirst('.') + 2);
-
-		title = NString::StringWithFormat(256, "NekoEngine v%s [%s %s] %s] [%s]", ENGINE_VERSION_STRING,
-			Renderer::GetInstance()->GetAPIName(), Renderer::GetInstance()->GetAPIVersion(), *alVersion, ENGINE_PLATFORM_STRING);
+		title = NString::StringWithFormat(256, "NekoEngine v%s [%s %s] [%s %s] [%s]", ENGINE_VERSION_STRING,
+			Renderer::GetInstance()->GetAPIName(), Renderer::GetInstance()->GetAPIVersion(), AudioSystem::GetInstance()->GetName(), AudioSystem::GetInstance()->GetVersion(), ENGINE_PLATFORM_STRING);
 
 #if defined(NE_CONFIG_DEBUG)
 		title.Append(" [Debug]");
@@ -182,8 +206,8 @@ int Engine::Initialize(const char *cmdLine, bool editor)
 
 	Platform::SetWindowTitle(_engineWindow, *title);
 
-	_prevTime = high_resolution_clock::now();
-	//_startup = false;
+	_prevTime = high_resolution_clock::now();\
+	_startup = false;
 
 	return ENGINE_OK;
 }
@@ -232,7 +256,23 @@ void Engine::_ParseArgs(NString &cmdLine)
 			memset(_gameModuleFile, 0x0, NE_PATH_SIZE);
 			if (snprintf(_gameModuleFile, NE_PATH_SIZE, "%s", ptr + 7) >= NE_PATH_SIZE)
 			{
-				DIE("Invalid renderer argument !");
+				DIE("Invalid game module argument !");
+			}
+		}
+		else if ((ptr = strstr(*arg, "--physics")))
+		{
+			memset(_physicsModuleFile, 0x0, NE_PATH_SIZE);
+			if (snprintf(_physicsModuleFile, NE_PATH_SIZE, "%s", ptr + 10) >= NE_PATH_SIZE)
+			{
+				DIE("Invalid Physics module argument !");
+			}
+		}
+		else if ((ptr = strstr(*arg, "--audio")))
+		{
+			memset(_physicsModuleFile, 0x0, NE_PATH_SIZE);
+			if (snprintf(_physicsModuleFile, NE_PATH_SIZE, "%s", ptr + 8) >= NE_PATH_SIZE)
+			{
+				DIE("Invalid AudioSystem module argument !");
 			}
 		}
 	}
@@ -270,9 +310,25 @@ void Engine::_ReadINIFile(const char *file)
 		Platform::GetConfigString("Engine", "sGameModule", "Game", buff, INI_BUFF_SZ, file);
 		memset(_gameModuleFile, 0x0, NE_PATH_SIZE);
 		if (snprintf(_gameModuleFile, NE_PATH_SIZE, "%s", buff) >= NE_PATH_SIZE)
-		{
-			DIE("Failed to load configuration");
-		}
+		{ DIE("Failed to load configuration"); }
+		memset(buff, 0x0, INI_BUFF_SZ);
+	}
+
+	if (_physicsModuleFile[0] == 0x0)
+	{
+		Platform::GetConfigString("Engine", "sPhysicsModule", "NullPhysics", buff, INI_BUFF_SZ, file);
+		memset(_physicsModuleFile, 0x0, NE_PATH_SIZE);
+		if (snprintf(_physicsModuleFile, NE_PATH_SIZE, "%s", buff) >= NE_PATH_SIZE)
+		{ DIE("Failed to load configuration"); }
+		memset(buff, 0x0, INI_BUFF_SZ);
+	}
+
+	if (_audioSystemModuleFile[0] == 0x0)
+	{
+		Platform::GetConfigString("Engine", "sAudioSystemModule", "NullAudio", buff, INI_BUFF_SZ, file);
+		memset(_audioSystemModuleFile, 0x0, NE_PATH_SIZE);
+		if (snprintf(_audioSystemModuleFile, NE_PATH_SIZE, "%s", buff) >= NE_PATH_SIZE)
+		{ DIE("Failed to load configuration"); }
 		memset(buff, 0x0, INI_BUFF_SZ);
 	}
 
@@ -306,16 +362,24 @@ void Engine::_ReadINIFile(const char *file)
 	_config.Renderer.TextureQuality = Platform::GetConfigInt("Renderer", "iTextureQuality", 2, file);
 	_config.Renderer.ShadowMapSize = Platform::GetConfigInt("Renderer", "iShadowMapSize", 1024, file);
 	_config.Renderer.MaxLights = Platform::GetConfigInt("Renderer", "iMaxLights", 1024, file);
+	_config.Renderer.ShadowMapSize = Platform::GetConfigInt("Renderer", "iShadowMapSize", 1024, file);
+	_config.Renderer.MaxShadowMaps = Platform::GetConfigInt("Renderer", "iMaxShadowMaps", 64, file);
+	_config.Renderer.ShadowMultisampling = Platform::GetConfigInt("Renderer", "bShadowMultisampling", 1, file) != 0;
+	_config.Renderer.ShadowSamples = Platform::GetConfigInt("Renderer", "iShadowSamples", 4, file);
 	_config.Renderer.EnableAsyncCompute = Platform::GetConfigInt("Renderer", "bEnableAsyncCompute", 0, file) != 0;
+	_config.Renderer.Gamma = Platform::GetConfigFloat("Renderer", "fGamma", 2.2f, file);
 
 	_config.Renderer.SSAO.Enable = Platform::GetConfigInt("Renderer.SSAO", "bEnable", 1, file) != 0;
 	_config.Renderer.SSAO.KernelSize = Platform::GetConfigInt("Renderer", "iKernelSize", 128, file);
 	_config.Renderer.SSAO.Radius = Platform::GetConfigFloat("Renderer", "fRadius", 8.f, file);
 	_config.Renderer.SSAO.PowerExponent = Platform::GetConfigFloat("Renderer", "fPowerExponent", 4.f, file);
 	_config.Renderer.SSAO.Threshold = Platform::GetConfigFloat("Renderer", "fThreshold", .05f, file);
+	_config.Renderer.SSAO.Multisampling = Platform::GetConfigInt("Renderer.SSAO", "bMultisampling", 0, file) != 0;
 
-	if((_config.PostProcessor.Enable = Platform::GetConfigInt("PostProcessor", "bEnable", 1, file) != 0))
-		_ReadEffectConfig(file);
+	_config.PostProcessor.Bloom = Platform::GetConfigInt("PostProcessor", "bBloom", 1, file) != 0;
+	_config.PostProcessor.BloomIntensity = Platform::GetConfigInt("PostProcessor", "iBloomIntensity", 0, file) != 0;
+	_config.PostProcessor.DepthOfField = Platform::GetConfigInt("PostProcessor", "bDepthOfField", 1, file) != 0;
+	_config.PostProcessor.FilmGrain = Platform::GetConfigInt("PostProcessor", "bFilmGrain", 1, file) != 0;
 
 	_ReadInputConfig(file);
 	_ReadRendererConfig(file);
@@ -325,18 +389,11 @@ void Engine::_ReadINIFile(const char *file)
 	memset(buff, 0x0, INI_BUFF_SZ);
 }
 
-void Engine::_ReadEffectConfig(const char *file)
-{
-	_config.PostProcessor.Bloom = Platform::GetConfigInt("PostProcessor", "bBloom", 1, file) != 0;
-	_config.PostProcessor.BloomIntensity = Platform::GetConfigInt("PostProcessor", "iBloomIntensity", 0, file) != 0;
-	_config.PostProcessor.DepthOfField = Platform::GetConfigInt("PostProcessor", "bDepthOfField", 1, file) != 0;
-}
-
 void Engine::_ReadInputConfig(const char *file)
 {
-	char buff[INI_BUFF_SZ], optBuff[INI_BUFF_SZ];
 	bool end = false;
 	int i = 0, optI = 0;
+	char buff[INI_BUFF_SZ], optBuff[INI_BUFF_SZ];
 
 	memset(buff, 0x0, INI_BUFF_SZ);
 	memset(optBuff, 0x0, INI_BUFF_SZ);
@@ -344,7 +401,7 @@ void Engine::_ReadInputConfig(const char *file)
 	end = Platform::GetConfigSection("Input.ButtonMapping", buff, INI_BUFF_SZ, file) == 0;
 	while (!end)
 	{
-		char c, *vptr;
+		char c = 0x0, *vptr = nullptr;
 
 		while ((c = buff[i]) != 0x0)
 		{
@@ -355,6 +412,8 @@ void Engine::_ReadInputConfig(const char *file)
 
 		if (buff[++i] == 0x0)
 			end = true;
+
+		optBuff[optI] = 0x0;
 
 		if ((vptr = strchr(optBuff, '=')) == nullptr)
 			break;
@@ -374,7 +433,7 @@ void Engine::_ReadInputConfig(const char *file)
 	end = Platform::GetConfigSection("Input.VirtualAxis", buff, INI_BUFF_SZ, file) == 0;
 	while (!end)
 	{
-		char c, *max_ptr, *min_ptr;
+		char c = 0x0, *max_ptr = nullptr, *min_ptr = nullptr;
 
 		while ((c = buff[i]) != 0x0)
 		{
@@ -409,9 +468,9 @@ void Engine::_ReadInputConfig(const char *file)
 	end = Platform::GetConfigSection("Input.AxisMapping", buff, INI_BUFF_SZ, file) == 0;
 	while (!end)
 	{
-		char c, *axis_ptr, *sens_ptr;
-		int axis;
-		float sens;
+		char c = 0x0, *axis_ptr = nullptr, *sens_ptr = nullptr;
+		int axis = 0;
+		float sens = 0.f;
 
 		while ((c = buff[i]) != 0x0)
 		{
@@ -525,18 +584,6 @@ int Engine::_InitSystem()
 		return false;
 	}
 
-	if (SoundManager::Initialize() != ENGINE_OK)
-	{
-		Logger::Log(ENGINE_MODULE, LOG_CRITICAL, "Failed to initialize the sound manager");
-		return false;
-	}
-
-	/*if (PostProcessor::Initialize() != ENGINE_OK)
-	{
-	Logger::Log(ENGINE_MODULE, LOG_CRITICAL, "Failed to initialize the post processor");
-	return false;
-	}*/
-
 	return ENGINE_OK;
 }
 
@@ -559,7 +606,7 @@ bool Engine::_InitGame()
 		return true;
 	}
 
-	CreateGameModuleProc createGameModule = (CreateGameModuleProc)Platform::GetProcAddress(_gameModuleLibrary, "createGameModule");
+	const CreateGameModuleProc createGameModule = (CreateGameModuleProc)Platform::GetProcAddress(_gameModuleLibrary, "createGameModule");
 
 	if (!createGameModule)
 	{
@@ -579,7 +626,7 @@ bool Engine::_InitGame()
 		return false;
 	}
 
-	int ret = _gameModule->Initialize();
+	const int ret = _gameModule->Initialize();
 
 	if (ret != ENGINE_OK)
 	{

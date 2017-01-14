@@ -1,15 +1,13 @@
 /* NekoEngine
  *
- * ShadowRenderer.cpp
+ * ShadowRenderer.h
  * Author: Alexandru Naiman
  *
- * Deferred shadow renderer
- *
- * Based on: https://mynameismjp.wordpress.com/the-museum/samples-tutorials-tools/deferred-shadow-maps-sample/
+ * Shadow renderer
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -47,16 +45,22 @@ class ShadowRenderer
 public:
 	static int Initialize();
 
-	static bool BuildCommandBuffers();
+	static int32_t RegisterShadowCaster(int32_t lightId, uint8_t count, uint32_t *shadowIds, uint8_t &casterId);
+	static void UnregisterShadowCaster(uint8_t id);
 
+	static void GetMatrices(uint8_t id, glm::mat4 **matrices, glm::mat4 **biasedMatrices);
+	static VkCommandBuffer GetCommandBuffer();
+
+	static Texture *GetShadowMap();
+
+	static Buffer *GetMatricesBuffer();
+	static VkDeviceSize GetMatricesBufferSize();
+	
+	static VkDescriptorSet GetMatricesDescriptorSet();
+	static VkDescriptorSet GetBiasedMatricesDescriptorSet();
+
+	static void BuildCommandBuffer(VkCommandBuffer commandBuffer);
 	static void UpdateData(VkCommandBuffer cmdBuffer);
 
 	static void Release();
-
-	static VkCommandBuffer GetCommandBuffer();
-	static Texture *GetOcclusionTexture();
-
-private:
-
-	static void _CalculateFrustum(uint32_t lightId);
 };

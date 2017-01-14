@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -61,7 +61,7 @@ public:
 
 	ENGINE_API virtual ~AnimatorComponent() { }
 
-	Buffer *GetSkeletonBuffer() { return _skeleton->GetBuffer(); }	
+	Buffer *GetSkeletonBuffer() const noexcept { return _skeleton->GetBuffer(); }	
 	
 protected:
 	std::string _defaultAnimId;

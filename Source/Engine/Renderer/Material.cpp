@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -38,9 +38,9 @@
  */
 
 #include <Renderer/SSAO.h>
-#include <Renderer/Debug.h>
 #include <Renderer/VKUtil.h>
 #include <Renderer/Material.h>
+#include <Renderer/DebugMarker.h>
 #include <Renderer/PipelineManager.h>
 #include <Engine/Engine.h>
 #include <Engine/ResourceManager.h>
@@ -68,6 +68,7 @@ Material::Material(MaterialResource* res) noexcept
 	_pipelineId = PIPE_Unlit;
 	_pipelineLayoutId = PIPE_LYT_OneSampler;
 	_descriptorSet = VK_NULL_HANDLE;
+	_normalDescriptorSet = Renderer::GetInstance()->GetBlankTextureDescriptorSet();
 	_descriptorPool = VK_NULL_HANDLE;
 	_descriptorSetLayout = VK_NULL_HANDLE;
 
@@ -78,6 +79,7 @@ Material::Material(MaterialResource* res) noexcept
 
 Material::Material(MaterialData &data) noexcept
 {
+	_noCulling = false;
 	memcpy(&_data, &data, sizeof(MaterialData));
 
 	_LoadInfo();
@@ -132,7 +134,7 @@ int Material::Load()
 
 			if (lineBuff == "transparent")
 				_transparent = true;
-			if (lineBuff == "noculling")
+			if (lineBuff == "nocull")
 				_noCulling = true;
 
 			continue;
@@ -254,9 +256,14 @@ void Material::Enable(VkCommandBuffer buffer)
 	vkCmdBindDescriptorSets(buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, PipelineManager::GetPipelineLayout(_pipelineLayoutId), 2, 1, &_descriptorSet, 0, nullptr);
 }
 
+void Material::BindNormal(VkCommandBuffer buffer)
+{
+	vkCmdBindDescriptorSets(buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, PipelineManager::GetPipelineLayout(_animated ? PIPE_LYT_Anim_Depth : PIPE_LYT_Depth), 2, 1, &_normalDescriptorSet, 0, nullptr);
+}
+
 bool Material::CreateDescriptorSet()
 {
-	VkDescriptorPoolSize poolSize = {};
+	VkDescriptorPoolSize poolSize{};
 	poolSize.type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
 	poolSize.descriptorCount = 1;
 
@@ -266,8 +273,8 @@ bool Material::CreateDescriptorSet()
 		case MT_PhongSpecular:
 			poolSize.descriptorCount = 2;
 		break;
-		case MT_NormalPhongSpecular:
 		case MT_PhongSpecularEmission:
+		case MT_NormalPhongSpecular:
 			poolSize.descriptorCount = 3;
 		break;
 		case MT_NormalPhongSpecularEmission:
@@ -275,11 +282,11 @@ bool Material::CreateDescriptorSet()
 		break;
 	}
 
-	VkDescriptorPoolCreateInfo poolInfo = {};
+	VkDescriptorPoolCreateInfo poolInfo{};
 	poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
 	poolInfo.poolSizeCount = 1;
 	poolInfo.pPoolSizes = &poolSize;
-	poolInfo.maxSets = 1;
+	poolInfo.maxSets = 2;
 
 	if (vkCreateDescriptorPool(VKUtil::GetDevice(), &poolInfo, VKUtil::GetAllocator(), &_descriptorPool) != VK_SUCCESS)
 	{
@@ -287,7 +294,7 @@ bool Material::CreateDescriptorSet()
 		return false;
 	}
 
-	VkDescriptorSetAllocateInfo allocInfo = {};
+	VkDescriptorSetAllocateInfo allocInfo{};
 	allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
 	allocInfo.descriptorPool = _descriptorPool;
 	allocInfo.descriptorSetCount = 1;
@@ -299,19 +306,12 @@ bool Material::CreateDescriptorSet()
 		return false;
 	}
 
-	VkWriteDescriptorSet writeSampler = {};
-	writeSampler.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-	writeSampler.dstArrayElement = 0;
-	writeSampler.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-	writeSampler.descriptorCount = 1;
-	writeSampler.dstBinding = 0;
-	writeSampler.dstSet = _descriptorSet;
-	writeSampler.pBufferInfo = nullptr;
-	writeSampler.pTexelBufferView = nullptr;
+	VkWriteDescriptorSet writeSampler{};
+	VKUtil::WriteDS(&writeSampler, 1, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, nullptr, _descriptorSet, 0);
 
 	vector<VkDescriptorImageInfo> imageInfo;
 
-	VkDescriptorImageInfo diffuseImageInfo = {};
+	VkDescriptorImageInfo diffuseImageInfo{};
 	diffuseImageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 	diffuseImageInfo.imageView = _diffuseTexture->GetImageView();
 	diffuseImageInfo.sampler = _diffuseTexture->GetSampler();
@@ -319,7 +319,7 @@ bool Material::CreateDescriptorSet()
 
 	if (_data.Type == MT_PhongSpecular)
 	{
-		VkDescriptorImageInfo specularImageInfo = {};
+		VkDescriptorImageInfo specularImageInfo{};
 		specularImageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 		specularImageInfo.imageView = _specularTexture->GetImageView();
 		specularImageInfo.sampler = _specularTexture->GetSampler();
@@ -327,35 +327,21 @@ bool Material::CreateDescriptorSet()
 	}
 	else if (_data.Type == MT_PhongSpecularEmission)
 	{
-		VkDescriptorImageInfo specularImageInfo = {};
+		VkDescriptorImageInfo specularImageInfo{};
 		specularImageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 		specularImageInfo.imageView = _specularTexture->GetImageView();
 		specularImageInfo.sampler = _specularTexture->GetSampler();
 		imageInfo.push_back(specularImageInfo);
 
-		VkDescriptorImageInfo emissionImageInfo = {};
+		VkDescriptorImageInfo emissionImageInfo{};
 		emissionImageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 		emissionImageInfo.imageView = _emissionTexture->GetImageView();
 		emissionImageInfo.sampler = _emissionTexture->GetSampler();
 		imageInfo.push_back(emissionImageInfo);
 	}
-	else if (_data.Type == MT_NormalPhong)
-	{
-		VkDescriptorImageInfo normalImageInfo = {};
-		normalImageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-		normalImageInfo.imageView = _normalTexture->GetImageView();
-		normalImageInfo.sampler = _normalTexture->GetSampler();
-		imageInfo.push_back(normalImageInfo);
-	}
 	else if (_data.Type == MT_NormalPhongSpecular)
 	{
-		VkDescriptorImageInfo normalImageInfo = {};
-		normalImageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-		normalImageInfo.imageView = _normalTexture->GetImageView();
-		normalImageInfo.sampler = _normalTexture->GetSampler();
-		imageInfo.push_back(normalImageInfo);
-
-		VkDescriptorImageInfo specularImageInfo = {};
+		VkDescriptorImageInfo specularImageInfo{};
 		specularImageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 		specularImageInfo.imageView = _specularTexture->GetImageView();
 		specularImageInfo.sampler = _specularTexture->GetSampler();
@@ -363,19 +349,13 @@ bool Material::CreateDescriptorSet()
 	}
 	else if (_data.Type == MT_NormalPhongSpecularEmission)
 	{
-		VkDescriptorImageInfo normalImageInfo = {};
-		normalImageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-		normalImageInfo.imageView = _normalTexture->GetImageView();
-		normalImageInfo.sampler = _normalTexture->GetSampler();
-		imageInfo.push_back(normalImageInfo);
-
-		VkDescriptorImageInfo specularImageInfo = {};
+		VkDescriptorImageInfo specularImageInfo{};
 		specularImageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 		specularImageInfo.imageView = _specularTexture->GetImageView();
 		specularImageInfo.sampler = _specularTexture->GetSampler();
 		imageInfo.push_back(specularImageInfo);
 
-		VkDescriptorImageInfo emissionImageInfo = {};
+		VkDescriptorImageInfo emissionImageInfo{};
 		emissionImageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 		emissionImageInfo.imageView = _emissionTexture->GetImageView();
 		emissionImageInfo.sampler = _emissionTexture->GetSampler();
@@ -384,6 +364,31 @@ bool Material::CreateDescriptorSet()
 
 	writeSampler.descriptorCount = (uint32_t)imageInfo.size();
 	writeSampler.pImageInfo = imageInfo.data();
+
+	vkUpdateDescriptorSets(VKUtil::GetDevice(), 1, &writeSampler, 0, nullptr);
+
+	if (!_normalTexture)
+		return true;
+
+	VkDescriptorSetLayout normalSetLayout = PipelineManager::GetDescriptorSetLayout(DESC_LYT_OneSampler);
+	allocInfo.pSetLayouts = &normalSetLayout;
+
+	if (vkAllocateDescriptorSets(VKUtil::GetDevice(), &allocInfo, &_normalDescriptorSet) != VK_SUCCESS)
+	{
+		Logger::Log(MAT_MODULE, LOG_CRITICAL, "Failed to allocate descriptor set");
+		return false;
+	}
+
+	VkDescriptorImageInfo normalImageInfo{};
+	normalImageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+	normalImageInfo.imageView = _normalTexture->GetImageView();
+	normalImageInfo.sampler = _normalTexture->GetSampler();
+
+	writeSampler.dstSet = _normalDescriptorSet;
+	writeSampler.pBufferInfo = nullptr;
+	writeSampler.pTexelBufferView = nullptr;
+	writeSampler.descriptorCount = 1;
+	writeSampler.pImageInfo = &normalImageInfo;
 
 	vkUpdateDescriptorSets(VKUtil::GetDevice(), 1, &writeSampler, 0, nullptr);
 
@@ -421,20 +426,20 @@ void Material::_LoadInfo()
 	else if (_data.Type == MT_NormalPhong)
 	{
 		_pipelineId = PIPE_PhongNormal;
-		_pipelineLayoutId = PIPE_LYT_TwoSamplers;
-		_descriptorSetLayout = PipelineManager::GetDescriptorSetLayout(DESC_LYT_TwoSamplers);
+		_pipelineLayoutId = PIPE_LYT_OneSampler;
+		_descriptorSetLayout = PipelineManager::GetDescriptorSetLayout(DESC_LYT_OneSampler);
 	}
 	else if (_data.Type == MT_NormalPhongSpecular)
 	{
 		_pipelineId = PIPE_PhongNormalSpecular;
-		_pipelineLayoutId = PIPE_LYT_ThreeSamplers;
-		_descriptorSetLayout = PipelineManager::GetDescriptorSetLayout(DESC_LYT_ThreeSamplers);
+		_pipelineLayoutId = PIPE_LYT_TwoSamplers;
+		_descriptorSetLayout = PipelineManager::GetDescriptorSetLayout(DESC_LYT_TwoSamplers);
 	}
 	else if (_data.Type == MT_NormalPhongSpecularEmission)
 	{
 		_pipelineId = PIPE_PhongNormalSpecularEmissive;
-		_pipelineLayoutId = PIPE_LYT_FourSamplers;
-		_descriptorSetLayout = PipelineManager::GetDescriptorSetLayout(DESC_LYT_FourSamplers);
+		_pipelineLayoutId = PIPE_LYT_ThreeSamplers;
+		_descriptorSetLayout = PipelineManager::GetDescriptorSetLayout(DESC_LYT_ThreeSamplers);
 	}
 	else if (_data.Type == MT_Unlit)
 	{

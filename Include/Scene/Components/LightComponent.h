@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -50,12 +50,20 @@ public:
 
 	Light *GetLight() noexcept { return _light; }
 
+	virtual void Enable(bool enable) override { ObjectComponent::Enable(enable); _light->color.a = enable ? _intensity : 0.f; }
+
+	virtual void Update(double deltaTime) noexcept;
 	virtual void UpdatePosition() noexcept override;
 
-	virtual void Enable(bool enable) override { ObjectComponent::Enable(enable); _light->data.w = enable ? 1.f : 0.f; }
+	virtual bool Unload() override;
 
-	~LightComponent() noexcept { Renderer::GetInstance()->FreeLight(_light); }
+	virtual ~LightComponent() { };
 
 protected:
+	int32_t _lightId;
+	uint8_t _shadowCasterId;
 	Light *_light;
+	float _intensity;
+	uint32_t _shadowMapIds[6];
+	glm::mat4 *_lightMatrices[6], *_biasedLightMatrices[6];
 };

@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -45,8 +45,12 @@ using namespace glm;
 ObjectComponent::ObjectComponent(ComponentInitializer *initializer)
 	: _parent(initializer->parent),
 	_loaded(false),
-	_enabled(true)
+	_enabled(true),
+	_cmdBuffer(VK_NULL_HANDLE)
 {
+	SetPosition(initializer->position);
+	SetRotation(initializer->rotation);
+	SetScale(initializer->scale);
 }
 
 bool ObjectComponent::Unload()

@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -39,19 +39,23 @@
 
 #include <set>
 
-#include <Renderer/GUI.h>
+#include <GUI/GUI.h>
 #include <Renderer/SSAO.h>
-#include <Renderer/Debug.h>
 #include <Renderer/VKUtil.h>
 #include <Renderer/Texture.h>
 #include <Renderer/Renderer.h>
 #include <Renderer/Swapchain.h>
+#include <Renderer/Primitives.h>
+#include <Renderer/DebugMarker.h>
 #include <Renderer/PostProcessor.h>
+#include <Renderer/ShadowRenderer.h>
 #include <Renderer/PipelineManager.h>
 #include <Renderer/RenderPassManager.h>
 #include <Engine/Engine.h>
+#include <Engine/Version.h>
 #include <Engine/SceneManager.h>
 #include <Engine/CameraManager.h>
+#include <Profiler/Profiler.h>
 
 #define RENDERER_MODULE "VulkanRenderer"
 
@@ -60,22 +64,22 @@ VKUTIL_OBJS;
 using namespace std;
 using namespace glm;
 
-const vector<const char*> _ValidationLayers =
+const vector<const char*> _ValidationLayers
 {
 	"VK_LAYER_LUNARG_standard_validation"
 };
 
-const vector<const char *> _DeviceExtensions =
+const vector<const char *> _DeviceExtensions
 {
 	VK_KHR_SWAPCHAIN_EXTENSION_NAME
 };
 
-QueueFamilyIndices _queueIndices;
-NString _vkVersion;
-static uint _wkGroupsX = 0, _wkGroupsY = 0, _numTiles = 0;
-static Light *_lights;
-static Renderer *_rendererInstance = nullptr;
-static VkImageView _depthImageView = VK_NULL_HANDLE, _stencilImageView = VK_NULL_HANDLE;
+QueueFamilyIndices _queueIndices{};
+NString _vkVersion{};
+static uint _wkGroupsX{ 0 }, _wkGroupsY{ 0 }, _numTiles{ 0 };
+static Light *_lights{ nullptr };
+static Renderer *_rendererInstance{ nullptr };
+static VkImageView _depthImageView{ VK_NULL_HANDLE }, _stencilImageView{ VK_NULL_HANDLE };
 char _deviceName[VK_MAX_PHYSICAL_DEVICE_NAME_SIZE];
 
 Renderer *Renderer::GetInstance()
@@ -109,7 +113,8 @@ Renderer::Renderer()
 
 	_colorTarget = _depthTarget = nullptr;
 	_msaaColorTarget = nullptr;
-	_normalBrightTarget = _msaaNormalBrightTarget = nullptr;
+	_normalTarget = _msaaNormalTarget = nullptr;
+	_brightnessTarget = _msaaBrightnessTarget = nullptr;
 	_framebuffer = _depthFramebuffer = _guiFramebuffer = VK_NULL_HANDLE;
 	_depthSampler = VK_NULL_HANDLE;
 	_nearestSampler = VK_NULL_HANDLE;
@@ -140,8 +145,16 @@ int Renderer::Initialize(PlatformWindowType window, bool enableValidation, bool 
 		mat4(),
 		vec4(.2f, .2f, .2f, 1.f),
 		vec4(-40.f, 10.f, 0.f, 0.f),
-		ivec2(), 0, 0, vec4(), mat4()
+		ivec2(), 0, 0, Engine::GetConfiguration().Renderer.Multisampling ? Engine::GetConfiguration().Renderer.Samples : 1, Engine::GetConfiguration().Renderer.Gamma, vec2(), mat4()
 	};
+
+	for (int i = 0; i < MAX_INFLIGHT_COMMAND_BUFFERS; ++i)
+	{
+		_shadowCommandBuffers[i] = _depthCommandBuffers[i] = _sceneCommandBuffers[i] = _guiCommandBuffers[i] = VK_NULL_HANDLE;
+		_tempBuffers[i] = nullptr;
+	}
+
+	_temporaryBuffer = nullptr;
 
 	if (!_CreateInstance(enableValidation))
 		return ENGINE_INSTANCE_CREATE_FAIL;
@@ -164,7 +177,13 @@ int Renderer::Initialize(PlatformWindowType window, bool enableValidation, bool 
 	if (!_CreateCommandPools())
 		return ENGINE_CMDPOOL_CREATE_FAIL;
 
-	VKUtil::Initialize(_device, _physicalDevice, _graphicsQueue, _graphicsCommandPool, _computeQueue, _computeCommandPool, _allocator);	
+	VKUtil::Initialize(_device, _physicalDevice, _graphicsQueue, _graphicsCommandPool, _computeQueue, _computeCommandPool, _allocator);
+
+	uint8_t blankTexture[4]{ 255, 255, 255, 255 };
+
+	_blankTexture = new Texture(1, 1, 1, VK_FORMAT_R8G8B8A8_UINT, sizeof(uint8_t) * 4, blankTexture);
+	if (!_blankTexture->CreateView(VK_IMAGE_ASPECT_COLOR_BIT))
+		return ENGINE_FAIL;
 
 	RenderPassManager::Initialize();
 	if (PipelineManager::Initialize() != ENGINE_OK)
@@ -174,34 +193,34 @@ int Renderer::Initialize(PlatformWindowType window, bool enableValidation, bool 
 		return ENGINE_FRAMEUBFFER_CREATE_FAIL;
 
 	if (!VKUtil::CreateSampler(_depthSampler, VK_FILTER_NEAREST, VK_FILTER_NEAREST,
-		VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER, VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER,
-		VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER, 0.f, VK_SAMPLER_MIPMAP_MODE_LINEAR,
-		0.f, 0.f, 0.f, VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE))
+							   VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER, VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER,
+							   VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER, 0.f, VK_SAMPLER_MIPMAP_MODE_LINEAR,
+							   0.f, 0.f, 0.f, VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE))
 	{
 		Logger::Log(RENDERER_MODULE, LOG_CRITICAL, "Failed to create depth sampler");
 		return false;
 	}
-	DBG_SET_OBJECT_NAME((uint64_t)_depthSampler, VK_DEBUG_REPORT_OBJECT_TYPE_SAMPLER_EXT, "Depth sampler");
+	VK_DBG_SET_OBJECT_NAME((uint64_t)_depthSampler, VK_DEBUG_REPORT_OBJECT_TYPE_SAMPLER_EXT, "Depth sampler");
 
 	if (!VKUtil::CreateSampler(_nearestSampler, VK_FILTER_NEAREST, VK_FILTER_NEAREST,
-		VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER, VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER,
-		VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER, 0.f, VK_SAMPLER_MIPMAP_MODE_LINEAR,
-		0.f, 0.f, 0.f, VK_BORDER_COLOR_FLOAT_OPAQUE_BLACK))
+							   VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER, VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER,
+							   VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER, 0.f, VK_SAMPLER_MIPMAP_MODE_LINEAR,
+							   0.f, 0.f, 0.f, VK_BORDER_COLOR_FLOAT_OPAQUE_BLACK))
 	{
 		Logger::Log(RENDERER_MODULE, LOG_CRITICAL, "Failed to create depth sampler");
 		return false;
 	}
-	DBG_SET_OBJECT_NAME((uint64_t)_nearestSampler, VK_DEBUG_REPORT_OBJECT_TYPE_SAMPLER_EXT, "Nearest sampler");
+	VK_DBG_SET_OBJECT_NAME((uint64_t)_nearestSampler, VK_DEBUG_REPORT_OBJECT_TYPE_SAMPLER_EXT, "Nearest sampler");
 
 	if (!VKUtil::CreateSampler(_textureSampler, VK_FILTER_LINEAR, VK_FILTER_LINEAR,
-		VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER, VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER,
-		VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER, 16.f, VK_SAMPLER_MIPMAP_MODE_LINEAR,
-		0.f, 0.f, 0.f, VK_BORDER_COLOR_FLOAT_OPAQUE_BLACK))
+							   VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER, VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER,
+							   VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER, 16.f, VK_SAMPLER_MIPMAP_MODE_LINEAR,
+							   0.f, 0.f, 0.f, VK_BORDER_COLOR_FLOAT_OPAQUE_BLACK))
 	{
 		Logger::Log(RENDERER_MODULE, LOG_CRITICAL, "Failed to create depth sampler");
 		return false;
 	}
-	DBG_SET_OBJECT_NAME((uint64_t)_textureSampler, VK_DEBUG_REPORT_OBJECT_TYPE_SAMPLER_EXT, "Filtered sampler");
+	VK_DBG_SET_OBJECT_NAME((uint64_t)_textureSampler, VK_DEBUG_REPORT_OBJECT_TYPE_SAMPLER_EXT, "Filtered sampler");
 
 	_lights = (Light *)calloc(Engine::GetConfiguration().Renderer.MaxLights, sizeof(Light));
 
@@ -212,18 +231,21 @@ int Renderer::Initialize(PlatformWindowType window, bool enableValidation, bool 
 	_wkGroupsY = (Engine::GetScreenHeight() + (Engine::GetScreenHeight() % 16)) / 16;
 	++_wkGroupsY;
 	_numTiles = _wkGroupsX * _wkGroupsY;
-	_sceneData.NumberOfTilesX = (int32_t)_wkGroupsX;
+	_sceneData.numberOfTilesX = (int32_t)_wkGroupsX;
 
 	if (!_CreateBuffer())
 		return ENGINE_FAIL;
 
-	if (Engine::GetConfiguration().PostProcessor.Enable)
+	if (Primitives::Initialize() != ENGINE_OK)
 	{
-		if (PostProcessor::Initialize() != ENGINE_OK)
-		{
-			Logger::Log(RENDERER_MODULE, LOG_CRITICAL, "Failed to initialize the post processor");
-			return ENGINE_FAIL;
-		}
+		Logger::Log(RENDERER_MODULE, LOG_CRITICAL, "Failed to create basic primitives");
+		return ENGINE_FAIL;
+	}
+
+	if (PostProcessor::Initialize() != ENGINE_OK)
+	{
+		Logger::Log(RENDERER_MODULE, LOG_CRITICAL, "Failed to initialize the post processor");
+		return ENGINE_FAIL;
 	}
 
 	if (Engine::GetConfiguration().Renderer.SSAO.Enable)
@@ -235,6 +257,12 @@ int Renderer::Initialize(PlatformWindowType window, bool enableValidation, bool 
 		}
 	}
 
+	if (ShadowRenderer::Initialize() != ENGINE_OK)
+	{
+		Logger::Log(RENDERER_MODULE, LOG_CRITICAL, "Failed to initialize the shadow renderer");
+		return ENGINE_FAIL;
+	}
+
 	if (!_CreateDescriptorSets())
 		return ENGINE_DESCRIPTOR_SET_CREATE_FAIL;
 
@@ -244,17 +272,24 @@ int Renderer::Initialize(PlatformWindowType window, bool enableValidation, bool 
 	if (!_CreateSemaphores())
 		return ENGINE_SEMAPHORE_CREATE_FAIL;
 
-	for (int i = 0; i < MAX_INFLIGHT_COMMAND_BUFFERS; ++i)
-		_depthCommandBuffers[i] = _sceneCommandBuffers[i] = _guiCommandBuffers[i] = VK_NULL_HANDLE;
+	_currentBufferIndex = 0;
 
-	_currentDepthCB = -1;
-	_currentSceneCB = -1;
-	_currentGUICB = -1;
+	_temporaryBuffer = new Buffer(MAX_INFLIGHT_COMMAND_BUFFERS * TEMPORARY_BUFFER_SIZE,
+								  VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT |
+								  VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT |
+								  VK_BUFFER_USAGE_STORAGE_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_SRC_BIT |
+								  VK_BUFFER_USAGE_TRANSFER_DST_BIT, nullptr, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 
-	_rebuildDepthCB = _rebuildSceneCB = _rebuildGUICB = true;
+	for (uint8_t i = 0; i < MAX_INFLIGHT_COMMAND_BUFFERS; ++i)
+	{
+		_tempBuffers[i] = new Buffer(_temporaryBuffer, TEMPORARY_BUFFER_SIZE * i, TEMPORARY_BUFFER_SIZE);
+		_tempBufferOffsets[i] = 0;
+	}
 
 	for (uint32_t i = 0; i < _swapchain->GetImageCount(); ++i)
 		VKUtil::TransitionImageLayout(_swapchain->GetImage(i), VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR);
+
+	_computeCommandBuffers.Add(_cullingCommandBuffer);
 
 	Logger::Log(RENDERER_MODULE, LOG_INFORMATION, "Initialized");
 
@@ -263,20 +298,21 @@ int Renderer::Initialize(PlatformWindowType window, bool enableValidation, bool 
 
 bool Renderer::_CreateBuffer()
 {
-	VkDeviceSize bufferSize = sizeof(SceneData) + (sizeof(Light) * Engine::GetConfiguration().Renderer.MaxLights) + (_numTiles * Engine::GetConfiguration().Renderer.MaxLights * sizeof(int32_t));
+	VkDeviceSize bufferSize{ sizeof(SceneData) + (sizeof(Light) * Engine::GetConfiguration().Renderer.MaxLights) + (_numTiles * Engine::GetConfiguration().Renderer.MaxLights * sizeof(int32_t)) };
 
 	_stagingBuffer = new Buffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, nullptr, VK_MEMORY_PROPERTY_HOST_COHERENT_BIT | VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
 	_buffer = new Buffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT |
 		VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT | VK_BUFFER_USAGE_STORAGE_BUFFER_BIT, nullptr, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 
-	DBG_SET_OBJECT_NAME((uint64_t)_buffer->GetHandle(), VK_DEBUG_REPORT_OBJECT_TYPE_BUFFER_EXT, "Scene data buffer");
-	DBG_SET_OBJECT_NAME((uint64_t)_stagingBuffer->GetHandle(), VK_DEBUG_REPORT_OBJECT_TYPE_BUFFER_EXT, "Scene data staging buffer");
-	DBG_SET_OBJECT_NAME((uint64_t)_buffer->GetMemoryHandle(), VK_DEBUG_REPORT_OBJECT_TYPE_DEVICE_MEMORY_EXT, "Scene data buffer memory");
-	DBG_SET_OBJECT_NAME((uint64_t)_stagingBuffer->GetMemoryHandle(), VK_DEBUG_REPORT_OBJECT_TYPE_DEVICE_MEMORY_EXT, "Scene data staging buffer memory");
+	VK_DBG_SET_OBJECT_NAME((uint64_t)_buffer->GetHandle(), VK_DEBUG_REPORT_OBJECT_TYPE_BUFFER_EXT, "Scene data buffer");
+	VK_DBG_SET_OBJECT_NAME((uint64_t)_stagingBuffer->GetHandle(), VK_DEBUG_REPORT_OBJECT_TYPE_BUFFER_EXT, "Scene data staging buffer");
+	VK_DBG_SET_OBJECT_NAME((uint64_t)_buffer->GetMemoryHandle(), VK_DEBUG_REPORT_OBJECT_TYPE_DEVICE_MEMORY_EXT, "Scene data buffer memory");
+	VK_DBG_SET_OBJECT_NAME((uint64_t)_stagingBuffer->GetMemoryHandle(), VK_DEBUG_REPORT_OBJECT_TYPE_DEVICE_MEMORY_EXT, "Scene data staging buffer memory");
 
-	_sceneData.View = mat4();
-	_sceneData.Projection = mat4();
-	_sceneData.ScreenSize = ivec2(Engine::GetScreenWidth(), Engine::GetScreenHeight());
+	_sceneData.view = mat4();
+	_sceneData.projection = mat4();
+	_sceneData.screenSize = ivec2(Engine::GetScreenWidth(), Engine::GetScreenHeight());
+	_sceneData.gamma = Engine::GetConfiguration().Renderer.Gamma;
 
 	uint8_t *ptr = _stagingBuffer->Map();
 	{
@@ -292,8 +328,8 @@ bool Renderer::_CreateBuffer()
 
 VkCommandBuffer Renderer::CreateMeshCommandBuffer()
 {
-	VkCommandBuffer ret = VKUtil::CreateCommandBuffer(VK_COMMAND_BUFFER_LEVEL_SECONDARY, _graphicsCommandPool);
-	DBG_SET_OBJECT_NAME((uint64_t)ret, VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT, "Mesh command buffer");
+	VkCommandBuffer ret{ VKUtil::CreateCommandBuffer(VK_COMMAND_BUFFER_LEVEL_SECONDARY, _graphicsCommandPool) };
+	VK_DBG_SET_OBJECT_NAME((uint64_t)ret, VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT, "Mesh command buffer");
 	return ret;
 }
 
@@ -304,7 +340,7 @@ void Renderer::FreeMeshCommandBuffer(VkCommandBuffer buffer)
 
 VkDescriptorPool Renderer::CreateMeshDescriptorPool()
 {
-	VkDescriptorPool pool;
+	VkDescriptorPool pool{};
 
 	VkDescriptorPoolSize poolSize{};
 	poolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
@@ -321,14 +357,14 @@ VkDescriptorPool Renderer::CreateMeshDescriptorPool()
 		Logger::Log(RENDERER_MODULE, LOG_CRITICAL, "Failed to create descriptor pool");
 		return VK_NULL_HANDLE;
 	}
-	DBG_SET_OBJECT_NAME((uint64_t)pool, VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_POOL_EXT, "Mesh descriptor pool");
+	VK_DBG_SET_OBJECT_NAME((uint64_t)pool, VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_POOL_EXT, "Mesh descriptor pool");
 
 	return pool;
 }
 
 VkDescriptorPool Renderer::CreateAnimatedMeshDescriptorPool()
 {
-	VkDescriptorPool pool;
+	VkDescriptorPool pool{};
 
 	VkDescriptorPoolSize poolSize[2]{};
 	poolSize[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
@@ -347,14 +383,14 @@ VkDescriptorPool Renderer::CreateAnimatedMeshDescriptorPool()
 		Logger::Log(RENDERER_MODULE, LOG_CRITICAL, "Failed to create descriptor pool");
 		return VK_NULL_HANDLE;
 	}
-	DBG_SET_OBJECT_NAME((uint64_t)pool, VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_POOL_EXT, "Animated mesh descriptor pool");
+	VK_DBG_SET_OBJECT_NAME((uint64_t)pool, VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_POOL_EXT, "Animated mesh descriptor pool");
 
 	return pool;
 }
 
 void Renderer::FreeMeshDescriptorPool(VkDescriptorPool pool)
 {
-	if(pool != VK_NULL_HANDLE)
+	if (pool != VK_NULL_HANDLE)
 		vkDestroyDescriptorPool(_device, pool, _allocator);
 }
 
@@ -368,14 +404,24 @@ VkImage Renderer::GetDepthStencilImage()
 	return _depthTarget->GetImage();
 }
 
-VkImage Renderer::GetNormalBrightImage()
+VkImage Renderer::GetNormalImage()
 {
-	return _normalBrightTarget->GetImage();
+	return _normalTarget->GetImage();
 }
 
-VkImage Renderer::GetMSAANormalBrightImage()
+VkImage Renderer::GetMSAANormalImage()
 {
-	return _msaaNormalBrightTarget->GetImage();
+	return _msaaNormalTarget->GetImage();
+}
+
+VkImage Renderer::GetBrightnessImage()
+{
+	return _brightnessTarget->GetImage();
+}
+
+VkImage Renderer::GetMSAABrightnessImage()
+{
+	return _msaaBrightnessTarget->GetImage();
 }
 
 VkImageView Renderer::GetRenderTargetImageView()
@@ -388,14 +434,24 @@ VkImageView Renderer::GetDepthStencilImageView()
 	return _depthTarget->GetImageView();
 }
 
-VkImageView Renderer::GetNormalBrightImageView()
+VkImageView Renderer::GetNormalImageView()
 {
-	return _normalBrightTarget->GetImageView();
+	return _normalTarget->GetImageView();
 }
 
-VkImageView Renderer::GetMSAANormalBrightImageView()
+VkImageView Renderer::GetMSAANormalImageView()
 {
-	return _msaaNormalBrightTarget->GetImageView();
+	return _msaaNormalTarget->GetImageView();
+}
+
+VkImageView Renderer::GetBrightnessImageView()
+{
+	return _brightnessTarget->GetImageView();
+}
+
+VkImageView Renderer::GetMSAABrightnessImageView()
+{
+	return _msaaBrightnessTarget->GetImageView();
 }
 
 VkImageView Renderer::GetDepthImageView()
@@ -408,11 +464,24 @@ VkImageView Renderer::GetStencilImageView()
 	return _stencilImageView;
 }
 
+Buffer *Renderer::GetTemporaryBuffer(VkDeviceSize size)
+{
+	Buffer *ret{ new Buffer(_tempBuffers[_currentBufferIndex], _tempBufferOffsets[_currentBufferIndex], size) };
+
+	if (!ret)
+		return nullptr;
+
+	_tempBufferOffsets[_currentBufferIndex] += size;
+	_allocatedBuffers[_currentBufferIndex].Add(ret);
+
+	return ret;
+}
+
 Buffer *Renderer::GetStagingBuffer(VkDeviceSize size)
 {
-	Buffer *ret = new Buffer(size, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, nullptr, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
-	DBG_SET_OBJECT_NAME((uint64_t)ret->GetHandle(), VK_DEBUG_REPORT_OBJECT_TYPE_BUFFER_EXT, "Staging buffer");
-	DBG_SET_OBJECT_NAME((uint64_t)ret->GetMemoryHandle(), VK_DEBUG_REPORT_OBJECT_TYPE_DEVICE_MEMORY_EXT, "Staging buffer memory");
+	Buffer *ret{ new Buffer(size, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, nullptr, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT) };
+	VK_DBG_SET_OBJECT_NAME((uint64_t)ret->GetHandle(), VK_DEBUG_REPORT_OBJECT_TYPE_BUFFER_EXT, "Staging buffer");
+	VK_DBG_SET_OBJECT_NAME((uint64_t)ret->GetMemoryHandle(), VK_DEBUG_REPORT_OBJECT_TYPE_DEVICE_MEMORY_EXT, "Staging buffer memory");
 	return ret;
 }
 
@@ -421,42 +490,48 @@ void Renderer::FreeStagingBuffer(Buffer *stagingBuffer)
 	delete stagingBuffer;
 }
 
-Light *Renderer::AllocLight()
+int32_t Renderer::AllocLight()
 {
-	return &_lights[_sceneData.LightCount++];
+	if (_sceneData.lightCount == Engine::GetConfiguration().Renderer.MaxLights)
+		return -1;
+
+	return _sceneData.lightCount++;
 }
 
-Light *Renderer::GetLight(uint32_t lightId)
+Light *Renderer::GetLight(int32_t lightId)
 {
 	return &_lights[lightId];
 }
 
-void Renderer::FreeLight(Light *light)
+void Renderer::FreeLight(int32_t light)
 {
-	//
+	_sceneData.lightCount--;
 }
 
 void Renderer::Update(double deltaTime)
 {
 	if (!SceneManager::IsSceneLoaded())
-	{
 		return;
-	}
 
-	Camera *cam = CameraManager::GetActiveCamera();
-	_sceneData.View = cam->GetView();
-	_sceneData.Projection = cam->GetProjectionMatrix();
-	_sceneData.CameraPosition = vec4(cam->GetPosition(), 1.f);
-	_sceneData.ScreenSize = ivec2(Engine::GetScreenWidth(), Engine::GetScreenHeight());
+	Camera *cam{ CameraManager::GetActiveCamera() };
+	_sceneData.view = cam->GetView();
+	_sceneData.projection = cam->GetProjectionMatrix();
+	_sceneData.cameraPosition = vec4(cam->GetPosition(), 1.f);
+	_sceneData.screenSize = ivec2(Engine::GetScreenWidth(), Engine::GetScreenHeight());
+	_sceneData.gamma = Engine::GetConfiguration().Renderer.Gamma;
 
-	VkCommandBuffer updateBuffer = VKUtil::CreateOneShotCmdBuffer();
+	VkCommandBufferBeginInfo beginInfo{};
+	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+	beginInfo.flags = VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT;
 
-	DBG_MARKER_BEGIN(updateBuffer, "Update data", vec4(0.83, 0.63, 0.56, 1.0));
+	vkBeginCommandBuffer(_updateCommandBuffers[_currentBufferIndex], &beginInfo);
 
-	DBG_MARKER_INSERT(updateBuffer, "Update objects", vec4(0.83, 0.73, 0.56, 1.0));
+	VK_DBG_MARKER_BEGIN(_updateCommandBuffers[_currentBufferIndex], "Update data", vec4(0.83, 0.63, 0.56, 1.0));
+
+	VK_DBG_MARKER_INSERT(_updateCommandBuffers[_currentBufferIndex], "Update objects", vec4(0.83, 0.73, 0.56, 1.0));
 
 	if (SceneManager::IsSceneLoaded())
-		SceneManager::GetActiveScene()->UpdateData(updateBuffer);
+		SceneManager::GetActiveScene()->UpdateData(_updateCommandBuffers[_currentBufferIndex]);
 
 	uint8_t *ptr = _stagingBuffer->Map();
 	{
@@ -465,30 +540,37 @@ void Renderer::Update(double deltaTime)
 	}
 	_stagingBuffer->Unmap();
 
-	DBG_MARKER_INSERT(updateBuffer, "Update scene", vec4(0.83, 0.73, 0.56, 1.0));
+	VK_DBG_MARKER_INSERT(_updateCommandBuffers[_currentBufferIndex], "Update scene", vec4(0.83, 0.73, 0.56, 1.0));
 
-	VKUtil::CopyBuffer(_stagingBuffer->GetHandle(), _buffer->GetHandle(), sizeof(SceneData) + sizeof(Light) * _sceneData.LightCount, 0, 0, updateBuffer);
+	VKUtil::CopyBuffer(_stagingBuffer->GetHandle(), _buffer->GetHandle(), sizeof(SceneData) + sizeof(Light) * _sceneData.lightCount, 0, 0, _updateCommandBuffers[_currentBufferIndex]);
 
-	DBG_MARKER_INSERT(updateBuffer, "Update GUI", vec4(0.83, 0.73, 0.56, 1.0));
+	VK_DBG_MARKER_INSERT(_updateCommandBuffers[_currentBufferIndex], "Update GUI", vec4(0.83, 0.73, 0.56, 1.0));
 
 	if (Engine::GetConfiguration().Renderer.SSAO.Enable)
-		SSAO::UpdateData(updateBuffer);
+		SSAO::UpdateData(_updateCommandBuffers[_currentBufferIndex]);
 
-	GUI::UpdateData(updateBuffer);
+	PROF_END();
 
-	DBG_MARKER_END(updateBuffer);
+	if (Engine::StatsVisible())
+		PROF_DRAW();
 
-	VKUtil::ExecuteOneShotCmdBuffer(updateBuffer);
+	//GUIManager::DrawString(vec2(300, 300), vec3(1.f), "Visible objects: %d", _secondarySceneCommandBuffers.Count());
+	GUIManager::UpdateData(_updateCommandBuffers[_currentBufferIndex]);
+
+	ShadowRenderer::UpdateData(_updateCommandBuffers[_currentBufferIndex]);
+	
+	VK_DBG_MARKER_END(_updateCommandBuffers[_currentBufferIndex]);
+	vkEndCommandBuffer(_updateCommandBuffers[_currentBufferIndex]);
+
+	VKUtil::ExecuteCommandBuffer(_updateCommandBuffers[_currentBufferIndex]);
 }
 
 void Renderer::Draw()
 {
 	if (!SceneManager::IsSceneLoaded())
-	{
 		return;
-	}
 
-	uint32_t imageIndex = _swapchain->AcquireNextImage(_imageAvailableSemaphore);
+	uint32_t imageIndex{ _swapchain->AcquireNextImage(_imageAvailableSemaphore) };
 
 	if (imageIndex == UINT32_MAX)
 	{
@@ -496,19 +578,23 @@ void Renderer::Draw()
 		return;
 	}
 
+	vkResetCommandBuffer(_shadowCommandBuffers[_currentBufferIndex], 0);
 	ResetDepthCommandBuffers();
 	ResetSceneCommandBuffers();
+	ResetGUICommandBuffers();
 
 	SceneManager::GetActiveScene()->PrepareCommandBuffers();
+	GUIManager::PrepareCommandBuffers();
 
+	ShadowRenderer::BuildCommandBuffer(_shadowCommandBuffers[_currentBufferIndex]);
 	_BuildDepthCommandBuffer();
 	_BuildSceneCommandBuffer();
+	_BuildGUICommandBuffer();
 
-	if (_rebuildGUICB)
-	{
-		_BuildGUICommandBuffer();
-		_rebuildGUICB = false;
-	}
+#if defined(NE_CONFIG_DEBUG) || defined(NE_CONFIG_DEVELOPMENT)
+	if (Engine::GetDebugVariables().DrawBounds)
+		_BuildBoundsDrawCommandBuffer();
+#endif
 	
 	if(Engine::GetConfiguration().Renderer.EnableAsyncCompute)
 		_SubmitAsync(imageIndex);
@@ -517,22 +603,28 @@ void Renderer::Draw()
 
 	if (_swapchain->Present(_renderFinishedSemaphore, imageIndex, _presentQueue) == UINT32_MAX)
 		_RecreateSwapchain();
+
+	_currentBufferIndex = (_currentBufferIndex + 1) % MAX_INFLIGHT_COMMAND_BUFFERS;
+	_tempBufferOffsets[_currentBufferIndex] = 0;
+	for (Buffer *b : _allocatedBuffers[_currentBufferIndex])
+		delete b;
+	_allocatedBuffers[_currentBufferIndex].Clear(false);
 }
 
 void Renderer::_Submit(uint32_t imageIndex)
 {
-	VkResult result;
+	VkResult result{};
 
-	VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
+	VkPipelineStageFlags waitStages[]{ VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
 
-	VkCommandBuffer buffers[]{ _depthCommandBuffers[_currentDepthCB], SSAO::GetCommandBuffer() };
+	VkCommandBuffer buffers[]{ _shadowCommandBuffers[_currentBufferIndex], _depthCommandBuffers[_currentBufferIndex], SSAO::GetCommandBuffer() };
 
-	VkSubmitInfo submitInfo = {};
+	VkSubmitInfo submitInfo{};
 	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 	submitInfo.waitSemaphoreCount = 1;
 	submitInfo.pWaitSemaphores = &_imageAvailableSemaphore;
 	submitInfo.pWaitDstStageMask = waitStages;
-	submitInfo.commandBufferCount = Engine::GetConfiguration().Renderer.SSAO.Enable ? 2 : 1;
+	submitInfo.commandBufferCount = Engine::GetConfiguration().Renderer.SSAO.Enable ? 3 : 2;
 	submitInfo.pCommandBuffers = buffers;
 	submitInfo.signalSemaphoreCount = 1;
 	submitInfo.pSignalSemaphores = &_depthFinishedSemaphore;
@@ -544,8 +636,8 @@ void Renderer::_Submit(uint32_t imageIndex)
 	}
 
 	submitInfo.pWaitSemaphores = &_depthFinishedSemaphore;
-	submitInfo.commandBufferCount = 1;
-	submitInfo.pCommandBuffers = &_cullingCommandBuffer;
+	submitInfo.commandBufferCount = (uint32_t)_computeCommandBuffers.Count();
+	submitInfo.pCommandBuffers = *_computeCommandBuffers;
 	submitInfo.pSignalSemaphores = &_cullingFinishedSemaphore;
 
 	if (vkQueueSubmit(_computeQueue, 1, &submitInfo, VK_NULL_HANDLE) != VK_SUCCESS)
@@ -555,8 +647,16 @@ void Renderer::_Submit(uint32_t imageIndex)
 	}
 
 	submitInfo.pWaitSemaphores = &_cullingFinishedSemaphore;
+
+#if defined(NE_CONFIG_DEBUG) || defined(NE_CONFIG_DEVELOPMENT)
+	VkCommandBuffer sceneBuffers[]{ _sceneCommandBuffers[_currentBufferIndex], _drawBoundsCommandBuffers[_currentBufferIndex] };
+	submitInfo.pCommandBuffers = sceneBuffers;
+	submitInfo.commandBufferCount = Engine::GetDebugVariables().DrawBounds ? 2 : 1;
+#else
+	submitInfo.pCommandBuffers = &_sceneCommandBuffers[_currentBufferIndex];
 	submitInfo.commandBufferCount = 1;
-	submitInfo.pCommandBuffers = &_sceneCommandBuffers[_currentSceneCB];
+#endif
+
 	submitInfo.pSignalSemaphores = &_sceneFinishedSemaphore;
 
 	if (vkQueueSubmit(_graphicsQueue, 1, &submitInfo, VK_NULL_HANDLE) != VK_SUCCESS)
@@ -567,21 +667,14 @@ void Renderer::_Submit(uint32_t imageIndex)
 
 	submitInfo.pWaitSemaphores = &_sceneFinishedSemaphore;
 
-	VkCommandBuffer cBuffers[3];
-	if (Engine::GetConfiguration().PostProcessor.Enable)
+	VkCommandBuffer cBuffers[3]
 	{
-		cBuffers[0] = PostProcessor::GetCommandBuffer();
-		cBuffers[1] = _guiCommandBuffers[_currentGUICB];
-		cBuffers[2] = _presentCommandBuffers[imageIndex];
-		submitInfo.commandBufferCount = 3;
-	}
-	else
-	{
-		cBuffers[0] = _guiCommandBuffers[_currentGUICB];
-		cBuffers[1] = _presentCommandBuffers[imageIndex];
-		submitInfo.commandBufferCount = 2;
-	}
+		PostProcessor::GetCommandBuffer(),
+		_guiCommandBuffers[_currentBufferIndex],
+		_presentCommandBuffers[imageIndex]
+	};
 
+	submitInfo.commandBufferCount = 3;
 	submitInfo.pCommandBuffers = cBuffers;
 	submitInfo.pSignalSemaphores = &_renderFinishedSemaphore;
 
@@ -594,19 +687,19 @@ void Renderer::_Submit(uint32_t imageIndex)
 
 void Renderer::_SubmitAsync(uint32_t imageIndex)
 {
-	VkResult result;
+	VkResult result{};
 
-	VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
+	VkPipelineStageFlags waitStages[]{ VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
 
 	VkSemaphore depthSignalSemaphores[]{ _depthFinishedSemaphore, _aoReadySemaphore };
 
-	VkSubmitInfo submitInfo = {};
+	VkSubmitInfo submitInfo{};
 	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 	submitInfo.waitSemaphoreCount = 1;
 	submitInfo.pWaitSemaphores = &_imageAvailableSemaphore;
 	submitInfo.pWaitDstStageMask = waitStages;
 	submitInfo.commandBufferCount = 1;
-	submitInfo.pCommandBuffers = &_depthCommandBuffers[_currentDepthCB];
+	submitInfo.pCommandBuffers = &_depthCommandBuffers[_currentBufferIndex];
 	submitInfo.signalSemaphoreCount = Engine::GetConfiguration().Renderer.SSAO.Enable ? 2 : 1;
 	submitInfo.pSignalSemaphores = depthSignalSemaphores;
 
@@ -617,8 +710,8 @@ void Renderer::_SubmitAsync(uint32_t imageIndex)
 	}
 
 	submitInfo.pWaitSemaphores = &_depthFinishedSemaphore;
-	submitInfo.commandBufferCount = 1;
-	submitInfo.pCommandBuffers = &_cullingCommandBuffer;
+	submitInfo.commandBufferCount = (uint32_t)_computeCommandBuffers.Count();
+	submitInfo.pCommandBuffers = *_computeCommandBuffers;
 	submitInfo.signalSemaphoreCount = 1;
 	submitInfo.pSignalSemaphores = &_cullingFinishedSemaphore;
 
@@ -628,30 +721,35 @@ void Renderer::_SubmitAsync(uint32_t imageIndex)
 		DIE("Failed to submit culling compute  buffer");
 	}
 
-	if (Engine::GetConfiguration().Renderer.SSAO.Enable)
+	VkCommandBuffer buffers[]{ _shadowCommandBuffers[_currentBufferIndex], SSAO::GetCommandBuffer() };
+
+	submitInfo.pWaitSemaphores = &_aoReadySemaphore;
+	submitInfo.commandBufferCount = Engine::GetConfiguration().Renderer.SSAO.Enable ? 2 : 1;
+	submitInfo.pCommandBuffers = buffers;
+	submitInfo.pSignalSemaphores = &_aoFinishedSemaphore;
+
+	if (vkQueueSubmit(_graphicsQueue, 1, &submitInfo, VK_NULL_HANDLE) != VK_SUCCESS)
 	{
-		VkCommandBuffer ssaoCommandBuffer = SSAO::GetCommandBuffer();
-
-		submitInfo.pWaitSemaphores = &_aoReadySemaphore;
-		submitInfo.commandBufferCount = 1;
-		submitInfo.pCommandBuffers = &ssaoCommandBuffer;
-		submitInfo.pSignalSemaphores = &_aoFinishedSemaphore;
-
-		if (vkQueueSubmit(_graphicsQueue, 1, &submitInfo, VK_NULL_HANDLE) != VK_SUCCESS)
-		{
-			Logger::Log(RENDERER_MODULE, LOG_CRITICAL, "Failed to submit SSAO buffer: %d", result);
-			DIE("Failed to submit SSAO  buffer");
-		}
+		Logger::Log(RENDERER_MODULE, LOG_CRITICAL, "Failed to submit SSAO buffer: %d", result);
+		DIE("Failed to submit SSAO  buffer");
 	}
 
 	VkSemaphore sceneWaitSemaphores[]{ _cullingFinishedSemaphore, _aoFinishedSemaphore };
-	VkPipelineStageFlags sceneWaitStages[] = { VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
+	VkPipelineStageFlags sceneWaitStages[]{ VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
 
 	submitInfo.pWaitDstStageMask = sceneWaitStages;
 	submitInfo.waitSemaphoreCount = Engine::GetConfiguration().Renderer.SSAO.Enable ? 2 : 1;
 	submitInfo.pWaitSemaphores = sceneWaitSemaphores;
+
+#if defined(NE_CONFIG_DEBUG) || defined(NE_CONFIG_DEVELOPMENT)
+	VkCommandBuffer sceneBuffers[]{ _sceneCommandBuffers[_currentBufferIndex], _drawBoundsCommandBuffers[_currentBufferIndex] };
+	submitInfo.pCommandBuffers = sceneBuffers;
+	submitInfo.commandBufferCount = Engine::GetDebugVariables().DrawBounds ? 2 : 1;
+#else
+	submitInfo.pCommandBuffers = &_sceneCommandBuffers[_currentBufferIndex];
 	submitInfo.commandBufferCount = 1;
-	submitInfo.pCommandBuffers = &_sceneCommandBuffers[_currentSceneCB];
+#endif
+
 	submitInfo.pSignalSemaphores = &_sceneFinishedSemaphore;
 
 	if (vkQueueSubmit(_graphicsQueue, 1, &submitInfo, VK_NULL_HANDLE) != VK_SUCCESS)
@@ -664,21 +762,14 @@ void Renderer::_SubmitAsync(uint32_t imageIndex)
 	submitInfo.waitSemaphoreCount = 1;
 	submitInfo.pWaitSemaphores = &_sceneFinishedSemaphore;
 
-	VkCommandBuffer cBuffers[3];
-	if (Engine::GetConfiguration().PostProcessor.Enable)
+	VkCommandBuffer cBuffers[3]
 	{
-		cBuffers[0] = PostProcessor::GetCommandBuffer();
-		cBuffers[1] = _guiCommandBuffers[_currentGUICB];
-		cBuffers[2] = _presentCommandBuffers[imageIndex];
-		submitInfo.commandBufferCount = 3;
-	}
-	else
-	{
-		cBuffers[0] = _guiCommandBuffers[_currentGUICB];
-		cBuffers[1] = _presentCommandBuffers[imageIndex];
-		submitInfo.commandBufferCount = 2;
-	}
+		PostProcessor::GetCommandBuffer(),
+		_guiCommandBuffers[_currentBufferIndex],
+		_presentCommandBuffers[imageIndex]
+	};
 
+	submitInfo.commandBufferCount = 3;
 	submitInfo.pCommandBuffers = cBuffers;
 	submitInfo.pSignalSemaphores = &_renderFinishedSemaphore;
 
@@ -691,53 +782,48 @@ void Renderer::_SubmitAsync(uint32_t imageIndex)
 
 void Renderer::ScreenResized()
 {
-	// swapchain
-	
-	// Recreate framebuffers
-	_DestroyFramebuffers();
-	_CreateFramebuffers();
-
-	// Recreate command buffers
-	_DestroyCommandBuffers();
-	_CreateCommandBuffers();
+	_RecreateSwapchain();
 }
 
 void Renderer::_RecreateSwapchain()
 {
 	vkDeviceWaitIdle(_device);
 
-	/*_swapchain->Resize(_width, _height);
+	// Recreate swapchain
+	_swapchain->Resize();
 
-	vkDestroyImage(_device, _fbImage, _allocator);
-	vkFreeMemory(_device, _fbImageMemory, _allocator);
-	vkDestroyImage(_device, _fbDepthImage, _allocator);
-	vkFreeMemory(_device, _fbDepthImageMemory, _allocator);
+	// Recreate render passes
+	if (!RenderPassManager::RecreateRenderPasses())
+	{ DIE("Failed to recreate render passes"); }
 
-	vkDestroyImageView(_device, _fbImageView, _allocator);
-	vkDestroyImageView(_device, _fbDepthImageView, _allocator);
+	// Recreate pipelines
+	if (PipelineManager::RecreatePipelines() != ENGINE_OK)
+	{ DIE("Failed to recreate pipelines"); }
 
-	vkDestroyFramebuffer(_device, _framebuffer, _allocator);
-	vkDestroyFramebuffer(_device, _depthFramebuffer, _allocator);
-	vkDestroyFramebuffer(_device, _guiFramebuffer, _allocator);
+	// Recreate framebuffers
+	_DestroyFramebuffers();
+	_CreateFramebuffers();
 
-	vkFreeCommandBuffers(_device, _commandPool, 1, &_depthCommandBuffer);
-	vkFreeCommandBuffers(_device, _commandPool, 1, &_cmdBuffer);
-	vkFreeCommandBuffers(_device, _computeCommandPool, 1, &_cullingCommandBuffer);
+	PostProcessor::ScreenResized();
 
-	_CreateFramebufferImage();
-	_CreateFramebuffer();
+	if (Engine::GetConfiguration().Renderer.SSAO.Enable)
+		SSAO::ScreenResized();
 
-	_CreateSwapchainFramebuffers();
-	_CreateSwapchainCommandBuffers();
+	_UpdateDescriptorSets();
 
-	_BuildCommandBuffer();
+	// Recreate command buffers
+	_DestroyCommandBuffers();
+	_CreateCommandBuffers();	
 
-	vkDeviceWaitIdle(_device);*/
+	if (SceneManager::GetActiveScene() && !SceneManager::GetActiveScene()->RebuildCommandBuffers())
+	{ DIE("Failed to recreate command buffers"); }
+
+	vkDeviceWaitIdle(_device);
 }
 
 bool _checkValidationLayerSupport()
 {
-	uint32_t layerCount;
+	uint32_t layerCount{ 0 };
 	vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
 
 	vector<VkLayerProperties> layers(layerCount);
@@ -745,9 +831,9 @@ bool _checkValidationLayerSupport()
 
 	for (const char *name : _ValidationLayers)
 	{
-		bool found = false;
+		bool found{ false };
 
-		size_t len = strlen(name);
+		size_t len{ strlen(name) };
 		for (VkLayerProperties &properties : layers)
 		{
 			if (!strncmp(name, properties.layerName, len))
@@ -772,13 +858,13 @@ static VkBool32 debugCallback(VkDebugReportFlagsEXT flags, VkDebugReportObjectTy
 
 bool Renderer::_CheckDeviceExtension(const char *name)
 {
-	uint32_t extensionCount;
+	uint32_t extensionCount{ 0 };
 	vkEnumerateDeviceExtensionProperties(_physicalDevice, nullptr, &extensionCount, nullptr);
 
 	vector<VkExtensionProperties> extensions(extensionCount);
 	vkEnumerateDeviceExtensionProperties(_physicalDevice, nullptr, &extensionCount, extensions.data());
 
-	size_t len = strlen(name);
+	size_t len{ strlen(name) };
 
 	for (VkExtensionProperties &ext : extensions)
 		if (!strncmp(ext.extensionName, name, len))
@@ -794,19 +880,19 @@ bool Renderer::_CreateInstance(bool debug)
 		return false;
 	}
 
-	VkApplicationInfo appInfo = {};
+	VkApplicationInfo appInfo{};
 	appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
 	appInfo.pApplicationName = "NekoEngine";
 	appInfo.applicationVersion = VK_MAKE_VERSION(0, 4, 0);
 	appInfo.pEngineName = "NekoEngine";
-	appInfo.engineVersion = VK_MAKE_VERSION(0, 4, 0);
-	appInfo.apiVersion = VK_MAKE_VERSION(1, 0, 20);
+	appInfo.engineVersion = VK_MAKE_VERSION(ENGINE_VERSION_MAJOR, ENGINE_VERSION_MINOR, ENGINE_VERSION_PATCH);
+	appInfo.apiVersion = VK_MAKE_VERSION(1, 0, 37);
 
-	VkInstanceCreateInfo instInfo = {};
+	VkInstanceCreateInfo instInfo{};
 	instInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
 	instInfo.pApplicationInfo = &appInfo;
 
-	vector<const char*> extensions = Platform::GetRequiredExtensions(debug);
+	vector<const char*> extensions{ Platform::GetRequiredExtensions(debug) };
 
 	instInfo.enabledExtensionCount = (uint32_t)extensions.size();
 	instInfo.ppEnabledExtensionNames = extensions.data();
@@ -819,7 +905,7 @@ bool Renderer::_CreateInstance(bool debug)
 	else
 		instInfo.enabledLayerCount = 0;
 
-	VkResult result;
+	VkResult result{};
 	if ((result = vkCreateInstance(&instInfo, _allocator, &_instance)) != VK_SUCCESS)
 	{
 		Logger::Log(RENDERER_MODULE, LOG_CRITICAL, "Failed to create instance %d", result);
@@ -831,7 +917,7 @@ bool Renderer::_CreateInstance(bool debug)
 
 bool Renderer::_SetupDebugCallback()
 {
-	VkDebugReportCallbackCreateInfoEXT createInfo = {};
+	VkDebugReportCallbackCreateInfoEXT createInfo{};
 	createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT;
 	createInfo.flags = VK_DEBUG_REPORT_WARNING_BIT_EXT | VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT |
 		VK_DEBUG_REPORT_ERROR_BIT_EXT | VK_DEBUG_REPORT_DEBUG_BIT_EXT;
@@ -850,7 +936,7 @@ bool Renderer::_SetupDebugCallback()
 
 bool Renderer::_CreateDevice(bool enableValidation, bool debug)
 {
-	uint32_t deviceCount = 0;
+	uint32_t deviceCount{ 0 };
 
 	if (vkEnumeratePhysicalDevices(_instance, &deviceCount, nullptr) != VK_SUCCESS)
 	{
@@ -873,24 +959,24 @@ bool Renderer::_CreateDevice(bool enableValidation, bool debug)
 
 	for (VkPhysicalDevice &device : devices)
 	{
-		uint32_t max_mem = 0;
+		uint32_t max_mem{ 0 };
 
 		VkPhysicalDeviceProperties properties;
 		vkGetPhysicalDeviceProperties(device, &properties);
 
-		VkPhysicalDeviceFeatures features;
+		VkPhysicalDeviceFeatures features{};
 		vkGetPhysicalDeviceFeatures(device, &features);
 
-		uint32_t familyCount = 0;
+		uint32_t familyCount{ 0 };
 		vkGetPhysicalDeviceQueueFamilyProperties(device, &familyCount, nullptr);
 
 		vector<VkQueueFamilyProperties> families(familyCount);
 		vkGetPhysicalDeviceQueueFamilyProperties(device, &familyCount, families.data());
 
-		int graphicsQueueIndex = -1, presentQueueIndex = -1, computeQueueIndex = -1, i = 0;
+		int graphicsQueueIndex{ -1 }, presentQueueIndex{ -1 }, computeQueueIndex{ -1 }, i{ 0 };
 		for (VkQueueFamilyProperties familyProperties : families)
 		{
-			VkBool32 presentSupport = false;
+			VkBool32 presentSupport{ false };
 			if (vkGetPhysicalDeviceSurfaceSupportKHR(device, i, _surface, &presentSupport) != VK_SUCCESS)
 				continue;
 
@@ -914,7 +1000,7 @@ bool Renderer::_CreateDevice(bool enableValidation, bool debug)
 		if (graphicsQueueIndex < 0)
 			continue;
 
-		uint32_t extensionCount;
+		uint32_t extensionCount{ 0 };
 		if (vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, nullptr) != VK_SUCCESS)
 			continue;
 
@@ -933,7 +1019,7 @@ bool Renderer::_CreateDevice(bool enableValidation, bool debug)
 		if (vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, _surface, &_swapchainInfo.capabilities) != VK_SUCCESS)
 			continue;
 
-		uint32_t formatCount = 0;
+		uint32_t formatCount{ 0 };
 		if (vkGetPhysicalDeviceSurfaceFormatsKHR(device, _surface, &formatCount, nullptr) != VK_SUCCESS)
 			continue;
 
@@ -941,7 +1027,7 @@ bool Renderer::_CreateDevice(bool enableValidation, bool debug)
 		if (vkGetPhysicalDeviceSurfaceFormatsKHR(device, _surface, &formatCount, _swapchainInfo.formats.data()) != VK_SUCCESS)
 			continue;
 
-		uint32_t presentModeCount = 0;
+		uint32_t presentModeCount{ 0 };
 		if (vkGetPhysicalDeviceSurfacePresentModesKHR(device, _surface, &presentModeCount, nullptr) != VK_SUCCESS)
 			continue;
 
@@ -984,13 +1070,13 @@ bool Renderer::_CreateDevice(bool enableValidation, bool debug)
 		return false;
 	}
 
-	float queuePriority = 1.f;
-	vector<VkDeviceQueueCreateInfo> queueCreateInfos;
-	set<int> uniqueQueueFamilies = { _queueIndices.graphicsFamily, _queueIndices.presentFamily, _queueIndices.computeFamily };
+	float queuePriority{ 1.f };
+	vector<VkDeviceQueueCreateInfo> queueCreateInfos{};
+	set<int> uniqueQueueFamilies{ _queueIndices.graphicsFamily, _queueIndices.presentFamily, _queueIndices.computeFamily };
 
 	for (int family : uniqueQueueFamilies)
 	{
-		VkDeviceQueueCreateInfo queueCreateInfo = {};
+		VkDeviceQueueCreateInfo queueCreateInfo{};
 		queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
 		queueCreateInfo.queueFamilyIndex = family;
 		queueCreateInfo.queueCount = 1;
@@ -1007,7 +1093,7 @@ bool Renderer::_CreateDevice(bool enableValidation, bool debug)
 	deviceFeatures.textureCompressionBC = VK_TRUE;
 	deviceFeatures.fullDrawIndexUint32 = VK_TRUE;
 
-	VkPhysicalDeviceProperties properties;
+	VkPhysicalDeviceProperties properties{};
 	vkGetPhysicalDeviceProperties(_physicalDevice, &properties);
 	_vkVersion = NString::StringWithFormat(10, "%d.%d.%d", (properties.apiVersion >> 22),
 		((properties.apiVersion >> 12) & 0x3FF), (properties.apiVersion & 0xFFFF));
@@ -1018,7 +1104,7 @@ bool Renderer::_CreateDevice(bool enableValidation, bool debug)
 	createInfo.queueCreateInfoCount = (uint32_t)queueCreateInfos.size();
 	createInfo.pEnabledFeatures = &deviceFeatures;
 
-	vector<const char *> extensions;
+	vector<const char *> extensions{};
 	for (const char *ext : _DeviceExtensions)
 		extensions.push_back(ext);
 
@@ -1059,10 +1145,10 @@ bool Renderer::_CreateDevice(bool enableValidation, bool debug)
 
 bool Renderer::_CreateCommandPools()
 {
-	VkCommandPoolCreateInfo poolInfo = {};
+	VkCommandPoolCreateInfo poolInfo{};
 	poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
 	poolInfo.queueFamilyIndex = _queueIndices.graphicsFamily;
-	poolInfo.flags = 0;
+	poolInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
 
 	if (vkCreateCommandPool(_device, &poolInfo, _allocator, &_graphicsCommandPool) != VK_SUCCESS)
 	{
@@ -1098,24 +1184,31 @@ bool Renderer::_CreateFramebuffers()
 
 	_colorTarget = new Texture(VK_FORMAT_R16G16B16A16_SFLOAT, VK_IMAGE_TYPE_2D, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT |
 		VK_IMAGE_USAGE_TRANSFER_DST_BIT, VK_IMAGE_TILING_OPTIMAL, Engine::GetScreenWidth(), Engine::GetScreenHeight(), 1, true, VK_NULL_HANDLE, VK_SAMPLE_COUNT_1_BIT);
-	DBG_SET_OBJECT_NAME((uint64_t)_colorTarget->GetImage(), VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_EXT, "Color render target image");
+	VK_DBG_SET_OBJECT_NAME((uint64_t)_colorTarget->GetImage(), VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_EXT, "Color render target image");
 	_colorTarget->CreateView(VK_IMAGE_ASPECT_COLOR_BIT);
-	DBG_SET_OBJECT_NAME((uint64_t)_colorTarget->GetImageView(), VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_VIEW_EXT, "Color render target image view");
+	VK_DBG_SET_OBJECT_NAME((uint64_t)_colorTarget->GetImageView(), VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_VIEW_EXT, "Color render target image view");
 	VKUtil::TransitionImageLayout(_colorTarget->GetImage(), VK_IMAGE_LAYOUT_PREINITIALIZED, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, VK_IMAGE_ASPECT_COLOR_BIT);
 
-	_normalBrightTarget = new Texture(VK_FORMAT_R16G16B16A16_SFLOAT, VK_IMAGE_TYPE_2D, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_SAMPLED_BIT,
+	_normalTarget = new Texture(VK_FORMAT_R8G8_UNORM, VK_IMAGE_TYPE_2D, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_SAMPLED_BIT,
 		VK_IMAGE_TILING_OPTIMAL, Engine::GetScreenWidth(), Engine::GetScreenHeight(), 1, true, VK_NULL_HANDLE, VK_SAMPLE_COUNT_1_BIT);
-	DBG_SET_OBJECT_NAME((uint64_t)_normalBrightTarget->GetImage(), VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_EXT, "Normal & brightness render target image");
-	_normalBrightTarget->CreateView(VK_IMAGE_ASPECT_COLOR_BIT);
-	DBG_SET_OBJECT_NAME((uint64_t)_normalBrightTarget->GetImageView(), VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_VIEW_EXT, "Normal & brightness render target image view");
-	VKUtil::TransitionImageLayout(_normalBrightTarget->GetImage(), VK_IMAGE_LAYOUT_PREINITIALIZED, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, VK_IMAGE_ASPECT_COLOR_BIT);
+	VK_DBG_SET_OBJECT_NAME((uint64_t)_normalTarget->GetImage(), VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_EXT, "Normal render target image");
+	_normalTarget->CreateView(VK_IMAGE_ASPECT_COLOR_BIT);
+	VK_DBG_SET_OBJECT_NAME((uint64_t)_normalTarget->GetImageView(), VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_VIEW_EXT, "Normal render target image view");
+	VKUtil::TransitionImageLayout(_normalTarget->GetImage(), VK_IMAGE_LAYOUT_PREINITIALIZED, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, VK_IMAGE_ASPECT_COLOR_BIT);
+
+	_brightnessTarget = new Texture(VK_FORMAT_R16G16B16A16_SFLOAT, VK_IMAGE_TYPE_2D, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_SAMPLED_BIT,
+								VK_IMAGE_TILING_OPTIMAL, Engine::GetScreenWidth(), Engine::GetScreenHeight(), 1, true, VK_NULL_HANDLE, VK_SAMPLE_COUNT_1_BIT);
+	VK_DBG_SET_OBJECT_NAME((uint64_t)_brightnessTarget->GetImage(), VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_EXT, "Brightness render target image");
+	_brightnessTarget->CreateView(VK_IMAGE_ASPECT_COLOR_BIT);
+	VK_DBG_SET_OBJECT_NAME((uint64_t)_brightnessTarget->GetImageView(), VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_VIEW_EXT, "Brightness render target image view");
+	VKUtil::TransitionImageLayout(_brightnessTarget->GetImage(), VK_IMAGE_LAYOUT_PREINITIALIZED, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, VK_IMAGE_ASPECT_COLOR_BIT);
 
 	NArray<VkImageView> attachments(5);
 	NArray<VkImageView> depthAttachments(2);
 
 	if (Engine::GetConfiguration().Renderer.Multisampling)
 	{
-		VkSampleCountFlagBits samples = VK_SAMPLE_COUNT_1_BIT;
+		VkSampleCountFlagBits samples{ VK_SAMPLE_COUNT_1_BIT };
 		switch (Engine::GetConfiguration().Renderer.Samples)
 		{
 			case 2: samples = VK_SAMPLE_COUNT_2_BIT; break;
@@ -1128,49 +1221,56 @@ bool Renderer::_CreateFramebuffers()
 
 		_msaaColorTarget = new Texture(VK_FORMAT_R16G16B16A16_SFLOAT, VK_IMAGE_TYPE_2D, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, VK_IMAGE_TILING_OPTIMAL,
 			Engine::GetScreenWidth(), Engine::GetScreenHeight(), 1, true, VK_NULL_HANDLE, samples);
-		DBG_SET_OBJECT_NAME((uint64_t)_msaaColorTarget->GetImage(), VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_EXT, "MSAA color render target image");	
+		VK_DBG_SET_OBJECT_NAME((uint64_t)_msaaColorTarget->GetImage(), VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_EXT, "MSAA color render target image");	
 		_msaaColorTarget->CreateView(VK_IMAGE_ASPECT_COLOR_BIT);
-		DBG_SET_OBJECT_NAME((uint64_t)_msaaColorTarget->GetImageView(), VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_VIEW_EXT, "MSAA color render target image view");
+		VK_DBG_SET_OBJECT_NAME((uint64_t)_msaaColorTarget->GetImageView(), VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_VIEW_EXT, "MSAA color render target image view");
 		VKUtil::TransitionImageLayout(_msaaColorTarget->GetImage(), VK_IMAGE_LAYOUT_PREINITIALIZED, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, VK_IMAGE_ASPECT_COLOR_BIT);
 
 		_depthTarget = new Texture(VK_FORMAT_D32_SFLOAT_S8_UINT, VK_IMAGE_TYPE_2D, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_IMAGE_TILING_OPTIMAL,
 			Engine::GetScreenWidth(), Engine::GetScreenHeight(), 1, true, VK_NULL_HANDLE, samples);
-		DBG_SET_OBJECT_NAME((uint64_t)_depthTarget->GetImage(), VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_EXT, "Depth target image");
+		VK_DBG_SET_OBJECT_NAME((uint64_t)_depthTarget->GetImage(), VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_EXT, "Depth target image");
 		_depthTarget->CreateView(VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT);
-		DBG_SET_OBJECT_NAME((uint64_t)_depthTarget->GetImageView(), VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_VIEW_EXT, "Depth target image view");
+		VK_DBG_SET_OBJECT_NAME((uint64_t)_depthTarget->GetImageView(), VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_VIEW_EXT, "Depth target image view");
 		VKUtil::TransitionImageLayout(_depthTarget->GetImage(), VK_IMAGE_LAYOUT_PREINITIALIZED, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT);
 
-		_msaaNormalBrightTarget = new Texture(VK_FORMAT_R16G16B16A16_SFLOAT, VK_IMAGE_TYPE_2D, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_IMAGE_TILING_OPTIMAL,
+		_msaaNormalTarget = new Texture(VK_FORMAT_R8G8_UNORM, VK_IMAGE_TYPE_2D, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_IMAGE_TILING_OPTIMAL,
 			Engine::GetScreenWidth(), Engine::GetScreenHeight(), 1, true, VK_NULL_HANDLE, samples);
-		DBG_SET_OBJECT_NAME((uint64_t)_msaaNormalBrightTarget->GetImage(), VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_EXT, "MSAA normal & brightness render target image");
-		_msaaNormalBrightTarget->CreateView(VK_IMAGE_ASPECT_COLOR_BIT);
-		DBG_SET_OBJECT_NAME((uint64_t)_msaaNormalBrightTarget->GetImageView(), VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_VIEW_EXT, "MSAA normal & brightness render target image view");
-		VKUtil::TransitionImageLayout(_msaaNormalBrightTarget->GetImage(), VK_IMAGE_LAYOUT_PREINITIALIZED, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, VK_IMAGE_ASPECT_COLOR_BIT);
+		VK_DBG_SET_OBJECT_NAME((uint64_t)_msaaNormalTarget->GetImage(), VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_EXT, "MSAA normal render target image");
+		_msaaNormalTarget->CreateView(VK_IMAGE_ASPECT_COLOR_BIT);
+		VK_DBG_SET_OBJECT_NAME((uint64_t)_msaaNormalTarget->GetImageView(), VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_VIEW_EXT, "MSAA normal render target image view");
+		VKUtil::TransitionImageLayout(_msaaNormalTarget->GetImage(), VK_IMAGE_LAYOUT_PREINITIALIZED, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, VK_IMAGE_ASPECT_COLOR_BIT);
+
+		_msaaBrightnessTarget = new Texture(VK_FORMAT_R16G16B16A16_SFLOAT, VK_IMAGE_TYPE_2D, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_IMAGE_TILING_OPTIMAL,
+										Engine::GetScreenWidth(), Engine::GetScreenHeight(), 1, true, VK_NULL_HANDLE, samples);
+		VK_DBG_SET_OBJECT_NAME((uint64_t)_msaaBrightnessTarget->GetImage(), VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_EXT, "MSAA brightness render target image");
+		_msaaBrightnessTarget->CreateView(VK_IMAGE_ASPECT_COLOR_BIT);
+		VK_DBG_SET_OBJECT_NAME((uint64_t)_msaaBrightnessTarget->GetImageView(), VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_VIEW_EXT, "MSAA brightness render target image view");
+		VKUtil::TransitionImageLayout(_msaaBrightnessTarget->GetImage(), VK_IMAGE_LAYOUT_PREINITIALIZED, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, VK_IMAGE_ASPECT_COLOR_BIT);
 
 		attachments.Add(_msaaColorTarget->GetImageView());
 		attachments.Add(_depthTarget->GetImageView());
-		attachments.Add(_msaaNormalBrightTarget->GetImageView());
+		attachments.Add(_msaaBrightnessTarget->GetImageView());
 		attachments.Add(_colorTarget->GetImageView());
-		attachments.Add(_normalBrightTarget->GetImageView());
+		attachments.Add(_brightnessTarget->GetImageView());
 
 		depthAttachments.Add(_depthTarget->GetImageView());
-		depthAttachments.Add(_msaaNormalBrightTarget->GetImageView());
+		depthAttachments.Add(_msaaNormalTarget->GetImageView());
 	}
 	else
 	{
 		_depthTarget = new Texture(VK_FORMAT_D32_SFLOAT_S8_UINT, VK_IMAGE_TYPE_2D, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_IMAGE_TILING_OPTIMAL,
 			Engine::GetScreenWidth(), Engine::GetScreenHeight(), 1, true, VK_NULL_HANDLE, VK_SAMPLE_COUNT_1_BIT);
-		DBG_SET_OBJECT_NAME((uint64_t)_depthTarget->GetImage(), VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_EXT, "Depth target image");
+		VK_DBG_SET_OBJECT_NAME((uint64_t)_depthTarget->GetImage(), VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_EXT, "Depth target image");
 		_depthTarget->CreateView(VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT);
-		DBG_SET_OBJECT_NAME((uint64_t)_depthTarget->GetImageView(), VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_VIEW_EXT, "Depth target image view");
+		VK_DBG_SET_OBJECT_NAME((uint64_t)_depthTarget->GetImageView(), VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_VIEW_EXT, "Depth target image view");
 		VKUtil::TransitionImageLayout(_depthTarget->GetImage(), VK_IMAGE_LAYOUT_PREINITIALIZED, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT);
 
 		attachments.Add(_colorTarget->GetImageView());
 		attachments.Add(_depthTarget->GetImageView());
-		attachments.Add(_normalBrightTarget->GetImageView());
+		attachments.Add(_brightnessTarget->GetImageView());
 
 		depthAttachments.Add(_depthTarget->GetImageView());
-		depthAttachments.Add(_normalBrightTarget->GetImageView());
+		depthAttachments.Add(_normalTarget->GetImageView());
 	}
 
 	if (!VKUtil::CreateImageView(_depthImageView, _depthTarget->GetImage(), VK_IMAGE_VIEW_TYPE_2D, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_IMAGE_ASPECT_DEPTH_BIT))
@@ -1189,7 +1289,7 @@ bool Renderer::_CreateFramebuffers()
 	//* Default framebuffer
 	//**********************
 
-	VkFramebufferCreateInfo createInfo = {};
+	VkFramebufferCreateInfo createInfo{};
 	createInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
 	createInfo.renderPass = RenderPassManager::GetRenderPass(RP_Graphics);
 	createInfo.attachmentCount = (uint32_t)attachments.Count();
@@ -1203,7 +1303,7 @@ bool Renderer::_CreateFramebuffers()
 		Logger::Log(RENDERER_MODULE, LOG_CRITICAL, "Failed to create framebuffer");
 		return false;
 	}
-	DBG_SET_OBJECT_NAME((uint64_t)_framebuffer, VK_DEBUG_REPORT_OBJECT_TYPE_FRAMEBUFFER_EXT, "Default framebuffer");
+	VK_DBG_SET_OBJECT_NAME((uint64_t)_framebuffer, VK_DEBUG_REPORT_OBJECT_TYPE_FRAMEBUFFER_EXT, "Default framebuffer");
 
 	createInfo.renderPass = RenderPassManager::GetRenderPass(RP_Depth);
 	createInfo.attachmentCount = (uint32_t)depthAttachments.Count();
@@ -1214,7 +1314,7 @@ bool Renderer::_CreateFramebuffers()
 		Logger::Log(RENDERER_MODULE, LOG_CRITICAL, "Failed to create depth framebuffer");
 		return false;
 	}
-	DBG_SET_OBJECT_NAME((uint64_t)_depthFramebuffer, VK_DEBUG_REPORT_OBJECT_TYPE_FRAMEBUFFER_EXT, "Depth framebuffer");
+	VK_DBG_SET_OBJECT_NAME((uint64_t)_depthFramebuffer, VK_DEBUG_REPORT_OBJECT_TYPE_FRAMEBUFFER_EXT, "Depth framebuffer");
 
 	VkImageView guiImageViews[]{ _colorTarget->GetImageView() };
 	createInfo.renderPass = RenderPassManager::GetRenderPass(RP_GUI);
@@ -1226,7 +1326,7 @@ bool Renderer::_CreateFramebuffers()
 		Logger::Log(RENDERER_MODULE, LOG_CRITICAL, "Failed to create gui framebuffer");
 		return false;
 	}
-	DBG_SET_OBJECT_NAME((uint64_t)_guiFramebuffer, VK_DEBUG_REPORT_OBJECT_TYPE_FRAMEBUFFER_EXT, "GUI framebuffer");
+	VK_DBG_SET_OBJECT_NAME((uint64_t)_guiFramebuffer, VK_DEBUG_REPORT_OBJECT_TYPE_FRAMEBUFFER_EXT, "GUI framebuffer");
 
 	return true;
 }
@@ -1239,27 +1339,27 @@ bool Renderer::_CreateDescriptorSets()
 		poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
 		poolSizes[0].descriptorCount = 1;
 		poolSizes[1].type = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
-		poolSizes[1].descriptorCount = 2;
+		poolSizes[1].descriptorCount = 3;
 		poolSizes[2].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-		poolSizes[2].descriptorCount = 1;
+		poolSizes[2].descriptorCount = 4;
 
-		VkDescriptorPoolCreateInfo poolInfo = {};
+		VkDescriptorPoolCreateInfo poolInfo{};
 		poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
 		poolInfo.poolSizeCount = 3;
 		poolInfo.pPoolSizes = poolSizes;
-		poolInfo.maxSets = 1;
+		poolInfo.maxSets = 2;
 
 		if (vkCreateDescriptorPool(_device, &poolInfo, _allocator, &_descriptorPool) != VK_SUCCESS)
 		{
 			Logger::Log(RENDERER_MODULE, LOG_CRITICAL, "Failed to create descriptor pool");
 			return false;
 		}
-		DBG_SET_OBJECT_NAME((uint64_t)_descriptorPool, VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_POOL_EXT, "Scene descriptor pool");
+		VK_DBG_SET_OBJECT_NAME((uint64_t)_descriptorPool, VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_POOL_EXT, "Scene descriptor pool");
 	}
 
 	if (_computeDescriptorPool == VK_NULL_HANDLE)
 	{
-		VkDescriptorPoolSize sizes[3] = {};
+		VkDescriptorPoolSize sizes[3]{};
 		sizes[0].type = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
 		sizes[0].descriptorCount = 2;
 		sizes[1].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
@@ -1267,7 +1367,7 @@ bool Renderer::_CreateDescriptorSets()
 		sizes[2].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
 		sizes[2].descriptorCount = 1;
 
-		VkDescriptorPoolCreateInfo poolInfo = {};
+		VkDescriptorPoolCreateInfo poolInfo{};
 		poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
 		poolInfo.poolSizeCount = 3;
 		poolInfo.pPoolSizes = sizes;
@@ -1278,10 +1378,10 @@ bool Renderer::_CreateDescriptorSets()
 			Logger::Log(RENDERER_MODULE, LOG_CRITICAL, "Failed to create descriptor pool");
 			return false;
 		}
-		DBG_SET_OBJECT_NAME((uint64_t)_computeDescriptorPool, VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_POOL_EXT, "Compute descriptor pool");
+		VK_DBG_SET_OBJECT_NAME((uint64_t)_computeDescriptorPool, VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_POOL_EXT, "Compute descriptor pool");
 	}
 	
-	VkDescriptorSetAllocateInfo allocInfo = {};
+	VkDescriptorSetAllocateInfo allocInfo{};
 	allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
 	allocInfo.descriptorPool = _descriptorPool;
 	allocInfo.descriptorSetCount = 1;
@@ -1292,62 +1392,17 @@ bool Renderer::_CreateDescriptorSets()
 		Logger::Log(RENDERER_MODULE, LOG_CRITICAL, "Failed to allocate descriptor sets");
 		return false;
 	}
-	DBG_SET_OBJECT_NAME((uint64_t)_sceneDescriptorSet, VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_EXT, "Scene descriptor set");
+	VK_DBG_SET_OBJECT_NAME((uint64_t)_sceneDescriptorSet, VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_EXT, "Scene descriptor set");
 
-	VkDescriptorBufferInfo sceneDataInfo{};
-	sceneDataInfo.buffer = _buffer->GetHandle();
-	sceneDataInfo.offset = 0;
-	sceneDataInfo.range = sizeof(SceneData);
+	VkDescriptorSetLayout layouts[]{ PipelineManager::GetDescriptorSetLayout(DESC_LYT_OneSampler) };
+	allocInfo.pSetLayouts = layouts;
 
-	VkDescriptorBufferInfo lightBufferInfo{};
-	lightBufferInfo.buffer = _buffer->GetHandle();
-	lightBufferInfo.offset = sceneDataInfo.offset + sceneDataInfo.range;
-	lightBufferInfo.range = sizeof(Light) * Engine::GetConfiguration().Renderer.MaxLights;
-
-	VkDescriptorBufferInfo visibleIndicesInfo{};
-	visibleIndicesInfo.buffer = _buffer->GetHandle();
-	visibleIndicesInfo.offset = lightBufferInfo.offset + lightBufferInfo.range;
-	visibleIndicesInfo.range = sizeof(int32_t) * Engine::GetConfiguration().Renderer.MaxLights * _numTiles;
-
-	VkDescriptorImageInfo aoImageInfo{};
-	aoImageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-	aoImageInfo.imageView = Engine::GetConfiguration().Renderer.SSAO.Enable ? SSAO::GetAOImageView() : VK_NULL_HANDLE;
-	aoImageInfo.sampler = _nearestSampler;
-
-	VkWriteDescriptorSet writeBuffer{};
-	writeBuffer.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-	writeBuffer.dstSet = _sceneDescriptorSet;
-	writeBuffer.dstBinding = 0;
-	writeBuffer.dstArrayElement = 0;
-	writeBuffer.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-	writeBuffer.descriptorCount = 1;
-	writeBuffer.pBufferInfo = &sceneDataInfo;
-	writeBuffer.pImageInfo = nullptr;
-	writeBuffer.pTexelBufferView = nullptr;
-
-	vector<VkWriteDescriptorSet> writeSets;
-
-	writeSets.push_back(writeBuffer);
-
-	writeBuffer.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
-
-	writeBuffer.dstBinding = 1;
-	writeBuffer.pBufferInfo = &lightBufferInfo;
-	writeSets.push_back(writeBuffer);
-
-	writeBuffer.dstBinding = 2;
-	writeBuffer.pBufferInfo = &visibleIndicesInfo;
-	writeSets.push_back(writeBuffer);
-
-	writeBuffer.dstBinding = 3;
-	writeBuffer.pBufferInfo = &visibleIndicesInfo;
-	writeBuffer.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-	writeBuffer.pBufferInfo = nullptr;
-	writeBuffer.pImageInfo = Engine::GetConfiguration().Renderer.SSAO.Enable ? &aoImageInfo : nullptr;
-	writeBuffer.descriptorCount = Engine::GetConfiguration().Renderer.SSAO.Enable ? 1 : 0;
-	writeSets.push_back(writeBuffer);
-
-	vkUpdateDescriptorSets(VKUtil::GetDevice(), (uint32_t)writeSets.size(), writeSets.data(), 0, nullptr);
+	if (vkAllocateDescriptorSets(VKUtil::GetDevice(), &allocInfo, &_blankTextureDescriptorSet) != VK_SUCCESS)
+	{
+		Logger::Log(RENDERER_MODULE, LOG_CRITICAL, "Failed to allocate descriptor sets");
+		return false;
+	}
+	VK_DBG_SET_OBJECT_NAME((uint64_t)_blankTextureDescriptorSet, VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_EXT, "Blank texture descriptor set");
 
 	// Culling
 
@@ -1361,72 +1416,9 @@ bool Renderer::_CreateDescriptorSets()
 		Logger::Log(RENDERER_MODULE, LOG_CRITICAL, "Failed to allocate descriptor sets");
 		return false;
 	}
-	DBG_SET_OBJECT_NAME((uint64_t)_cullingDescriptorSet, VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_EXT, "Culling descriptor set");
+	VK_DBG_SET_OBJECT_NAME((uint64_t)_cullingDescriptorSet, VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_EXT, "Culling descriptor set");
 
-	VkDescriptorBufferInfo lightBlockInfo = {};
-	lightBlockInfo.buffer = _buffer->GetHandle();
-	lightBlockInfo.offset = sizeof(SceneData);
-	lightBlockInfo.range = Engine::GetConfiguration().Renderer.MaxLights * sizeof(Light);
-
-	VkDescriptorBufferInfo visibleIndicesBlockInfo = {};
-	visibleIndicesBlockInfo.buffer = _buffer->GetHandle();
-	visibleIndicesBlockInfo.offset = lightBlockInfo.offset + lightBlockInfo.range;
-	visibleIndicesBlockInfo.range = Engine::GetConfiguration().Renderer.MaxLights * sizeof(int32_t) * _numTiles;
-
-	VkDescriptorBufferInfo dataBlockInfo = {};
-	dataBlockInfo.buffer = _buffer->GetHandle();
-	dataBlockInfo.offset = 0;
-	dataBlockInfo.range = sizeof(SceneData);
-
-	VkDescriptorImageInfo imageInfo = {};
-	imageInfo.imageLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL;
-	imageInfo.imageView = _depthImageView;
-	imageInfo.sampler = _depthSampler;
-
-	VkWriteDescriptorSet descriptorWrite[4] = {};
-	memset(descriptorWrite, 0x0, sizeof(VkWriteDescriptorSet) * 4);
-
-	descriptorWrite[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-	descriptorWrite[0].dstSet = _cullingDescriptorSet;
-	descriptorWrite[0].dstBinding = 0;
-	descriptorWrite[0].dstArrayElement = 0;
-	descriptorWrite[0].descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
-	descriptorWrite[0].descriptorCount = 1;
-	descriptorWrite[0].pBufferInfo = &lightBlockInfo;
-	descriptorWrite[0].pImageInfo = nullptr;
-	descriptorWrite[0].pTexelBufferView = nullptr;
-
-	descriptorWrite[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-	descriptorWrite[1].dstSet = _cullingDescriptorSet;
-	descriptorWrite[1].dstBinding = 1;
-	descriptorWrite[1].dstArrayElement = 0;
-	descriptorWrite[1].descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
-	descriptorWrite[1].descriptorCount = 1;
-	descriptorWrite[1].pBufferInfo = &visibleIndicesBlockInfo;
-	descriptorWrite[1].pImageInfo = nullptr;
-	descriptorWrite[1].pTexelBufferView = nullptr;
-
-	descriptorWrite[2].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-	descriptorWrite[2].dstSet = _cullingDescriptorSet;
-	descriptorWrite[2].dstBinding = 2;
-	descriptorWrite[2].dstArrayElement = 0;
-	descriptorWrite[2].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-	descriptorWrite[2].descriptorCount = 1;
-	descriptorWrite[2].pBufferInfo = &dataBlockInfo;
-	descriptorWrite[2].pImageInfo = nullptr;
-	descriptorWrite[2].pTexelBufferView = nullptr;
-
-	descriptorWrite[3].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-	descriptorWrite[3].dstSet = _cullingDescriptorSet;
-	descriptorWrite[3].dstBinding = 3;
-	descriptorWrite[3].dstArrayElement = 0;
-	descriptorWrite[3].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-	descriptorWrite[3].descriptorCount = 1;
-	descriptorWrite[3].pBufferInfo = nullptr;
-	descriptorWrite[3].pImageInfo = &imageInfo;
-	descriptorWrite[3].pTexelBufferView = nullptr;
-
-	vkUpdateDescriptorSets(_device, 4, descriptorWrite, 0, nullptr);
+	_UpdateDescriptorSets();
 
 	return true;
 }
@@ -1435,7 +1427,7 @@ bool Renderer::_CreateCommandBuffers()
 {
 	// Culling
 
-	VkCommandBufferAllocateInfo allocInfo = {};
+	VkCommandBufferAllocateInfo allocInfo{};
 	allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
 	allocInfo.commandPool = _computeCommandPool;
 	allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
@@ -1446,9 +1438,9 @@ bool Renderer::_CreateCommandBuffers()
 		Logger::Log(RENDERER_MODULE, LOG_CRITICAL, "Failed to allocate culling command buffer");
 		return false;
 	}
-	DBG_SET_OBJECT_NAME((uint64_t)_cullingCommandBuffer, VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT, "Culling command buffer");
+	VK_DBG_SET_OBJECT_NAME((uint64_t)_cullingCommandBuffer, VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT, "Culling command buffer");
 
-	VkCommandBufferBeginInfo beginInfo = {};
+	VkCommandBufferBeginInfo beginInfo{};
 	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 	beginInfo.flags = VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT;
 	beginInfo.pInheritanceInfo = nullptr;
@@ -1459,13 +1451,13 @@ bool Renderer::_CreateCommandBuffers()
 		return false;
 	}
 
-	DBG_MARKER_BEGIN(_cullingCommandBuffer, "Light culling", vec4(0.34, 0.82, 0.2, 1.0));
+	VK_DBG_MARKER_BEGIN(_cullingCommandBuffer, "Light culling", vec4(0.34, 0.82, 0.2, 1.0));
 
 	vkCmdBindPipeline(_cullingCommandBuffer, VK_PIPELINE_BIND_POINT_COMPUTE, PipelineManager::GetPipeline(PIPE_Culling));
 	vkCmdBindDescriptorSets(_cullingCommandBuffer, VK_PIPELINE_BIND_POINT_COMPUTE, PipelineManager::GetPipelineLayout(PIPE_LYT_Culling), 0, 1, &_cullingDescriptorSet, 0, nullptr);
 	vkCmdDispatch(_cullingCommandBuffer, _wkGroupsX, _wkGroupsY, 1);
 
-	DBG_MARKER_END(_cullingCommandBuffer);
+	VK_DBG_MARKER_END(_cullingCommandBuffer);
 
 	if (vkEndCommandBuffer(_cullingCommandBuffer) != VK_SUCCESS)
 	{
@@ -1494,9 +1486,9 @@ bool Renderer::_CreateCommandBuffers()
 
 	for (size_t i = 0; i < _presentCommandBuffers.Size(); ++i)
 	{
-		DBG_SET_OBJECT_NAME((uint64_t)_presentCommandBuffers[i], VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT, "Present command buffer");
+		VK_DBG_SET_OBJECT_NAME((uint64_t)_presentCommandBuffers[i], VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT, "Present command buffer");
 
-		VkCommandBufferBeginInfo beginInfo = {};
+		VkCommandBufferBeginInfo beginInfo{};
 		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 		beginInfo.flags = VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT;
 		beginInfo.pInheritanceInfo = nullptr;
@@ -1507,7 +1499,7 @@ bool Renderer::_CreateCommandBuffers()
 			return false;
 		}
 
-		DBG_MARKER_BEGIN(_presentCommandBuffers[i], "Present", vec4(0.9, 0.85, 0.0, 1.0));
+		VK_DBG_MARKER_BEGIN(_presentCommandBuffers[i], "Present", vec4(0.9, 0.85, 0.0, 1.0));
 
 		VKUtil::TransitionImageLayout(_colorTarget->GetImage(), VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, VK_IMAGE_ASPECT_COLOR_BIT, _presentCommandBuffers[i]);
 		VKUtil::TransitionImageLayout(_swapchain->GetImage((uint32_t)i), VK_IMAGE_LAYOUT_PRESENT_SRC_KHR, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_ASPECT_COLOR_BIT, _presentCommandBuffers[i]);
@@ -1517,7 +1509,7 @@ bool Renderer::_CreateCommandBuffers()
 		VKUtil::TransitionImageLayout(_swapchain->GetImage((uint32_t)i), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR, VK_IMAGE_ASPECT_COLOR_BIT, _presentCommandBuffers[i]);
 		VKUtil::TransitionImageLayout(_colorTarget->GetImage(), VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, VK_IMAGE_ASPECT_COLOR_BIT, _presentCommandBuffers[i]);
 
-		DBG_MARKER_END(_presentCommandBuffers[i]);
+		VK_DBG_MARKER_END(_presentCommandBuffers[i]);
 
 		if (vkEndCommandBuffer(_presentCommandBuffers[i]) != VK_SUCCESS)
 		{
@@ -1526,12 +1518,60 @@ bool Renderer::_CreateCommandBuffers()
 		}
 	}
 
+	allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+	allocInfo.commandPool = _graphicsCommandPool;
+	allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+	allocInfo.commandBufferCount = MAX_INFLIGHT_COMMAND_BUFFERS;
+
+	// Depth
+	if (vkAllocateCommandBuffers(_device, &allocInfo, _depthCommandBuffers) != VK_SUCCESS)
+	{
+		Logger::Log(RENDERER_MODULE, LOG_CRITICAL, "Failed to allocate shadow command buffers");
+		return false;
+	}
+	//VK_DBG_SET_OBJECT_NAME((uint64_t)_sceneCommandBuffers[_currentBufferIndex], VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT, "Scene command buffer");
+
+	// Shadow
+	if (vkAllocateCommandBuffers(_device, &allocInfo, _shadowCommandBuffers) != VK_SUCCESS)
+	{
+		Logger::Log(RENDERER_MODULE, LOG_CRITICAL, "Failed to allocate shadow command buffers");
+		return false;
+	}
+
+	// Scene
+	if (vkAllocateCommandBuffers(_device, &allocInfo, _sceneCommandBuffers) != VK_SUCCESS)
+	{
+		Logger::Log(RENDERER_MODULE, LOG_CRITICAL, "Failed to allocate shadow command buffers");
+		return false;
+	}
+
+	// GUI
+	if (vkAllocateCommandBuffers(_device, &allocInfo, _guiCommandBuffers) != VK_SUCCESS)
+	{
+		Logger::Log(RENDERER_MODULE, LOG_CRITICAL, "Failed to allocate shadow command buffers");
+		return false;
+	}
+
+	// Update
+	if (vkAllocateCommandBuffers(_device, &allocInfo, _updateCommandBuffers) != VK_SUCCESS)
+	{
+		Logger::Log(RENDERER_MODULE, LOG_CRITICAL, "Failed to allocate shadow command buffers");
+		return false;
+	}
+
+	// Bounds debug
+	if (vkAllocateCommandBuffers(_device, &allocInfo, _drawBoundsCommandBuffers) != VK_SUCCESS)
+	{
+		Logger::Log(RENDERER_MODULE, LOG_CRITICAL, "Failed to allocate shadow command buffers");
+		return false;
+	}
+
 	return true;
 }
 
 bool Renderer::_CreateSemaphores()
 {
-	VkSemaphoreCreateInfo semaphoreInfo = {};
+	VkSemaphoreCreateInfo semaphoreInfo{};
 	semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
 
 	if (vkCreateSemaphore(_device, &semaphoreInfo, _allocator, &_imageAvailableSemaphore) != VK_SUCCESS ||
@@ -1551,36 +1591,18 @@ bool Renderer::_CreateSemaphores()
 
 bool Renderer::_BuildDepthCommandBuffer()
 {
-	int nextCB = (_currentDepthCB + 1) % MAX_INFLIGHT_COMMAND_BUFFERS;
-
-	if (_depthCommandBuffers[nextCB] != VK_NULL_HANDLE)
-		vkFreeCommandBuffers(_device, _graphicsCommandPool, 1, &_depthCommandBuffers[nextCB]);
-
-	VkCommandBufferAllocateInfo allocInfo = {};
-	allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-	allocInfo.commandPool = _graphicsCommandPool;
-	allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-	allocInfo.commandBufferCount = 1;
-
-	if (vkAllocateCommandBuffers(_device, &allocInfo, &_depthCommandBuffers[nextCB]) != VK_SUCCESS)
-	{
-		Logger::Log(RENDERER_MODULE, LOG_CRITICAL, "Failed to allocate depth command buffer");
-		return false;
-	}
-	DBG_SET_OBJECT_NAME((uint64_t)_depthCommandBuffers[nextCB], VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT, "Depth command buffer");
-
-	VkCommandBufferBeginInfo beginInfo = {};
+	VkCommandBufferBeginInfo beginInfo{};
 	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 	beginInfo.flags = VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT;
 	beginInfo.pInheritanceInfo = nullptr;
 
-	if (vkBeginCommandBuffer(_depthCommandBuffers[nextCB], &beginInfo) != VK_SUCCESS)
+	if (vkBeginCommandBuffer(_depthCommandBuffers[_currentBufferIndex], &beginInfo) != VK_SUCCESS)
 	{
 		Logger::Log(RENDERER_MODULE, LOG_CRITICAL, "vkBeginCommandBuffer (depth) call failed");
 		return false;
 	}
 
-	VkRenderPassBeginInfo renderPassInfo = {};
+	VkRenderPassBeginInfo renderPassInfo{};
 	renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
 	renderPassInfo.renderPass = RenderPassManager::GetRenderPass(RP_Depth);
 	renderPassInfo.framebuffer = _depthFramebuffer;
@@ -1590,61 +1612,44 @@ bool Renderer::_BuildDepthCommandBuffer()
 	VkClearValue clearValues[2]{};
 	clearValues[0].depthStencil = { 1.0f, 0 };
 	clearValues[1].color = { { 0.f, 0.f, 0.f, 0.f } };
-
+	
 	renderPassInfo.clearValueCount = 2;
 	renderPassInfo.pClearValues = clearValues;
 
-	DBG_MARKER_BEGIN(_depthCommandBuffers[nextCB], "Depth pass", vec4(0.03, 0.48, 0.64, 1.0));
+	if (_secondaryDepthCommandBuffers.Count())
+	{
+		VK_DBG_MARKER_BEGIN(_depthCommandBuffers[_currentBufferIndex], "Depth pass", vec4(0.03, 0.48, 0.64, 1.0));
 
-	vkCmdBeginRenderPass(_depthCommandBuffers[nextCB], &renderPassInfo, VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS);
-	vkCmdExecuteCommands(_depthCommandBuffers[nextCB], (uint32_t)_secondaryDepthCommandBuffers.Count(), *_secondaryDepthCommandBuffers);
-	vkCmdEndRenderPass(_depthCommandBuffers[nextCB]);
+		vkCmdBeginRenderPass(_depthCommandBuffers[_currentBufferIndex], &renderPassInfo, VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS);
+		vkCmdExecuteCommands(_depthCommandBuffers[_currentBufferIndex], (uint32_t)_secondaryDepthCommandBuffers.Count(), *_secondaryDepthCommandBuffers);
+		vkCmdEndRenderPass(_depthCommandBuffers[_currentBufferIndex]);
 
-	DBG_MARKER_END(_depthCommandBuffers[nextCB]);
+		VK_DBG_MARKER_END(_depthCommandBuffers[_currentBufferIndex]);
+	}
 
-	if (vkEndCommandBuffer(_depthCommandBuffers[nextCB]) != VK_SUCCESS)
+	if (vkEndCommandBuffer(_depthCommandBuffers[_currentBufferIndex]) != VK_SUCCESS)
 	{
 		Logger::Log(RENDERER_MODULE, LOG_CRITICAL, "vkEndCommandBuffer (depth) call failed");
 		return false;
 	}
-
-	_currentDepthCB = nextCB;
 
 	return true;
 }
 
 bool Renderer::_BuildSceneCommandBuffer()
 {
-	int nextCB = (_currentSceneCB + 1) % MAX_INFLIGHT_COMMAND_BUFFERS;
-
-	if (_sceneCommandBuffers[nextCB] != VK_NULL_HANDLE)
-		vkFreeCommandBuffers(_device, _graphicsCommandPool, 1, &_sceneCommandBuffers[nextCB]);
-
-	VkCommandBufferAllocateInfo allocInfo = {};
-	allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-	allocInfo.commandPool = _graphicsCommandPool;
-	allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-	allocInfo.commandBufferCount = 1;
-
-	if (vkAllocateCommandBuffers(_device, &allocInfo, &_sceneCommandBuffers[nextCB]) != VK_SUCCESS)
-	{
-		Logger::Log(RENDERER_MODULE, LOG_CRITICAL, "Failed to allocate scene command buffer");
-		return false;
-	}
-	DBG_SET_OBJECT_NAME((uint64_t)_sceneCommandBuffers[nextCB], VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT, "Scene command buffer");
-
-	VkCommandBufferBeginInfo beginInfo = {};
+	VkCommandBufferBeginInfo beginInfo{};
 	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 	beginInfo.flags = VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT;
 	beginInfo.pInheritanceInfo = nullptr;
 
-	if (vkBeginCommandBuffer(_sceneCommandBuffers[nextCB], &beginInfo) != VK_SUCCESS)
+	if (vkBeginCommandBuffer(_sceneCommandBuffers[_currentBufferIndex], &beginInfo) != VK_SUCCESS)
 	{
 		Logger::Log(RENDERER_MODULE, LOG_CRITICAL, "vkBeginCommandBuffer (scene) call failed");
 		return false;
 	}
 
-	VkRenderPassBeginInfo renderPassInfo = {};
+	VkRenderPassBeginInfo renderPassInfo{};
 	renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
 	renderPassInfo.renderPass = RenderPassManager::GetRenderPass(RP_Graphics);
 	renderPassInfo.framebuffer = _framebuffer;
@@ -1653,87 +1658,295 @@ bool Renderer::_BuildSceneCommandBuffer()
 
 	VkClearValue clearValues[3]{}; // value 1 not used
 	clearValues[0].color = { { 0.0f, 0.0f, 0.0f, 0.0f } };
+	clearValues[1].depthStencil = { 1.f, 0 };
 	clearValues[2].color = { { 0.0f, 0.0f, 0.0f, 0.0f } };
 
 	renderPassInfo.clearValueCount = 3;
 	renderPassInfo.pClearValues = clearValues;	
 
-	DBG_MARKER_BEGIN(_sceneCommandBuffers[nextCB], "Scene pass", vec4(0.79, 0.2, 0.0, 1.0));
+	if (_secondarySceneCommandBuffers.Count())
+	{
+		VK_DBG_MARKER_BEGIN(_sceneCommandBuffers[_currentBufferIndex], "Scene pass", vec4(0.79, 0.2, 0.0, 1.0));
 
-	vkCmdBeginRenderPass(_sceneCommandBuffers[nextCB], &renderPassInfo, VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS);
-	vkCmdExecuteCommands(_sceneCommandBuffers[nextCB], (uint32_t)_secondarySceneCommandBuffers.Count(), *_secondarySceneCommandBuffers);
-	vkCmdEndRenderPass(_sceneCommandBuffers[nextCB]);
+		vkCmdBeginRenderPass(_sceneCommandBuffers[_currentBufferIndex], &renderPassInfo, VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS);
+		vkCmdExecuteCommands(_sceneCommandBuffers[_currentBufferIndex], (uint32_t)_secondarySceneCommandBuffers.Count(), *_secondarySceneCommandBuffers);
+		if (_particleDrawCommandBuffers.Count()) vkCmdExecuteCommands(_sceneCommandBuffers[_currentBufferIndex], (uint32_t)_particleDrawCommandBuffers.Count(), *_particleDrawCommandBuffers);
+		vkCmdEndRenderPass(_sceneCommandBuffers[_currentBufferIndex]);
 
-	DBG_MARKER_END(_sceneCommandBuffers[nextCB]);
+		VK_DBG_MARKER_END(_sceneCommandBuffers[_currentBufferIndex]);
+	}
+	else
+	{
+		VkClearColorValue clearColor{ 0.f, 0.f, 0.f, 0.f };
+		VkImageSubresourceRange range{};
+		range.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+		range.baseArrayLayer = 0;
+		range.baseMipLevel = 0;		
+		range.layerCount = 1;
+		range.levelCount = 1;
 
-	if (vkEndCommandBuffer(_sceneCommandBuffers[nextCB]) != VK_SUCCESS)
+		vkCmdClearColorImage(_sceneCommandBuffers[_currentBufferIndex], _colorTarget->GetImage(), VK_IMAGE_LAYOUT_UNDEFINED, &clearColor, 1, &range);
+	}
+
+	if (vkEndCommandBuffer(_sceneCommandBuffers[_currentBufferIndex]) != VK_SUCCESS)
 	{
 		Logger::Log(RENDERER_MODULE, LOG_CRITICAL, "vkEndCommandBuffer (scene) call failed");
 		return false;
 	}
-
-	_currentSceneCB = nextCB;
 
 	return true;
 }
 
 bool Renderer::_BuildGUICommandBuffer()
 {
-	int nextCB = (_currentGUICB + 1) % MAX_INFLIGHT_COMMAND_BUFFERS;
-
-	if (_guiCommandBuffers[nextCB] != VK_NULL_HANDLE)
-		vkFreeCommandBuffers(_device, _graphicsCommandPool, 1, &_guiCommandBuffers[nextCB]);
-
-	VkCommandBufferAllocateInfo allocInfo = {};
-	allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-	allocInfo.commandPool = _graphicsCommandPool;
-	allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-	allocInfo.commandBufferCount = 1;
-
-	if (vkAllocateCommandBuffers(_device, &allocInfo, &_guiCommandBuffers[nextCB]) != VK_SUCCESS)
-	{
-		Logger::Log(RENDERER_MODULE, LOG_CRITICAL, "Failed to allocate gui command buffer");
-		return false;
-	}
-	DBG_SET_OBJECT_NAME((uint64_t)_guiCommandBuffers[nextCB], VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT, "GUI command buffer");
-
-	VkCommandBufferBeginInfo beginInfo = {};
+	VkCommandBufferBeginInfo beginInfo{};
 	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 	beginInfo.flags = VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT;
 	beginInfo.pInheritanceInfo = nullptr;
 
-	if (vkBeginCommandBuffer(_guiCommandBuffers[nextCB], &beginInfo) != VK_SUCCESS)
+	if (vkBeginCommandBuffer(_guiCommandBuffers[_currentBufferIndex], &beginInfo) != VK_SUCCESS)
 	{
 		Logger::Log(RENDERER_MODULE, LOG_CRITICAL, "vkBeginCommandBuffer (gui) call failed");
 		return false;
 	}
 
-	DBG_MARKER_BEGIN(_guiCommandBuffers[nextCB], "GUI pass", vec4(0.66, 0.2, 0.82, 1.0));
+	if (_secondaryGuiCommandBuffers.Count())
+	{
+		VK_DBG_MARKER_BEGIN(_guiCommandBuffers[_currentBufferIndex], "GUI pass", vec4(0.66, 0.2, 0.82, 1.0));
 
-	VkRenderPassBeginInfo renderPassInfo = {};
-	renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-	renderPassInfo.renderPass = RenderPassManager::GetRenderPass(RP_GUI);
-	renderPassInfo.framebuffer = _guiFramebuffer;
-	renderPassInfo.renderArea.offset = { 0, 0 };
-	renderPassInfo.renderArea.extent = { Engine::GetScreenWidth(), Engine::GetScreenHeight() };
-	renderPassInfo.clearValueCount = 0;
-	renderPassInfo.pClearValues = nullptr;
+		VkRenderPassBeginInfo renderPassInfo{};
+		renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+		renderPassInfo.renderPass = RenderPassManager::GetRenderPass(RP_GUI);
+		renderPassInfo.framebuffer = _guiFramebuffer;
+		renderPassInfo.renderArea.offset = { 0, 0 };
+		renderPassInfo.renderArea.extent = { Engine::GetScreenWidth(), Engine::GetScreenHeight() };
+		renderPassInfo.clearValueCount = 0;
+		renderPassInfo.pClearValues = nullptr;
 
-	vkCmdBeginRenderPass(_guiCommandBuffers[nextCB], &renderPassInfo, VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS);
-	vkCmdExecuteCommands(_guiCommandBuffers[nextCB], (uint32_t)_secondaryGuiCommandBuffers.Count(), *_secondaryGuiCommandBuffers);
-	vkCmdEndRenderPass(_guiCommandBuffers[nextCB]);
+		vkCmdBeginRenderPass(_guiCommandBuffers[_currentBufferIndex], &renderPassInfo, VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS);
+		vkCmdExecuteCommands(_guiCommandBuffers[_currentBufferIndex], (uint32_t)_secondaryGuiCommandBuffers.Count(), *_secondaryGuiCommandBuffers);
+		vkCmdEndRenderPass(_guiCommandBuffers[_currentBufferIndex]);
 
-	DBG_MARKER_END(_guiCommandBuffers[nextCB]);
+		VK_DBG_MARKER_END(_guiCommandBuffers[_currentBufferIndex]);
+	}
 
-	if (vkEndCommandBuffer(_guiCommandBuffers[nextCB]) != VK_SUCCESS)
+	if (vkEndCommandBuffer(_guiCommandBuffers[_currentBufferIndex]) != VK_SUCCESS)
 	{
 		Logger::Log(RENDERER_MODULE, LOG_CRITICAL, "vkEndCommandBuffer (gui) call failed");
 		return false;
 	}
 
-	_currentGUICB = nextCB;
+	return true;
+}
+
+bool Renderer::_BuildBoundsDrawCommandBuffer()
+{
+	VkCommandBufferBeginInfo beginInfo{};
+	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+	beginInfo.flags = VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT;
+	beginInfo.pInheritanceInfo = nullptr;
+
+	if (vkBeginCommandBuffer(_drawBoundsCommandBuffers[_currentBufferIndex], &beginInfo) != VK_SUCCESS)
+	{
+		Logger::Log(RENDERER_MODULE, LOG_CRITICAL, "vkBeginCommandBuffer (bounds) call failed");
+		return false;
+	}
+
+	if (_drawBoundsList.Count())
+	{
+		VK_DBG_MARKER_BEGIN(_drawBoundsCommandBuffers[_currentBufferIndex], "Bounding Box Pass (DEBUG)", vec4(0.66, 0.2, 0.82, 1.0));
+
+		VkRenderPassBeginInfo renderPassInfo{};
+		renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+		renderPassInfo.renderPass = RenderPassManager::GetRenderPass(RP_GUI);
+		renderPassInfo.framebuffer = _guiFramebuffer;
+		renderPassInfo.renderArea.offset = { 0, 0 };
+		renderPassInfo.renderArea.extent = { Engine::GetScreenWidth(), Engine::GetScreenHeight() };
+		renderPassInfo.clearValueCount = 0;
+		renderPassInfo.pClearValues = nullptr;
+
+		vkCmdBeginRenderPass(_drawBoundsCommandBuffers[_currentBufferIndex], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+		
+		vkCmdBindPipeline(_drawBoundsCommandBuffers[_currentBufferIndex], VK_PIPELINE_BIND_POINT_GRAPHICS, PipelineManager::GetPipeline(PIPE_Bounds));
+
+		for (const NBounds *bounds : _drawBoundsList)
+		{
+			// TEMPORARY
+			if (!bounds->HaveBox())
+				continue;
+
+			mat4 mvp{};
+			PrimitiveID primitiveId{ PrimitiveID::Box };
+
+			mat4 translationMatrix{ translate(mat4(), bounds->GetCenter()) };
+			quat rotation{};
+			mat4 scaleMatrix{};
+
+			if (bounds->HaveBox())
+			{
+				scaleMatrix = scale(mat4(), bounds->GetBox().GetHalf());
+				//scale = scale(mat4(), bounds->GetBox().)
+			}
+			/*else if (bounds->HaveSphere())
+			{
+				scaleMatrix = scale(mat4(), vec3(bounds->GetSphere().GetRadius(), bounds->GetSphere().GetRadius(), bounds->GetSphere().GetRadius()));
+				/*primitiveId = PrimitiveID::Sphere;
+				scaleMatrix = scale(mat4(), vec3(bounds->GetSphere().GetRadius() * 2.f));*
+			}*/
+
+			Camera *cam{ CameraManager::GetActiveCamera() };
+
+			mvp = cam->GetProjectionMatrix() * cam->GetView() * ((translationMatrix * mat4_cast(rotation)) * scaleMatrix);
+			vkCmdPushConstants(_drawBoundsCommandBuffers[_currentBufferIndex], PipelineManager::GetPipelineLayout(PIPE_LYT_Bounds), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(mat4), value_ptr(mvp));
+			Primitives::DrawPrimitive(primitiveId, _drawBoundsCommandBuffers[_currentBufferIndex]);
+		}
+		
+		vkCmdEndRenderPass(_drawBoundsCommandBuffers[_currentBufferIndex]);
+
+		VK_DBG_MARKER_END(_drawBoundsCommandBuffers[_currentBufferIndex]);
+	}
+
+	_drawBoundsList.Clear(false);
+
+	if (vkEndCommandBuffer(_drawBoundsCommandBuffers[_currentBufferIndex]) != VK_SUCCESS)
+	{
+		Logger::Log(RENDERER_MODULE, LOG_CRITICAL, "vkEndCommandBuffer (bounds) call failed");
+		return false;
+	}
 
 	return true;
+}
+
+void Renderer::_UpdateDescriptorSets()
+{
+	VkDescriptorBufferInfo sceneDataInfo{};
+	sceneDataInfo.buffer = _buffer->GetHandle();
+	sceneDataInfo.offset = 0;
+	sceneDataInfo.range = sizeof(SceneData);
+
+	VkDescriptorBufferInfo lightBufferInfo{};
+	lightBufferInfo.buffer = _buffer->GetHandle();
+	lightBufferInfo.offset = sceneDataInfo.offset + sceneDataInfo.range;
+	lightBufferInfo.range = sizeof(Light) * Engine::GetConfiguration().Renderer.MaxLights;
+
+	VkDescriptorBufferInfo visibleIndicesInfo{};
+	visibleIndicesInfo.buffer = _buffer->GetHandle();
+	visibleIndicesInfo.offset = lightBufferInfo.offset + lightBufferInfo.range;
+	visibleIndicesInfo.range = sizeof(int32_t) * Engine::GetConfiguration().Renderer.MaxLights * _numTiles;
+
+	VkDescriptorImageInfo aoImageInfo{};
+	aoImageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+	aoImageInfo.imageView = Engine::GetConfiguration().Renderer.SSAO.Enable ? SSAO::GetAOImageView() : _blankTexture->GetImageView();
+	aoImageInfo.sampler = _nearestSampler;
+
+	VkDescriptorBufferInfo shadowMatricesBuffer{};
+	shadowMatricesBuffer.buffer = ShadowRenderer::GetMatricesBuffer()->GetHandle();
+	shadowMatricesBuffer.offset = ShadowRenderer::GetMatricesBufferSize();
+	shadowMatricesBuffer.range = ShadowRenderer::GetMatricesBufferSize();
+
+	VkDescriptorImageInfo shadowMapImageInfo{};
+	shadowMapImageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+	shadowMapImageInfo.imageView = ShadowRenderer::GetShadowMap()->GetImageView();
+	shadowMapImageInfo.sampler = ShadowRenderer::GetShadowMap()->GetSampler();
+
+	VkDescriptorImageInfo wsNormalMapImageInfo{};
+	wsNormalMapImageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+	wsNormalMapImageInfo.imageView = Engine::GetConfiguration().Renderer.Multisampling ? _msaaNormalTarget->GetImageView() : _normalTarget->GetImageView();
+	wsNormalMapImageInfo.sampler = _nearestSampler;
+
+	VkDescriptorImageInfo blankImageInfo{};
+	blankImageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+	blankImageInfo.imageView = _blankTexture->GetImageView();
+	blankImageInfo.sampler = _nearestSampler;
+
+	VkWriteDescriptorSet writeBuffer{};
+	writeBuffer.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+	writeBuffer.dstSet = _sceneDescriptorSet;
+	writeBuffer.dstBinding = 0;
+	writeBuffer.dstArrayElement = 0;
+	writeBuffer.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+	writeBuffer.descriptorCount = 1;
+	writeBuffer.pBufferInfo = &sceneDataInfo;
+	writeBuffer.pImageInfo = nullptr;
+	writeBuffer.pTexelBufferView = nullptr;
+
+	vector<VkWriteDescriptorSet> writeSets;
+
+	writeSets.push_back(writeBuffer);
+
+	writeBuffer.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+
+	writeBuffer.dstBinding = 1;
+	writeBuffer.pBufferInfo = &lightBufferInfo;
+	writeSets.push_back(writeBuffer);
+
+	writeBuffer.dstBinding = 2;
+	writeBuffer.pBufferInfo = &visibleIndicesInfo;
+	writeSets.push_back(writeBuffer);
+
+	writeBuffer.dstBinding = 3;
+	writeBuffer.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+	writeBuffer.pBufferInfo = nullptr;
+	writeBuffer.pImageInfo = &aoImageInfo;
+	writeBuffer.descriptorCount = 1;
+	writeSets.push_back(writeBuffer);
+
+	writeBuffer.dstBinding = 4;
+	writeBuffer.pBufferInfo = &shadowMatricesBuffer;
+	writeBuffer.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+	writeBuffer.descriptorCount = 1;
+	writeSets.push_back(writeBuffer);
+
+	writeBuffer.dstBinding = 5;
+	writeBuffer.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+	writeBuffer.pBufferInfo = nullptr;
+	writeBuffer.pImageInfo = &shadowMapImageInfo;
+	writeBuffer.descriptorCount = 1;
+	writeSets.push_back(writeBuffer);
+
+	writeBuffer.dstBinding = 6;
+	writeBuffer.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+	writeBuffer.pBufferInfo = nullptr;
+	writeBuffer.pImageInfo = &wsNormalMapImageInfo;
+	writeBuffer.descriptorCount = 1;
+	writeSets.push_back(writeBuffer);
+
+	writeBuffer.dstSet = _blankTextureDescriptorSet;
+	writeBuffer.dstBinding = 0;
+	writeBuffer.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+	writeBuffer.pBufferInfo = nullptr;
+	writeBuffer.pImageInfo = &blankImageInfo;
+	writeBuffer.descriptorCount = 1;
+	writeSets.push_back(writeBuffer);
+
+	vkUpdateDescriptorSets(VKUtil::GetDevice(), (uint32_t)writeSets.size(), writeSets.data(), 0, nullptr);
+
+	VkDescriptorBufferInfo lightBlockInfo{};
+	lightBlockInfo.buffer = _buffer->GetHandle();
+	lightBlockInfo.offset = sizeof(SceneData);
+	lightBlockInfo.range = Engine::GetConfiguration().Renderer.MaxLights * sizeof(Light);
+
+	VkDescriptorBufferInfo visibleIndicesBlockInfo{};
+	visibleIndicesBlockInfo.buffer = _buffer->GetHandle();
+	visibleIndicesBlockInfo.offset = lightBlockInfo.offset + lightBlockInfo.range;
+	visibleIndicesBlockInfo.range = Engine::GetConfiguration().Renderer.MaxLights * sizeof(int32_t) * _numTiles;
+
+	VkDescriptorBufferInfo dataBlockInfo = {};
+	dataBlockInfo.buffer = _buffer->GetHandle();
+	dataBlockInfo.offset = 0;
+	dataBlockInfo.range = sizeof(SceneData);
+
+	VkDescriptorImageInfo imageInfo{};
+	imageInfo.imageLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL;
+	imageInfo.imageView = _depthImageView;
+	imageInfo.sampler = _depthSampler;
+
+	VkWriteDescriptorSet descriptorWrite[4]{};
+	VKUtil::WriteDS(&descriptorWrite[0], 1, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, &lightBlockInfo, _cullingDescriptorSet, 0);
+	VKUtil::WriteDS(&descriptorWrite[1], 1, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, &visibleIndicesBlockInfo, _cullingDescriptorSet, 1);
+	VKUtil::WriteDS(&descriptorWrite[2], 1, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, &dataBlockInfo, _cullingDescriptorSet, 2);
+	VKUtil::WriteDS(&descriptorWrite[3], 1, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, &imageInfo, _cullingDescriptorSet, 3);
+	vkUpdateDescriptorSets(_device, 4, descriptorWrite, 0, nullptr);
 }
 
 void Renderer::_DestroyFramebuffers()
@@ -1746,9 +1959,11 @@ void Renderer::_DestroyFramebuffers()
 
 	delete _colorTarget;
 	delete _depthTarget;
-	delete _normalBrightTarget;
+	delete _normalTarget;
+	delete _brightnessTarget;
 	delete _msaaColorTarget;
-	delete _msaaNormalBrightTarget;
+	delete _msaaNormalTarget;
+	delete _msaaBrightnessTarget;
 
 	if (_framebuffer != VK_NULL_HANDLE)
 		vkDestroyFramebuffer(_device, _framebuffer, _allocator);
@@ -1756,11 +1971,6 @@ void Renderer::_DestroyFramebuffers()
 		vkDestroyFramebuffer(_device, _depthFramebuffer, _allocator);
 	if (_guiFramebuffer != VK_NULL_HANDLE)
 		vkDestroyFramebuffer(_device, _guiFramebuffer, _allocator);
-}
-
-void Renderer::_DestroyDescriptorSets()
-{
-	//
 }
 
 void Renderer::_DestroyCommandBuffers()
@@ -1775,8 +1985,18 @@ Renderer::~Renderer()
 	if (_device == VK_NULL_HANDLE)
 		return;
 
+	if (Engine::GetConfiguration().Renderer.SSAO.Enable) SSAO::Release();
+	Primitives::Release();
+	PostProcessor::Release();
+	ShadowRenderer::Release();
+
+	for (uint8_t i = 0; i < MAX_INFLIGHT_COMMAND_BUFFERS; ++i)
+		delete _tempBuffers[i];
+
+	delete _temporaryBuffer;
 	delete _buffer;
 	delete _stagingBuffer;
+	delete _blankTexture;
 
 	vkDestroySemaphore(_device, _imageAvailableSemaphore, _allocator);
 	vkDestroySemaphore(_device, _depthFinishedSemaphore, _allocator);

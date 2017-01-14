@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -49,6 +49,7 @@
 #include <Renderer/Renderer.h>
 #include <Engine/Engine.h>
 #include <Scene/Object.h>
+#include <Scene/OcTree.h>
 #include <Scene/LoadingScreen.h>
 #include <System/VFS/VFS.h>
 #include <System/Logger.h>
@@ -64,10 +65,10 @@ public:
 		_name("Unnamed Scene"),
 		_bgMusicVolume(1.f),
 		_loadingScreenTexture(LS_DEFAULT_TEXTURE),
-		_skysphere(nullptr),
 		_sceneBuffer(nullptr),
 		_sceneUbo(nullptr),
-		_threadPool(new NThreadPool(Platform::GetNumberOfProcessors() - 2))
+		_threadPool(new NThreadPool(Platform::GetNumberOfProcessors() - 2)),
+		_ocTree(new OcTree())
 	{ };
 
 	ENGINE_API Scene(int id, std::string file, const char* ls_texture) noexcept :
@@ -78,21 +79,22 @@ public:
 		_name("Unnamed Scene"),
 		_bgMusicVolume(1.f),
 		_loadingScreenTexture(ls_texture),
-		_skysphere(nullptr),
 		_sceneBuffer(nullptr),
 		_sceneUbo(nullptr),
-		_threadPool(new NThreadPool(Platform::GetNumberOfProcessors() - 2))
+		_threadPool(new NThreadPool(Platform::GetNumberOfProcessors() - 2)),
+		_ocTree(new OcTree())
 	{ };
 
 	ENGINE_API int GetId() noexcept { return _id; }
 	ENGINE_API bool IsLoaded() noexcept { return _loaded; }
 	ENGINE_API NString &GetName() noexcept { return _name; }
-	ENGINE_API Object *GetObjectByID(int32_t id);
+	ENGINE_API Object *GetObjectByID(uint32_t id);
 	ENGINE_API Object *GetObjectByName(const char *name);
 	ENGINE_API size_t GetObjectCount() noexcept { return _objects.size(); }
 	ENGINE_API size_t GetVertexCount() noexcept;
 	ENGINE_API size_t GetTriangleCount() noexcept;
 	ENGINE_API NString GetLoadingScreenTextureID() noexcept { return _loadingScreenTexture; }
+	ENGINE_API OcTree *GetOcTree() noexcept { return _ocTree; }
 	
 	ENGINE_API int Load();
 	ENGINE_API void Update(double deltaTime) noexcept;
@@ -104,23 +106,36 @@ public:
 	ENGINE_API ~Scene() noexcept;
 
 	void PrepareCommandBuffers();
+	bool RebuildCommandBuffers();
+
+	template<typename T>
+	void GetObjectsOfType(std::vector<T *> &vec)
+	{
+		for (Object *obj : _objects)
+		{
+			T *c = dynamic_cast<T *>(obj);
+			if (c)
+				vec.push_back(c);
+		}
+	}
 
 #ifdef ENGINE_INTERNAL
-	Buffer *GetSceneBuffer() { return _sceneBuffer; }
+	Buffer *GetSceneBuffer() noexcept { return _sceneBuffer; }
 	void UpdateData(VkCommandBuffer buffer) noexcept;
+	void DrawShadow(VkCommandBuffer commandBuffer, uint32_t shadowId) noexcept;
 #endif
 
 private:
 	int _id, _bgMusic;
 	bool _loaded;
 	NString _sceneFile, _name;
-	std::vector<Object *> _objects, _transparentObjects;
+	std::vector<Object *> _objects;
 	std::vector<Object *> _newObjects, _deletedObjects;
 	float _bgMusicVolume;
 	NString _loadingScreenTexture;
-	class Skysphere *_skysphere;
 	Buffer *_sceneBuffer, *_sceneUbo;
 	NThreadPool *_threadPool;
+	OcTree *_ocTree;
 
 #ifdef ENGINE_INTERNAL
 	uint64_t _bufferSize;

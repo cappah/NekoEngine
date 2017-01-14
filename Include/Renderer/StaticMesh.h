@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -45,8 +45,17 @@
 #include <Engine/Vertex.h>
 #include <Renderer/Buffer.h>
 #include <Renderer/Material.h>
+#include <Renderer/Drawable.h>
 #include <Resource/Resource.h>
 #include <Resource/MeshResource.h>
+
+struct MeshGroup
+{
+	uint32_t vertexOffset;
+	uint32_t vertexCount;
+	uint32_t indexOffset;
+	uint32_t indexCount;
+};
 
 class StaticMesh : public Resource
 {
@@ -55,22 +64,31 @@ class StaticMesh : public Resource
 public:
 	ENGINE_API StaticMesh(MeshResource *res) noexcept;
 
-	ENGINE_API MeshResource* GetResourceInfo() noexcept { return (MeshResource*)_resourceInfo; }
-	ENGINE_API bool IsResident() noexcept { return _resident; }
-	ENGINE_API uint32_t GetTotalIndexCount() noexcept { return _indexCount; }
-	ENGINE_API uint32_t GetVertexCount() noexcept { return _vertexCount; }
-	ENGINE_API uint32_t GetTriangleCount() noexcept { return _triangleCount; }
-	ENGINE_API uint32_t GetGroupCount() noexcept { return (uint32_t)_groupOffset.size(); }
-	ENGINE_API std::vector<Vertex> &GetVertices() { return _vertices; }
-	ENGINE_API std::vector<uint32_t> &GetIndices() { return _indices; }
+	ENGINE_API MeshResource* GetResourceInfo() const noexcept { return (MeshResource*)_resourceInfo; }
+	ENGINE_API bool IsResident() const noexcept { return _resident; }
+	ENGINE_API uint32_t GetIndexCount() const noexcept { return _indexCount; }
+	ENGINE_API uint32_t GetVertexCount() const noexcept { return _vertexCount; }
+	ENGINE_API uint32_t GetTriangleCount() const noexcept { return _triangleCount; }
+	ENGINE_API uint32_t GetGroupCount() const noexcept { return (uint32_t)_groups.size(); }
+	ENGINE_API const std::vector<Vertex> &GetVertices() const noexcept { return _vertices; }
+	ENGINE_API const std::vector<uint32_t> &GetIndices() const noexcept { return _indices; }
+	ENGINE_API const NBounds &GetBounds() const noexcept { return _bounds; }
+	ENGINE_API uint64_t GetVertexOffset() const noexcept { return _vertexOffset; }
+	ENGINE_API uint64_t GetIndexOffset() const noexcept { return _indexOffset; }
+	ENGINE_API const MeshGroup &GetGroup(uint32_t group) const noexcept { return _groups[group]; }
+	ENGINE_API uint32_t GetGroupVertexOffset(uint32_t group) const noexcept { return _groups[group].vertexOffset; }
+	ENGINE_API uint32_t GetGroupVertexCount(uint32_t group) const noexcept { return _groups[group].vertexCount; }
+	ENGINE_API uint32_t GetGroupIndexOffset(uint32_t group) const noexcept { return _groups[group].indexOffset; }
+	ENGINE_API uint32_t GetGroupIndexCount(uint32_t group) const noexcept { return _groups[group].indexCount; }
 
 	ENGINE_API virtual int Load() override;
-	ENGINE_API int LoadStatic(std::vector<Vertex> &vertices, std::vector<uint32_t> &indices, bool createGroup = true, bool calculateTangents = true);
-	ENGINE_API int LoadDynamic(std::vector<Vertex> & vertices, std::vector<uint32_t> &indices, bool createGroup = true, bool calculateTangents = true);
+	ENGINE_API int LoadStatic(std::vector<Vertex> &vertices, std::vector<uint32_t> &indices, bool createGroup = true, bool calculateTangents = true, bool createBounds = true);
+	ENGINE_API int LoadDynamic(std::vector<Vertex> & vertices, std::vector<uint32_t> &indices, bool createGroup = true, bool calculateTangents = true, bool createBounds = true);
 	ENGINE_API int CreateBuffer(bool dynamic);
+	ENGINE_API virtual void CreateBounds();
 
-	ENGINE_API void AddGroup(uint32_t offset, uint32_t count) { _groupOffset.push_back(offset); _groupCount.push_back(count); }
-	ENGINE_API void ResetGroups() { _groupOffset.clear(); _groupCount.clear(); }
+	ENGINE_API void AddGroup(MeshGroup &group) { _groups.push_back(group); }
+	ENGINE_API void ResetGroups() { _groups.clear(); }
 
 	ENGINE_API void UpdateIndices(std::vector<uint32_t>& indices);
 	ENGINE_API void UpdateVertices(std::vector<Vertex> &vertices);
@@ -79,25 +97,24 @@ public:
 
 	ENGINE_API virtual ~StaticMesh() noexcept;
 
-	Buffer *GetBuffer() { return _buffer; }
-	uint32_t GetGroupOffset(uint32_t group) { return _groupOffset[group]; }
-	uint32_t GetIndexCount(uint32_t group) noexcept { return _groupCount[group]; }
+	Buffer *GetBuffer() const noexcept { return _buffer; }	
 	VkDeviceSize GetRequiredMemorySize();
 
 	bool Upload(Buffer *buffer = nullptr);
 	VkDescriptorSet CreateDescriptorSet(VkDescriptorPool pool, Buffer *uniform);
-	bool BuildCommandBuffers(NArray<Material *> &_materials, VkDescriptorSet descriptorSet, VkCommandBuffer &depthCmdBuffer, VkCommandBuffer &sceneCmdBuffer);
+	bool BuildDrawables(NArray<Material *> &materials, VkDescriptorSet descriptorSet, NArray<Drawable> &drawables, bool buildDepth = true, bool buildBounds = true);
+	virtual void DrawShadow(VkCommandBuffer commandBuffer, uint32_t shadowId, VkDescriptorSet descriptorSet) noexcept;
 
 protected:
 	Buffer *_buffer;
 	std::vector<Vertex> _vertices;
 	std::vector<uint32_t> _indices;
-	std::vector<uint32_t> _groupOffset;
-	std::vector<uint32_t> _groupCount;
+	std::vector<MeshGroup> _groups;
 	uint32_t _indexCount;
 	uint32_t _vertexCount;
 	uint32_t _triangleCount;
 	bool _dynamic, _hasOwnBuffer, _resident;
+	NBounds _bounds;
 
 	VkDeviceSize _vertexOffset;
 	VkDeviceSize _indexOffset;
@@ -106,4 +123,5 @@ protected:
 	PipelineLayoutId _depthPipelineLayoutId;
 
 	void _CalculateTangents();
+	void _BuildBounds(uint32_t group, NBounds &bounds);
 };

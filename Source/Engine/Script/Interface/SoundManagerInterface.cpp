@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -95,7 +95,7 @@ int SoundManagerInterface::SetListenerPosition(lua_State *state)
 	if (argc != 3)
 		return luaL_error(state, "Invalid arguments");
 
-	SoundManager::SetListenerPosition((float)lua_tonumber(state, 1), (float)lua_tonumber(state, 2), (float)lua_tonumber(state, 3));
+//	SoundManager::SetListenerPosition((float)lua_tonumber(state, 1), (float)lua_tonumber(state, 2), (float)lua_tonumber(state, 3));
 
 	return 0;
 }
@@ -107,7 +107,7 @@ int SoundManagerInterface::SetListenerOrientation(lua_State *state)
 	if (argc != 3)
 		return luaL_error(state, "Invalid arguments");
 
-	SoundManager::SetListenerOrientation((float)lua_tonumber(state, 1), (float)lua_tonumber(state, 2), (float)lua_tonumber(state, 3));
+//	SoundManager::SetListenerOrientation((float)lua_tonumber(state, 1), (float)lua_tonumber(state, 2), (float)lua_tonumber(state, 3));
 
 	return 0;
 }

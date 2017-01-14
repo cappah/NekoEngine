@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -72,15 +72,16 @@ public:
 	ENGINE_API bool IsResident() { return _data ? true : false; }
 	
 	ENGINE_API VFSFile* Open(NString &path);
-
 	ENGINE_API size_t Read(void *buffer, size_t offset, size_t size, size_t count);
+
+	ENGINE_API void GetFilesInDirectory(const NString &directory, NArray<VFSFile *> files);
 
 	ENGINE_API virtual ~VFSArchive();
 
 private:
 	VFSArchiveHeader _header;
 	NString _path;
-	std::vector<VFSFile> _files;
+	std::vector<VFSFile *> _files;
 	FILE *_fp;
 	uint8_t *_data;
 	size_t _dataSize;

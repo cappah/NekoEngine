@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -149,9 +149,9 @@ static int _sq3_vfs_xFullPathname(sqlite3_vfs *vfs, const char *zName, int nOut,
 	(void)vfs;
 	
 	if (zName[0] == '/')
-		snprintf(zOut, nOut, "%s", zName);
+		(void)snprintf(zOut, nOut, "%s", zName);
 	else
-		snprintf(zOut, nOut, "/%s", zName);
+		(void)snprintf(zOut, nOut, "/%s", zName);
 	
 	return ENGINE_OK;
 }
@@ -263,8 +263,9 @@ bool ResourceDatabase::Open(const char *file) noexcept
 
 bool ResourceDatabase::GetResources(vector<ResourceInfo *> &vec)
 {
-	sqlite3_stmt *stmt;
+	sqlite3_stmt *stmt = nullptr;
 	char buff[80];
+	memset(buff, 0x0, sizeof(buff));
 
 	for (unsigned int i = 0; i < (unsigned int)ResourceType::RES_END; i++)
 	{

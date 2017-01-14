@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -52,19 +52,23 @@ class SkeletalMesh : public StaticMesh
 public:
 	ENGINE_API SkeletalMesh(MeshResource *res) noexcept;
 	
+	ENGINE_API const std::vector<SkeletalVertex> &GetVertices() const noexcept { return _vertices; }
+
 	ENGINE_API Skeleton *CreateSkeleton();
 	
 	ENGINE_API virtual int Load() override;
-	ENGINE_API int LoadStatic(std::vector<SkeletalVertex> &vertices, std::vector<uint32_t> &indices, bool createGroup = true, bool calculateTangents = true);
-	ENGINE_API int LoadDynamic(std::vector<SkeletalVertex> & vertices, std::vector<uint32_t> &indices, bool createGroup = true, bool calculateTangents = true);
-	
+	ENGINE_API int LoadStatic(std::vector<SkeletalVertex> &vertices, std::vector<uint32_t> &indices, bool createGroup = true, bool calculateTangents = true, bool createBounds = true);
+	ENGINE_API int LoadDynamic(std::vector<SkeletalVertex> & vertices, std::vector<uint32_t> &indices, bool createGroup = true, bool calculateTangents = true, bool createBounds = true);
+	ENGINE_API virtual void CreateBounds() override;
+
 	ENGINE_API virtual ~SkeletalMesh() noexcept;
 
 	VkDeviceSize GetRequiredMemorySize();
 
 	bool Upload(Buffer *buffer = nullptr);
-	bool BuildCommandBuffers(NArray<Material *> &_materials, VkDescriptorSet descriptorSet, VkCommandBuffer &depthCmdBuffer, VkCommandBuffer &sceneCmdBuffer);
+	bool BuildDrawables(NArray<Material *> &materials, VkDescriptorSet descriptorSet, NArray<Drawable> &drawables, bool buildDepth = true, bool buildBounds = true);
 	VkDescriptorSet CreateDescriptorSet(VkDescriptorPool pool, Buffer *uniform, Buffer *boneBuffer);
+	virtual void DrawShadow(VkCommandBuffer commandBuffer, uint32_t shadowId, VkDescriptorSet descriptorSet) noexcept override;
 
 private:
 	std::vector<SkeletalVertex> _vertices;
@@ -73,6 +77,7 @@ private:
 	std::vector<TransformNode> _nodes;
 
 	void _CalculateTangents();
+	void _BuildBounds(uint32_t group, NBounds &bounds);
 };
 
 #if defined(_MSC_VER)

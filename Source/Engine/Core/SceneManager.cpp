@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -41,6 +41,8 @@
 
 #include <Engine/Engine.h>
 #include <Engine/SceneManager.h>
+#include <Engine/EventManager.h>
+#include <Engine/CameraManager.h>
 #include <Engine/ResourceManager.h>
 #include <Scene/Scene.h>
 #include <Scene/LoadingScreen.h>
@@ -61,6 +63,8 @@ int SceneManager::_defaultScene = 0;
 int SceneManager::_loadScene = -1;
 LoadingScreen *SceneManager::_loadingScreen = nullptr;
 thread *SceneManager::_loadThread = nullptr;
+
+static uint32_t _objectMovedEventHandler{ 0 };
 
 int SceneManager::Initialize()
 {
@@ -149,9 +153,7 @@ void SceneManager::UpdateScene(double deltaTime) noexcept
 	if (_loadScene != -1)
 	{
 		if (_LoadSceneInternal(_loadScene) != ENGINE_OK)
-		{
-			DIE("Failed to load scene");
-		}
+		{ DIE("Failed to load scene"); }
 		_loadScene = -1;
 	}
 
@@ -163,6 +165,9 @@ void SceneManager::_UnloadScene() noexcept
 {
 	if (_activeScene == nullptr)
 		return;
+
+	CameraManager::RemoveAllCameras();
+	EventManager::UnregisterHandler(NE_EVT_OBJ_MOVED, _objectMovedEventHandler);
 
 	_activeScene->Unload();
 	_activeScene = nullptr;
@@ -226,6 +231,14 @@ int SceneManager::_LoadSceneWorker(Scene *scn)
 		scn = nullptr;
 
 	_loadingScene = nullptr;
+
+	_objectMovedEventHandler = EventManager::RegisterHandler(NE_EVT_OBJ_MOVED, [scn](int32_t eventId, void *eventData) {
+		if (!scn->GetOcTree()->GetRootNode()->NeedsReposition((const Object *)eventData))
+			return;
+
+		scn->GetOcTree()->GetRootNode()->Remove((const Object *)eventData);
+		scn->GetOcTree()->GetRootNode()->Add((const Object *)eventData);
+	});
 
 	return ret;
 }

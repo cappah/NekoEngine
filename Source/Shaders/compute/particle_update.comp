@@ -1,0 +1,156 @@
+/* NekoEngine
+ *
+ * particle_update.comp
+ * Author: Alexandru Naiman
+ *
+ * Particle system compute shader
+ *
+ * -----------------------------------------------------------------------------
+ *
+ * Copyright (c) 2015-2017, Alexandru Naiman
+ *
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ * this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
+ *
+ * 3. Neither the name of the copyright holder nor the names of its contributors
+ * may be used to endorse or promote products derived from this software without
+ * specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ALEXANDRU NAIMAN "AS IS" AND ANY EXPRESS OR
+ * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ * IN NO EVENT SHALL ALEXANDRU NAIMAN BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
+ * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+ * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+#version 450 core
+#extension GL_GOOGLE_include_directive : require
+
+#include "penner.glh"
+#include "particle_bindings.glh"
+
+#define CURVE_LINEAR		0
+#define CURVE_QUADRATIC		1
+#define CURVE_CUBIC			2
+#define CURVE_QUARTIC		3
+#define CURVE_QUINTIC		4
+#define CURVE_SINE			5
+#define CURVE_CIRCULAR		6
+#define CURVE_EXPONENTIAL	7
+#define CURVE_ELASTIC		8
+#define CURVE_BACK			9
+#define CURVE_BOUNCE		11
+
+layout(local_size_x = 256) in;
+
+float easeIn(uint curveId, float val)
+{
+	switch(curveId)
+	{
+		case CURVE_LINEAR: return val;
+		case CURVE_QUADRATIC: return quadraticEaseIn(val);
+		case CURVE_CUBIC: return cubicEaseIn(val);
+		case CURVE_QUARTIC: return quarticEaseIn(val);
+		case CURVE_QUINTIC: return quinticEaseIn(val);
+		case CURVE_SINE: return sineEaseIn(val);
+		case CURVE_CIRCULAR: return circularEaseIn(val);
+		case CURVE_EXPONENTIAL: return exponentialEaseIn(val);
+		case CURVE_ELASTIC: return elasticEaseIn(val);
+		case CURVE_BACK: return backEaseIn(val);
+		case CURVE_BOUNCE: return bounceEaseIn(val);
+	}
+}
+
+float easeOut(uint curveId, float val)
+{
+	switch(curveId)
+	{
+		case CURVE_LINEAR: return val;
+		case CURVE_QUADRATIC: return quadraticEaseOut(val);
+		case CURVE_CUBIC: return cubicEaseOut(val);
+		case CURVE_QUARTIC: return quarticEaseOut(val);
+		case CURVE_QUINTIC: return quinticEaseOut(val);
+		case CURVE_SINE: return sineEaseOut(val);
+		case CURVE_CIRCULAR: return circularEaseOut(val);
+		case CURVE_EXPONENTIAL: return exponentialEaseOut(val);
+		case CURVE_ELASTIC: return elasticEaseOut(val);
+		case CURVE_BACK: return backEaseOut(val);
+		case CURVE_BOUNCE: return bounceEaseOut(val);
+	}
+}
+
+float easeInOut(uint curveId, float val)
+{
+	switch(curveId)
+	{
+		case CURVE_LINEAR: return val;
+		case CURVE_QUADRATIC: return quadraticEaseInOut(val);
+		case CURVE_CUBIC: return cubicEaseInOut(val);
+		case CURVE_QUARTIC: return quarticEaseInOut(val);
+		case CURVE_QUINTIC: return quinticEaseInOut(val);
+		case CURVE_SINE: return sineEaseInOut(val);
+		case CURVE_CIRCULAR: return circularEaseInOut(val);
+		case CURVE_EXPONENTIAL: return exponentialEaseInOut(val);
+		case CURVE_ELASTIC: return elasticEaseInOut(val);
+		case CURVE_BACK: return backEaseInOut(val);
+		case CURVE_BOUNCE: return bounceEaseInOut(val);
+	}
+}
+
+void main()
+{
+	if (emitterData.enable != 1 || emitterData.deltaTime < 0.0)
+		return;
+
+	uint particleId = gl_GlobalInvocationID.x;
+
+	if (particleId >= emitterData.currentParticles || particleBuffer.data[particleId].positionAndAge.w < 0.0)
+		return;
+
+	particleBuffer.data[particleId].positionAndAge.w += emitterData.deltaTime;
+	if (particleBuffer.data[particleId].positionAndAge.w < emitterData.positionAndLifespan.w)
+	{
+		float val = easeInOut(emitterData.velocityCurve, 1.0 * particleBuffer.data[particleId].positionAndAge.w / emitterData.positionAndLifespan.w);
+		particleBuffer.data[particleId].positionAndAge.xyz = mix(particleBuffer.data[particleId].positionAndAge.xyz, particleBuffer.data[particleId].destinationAndSize.xyz, vec3(val));
+
+		val = easeInOut(emitterData.sizeCurve, 1.0 * particleBuffer.data[particleId].positionAndAge.w / emitterData.positionAndLifespan.w);
+		particleBuffer.data[particleId].destinationAndSize.w = mix(particleBuffer.data[particleId].destinationAndSize.w, emitterData.scaleAndFinalSize.w, val);
+
+		val = easeInOut(emitterData.colorCurve, 1.0 * particleBuffer.data[particleId].positionAndAge.w / emitterData.positionAndLifespan.w);
+		particleBuffer.data[particleId].color = mix(particleBuffer.data[particleId].color, emitterData.finalColor, vec4(val));
+	}
+	else
+	{
+		particleBuffer.data[particleId].positionAndAge.w = -1.0;
+		atomicAdd(emitterData.currentParticles, -1);
+		atomicMax(emitterData.currentParticles, 0);
+	}
+
+	memoryBarrier(); barrier();
+
+	if (gl_GlobalInvocationID.x == 0)
+	{
+		// disable updates
+		emitterData.deltaTime = -1.0;
+
+		// build draw command
+		drawIndirect.vertexCount = emitterData.currentParticles;
+		drawIndirect.instanceCount = 1;
+		drawIndirect.firstVertex = 0;
+		drawIndirect.firstInstance = 0;
+	}
+}

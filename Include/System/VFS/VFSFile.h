@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -39,10 +39,6 @@
 
 #pragma once
 
-#ifdef ENGINE_INTERNAL
-	#include <zlib.h>
-#endif
-
 #include <stdio.h>
 #include <stdint.h>
 
@@ -55,13 +51,11 @@ enum class FileType : unsigned
 	Packed
 };
 
-#define VFS_MAX_FILE_NAME		1024
-#define VFS_MAX_DIR_NAME		1024
+#define VFS_MAX_FILE_NAME		2048
 
 typedef struct VFS_FILE_HEADER
 {
 	char name[VFS_MAX_FILE_NAME];
-	char dir[VFS_MAX_DIR_NAME];
 	uint64_t start;
 	uint64_t size;
 } VFSFileHeader;
@@ -74,41 +68,29 @@ public:
 
 	ENGINE_API VFSFileHeader& GetHeader() { return _header; }
 	
-	ENGINE_API bool IsOpen();
+	ENGINE_API virtual bool IsOpen() = 0;
+	ENGINE_API virtual bool IsReadonly() = 0;
 
-	ENGINE_API int Open();
-	ENGINE_API size_t Read(void *buffer, size_t size, size_t count);
-	ENGINE_API void *ReadAll(size_t &size, bool terminate = false);
-	ENGINE_API char* Gets(NString &str, int num) { return Gets(*str, num); }
-	ENGINE_API char* Gets(NString *str, int num) { return Gets(**str, num); }
-	ENGINE_API char* Gets(char *str, int num);
-	ENGINE_API int Seek(size_t offset, int origin);
-	ENGINE_API size_t Tell();
-	ENGINE_API bool EoF();
-	ENGINE_API void Close();
+	ENGINE_API virtual int Open() = 0;
+	ENGINE_API virtual int Create() = 0;
+
+	ENGINE_API virtual size_t Read(void *buffer, size_t size, size_t count) = 0;
+	ENGINE_API virtual void *ReadAll(size_t &size, bool terminate = false);
+	ENGINE_API char *Gets(NString &str, int num) { return Gets(*str, num); }
+	ENGINE_API char *Gets(NString *str, int num) { return Gets(**str, num); }
+	ENGINE_API virtual char *Gets(char *str, int num) = 0;
+
+	ENGINE_API virtual size_t Write(void *buffer, size_t size, size_t count) = 0;
+	
+	ENGINE_API virtual int Seek(size_t offset, int origin) = 0;
+	ENGINE_API virtual size_t Tell() = 0;
+	ENGINE_API virtual bool EoF() = 0;
+	ENGINE_API virtual void Close() = 0;
 
 	ENGINE_API virtual ~VFSFile();
 
-#ifdef ENGINE_INTERNAL
-	FILE* GetNativeHandle() { return _fp; }
-#endif
-
-private:
+protected:
 	VFSFileHeader _header;
 	FileType _type;
 	unsigned int _references;
-	uint64_t _offset;
-	class VFSArchive *_archive;
-	bool _compressed;
-	uint8_t *_fileData;
-	uint64_t _uncompressedSize;
-	bool _decompressing;
-
-	int _Decompress();
-
-#ifdef ENGINE_INTERNAL
-	// Only for loose files
-	FILE* _fp;
-	gzFile _gzfp;
-#endif
 };

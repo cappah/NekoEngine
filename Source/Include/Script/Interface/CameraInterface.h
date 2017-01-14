@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -51,7 +51,6 @@ public:
 	static int GetPosition(lua_State *state);
 	static int GetRotation(lua_State *state);
 	static int GetViewMatrix(lua_State *state);
-	static int GetModelMatrix(lua_State *state);
 	static int GetProjectionMatrix(lua_State *state);
 	static int GetNear(lua_State *state);
 	static int GetFar(lua_State *state);

@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -37,7 +37,7 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <Renderer/GUI.h>
+#include <GUI/GUI.h>
 #include <Engine/Engine.h>
 #include <Script/Interface/GUIInterface.h>
 
@@ -55,7 +55,7 @@ int GUIInterface::DrawString(lua_State *state)
 	if (argc != 3)
 		return luaL_error(state, "Invalid arguments");
 
-	GUI::DrawString(vec2(lua_tonumber(state, 2), lua_tonumber(state, 3)), vec3(1.f), lua_tostring(state, 1));
+	GUIManager::DrawString(vec2(lua_tonumber(state, 2), lua_tonumber(state, 3)), vec3(1.f), lua_tostring(state, 1));
 
 	return 0;
 }

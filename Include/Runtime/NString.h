@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -113,12 +113,12 @@ public:
 		other._str = nullptr;
 	}
 
-	size_t Length() { return _length; }
+	size_t Length() const { return _length; }
 	size_t Count() { _length = 0; char *ptr = _str; while (*ptr++) ++_length; return _length; }
 	bool IsEmpty() { return _str[0] == 0x0; }
 
 	bool Contains(char c) { char f[2] = { c, 0x0 }; return Contains(f); }
-	bool Contains(NString &str) { return Contains(*str); }
+	bool Contains(const NString &str) { return Contains(*str); }
 	bool Contains(std::string &str) { return Contains(str.c_str()); }
 	bool Contains(const char *str) { return Find(str) != NotFound; }
 
@@ -139,7 +139,9 @@ public:
 		{
 			_size = len + 1;
 			_length = len;
-			_str = (char *)realloc(nullptr, _size);
+			if ((_str = (char *)realloc(nullptr, _size)) == nullptr)
+				return;
+
 			memcpy(_str, str, len);
 			_str[len] = 0x0;
 			return;
@@ -202,12 +204,15 @@ public:
 
 	NArray<NString> Split(char delim)
 	{
-		const char *ptr = strchr(_str, delim);
+		const char *ptr = nullptr;
 		const char *start = _str;
-		NArray<NString> ret;
+		NArray<NString> ret = NArray<NString>();
 		size_t len = 0;
 
-		if (!ptr)
+		if (!_str)
+			return ret;
+
+		if ((ptr = strchr(_str, delim)) == nullptr)
 		{
 			NString str = *this;
 			ret.Add(str);
@@ -223,6 +228,9 @@ public:
 			if (ptr) start = ++ptr;
 			if (ptr) ptr = strchr(++ptr, delim);
 		}
+
+		if (!start)
+			return ret;
 
 		len = strlen(start);
 		NString sub(len, start);
@@ -340,6 +348,7 @@ public:
 
 	char &operator [](size_t i) { return _str[i]; }
 	char *operator *() { return _str; }
+	const char *operator *() const { return _str; }
 
 	inline bool operator < (const NString &other) const
 	{

@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -37,12 +37,21 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#pragma comment(linker,"\"/manifestdependency:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
+
+#define VC_EXTRALEAN
+#define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
+
 #include <Engine/Engine.h>
+#include <Runtime/Runtime.h>
+#include <Platform/CrashHandler.h>
 
 #include <stdexcept>
 
 using namespace std;
+
+NString __win32_launcher_error_msg{};
 
 void CleanUp()
 {
@@ -54,46 +63,60 @@ void CleanUp()
 #endif
 }
 
-int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
+int __win32_launcher_crash(struct _EXCEPTION_POINTERS *ep)
 {
-	try
+	CrashHandler::SaveCrashDump(ep);
+	__win32_launcher_error_msg = CrashHandler::GetErrorString(ep);
+
+	return EXCEPTION_EXECUTE_HANDLER;
+}
+
+int __win32_launcher_run(LPSTR lpCmdLine)
+{
+	atexit(CleanUp);
+
+	string str(lpCmdLine);
+
+	#if defined(NE_CONFIG_DEBUG) || defined(NE_CONFIG_DEVELOPMENT)
+	if (!IsDebuggerPresent() && (str.find("--noconsole") == string::npos))
 	{
-		atexit(CleanUp);
+		FreeConsole();
+		AllocConsole();
+		AttachConsole(GetCurrentProcessId());
 
-		string str(lpCmdLine);
+		(void)freopen("CON", "w", stdout);
+		(void)freopen("CON", "w", stderr);
 
-#if defined(NE_CONFIG_DEBUG) || defined(NE_CONFIG_DEVELOPMENT)
-		if (!IsDebuggerPresent() && (str.find("--noconsole") == string::npos))
-		{
-			FreeConsole();
-			AllocConsole();
-			AttachConsole(GetCurrentProcessId());
-
-			freopen("CON", "w", stdout);
-			freopen("CON", "w", stderr);
-
-			system("title NekoEngine Debug Console");
-		}
-#endif
-
-		_CrtSetDbgFlag(0);
-
-		if(str.find("--waitrdoc") != string::npos)
-			MessageBoxA(HWND_DESKTOP, "Press OK after RenderDoc injection", "Waiting for RenderDoc", MB_OK);
-
-		if (Engine::Initialize(lpCmdLine, false) != ENGINE_OK)
-		{
-			MessageBoxA(HWND_DESKTOP, "Failed to initialize engine. The application will now exit.", "Fatal error", MB_ICONERROR | MB_OK);
-			return -1;
-		}
-
-		return Engine::Run();
+		system("title NekoEngine Debug Console");
 	}
-	catch (exception e)
+	#endif
+
+	_CrtSetDbgFlag(0);
+
+	if(str.find("--waitrdoc") != string::npos)
+		MessageBoxA(HWND_DESKTOP, "Press OK after RenderDoc injection", "Waiting for RenderDoc", MB_OK);
+
+	if (Engine::Initialize(lpCmdLine, false) != ENGINE_OK)
+	{
+		MessageBoxA(HWND_DESKTOP, "Failed to initialize engine. The application will now exit.", "Fatal error", MB_ICONERROR | MB_OK);
+		return -1;
+	}
+
+	return Engine::Run();
+}
+
+int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow){
+	__try
+	{
+		return __win32_launcher_run(lpCmdLine);
+	}
+	__except(__win32_launcher_crash(GetExceptionInformation()))
 	{
 		char buff[4096];
-		snprintf(buff, 4096, "Runtime error: %s\nThe application will now exit.", e.what());
+		(void)snprintf(buff, 4096, "%s\nThe application will now exit.", *__win32_launcher_error_msg);
+
 		MessageBoxA(HWND_DESKTOP, buff, "Fatal error", MB_ICONERROR | MB_OK);
+
 		return -1;
 	}
 }

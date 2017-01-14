@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -57,6 +57,10 @@ enum DescriptorLayoutId : uint8_t
 	DESC_LYT_Culling,
 	DESC_LYT_Anim_Object,
 	DESC_LYT_PostProcess,
+	DESC_LYT_ShadowMap,
+	DESC_LYT_ShadowFilter,
+	DESC_LYT_ParticleCompute,
+	DESC_LYT_ParticleDraw,
 };
 
 enum PipelineLayoutId : uint8_t
@@ -66,16 +70,23 @@ enum PipelineLayoutId : uint8_t
 	PIPE_LYT_ThreeSamplers = 2,
 	PIPE_LYT_FourSamplers = 3,
 	PIPE_LYT_Depth = 4,
+	PIPE_LYT_Shadow = 5,
 	PIPE_LYT_Anim_OneSampler = 10,
 	PIPE_LYT_Anim_TwoSamplers = 11,
 	PIPE_LYT_Anim_ThreeSamplers = 12,
 	PIPE_LYT_Anim_FourSamplers = 13,
 	PIPE_LYT_Anim_Depth = 14,
+	PIPE_LYT_Anim_Shadow = 15,
 	PIPE_LYT_GUI = 100,
 	PIPE_LYT_PostProcess = 101,
 	PIPE_LYT_Culling = 102,
 	PIPE_LYT_Blur = 103,
-	PIPE_LYT_DoF = 104
+	PIPE_LYT_DoF = 104,
+	PIPE_LYT_FilmGrain = 105,
+	PIPE_LYT_ShadowFilter = 190,
+	PIPE_LYT_ParticleCompute = 200,
+	PIPE_LYT_ParticleDraw = 201,
+	PIPE_LYT_Bounds = 220,
 };
 
 enum PipelineId : uint8_t
@@ -88,6 +99,8 @@ enum PipelineId : uint8_t
 	PIPE_PhongNormalSpecular = 5,
 	PIPE_PhongNormalSpecularEmissive = 6,
 	PIPE_Depth = 7,
+	PIPE_DepthNormal = 8,
+	PIPE_Shadow = 9,
 	PIPE_Anim_Unlit = 10,
 	PIPE_Anim_Phong = 11,
 	PIPE_Anim_PhongSpecular = 12,
@@ -96,6 +109,8 @@ enum PipelineId : uint8_t
 	PIPE_Anim_PhongNormalSpecular = 15,
 	PIPE_Anim_PhongNormalSpecularEmissive = 16,
 	PIPE_Anim_Depth = 17,
+	PIPE_Anim_DepthNormal = 18,
+	PIPE_Anim_Shadow = 19,
 	PIPE_Transparent_Unlit = 20,
 	PIPE_Transparent_Phong = 21,
 	PIPE_Transparent_PhongSpecular = 22,
@@ -115,7 +130,14 @@ enum PipelineId : uint8_t
 	PIPE_Font = 102,
 	PIPE_Culling = 103,
 	PIPE_Terrain = 104,
-	PIPE_Terrain_Depth = 105
+	PIPE_Terrain_Depth = 105,
+	PIPE_Terrain_Shadow = 106,
+	PIPE_ShadowFilter = 190,
+	PIPE_ParticleEmit = 200,
+	PIPE_ParticleUpdate = 201,
+	PIPE_ParticleSort = 202,
+	PIPE_ParticleDraw = 203,
+	PIPE_Bounds = 220,
 };
 
 class PipelineManager
@@ -126,6 +148,8 @@ public:
 	static VkPipeline GetPipeline(PipelineId id) { return _pipelines[id]; }
 	static VkPipelineLayout GetPipelineLayout(PipelineLayoutId layout) { return _pipelineLayouts[layout]; }
 	static VkDescriptorSetLayout GetDescriptorSetLayout(DescriptorLayoutId layout) { return _descriptorSetLayouts[layout]; }
+
+	static int RecreatePipelines();
 
 	static void Release();
 
@@ -143,4 +167,6 @@ private:
 	static int _CreateComputePipelines();
 	static int _CreateComputePipelineLayouts();
 	static int _CreateComputeDescriptorSetLayouts();
+
+	static void _DestroyPipelines();
 };

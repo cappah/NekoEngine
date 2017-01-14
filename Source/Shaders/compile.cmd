@@ -1,31 +1,46 @@
 @ECHO OFF
 
 set OUTPUT_DIRECTORY=..\..\Resources\Data\Shaders
+set SHC="%VK_SDK_PATH%\Bin\glslc.exe"
+set SHCFLAGS=--target-env=vulkan -Os -Iinclude
+mkdir %OUTPUT_DIRECTORY%
 
-"%VK_SDK_PATH%\Bin\glslangValidator.exe" -V depth_vertex.vert -o %OUTPUT_DIRECTORY%\depth_vertex.spv
-"%VK_SDK_PATH%\Bin\glslangValidator.exe" -V depth_anim_vertex.vert -o %OUTPUT_DIRECTORY%\depth_anim_vertex.spv
-"%VK_SDK_PATH%\Bin\glslangValidator.exe" -V depth_terrain_vertex.vert -o %OUTPUT_DIRECTORY%\depth_terrain_vertex.spv
-"%VK_SDK_PATH%\Bin\glslangValidator.exe" -V depth_fragment.frag -o %OUTPUT_DIRECTORY%\depth_fragment.spv
+echo.
+echo Compiling vertex shaders...
+for /f %%f in ('dir /b vertex') do (call :compile_shader %%f .vert vertex)
 
-"%VK_SDK_PATH%\Bin\glslangValidator.exe" -V light_culling.comp -o %OUTPUT_DIRECTORY%\light_culling.spv
+echo.
+echo Compiling tesselation control shaders...
+for /f %%f in ('dir /b tesc') do (call :compile_shader %%f .tesc tesc)
 
-"%VK_SDK_PATH%\Bin\glslangValidator.exe" -V vertex.vert -o %OUTPUT_DIRECTORY%\vertex.spv
-"%VK_SDK_PATH%\Bin\glslangValidator.exe" -V anim_vertex.vert -o %OUTPUT_DIRECTORY%\anim_vertex.spv
-"%VK_SDK_PATH%\Bin\glslangValidator.exe" -V terrain_vertex.vert -o %OUTPUT_DIRECTORY%\terrain_vertex.spv
-"%VK_SDK_PATH%\Bin\glslangValidator.exe" -V phong.frag -o %OUTPUT_DIRECTORY%\phong.spv
+echo.
+echo Compiling tesselation eval shaders...
+for /f %%f in ('dir /b tese') do (call :compile_shader %%f .tese tese)
 
-"%VK_SDK_PATH%\Bin\glslangValidator.exe" -V skysphere_vertex.vert -o %OUTPUT_DIRECTORY%\skysphere_vertex.spv
-"%VK_SDK_PATH%\Bin\glslangValidator.exe" -V skysphere_fragment.frag -o %OUTPUT_DIRECTORY%\skysphere_fragment.spv
+echo.
+echo Compiling geometry shaders...
+for /f %%f in ('dir /b geometry') do (call :compile_shader %%f .geom geometry)
 
-"%VK_SDK_PATH%\Bin\glslangValidator.exe" -V gui_vertex.vert -o %OUTPUT_DIRECTORY%\gui_vertex.spv
-"%VK_SDK_PATH%\Bin\glslangValidator.exe" -V gui_fragment.frag -o %OUTPUT_DIRECTORY%\gui_fragment.spv
+echo.
+echo Compiling fragment shaders...
+for /f %%f in ('dir /b fragment') do (call :compile_shader %%f .frag fragment)
 
-"%VK_SDK_PATH%\Bin\glslangValidator.exe" -V fullscreen_vertex.vert -o %OUTPUT_DIRECTORY%\fullscreen_vertex.spv
+echo.
+echo Compiling post process shaders...
+for /f %%f in ('dir /b pp') do (call :compile_shader %%f .frag pp)
 
-"%VK_SDK_PATH%\Bin\glslangValidator.exe" -V pp_hdr.frag -o %OUTPUT_DIRECTORY%\pp_hdr.spv
-"%VK_SDK_PATH%\Bin\glslangValidator.exe" -V pp_blur.frag -o %OUTPUT_DIRECTORY%\pp_blur.spv
-"%VK_SDK_PATH%\Bin\glslangValidator.exe" -V pp_dof.frag -o %OUTPUT_DIRECTORY%\pp_dof.spv
+echo.
+echo Compiling compute shaders...
+for /f %%f in ('dir /b compute') do (call :compile_shader %%f .comp compute)
 
-"%VK_SDK_PATH%\Bin\glslangValidator.exe" -V ssao.frag -o %OUTPUT_DIRECTORY%\ssao.spv
-"%VK_SDK_PATH%\Bin\glslangValidator.exe" -V ssao_blur.frag -o %OUTPUT_DIRECTORY%\ssao_blur.spv
+goto :eof
+
+:compile_shader
+	SETLOCAL ENABLEDELAYEDEXPANSION
+	set src_file=%1
+	set out_file=!src_file:%2=.spv!
+	%SHC% %SHCFLAGS% %3\%src_file% -o %OUTPUT_DIRECTORY%\%out_file%
+	ENDLOCAL
+GOTO :eof
+
 pause

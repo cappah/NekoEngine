@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -88,9 +88,6 @@ bool AssimpConverter::Convert(const char *inFile, const char *outFile, bool forc
 
 		for (uint32_t i = 0; i < scene->mNumMeshes; ++i)
 			_ProcessSkeletalMesh(scene->mMeshes[i]);
-
-		for (uint32_t i = 0; i < scene->mNumMeshes; ++i)
-			_ProcessBones(scene->mMeshes[i]);
 
 		if (_skeletalMesh->GetBones().size() > 0)
 		{
@@ -362,6 +359,8 @@ void AssimpConverter::_ProcessSkeletalMesh(struct aiMesh *mesh)
 	AnimatedVertex v;
 	memset(&v, 0x0, sizeof(AnimatedVertex));
 
+	v.boneIndices = ivec4(-1);
+
 	_skeletalMesh->BeginGroup();
 
 	for (uint32_t i = 0; i < mesh->mNumVertices; ++i)
@@ -383,39 +382,35 @@ void AssimpConverter::_ProcessSkeletalMesh(struct aiMesh *mesh)
 		_skeletalMesh->AddIndex(face.mIndices[2]);
 	}
 
-	_skeletalMesh->SetMaterialID(mesh->mMaterialIndex);
-	_skeletalMesh->EndGroup();
-}
-
-void AssimpConverter::_ProcessBones(struct aiMesh *mesh)
-{
 	for (uint32_t i = 0; i < mesh->mNumBones; ++i)
 	{
+		aiBone *bone = mesh->mBones[i];
 		Bone b;
 
-		b.name = mesh->mBones[i]->mName.data;
+		b.name = bone->mName.data;
 
 		int32_t boneIndex = _skeletalMesh->GetBoneIndex(b.name);
 		if (boneIndex == -1)
 		{
-			b.offset = _ConvertMatrix(mesh->mBones[i]->mOffsetMatrix);
+			b.offset = _ConvertMatrix(bone->mOffsetMatrix);
 			boneIndex = (int32_t)_skeletalMesh->AddBone(b);
 		}
 
-		for (uint32_t j = 0; j < mesh->mBones[i]->mNumWeights; ++j)
+		for (uint32_t j = 0; j < bone->mNumWeights; ++j)
 		{
-			uint32_t vertexId = mesh->mBones[i]->mWeights[j].mVertexId;
+			uint32_t vertexId = bone->mWeights[j].mVertexId + _skeletalMesh->GetGroupStartVertex();
 
 			AnimatedVertex &av = _skeletalMesh->GetVertex(vertexId);
 			if (av.numBones == 4)
 				continue;
 
-			av.boneWeights[av.numBones] = mesh->mBones[i]->mWeights[j].mWeight;
+			av.boneWeights[av.numBones] = bone->mWeights[j].mWeight;
 			av.boneIndices[av.numBones++] = boneIndex;
-
-			fprintf(stderr, "adding weight: %d, %d, %.01f\n", vertexId, boneIndex, av.boneWeights[av.numBones - 1]);
 		}
 	}
+
+	_skeletalMesh->SetMaterialID(mesh->mMaterialIndex);
+	_skeletalMesh->EndGroup();
 }
 
 void AssimpConverter::_BuildNodeList(struct aiNode *node)

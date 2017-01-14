@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -148,7 +148,7 @@ int AudioSourceInterface::SetDirection(lua_State *state)
 	if (args != 4)
 		return luaL_error(state, "Invalid arguments");
 
-	((AudioSource *)lua_touserdata(state, 1))->SetDirection((float)lua_tonumber(state, 2), (float)lua_tonumber(state, 3), (float)lua_tonumber(state, 4));
+//	((AudioSource *)lua_touserdata(state, 1))->SetDirection((float)lua_tonumber(state, 2), (float)lua_tonumber(state, 3), (float)lua_tonumber(state, 4));
 
 	return 0;
 }
@@ -160,7 +160,7 @@ int AudioSourceInterface::SetPosition(lua_State *state)
 	if (args != 4)
 		return luaL_error(state, "Invalid arguments");
 
-	((AudioSource *)lua_touserdata(state, 1))->SetPosition((float)lua_tonumber(state, 2), (float)lua_tonumber(state, 3), (float)lua_tonumber(state, 4));
+//	((AudioSource *)lua_touserdata(state, 1))->SetPosition((float)lua_tonumber(state, 2), (float)lua_tonumber(state, 3), (float)lua_tonumber(state, 4));
 
 	return 0;
 }
@@ -172,7 +172,7 @@ int AudioSourceInterface::SetVelocity(lua_State *state)
 	if (args != 4)
 		return luaL_error(state, "Invalid arguments");
 
-	((AudioSource *)lua_touserdata(state, 1))->SetVelocity((float)lua_tonumber(state, 2), (float)lua_tonumber(state, 3), (float)lua_tonumber(state, 4));
+//	((AudioSource *)lua_touserdata(state, 1))->SetVelocity((float)lua_tonumber(state, 2), (float)lua_tonumber(state, 3), (float)lua_tonumber(state, 4));
 
 	return 0;
 }

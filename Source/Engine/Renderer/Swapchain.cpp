@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -59,8 +59,8 @@ Swapchain::Swapchain(SwapchainInfo &info)
 
 bool Swapchain::_Create()
 {
-	VkSurfaceFormatKHR surfaceFormat = { VK_FORMAT_B8G8R8A8_UNORM, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR };
-	VkPresentModeKHR presentMode = VK_PRESENT_MODE_FIFO_KHR;
+	VkSurfaceFormatKHR surfaceFormat{ VK_FORMAT_B8G8R8A8_UNORM, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR };
+	VkPresentModeKHR presentMode{ VK_PRESENT_MODE_FIFO_KHR };
 
 	for (VkPresentModeKHR &mode : _info.presentModes)
 		if (mode == VK_PRESENT_MODE_MAILBOX_KHR)
@@ -70,11 +70,11 @@ bool Swapchain::_Create()
 	_extent.width = std::max(_info.capabilities.minImageExtent.width, std::min(_info.capabilities.maxImageExtent.width, _extent.width));
 	_extent.height = std::max(_info.capabilities.minImageExtent.height, std::min(_info.capabilities.maxImageExtent.height, _extent.height));
 
-	uint32_t imageCount = _info.capabilities.minImageCount + 1;
+	uint32_t imageCount{ _info.capabilities.minImageCount + 1 };
 	if (_info.capabilities.maxImageCount > 0 && imageCount > _info.capabilities.maxImageCount)
 		imageCount = _info.capabilities.maxImageCount;
 
-	VkSwapchainCreateInfoKHR createInfo = {};
+	VkSwapchainCreateInfoKHR createInfo{};
 	createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
 	createInfo.surface = _info.surface;
 	createInfo.minImageCount = imageCount;
@@ -84,7 +84,7 @@ bool Swapchain::_Create()
 	createInfo.imageArrayLayers = 1;
 	createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT;
 
-	uint32_t queueFamilyIndices[] = { (uint32_t)_info.graphicsFamily, (uint32_t)_info.presentFamily };
+	uint32_t queueFamilyIndices[]{ (uint32_t)_info.graphicsFamily, (uint32_t)_info.presentFamily };
 
 	if (_info.graphicsFamily != _info.presentFamily)
 	{
@@ -105,7 +105,7 @@ bool Swapchain::_Create()
 	createInfo.clipped = VK_TRUE;
 	createInfo.oldSwapchain = _swapchain;
 
-	VkSwapchainKHR newSwapchain;
+	VkSwapchainKHR newSwapchain{};
 	if (vkCreateSwapchainKHR(_info.device, &createInfo, _info.allocator, &newSwapchain) != VK_SUCCESS)
 	{
 		Logger::Log(SWAPCHAIN_MODULE, LOG_CRITICAL, "Failed to create swapchain");
@@ -134,8 +134,8 @@ bool Swapchain::_Create()
 
 uint32_t Swapchain::AcquireNextImage(VkSemaphore signalSemaphore)
 {
-	uint32_t imageIndex;
-	VkResult res = vkAcquireNextImageKHR(_info.device, _swapchain, std::numeric_limits<uint64_t>::max(), signalSemaphore, VK_NULL_HANDLE, &imageIndex);
+	uint32_t imageIndex{};
+	VkResult res{ vkAcquireNextImageKHR(_info.device, _swapchain, std::numeric_limits<uint64_t>::max(), signalSemaphore, VK_NULL_HANDLE, &imageIndex) };
 
 	if (res == VK_ERROR_OUT_OF_DATE_KHR)
 	{
@@ -150,9 +150,9 @@ uint32_t Swapchain::AcquireNextImage(VkSemaphore signalSemaphore)
 
 uint32_t Swapchain::Present(VkSemaphore waitSemaphore, uint32_t imageIndex, VkQueue presentQueue)
 {
-	VkSemaphore signalSemaphores[] = { waitSemaphore };
+	VkSemaphore signalSemaphores[]{ waitSemaphore };
 
-	VkPresentInfoKHR presentInfo = {};
+	VkPresentInfoKHR presentInfo{};
 	presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
 	presentInfo.waitSemaphoreCount = 1;
 	presentInfo.pWaitSemaphores = signalSemaphores;

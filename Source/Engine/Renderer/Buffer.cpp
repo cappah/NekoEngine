@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -56,7 +56,7 @@ Buffer::Buffer(size_t size, VkBufferUsageFlags usage, uint8_t *data, VkMemoryPro
 	_buffer = VK_NULL_HANDLE;
 	_memory = VK_NULL_HANDLE;
 	_offset = _size = 0;
-	_child = _persistent = false;
+	_child = _persistent = _ownMemory = false;
 
 	_CreateBuffer(size, usage, data, VK_NULL_HANDLE, 0, properties);
 }
@@ -66,7 +66,7 @@ Buffer::Buffer(size_t size, VkBufferUsageFlags usage, uint8_t *data, VkDeviceMem
 	_buffer = VK_NULL_HANDLE;
 	_memory = VK_NULL_HANDLE;
 	_offset = _size = 0;
-	_child = _persistent = false;
+	_child = _persistent = _ownMemory = false;
 
 	_CreateBuffer(size, usage, data, memory, offset, properties);
 }
@@ -84,7 +84,8 @@ Buffer::Buffer(Buffer *parent, VkDeviceSize offset, VkDeviceSize size)
 
 void Buffer::UpdateData(uint8_t *data, VkDeviceSize offset, VkDeviceSize size, VkCommandBuffer cmdBuffer, bool useStagingBuffer)
 {
-	bool submit = false;
+	bool submit{ false };
+
 	if (cmdBuffer == VK_NULL_HANDLE)
 	{
 		submit = true;
@@ -95,9 +96,9 @@ void Buffer::UpdateData(uint8_t *data, VkDeviceSize offset, VkDeviceSize size, V
 		vkCmdUpdateBuffer(cmdBuffer, _buffer, _offset + offset, size, data);
 	else
 	{
-		Buffer *stagingBuffer = Renderer::GetInstance()->GetStagingBuffer(size);
+		Buffer *stagingBuffer{ Renderer::GetInstance()->GetStagingBuffer(size) };
 
-		uint8_t *ptr = stagingBuffer->Map(0, size);
+		uint8_t *ptr{ stagingBuffer->Map(0, size) };
 		if (!ptr)
 		{ DIE("Failed to map buffer"); }
 
@@ -117,11 +118,16 @@ void Buffer::Copy(Buffer *dst, VkDeviceSize size, VkDeviceSize srcOffset, VkDevi
 	VKUtil::CopyBuffer(_buffer, dst->GetHandle(), size, _offset + srcOffset, dst->GetParentOffset() + dstOffset, cmdBuffer);
 }
 
+void Buffer::Fill(uint32_t value, VkCommandBuffer buffer)
+{
+	VKUtil::FillBuffer(_buffer, _offset, _size, value);
+}
+
 uint8_t *Buffer::Map(VkDeviceSize offset, VkDeviceSize size)
 {
 	if (!size) size = _size;
 
-	uint8_t *ptr = nullptr;
+	uint8_t *ptr{ nullptr };
 	if (vkMapMemory(VKUtil::GetDevice(), _memory, _offset + offset, size, 0, (void **)&ptr) != VK_SUCCESS)
 		return nullptr;
 
@@ -148,9 +154,9 @@ void Buffer::_CreateBuffer(size_t size, VkBufferUsageFlags usage, uint8_t *data,
 
 	if (data)
 	{
-		Buffer *stagingBuffer = Renderer::GetInstance()->GetStagingBuffer(size);
+		Buffer *stagingBuffer{ Renderer::GetInstance()->GetStagingBuffer(size) };
 	
-		uint8_t *ptr = stagingBuffer->Map(0, size);
+		uint8_t *ptr{ stagingBuffer->Map(0, size) };
 		if (!ptr)
 		{ DIE("Failed to map buffer"); }
 

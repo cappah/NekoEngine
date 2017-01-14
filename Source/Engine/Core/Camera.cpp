@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -89,8 +89,8 @@ void Camera::UpdateProjection() noexcept
 {
 	if (_projection == ProjectionType::Perspective)
 	{
-		_projectionMatrix = perspective(_fov / 2.f, (float)Engine::GetScreenWidth() / (float)Engine::GetScreenHeight(), _near, _far);
-		_skyboxProjectionMatrix = perspective(_fov / 2.f, (float)Engine::GetScreenWidth() / (float)Engine::GetScreenHeight(), _near, 10000.f);
+		_projectionMatrix = perspective(radians(_fov / 2.f), (float)Engine::GetScreenWidth() / (float)Engine::GetScreenHeight(), _near, _far);
+		_skyboxProjectionMatrix = infinitePerspective(radians(_fov / 2.f), (float)Engine::GetScreenWidth() / (float)Engine::GetScreenHeight(), _near);
 	}
 	else
 		_projectionMatrix = ortho(0.f, (float)Engine::GetScreenWidth(), (float)Engine::GetScreenHeight(), 0.f, _near, _far);
@@ -114,8 +114,6 @@ void Camera::UpdateView() noexcept
 	_view = lookAt(_position, _position + _front, _up);
 	_skyboxView = mat4(mat3(_view));
 
-	_model = translate(mat4(), _position);
-	_model = rotate(_model, radians(_rotation.z), vec3(0.f, 0.f, 1.f));
-	_model = rotate(_model, radians(_rotation.x), vec3(1.f, 0.f, 0.f));
-	_model = rotate(_model, radians(_rotation.y), vec3(0.f, 1.f, 0.f));
+	mat4 viewProjection = _projectionMatrix * _view;
+	_frustum.FromViewProjection(viewProjection);
 }

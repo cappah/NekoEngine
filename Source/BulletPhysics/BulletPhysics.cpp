@@ -1,0 +1,159 @@
+/* NekoEngine
+ *
+ * BulletPhysics.cpp
+ * Author: Alexandru Naiman
+ *
+ * Bullet physics Module
+ *
+ * -----------------------------------------------------------------------------
+ *
+ * Copyright (c) 2015-2017, Alexandru Naiman
+ *
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ * this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
+ *
+ * 3. Neither the name of the copyright holder nor the names of its contributors
+ * may be used to endorse or promote products derived from this software without
+ * specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ALEXANDRU NAIMAN "AS IS" AND ANY EXPRESS OR
+ * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ * IN NO EVENT SHALL ALEXANDRU NAIMAN BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
+ * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+ * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+#include "version.h"
+#include "BulletPhysics.h"
+#include "BulletColliders.h"
+
+#include <System/Logger.h>
+
+#define BLT_MODULE	"BulletPhysics"
+
+using namespace glm;
+
+int BulletPhysics::Initialize()
+{
+	if ((_configuration = new btDefaultCollisionConfiguration()) == nullptr)
+		return ENGINE_OUT_OF_RESOURCES;
+
+	if ((_dispatcher = new btCollisionDispatcher(_configuration)) == nullptr)
+		return ENGINE_OUT_OF_RESOURCES;
+	
+	Logger::Log(BLT_MODULE, LOG_INFORMATION, "Initialized");
+	Logger::Log(BLT_MODULE, LOG_INFORMATION, "Module version: %s, using Bullet %d", BULLET_PHYSICS_VERSION_STRING, BT_BULLET_VERSION);
+
+	return ENGINE_OK;
+}
+
+int BulletPhysics::InitScene(BroadphaseType broadphase, double sceneSize, uint32_t maxObjects)
+{
+	btVector3 min(-sceneSize, -sceneSize, -sceneSize);
+	btVector3 max(sceneSize, sceneSize, sceneSize);
+
+	if ((_broadphase = new bt32BitAxisSweep3(min, max)) == nullptr)
+		return ENGINE_OUT_OF_RESOURCES;
+
+	if ((_world = new btCollisionWorld(_dispatcher, _broadphase, _configuration)) == nullptr)
+		return ENGINE_OUT_OF_RESOURCES;
+	
+	return ENGINE_OK;
+}
+
+BoxCollider *BulletPhysics::CreateBoxCollider(Object *parent, glm::vec3 &halfExtents)
+{
+	BulletBoxCollider *collider{ new BulletBoxCollider(parent, halfExtents) };
+	_world->addCollisionObject(collider->GetCollisionObject());
+	return (BoxCollider *)collider;
+}
+
+SphereCollider *BulletPhysics::CreateSphereCollider(Object *parent, double radius)
+{
+	BulletSphereCollider *collider{ new BulletSphereCollider(parent, radius) };
+	_world->addCollisionObject(collider->GetCollisionObject());
+	return (SphereCollider *)collider;
+}
+
+CapsuleCollider *BulletPhysics::CreateCapsuleCollider(Object *parent, double radius, double height)
+{
+	BulletCapsuleCollider *collider{ new BulletCapsuleCollider(parent, radius, height) };
+	_world->addCollisionObject(collider->GetCollisionObject());
+	return (CapsuleCollider *)collider;
+}
+
+MeshCollider *BulletPhysics::CreateMeshCollider(Object *parent, const StaticMesh *mesh)
+{
+	BulletMeshCollider *collider{ new BulletMeshCollider(parent, mesh) };
+	_world->addCollisionObject(collider->GetCollisionObject());
+	return (MeshCollider *)collider;
+}
+
+bool BulletPhysics::RayCast(Ray *ray, glm::vec3 &start, glm::vec3 &end)
+{
+	btVector3 rayStart{ start.x, start.y, start.z };
+	btVector3 rayEnd{ end.x, end.y, end.z };
+
+	btCollisionWorld::ClosestRayResultCallback callback(rayStart, rayEnd);
+
+	_world->rayTest(rayStart, rayEnd, callback);
+
+	if (!callback.hasHit())
+		return false;
+
+	ray->hitPoint = vec3(callback.m_hitPointWorld.x(), callback.m_hitPointWorld.y(), callback.m_hitPointWorld.z());
+	ray->hitNormal = vec3(callback.m_hitNormalWorld.x(), callback.m_hitNormalWorld.y(), callback.m_hitNormalWorld.z());
+	ray->hitObject = (Object *)callback.m_collisionObject->getUserPointer();
+
+	return true;
+}
+
+void BulletPhysics::Update(double deltaTime)
+{
+	_world->performDiscreteCollisionDetection();
+
+	int manifolds{ _dispatcher->getNumManifolds() };
+
+	for (int i = 0; i < manifolds; ++i)
+	{
+		btPersistentManifold *manifold{ _dispatcher->getManifoldByIndexInternal(i) };
+		const btCollisionObject *a{ manifold->getBody0() };
+		const btCollisionObject *b{ manifold->getBody1() };
+		manifold->refreshContactPoints(a->getWorldTransform(), b->getWorldTransform());
+
+		int contacts{ manifold->getNumContacts() };
+
+		for (int j = 0; j < contacts; ++j)
+		{
+			btManifoldPoint &contactPoint{ manifold->getContactPoint(j) };
+			glm::vec3 hitPos{ contactPoint.getPositionWorldOnA().x(), contactPoint.getPositionWorldOnA().y(), contactPoint.getPositionWorldOnA().z() };
+			((Object *)a->getUserPointer())->OnHit((Object *)b->getUserPointer(), hitPos);
+			hitPos = { contactPoint.getPositionWorldOnB().x(), contactPoint.getPositionWorldOnB().y(), contactPoint.getPositionWorldOnB().z() };
+			((Object *)b->getUserPointer())->OnHit((Object *)a->getUserPointer(), hitPos);
+		}
+	}
+}
+
+void BulletPhysics::Release()
+{
+	delete _world;
+	delete _dispatcher;
+	delete _broadphase;
+	delete _configuration;
+}
+
+BulletPhysics::~BulletPhysics() { }

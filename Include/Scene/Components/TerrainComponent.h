@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -53,8 +53,8 @@ public:
 
 	ENGINE_API NString &GetMeshID() noexcept { return _meshId; }
 	ENGINE_API StaticMesh *GetMesh() noexcept { return _mesh; }
-	ENGINE_API virtual size_t GetVertexCount() noexcept override { return _mesh->GetVertexCount(); }
-	ENGINE_API virtual size_t GetTriangleCount() noexcept override { return _mesh->GetTriangleCount(); }
+	ENGINE_API virtual size_t GetVertexCount() const noexcept override { return _mesh->GetVertexCount(); }
+	ENGINE_API virtual size_t GetTriangleCount() const noexcept override { return _mesh->GetTriangleCount(); }
 
 	ENGINE_API virtual int Load() override;
 	ENGINE_API virtual bool Upload(Buffer *buffer = nullptr) override;
@@ -62,7 +62,9 @@ public:
 	ENGINE_API virtual bool Unload() override;
 	ENGINE_API virtual ~TerrainComponent() { };
 
-	virtual VkDeviceSize GetRequiredMemorySize() override;
+	virtual VkDeviceSize GetRequiredMemorySize() const noexcept override;
+
+	ENGINE_API virtual void DrawShadow(VkCommandBuffer commandBuffer, uint32_t shadowId) const noexcept override;
 
 protected:
 	std::vector<TerrainVertex> _terrainVertices;

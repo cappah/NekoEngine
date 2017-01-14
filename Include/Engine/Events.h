@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -37,6 +37,11 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <Engine/EventManager.h>
+#define NE_EVT_SHUTDOWN			100
 
-#define NE_EVT_SHUTDOWN		100
+#define NE_EVT_SCN_LOADED		200
+#define NE_EVT_SCN_UNLOADED		201
+
+#define NE_EVT_OBJ_ADDED		210
+#define NE_EVT_OBJ_REMOVED		211
+#define NE_EVT_OBJ_MOVED		212

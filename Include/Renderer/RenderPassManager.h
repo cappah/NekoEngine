@@ -11,7 +11,10 @@ enum RenderPassId : uint8_t
 	RP_Graphics,
 	RP_GUI,
 	RP_PostProcess,
-	RP_SSAO
+	RP_SSAO,
+	RP_ShadowMap,
+	RP_ShadowFilter,
+	RP_Debug
 };
 
 class RenderPassManager
@@ -22,6 +25,8 @@ public:
 
 	static VkRenderPass GetRenderPass(uint8_t name) { return _renderPasses[name]; }
 
+	static bool RecreateRenderPasses();
+
 	static void Release();
 
 private:
@@ -31,4 +36,5 @@ private:
 	static bool _CreateDepthRenderPass();
 	static bool _CreateGUIRenderPass();
 	static bool _CreateSSAORenderPass();
+	static bool _CreateShadowRenderPass();
 };

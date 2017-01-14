@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -66,6 +66,13 @@ enum SamplerMipmapMode : uint8_t
 	MipmapLinear = 1
 };
 
+enum SamplerBorderColor : uint8_t
+{
+	OpaqueBlack = 0,
+	OpaqueWhite = 1,
+	TransparentBlack = 2
+};
+
 struct SamplerParams
 {
 	SamplerFilter minFilter;
@@ -74,6 +81,7 @@ struct SamplerParams
 	SamplerAddressMode addressV;
 	SamplerAddressMode addressW;
 	SamplerMipmapMode mipmapMode;
+	SamplerBorderColor borderColor;
 	float minLodBias;
 };
 
@@ -87,7 +95,7 @@ public:
 	TextureResource* GetResourceInfo() noexcept { return (TextureResource*)_resourceInfo; }
 	int GetResourceId() noexcept { return _resourceInfo->id; }
 	virtual int Load() override;
-	void SetParameters(SamplerParams& params) noexcept;
+	void SetParameters(SamplerParams &params, float aniso = -1.f) noexcept;
 	void GenerateMipmaps();
 
 	virtual ~Texture() noexcept;
@@ -100,9 +108,9 @@ public:
 	uint32_t GetWidth() { return _width; }
 	uint32_t GetHeight() { return _height; }
 
-	bool CreateView(VkImageAspectFlags aspect);
+	bool CreateView(VkImageAspectFlags aspect, bool forceArray = false);
 
-	static Texture *CreateRenderTarget();
+	static Texture *CreateRenderTarget(VkSampleCountFlagBits samples = VK_SAMPLE_COUNT_1_BIT);
 	static Texture *CreateDepthStencilTarget();
 
 private:
@@ -113,7 +121,7 @@ private:
 	VkSampler _sampler;
 	VkImageType _type;
 	bool _isAttachment, _ownMemory;
-	uint32_t _width, _height, _depth, _mipLevels;
+	uint32_t _width, _height, _depth, _mipLevels, _arrayLayers;
 
 	VkDeviceSize _GetByteSize(uint32_t width, uint32_t height);
 };

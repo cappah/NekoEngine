@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -93,14 +93,14 @@ int LightGenerator::Load()
 		vec3 color = vec3(dis(gen), dis(gen), dis(gen));
 
 		char buff[1024];
-		snprintf(buff, 1024, "%.02f, %.02f, %.02f", color.x, color.y, color.z);
+		(void)snprintf(buff, 1024, "%.02f, %.02f, %.02f", color.x, color.y, color.z);
 
 		ComponentInitializer ci = {};
 		ci.parent = obj;
 		ci.arguments.insert(make_pair("color", buff));
 		ci.arguments.insert(make_pair("type", "point"));
 
-		snprintf(buff, 1024, "%.02f, %.02f", _lightRadius - 10, _lightRadius);
+		(void)snprintf(buff, 1024, "%.02f, %.02f", _lightRadius - 10, _lightRadius);
 		ci.arguments.insert(make_pair("radius", buff));
 
 		LightComponent *comp = (LightComponent *)Engine::NewComponent("LightComponent", &ci);

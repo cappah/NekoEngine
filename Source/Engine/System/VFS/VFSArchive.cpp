@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -39,6 +39,7 @@
 
 #include <Engine/Engine.h>
 #include <System/Logger.h>
+#include <System/VFS/PackedFile.h>
 #include <System/VFS/VFSArchive.h>
 
 #define VFS_AR_MODULE	"VFS_Archive"
@@ -95,13 +96,13 @@ int VFSArchive::Load()
 
 	for (VFSFileHeader &fileHeader : fileHeaders)
 	{
-		VFSFile f(this);
+		PackedFile *f{ new PackedFile(this) };
 
-		f.GetHeader().start = fileHeader.start;
-		f.GetHeader().size = fileHeader.size;
+		f->GetHeader().start = fileHeader.start;
+		f->GetHeader().size = fileHeader.size;
 		_dataSize += (size_t)fileHeader.size;
 
-		if (snprintf(f.GetHeader().name, VFS_MAX_FILE_NAME, "%s", fileHeader.name) >= VFS_MAX_FILE_NAME)
+		if (snprintf(f->GetHeader().name, VFS_MAX_FILE_NAME, "%s", fileHeader.name) >= VFS_MAX_FILE_NAME)
 		{
 			Logger::Log(VFS_AR_MODULE, LOG_CRITICAL, "snprintf() call failed");
 			return ENGINE_FAIL;
@@ -115,8 +116,8 @@ int VFSArchive::Load()
 
 void VFSArchive::Unload()
 {
-	for (VFSFile &file : _files)
-		file.Close();
+	for (VFSFile *file : _files)
+		delete file;
 	_files.clear();
 
 	free(_data);
@@ -156,12 +157,12 @@ VFSFile *VFSArchive::Open(NString &path)
 {
 	size_t len = strlen(*path);
 
-	for (VFSFile &file : _files)
+	for (VFSFile *file : _files)
 	{
-		if (!strncmp(*path, file.GetHeader().name, len))
+		if (!strncmp(*path, file->GetHeader().name, len))
 		{
-			file.Open();
-			return &file;
+			file->Open();
+			return file;
 		}
 	}
 
@@ -185,6 +186,13 @@ size_t VFSArchive::Read(void *buffer, size_t offset, size_t size, size_t count)
 		Logger::Log(VFS_AR_MODULE, LOG_CRITICAL, "Failed to read archive file %s", *_path);
 
 	return ret;
+}
+
+void VFSArchive::GetFilesInDirectory(const NString &directory, NArray<VFSFile *> files)
+{
+	for (VFSFile *file : _files)
+		if (!strncmp(file->GetHeader().name, *directory, directory.Length()))
+			files.Add(file);
 }
 
 VFSArchive::~VFSArchive()

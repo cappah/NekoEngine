@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -42,6 +42,9 @@
 #include <vector>
 #include <functional>
 
+#include <Engine/Defs.h>
+#include <Engine/Events.h>
+
 typedef struct HANDLERS
 {
 	int id;
@@ -53,10 +56,10 @@ class EventManager
 public:
 	static int Initialize();
 
-	static uint32_t RegisterHandler(int32_t id, std::function<void(int32_t, void *)> handler);
-	static void UnregisterHandler(int32_t id, uint32_t handle);
+	ENGINE_API static uint32_t RegisterHandler(int32_t id, std::function<void(int32_t, void *)> handler);
+	ENGINE_API static void UnregisterHandler(int32_t id, uint32_t handle);
 
-	static void Broadcast(int32_t id, void *eventArgs);
+	ENGINE_API static void Broadcast(int32_t id, void *eventArgs);
 
 	static void Release();
 

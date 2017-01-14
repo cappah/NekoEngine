@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -85,8 +85,9 @@ public:
 	/*ENGINE_API glm::vec3 GetColor() noexcept { return glm::vec3(_data.Color[0], _data.Color[1], _data.Color[2]); }
 	ENGINE_API void SetColor(glm::vec3& color) noexcept { memcpy(_data.Color, &color.x, sizeof(float) * 3); }*/
 
-	ENGINE_API MaterialType GetType() { return (MaterialType)_data.Type; }
-	ENGINE_API bool IsTransparent() { return _transparent; }
+	ENGINE_API MaterialType GetType() const { return (MaterialType)_data.Type; }
+	ENGINE_API bool IsTransparent() const { return _transparent; }
+	ENGINE_API bool HasNormalMap() const { return _normalTexture != nullptr; }
 	ENGINE_API void SetAnimated(bool animated);
 
 	ENGINE_API virtual int Load() override;
@@ -105,6 +106,7 @@ public:
 	VkPipelineLayout GetPipelineLayout() { return PipelineManager::GetPipelineLayout(_pipelineLayoutId); }
 
 	void Enable(VkCommandBuffer buffer);
+	void BindNormal(VkCommandBuffer buffer);
 	bool HasDescriptorSet() { return _descriptorSet != VK_NULL_HANDLE; }
 
 private:
@@ -127,7 +129,7 @@ private:
 	PipelineId _pipelineId;
 	PipelineLayoutId _pipelineLayoutId;
 
-	VkDescriptorSet _descriptorSet;
+	VkDescriptorSet _descriptorSet, _normalDescriptorSet;
 	VkDescriptorPool _descriptorPool;
 	VkDescriptorSetLayout _descriptorSetLayout;
 

@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -47,6 +47,9 @@
 
 using namespace std;
 
+extern UINT NWM_SHOWCURSOR;
+extern UINT NWM_HIDECURSOR;
+
 DWORD _xiLastPacket[4] = { 0, 0, 0, 0 };
 
 static inline void _xiDeadzone(float &x, float &y, float max, float deadzone)
@@ -75,7 +78,7 @@ static inline void _xiDeadzone(float &x, float &y, float max, float deadzone)
 
 bool Input::SetControllerVibration(int n, float left, float right)
 {
-	XINPUT_VIBRATION vibration;
+	XINPUT_VIBRATION vibration{};
 
 	left = left > 1.f ? 1.f : left;
 	right = right > 1.f ? 1.f : right;
@@ -216,7 +219,7 @@ void Input::_InitializeKeymap()
 
 int Input::_GetControllerCount()
 {
-	XINPUT_STATE xistate;
+	XINPUT_STATE xistate{};
 	int num = 0;
 
 	for (DWORD i = 0; i < XUSER_MAX_COUNT; ++i)
@@ -329,7 +332,7 @@ bool Input::_GetControllerState(int n, ControllerState *state)
 
 bool Input::CapturePointer()
 {
-	ShowCursor(FALSE);
+	PostMessage(Platform::GetActiveWindow(), NWM_HIDECURSOR, (WPARAM)0, (LPARAM)0);
 	SetCapture(Platform::GetActiveWindow());
 
 	_pointerCaptured = true;
@@ -340,15 +343,15 @@ bool Input::CapturePointer()
 void Input::ReleasePointer()
 {
 	ReleaseCapture();
-	ShowCursor(TRUE);
+	PostMessage(Platform::GetActiveWindow(), NWM_SHOWCURSOR, (WPARAM)0, (LPARAM)0);
 
 	_pointerCaptured = false;
 }
 
 bool Input::GetPointerPosition(long &x, long &y)
 {
-	POINT pt;
-	bool ret;
+	POINT pt{};
+	bool ret = false;
 
 	ret = GetCursorPos(&pt) == TRUE ? true : false;
 	ret &= ScreenToClient(Platform::GetActiveWindow(), &pt) == TRUE ? true : false;
@@ -364,8 +367,8 @@ bool Input::GetPointerPosition(long &x, long &y)
 
 bool Input::SetPointerPosition(long x, long y)
 {
-	POINT pt;
-	bool ret;
+	POINT pt{};
+	bool ret = false;
 
 	pt.x = x;
 	pt.y = y;

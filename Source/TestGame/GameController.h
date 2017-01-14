@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -39,7 +39,8 @@
 
 #pragma once
 
-#include <glm/glm.hpp>
+#include <GUI/GUI.h>
+#include <Engine/Engine.h>
 
 #include "TestGame.h"
 #include <Scene/Object.h>
@@ -50,8 +51,16 @@ class GameController :
 public:
 	TESTGAME_API GameController(ObjectInitializer *initializer) noexcept;
 
-	virtual int TESTGAME_API Load() override;
-	virtual void TESTGAME_API Update(double deltaTime) noexcept override;
+	TESTGAME_API virtual int Load() override;
+	TESTGAME_API virtual void Update(double deltaTime) noexcept override;
+	TESTGAME_API virtual bool Unload() noexcept override;
 
-	virtual TESTGAME_API ~GameController() noexcept {};
+	TESTGAME_API virtual ~GameController() noexcept;
+
+private:
+	Box *_menuBox;
+	Label *_menuLabel;
+	Button *_resumeButton, *_exitButton;
+
+	void _ShowMenu(bool show);
 };

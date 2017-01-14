@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -52,6 +52,8 @@ public:
 	static bool BuildCommandBuffer();
 	static VkCommandBuffer GetCommandBuffer() { return _commandBuffer; }
 
+	static void ScreenResized() noexcept;
+
 	static void Release();
 
 private:
@@ -61,6 +63,7 @@ private:
 	static int _CreatePipeline();
 	static bool _CreateFramebuffers();
 	static bool _CreateDescriptorSets();
+	static void _UpdateDescriptorSets();
 
 	static Texture *_GetPPTexture0();
 	static Texture *_GetPPTexture1();

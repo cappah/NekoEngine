@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -44,44 +44,25 @@
 #include <stdarg.h>
 
 #include <Engine/Defs.h>
+#include <Runtime/NString.h>
 
-#define LOG_DEBUG		0
+#define LOG_DEBUG			0
 #define LOG_INFORMATION		1
-#define LOG_WARNING		2
+#define LOG_WARNING			2
 #define LOG_CRITICAL		3
 
 #define	LOG_ALL			LOG_INFORMATION
-
-struct LogMessage
-{
-	LogMessage(std::string module,
-		unsigned int severity,
-		std::string message) :
-		Module(module),
-		Severity(severity),
-		Message(message) 
-	{ }
-
-	std::string Module;
-	unsigned int Severity;
-	std::string Message;
-};
 
 class Logger
 {
 public:
 	ENGINE_API static void Initialize(std::string file, unsigned int severity) noexcept;
-	ENGINE_API static void Log(std::string Module, unsigned int severity, const char* format, ...);
-	ENGINE_API static void Log(std::string Module, unsigned int severity, std::string Message);
+	ENGINE_API static void Log(const char *module, unsigned int severity, const char* format, ...) noexcept;
+	ENGINE_API static void Log(const char *module, unsigned int severity, const std::string &message) noexcept;
+	ENGINE_API static void Log(const char *module, unsigned int severity, const NString &message) noexcept;
 	ENGINE_API static void LogRendererDebugMessage(const char* message) noexcept;
-	ENGINE_API static void EnqueueLogMessage(std::string Module, unsigned int severity, std::string Message) noexcept;
-	ENGINE_API static void EnqueueLogMessage(std::string Module, unsigned int severity, const char* format, ...) noexcept;
+	ENGINE_API static void EnqueueLogMessage(const char *module, unsigned int severity, const char* format, ...) noexcept;
+	ENGINE_API static void EnqueueLogMessage(const char *module, unsigned int severity, const std::string &message) noexcept;
+	ENGINE_API static void EnqueueLogMessage(const char *module, unsigned int severity, const NString &message) noexcept;	
 	ENGINE_API static void Flush();
-
-private:
-	static std::string _logFile;
-	static unsigned int _logSeverity;
-	static std::vector<LogMessage> _logQueue;
-
-	static void _WriteMessage(LogMessage& msg);
 };

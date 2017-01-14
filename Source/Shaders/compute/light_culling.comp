@@ -1,0 +1,171 @@
+/* NekoEngine
+ *
+ * light_culling.comp
+ * Author: Alexandru Naiman
+ *
+ * Light culling compute shader
+ *
+ * -----------------------------------------------------------------------------
+ *
+ * Copyright (c) 2015-2017, Alexandru Naiman
+ *
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ * this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
+ *
+ * 3. Neither the name of the copyright holder nor the names of its contributors
+ * may be used to endorse or promote products derived from this software without
+ * specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ALEXANDRU NAIMAN "AS IS" AND ANY EXPRESS OR
+ * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ * IN NO EVENT SHALL ALEXANDRU NAIMAN BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
+ * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+ * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+#version 450 core
+#extension GL_GOOGLE_include_directive : require
+
+// Based on:
+// https://github.com/bcrusco/Forward-Plus-Renderer/blob/master/Forward-Plus/Forward-Plus/source/shaders/light_culling.comp.glsl
+
+#define LIGHT_BUFFER_SET			0
+#define LIGHT_BUFFER_BINDING		0
+#define VISIBLE_INDICES_SET			0
+#define VISIBLE_INDICES_BINDING		1
+#define VISIBLE_INDICES_WRITE		1
+#define SCENE_DATA_BINDING			2
+
+#include "scenedata.glh"
+#include "lightbuffers.glh"
+
+layout(set = 0, binding = 3) uniform sampler2DMS depthMap;
+
+shared uint minDepthInt;
+shared uint maxDepthInt;
+shared vec4 frustumPlanes[6];
+
+shared uint visibleLights;
+shared uint visibleIndices[1024];
+
+shared mat4 viewProjection;
+shared mat4 inverseProjection;
+
+#define TILE_SIZE 16
+layout(local_size_x = TILE_SIZE, local_size_y = TILE_SIZE, local_size_z = 1) in;
+
+void main()
+{
+	ivec2 location = ivec2(gl_GlobalInvocationID.xy);
+	ivec2 item = ivec2(gl_LocalInvocationID.xy);
+	ivec2 tile = ivec2(gl_WorkGroupID.xy);
+	ivec2 tileNumber = ivec2(gl_NumWorkGroups.xy);
+	uint index = tile.y * tileNumber.x + tile.x;
+
+	if (gl_LocalInvocationIndex == 0)
+	{
+		minDepthInt = 0xFFFFFFFF;
+		maxDepthInt = 0;
+		visibleLights = 0;
+		viewProjection = sceneData.projection * sceneData.view;
+		inverseProjection = inverse(sceneData.projection);
+	}
+
+	barrier();
+
+	float maxDepth, minDepth;
+	float depth = texelFetch(depthMap, location, 0).r;
+	depth =  1.f / (depth * inverseProjection[2][3] + inverseProjection[3][3]);
+
+	uint depthInt = floatBitsToUint(depth);
+	atomicMin(minDepthInt, depthInt);
+	atomicMax(maxDepthInt, depthInt);
+
+	barrier();
+
+	if (gl_LocalInvocationIndex == 0)
+	{
+		minDepth = uintBitsToFloat(minDepthInt);
+		maxDepth = uintBitsToFloat(maxDepthInt);
+
+		vec2 negativeStep = (2.0 * vec2(tile)) / vec2(tileNumber);
+		vec2 positiveStep = (2.0 * vec2(tile + ivec2(1, 1))) / vec2(tileNumber);
+
+		frustumPlanes[0]  = vec4(1.0, 0.0, 0.0, 1.0 - negativeStep.x) * viewProjection;
+		frustumPlanes[0] /= length(frustumPlanes[0].xyz);
+		frustumPlanes[1]  = vec4(-1.0, 0.0, 0.0, -1.0 + positiveStep.x) * viewProjection;
+		frustumPlanes[1] /= length(frustumPlanes[1].xyz);
+		frustumPlanes[2]  = vec4(0.0, 1.0, 0.0, 1.0 - negativeStep.y) * viewProjection;
+		frustumPlanes[2] /= length(frustumPlanes[2].xyz);
+		frustumPlanes[3]  = vec4(0.0, -1.0, 0.0, -1.0 + positiveStep.y) * viewProjection;
+		frustumPlanes[3] /= length(frustumPlanes[3].xyz);
+		frustumPlanes[4]  = vec4(0.0, 0.0, -1.0, -minDepth) * sceneData.view;
+		frustumPlanes[4] /= length(frustumPlanes[4].xyz);
+		frustumPlanes[5]  = vec4(0.0, 0.0, 1.0, maxDepth) * sceneData.view;
+		frustumPlanes[5] /= length(frustumPlanes[5].xyz);
+	}
+
+	barrier();
+
+	uint threadCount = TILE_SIZE * TILE_SIZE;
+	uint passCount = (sceneData.lightCount + threadCount - 1) / threadCount;
+
+	for(uint i = 0; i < passCount; ++i)
+	{
+		uint lightIndex = i * threadCount + gl_LocalInvocationIndex;
+		if (lightIndex >= sceneData.lightCount || lightBuffer.data[lightIndex].color.a < 0.02)
+			break;
+
+		if (getLightType(lightBuffer.data[lightIndex].position.w) != LT_DIRECTIONAL)
+		{
+			float distance = dot(vec4(lightBuffer.data[lightIndex].position.xyz, 1.0), frustumPlanes[0]) + lightBuffer.data[lightIndex].data.y;
+			if (distance <= 0.0) continue;
+
+			distance = dot(vec4(lightBuffer.data[lightIndex].position.xyz, 1.0), frustumPlanes[1]) + lightBuffer.data[lightIndex].data.y; 
+			if (distance <= 0.0) continue;
+
+			distance = dot(vec4(lightBuffer.data[lightIndex].position.xyz, 1.0), frustumPlanes[2]) + lightBuffer.data[lightIndex].data.y;
+			if (distance <= 0.0) continue;
+
+			distance = dot(vec4(lightBuffer.data[lightIndex].position.xyz, 1.0), frustumPlanes[3]) + lightBuffer.data[lightIndex].data.y;
+			if (distance <= 0.0) continue;
+
+			distance = dot(vec4(lightBuffer.data[lightIndex].position.xyz, 1.0), frustumPlanes[4]) + lightBuffer.data[lightIndex].data.y;
+			if (distance <= 0.0) continue;
+
+			distance = dot(vec4(lightBuffer.data[lightIndex].position.xyz, 1.0), frustumPlanes[5]) + lightBuffer.data[lightIndex].data.y;
+			if (distance <= 0.0) continue;
+		}
+		
+		// Directional lights are always visible
+
+		uint offset = atomicAdd(visibleLights, 1);
+		visibleIndices[offset] = int(lightIndex);
+	}
+
+	barrier();
+
+	if (gl_LocalInvocationIndex == 0)
+	{
+		uint offset = index * 1024;
+		for(uint i = 0; i < visibleLights; ++i)
+			visibleIndicesBuffer.data[offset + i] = visibleIndices[i];
+
+		if (visibleLights != 1024)
+			visibleIndicesBuffer.data[offset + visibleLights] = -1;
+	}
+}

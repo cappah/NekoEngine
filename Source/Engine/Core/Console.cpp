@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -37,11 +37,11 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <GUI/GUI.h>
 #include <Engine/Input.h>
 #include <Engine/Engine.h>
 #include <Engine/Console.h>
 #include <Engine/Keycodes.h>
-#include <Renderer/GUI.h>
 #include <System/Logger.h>
 #include <Script/Script.h>
 
@@ -60,25 +60,6 @@ map<NString, function<void(NArray<NString> &)>> Console::_argFuncs;
 static lua_State *_consoleState = nullptr;
 static NString _buff;
 static bool _shift = false;
-static map<char, char> _shiftedChars
-{
-	{ 0x2C, 0x3C },
-	{ 0x2D, 0x5F },
-	{ 0x2E, 0x3E },
-	{ 0x2F, 0x3F },
-	{ 0x30, 0x29 },
-	{ 0x31, 0x21 },
-	{ 0x32, 0x40 },
-	{ 0x33, 0x23 },
-	{ 0x34, 0x24 },
-	{ 0x35, 0x25 },
-	{ 0x36, 0x5E },
-	{ 0x37, 0x26 },
-	{ 0x38, 0x2A },
-	{ 0x39, 0x28 },
-	{ 0x2B, 0x3D },
-	{ '\'', '"' }
-};
 
 void eng_setres(NArray<NString> &args)
 {
@@ -147,13 +128,13 @@ void Console::Update()
 
 	vec2 pos = vec2(10, Engine::GetScreenHeight() * .9);
 
-	GUI::DrawString(vec2(pos.x, pos.y), vec3(1, 1, 1), "> ");
-	GUI::DrawString(vec2(pos.x + 20, pos.y), vec3(1, 1, 1), _buff);
+	GUIManager::DrawString(vec2(pos.x, pos.y), vec3(1, 1, 1), "> ");
+	GUIManager::DrawString(vec2(pos.x + 20, pos.y), vec3(1, 1, 1), _buff);
 	pos.y -= 20 * (_text.Count() + 1);
 
-	for (NString &nstr : _text)
+	for (const NString &nstr : _text)
 	{
-		GUI::DrawString(pos, vec3(1, 1, 1), nstr);
+		GUIManager::DrawString(pos, vec3(1, 1, 1), nstr);
 		pos.y += 20;
 	}
 }
@@ -173,19 +154,7 @@ void Console::HandleKeyDown(uint8_t key)
 	else if (key == NE_KEY_RSHIFT || key == NE_KEY_LSHIFT)
 		_shift = true;
 	else
-	{
-		uint8_t ch = keycodeToChar[key];
-
-		if (_shift)
-		{
-			if (ch > 0x60 && ch < 0x7B) ch -= 0x20;
-			else if (ch > 0x5A && ch < 0x5E) ch += 0x20;
-			else if (_shiftedChars.find(ch) != _shiftedChars.end())
-				ch = _shiftedChars[ch];
-		}
-
-		_buff.Append(ch);
-	}
+		_buff.Append(Input::KeycodeToChar(key, _shift));
 }
 
 void Console::HandleKeyUp(uint8_t key)
@@ -210,7 +179,7 @@ void Console::ExecuteCommand(NString cmd)
 	}
 	else if (cmdSplit[0] == "luaExec")
 	{
-		int err = luaL_dostring(_consoleState, *cmd + 8);
+		const int err = luaL_dostring(_consoleState, *cmd + 8);
 		if (err && lua_gettop(_consoleState))
 		{
 			Print("ERROR: %s", lua_tostring(_consoleState, -1));
@@ -238,5 +207,6 @@ void Console::ExecuteCommand(NString cmd)
 
 void Console::Release()
 {
-	lua_close(_consoleState);
+	if (_consoleState)
+		lua_close(_consoleState);
 }

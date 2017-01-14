@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -45,7 +45,6 @@ using namespace glm;
 
 void ObjectInterface::Register(lua_State *state)
 {
-	lua_register(state, "O_GetParent", GetParent);
 	lua_register(state, "O_GetPosition", GetPosition);
 	lua_register(state, "O_GetRotation", GetRotation);
 	lua_register(state, "O_GetScale", GetScale);
@@ -59,18 +58,6 @@ void ObjectInterface::Register(lua_State *state)
 	lua_register(state, "O_Load", Load);
 	lua_register(state, "O_AddToScene", AddToScene);
 	lua_register(state, "O_Destroy", Destroy);
-}
-
-int ObjectInterface::GetParent(lua_State *state)
-{
-	int argc{ lua_gettop(state) };
-
-	if (argc != 1)
-		return luaL_error(state, "Invalid arguments");
-
-	lua_pushlightuserdata(state, ((Object *)lua_touserdata(state, 1))->GetParent());
-
-	return 1;
 }
 
 int ObjectInterface::GetPosition(lua_State *state)

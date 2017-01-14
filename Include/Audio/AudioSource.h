@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -39,16 +39,6 @@
 
 #pragma once
 
-#include <Platform/PlatformDetect.h>
-
-#ifdef ENGINE_INTERNAL
-	#if defined(NE_PLATFORM_MAC) || defined(NE_PLATFORM_IOS)
-		#include <OpenAL/al.h>
-	#else
-		#include <AL/al.h>
-	#endif
-#endif
-
 #include <Engine/Engine.h>
 #include <Audio/AudioClip.h>
 
@@ -57,46 +47,37 @@
 class AudioSource
 {
 public:
-	AudioSource() noexcept;
+	AudioSource() noexcept { }
 
 	ENGINE_API bool HasClip() noexcept { return _clip != nullptr; }
 
-	ENGINE_API void SetPitch(float p) noexcept;
-	ENGINE_API void SetGain(float g) noexcept;
+	virtual void SetPitch(float p) noexcept = 0;
+	virtual void SetGain(float g) noexcept = 0;
 
-	ENGINE_API void SetConeInnerAngle(float a) noexcept;
-	ENGINE_API void SetConeOuterAngle(float a) noexcept;
-	ENGINE_API void SetConeOuterGain(float g) noexcept;
+	virtual void SetConeInnerAngle(float a) noexcept = 0;
+	virtual void SetConeOuterAngle(float a) noexcept = 0;
+	virtual void SetConeOuterGain(float g) noexcept = 0;
 	
-	ENGINE_API void SetDirection(float x, float y, float z) noexcept;
-	ENGINE_API void SetPosition(float x, float y, float z) noexcept;
-	ENGINE_API void SetVelocity(float x, float y, float z) noexcept;
+	virtual void SetDirection(glm::vec3 &dir) noexcept = 0;
+	virtual void SetPosition(glm::vec3 &pos) noexcept = 0;
+	virtual void SetVelocity(glm::vec3 &v) noexcept = 0;
 
-	ENGINE_API void SetDirection(glm::vec3 &dir) noexcept;
-	ENGINE_API void SetPosition(glm::vec3 &pos) noexcept;
-	ENGINE_API void SetVelocity(glm::vec3 &v) noexcept;
+	virtual void SetLooping(bool looping) noexcept = 0;
 
-	ENGINE_API void SetLooping(bool looping) noexcept;
+	virtual void SetMaxDistance(float maxDistance) noexcept = 0;
+	virtual void SetReferenceDistance(float referenceDistance) noexcept = 0;
 
-	ENGINE_API void SetMaxDistance(float maxDistance) noexcept;
-	ENGINE_API void SetReferenceDistance(float referenceDistance) noexcept;
+	virtual int SetClip(AudioClip *clip) noexcept = 0;
 
-	ENGINE_API int SetClip(AudioClip *clip) noexcept;
+	virtual bool Play() noexcept = 0;
+	virtual void Pause() noexcept = 0;
+	virtual void Stop() noexcept = 0;
+	virtual void Rewind() noexcept = 0;
+	virtual bool IsPlaying() noexcept = 0;
 
-	ENGINE_API bool Play() noexcept;
-	ENGINE_API void Pause() noexcept;
-	ENGINE_API void Stop() noexcept;
-	ENGINE_API void Rewind() noexcept;
-	ENGINE_API bool IsPlaying() noexcept;
+	virtual ~AudioSource() {}
 
-	virtual ~AudioSource();
-
-#ifdef ENGINE_INTERNAL
-private:
-	ALuint _src;
-#endif
-
-private:
+protected:
 	AudioClip *_clip;
 };
 

@@ -45,7 +45,7 @@ class Skysphere :
 	public Object
 {
 public:
-	ENGINE_API Skysphere(ObjectInitializer *initializer) noexcept : Object(initializer) { };
+	ENGINE_API Skysphere(ObjectInitializer *initializer) noexcept : Object(initializer) { _noCull = true; };
 	ENGINE_API virtual void UpdateData(VkCommandBuffer commandBuffer) noexcept override;
 	ENGINE_API virtual ~Skysphere() noexcept { };
 };

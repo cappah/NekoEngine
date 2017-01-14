@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -41,7 +41,8 @@
 #include <System/VFS/VFS.h>
 #include <System/AssetLoader/AssetLoader.h>
 #include <Engine/ResourceManager.h>
-#include <Renderer/Debug.h>
+#include <Renderer/ShadowRenderer.h>
+#include <Renderer/DebugMarker.h>
 #include <Scene/Object.h>
 #include <Scene/Components/TerrainComponent.h>
 
@@ -69,7 +70,7 @@ TerrainComponent::TerrainComponent(ComponentInitializer *initializer) :
 	}
 
 	ArgumentMapType::iterator it;
-	const char *ptr = initializer->arguments.find("numcells")->second.c_str();
+	const char *ptr{ initializer->arguments.find("numcells")->second.c_str() };
 	_numCells = ptr ? (unsigned short)atoi(ptr) : 4;
 
 	ptr = initializer->arguments.find("cellsize")->second.c_str();
@@ -93,15 +94,14 @@ int TerrainComponent::Load()
 		return ENGINE_FAIL;
 
 	_mesh->_depthPipelineId = PIPE_Terrain_Depth;
-	_mesh->_groupOffset.push_back(0);
-	_mesh->_groupCount.push_back((uint32_t)_terrainIndices.size());
+	_mesh->_groups.push_back({ 0, (uint32_t)_terrainVertices.size(), 0, (uint32_t)_terrainIndices.size() });
 
 	_parent->SetNoCull(true);
 
 	return ENGINE_OK;
 }
 
-VkDeviceSize TerrainComponent::GetRequiredMemorySize()
+VkDeviceSize TerrainComponent::GetRequiredMemorySize() const noexcept
 {
 	VkDeviceSize size = sizeof(TerrainVertex) * _terrainVertices.size() + sizeof(uint32_t) * _terrainIndices.size();
 	if (size % 256)
@@ -198,10 +198,10 @@ bool TerrainComponent::_GenerateTerrain() noexcept
 
 bool TerrainComponent::_LoadHeightmap() noexcept
 {
-	uint8_t *heightmapData, bpp;
-	size_t heightmapSize;
+	uint8_t *heightmapData{ nullptr }, bpp{ 8 };
+	size_t heightmapSize{ 0 };
 
-	VFSFile *heightmapFile = VFS::Open(_heightmapPath);
+	VFSFile *heightmapFile{ VFS::Open(_heightmapPath) };
 	if (!heightmapFile)
 	{
 		Logger::Log(TERRAIN_COMPONENT_MODULE, LOG_CRITICAL, "Failed to open heightmap file");
@@ -222,8 +222,8 @@ bool TerrainComponent::_LoadHeightmap() noexcept
 
 float TerrainComponent::_ReadHeightmap(float x, float y) noexcept
 {
-	uint32_t mapX = (uint32_t)(x * _heightmapWidth);
-	uint32_t mapY = (uint32_t)(y * _heightmapHeight);
+	uint32_t mapX = clamp((uint32_t)(x * _heightmapWidth), 0u, _heightmapWidth - 1);
+	uint32_t mapY = clamp((uint32_t)(y * _heightmapHeight), 0u, _heightmapHeight - 1);
 	uint32_t val = *(_heightmapData + (mapY * _heightmapWidth) + mapX);
 	return (float)val / 255.f;
 }
@@ -236,4 +236,26 @@ bool TerrainComponent::Unload()
 	free(_heightmapData); _heightmapData = nullptr;
 
 	return true;
+}
+
+void TerrainComponent::DrawShadow(VkCommandBuffer commandBuffer, uint32_t shadowId) const noexcept
+{
+	ObjectComponent::DrawShadow(commandBuffer, shadowId);
+
+	VkDeviceSize vertexOffset{ _mesh->GetVertexOffset() };
+	vkCmdBindVertexBuffers(commandBuffer, 0, 1, &_mesh->GetBuffer()->GetHandle(), &vertexOffset);
+	vkCmdBindIndexBuffer(commandBuffer, _mesh->GetBuffer()->GetHandle(), _mesh->GetIndexOffset(), VK_INDEX_TYPE_UINT32);
+
+	vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, PipelineManager::GetPipeline(PIPE_Terrain_Shadow));
+
+	VkDescriptorSet matricesDS = ShadowRenderer::GetMatricesDescriptorSet();
+	vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, PipelineManager::GetPipelineLayout(PIPE_LYT_Shadow), 0, 1, &matricesDS, 0, nullptr);
+	vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, PipelineManager::GetPipelineLayout(PIPE_LYT_Shadow), 1, 1, &_descriptorSet, 0, nullptr);
+
+	vkCmdPushConstants(commandBuffer, PipelineManager::GetPipelineLayout(PIPE_LYT_Shadow), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(uint32_t), &shadowId);
+
+	VK_DBG_MARKER_INSERT(commandBuffer, "terrain mesh", vec4(0.0, 0.5, 1.0, 1.0));
+
+	for (size_t i = 0; i < _mesh->GetGroupCount(); ++i)
+		vkCmdDrawIndexed(commandBuffer, _mesh->GetGroupIndexCount((uint32_t)i), 1, _mesh->GetGroupIndexOffset((uint32_t)i), 0, 0);
 }

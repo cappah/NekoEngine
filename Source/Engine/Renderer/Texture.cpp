@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -41,9 +41,9 @@
 #include <string.h>
 
 #include <Engine/Engine.h>
-#include <Renderer/Debug.h>
 #include <Renderer/VKUtil.h>
 #include <Renderer/Texture.h>
+#include <Renderer/DebugMarker.h>
 #include <System/AssetLoader/AssetLoader.h>
 #include <System/VFS/VFS.h>
 
@@ -73,6 +73,13 @@ VkSamplerMipmapMode _MipmapMode[2] =
 	VK_SAMPLER_MIPMAP_MODE_LINEAR
 };
 
+VkBorderColor _BorderColor[3] = 
+{
+	VK_BORDER_COLOR_FLOAT_OPAQUE_BLACK,
+	VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE,
+	VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK
+};
+
 Texture::Texture(TextureResource *res) noexcept
 {
 	_resourceInfo = res;
@@ -84,6 +91,7 @@ Texture::Texture(TextureResource *res) noexcept
 	_type = VK_IMAGE_TYPE_2D;
 	_isAttachment = false;
 	_width = _height = _depth = _mipLevels = 0;
+	_arrayLayers = 1;
 	_ownMemory = true;
 }
 
@@ -101,6 +109,7 @@ Texture::Texture(uint32_t width, uint32_t height, uint32_t mipLevels, VkFormat f
 	_height = height;
 	_depth = 1;
 	_mipLevels = mipLevels;
+	_arrayLayers = 1;
 	_ownMemory = true;
 
 	VKUtil::CreateImage(_image, _imageMemory, _width, _height, _depth, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
@@ -140,27 +149,28 @@ Texture::Texture(VkFormat format, VkImageType type, VkImageUsageFlags usage, VkI
 	_height = height;
 	_depth = depth;
 	_mipLevels = mipLevels;
+	_arrayLayers = arrayLayers;
 	_ownMemory = _imageMemory == VK_NULL_HANDLE;
 
 	if (!create)
 		return;
 
 	if (!VKUtil::CreateImage(_image, _imageMemory, _width, _height, _depth, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
-		_format, _type, usage, tiling, _mipLevels, arrayLayers, 0, samples))
+		_format, _type, usage, tiling, _mipLevels, _arrayLayers, 0, samples))
 	{ DIE("Out of resources"); }
 }
 
 int Texture::Load()
 {
-	bool tga = false;
+	bool tga{ false };
 	NString path(GetResourceInfo()->filePath);
 	path.Append(".dds");
-	uint8_t *mem = nullptr, *imgData = nullptr;
-	VkDeviceSize size, imgDataSize;
-	VFSFile *file = VFS::Open(path);
-	Buffer *stagingBuffer;
-	VkImageViewType imageViewType;
-	uint32_t fileMipLevels;
+	uint8_t *mem{ nullptr }, *imgData{ nullptr };
+	VkDeviceSize size{ 0 }, imgDataSize{ 0 };
+	VFSFile *file{ VFS::Open(path) };
+	Buffer *stagingBuffer{ nullptr };
+	VkImageViewType imageViewType{};
+	uint32_t fileMipLevels{ 0 };
 
 	if (!file)
 	{
@@ -222,21 +232,21 @@ int Texture::Load()
 
 		if (GetResourceInfo()->textureType == TextureResourceType::TEXTURE_CUBEMAP)
 		{
-			int size = _width / 4;
-			int rowSize = bpp * size;
-			int imageSize = size * size * bpp;
+			uint32_t size{ _width / 4 };
+			uint32_t rowSize{ bpp * size };
+			uint32_t imageSize{ size * size * bpp };
 
-			int centerRowOffset = 4 * imageSize;
-			int bottomRowOffset = 8 * imageSize;
+			uint32_t centerRowOffset{ 4 * imageSize };
+			uint32_t bottomRowOffset{ 8 * imageSize };
 
-			uint8_t *cubemap = (uint8_t *)calloc(imageSize, 6);
+			uint8_t *cubemap{ (uint8_t *)calloc(imageSize, 6) };
 			if (!cubemap)
 				return false;
 
-			for (int i = 0; i < size; i++)
+			for (uint32_t i = 0; i < size; i++)
 			{
-				int dstOffset = rowSize * i;
-				int rowOffset = (4 * rowSize * i);
+				uint32_t dstOffset{ rowSize * i };
+				uint32_t rowOffset{ (4 * rowSize * i) };
 
 				memcpy(cubemap + dstOffset, imgData + centerRowOffset + rowOffset + (rowSize * 2), rowSize);
 				memcpy((cubemap + imageSize) + dstOffset, imgData + centerRowOffset + rowOffset, rowSize);
@@ -254,7 +264,7 @@ int Texture::Load()
 	}
 	else
 	{
-		uint32_t fmt;
+		uint32_t fmt{};
 		if (AssetLoader::LoadDDS(mem, size, _width, _height, _depth, fmt, fileMipLevels, &imgData, imgDataSize) != ENGINE_OK)
 		{
 			Logger::Log(TEX_MODULE, LOG_CRITICAL, "Failed to load DDS file for texture %s", GetResourceInfo()->name.c_str());
@@ -284,7 +294,7 @@ int Texture::Load()
 		return ENGINE_OUT_OF_RESOURCES;
 	}
 
-	uint8_t *ptr = stagingBuffer->Map();
+	uint8_t *ptr{ stagingBuffer->Map() };
 	if (!ptr)
 	{
 		free(mem); if (tga) free(imgData);
@@ -295,7 +305,7 @@ int Texture::Load()
 
 	free(mem); if (tga) free(imgData);
 
-	VkCommandBuffer uploadCmdBuffer = VKUtil::CreateOneShotCmdBuffer();
+	VkCommandBuffer uploadCmdBuffer{ VKUtil::CreateOneShotCmdBuffer() };
 
 	VkImageSubresourceRange range{};
 	range.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
@@ -306,18 +316,18 @@ int Texture::Load()
 
 	VKUtil::TransitionImageLayout(_image, VK_IMAGE_LAYOUT_PREINITIALIZED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, range, uploadCmdBuffer);
 
-	VkDeviceSize buffOffset = 0;
+	VkDeviceSize buffOffset{ 0 };
 
 	for (uint32_t i = 0; i < range.layerCount; ++i)
 	{
 		for (uint32_t j = 0; j < fileMipLevels; ++j)
 		{
-			uint32_t width = j ? _width >> j : _width;
-			uint32_t height = j ? _height >> j : _height;
+			uint32_t width{ j ? _width >> j : _width };
+			uint32_t height{ j ? _height >> j : _height };
 
-			VkDeviceSize size = _GetByteSize(width, height);
+			VkDeviceSize size{ _GetByteSize(width, height) };
 
-			VkImageSubresourceLayers subResource = {};
+			VkImageSubresourceLayers subResource{};
 			subResource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
 			subResource.baseArrayLayer = i;
 			subResource.mipLevel = j;
@@ -342,7 +352,7 @@ int Texture::Load()
 	else
 		imageViewType = VK_IMAGE_VIEW_TYPE_2D;
 
-	uint32_t baseMip = 2 - Engine::GetConfiguration().Renderer.TextureQuality;
+	uint32_t baseMip{ 2u - Engine::GetConfiguration().Renderer.TextureQuality };
 
 	if (baseMip > _mipLevels - 1)
 		baseMip = _mipLevels - 1;
@@ -355,30 +365,32 @@ int Texture::Load()
 		VK_SAMPLER_ADDRESS_MODE_REPEAT, VK_SAMPLER_ADDRESS_MODE_REPEAT, VK_SAMPLER_ADDRESS_MODE_REPEAT, 16.f,
 		VK_SAMPLER_MIPMAP_MODE_LINEAR, 0.f, 0.f, (float)_mipLevels);
 
-	DBG_SET_OBJECT_NAME((uint64_t)_image, VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_EXT, _resourceInfo->name.c_str());
+	VK_DBG_SET_OBJECT_NAME((uint64_t)_image, VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_EXT, _resourceInfo->name.c_str());
 
 	Logger::Log(TEX_MODULE, LOG_DEBUG, "Loaded texture id %d from %s, size %dx%d", _resourceInfo->id, *path, _width, _height);
 
 	return ENGINE_OK;
 }
 
-void Texture::SetParameters(SamplerParams &params) noexcept
+void Texture::SetParameters(SamplerParams &params, float aniso) noexcept
 {
 	if (_sampler != VK_NULL_HANDLE)
 		vkDestroySampler(VKUtil::GetDevice(), _sampler, VKUtil::GetAllocator());
 
-	float aniso = 0.f;
-
-	if (Engine::GetConfiguration().Renderer.Anisotropic) aniso = (float)Engine::GetConfiguration().Renderer.Aniso;
+	if (Engine::GetConfiguration().Renderer.Anisotropic)
+	{
+		if(aniso < 0.f)
+			aniso = (float)Engine::GetConfiguration().Renderer.Aniso;
+	}
 
 	VKUtil::CreateSampler(_sampler, _SamplerFilter[params.minFilter], _SamplerFilter[params.magFilter],
 		_AddressMode[params.addressU], _AddressMode[params.addressV], _AddressMode[params.addressW], aniso,
-		_MipmapMode[params.mipmapMode], params.minLodBias, 0.f, (float)_mipLevels);
+		_MipmapMode[params.mipmapMode], params.minLodBias, 0.f, (float)_mipLevels, _BorderColor[params.borderColor]);
 }
 
 void Texture::GenerateMipmaps()
 {
-	VkCommandBuffer mipmapCmdBuffer = VKUtil::CreateOneShotCmdBuffer();
+	VkCommandBuffer mipmapCmdBuffer{ VKUtil::CreateOneShotCmdBuffer() };
 
 	VKUtil::TransitionImageLayout(_image, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, VK_IMAGE_ASPECT_COLOR_BIT, mipmapCmdBuffer);
 
@@ -421,10 +433,19 @@ void Texture::GenerateMipmaps()
 	VKUtil::ExecuteOneShotCmdBuffer(mipmapCmdBuffer);
 }
 
-bool Texture::CreateView(VkImageAspectFlags aspect)
+bool Texture::CreateView(VkImageAspectFlags aspect, bool forceArray)
 {
-	if (!VKUtil::CreateImageView(_view, _image, VK_IMAGE_VIEW_TYPE_2D, _format, aspect, 0, _mipLevels, 0, 1))
+	if (_view != VK_NULL_HANDLE)
+		vkDestroyImageView(VKUtil::GetDevice(), _view, VKUtil::GetAllocator());
+
+	VkImageViewType type{ VK_IMAGE_VIEW_TYPE_2D };
+
+	if (forceArray || _arrayLayers > 1)
+		type = VK_IMAGE_VIEW_TYPE_2D_ARRAY;
+
+	if (!VKUtil::CreateImageView(_view, _image, type, _format, aspect, 0, _mipLevels, 0, 1))
 		return false;
+
 	return true;
 }
 
@@ -465,11 +486,10 @@ VkDeviceSize Texture::_GetByteSize(uint32_t width, uint32_t height)
 	return 0;
 }
 
-Texture *Texture::CreateRenderTarget()
+Texture *Texture::CreateRenderTarget(VkSampleCountFlagBits samples)
 {
-	VkFormat fmt = VK_FORMAT_R16G16B16A16_SFLOAT;
-	VkSampleCountFlagBits samples = VK_SAMPLE_COUNT_16_BIT;
-	Texture *t = new Texture(fmt, VK_IMAGE_TYPE_2D, 1, VK_IMAGE_TILING_OPTIMAL, 1920, 1080, 1, true, VK_NULL_HANDLE, samples);
+	VkFormat fmt{ VK_FORMAT_R16G16B16A16_SFLOAT };
+	Texture *t{ new Texture(fmt, VK_IMAGE_TYPE_2D, 1, VK_IMAGE_TILING_OPTIMAL, 1920, 1080, 1, true, VK_NULL_HANDLE, samples) };
 	return t;
 }
 

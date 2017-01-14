@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -45,17 +45,20 @@
 #include <Engine/Engine.h>
 #include <Engine/ResourceManager.h>
 #include <Engine/SoundManager.h>
+#include <Engine/EventManager.h>
 #include <Engine/GameModule.h>
 #include <Engine/CameraManager.h>
 #include <Runtime/Runtime.h>
 #include <Scene/Scene.h>
 #include <Scene/Object.h>
-#include <Scene/Skysphere.h>
-#include <Renderer/Debug.h>
+#include <Physics/Physics.h>
+#include <Profiler/Profiler.h>
 #include <Renderer/Renderer.h>
+#include <Renderer/DebugMarker.h>
 #include <System/VFS/VFS.h>
 #include <System/AssetLoader/AssetLoader.h>
 #include <Scene/Components/TerrainComponent.h>
+#include <Scene/Components/SkysphereComponent.h>
 #include <Scene/Components/StaticMeshComponent.h>
 #include <Scene/Components/SkeletalMeshComponent.h>
 
@@ -72,7 +75,7 @@ typedef struct COMPONNENT_INITIALIZER_INFO
 	ComponentInitializer initializer;
 } ComponentInitInfo;
 
-Object *Scene::GetObjectByID(int32_t id)
+Object *Scene::GetObjectByID(uint32_t id)
 {
 	for (Object *obj : _objects)
 		if (obj->GetId() == id)
@@ -93,7 +96,7 @@ Object *Scene::_LoadObject(VFSFile *f, NString &className)
 	NString lineBuff(SCENE_LINE_BUFF);
 
 	ObjectInitializer initializer;
-	initializer.position = initializer.rotation = initializer.color = vec3(0.f);
+	initializer.position = initializer.rotation = vec3(0.f);
 	initializer.scale = vec3(1.f);
 
 	vector<ComponentInitInfo> componentInitInfo;
@@ -124,12 +127,8 @@ Object *Scene::_LoadObject(VFSFile *f, NString &className)
 		if (split.Count() < 2)
 			continue;
 
-		if (split[0] == "id")
-			initializer.id = atoi(*split[1]);
-		else if (split[0] == "parent")
-			initializer.parent = GetObjectByID(atoi(*split[1]));
-		else if (split[0] == "color")
-			AssetLoader::ReadFloatArray(*split[1], 3, &initializer.color.x);
+		if (split[0] == "name")
+			initializer.name = *split[1];
 		else if (split[0] == "position")
 			AssetLoader::ReadFloatArray(*split[1], 3, &initializer.position.x);
 		else if (split[0] == "rotation")
@@ -172,8 +171,10 @@ Object *Scene::_LoadObject(VFSFile *f, NString &className)
 			return nullptr;
 		}
 		
+		StaticMeshComponent *stcomp = dynamic_cast<StaticMeshComponent*>(comp);
 		SkeletalMeshComponent *skcomp = dynamic_cast<SkeletalMeshComponent*>(comp);
 		TerrainComponent *tcomp = dynamic_cast<TerrainComponent*>(comp);
+		SkysphereComponent *skycomp = dynamic_cast<SkysphereComponent*>(comp);
 		if (skcomp)
 		{
 			string &name = skcomp->GetMesh()->GetResourceInfo()->name;
@@ -186,10 +187,19 @@ Object *Scene::_LoadObject(VFSFile *f, NString &className)
 		}
 		else if (tcomp)
 			_bufferSize += tcomp->GetRequiredMemorySize();
-		else
+		else if (skycomp)
 		{
-			StaticMeshComponent *stcomp = dynamic_cast<StaticMeshComponent*>(comp);
-			if (stcomp && stcomp->GetMesh()->GetResourceInfo())
+			string &name = stcomp->GetMesh()->GetResourceInfo()->name;
+
+			if (name.length() && (find(_loadedMeshIds.begin(), _loadedMeshIds.end(), name) == _loadedMeshIds.end()))
+			{
+				_bufferSize += stcomp->GetMesh()->GetRequiredMemorySize();
+				_loadedMeshIds.push_back(name);
+			}
+		}
+		else if (stcomp)
+		{
+			if (stcomp->GetMesh()->GetResourceInfo())
 			{
 				string &name = stcomp->GetMesh()->GetResourceInfo()->name;
 
@@ -310,7 +320,14 @@ void Scene::_LoadComponent(VFSFile *f, ComponentInitInfo *initInfo)
 		// skip tabs
 		while (*ptr == '\t') ptr++;
 
-		initInfo->initializer.arguments.insert(make_pair(ptr, *split[1]));
+		if (split[0].Contains("position"))
+			AssetLoader::ReadFloatArray(*split[1], 3, &initInfo->initializer.position.x);
+		else if (split[0].Contains("rotation"))
+			AssetLoader::ReadFloatArray(*split[1], 3, &initInfo->initializer.rotation.x);
+		else if (split[0].Contains("scale"))
+			AssetLoader::ReadFloatArray(*split[1], 3, &initInfo->initializer.scale.x);
+		else
+			initInfo->initializer.arguments.insert(make_pair(ptr, *split[1]));
 	}
 }
 
@@ -394,12 +411,10 @@ int Scene::Load()
 				return ENGINE_FAIL;
 			}
 
-			Skysphere *s = dynamic_cast<Skysphere *>(obj);
+			_objects.push_back(obj);
 
-			if (!_skysphere && s)
-				_skysphere = s;
-			else
-				_objects.push_back(obj);
+			if (obj->GetTransformedBounds().IsValid())
+				_ocTree->Add(obj);
 		}
 		else if (lineBuff.Contains("SceneInfo"))
 			_LoadSceneInfo(f);
@@ -409,14 +424,14 @@ int Scene::Load()
 
 	// Upload mesh data
 
-	uint64_t uboSize = (_objects.size() + (_skysphere ? 1 : 0)) * sizeof(ObjectData);
+	uint64_t uboSize = _objects.size() * sizeof(ObjectData);
 
 	if (uboSize)
 	{
 		_sceneUbo = new Buffer(uboSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT, nullptr, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 		if (!_sceneUbo)
 		{ DIE("Out of resources"); }
-		DBG_SET_OBJECT_NAME((uint64_t)_sceneUbo->GetHandle(), VK_DEBUG_REPORT_OBJECT_TYPE_BUFFER_EXT, "Scene uniform buffer");
+		VK_DBG_SET_OBJECT_NAME((uint64_t)_sceneUbo->GetHandle(), VK_DEBUG_REPORT_OBJECT_TYPE_BUFFER_EXT, "Scene uniform buffer");
 	}
 
 	if (_bufferSize)
@@ -424,30 +439,21 @@ int Scene::Load()
 		_sceneBuffer = new Buffer(_bufferSize, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT, nullptr, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 		if (!_sceneBuffer)
 		{ DIE("Out of resources"); }
-		DBG_SET_OBJECT_NAME((uint64_t)_sceneBuffer->GetHandle(), VK_DEBUG_REPORT_OBJECT_TYPE_BUFFER_EXT, "Scene vertex/index buffer");
+		VK_DBG_SET_OBJECT_NAME((uint64_t)_sceneBuffer->GetHandle(), VK_DEBUG_REPORT_OBJECT_TYPE_BUFFER_EXT, "Scene vertex/index buffer");
 	}
 
 	uint64_t offset = 0, uboOffset = 0;
-	if (_skysphere)
-	{
-		StaticMeshComponent *skyMesh = (StaticMeshComponent *)_skysphere->GetComponent("Mesh");
-
-		skyMesh->GetMesh()->Upload(new Buffer(_sceneBuffer, offset, skyMesh->GetMesh()->GetRequiredMemorySize()));
-		offset += skyMesh->GetMesh()->GetRequiredMemorySize();
-
-		_skysphere->SetUniformBuffer(new Buffer(_sceneUbo, uboOffset, sizeof(ObjectData)));
-		uboOffset += sizeof(ObjectData);
-		
-		_skysphere->BuildCommandBuffers();
-		_skysphere->RegisterCommandBuffers();
-	}
 
 	for (Object *obj : _objects)
 	{
-		Buffer *buffer = nullptr;
+		Buffer *buffer{ nullptr }, *ubo{ nullptr };
 
 		for (SkeletalMeshComponent *skmesh : obj->GetComponentsOfType<SkeletalMeshComponent>())
 		{
+			ubo = new Buffer(_sceneUbo, uboOffset, sizeof(ObjectData));
+			skmesh->SetUniformBuffer(ubo);
+			uboOffset += sizeof(ObjectData);
+
 			if (skmesh->GetMeshID() == SM_GENERATED || skmesh->GetMesh()->IsResident())
 				continue;
 
@@ -458,6 +464,10 @@ int Scene::Load()
 
 		for (TerrainComponent *tcomp : obj->GetComponentsOfType<TerrainComponent>())
 		{
+			ubo = new Buffer(_sceneUbo, uboOffset, sizeof(ObjectData));
+			tcomp->SetUniformBuffer(ubo);
+			uboOffset += sizeof(ObjectData);
+
 			if (tcomp->GetMesh()->IsResident())
 				continue;
 
@@ -466,8 +476,26 @@ int Scene::Load()
 			offset += tcomp->GetRequiredMemorySize();
 		}
 
+		for (SkysphereComponent *skycomp : obj->GetComponentsOfType<SkysphereComponent>())
+		{
+			ubo = new Buffer(_sceneUbo, uboOffset, sizeof(ObjectData));
+			skycomp->SetUniformBuffer(ubo);
+			uboOffset += sizeof(ObjectData);
+
+			if (skycomp->GetMesh()->IsResident())
+				continue;
+
+			buffer = new Buffer(_sceneBuffer, offset, skycomp->GetRequiredMemorySize());
+			skycomp->Upload(buffer);
+			offset += skycomp->GetRequiredMemorySize();
+		}
+
 		for (StaticMeshComponent *stmesh : obj->GetComponentsOfType<StaticMeshComponent>())
 		{
+			ubo = new Buffer(_sceneUbo, uboOffset, sizeof(ObjectData));
+			stmesh->SetUniformBuffer(ubo);
+			uboOffset += sizeof(ObjectData);
+
 			if (stmesh->GetMeshID() == SM_GENERATED || stmesh->GetMesh()->IsResident())
 				continue;
 
@@ -476,11 +504,8 @@ int Scene::Load()
 			offset += stmesh->GetMesh()->GetRequiredMemorySize();
 		}
 		
-		obj->SetUniformBuffer(new Buffer(_sceneUbo, uboOffset, sizeof(ObjectData)));
-		uboOffset += sizeof(ObjectData);
-
-		obj->BuildCommandBuffers();
-		obj->RegisterCommandBuffers();
+		// at least one mesh component exists
+		if (ubo) obj->BuildCommandBuffers();
 	}
 
 	if (!CameraManager::Count())
@@ -505,6 +530,10 @@ int Scene::Load()
 
 	_loadedMeshIds.clear();
 
+	EventManager::Broadcast(NE_EVT_SCN_LOADED, this);
+
+	Physics::GetInstance()->InitScene(BroadphaseType::SAP, 1000.f, 15000000u);
+
 	Logger::Log(SCENE_MODULE, LOG_INFORMATION, "Scene %s, id=%d loaded with %d %s and %d %s", *_name, _id, _objects.size(), _objects.size() > 1 ? "objects" : "object", CameraManager::Count(), CameraManager::Count() > 1 ? "cameras" : "camera");
 
 	return ENGINE_OK;
@@ -512,21 +541,25 @@ int Scene::Load()
 
 void Scene::Update(double deltaTime) noexcept
 {	
-	for (size_t i = 0; i < _objects.size(); i++)
+	for (Object *obj : _objects)
 	{
-		if (!Engine::IsPaused() || _objects[i]->GetUpdateWhilePaused())
-		{
-			Object *obj = _objects[i];
-			_threadPool->Enqueue([obj, deltaTime]() {
-				obj->Update(deltaTime);
-			});
-		}
+		if (!obj->GetUpdateWhilePaused() && Engine::IsPaused())
+			continue;
+		obj->Update(deltaTime);
 	}
 
-	_threadPool->Wait();
+	for (Object *obj : _newObjects)
+	{
+		if (!obj->GetUpdateWhilePaused() && Engine::IsPaused())
+			continue;
+		obj->Update(deltaTime);
+	}
 
 	for (Object *obj : _newObjects)
+	{
 		_objects.push_back(obj);
+		_ocTree->Add(obj);
+	}
 	_newObjects.clear();
 
 	vector<Object *> tmp;
@@ -535,6 +568,7 @@ void Scene::Update(double deltaTime) noexcept
 		if (obj->CanUnload())
 		{
 			_objects.erase(remove(_objects.begin(), _objects.end(), obj), _objects.end());
+			_ocTree->Remove(obj);
 			delete obj;
 		}
 		else
@@ -548,40 +582,100 @@ void Scene::Update(double deltaTime) noexcept
 
 void Scene::UpdateData(VkCommandBuffer buffer) noexcept
 {
-	if (_skysphere)
-		_skysphere->UpdateData(buffer);
-
 	for (Object *obj : _objects)
 		obj->UpdateData(buffer);
 }
 
+void Scene::DrawShadow(VkCommandBuffer buffer, uint32_t shadowId) noexcept
+{
+	for (const Object *obj : _objects)
+		obj->DrawShadow(buffer, shadowId);
+}
+
 void Scene::PrepareCommandBuffers()
 {
-	std::map<float, Object *> sortedList;
-	Camera *cam = CameraManager::GetActiveCamera();
-
-	if (_skysphere)
-		_skysphere->RegisterCommandBuffers();
+	NArray<const Object *> visibleObjects(_objects.size());
+	vector<Drawable *> opaqueDrawables{};
+	vector<Drawable *> transparentDrawables{};
+	Camera *cam{ CameraManager::GetActiveCamera() };
+	float minDistance = FLT_MAX;
+	
+	PROF_BEGIN("Culling", vec3(1.f, 0.f, 0.f));
 
 	for (Object *obj : _objects)
+		if (obj->GetNoCull()) visibleObjects.Add(obj);
+
+	_ocTree->GetVisible(cam->GetFrustum(), visibleObjects);
+	PROF_MARKER("Objects", vec3(1.f, 0.f, 0.f));
+	
+	for (const Object *obj : visibleObjects)
 	{
-		_threadPool->Enqueue([obj, cam]() {
-			if (obj->GetNoCull() || distance(cam->GetPosition(), obj->GetPosition()) < cam->GetViewDistance())
-				obj->RegisterCommandBuffers();
-		});
+		NArray<Drawable> *drawables = obj->GetDrawables();
+
+		if (!drawables)
+			continue;
+
+		for (Drawable &drawable : *drawables)
+		{
+			if (!cam->GetFrustum().ContainsBounds(drawable.transformedBounds))
+				continue;
+
+			if (drawable.transparent)
+			{
+				float dist = distance(drawable.bounds.GetCenter(), cam->GetPosition());
+
+				if (dist < minDistance)
+				{
+					minDistance = dist;
+					transparentDrawables.insert(transparentDrawables.begin(), &drawable);
+				}
+				else
+					transparentDrawables.push_back(&drawable);
+			}
+			else
+				opaqueDrawables.push_back(&drawable);
+		}
 	}
 
-	_threadPool->Wait();
+	PROF_MARKER("Drawables", vec3(1.f, 0.f, 0.f));
+	PROF_END();
 
-	for (Object *obj : _transparentObjects)
+	for (Drawable *drawable : opaqueDrawables)
 	{
-		float d = distance(CameraManager::GetActiveCamera()->GetPosition(), obj->GetPosition());
-		if(obj->GetNoCull() || d < cam->GetViewDistance())
-			sortedList[d] = obj;
+		if (drawable->depthCommandBuffer != VK_NULL_HANDLE)
+			Renderer::GetInstance()->AddDepthCommandBuffer(drawable->depthCommandBuffer);
+		Renderer::GetInstance()->AddSceneCommandBuffer(drawable->sceneCommandBuffer);
+
+		#if defined(NE_CONFIG_DEBUG) || defined(NE_CONFIG_DEVELOPMENT)
+		if (Engine::GetDebugVariables().DrawBounds)
+			Renderer::GetInstance()->DrawBounds(drawable->transformedBounds);
+		#endif
 	}
 
-	for (std::map<float, Object *>::reverse_iterator it = sortedList.rbegin(); it != sortedList.rend(); ++it)
-		it->second->RegisterCommandBuffers();
+	for (Drawable *drawable : reverse(transparentDrawables))
+	{
+		if (drawable->depthCommandBuffer != VK_NULL_HANDLE)
+			Renderer::GetInstance()->AddDepthCommandBuffer(drawable->depthCommandBuffer);
+		Renderer::GetInstance()->AddSceneCommandBuffer(drawable->sceneCommandBuffer);
+
+		#if defined(NE_CONFIG_DEBUG) || defined(NE_CONFIG_DEVELOPMENT)
+		if (Engine::GetDebugVariables().DrawBounds)
+			Renderer::GetInstance()->DrawBounds(drawable->transformedBounds);
+		#endif
+	}
+}
+
+bool Scene::RebuildCommandBuffers()
+{
+	for (Object *obj : _objects)
+		if (!obj->RebuildCommandBuffers())
+			return false;
+
+	for (Object *obj : _newObjects)
+		if (!obj->RebuildCommandBuffers())
+			return false;
+
+	return true;
 }
 
 void Scene::Unload() noexcept
@@ -592,11 +686,11 @@ void Scene::Unload() noexcept
 	_threadPool->Stop();
 	_threadPool->Join();
 
-	delete _skysphere;
-	_skysphere = nullptr;
-
 	for (Object *obj : _objects)
+	{
+		obj->Unload();
 		delete obj;
+	}
 	_objects.clear();
 
 	if (_bgMusic >= 0)
@@ -607,8 +701,12 @@ void Scene::Unload() noexcept
 
 	delete _sceneUbo; _sceneUbo = nullptr;
 	delete _sceneBuffer; _sceneBuffer = nullptr;
+	delete _threadPool; _threadPool = nullptr;
+	delete _ocTree; _ocTree = nullptr;
 	
 	_loaded = false;
+
+	EventManager::Broadcast(NE_EVT_SCN_UNLOADED, this);
 }
 
 void Scene::AddObject(Object *obj) noexcept
@@ -617,12 +715,16 @@ void Scene::AddObject(Object *obj) noexcept
 		_newObjects.push_back(obj);
 	else
 		_objects.push_back(obj);
+
+	EventManager::Broadcast(NE_EVT_OBJ_ADDED, obj);
 }
 
 void Scene::RemoveObject(Object *obj) noexcept
 {
 	if (find(_deletedObjects.begin(), _deletedObjects.end(), obj) == _deletedObjects.end())
 		_deletedObjects.push_back(obj);
+
+	EventManager::Broadcast(NE_EVT_OBJ_REMOVED, obj);
 }
 
 Scene::~Scene() noexcept

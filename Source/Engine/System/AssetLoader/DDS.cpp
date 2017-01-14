@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -348,8 +348,8 @@ static inline bool _DDS_VerifyHeader(DDSLoaderInfo *info)
 
 int AssetLoader::LoadDDS(const uint8_t *data, uint64_t dataSize, uint32_t &width, uint32_t &height, uint32_t &depth, uint32_t &format, uint32_t &mipLevels, uint8_t **imgData, uint64_t &imgDataSize)
 {
-	size_t offset = 0;
-	DDSLoaderInfo info;
+	size_t offset{ 0 };
+	DDSLoaderInfo info{};
 	uint32_t magic;
 
 	memcpy(&magic, data + offset, sizeof(uint32_t));

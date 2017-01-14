@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -39,16 +39,7 @@
 
 #pragma once
 
-#include <Platform/PlatformDetect.h>
-
-#ifdef ENGINE_INTERNAL
-	#if defined(NE_PLATFORM_MAC) || defined(NE_PLATFORM_IOS)
-		#include <OpenAL/al.h>
-	#else
-		#include <AL/al.h>
-	#endif
-#endif
-
+#include <Audio/AudioBuffer.h>
 #include <Runtime/Runtime.h>
 #include <Resource/Resource.h>
 #include <Resource/AudioClipResource.h>
@@ -58,17 +49,15 @@ class ENGINE_API AudioClip : public Resource
 public:
 	AudioClip(AudioClipResource *res) noexcept;
 
+	AudioBuffer *GetBuffer() { return _buffer; }
+
 	AudioClipResource *GetResourceInfo() noexcept  { return (AudioClipResource *)_resourceInfo; }
 	virtual int Load() override;
 
 	virtual ~AudioClip() noexcept;
 
-#ifdef ENGINE_INTERNAL
-	ALuint GetBufferID() noexcept { return _buffer; }
-
 private:
-	ALuint _buffer;
-#endif
+	AudioBuffer *_buffer;
 };
 
 #if defined(_MSC_VER)

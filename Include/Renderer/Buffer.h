@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -68,6 +68,8 @@ public:
 	void UpdateData(uint8_t *data, VkDeviceSize offset, VkDeviceSize size, VkCommandBuffer cmdBuffer = VK_NULL_HANDLE, bool useStagingBuffer = false);
 
 	void Copy(Buffer *dst, VkDeviceSize size, VkDeviceSize srcOffset = 0, VkDeviceSize dstOffset = 0, VkCommandBuffer cmdBuffer = VK_NULL_HANDLE);
+
+	void Fill(uint32_t value, VkCommandBuffer cmdBuffer = VK_NULL_HANDLE);
 
 	//void InitUpdateBuffer(size_t size);
 

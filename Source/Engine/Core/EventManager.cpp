@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -70,7 +70,7 @@ uint32_t EventManager::RegisterHandler(int32_t id, std::function<void(int32_t, v
 
 	_eventHandlers.push_back(handlers);
 
-	return (uint32_t)handlers.handlers.size();
+	return (uint32_t)handlers.handlers.size() - 1;
 }
 
 void EventManager::UnregisterHandler(int32_t id, uint32_t handler)
@@ -98,8 +98,6 @@ void EventManager::Broadcast(int id, void *eventArgs)
 
 		return;
 	}
-
-	Logger::Log(EVT_MGR_MODULE, LOG_WARNING, "Attempt to broadcast event %d with no listeners", id);
 }
 
 void EventManager::Release()

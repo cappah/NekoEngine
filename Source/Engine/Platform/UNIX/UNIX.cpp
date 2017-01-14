@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -42,6 +42,7 @@
 #include <dlfcn.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/signal.h>
 #include <sys/utsname.h>
 #include <Platform/Platform.h>
 
@@ -51,33 +52,69 @@ using namespace std;
 
 static struct utsname uname_data;
 
-const char* Platform::GetName()
+int Platform::Initialize()
+{
+	return ENGINE_OK;
+}
+
+const char *Platform::GetName()
 {
 	uname(&uname_data);
 	return uname_data.sysname;
 }
 
-const char* Platform::GetMachineName()
+const char *Platform::GetMachineName()
 {
 	uname(&uname_data);
 	return uname_data.nodename;
 }
 
-const char* Platform::GetMachineArchitecture()
+const char *Platform::GetMachineArchitecture()
 {
 	uname(&uname_data);
 	return uname_data.machine;
 }
 
-const char* Platform::GetVersion()
+const char *Platform::GetVersion()
 {
 	uname(&uname_data);
 	return uname_data.release;
 }
 
-int Platform::GetNumberOfProcessors()
+const char *Platform::GetProcessorName()
+{
+	// cat /proc/cpuinfo ?
+	return "CPU";
+}
+
+uint32_t Platform::GetProcessorFrequency()
+{
+	return 0;
+}
+
+int32_t Platform::GetNumberOfProcessors()
 {
 	return sysconf(_SC_NPROCESSORS_ONLN);
+}
+
+uint64_t Platform::GetProcessMemory()
+{
+	return 0;
+}
+
+uint64_t Platform::GetUsedSystemMemory()
+{
+	return 0;
+}
+
+uint64_t Platform::GetFreeSystemMemory()
+{
+	return 0;
+}
+
+uint64_t Platform::GetTotalSystemMemory()
+{
+	return 0;
 }
 
 PlatformModuleType Platform::LoadModule(const char* module)
@@ -141,4 +178,9 @@ void Platform::Sleep(uint32_t seconds)
 void Platform::USleep(uint32_t microseconds)
 {
 	(void)usleep(microseconds);
+}
+
+void Platform::Terminate()
+{
+	kill(getpid(), SIGKILL);
 }

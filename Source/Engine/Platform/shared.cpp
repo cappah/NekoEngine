@@ -1,13 +1,13 @@
 /* NekoEngine
  *
- * shared.cpp
+ * Shared.cpp
  * Author: Alexandru Naiman
  *
  * Shared platform functions
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -39,9 +39,14 @@
 
 #include <assert.h>
 
+#include <Engine/Debug.h>
 #include <Engine/Engine.h>
+#include <Engine/Version.h>
+#include <Engine/GameModule.h>
 #include <Platform/Compat.h>
 #include <Platform/Platform.h>
+#include <Platform/CrashHandler.h>
+#include <Renderer/Renderer.h>
 
 #define INI_LINE_BUFF	512
 
@@ -53,6 +58,7 @@ size_t Platform::GetConfigString(const char *section, const char *entry, const c
 	bool found = false;
 	char lineBuff[INI_LINE_BUFF], sectionBuff[INI_LINE_BUFF];
 	memset(lineBuff, 0x0, INI_LINE_BUFF);
+	memset(sectionBuff, 0x0, INI_LINE_BUFF);
 
 	assert(section);
 	assert(entry);
@@ -176,6 +182,7 @@ size_t Platform::GetConfigSection(const char *section, char *out, size_t size, c
 	bool found = false;
 	char lineBuff[INI_LINE_BUFF], sectionBuff[INI_LINE_BUFF];
 	memset(lineBuff, 0x0, INI_LINE_BUFF);
+	memset(sectionBuff, 0x0, INI_LINE_BUFF);
 
 	assert(section);
 	assert(out);
@@ -236,4 +243,60 @@ int Platform::Rand()
 void Platform::Exit()
 {
 	_exit = true;
+}
+
+void CrashHandler::SaveCrashDump(void *params)
+{
+	const NString &stackTrace = GetStackTrace();
+	const NString &errorString = GetErrorString(params);
+	char timestamp[512]{}, fileTimestamp[512]{}, coreDumpFile[512]{};
+
+	time_t currentTime{};
+	time(&currentTime);
+
+	struct tm *tmBuff{ localtime(&currentTime) };
+
+	strftime(timestamp, 512, "%d/%m/%Y at %H:%M:%S", tmBuff);
+	strftime(fileTimestamp, 512, "%d_%m_%Y_at_%H_%M_%S", tmBuff);
+	snprintf(coreDumpFile, 512, "%s_%s.dmp", Engine::GetGameModule() ? Engine::GetGameModule()->GetModuleName() : "NekoEngine", fileTimestamp);
+
+	FILE *fp{ fopen("CrashDump.txt", "a") };
+
+	fprintf(fp, "NekoEngine Crash Dump\n");
+	fprintf(fp, "Date: %s\n", timestamp);
+	fprintf(fp, "EngineVersion: %s\n", ENGINE_VERSION_STRING);
+	fprintf(fp, "GameModule: %s\n", Engine::GetGameModule()->GetModuleName());
+	fprintf(fp, "CoreDumpFile: %s\n\n", coreDumpFile);
+
+	if (errorString.Length())
+		fprintf(fp, "%s\n\n", *errorString);
+
+	fprintf(fp, "System --------------------------------\n");
+	fprintf(fp, "Platform:        %s\n", Platform::GetName());
+	fprintf(fp, "PlatformVersion: %s\n", Platform::GetVersion());
+	fprintf(fp, "Architecture:    %s\n", Platform::GetMachineArchitecture());
+	fprintf(fp, "MachineName:     %s\n\n", Platform::GetMachineName());
+
+	fprintf(fp, "Processor -----------------------------\n");
+	fprintf(fp, "CPU: %s\n", Platform::GetProcessorName());
+	fprintf(fp, "Frequency: %d MHz\n", Platform::GetProcessorFrequency());
+	fprintf(fp, "NumberOfProcessors: %d\n\n", Platform::GetNumberOfProcessors());
+
+	fprintf(fp, "Memory --------------------------------\n");
+	fprintf(fp, "TotalSystemMemory: %lu KB\n", Platform::GetTotalSystemMemory());
+	fprintf(fp, "FreeSystemMemory:  %lu KB\n", Platform::GetFreeSystemMemory());
+	fprintf(fp, "ProcessMemory:     %lu KB\n\n", Platform::GetProcessMemory());
+
+	fprintf(fp, "Graphics Device -----------------------\n");
+	fprintf(fp, "Device: %s\n", Renderer::GetInstance()->GetDeviceName());
+	fprintf(fp, "API:    %s %s\n\n", Renderer::GetInstance()->GetAPIName(), Renderer::GetInstance()->GetAPIVersion());
+
+	fprintf(fp, "Stack trace ---------------------------\n");
+	fprintf(fp, "Current thread: %s\n\n", DBG_GET_THREAD_NAME());
+	fprintf(fp, "%s", *stackTrace);
+	fprintf(fp, "---------------------------------------\n\n\n");
+
+	fclose(fp);
+
+	SaveCoreDump(coreDumpFile, params);
 }

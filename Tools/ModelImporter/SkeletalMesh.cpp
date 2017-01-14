@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -62,11 +62,8 @@ bool SkeletalMesh::ExportBinary(const char *file)
 	{
 		AnimatedVertex &av = _vertices[i];
 		float weight = av.boneWeights[0] + av.boneWeights[1] + av.boneWeights[2] + av.boneWeights[3];
-		if (weight > 1.0 || weight < 0.98)
-		{
-			fprintf(stderr, "ERROR: weight is not 1.0 ! (index: %d, weight: %.01f, num: %d)", i, weight, av.numBones);
-			return false;
-		}
+		if (weight > 1.02 || weight < 0.98)
+			fprintf(stderr, "WARNING: weight is not 1.0 ! (index: %d, weight: %.01f, num: %d)", i, weight, av.numBones);
 	}
 
 	gzwrite(fp, BIN_HEADER, 7);

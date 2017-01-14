@@ -7,7 +7,7 @@
  *
  * -----------------------------------------------------------------------------
  *
- * Copyright (c) 2015-2016, Alexandru Naiman
+ * Copyright (c) 2015-2017, Alexandru Naiman
  *
  * All rights reserved.
  *
@@ -48,17 +48,73 @@
 
 using namespace std;
 
-string Logger::_logFile = "Engine.log";
-unsigned int Logger::_logSeverity = 0;
-vector<LogMessage> Logger::_logQueue;
+struct LogMessage
+{
+	LogMessage(std::string module,
+			   unsigned int severity,
+			   NString message) :
+		module(module),
+		severity(severity),
+		message(message) 
+	{ }
 
-static string _SeverityStr[4] =
+	NString module;
+	unsigned int severity;
+	NString message;
+};
+
+static std::string _logFile{ "Engine.log" };
+static unsigned int _logSeverity{ 0 };
+static std::vector<LogMessage> _logQueue;
+
+static const char *_SeverityStr[4] =
 {
 	"Debug",
 	"Information",
 	"Warning",
 	"Critical"
 };
+
+void _WriteMessage(LogMessage &msg)
+{
+	FILE *fp = nullptr;
+
+	// Log all messages in debug mode
+	#if !defined(NE_CONFIG_DEBUG) && !defined(NE_CONFIG_DEVELOPMENT) 
+	if (msg.severity < _logSeverity)
+		return;
+	#else
+	if (msg.severity == LOG_CRITICAL)
+		fprintf(stderr, "[%s][%s]: %s", *msg.module, _SeverityStr[msg.severity], *msg.message);
+
+	char buff[2048];
+	if (snprintf(buff, 2048, "[%s][%s]: %s", *msg.module, _SeverityStr[msg.severity], *msg.message) >= 1024)
+		Platform::LogDebugMessage("MESSAGE TRUNCATED");
+	Platform::LogDebugMessage(buff);
+	#endif
+
+	if (msg.severity > LOG_ALL)
+		msg.severity = LOG_ALL;
+
+	if((fp = fopen(_logFile.c_str(), "a+")) == nullptr)
+	{
+		perror("failed to open log file for append\n");
+		return;
+	}
+
+	time_t t = time(0);
+	struct tm *tm = localtime(&t);
+
+	fprintf(fp, "%d-%d-%d-%d:%d:%d [%s][%s]: %s",
+			tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday,
+			tm->tm_hour, tm->tm_min, tm->tm_sec,
+			*msg.module, _SeverityStr[msg.severity], *msg.message);
+
+	if(msg.message[msg.message.Length() - 1] != '\n')
+		fprintf(fp, "\n");
+
+	fclose(fp);
+}
 
 void Logger::Initialize(string file, unsigned int severity) noexcept
 {
@@ -67,7 +123,7 @@ void Logger::Initialize(string file, unsigned int severity) noexcept
 	_logQueue.reserve(10);
 }
 
-void Logger::Log(std::string Module, unsigned int severity, const char *format, ...)
+void Logger::Log(const char *module, unsigned int severity, const char *format, ...) noexcept
 {
 	va_list args;
 	char buff[LOG_BUFF];
@@ -77,13 +133,19 @@ void Logger::Log(std::string Module, unsigned int severity, const char *format, 
 	vsnprintf(buff, LOG_BUFF, format, args);
 	va_end(args);
 
-	LogMessage msg(Module, severity, buff);
+	LogMessage msg(module, severity, buff);
 	_WriteMessage(msg);
 }
 
-void Logger::Log(string Module, unsigned int severity, string Message)
+void Logger::Log(const char *module, unsigned int severity, const string &message) noexcept
 {
-	LogMessage msg(Module, severity, Message);
+	LogMessage msg(module, severity, message.c_str());
+	_WriteMessage(msg);
+}
+
+void Logger::Log(const char *module, unsigned int severity, const NString &message) noexcept
+{
+	LogMessage msg(module, severity, message);
 	_WriteMessage(msg);
 }
 
@@ -93,7 +155,7 @@ void Logger::LogRendererDebugMessage(const char *message) noexcept
 	_WriteMessage(lmsg);
 }
 
-void Logger::EnqueueLogMessage(std::string Module, unsigned int severity, const char *format, ...) noexcept
+void Logger::EnqueueLogMessage(const char *module, unsigned int severity, const char *format, ...) noexcept
 {
 	va_list args;
 	char buff[LOG_BUFF];
@@ -103,12 +165,17 @@ void Logger::EnqueueLogMessage(std::string Module, unsigned int severity, const 
 	vsnprintf(buff, LOG_BUFF, format, args);
 	va_end(args);
 
-	_logQueue.push_back(LogMessage(Module, severity, buff));
+	_logQueue.push_back(LogMessage(module, severity, buff));
 }
 
-void Logger::EnqueueLogMessage(std::string Module, unsigned int severity, std::string Message) noexcept
+void Logger::EnqueueLogMessage(const char *module, unsigned int severity, const string &message) noexcept
 {
-	_logQueue.push_back(LogMessage(Module, severity, Message));
+	_logQueue.push_back(LogMessage(module, severity, message.c_str()));
+}
+
+void Logger::EnqueueLogMessage(const char *module, unsigned int severity, const NString &message) noexcept
+{
+	_logQueue.push_back(LogMessage(module, severity, message));
 }
 
 void Logger::Flush()
@@ -116,45 +183,4 @@ void Logger::Flush()
 	for (LogMessage &msg : _logQueue)
 		_WriteMessage(msg);
 	_logQueue.clear();
-}
-
-void Logger::_WriteMessage(LogMessage &msg)
-{
-    FILE *fp = nullptr;
-	
-	// Log all messages in debug mode
-#if !defined(NE_CONFIG_DEBUG) && !defined(NE_CONFIG_DEVELOPMENT) 
-	if (msg.Severity < _logSeverity)
-		return;
-#else
-	if (msg.Severity == LOG_CRITICAL)
-		fprintf(stderr, "[%s][%s]: %s", msg.Module.c_str(), _SeverityStr[msg.Severity].c_str(), msg.Message.c_str());
-
-	char buff[2048];
-	if (snprintf(buff, 2048, "[%s][%s]: %s", msg.Module.c_str(), _SeverityStr[msg.Severity].c_str(), msg.Message.c_str()) >= 1024)
-		Platform::LogDebugMessage("MESSAGE TRUNCATED");
-	Platform::LogDebugMessage(buff);
-#endif
-
-	if (msg.Severity > LOG_ALL)
-		msg.Severity = LOG_ALL;
-
-	if((fp = fopen(_logFile.c_str(), "a+")) == nullptr)
-	{
-	    perror("failed to open log file for append\n");
-		return;
-	}
-
-	time_t t = time(0);
-	struct tm *tm = localtime(&t);
-
-	fprintf(fp, "%d-%d-%d-%d:%d:%d [%s][%s]: %s",
-	        tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday,
-	        tm->tm_hour, tm->tm_min, tm->tm_sec,
-	        msg.Module.c_str(), _SeverityStr[msg.Severity].c_str(), msg.Message.c_str());
-
-	if(msg.Message[msg.Message.size() - 1] != '\n')
-	    fprintf(fp, "\n");
-
-	fclose(fp);
 }
