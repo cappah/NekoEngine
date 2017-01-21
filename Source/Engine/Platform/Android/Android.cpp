@@ -42,8 +42,6 @@
 
 #include <sys/stat.h>
 
-#include <curl/curl.h>
-
 #include <android/log.h>
 #include <android/sensor.h>
 

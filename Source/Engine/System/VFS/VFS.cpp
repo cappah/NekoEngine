@@ -177,6 +177,18 @@ VFSFile *VFS::Open(NString &path)
 	return nullptr;
 }
 
+bool VFS::Exists(NString &path)
+{
+	VFSFile *f = nullptr;
+	if ((f = Open(path)) != nullptr)
+	{
+		f->Close();
+		return true;
+	}
+
+	return false;
+}
+
 void VFS::Release()
 {
 	for (VFSArchive *archive : _archives)

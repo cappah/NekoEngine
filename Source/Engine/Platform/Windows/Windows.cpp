@@ -461,6 +461,16 @@ void Platform::CleanUp()
 	UnregisterClass(WindowClassName, hEngineInstance);
 }
 
+void Platform::Sleep(uint32_t seconds)
+{
+	::Sleep(seconds * 1000);
+}
+
+void Platform::USleep(uint32_t microseconds)
+{
+	::Sleep(microseconds / 1000);
+}
+
 void Platform::Exit()
 {
 	PostQuitMessage(0);

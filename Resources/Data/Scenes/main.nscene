@@ -3,7 +3,7 @@ SceneInfo
 name=Main
 bgmusic=bg_meat_grinder
 bgmusicvol=1.2
-gamemodule=TestGame
+gamemodule=RunnerGame
 ambcolor=0.02, 0.02, 0.02
 ambintensity=0.2
 EndSceneInfo

@@ -79,12 +79,9 @@ int ResourceManager::Initialize()
 
 int ResourceManager::_LoadResources()
 {
-	string databaseFile = Engine::GetConfiguration().Engine.DataDirectory;
-	databaseFile.append("/resources.db");
-
 	_db = new ResourceDatabase();
 
-	if (!_db->Open(databaseFile.c_str()))
+	if (!_db->Open("/resources.db"))
 	{
 		Logger::Log(RM_MODULE, LOG_CRITICAL, "Failed to open resource database");
 		delete _db;

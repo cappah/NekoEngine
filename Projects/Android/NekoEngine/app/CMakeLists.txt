@@ -25,7 +25,7 @@ file(GLOB GLESRendererSourceFiles "../../../../Source/Renderer/GLESRenderer/*.cp
 	"../../../../Source/Renderer/GLESRenderer/Platform/EGL/*.cpp"
 )
 
-file(GLOB TestGameSourceFiles "../../../../Source/TestGame/*.cpp")
+file(GLOB RunnerGameSourceFiles "../../../../Source/RunnerGame/*.cpp")
 
 include_directories(${ANDROID_NDK}/sources/android/native_app_glue)
 include_directories(${PROJECT_SOURCE_DIR}/../../../../Include)
@@ -43,11 +43,11 @@ set_target_properties(freetype PROPERTIES IMPORTED_LOCATION ${PROJECT_SOURCE_DIR
 add_library(OpenAL-MOB STATIC IMPORTED)
 set_target_properties(OpenAL-MOB PROPERTIES IMPORTED_LOCATION ${PROJECT_SOURCE_DIR}/../../../../3rdparty/lib_android/${ANDROID_ABI}/libOpenAL-MOB.a)
 
-add_library(TestGame STATIC ${TestGameSourceFiles})
-target_compile_options(TestGame PRIVATE -std=c++11)
-target_compile_options(TestGame PRIVATE -fPIC)
-target_compile_options(TestGame PRIVATE -frtti)
-target_compile_options(TestGame PRIVATE -DTESTGAME_INTERNAL)
+add_library(RunnerGame STATIC ${RunnerGameSourceFiles})
+target_compile_options(RunnerGame PRIVATE -std=c++11)
+target_compile_options(RunnerGame PRIVATE -fPIC)
+target_compile_options(RunnerGame PRIVATE -frtti)
+target_compile_options(RunnerGame PRIVATE -DTESTGAME_INTERNAL)
 
 add_library(GLESRenderer STATIC ${GLESRendererSourceFiles})
 target_compile_options(GLESRenderer PRIVATE -std=c++11)
@@ -61,4 +61,4 @@ target_compile_options(Engine PRIVATE -fPIC)
 target_compile_options(Engine PRIVATE -frtti)
 target_compile_options(Engine PRIVATE -DENGINE_INTERNAL)
 target_compile_options(Engine PRIVATE -DPLATFORM_INTERNAL)
-target_link_libraries(Engine GLESRenderer TestGame app-glue z sqlite3 freetype OpenAL-MOB OpenSLES android ${log-lib})
+target_link_libraries(Engine GLESRenderer RunnerGame app-glue z sqlite3 freetype OpenAL-MOB OpenSLES android ${log-lib})

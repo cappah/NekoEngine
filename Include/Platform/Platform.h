@@ -42,6 +42,7 @@
 #include <Platform/PlatformDetect.h>
 
 #include <stddef.h>
+#include <stdint.h>
 
 #ifdef NE_PLATFORM_WINDOWS
 	#ifdef PLATFORM_INTERNAL
@@ -161,6 +162,9 @@ public:
 	PLATFORM_API static MessageBoxResult MessageBox(const char* title, const char* message, MessageBoxButtons buttons, MessageBoxIcon icon);
 
 	PLATFORM_API static void LogDebugMessage(const char* message);
+
+	PLATFORM_API static void Sleep(uint32_t seconds);
+	PLATFORM_API static void USleep(uint32_t microseconds);
 
 	PLATFORM_API static void Exit();
 
