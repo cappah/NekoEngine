@@ -43,9 +43,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "124A31C31CDC252200472893"
-               BuildableName = "libTestGame_iOS.a"
-               BlueprintName = "TestGame_iOS"
-               ReferencedContainer = "container:../../Source/TestGame/TestGame.xcodeproj">
+               BuildableName = "libRunnerGame_iOS.a"
+               BlueprintName = "RunnerGame_iOS"
+               ReferencedContainer = "container:../../Source/RunnerGame/RunnerGame.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>

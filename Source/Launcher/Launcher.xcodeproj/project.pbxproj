@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		120505361E33B72E00D3EB46 /* libRunnerGame_iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 120505351E33B71500D3EB46 /* libRunnerGame_iOS.a */; };
 		120718C01CCFD0BA001A1EEA /* Engine_Low.ini in Resources */ = {isa = PBXBuildFile; fileRef = 120718BF1CCFD0BA001A1EEA /* Engine_Low.ini */; };
 		121976861D469C7400CCDD12 /* core.nar in CopyFiles */ = {isa = PBXBuildFile; fileRef = 121976851D469C7400CCDD12 /* core.nar */; };
 		1219768B1D469CCC00CCDD12 /* resources.db in CopyFiles */ = {isa = PBXBuildFile; fileRef = 121976881D469CCC00CCDD12 /* resources.db */; };
@@ -26,7 +27,6 @@
 		1296BC481CDC132C00D17488 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1296BC471CDC132C00D17488 /* Assets.xcassets */; };
 		1296BC4B1CDC132C00D17488 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1296BC491CDC132C00D17488 /* LaunchScreen.storyboard */; };
 		1296BC551CDC145600D17488 /* libEngine_iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1296BC511CDC132C00D17488 /* libEngine_iOS.a */; };
-		1296BD871CDC1E1A00D17488 /* libTestGame_iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1296BD861CDC1E1700D17488 /* libTestGame_iOS.a */; };
 		12A15FB61CD4460F00BEDD06 /* libGLRenderer.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 12A15FB31CD445FE00BEDD06 /* libGLRenderer.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		12A9BAAC1D54F037001B363A /* libfreetype.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 12A9BAAB1D54F037001B363A /* libfreetype.a */; };
 		12A9BAB11D54FEDE001B363A /* Engine_iOS.ini in Resources */ = {isa = PBXBuildFile; fileRef = 12A9BAB01D54FEDE001B363A /* Engine_iOS.ini */; };
@@ -34,11 +34,24 @@
 		12B748381CC6E80100825D36 /* launcher.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1270119A1CC31326001840A7 /* launcher.mm */; };
 		12B7483B1CC6E81B00825D36 /* libEngine.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 127012531CC315FD001840A7 /* libEngine.dylib */; };
 		12B7483D1CC6E97200825D36 /* libEngine.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 127012531CC315FD001840A7 /* libEngine.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		12B748531CC6EA4E00825D36 /* libTestGame.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 12B7484F1CC6EA4000825D36 /* libTestGame.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		12B748571CC6F52100825D36 /* Engine.ini in Resources */ = {isa = PBXBuildFile; fileRef = 12B748561CC6F52100825D36 /* Engine.ini */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		120505321E33B71500D3EB46 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1205052D1E33B71500D3EB46 /* RunnerGame.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 127011EF1CC313D7001840A7;
+			remoteInfo = RunnerGame;
+		};
+		120505341E33B71500D3EB46 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1205052D1E33B71500D3EB46 /* RunnerGame.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 124A31C41CDC252200472893;
+			remoteInfo = RunnerGame_iOS;
+		};
 		125025991D5B8FE7005B3341 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 125025951D5B8FE7005B3341 /* GLESRenderer.xcodeproj */;
@@ -74,20 +87,6 @@
 			remoteGlobalIDString = 124A31D21CDC258C00472893;
 			remoteInfo = Engine_iOS;
 		};
-		1296BD821CDC1E1700D17488 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 12B7484A1CC6EA4000825D36 /* TestGame.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 124A31C31CDC252200472893;
-			remoteInfo = TestGame_iOS;
-		};
-		1296BD851CDC1E1700D17488 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 12B7484A1CC6EA4000825D36 /* TestGame.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 1296BD721CDC1D9600D17488;
-			remoteInfo = TestGame_iOS;
-		};
 		12A15FB21CD445FE00BEDD06 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 12A15FAE1CD445FE00BEDD06 /* GLRenderer.xcodeproj */;
@@ -108,20 +107,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 12822AF01CC1AD4300EE5D0A;
 			remoteInfo = Engine;
-		};
-		12B7484E1CC6EA4000825D36 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 12B7484A1CC6EA4000825D36 /* TestGame.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 127011EF1CC313D7001840A7;
-			remoteInfo = TestGame;
-		};
-		12B748501CC6EA4400825D36 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 12B7484A1CC6EA4000825D36 /* TestGame.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 127011EE1CC313D7001840A7;
-			remoteInfo = TestGame;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -147,7 +132,6 @@
 			dstSubfolderSpec = 6;
 			files = (
 				12A15FB61CD4460F00BEDD06 /* libGLRenderer.dylib in CopyFiles */,
-				12B748531CC6EA4E00825D36 /* libTestGame.dylib in CopyFiles */,
 				12B7483D1CC6E97200825D36 /* libEngine.dylib in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -155,6 +139,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1205052D1E33B71500D3EB46 /* RunnerGame.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RunnerGame.xcodeproj; path = /Users/racetrack/Projects/NekoEngine/Source/Renderer/GLESRenderer/../../RunnerGame/RunnerGame.xcodeproj; sourceTree = "<absolute>"; };
 		120718BF1CCFD0BA001A1EEA /* Engine_Low.ini */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Engine_Low.ini; path = ../../../Resources/Engine_Low.ini; sourceTree = "<group>"; };
 		121976851D469C7400CCDD12 /* core.nar */ = {isa = PBXFileReference; lastKnownFileType = file; name = core.nar; path = ../../Resources/Data/core.nar; sourceTree = "<group>"; };
 		121976881D469CCC00CCDD12 /* resources.db */ = {isa = PBXFileReference; lastKnownFileType = file; name = resources.db; path = ../../Resources/Data/resources.db; sourceTree = "<group>"; };
@@ -189,7 +174,6 @@
 		12B748271CC6E7C600825D36 /* Launcher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Launcher.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		12B7482F1CC6E7C600825D36 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		12B748341CC6E7C600825D36 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		12B7484A1CC6EA4000825D36 /* TestGame.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = TestGame.xcodeproj; path = ../TestGame/TestGame.xcodeproj; sourceTree = "<group>"; };
 		12B748561CC6F52100825D36 /* Engine.ini */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Engine.ini; path = ../../../Resources/Engine.ini; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -198,6 +182,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				120505361E33B72E00D3EB46 /* libRunnerGame_iOS.a in Frameworks */,
 				129000BF1DCA583700EBB120 /* CoreMotion.framework in Frameworks */,
 				1250259D1D5B8FF2005B3341 /* libGLESRenderer.a in Frameworks */,
 				124A32511CDC299500472893 /* OpenGLES.framework in Frameworks */,
@@ -205,7 +190,6 @@
 				124A320A1CDC268100472893 /* libsqlite3.tbd in Frameworks */,
 				124A32081CDC267D00472893 /* libz.tbd in Frameworks */,
 				12A9BAAC1D54F037001B363A /* libfreetype.a in Frameworks */,
-				1296BD871CDC1E1A00D17488 /* libTestGame_iOS.a in Frameworks */,
 				1296BC551CDC145600D17488 /* libEngine_iOS.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -221,6 +205,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1205052E1E33B71500D3EB46 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				120505331E33B71500D3EB46 /* libRunnerGame.dylib */,
+				120505351E33B71500D3EB46 /* libRunnerGame_iOS.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		121976871D469C8900CCDD12 /* iOS Data */ = {
 			isa = PBXGroup;
 			children = (
@@ -262,9 +255,9 @@
 			isa = PBXGroup;
 			children = (
 				1270124E1CC315FD001840A7 /* Engine.xcodeproj */,
-				12B7484A1CC6EA4000825D36 /* TestGame.xcodeproj */,
 				12A15FAE1CD445FE00BEDD06 /* GLRenderer.xcodeproj */,
 				125025951D5B8FE7005B3341 /* GLESRenderer.xcodeproj */,
+				1205052D1E33B71500D3EB46 /* RunnerGame.xcodeproj */,
 				127011991CC31317001840A7 /* Source */,
 				12B748281CC6E7C600825D36 /* Launcher */,
 				1296BC3A1CDC132C00D17488 /* Launcher-iOS */,
@@ -360,15 +353,6 @@
 			path = Launcher;
 			sourceTree = "<group>";
 		};
-		12B7484B1CC6EA4000825D36 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				12B7484F1CC6EA4000825D36 /* libTestGame.dylib */,
-				1296BD861CDC1E1700D17488 /* libTestGame_iOS.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -385,7 +369,6 @@
 			);
 			dependencies = (
 				1250259C1D5B8FEE005B3341 /* PBXTargetDependency */,
-				1296BD831CDC1E1700D17488 /* PBXTargetDependency */,
 				1296BC541CDC144F00D17488 /* PBXTargetDependency */,
 			);
 			name = "Launcher-iOS";
@@ -406,7 +389,6 @@
 			);
 			dependencies = (
 				12A15FB51CD4460100BEDD06 /* PBXTargetDependency */,
-				12B748511CC6EA4400825D36 /* PBXTargetDependency */,
 				12B7483A1CC6E81400825D36 /* PBXTargetDependency */,
 			);
 			name = Launcher;
@@ -457,8 +439,8 @@
 					ProjectRef = 12A15FAE1CD445FE00BEDD06 /* GLRenderer.xcodeproj */;
 				},
 				{
-					ProductGroup = 12B7484B1CC6EA4000825D36 /* Products */;
-					ProjectRef = 12B7484A1CC6EA4000825D36 /* TestGame.xcodeproj */;
+					ProductGroup = 1205052E1E33B71500D3EB46 /* Products */;
+					ProjectRef = 1205052D1E33B71500D3EB46 /* RunnerGame.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -470,6 +452,20 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		120505331E33B71500D3EB46 /* libRunnerGame.dylib */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.dylib";
+			path = libRunnerGame.dylib;
+			remoteRef = 120505321E33B71500D3EB46 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		120505351E33B71500D3EB46 /* libRunnerGame_iOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRunnerGame_iOS.a;
+			remoteRef = 120505341E33B71500D3EB46 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		1250259A1D5B8FE7005B3341 /* libGLESRenderer.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -491,25 +487,11 @@
 			remoteRef = 1296BC501CDC132C00D17488 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		1296BD861CDC1E1700D17488 /* libTestGame_iOS.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libTestGame_iOS.a;
-			remoteRef = 1296BD851CDC1E1700D17488 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		12A15FB31CD445FE00BEDD06 /* libGLRenderer.dylib */ = {
 			isa = PBXReferenceProxy;
 			fileType = "compiled.mach-o.dylib";
 			path = libGLRenderer.dylib;
 			remoteRef = 12A15FB21CD445FE00BEDD06 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		12B7484F1CC6EA4000825D36 /* libTestGame.dylib */ = {
-			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.dylib";
-			path = libTestGame.dylib;
-			remoteRef = 12B7484E1CC6EA4000825D36 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -570,11 +552,6 @@
 			name = Engine_iOS;
 			targetProxy = 1296BC531CDC144F00D17488 /* PBXContainerItemProxy */;
 		};
-		1296BD831CDC1E1700D17488 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = TestGame_iOS;
-			targetProxy = 1296BD821CDC1E1700D17488 /* PBXContainerItemProxy */;
-		};
 		12A15FB51CD4460100BEDD06 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = GLRenderer;
@@ -584,11 +561,6 @@
 			isa = PBXTargetDependency;
 			name = Engine;
 			targetProxy = 12B748391CC6E81400825D36 /* PBXContainerItemProxy */;
-		};
-		12B748511CC6EA4400825D36 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = TestGame;
-			targetProxy = 12B748501CC6EA4400825D36 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
