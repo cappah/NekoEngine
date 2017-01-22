@@ -14,6 +14,7 @@ file(GLOB EngineSourceFiles "../../../../Source/Engine/*.cpp"
 	"../../../../Source/Engine/Platform/Compat/*.cpp"
 	"../../../../Source/Engine/Platform/UNIX/*.cpp"
     "../../../../Source/Engine/Platform/Android/*.cpp"
+    "../../../../Source/Engine/GUI/*.cpp"
 )
 
 file(GLOB LauncherSourceFiles

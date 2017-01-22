@@ -40,12 +40,18 @@
 #include <Engine/Engine.h>
 #include <System/Logger.h>
 
+#include <netdb.h>
+#include <unistd.h>
 #include <sys/stat.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 
 #include <android/log.h>
 #include <android/sensor.h>
 
 #define ANDROID_PLATFORM_MODULE	"AndroidPlatform"
+#define	DL_BUFF_SIZE			512
 
 static struct android_app *_app;
 static ASensorManager *_sensorManager;
@@ -64,24 +70,118 @@ static NString _externalDataPath;
 int32_t _android_handle_input_event(struct android_app* app, AInputEvent* event);
 void _android_handle_sensor_event(ASensorEventQueue *queue, const ASensor *_accelerometer, const ASensor *_gyroscope, const ASensor *_lightSensor);
 
-bool _android_download_data()
+bool _android_download_file(const char *address, const char *file)
 {
+	int sock{ 0 };
 
+	char c{};
+	int i{}, j{}, k{}, l{}, m{};
+	FILE *f{ fopen(file, "wb") };
+	char host[512]{};
+	const char *url{ address + (strchr(address, '/') - address) };
+	struct addrinfo *ai{ nullptr };
+	struct addrinfo hints{};
+	char buff[DL_BUFF_SIZE]{};
+	snprintf(host, strchr(address, '/') - address + 1, "%s", address);
+
+	if (!f)
+	{
+		fclose(f);
+		Logger::Log(ANDROID_PLATFORM_MODULE, LOG_CRITICAL, "failed to open file for writing: %s", file);
+		return false;
+	}
+
+	hints.ai_family = AF_INET;
+	hints.ai_socktype = SOCK_STREAM;
+	hints.ai_protocol = IPPROTO_TCP;
+	snprintf(buff, DL_BUFF_SIZE, "GET %s HTTP/1.1\r\n", url);
+
+	if (i == getaddrinfo(host, "80", &hints, &ai))
+	{
+		fclose(f);
+		Logger::Log(ANDROID_PLATFORM_MODULE, LOG_CRITICAL, "getaddrinfo() failed: %s", gai_strerror(i));
+		return false;
+	}
+
+	snprintf(buff + strlen(buff), DL_BUFF_SIZE, "Host: %s\r\n\r\n", host);
+
+	sock = socket(ai->ai_family, ai->ai_socktype, ai->ai_protocol);
+	if (connect(sock, ai->ai_addr, ai->ai_addrlen))
+	{
+		fclose(f);
+		freeaddrinfo(ai);
+		Logger::Log(ANDROID_PLATFORM_MODULE, LOG_CRITICAL, "connect() failed");
+		return false;
+	}
+
+	freeaddrinfo(ai);
+
+	i = send(sock, buff, strlen(buff), 0);
+	if ( i < strlen(buff) || i == -1)
+	{
+		fclose(f);
+		Logger::Log(ANDROID_PLATFORM_MODULE, LOG_CRITICAL, "send() failed");
+		return false;
+	}
+
+	while(strncmp(buff, "\r\n", 2))
+	{
+		for (i = 0; strcmp(buff + i - 2, "\r\n"); i++) { recv(sock, buff + i, 1, 0); buff[i + 1] = 0x0; }
+		if (strstr(buff, "HTTP/") == buff)
+		{
+			fputs(strchr(buff, ' ') + 1, stdout);
+			if (strcmp(strchr(buff, ' ') + 1, "200 OK\r\n"))
+			{
+				Logger::Log(ANDROID_PLATFORM_MODULE, LOG_CRITICAL, "http response: %s", buff);
+				return false;
+			}
+		}
+		if (strstr(buff, "Content-Length:") == buff)
+		{
+			*strchr(buff, '\r') = 0x0;
+			j = atoi(strchr(buff, ' ') + 1);
+			l = j / 100;
+		}
+	}
+
+	for (i = 0, k = 0, m = 0; i < j; i++, k++)
+	{
+		recv(sock, &c, 1, 0);
+		fputc(c, f);
+		if (k == l) { m++; k = 0; }
+	}
+
+	fclose(f);
 
 	return true;
 }
 
 void _android_handle_app_cmd(struct android_app *app, int32_t cmd)
 {
+	struct stat st{};
 	switch (cmd)
 	{
 		case APP_CMD_INIT_WINDOW:
 		{
 			NString args = "--log=";
 			args.Append(_externalDataPath);
-			args.Append("/engine.log");
+			args.Append("/engine.log --data=");
+			args.Append(_externalDataPath);
+			args.Append("/data --ini=");
+			args.Append(_externalDataPath);
+			args.Append("/engine.ini");
 
-			// check data directory
+			// check & download data
+
+			char buff[512];
+			snprintf(buff, 512, "%s/data", *_externalDataPath);
+			mkdir(buff, 0777);
+
+			snprintf(buff, 512, "%s/data/core_android.nar", *_externalDataPath);
+			if(access(buff, 0)) _android_download_file("nalexandru.xyz/runnergame_android/core_android.nar", buff);
+
+			snprintf(buff, 512, "%s/engine.ini", *_externalDataPath);
+			if(access(buff, 0)) _android_download_file("nalexandru.xyz/runnergame_android/engine.ini", buff);
 
 			if(Engine::Initialize(*args, false) != ENGINE_OK)
 				Platform::Exit();

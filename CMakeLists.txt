@@ -22,6 +22,7 @@ file(GLOB EngineSourceFiles "Source/Engine/*.cpp"
 	"Source/Engine/System/VFS/*.cpp"
 	"Source/Engine/Platform/*.cpp"
 	"Source/Engine/Platform/Compat/*.cpp"
+	"Source/Engine/GUI/*.cpp"
 )
 file(GLOB TestGameSourceFiles "Source/TestGame/*.cpp")
 file(GLOB GLRendererSourceFiles "Source/Renderer/GLRenderer/*.cpp"

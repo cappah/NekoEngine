@@ -327,6 +327,10 @@ bool GLESShader::Link()
 		return false;
 	}
 
+#ifdef NE_PLATFORM_ANDROID
+	glUseProgram(_program);
+#endif
+
 	for(UniformInfo &info : _uniformInfo)
 	{
 		char *ptr = NULL;
@@ -342,8 +346,18 @@ bool GLESShader::Link()
 		}
 
 		_uniformLocations[location] = glGetUniformLocation(_program, info.name.c_str());
+
+#ifdef NE_PLATFORM_ANDROID
+		glUniform1i(_uniformLocations[location], location);
+#else
 		glProgramUniform1iEXT(_program, _uniformLocations[location], location);
+#endif
+
 	}
+
+#ifdef NE_PLATFORM_ANDROID
+	glUseProgram(0);
+#endif
 
 	return true;
 }
