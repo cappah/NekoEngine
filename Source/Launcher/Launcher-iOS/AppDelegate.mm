@@ -21,6 +21,7 @@ static UIDeviceOrientation _lastOrientation;
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
 	UIWindow *window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+	
 	[self setWindow:window];
 	[window makeKeyAndVisible];
 	
@@ -53,6 +54,13 @@ static UIDeviceOrientation _lastOrientation;
 	
 	Engine::Run();
 	
+	_storyboard = [UIStoryboard storyboardWithName:@"Menu" bundle:nil];
+	_mainMenuViewController = [_storyboard instantiateViewControllerWithIdentifier:@"MainMenu"];
+	_inGameMenuViewController = [_storyboard instantiateViewControllerWithIdentifier:@"InGameMenu"];
+	
+	_engineViewController = [_window rootViewController];
+	[_window setRootViewController:_mainMenuViewController];
+	
 	return true;
 }
 
@@ -68,9 +76,9 @@ static UIDeviceOrientation _lastOrientation;
 	// If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
 }
 
-- (void)applicationWillEnterForeground:(UIApplication *)application {
-	Engine::Pause(false);
-	// Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+- (void)applicationWillEnterForeground:(UIApplication *)application
+{
+	[_window setRootViewController:_inGameMenuViewController];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
@@ -112,6 +120,16 @@ static UIDeviceOrientation _lastOrientation;
 	
 	CGRect bounds = [[UIScreen mainScreen] bounds];
 	Engine::ScreenResized(bounds.size.width, bounds.size.height);
+}
+
+- (void)showMenu
+{
+	[_window setRootViewController:_mainMenuViewController];
+}
+
+- (void)showEngine
+{
+	[_window setRootViewController:_engineViewController];
 }
 
 - (void)dealloc

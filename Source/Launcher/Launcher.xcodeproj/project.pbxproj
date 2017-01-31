@@ -35,6 +35,8 @@
 		12B7483B1CC6E81B00825D36 /* libEngine.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 127012531CC315FD001840A7 /* libEngine.dylib */; };
 		12B7483D1CC6E97200825D36 /* libEngine.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 127012531CC315FD001840A7 /* libEngine.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		12B748571CC6F52100825D36 /* Engine.ini in Resources */ = {isa = PBXBuildFile; fileRef = 12B748561CC6F52100825D36 /* Engine.ini */; };
+		12E19B6A1E40306600369988 /* Menu.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 12E19B681E40306600369988 /* Menu.storyboard */; };
+		12E19B6D1E4031D300369988 /* MenuController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 12E19B6C1E4031D300369988 /* MenuController.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -175,6 +177,9 @@
 		12B7482F1CC6E7C600825D36 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		12B748341CC6E7C600825D36 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		12B748561CC6F52100825D36 /* Engine.ini */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Engine.ini; path = ../../../Resources/Engine.ini; sourceTree = "<group>"; };
+		12E19B691E40306600369988 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Menu.storyboard; sourceTree = "<group>"; };
+		12E19B6B1E4031D300369988 /* MenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuController.h; sourceTree = "<group>"; };
+		12E19B6C1E4031D300369988 /* MenuController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MenuController.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -314,6 +319,9 @@
 				1296BC4C1CDC132C00D17488 /* Info.plist */,
 				1219768E1D469D3900CCDD12 /* scenes.cfg */,
 				1296BC3B1CDC132C00D17488 /* Supporting Files */,
+				12E19B681E40306600369988 /* Menu.storyboard */,
+				12E19B6B1E4031D300369988 /* MenuController.h */,
+				12E19B6C1E4031D300369988 /* MenuController.mm */,
 			);
 			path = "Launcher-iOS";
 			sourceTree = "<group>";
@@ -501,6 +509,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				12E19B6A1E40306600369988 /* Menu.storyboard in Resources */,
 				1296BC4B1CDC132C00D17488 /* LaunchScreen.storyboard in Resources */,
 				1219768F1D469D3900CCDD12 /* scenes.cfg in Resources */,
 				12A9BAB11D54FEDE001B363A /* Engine_iOS.ini in Resources */,
@@ -528,6 +537,7 @@
 			files = (
 				1296BC401CDC132C00D17488 /* AppDelegate.mm in Sources */,
 				1296BC3D1CDC132C00D17488 /* main.m in Sources */,
+				12E19B6D1E4031D300369988 /* MenuController.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -571,6 +581,14 @@
 				1296BC4A1CDC132C00D17488 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		12E19B681E40306600369988 /* Menu.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				12E19B691E40306600369988 /* Base */,
+			);
+			name = Menu.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
