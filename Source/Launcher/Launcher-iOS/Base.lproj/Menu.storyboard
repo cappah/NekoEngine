@@ -85,7 +85,7 @@
                         <viewControllerLayoutGuide type="top" id="Ue0-G8-Tzq"/>
                         <viewControllerLayoutGuide type="bottom" id="YTp-HX-GSg"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="gSJ-6y-Pt0">
+                    <view key="view" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="gSJ-6y-Pt0">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -116,7 +116,7 @@
                                 </connections>
                             </button>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XDb-Ap-FqR" userLabel="First Responder" sceneMemberID="firstResponder"/>

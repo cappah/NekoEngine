@@ -16,6 +16,7 @@
 - (IBAction)startGame:(id)sender
 {
 	[[[UIApplication sharedApplication] delegate] performSelector:@selector(showEngine)];
+	Engine::Pause(false);
 }
 
 - (IBAction)resumeGame:(id)sender
