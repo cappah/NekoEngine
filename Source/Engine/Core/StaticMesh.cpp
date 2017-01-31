@@ -73,7 +73,7 @@ StaticMesh::StaticMesh(MeshResource *res) noexcept :
 
 int StaticMesh::Load()
 {
-	if (AssetLoader::LoadMesh(GetResourceInfo()->filePath, MeshType::Static, _vertices, _indices, _groupOffset, _groupCount) != ENGINE_OK)
+	if (AssetLoader::LoadStaticMesh(GetResourceInfo()->filePath, _vertices, _indices, _groupOffset, _groupCount) != ENGINE_OK)
 	{
 		Logger::Log(MESH_MODULE, LOG_CRITICAL, "Failed to load mesh id=%s", _resourceInfo->name.c_str());
 		return ENGINE_FAIL;

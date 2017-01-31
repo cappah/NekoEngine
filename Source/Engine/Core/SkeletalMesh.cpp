@@ -78,7 +78,7 @@ Skeleton *SkeletalMesh::GetSkeleton()
 
 int SkeletalMesh::Load()
 {	
-	if (AssetLoader::LoadMesh(GetResourceInfo()->filePath, MeshType::Skeletal, _vertices, _indices, _groupOffset, _groupCount, &_bones, &_nodes, &_globalInverseTransform) != ENGINE_OK)
+	if (AssetLoader::LoadSkeletalMesh(GetResourceInfo()->filePath, _vertices, _indices, _groupOffset, _groupCount, _bones, _nodes, _globalInverseTransform) != ENGINE_OK)
 	{
 		Logger::Log(SK_MESH_MODULE, LOG_CRITICAL, "Failed to load mesh id=%s", _resourceInfo->name.c_str());
 		return ENGINE_FAIL;

@@ -52,7 +52,7 @@
 #define VERTEX_WEIGHT_OFFSET		offsetof(Vertex, boneWeights)
 #define VERTEX_NUMBONES_OFFSET		offsetof(Vertex, numBones)
 
-struct Vertex 
+struct Vertex
 {
 	Vertex() :
 		pos(glm::vec3(0.f)),

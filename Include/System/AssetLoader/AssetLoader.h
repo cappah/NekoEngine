@@ -51,18 +51,34 @@
 #include <Engine/AnimationClip.h>
 #include <Resource/MeshResource.h>
 
+#define NMESH1_HEADER	"NMESH1 "
+#define NMESH2_HEADER	"NMESH2 "
+#define NMESH2_FOOTER	"ENDMESH"
+#define NMESH_SKELETAL	"SKELETAL"
+#define NMESH2A_HEADER	"NMESH2A"
+
+#define NANIM1_HEADER	"NANIM1 "
+#define NANIM2_HEADER	"NANIM2 "
+#define NANIM2_FOOTER	"ENDANIM"
+
 class AssetLoader
 {
 public:
 	// Mesh
-	static int LoadMesh(NString &file, MeshType type,
-						std::vector<Vertex> &vertices,
-						std::vector<uint32_t> &indices,
-						std::vector<uint32_t> &groupOffset,
-						std::vector<uint32_t> &groupCount,
-						std::vector<Bone> *bones = nullptr,
-						std::vector<TransformNode> *nodes = nullptr,
-						glm::dmat4 *globalInverseTransform = nullptr);
+	static int LoadStaticMesh(NString &file,
+							  std::vector<Vertex> &vertices,
+							  std::vector<uint32_t> &indices,
+							  std::vector<uint32_t> &groupOffset,
+							  std::vector<uint32_t> &groupCount);
+
+	static int LoadSkeletalMesh(NString &file,
+								std::vector<Vertex> &vertices,
+								std::vector<uint32_t> &indices,
+								std::vector<uint32_t> &groupOffset,
+								std::vector<uint32_t> &groupCount,
+								std::vector<Bone> &bones,
+								std::vector<TransformNode> &nodes,
+								glm::dmat4 &globalInverseTransform);
 	
 	static int LoadAnimation(NString &file,
 							 std::string &name,
@@ -75,6 +91,49 @@ public:
 	static int LoadOGG(NString &file, ALenum *format, unsigned char **data, ALsizei *size, ALsizei *freq);
 
 private:
+	static int _LoadStaticMeshV1(class VFSFile *file,
+								 std::vector<Vertex> &vertices,
+								 std::vector<uint32_t> &indices,
+								 std::vector<uint32_t> &groupOffset,
+								 std::vector<uint32_t> &groupCount);
+
+	static int _LoadStaticMeshV2(class VFSFile *file,
+								 std::vector<Vertex> &vertices,
+								 std::vector<uint32_t> &indices,
+								 std::vector<uint32_t> &groupOffset,
+								 std::vector<uint32_t> &groupCount,
+								 bool readVertexGroup);
+
+	static int _LoadSkeletalMeshV1(VFSFile *file,
+								   std::vector<Vertex> &vertices,
+								   std::vector<uint32_t> &indices,
+								   std::vector<uint32_t> &groupOffset,
+								   std::vector<uint32_t> &groupCount,
+								   std::vector<Bone> &bones,
+								   std::vector<TransformNode> &nodes,
+								   glm::dmat4 &globalInverseTransform);
+
+	static int _LoadSkeletalMeshV2(VFSFile *file,
+								   std::vector<Vertex> &vertices,
+								   std::vector<uint32_t> &indices,
+								   std::vector<uint32_t> &groupOffset,
+								   std::vector<uint32_t> &groupCount,
+								   std::vector<Bone> &bones,
+								   std::vector<TransformNode> &nodes,
+								   glm::dmat4 &globalInverseTransform,
+								   bool readVertexGroup);
+
+	static int _LoadAnimationV1(VFSFile *file,
+								std::string &name,
+								double *duration,
+								double *ticksPerSecond,
+								std::vector<AnimationNode> &channels);
+
+	static int _LoadAnimationV2(VFSFile *file,
+								std::string &name,
+								double *duration,
+								double *ticksPerSecond,
+								std::vector<AnimationNode> &channels);
 
 	/**
 	 * Read a vertex from a mesh file

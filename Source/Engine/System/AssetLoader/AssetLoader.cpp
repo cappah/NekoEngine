@@ -45,6 +45,8 @@
 
 #include <Platform/Compat.h>
 
+#include <glm/gtc/type_ptr.hpp>
+
 #define AL_MODULE	"AssetLoader"
 
 #define DATA_SIZE			524288
@@ -102,31 +104,187 @@ typedef struct WAVE_DATA
 
 using namespace glm;
 
-int AssetLoader::LoadMesh(NString &file,
-						  MeshType type,
-						  vector<Vertex> &vertices,
-						  vector<uint32_t> &indices,
-						  vector<uint32_t> &groupOffset,
-						  vector<uint32_t> &groupCount,
-						  vector<Bone> *bones,
-						  vector<TransformNode> *nodes,
-						  dmat4 *globalInverseTransform)
+int AssetLoader::LoadStaticMesh(NString &file,
+								vector<Vertex> &vertices,
+								vector<uint32_t> &indices,
+								vector<uint32_t> &groupOffset,
+								vector<uint32_t> &groupCount)
+{
+	char idBuff[8]{ 0x0 };
+	int ret{ ENGINE_FAIL };
+
+	vertices.clear();
+	indices.clear();
+	groupOffset.clear();
+	groupCount.clear();
+
+	if (VFSFile *f = VFS::Open(file))
+	{
+		f->Read(idBuff, sizeof(char), 7);
+		idBuff[7] = 0x0;
+
+		if (!strncmp(idBuff, NMESH2_HEADER, 7))
+			ret = _LoadStaticMeshV2(f, vertices, indices, groupOffset, groupCount, false);
+		else if (!strncmp(idBuff, NMESH2A_HEADER, 7))
+			ret = _LoadStaticMeshV2(f, vertices, indices, groupOffset, groupCount, true);
+		else
+		{
+			f->Seek(0, SEEK_SET);
+			ret = _LoadStaticMeshV1(f, vertices, indices, groupOffset, groupCount);
+		}
+
+		f->Close();
+
+		return ret;
+	}
+
+	Logger::Log(AL_MODULE, LOG_CRITICAL, "Failed to open mesh file %s", *file);
+	return ENGINE_IO_FAIL;
+}
+
+int AssetLoader::_LoadStaticMeshV1(VFSFile *f,
+								   vector<Vertex> &vertices,
+								   vector<uint32_t> &indices,
+								   vector<uint32_t> &groupOffset,
+								   vector<uint32_t> &groupCount)
 {
 	unsigned int offset = 0;
 	uint32_t indexBuff[3];
-	/*size_t indexCount = 0;
-	size_t vertexCount = 0;
-	size_t boneCount = 0;
-	size_t nodeCount = 0;*/
 	char lineBuff[AL_LINE_BUFF];
 	memset(lineBuff, 0x0, AL_LINE_BUFF);
 
-	VFSFile *f = VFS::Open(file);
-	if(!f)
+	groupOffset.push_back(0);
+
+	while (!f->EoF())
 	{
-		Logger::Log(AL_MODULE, LOG_CRITICAL, "Failed to open mesh file %s", *file);
-		return ENGINE_IO_FAIL;
+		f->Gets(lineBuff, AL_LINE_BUFF);
+
+		if (lineBuff[0] == 0x0)
+			continue;
+
+		EngineUtils::RemoveNewline(lineBuff);;
+
+		if (lineBuff[0] == 0x0)
+			continue;
+
+		if (strstr(lineBuff, "vertices"))
+		{
+			char *ptr = strchr(lineBuff, ':');
+			if (!ptr)
+				break;
+
+			//vertexCount = atoi(++ptr);
+		}
+		else if (strstr(lineBuff, "indices"))
+		{
+			char *ptr = strchr(lineBuff, ':');
+			if (!ptr)
+				break;
+
+			//indexCount = atoi(++ptr);
+		}
+		else if (strchr(lineBuff, '[')) // Vertex line
+			vertices.push_back(_ReadVertex(lineBuff));
+		else if (strstr(lineBuff, "newidgrp"))
+		{
+			groupOffset.push_back((uint32_t)indices.size());
+			groupCount.push_back((uint32_t)indices.size() - offset);
+			offset = (uint32_t)indices.size();
+		}
+		else // Index line
+		{
+			EngineUtils::ReadUIntArray(lineBuff, 3, indexBuff);
+			
+			indices.push_back(indexBuff[0]);
+			indices.push_back(indexBuff[1]);
+			indices.push_back(indexBuff[2]);
+		}
 	}
+
+    groupCount.push_back((uint32_t)indices.size() - offset);
+    
+	return ENGINE_OK;
+}
+
+int AssetLoader::_LoadStaticMeshV2(VFSFile *file,
+								   vector<Vertex> &vertices,
+								   vector<uint32_t> &indices,
+								   vector<uint32_t> &groupOffset,
+								   vector<uint32_t> &groupCount,
+								   bool readVertexGroup)
+{
+	struct StaticVertex
+	{
+		glm::vec3 position;
+		glm::vec2 uv;
+		glm::vec3 normal;
+		glm::vec3 tangent;
+	};
+
+	vector<StaticVertex> meshVertices{};
+
+	uint32_t num{ 0 };
+	char idBuff[8]{ 0x0 };
+
+	file->Read(&num, sizeof(uint32_t), 1);
+	meshVertices.resize(num);
+	file->Read(meshVertices.data(), sizeof(StaticVertex), num);
+
+	for (StaticVertex &stv : meshVertices)
+	{
+		Vertex v{};
+		v.pos = stv.position;
+		v.color = vec3(0.f);
+		v.norm = stv.normal;
+		v.tgt = stv.tangent;
+		v.uv = stv.uv;
+		v.terrainUv = vec2(0.f);
+	}
+
+	file->Read(&num, sizeof(uint32_t), 1);
+	indices.resize(num);
+	file->Read(indices.data(), sizeof(uint32_t), num);
+
+	file->Read(&num, sizeof(uint32_t), 1);
+
+	for (uint32_t i = 0; i < num; ++i)
+	{
+		uint32_t d{};
+
+		if (readVertexGroup)
+		{
+			file->Read(&d, sizeof(uint32_t), 1);
+			file->Read(&d, sizeof(uint32_t), 1);
+		}
+
+		file->Read(&d, sizeof(uint32_t), 1);
+		groupOffset.push_back(d);
+		file->Read(&d, sizeof(uint32_t), 1);
+		groupCount.push_back(d);
+	}
+
+	file->Read(idBuff, sizeof(char), 7);
+	idBuff[7] = 0x0;
+
+	if (strncmp(idBuff, NMESH2_FOOTER, 7))
+		Logger::Log(AL_MODULE, LOG_WARNING, "Extra data in StaticMesh file %s", file->GetHeader().name);
+
+	return ENGINE_OK;
+}
+
+int AssetLoader::_LoadSkeletalMeshV1(VFSFile *f,
+									 vector<Vertex> &vertices,
+									 vector<uint32_t> &indices,
+									 vector<uint32_t> &groupOffset,
+									 vector<uint32_t> &groupCount,
+									 vector<Bone> &bones,
+									 vector<TransformNode> &nodes,
+									 dmat4 &globalInverseTransform)
+{
+	unsigned int offset = 0;
+	uint32_t indexBuff[3];
+	char lineBuff[AL_LINE_BUFF];
+	memset(lineBuff, 0x0, AL_LINE_BUFF);
 
 	while (!f->EoF())
 	{
@@ -161,7 +319,7 @@ int AssetLoader::LoadMesh(NString &file,
 			char *ptr = strchr(lineBuff, ':');
 			if (!ptr)
 				break;
-			
+
 			//boneCount = atoi(++ptr);
 		}
 		else if (strstr(lineBuff, "git"))
@@ -169,15 +327,15 @@ int AssetLoader::LoadMesh(NString &file,
 			char *ptr = strchr(lineBuff, ':');
 			if(!ptr)
 				break;
-			
-			EngineUtils::ReadDoubleArray(++ptr, 16, &(*globalInverseTransform)[0][0]);
+
+			EngineUtils::ReadDoubleArray(++ptr, 16, &(globalInverseTransform)[0][0]);
 		}
 		else if (strstr(lineBuff, "nodes"))
 		{
 			char *ptr = strchr(lineBuff, ':');
 			if (!ptr)
 				break;
-			
+
 			//nodeCount = atoi(++ptr);
 		}
 		else if (strchr(lineBuff, '[')) // Vertex line
@@ -189,45 +347,228 @@ int AssetLoader::LoadMesh(NString &file,
 			offset = (uint32_t)indices.size();
 		}
 		else if(strchr(lineBuff, '{')) // Bone line
-		{
-			if(bones)
-				bones->push_back(_ReadBone(lineBuff));
-			else
-			{
-				Logger::Log(AL_MODULE, LOG_CRITICAL, "Bone line found, but no Bone array provided");
-				f->Close();
-				return ENGINE_FAIL;
-			}
-		}
+			bones.push_back(_ReadBone(lineBuff));
 		else if(strchr(lineBuff, '(')) // TransformNode line
-		{
-			if(nodes)
-				nodes->push_back(_ReadTransformNode(lineBuff));
-			else
-			{
-				Logger::Log(AL_MODULE, LOG_CRITICAL, "TransformNode line found, but no TransformNode array provided");
-				f->Close();
-				return ENGINE_FAIL;
-			}
-		}
+			nodes.push_back(_ReadTransformNode(lineBuff));
 		else // Index line
 		{
 			EngineUtils::ReadUIntArray(lineBuff, 3, indexBuff);
-			
+
 			indices.push_back(indexBuff[0]);
 			indices.push_back(indexBuff[1]);
 			indices.push_back(indexBuff[2]);
 		}
 	}
 
-    groupCount.push_back((uint32_t)indices.size() - offset);
-    
-    f->Close();
-	
+	groupCount.push_back((uint32_t)indices.size() - offset);
+
+	return ENGINE_OK;
+}
+
+int AssetLoader::_LoadSkeletalMeshV2(VFSFile *file,
+									 vector<Vertex> &vertices,
+									 vector<uint32_t> &indices,
+									 vector<uint32_t> &groupOffset,
+									 vector<uint32_t> &groupCount,
+									 vector<Bone> &bones,
+									 vector<TransformNode> &nodes,
+									 dmat4 &globalInverseTransform,
+									 bool readVertexGroup)
+{
+	struct SkeletalVertex
+	{
+		vec3 position;
+		vec2 uv;
+		vec3 normal;
+		vec3 tangent;
+		ivec4 boneIndices;
+		vec4 boneWeights;
+		int32_t numBones;
+	};
+
+	vector<SkeletalVertex> meshVertices{};
+
+	uint32_t num{ 0 };
+	char idBuff[8]{ 0x0 };
+
+	file->Read(&num, sizeof(uint32_t), 1);
+	meshVertices.resize(num);
+	file->Read(meshVertices.data(), sizeof(SkeletalVertex), num);
+
+	for (SkeletalVertex &skv : meshVertices)
+	{
+		Vertex v{};
+		v.pos = skv.position;
+		v.color = vec3(0.f);
+		v.norm = skv.normal;
+		v.tgt = skv.tangent;
+		v.uv = skv.uv;
+		v.terrainUv = vec2(0.f);
+		v.boneIndices = skv.boneIndices;
+		v.boneWeights = skv.boneWeights;
+		v.numBones = skv.numBones;
+	}
+
+	file->Read(&num, sizeof(uint32_t), 1);
+	indices.resize(num);
+	file->Read(indices.data(), sizeof(uint32_t), num);
+
+	file->Read(&num, sizeof(uint32_t), 1);
+
+	for (uint32_t i = 0; i < num; ++i)
+	{
+		uint32_t d{};
+
+		if (readVertexGroup)
+		{
+			file->Read(&d, sizeof(uint32_t), 1);
+			file->Read(&d, sizeof(uint32_t), 1);
+		}
+
+		file->Read(&d, sizeof(uint32_t), 1);
+		groupOffset.push_back(d);
+		file->Read(&d, sizeof(uint32_t), 1);
+		groupCount.push_back(d);
+	}
+
+	file->Read(value_ptr(globalInverseTransform), sizeof(dmat4), 1);
+
+	file->Read(&num, sizeof(uint32_t), 1);
+	for (uint32_t i = 0; i < num; ++i)
+	{
+		Bone bone{};
+		uint16_t len{ 0 };
+
+		file->Read(&len, sizeof(uint16_t), 1);
+		bone.name.resize(len);
+		file->Read(&bone.name[0], sizeof(char), len);
+
+		file->Read(value_ptr(bone.offset), sizeof(dmat4), 1);
+
+		bones.push_back(bone);
+	}
+
+	file->Read(&num, sizeof(uint32_t), 1);
+	for (uint32_t i = 0; i < num; ++i)
+	{
+		TransformNode node{};
+		uint16_t id{ 0 };
+
+		file->Read(&id, sizeof(uint16_t), 1);
+		node.name.resize(id);
+		file->Read(&node.name[0], sizeof(char), id);
+
+		file->Read(value_ptr(node.transform), sizeof(dmat4), 1);
+		file->Read(&node.parentId, sizeof(uint16_t), 1);
+		file->Read(&node.numChildren, sizeof(uint16_t), 1);
+
+		for (uint16_t j = 0; j < node.numChildren; ++j)
+		{
+			file->Read(&id, sizeof(uint16_t), 1);
+			node.childrenIds.push_back(id);
+		}
+
+		nodes.push_back(node);
+	}
+
+	file->Read(idBuff, sizeof(char), 7);
+	idBuff[7] = 0x0;
+
+	if (strncmp(idBuff, NMESH2_FOOTER, 7))
+		Logger::Log(AL_MODULE, LOG_WARNING, "Extra data in SkeletalMesh file %s", file->GetHeader().name);
+
 	return ENGINE_OK;
 }
 
 int AssetLoader::LoadAnimation(NString &file,
+							   std::string &name,
+							   double *duration,
+							   double *ticksPerSecond,
+							   vector<AnimationNode> &channels)
+{
+	char idBuff[8]{ 0x0 };
+	int ret{ ENGINE_FAIL };
+	memset(idBuff, 0x0, 8);
+
+	if (VFSFile *f = VFS::Open(file))
+	{
+		f->Read(idBuff, sizeof(char), 7);
+		idBuff[7] = 0x0;
+
+		if (!strncmp(idBuff, NANIM2_HEADER, 7))
+			ret = _LoadAnimationV2(f, name, duration, ticksPerSecond, channels);
+		else
+		{
+			f->Seek(0, SEEK_SET);
+			ret = _LoadAnimationV1(f, name, duration, ticksPerSecond, channels);
+		}
+
+		f->Close();
+
+		return ret;
+	}
+
+	Logger::Log(AL_MODULE, LOG_CRITICAL, "Failed to open AnimationClip file %s", *file);
+	return ENGINE_IO_FAIL;
+}
+
+int AssetLoader::LoadSkeletalMesh(NString &file,
+								  vector<Vertex> &vertices,
+								  vector<uint32_t> &indices,
+								  vector<uint32_t> &groupOffset,
+								  vector<uint32_t> &groupCount,
+								  vector<Bone> &bones,
+								  vector<TransformNode> &nodes,
+								  dmat4 &globalInverseTransform)
+{
+	char idBuff[8]{ 0x0 }, skelBuff[9]{ 0x0 };
+	int ret{ ENGINE_FAIL };
+
+	vertices.clear();
+	indices.clear();
+	groupOffset.clear();
+	groupCount.clear();
+	bones.clear();
+	nodes.clear();
+	globalInverseTransform = dmat4();
+
+	if (VFSFile *f = VFS::Open(file))
+	{
+		f->Read(idBuff, sizeof(char), 7);
+		idBuff[7] = 0x0;
+
+		f->Read(skelBuff, sizeof(char), 8);
+		skelBuff[8] = 0x0;
+
+		if (strncmp(skelBuff, NMESH_SKELETAL, 8))
+		{
+			f->Seek(0, SEEK_SET);
+			ret = _LoadSkeletalMeshV1(f, vertices, indices, groupOffset, groupCount, bones, nodes, globalInverseTransform);
+			f->Close();
+			return ENGINE_FAIL;
+		}
+
+		if (!strncmp(idBuff, NMESH2_HEADER, 7))
+			ret = _LoadSkeletalMeshV2(f, vertices, indices, groupOffset, groupCount, bones, nodes, globalInverseTransform, false);
+		else if (!strncmp(idBuff, NMESH2A_HEADER, 7))
+			ret = _LoadSkeletalMeshV2(f, vertices, indices, groupOffset, groupCount, bones, nodes, globalInverseTransform, true);
+		else
+		{
+			f->Close();
+			Logger::Log(AL_MODULE, LOG_CRITICAL, "File %s is not a valid mesh", *file);
+			return ENGINE_FAIL;
+		}
+
+		f->Close();
+
+		return ret;
+	}
+
+	Logger::Log(AL_MODULE, LOG_CRITICAL, "Failed to open mesh file %s", *file);
+	return ENGINE_IO_FAIL;
+}
+
+int AssetLoader::_LoadAnimationV1(VFSFile *f,
 						 std::string &name,
 						 double *duration,
 						 double *ticksPerSecond,
@@ -238,13 +579,6 @@ int AssetLoader::LoadAnimation(NString &file,
 	QuatKey qk;
 	AnimationNode channel;
 	memset(lineBuff, 0x0, AL_LINE_BUFF);
-	
-	VFSFile *f = VFS::Open(file);
-	if(!f)
-	{
-		Logger::Log(AL_MODULE, LOG_CRITICAL, "Failed to open animation file %s", *file);
-		return ENGINE_IO_FAIL;
-	}
 	
 	while (!f->EoF())
 	{
@@ -339,8 +673,68 @@ int AssetLoader::LoadAnimation(NString &file,
 		}
 	}
 	
-	f->Close();
-	
+	return ENGINE_OK;
+}
+
+int AssetLoader::_LoadAnimationV2(VFSFile *file,
+								  std::string &name,
+								  double *duration,
+								  double *ticksPerSecond,
+								  std::vector<AnimationNode> &channels)
+{
+	char idBuff[8]{ 0x0 };
+	uint32_t num{ 0 }, numChannels{ 0 }, numKeys{ 0 };
+	NString str{};
+
+	file->Read(&num, sizeof(uint32_t), 1);
+	str.Resize(num + 1);
+	file->Read(*str, sizeof(char), num);
+	str[num] = 0x0;
+	name = *str;
+
+	file->Read(duration, sizeof(double), 1);
+	file->Read(ticksPerSecond, sizeof(double), 1);
+
+	file->Read(&numChannels, sizeof(uint32_t), 1);
+	channels.resize(numChannels);
+	for (uint32_t i = 0; i < numChannels; ++i)
+	{
+		file->Read(&num, sizeof(uint32_t), 1);
+		channels[i].name.Resize(num + 1);
+		file->Read(*channels[i].name, sizeof(char), num);
+		channels[i].name[num] = 0x0;
+
+		file->Read(&numKeys, sizeof(uint32_t), 1);
+		channels[i].positionKeys.resize(numKeys);
+		for (uint32_t j = 0; j < numKeys; ++j)
+		{
+			file->Read(&channels[i].positionKeys[j].value.x, sizeof(double), 3);
+			file->Read(&channels[i].positionKeys[j].time, sizeof(double), 1);
+		}
+
+		file->Read(&numKeys, sizeof(uint32_t), 1);
+		channels[i].rotationKeys.resize(numKeys);
+		for (uint32_t j = 0; j < numKeys; ++j)
+		{
+			file->Read(&channels[i].rotationKeys[j].value.x, sizeof(double), 4);
+			file->Read(&channels[i].rotationKeys[j].time, sizeof(double), 1);
+		}
+
+		file->Read(&numKeys, sizeof(uint32_t), 1);
+		channels[i].scalingKeys.resize(numKeys);
+		for (uint32_t j = 0; j < numKeys; ++j)
+		{
+			file->Read(&channels[i].scalingKeys[j].value.x, sizeof(double), 3);
+			file->Read(&channels[i].scalingKeys[j].time, sizeof(double), 1);
+		}
+	}
+
+	file->Read(idBuff, sizeof(char), 7);
+	idBuff[7] = 0x0;
+
+	if (strncmp(idBuff, NANIM2_FOOTER, 7))
+		Logger::Log(AL_MODULE, LOG_WARNING, "Extra data in AnimationClip file %s", file->GetHeader().name);
+
 	return ENGINE_OK;
 }
 
