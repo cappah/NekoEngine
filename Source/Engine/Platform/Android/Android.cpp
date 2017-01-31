@@ -96,7 +96,7 @@ bool _android_download_file(const char *address, const char *file)
 	hints.ai_protocol = IPPROTO_TCP;
 	snprintf(buff, DL_BUFF_SIZE, "GET %s HTTP/1.1\r\n", url);
 
-	if (i == getaddrinfo(host, "80", &hints, &ai))
+	if (i = getaddrinfo(host, "80", &hints, &ai))
 	{
 		fclose(f);
 		Logger::Log(ANDROID_PLATFORM_MODULE, LOG_CRITICAL, "getaddrinfo() failed: %s", gai_strerror(i));
@@ -175,13 +175,14 @@ void _android_handle_app_cmd(struct android_app *app, int32_t cmd)
 
 			char buff[512];
 			snprintf(buff, 512, "%s/data", *_externalDataPath);
+			mkdir(*_externalDataPath, 0777);
 			mkdir(buff, 0777);
 
 			snprintf(buff, 512, "%s/data/core_android.nar", *_externalDataPath);
-			if(access(buff, 0)) _android_download_file("nalexandru.xyz/runnergame_android/core_android.nar", buff);
+			if(access(buff, 0)) _android_download_file("192.168.7.6/runnergame_android/core_android.nar", buff);
 
 			snprintf(buff, 512, "%s/engine.ini", *_externalDataPath);
-			if(access(buff, 0)) _android_download_file("nalexandru.xyz/runnergame_android/engine.ini", buff);
+			if(access(buff, 0)) _android_download_file("192.168.7.6/runnergame_android/engine.ini", buff);
 
 			if(Engine::Initialize(*args, false) != ENGINE_OK)
 				Platform::Exit();

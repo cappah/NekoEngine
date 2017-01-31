@@ -318,6 +318,15 @@ bool Object::CanUnload() noexcept
 	return ret;
 }
 
+void Object::OnHit(Object *other, glm::vec3 &position)
+{
+	if (!_loaded)
+		return;
+
+	for (pair<string, ObjectComponent*> kvp : _components)
+		kvp.second->OnHit(other, position);
+}
+
 void Object::AddComponent(const char *name, ObjectComponent *comp)
 {
 	_components.insert({ name, comp });

@@ -50,6 +50,23 @@ Object
 id=9001
 Component=FPSControllerComponent=Controller
 EndComponent
+Component=StaticMeshComponent=Mesh
+	scale=0.1, 0.1, 0.1
+	mesh=stm_muscle_car
+	material=mat_skyreflect
+	material=mat_skyreflect
+	material=mat_skyreflect
+	material=mat_skyreflect
+	material=mat_skyreflect
+	material=mat_skyreflect
+	material=mat_skyreflect
+	material=mat_skyreflect
+	material=mat_skyreflect
+	material=mat_skyreflect
+	material=mat_skyreflect
+	material=mat_skyreflect
+	material=mat_skyreflect
+EndComponent
 position=0.0, 0.0, 0.0
 scale=1.0, 1.0, 1.0
 rotation=0.0, -90.0, 0.0

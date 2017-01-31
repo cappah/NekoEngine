@@ -67,6 +67,7 @@
 #include <Engine/DeferredBuffer.h>
 #include <Engine/Console.h>
 #include <System/Logger.h>
+#include <Physics/Physics.h>
 #include <PostEffects/Effect.h>
 #include <System/VFS/VFS.h>
 #include <GUI/GUIManager.h>
@@ -535,6 +536,12 @@ bool Engine::_InitSystem()
 		return false;
 	}
 
+	if (Physics::Initialize() != ENGINE_OK)
+	{
+		Logger::Log(ENGINE_MODULE, LOG_CRITICAL, "Failed to initialize the physics module");
+		return false;
+	}
+
 	if (SceneManager::Initialize() != ENGINE_OK)
 	{
 		Logger::Log(ENGINE_MODULE, LOG_CRITICAL, "Failed to initialize the scene manager");
@@ -855,6 +862,8 @@ void Engine::Update(double deltaTime) noexcept
 
 	Input::Update();
 
+	Physics::Update(deltaTime);
+
 	if (_config.Engine.EnableConsole)
 		if (Input::GetButtonDown(NE_KEY_TILDE))
 			Console::OpenConsole();
@@ -1131,6 +1140,7 @@ void Engine::CleanUp() noexcept
 	DeferredBuffer::Release();
 	PostProcessor::Release();
 	SceneManager::Release();
+	Physics::Release();
 	SoundManager::Release();
 	ResourceManager::Release();
 	VFS::Release();

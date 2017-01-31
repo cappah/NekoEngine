@@ -51,6 +51,7 @@
 #include <Engine/DeferredBuffer.h>
 #include <Engine/CameraManager.h>
 #include <Runtime/Runtime.h>
+#include <Physics/Physics.h>
 #include <Scene/Scene.h>
 #include <Scene/Object.h>
 #include <Scene/Terrain.h>
@@ -263,6 +264,7 @@ void Scene::_LoadSceneInfo(VFSFile *f)
 	}
 
 	DeferredBuffer::SetAmbientColor(_ambientColor, _ambientColorIntensity);
+	Physics::InitScene(BroadphaseType::SAP, 4000.f, 15000000u);
 }
 
 void Scene::_LoadComponent(VFSFile *f, ComponentInitInfo *initInfo)

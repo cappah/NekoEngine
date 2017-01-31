@@ -141,6 +141,8 @@ public:
 	ENGINE_API virtual bool Unload() noexcept;
 	ENGINE_API virtual bool CanUnload() noexcept;
 
+	ENGINE_API virtual void OnHit(Object *other, glm::vec3 &position);
+
 	ENGINE_API void AddComponent(const char *name, ObjectComponent *comp);
 	ENGINE_API ObjectComponent *GetComponent(const char *name) { return _components[name]; }
 	template<typename T>

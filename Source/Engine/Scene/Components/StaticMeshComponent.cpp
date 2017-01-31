@@ -178,8 +178,7 @@ void StaticMeshComponent::Draw(RShader *shader, Camera *camera) noexcept
 	{
 		if(_mmNeedsUpdate)
 		{
-			_matrixBlock.Model = (_translationMatrix * _rotationMatrix) * _scaleMatrix;
-			_matrixBlock.Model *= _parent->GetModelMatrix();
+			_matrixBlock.Model = _parent->GetModelMatrix() * _translationMatrix * _rotationMatrix * _scaleMatrix;
 			_mmNeedsUpdate = false;
 		}	
 

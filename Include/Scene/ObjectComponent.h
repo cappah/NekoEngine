@@ -86,6 +86,8 @@ public:
 	virtual bool Unload();
 	virtual bool CanUnload() { return true; }
 
+	virtual void OnHit(Object *other, glm::vec3 &position) { (void)other; (void)position; }
+
 	virtual ~ObjectComponent() { Unload(); }
 
 protected:
