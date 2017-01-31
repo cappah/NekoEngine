@@ -239,6 +239,8 @@ int AssetLoader::_LoadStaticMeshV2(VFSFile *file,
 		v.tgt = stv.tangent;
 		v.uv = stv.uv;
 		v.terrainUv = vec2(0.f);
+
+		vertices.push_back(v);
 	}
 
 	file->Read(&num, sizeof(uint32_t), 1);
@@ -407,6 +409,8 @@ int AssetLoader::_LoadSkeletalMeshV2(VFSFile *file,
 		v.boneIndices = skv.boneIndices;
 		v.boneWeights = skv.boneWeights;
 		v.numBones = skv.numBones;
+
+		vertices.push_back(v);
 	}
 
 	file->Read(&num, sizeof(uint32_t), 1);

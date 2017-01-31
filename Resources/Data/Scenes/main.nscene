@@ -91,6 +91,17 @@ scale=1.0, 1.0, 1.0
 rotation=0.0, 85.0, 0.0
 EndObject
 
+Object
+id=4415
+Component=StaticMeshComponent=Mesh
+	mesh=stm_quad
+	material=mat_arissa
+EndComponent
+position=0.0, 20.0, 0.0
+scale=100.0, 100.0, 100.0
+rotation=0.0, 0.0, 0.0
+EndObject
+
 # Arissa
 #Object
 #id=5
