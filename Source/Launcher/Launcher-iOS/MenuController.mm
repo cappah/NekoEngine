@@ -26,7 +26,7 @@
 
 - (IBAction)endGame:(id)sender
 {
-	SceneManager::LoadScene(0);
+//	SceneManager::LoadScene(0);
 }
 
 - (IBAction)saveSettings:(id)sender

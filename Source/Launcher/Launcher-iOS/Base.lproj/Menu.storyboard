@@ -44,6 +44,7 @@
                                 <state key="normal" title="Main Menu"/>
                                 <connections>
                                     <action selector="endGame:" destination="mAO-Cc-RwV" eventType="touchUpInside" id="gIb-Qk-nIh"/>
+                                    <segue destination="9bg-fU-Dbf" kind="show" id="32W-CU-54q"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Score: 666" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="I8f-JA-VuH">
@@ -111,6 +112,7 @@
                                 <state key="normal" title="Give Up"/>
                                 <connections>
                                     <action selector="endGame:" destination="JEK-dd-MTg" eventType="touchUpInside" id="1Q4-PJ-Ryq"/>
+                                    <segue destination="9bg-fU-Dbf" kind="show" id="F81-Jy-ZP8"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -318,6 +320,6 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="m96-jB-Bm0"/>
+        <segue reference="32W-CU-54q"/>
     </inferredMetricsTieBreakers>
 </document>
