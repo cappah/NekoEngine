@@ -1,9 +1,9 @@
-/* NekoEngine
+/* DungeonGame
  *
- * MovingObject.h
+ * Player.h
  * Author: Alexandru Naiman
  *
- * MovingObject class definition 
+ * Player class
  *
  * -----------------------------------------------------------------------------
  *
@@ -39,37 +39,26 @@
 
 #pragma once
 
-#include <glm/glm.hpp>
-
-#include "RunnerGame.h"
 #include <Scene/Object.h>
+#include <Scene/Components/ColliderComponent.h>
 
-enum class TrajectoryType : unsigned short
-{
-	NoTrajectory = 0,
-	Linear = 1,
-	Circular = 2
-};
+#define PLAYER_SIZE		2.f
 
-class MovingObject :
-	public Object
+class Player : public Object
 {
 public:
-	RUNNERGAME_API MovingObject(ObjectInitializer *initializer) noexcept;
+	Player(ObjectInitializer *initializer);
 
-	void RUNNERGAME_API SetTrajectory(TrajectoryType trajectory) noexcept { _trajectory = trajectory; }
-	void RUNNERGAME_API SetDestination(glm::vec3 &destination) noexcept { _endPosition = destination; }
-	void RUNNERGAME_API SetMovementSpeed(float speed) noexcept { _speed = speed; }
-	void RUNNERGAME_API SetMovementRadius(float radius) noexcept { _radius = radius; }
+	virtual int Load() override;
 
-	virtual int RUNNERGAME_API Load() override;
-	virtual void RUNNERGAME_API Update(double deltaTime) noexcept override;
+	virtual void Update(double deltaTime) noexcept override;
 
-	virtual RUNNERGAME_API ~MovingObject() noexcept {};
+	virtual void OnHit(Object *other, glm::vec3 &position);
 
-protected:
-	glm::vec3 _startPosition, _endPosition;
-	float _speed, _radius;
-	TrajectoryType _trajectory;
-	float _lastDistance, _circularCounter;
+	virtual bool Unload() noexcept override;
+
+	virtual ~Player();
+
+private:
+	ColliderComponent *_collider;
 };

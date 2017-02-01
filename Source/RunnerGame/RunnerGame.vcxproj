@@ -19,16 +19,16 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CameraController.h" />
     <ClInclude Include="DemoAnimatorComponent.h" />
     <ClInclude Include="GameController.h" />
-    <ClInclude Include="MovingObject.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="RunnerGame.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CameraController.cpp" />
     <ClCompile Include="DemoAnimatorComponent.cpp" />
     <ClCompile Include="GameController.cpp" />
-    <ClCompile Include="MovingObject.cpp" />
     <ClCompile Include="RunnerGame.cpp" />
   </ItemGroup>
   <ItemGroup>

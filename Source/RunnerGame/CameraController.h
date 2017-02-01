@@ -1,9 +1,9 @@
 /* NekoEngine
  *
- * RunnerGame.cpp
+ * CameraController.h
  * Author: Alexandru Naiman
  *
- * Runner game module
+ * CameraController class definition
  *
  * -----------------------------------------------------------------------------
  *
@@ -37,25 +37,21 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
-#include <vector>
-
-#include <glm/glm.hpp>
+#pragma once
 
 #include "RunnerGame.h"
+#include <Scene/ObjectComponent.h>
 
-using namespace std;
-using namespace glm;
-
-NEKO_GAME_MODULE_IMPL(RunnerGame);
-
-int RunnerGame::Initialize()
+class CameraController : public ObjectComponent
 {
-	//
-	return ENGINE_OK;
-}
+public:
+	RUNNERGAME_API CameraController(ComponentInitializer *initializer);
 
-void RunnerGame::CleanUp()
-{
-	//
-}
+	RUNNERGAME_API virtual int Load() override;
+	RUNNERGAME_API virtual void Update(double deltaTime) noexcept override;
+	RUNNERGAME_API virtual bool Unload() override;
+
+	RUNNERGAME_API ~CameraController();
+
+private:
+};

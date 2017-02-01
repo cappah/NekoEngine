@@ -1,9 +1,9 @@
-/* NekoEngine
+/* DungeonGame
  *
- * RunnerGame.cpp
+ * Player.cpp
  * Author: Alexandru Naiman
  *
- * Runner game module
+ * Player class
  *
  * -----------------------------------------------------------------------------
  *
@@ -37,25 +37,47 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include "Player.h"
 
-#include <vector>
-
-#include <glm/glm.hpp>
-
-#include "RunnerGame.h"
-
-using namespace std;
 using namespace glm;
 
-NEKO_GAME_MODULE_IMPL(RunnerGame);
-
-int RunnerGame::Initialize()
+Player::Player(ObjectInitializer *initializer) :
+	Object(initializer)
 {
-	//
+	ArgumentMapType::iterator it;
+	const char *ptr = nullptr;
+
+	/*if (((it = initializer->arguments.find("bullets")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
+	_bullets = atoi(ptr);*/
+}
+
+int Player::Load()
+{
+	int ret{ Object::Load() };
+	if (ret != ENGINE_OK) return ret;
+
 	return ENGINE_OK;
 }
 
-void RunnerGame::CleanUp()
+void Player::Update(double deltaTime) noexcept
+{
+	Object::Update(deltaTime);
+}
+
+void Player::OnHit(Object *other, vec3 &position)
+{
+	Object::OnHit(other, position);
+}
+
+bool Player::Unload() noexcept
+{
+	if (!Object::Unload())
+		return false;
+
+	return true;
+}
+
+Player::~Player()
 {
 	//
 }
