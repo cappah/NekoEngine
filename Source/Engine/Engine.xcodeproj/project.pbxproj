@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		120F83D21E4B6AA600DA5214 /* Colliders.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 120F83D01E4B6AA600DA5214 /* Colliders.cpp */; };
+		120F83D31E4B6AA600DA5214 /* Colliders.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 120F83D01E4B6AA600DA5214 /* Colliders.cpp */; };
+		120F83D41E4B6AA600DA5214 /* Physics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 120F83D11E4B6AA600DA5214 /* Physics.cpp */; };
+		120F83D51E4B6AA600DA5214 /* Physics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 120F83D11E4B6AA600DA5214 /* Physics.cpp */; };
 		121482B31D51461E00F804C3 /* libfreetype.6.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 121482B21D51461E00F804C3 /* libfreetype.6.dylib */; };
 		121482B51D51465000F804C3 /* NFont.h in Headers */ = {isa = PBXBuildFile; fileRef = 121482B41D51465000F804C3 /* NFont.h */; };
 		121482B71D51466B00F804C3 /* NFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 121482B61D51466B00F804C3 /* NFont.cpp */; };
@@ -711,6 +715,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		120F83D01E4B6AA600DA5214 /* Colliders.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Colliders.cpp; path = Physics/Colliders.cpp; sourceTree = SOURCE_ROOT; };
+		120F83D11E4B6AA600DA5214 /* Physics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Physics.cpp; path = Physics/Physics.cpp; sourceTree = SOURCE_ROOT; };
 		121482B21D51461E00F804C3 /* libfreetype.6.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfreetype.6.dylib; path = ../../../../../usr/local/Cellar/freetype/2.6.3/lib/libfreetype.6.dylib; sourceTree = "<group>"; };
 		121482B41D51465000F804C3 /* NFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NFont.h; sourceTree = "<group>"; };
 		121482B61D51466B00F804C3 /* NFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NFont.cpp; path = Core/NFont.cpp; sourceTree = SOURCE_ROOT; };
@@ -1287,6 +1293,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		120F83CF1E4B6A3B00DA5214 /* Physics */ = {
+			isa = PBXGroup;
+			children = (
+				120F83D01E4B6AA600DA5214 /* Colliders.cpp */,
+				120F83D11E4B6AA600DA5214 /* Physics.cpp */,
+			);
+			name = Physics;
+			sourceTree = "<group>";
+		};
 		123995DE1E400C6D001F79BF /* Bullet */ = {
 			isa = PBXGroup;
 			children = (
@@ -1830,6 +1845,7 @@
 		12822AF31CC1AD4300EE5D0A /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				120F83CF1E4B6A3B00DA5214 /* Physics */,
 				123995DE1E400C6D001F79BF /* Bullet */,
 				12822B051CC1AD9400EE5D0A /* Audio */,
 				12822B0A1CC1AD9F00EE5D0A /* Core */,
@@ -2655,6 +2671,7 @@
 				123997831E400C6D001F79BF /* btActivatingCollisionAlgorithm.cpp in Sources */,
 				12C560AB1CFB57B200E25478 /* Material.cpp in Sources */,
 				123999081E400C6E001F79BF /* btMultiBodySliderConstraint.cpp in Sources */,
+				120F83D31E4B6AA600DA5214 /* Colliders.cpp in Sources */,
 				123997BC1E400C6D001F79BF /* btInternalEdgeUtility.cpp in Sources */,
 				12C560B51CFB57B200E25478 /* Shader.cpp in Sources */,
 				123998021E400C6D001F79BF /* btCylinderShape.cpp in Sources */,
@@ -2676,6 +2693,7 @@
 				123998AB1E400C6E001F79BF /* btContactConstraint.cpp in Sources */,
 				123998EA1E400C6E001F79BF /* btSimulationIslandManagerMt.cpp in Sources */,
 				123997A71E400C6D001F79BF /* btConvexConcaveCollisionAlgorithm.cpp in Sources */,
+				120F83D51E4B6AA600DA5214 /* Physics.cpp in Sources */,
 				12A4ABC81D648CD400D22B76 /* HBAO.cpp in Sources */,
 				124A31FB1CDC264100472893 /* Light.cpp in Sources */,
 				1239987A1E400C6E001F79BF /* btConvexCast.cpp in Sources */,
@@ -2868,6 +2886,7 @@
 				123997821E400C6D001F79BF /* btActivatingCollisionAlgorithm.cpp in Sources */,
 				12C560AA1CFB57B200E25478 /* Material.cpp in Sources */,
 				123999071E400C6E001F79BF /* btMultiBodySliderConstraint.cpp in Sources */,
+				120F83D21E4B6AA600DA5214 /* Colliders.cpp in Sources */,
 				123997BB1E400C6D001F79BF /* btInternalEdgeUtility.cpp in Sources */,
 				12C560B41CFB57B200E25478 /* Shader.cpp in Sources */,
 				123998011E400C6D001F79BF /* btCylinderShape.cpp in Sources */,
@@ -2889,6 +2908,7 @@
 				123998AA1E400C6E001F79BF /* btContactConstraint.cpp in Sources */,
 				123998E91E400C6E001F79BF /* btSimulationIslandManagerMt.cpp in Sources */,
 				123997A61E400C6D001F79BF /* btConvexConcaveCollisionAlgorithm.cpp in Sources */,
+				120F83D41E4B6AA600DA5214 /* Physics.cpp in Sources */,
 				12822B2D1CC1ADD000EE5D0A /* UNIX.cpp in Sources */,
 				12C560C21CFB57B200E25478 /* Texture.cpp in Sources */,
 				123998791E400C6E001F79BF /* btConvexCast.cpp in Sources */,
