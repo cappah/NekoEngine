@@ -201,6 +201,29 @@ rotation=0.0, 0.0, 0.0
 scale=280.0, 280.0, 280.0
 EndObject
 
+# Nyra
+Object
+id=12
+Component=StaticMeshComponent=Mesh
+	mesh=stm_tombstone1
+	material=mat_tombstone
+EndComponent
+position=100.0, -25.0, -145.0
+rotation=0.0, 0.0, 0.0
+scale=100.0, 100.0, 100.0
+EndObject
+
+Object
+id=12
+Component=StaticMeshComponent=Mesh
+	mesh=stm_tombstone2
+	material=mat_tombstone
+EndComponent
+position=200.0, -25.0, -145.0
+rotation=0.0, 0.0, 0.0
+scale=100.0, 100.0, 100.0
+EndObject
+
 ##########
 # Lights #
 ##########
