@@ -525,8 +525,8 @@ bool DeferredBuffer::_GenerateTextures() noexcept
 		_gbTextures[GB_TEX_NORMAL] = r->CreateTexture(TextureType::Tex2DMultisample);
 		if(!_gbTextures[GB_TEX_NORMAL])
 			return false;
-		_gbTextures[GB_TEX_NORMAL]->SetStorage2DMS(_samples, _fboWidth, _fboHeight, TextureSizedFormat::RGB10_A2, true);
-
+		//_gbTextures[GB_TEX_NORMAL]->SetStorage2DMS(_samples, _fboWidth, _fboHeight, TextureSizedFormat::RGB10_A2, true);
+		_gbTextures[GB_TEX_NORMAL]->SetStorage2DMS(_samples, _fboWidth, _fboHeight, TextureSizedFormat::RGBA_16F, true);
 		_gbTextures[GB_TEX_COLOR_SPECULAR] = r->CreateTexture(TextureType::Tex2DMultisample);
 		if(!_gbTextures[GB_TEX_COLOR_SPECULAR])
 			return false;
@@ -567,7 +567,7 @@ bool DeferredBuffer::_GenerateTextures() noexcept
 		_gbTextures[GB_TEX_NORMAL] = r->CreateTexture(TextureType::Tex2D);
 		if(!_gbTextures[GB_TEX_NORMAL])
 			return false;
-		_gbTextures[GB_TEX_NORMAL]->SetStorage2D(1, TextureSizedFormat::RGB10_A2, _fboWidth, _fboHeight);
+		_gbTextures[GB_TEX_NORMAL]->SetStorage2D(1, TextureSizedFormat::RGBA_16F, _fboWidth, _fboHeight);
 
 		_gbTextures[GB_TEX_COLOR_SPECULAR] = r->CreateTexture(TextureType::Tex2D);
 		if(!_gbTextures[GB_TEX_COLOR_SPECULAR])

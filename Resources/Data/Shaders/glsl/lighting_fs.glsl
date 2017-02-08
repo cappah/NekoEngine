@@ -48,7 +48,7 @@ float attenuation = 1.0;
 vec3 normal;
 vec3 lightDirection;
 
-vec3 decodeNormal(vec2 enc)
+/*vec3 decodeNormal(vec2 enc)
 {
 	vec2 fenc = enc * 4.0 - 2.0;
 	float f = dot(fenc, fenc);
@@ -57,7 +57,7 @@ vec3 decodeNormal(vec2 enc)
 	n.xy = fenc * g;
 	n.z = 1.0 - f / 2.0;
 	return n;
-}
+}*/
 
 float getShadow()
 {
@@ -156,7 +156,8 @@ void readGBuffer()
 	
 	fragmentPosition = gb0;
 	
-	normal = decodeNormal(gb1.xy);
+	//normal = decodeNormal(gb1.xy);
+	normal = gb1.xyz;
 	bloom = gb1.w;
 	
 	color = gb2.rgb;

@@ -168,7 +168,7 @@ void main()
 
 	o_Position = vec4(vertexData.Position, MaterialType);
 	
-	o_GBuffer1 = vec4(encodeNormal(normal), 0.f, Bloom);
+	o_GBuffer1 = vec4(normal, Bloom);//vec4(encodeNormal(normal), 0.f, Bloom);
 	o_GBuffer2 = vec4(color, shininess);
 	o_GBuffer3 = vec2(DiffuseConstant, SpecularConstant);
 }

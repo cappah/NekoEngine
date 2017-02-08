@@ -40,6 +40,7 @@
 #pragma once
 
 #include <Engine/Engine.h>
+#include <btBulletCollisionCommon.h>
 
 class Object;
 class StaticMesh;

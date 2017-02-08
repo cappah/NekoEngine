@@ -22,6 +22,7 @@
     <ClInclude Include="CameraController.h" />
     <ClInclude Include="DemoAnimatorComponent.h" />
     <ClInclude Include="GameController.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="RunnerGame.h" />
   </ItemGroup>
@@ -29,6 +30,7 @@
     <ClCompile Include="CameraController.cpp" />
     <ClCompile Include="DemoAnimatorComponent.cpp" />
     <ClCompile Include="GameController.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="RunnerGame.cpp" />
   </ItemGroup>
   <ItemGroup>
