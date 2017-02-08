@@ -39,6 +39,8 @@
 
 #include "CameraController.h"
 
+REGISTER_COMPONENT_CLASS(CameraController);
+
 CameraController::CameraController(ComponentInitializer *initializer) :
 	ObjectComponent(initializer)
 {

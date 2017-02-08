@@ -61,7 +61,7 @@ uint32_t EventManager::RegisterHandler(int32_t id, std::function<void(int32_t, v
 
 		eventHandlers.handlers.push_back(handler);
 
-		return (uint32_t)eventHandlers.handlers.size();
+		return (uint32_t)eventHandlers.handlers.size() - 1;
 	}
 
 	EventHandlers handlers{};
@@ -70,7 +70,7 @@ uint32_t EventManager::RegisterHandler(int32_t id, std::function<void(int32_t, v
 
 	_eventHandlers.push_back(handlers);
 
-	return (uint32_t)handlers.handlers.size();
+	return (uint32_t)handlers.handlers.size() - 1;
 }
 
 void EventManager::UnregisterHandler(int32_t id, uint32_t handler)
@@ -86,7 +86,7 @@ void EventManager::UnregisterHandler(int32_t id, uint32_t handler)
 	}
 }
 
-void EventManager::Broadcast(int id, void *eventArgs)
+void EventManager::Broadcast(int32_t id, void *eventArgs)
 {
 	for (EventHandlers &eventHandlers : _eventHandlers)
 	{
