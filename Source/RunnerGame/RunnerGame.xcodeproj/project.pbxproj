@@ -7,12 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		124A31CD1CDC253900472893 /* MovingObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 127012011CC31417001840A7 /* MovingObject.cpp */; };
+		120F83C61E4B69AD00DA5214 /* Player.h in Headers */ = {isa = PBXBuildFile; fileRef = 120F83C51E4B69AD00DA5214 /* Player.h */; };
+		120F83C81E4B69B700DA5214 /* CameraController.h in Headers */ = {isa = PBXBuildFile; fileRef = 120F83C71E4B69B700DA5214 /* CameraController.h */; };
+		120F83CA1E4B69BD00DA5214 /* Player.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 120F83C91E4B69BD00DA5214 /* Player.cpp */; };
+		120F83CB1E4B69BD00DA5214 /* Player.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 120F83C91E4B69BD00DA5214 /* Player.cpp */; };
+		120F83CD1E4B69C200DA5214 /* CameraController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 120F83CC1E4B69C200DA5214 /* CameraController.cpp */; };
+		120F83CE1E4B69C200DA5214 /* CameraController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 120F83CC1E4B69C200DA5214 /* CameraController.cpp */; };
 		12615D661CF40C8D006FB6DB /* DemoAnimatorComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 12615D651CF40C8D006FB6DB /* DemoAnimatorComponent.h */; };
 		12615D691CF40C91006FB6DB /* DemoAnimatorComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12615D681CF40C91006FB6DB /* DemoAnimatorComponent.cpp */; };
 		12615D6A1CF40C91006FB6DB /* DemoAnimatorComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12615D681CF40C91006FB6DB /* DemoAnimatorComponent.cpp */; };
-		127012031CC31417001840A7 /* MovingObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 127012011CC31417001840A7 /* MovingObject.cpp */; };
-		127012071CC3141C001840A7 /* MovingObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 127012051CC3141C001840A7 /* MovingObject.h */; };
 		1270125E1CC31645001840A7 /* libEngine.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1270125B1CC31615001840A7 /* libEngine.dylib */; };
 		12BE4CD71E1D74DC00BDD467 /* RunnerGame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12BE4CD61E1D74DC00BDD467 /* RunnerGame.cpp */; };
 		12BE4CD81E1D74DC00BDD467 /* RunnerGame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12BE4CD61E1D74DC00BDD467 /* RunnerGame.cpp */; };
@@ -59,12 +62,14 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		120F83C51E4B69AD00DA5214 /* Player.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Player.h; sourceTree = "<group>"; };
+		120F83C71E4B69B700DA5214 /* CameraController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CameraController.h; sourceTree = "<group>"; };
+		120F83C91E4B69BD00DA5214 /* Player.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Player.cpp; sourceTree = "<group>"; };
+		120F83CC1E4B69C200DA5214 /* CameraController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CameraController.cpp; sourceTree = "<group>"; };
 		124A31C41CDC252200472893 /* libRunnerGame_iOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRunnerGame_iOS.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		12615D651CF40C8D006FB6DB /* DemoAnimatorComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoAnimatorComponent.h; sourceTree = "<group>"; };
 		12615D681CF40C91006FB6DB /* DemoAnimatorComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DemoAnimatorComponent.cpp; sourceTree = "<group>"; };
 		127011EF1CC313D7001840A7 /* libRunnerGame.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libRunnerGame.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
-		127012011CC31417001840A7 /* MovingObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MovingObject.cpp; sourceTree = "<group>"; };
-		127012051CC3141C001840A7 /* MovingObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MovingObject.h; sourceTree = "<group>"; };
 		1270120B1CC3143F001840A7 /* AudioClip.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioClip.h; sourceTree = "<group>"; };
 		1270120C1CC3143F001840A7 /* AudioSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioSource.h; sourceTree = "<group>"; };
 		1270120E1CC3143F001840A7 /* DeferredBuffer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DeferredBuffer.h; sourceTree = "<group>"; };
@@ -178,8 +183,9 @@
 		127011FE1CC313F9001840A7 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				120F83CC1E4B69C200DA5214 /* CameraController.cpp */,
+				120F83C91E4B69BD00DA5214 /* Player.cpp */,
 				12C0589A1D2AF9020042023D /* GameController.cpp */,
-				127012011CC31417001840A7 /* MovingObject.cpp */,
 				12BE4CD61E1D74DC00BDD467 /* RunnerGame.cpp */,
 				12615D681CF40C91006FB6DB /* DemoAnimatorComponent.cpp */,
 			);
@@ -198,8 +204,9 @@
 		127012001CC3140E001840A7 /* Include */ = {
 			isa = PBXGroup;
 			children = (
+				120F83C71E4B69B700DA5214 /* CameraController.h */,
+				120F83C51E4B69AD00DA5214 /* Player.h */,
 				12C058971D2AF8FF0042023D /* GameController.h */,
-				127012051CC3141C001840A7 /* MovingObject.h */,
 				12BE4CD91E1D74E800BDD467 /* RunnerGame.h */,
 				12615D651CF40C8D006FB6DB /* DemoAnimatorComponent.h */,
 			);
@@ -375,10 +382,11 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				120F83C81E4B69B700DA5214 /* CameraController.h in Headers */,
 				12C058981D2AF8FF0042023D /* GameController.h in Headers */,
 				12615D661CF40C8D006FB6DB /* DemoAnimatorComponent.h in Headers */,
 				12BE4CDA1E1D74E800BDD467 /* RunnerGame.h in Headers */,
-				127012071CC3141C001840A7 /* MovingObject.h in Headers */,
+				120F83C61E4B69AD00DA5214 /* Player.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -484,8 +492,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				124A31CD1CDC253900472893 /* MovingObject.cpp in Sources */,
+				120F83CB1E4B69BD00DA5214 /* Player.cpp in Sources */,
 				12C0589C1D2AF9020042023D /* GameController.cpp in Sources */,
+				120F83CE1E4B69C200DA5214 /* CameraController.cpp in Sources */,
 				12615D6A1CF40C91006FB6DB /* DemoAnimatorComponent.cpp in Sources */,
 				12BE4CD81E1D74DC00BDD467 /* RunnerGame.cpp in Sources */,
 			);
@@ -495,8 +504,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				127012031CC31417001840A7 /* MovingObject.cpp in Sources */,
+				120F83CA1E4B69BD00DA5214 /* Player.cpp in Sources */,
 				12C0589B1D2AF9020042023D /* GameController.cpp in Sources */,
+				120F83CD1E4B69C200DA5214 /* CameraController.cpp in Sources */,
 				12615D691CF40C91006FB6DB /* DemoAnimatorComponent.cpp in Sources */,
 				12BE4CD71E1D74DC00BDD467 /* RunnerGame.cpp in Sources */,
 			);
