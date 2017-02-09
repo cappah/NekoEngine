@@ -43,6 +43,8 @@
 #include <vector>
 #include <stdarg.h>
 
+#include <Platform/Platform.h>
+
 #define LOG_DEBUG		0
 #define LOG_INFORMATION		1
 #define LOG_WARNING		2
@@ -69,11 +71,11 @@ class Logger
 {
 public:
 	static void Initialize(std::string file, unsigned int severity) noexcept;
-	static void Log(std::string Module, unsigned int severity, const char* format, ...);
-	static void Log(std::string Module, unsigned int severity, std::string Message);
+	PLATFORM_API static void Log(std::string Module, unsigned int severity, const char* format, ...);
+	PLATFORM_API static void Log(std::string Module, unsigned int severity, std::string Message);
 	static void LogRendererDebugMessage(const char* message) noexcept;
-	static void EnqueueLogMessage(std::string Module, unsigned int severity, std::string Message) noexcept;
-	static void EnqueueLogMessage(std::string Module, unsigned int severity, const char* format, ...) noexcept;
+	PLATFORM_API static void EnqueueLogMessage(std::string Module, unsigned int severity, std::string Message) noexcept;
+	PLATFORM_API static void EnqueueLogMessage(std::string Module, unsigned int severity, const char* format, ...) noexcept;
 	static void Flush();
 
 private:
