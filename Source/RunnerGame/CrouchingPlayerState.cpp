@@ -38,11 +38,18 @@
 */
 
 #include "CrouchingPlayerState.h"
+#include "RunningPlayerState.h"
+#include "Player.h"
 
 CrouchingPlayerState::CrouchingPlayerState(Player* player) :
 	PlayerState (player)
 {
 	_stateType = PlayerStateType::STATE_CROUCHING;
+
+	_speed = 300.0;
+	_duration = 0.75; // seconds
+
+	_elapsedTime = _duration;
 }
 
 CrouchingPlayerState::~CrouchingPlayerState()
@@ -52,5 +59,13 @@ CrouchingPlayerState::~CrouchingPlayerState()
 
 void CrouchingPlayerState::Update(double deltaTime)
 {
-	// Crouch
+	vec3 velocity = _player->GetForwardDirection() * _speed * (float)deltaTime;
+	vec3 newPosition = _player->GetPosition() + velocity;
+
+	_player->SetPosition(newPosition);
+
+	_duration -= deltaTime;
+
+	if (_duration < 0)
+		_player->SetState (new RunningPlayerState (_player));
 }

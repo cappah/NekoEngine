@@ -42,6 +42,9 @@
 #include <Scene/Object.h>
 #include "PlayerState.h"
 #include <Scene/Components/ColliderComponent.h>
+#include <glm/glm.hpp>
+
+using namespace glm;
 
 #define PLAYER_SIZE		2.f
 
@@ -49,6 +52,8 @@ class Player : public Object
 {
 private:
 	PlayerState* _currentPlayerState;
+	vec3 _moveDirection;
+
 public:
 	Player(ObjectInitializer *initializer);
 
@@ -61,6 +66,8 @@ public:
 	virtual bool Unload() noexcept override;
 
 	virtual void Kill() noexcept;
+
+	virtual vec3 GetForwardDirection () const noexcept;
 
 	virtual void SetState(PlayerState*);
 	virtual PlayerState* GetState () const;

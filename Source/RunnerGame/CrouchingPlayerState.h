@@ -43,6 +43,12 @@
 
 class CrouchingPlayerState : public PlayerState
 {
+private:
+	float _duration;
+	float _speed;
+	
+	float _elapsedTime;
+
 public:
 	CrouchingPlayerState(Player* player);
 	virtual ~CrouchingPlayerState();

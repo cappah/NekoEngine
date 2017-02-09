@@ -42,9 +42,16 @@
 #include "RunnerGame.h"
 #include "PlayerState.h"
 #include "Player.h"
+#include <glm/glm.hpp>
+
+using namespace glm;
 
 class RunningPlayerState : public PlayerState
 {
+private:
+	float _speed;
+	vec3 _direction;
+
 public:
 	RunningPlayerState(Player* player);
 	virtual ~RunningPlayerState();

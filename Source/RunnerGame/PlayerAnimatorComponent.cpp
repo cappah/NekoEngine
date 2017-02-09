@@ -95,6 +95,11 @@ void PlayerAnimatorComponent::Update(double deltaTime) noexcept
 			_defaultAnim = _clips[2];
 			_currentTime = 0.0;
 		}
+		else if (playerStateType == PlayerStateType::STATE_DYING)
+		{
+			_defaultAnim = _clips[3];
+			_currentTime = 0.0;
+		}
 	}
 
 	_currentPlayerState = playerStateType;

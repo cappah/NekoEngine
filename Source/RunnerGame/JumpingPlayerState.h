@@ -41,9 +41,20 @@
 
 #include "PlayerState.h"
 #include "RunnerGame.h"
+#include <glm/glm.hpp>
+
+using namespace glm;
 
 class JumpingPlayerState : public PlayerState
 {
+private:
+	float _gravity;
+	float _jumpForce;
+	float _speed;
+
+	float _originalPlayerAltitude;
+	vec3 _jumpVelocity;
+
 public:
 	JumpingPlayerState(Player* player);
 	virtual ~JumpingPlayerState();

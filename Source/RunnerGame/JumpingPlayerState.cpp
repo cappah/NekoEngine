@@ -38,11 +38,22 @@
 */
 
 #include "JumpingPlayerState.h"
+#include "RunningPlayerState.h"
+#include "Player.h"
 
 JumpingPlayerState::JumpingPlayerState(Player* player) :
 	PlayerState (player)
 {
 	_stateType = PlayerStateType::STATE_JUMPING;
+
+	_jumpForce = 100.0;	
+	_gravity = 300.0;		
+	_speed = 300;
+
+	_originalPlayerAltitude = _player->GetPosition ().y;
+
+	_jumpVelocity = player->GetForwardDirection () * _speed +
+		vec3 (0, 1, 0) * _jumpForce;
 }
 
 JumpingPlayerState::~JumpingPlayerState()
@@ -52,5 +63,17 @@ JumpingPlayerState::~JumpingPlayerState()
 
 void JumpingPlayerState::Update(double deltaTime)
 {
+	const vec3 gravityDirection = vec3 (0, -1, 0) * _gravity;
 
+	_jumpVelocity = _jumpVelocity + gravityDirection * (float) deltaTime;
+
+	vec3 newPosition = _player->GetPosition () + _jumpVelocity * (float) deltaTime;
+	_player->SetPosition (newPosition);
+
+	if (newPosition.y < _originalPlayerAltitude) {
+		newPosition.y = _originalPlayerAltitude;
+		_player->SetPosition (newPosition);
+
+		_player->SetState (new RunningPlayerState (_player));
+	}
 }

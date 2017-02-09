@@ -43,12 +43,15 @@
 #include "JumpingPlayerState.h"
 #include "CrouchingPlayerState.h"
 
-#include <Engine\Input.h>
+#include <Engine/Input.h>
+#include <Engine/Keycodes.h>
 
 RunningPlayerState::RunningPlayerState(Player* player) :
 	PlayerState (player)
 {
 	_stateType = PlayerStateType::STATE_RUNNING;
+
+	_speed = 300.0;
 }
 
 RunningPlayerState::~RunningPlayerState()
@@ -61,7 +64,7 @@ void RunningPlayerState::Update(double deltaTime)
 	bool jump = false;
 
 #ifndef NE_DEVICE_MOBILE
-	jump = Input::GetButtonDown(" ");
+	jump = Input::GetButtonDown(NE_KEY_SPACE);
 #else
 	// ios
 #endif
@@ -75,7 +78,7 @@ void RunningPlayerState::Update(double deltaTime)
 	bool crouch = false;
 
 #ifndef NE_DEVICE_MOBILE
-	jump = Input::GetButtonDown("s");
+	crouch = Input::GetButtonDown(NE_KEY_S);
 #else
 	// ios
 #endif
@@ -86,5 +89,8 @@ void RunningPlayerState::Update(double deltaTime)
 		return;
 	}
 
+	vec3 velocity = _player->GetForwardDirection () * _speed * (float)deltaTime;
+	vec3 newPosition = _player->GetPosition () + velocity;
 
+	_player->SetPosition(newPosition);
 }

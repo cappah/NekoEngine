@@ -59,6 +59,7 @@ int Player::Load()
 	if (ret != ENGINE_OK) return ret;
 
 	_currentPlayerState = new RunningPlayerState (this);
+	_moveDirection = vec3(0, 0, 1);
 
 	return ENGINE_OK;
 }
@@ -86,6 +87,11 @@ bool Player::Unload() noexcept
 void Player::Kill () noexcept
 {
 	SetState(new DyingPlayerState(this));
+}
+
+vec3 Player::GetForwardDirection() const noexcept
+{
+	return _moveDirection;
 }
 
 void Player::SetState(PlayerState* playerState)
