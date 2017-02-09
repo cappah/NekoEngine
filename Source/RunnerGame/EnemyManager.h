@@ -1,13 +1,13 @@
-/* NekoEngine
+/* RunnerGame
 *
-* RoadPatchComponent.cpp
+* EnemyManager.h
 * Author: Cristian Lambru
 *
-* RoadPatchComponent class definition
+* EnemyManager class
 *
 * -----------------------------------------------------------------------------
 *
-* Copyright (c) 2015-2017, NekoEngine
+* Copyright (c) 2015-2017, Alexandru Naiman
 *
 * All rights reserved.
 *
@@ -37,69 +37,29 @@
 * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <Scene/Object.h>
-#include <Platform/Platform.h>
+#pragma once
 
-#include "Player.h"
-#include "PatchManager.h"
-#include "EnemyFactory.h"
-#include "RoadPatchComponent.h"
-#include "EnemyManager.h"
+#include <vector>
+#include <queue>
+#include <Scene/Object.h>
+#include <glm/glm.hpp>
 
 using namespace glm;
+using namespace std;
 
-REGISTER_COMPONENT_CLASS(RoadPatchComponent);
-
-static uint64_t rpid = 0;
-
-RoadPatchComponent::RoadPatchComponent(ComponentInitializer *initializer) :
-	ObjectComponent(initializer),
-	_hit(false)
+class EnemyManager
 {
-}
+private:
+	static size_t _maxEnemyLayers;
 
-int RoadPatchComponent::Load()
-{
-	int ret{ ObjectComponent::Load() };
-	if (ret != ENGINE_OK) return ret;
+public:
+	static void NewBatEnemy(vec3 position, vec3 rotation);
+	static void NewTarantulaEnemy(vec3 position, vec3 rotation);
+private:
+	static void CreateNewLayer();
+	static void AddEnemyInCurrentLayer(Object* object);
+	static void DestroyOldestLayer();
 
-	return ENGINE_OK;
-}
-
-void RoadPatchComponent::Update(double deltaTime) noexcept
-{
-	ObjectComponent::Update(deltaTime);
-}
-
-bool RoadPatchComponent::Unload()
-{
-	if (!ObjectComponent::Unload())
-		return false;
-
-	return true;
-}
-
-void RoadPatchComponent::OnHit(Object *other, glm::vec3 &position)
-{
-	Player *p{ dynamic_cast<Player *>(other) };
-	if (_hit || !p) return;
-	_hit = true;
-
-	PatchManager::NewPatch();	
-
-	if (Platform::Rand() % 2 == 0) // 50% chance of an enemy
-		return;
-
-	vec3 enemyPosition = _parent->GetPosition();
-	vec3 enemyRotation = _parent->GetRotation();
-
-	if (Platform::Rand() % 2 == 1) // 1 for bat 
-		EnemyManager::NewBatEnemy(enemyPosition, enemyRotation);
-	else
-		EnemyManager::NewTarantulaEnemy(enemyPosition, enemyRotation);
-}
-
-RoadPatchComponent::~RoadPatchComponent()
-{
-	//
-}
+	static Object *GetNewBatEnemy(glm::vec3 &position, glm::vec3 &rotation);
+	static Object *GetNewTarantulaEnemy(glm::vec3 &position, glm::vec3 &rotation);
+};

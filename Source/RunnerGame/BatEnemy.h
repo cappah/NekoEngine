@@ -1,9 +1,9 @@
 /* NekoEngine
 *
-* RoadPatchComponent.cpp
+* BatEnemy.h
 * Author: Cristian Lambru
 *
-* RoadPatchComponent class definition
+* BatEnemy class definition
 *
 * -----------------------------------------------------------------------------
 *
@@ -37,69 +37,16 @@
 * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#pragma once
+
 #include <Scene/Object.h>
-#include <Platform/Platform.h>
 
-#include "Player.h"
-#include "PatchManager.h"
-#include "EnemyFactory.h"
-#include "RoadPatchComponent.h"
-#include "EnemyManager.h"
-
-using namespace glm;
-
-REGISTER_COMPONENT_CLASS(RoadPatchComponent);
-
-static uint64_t rpid = 0;
-
-RoadPatchComponent::RoadPatchComponent(ComponentInitializer *initializer) :
-	ObjectComponent(initializer),
-	_hit(false)
+class BatEnemy : public Object
 {
-}
+public:
+	BatEnemy(ObjectInitializer *initializer);
 
-int RoadPatchComponent::Load()
-{
-	int ret{ ObjectComponent::Load() };
-	if (ret != ENGINE_OK) return ret;
+	virtual int Load() override;
 
-	return ENGINE_OK;
-}
-
-void RoadPatchComponent::Update(double deltaTime) noexcept
-{
-	ObjectComponent::Update(deltaTime);
-}
-
-bool RoadPatchComponent::Unload()
-{
-	if (!ObjectComponent::Unload())
-		return false;
-
-	return true;
-}
-
-void RoadPatchComponent::OnHit(Object *other, glm::vec3 &position)
-{
-	Player *p{ dynamic_cast<Player *>(other) };
-	if (_hit || !p) return;
-	_hit = true;
-
-	PatchManager::NewPatch();	
-
-	if (Platform::Rand() % 2 == 0) // 50% chance of an enemy
-		return;
-
-	vec3 enemyPosition = _parent->GetPosition();
-	vec3 enemyRotation = _parent->GetRotation();
-
-	if (Platform::Rand() % 2 == 1) // 1 for bat 
-		EnemyManager::NewBatEnemy(enemyPosition, enemyRotation);
-	else
-		EnemyManager::NewTarantulaEnemy(enemyPosition, enemyRotation);
-}
-
-RoadPatchComponent::~RoadPatchComponent()
-{
-	//
-}
+	~BatEnemy();
+};

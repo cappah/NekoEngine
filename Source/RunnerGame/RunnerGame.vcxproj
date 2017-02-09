@@ -24,8 +24,10 @@
     <ClInclude Include="DeadPlayerState.h" />
     <ClInclude Include="DemoAnimatorComponent.h" />
     <ClInclude Include="DyingPlayerState.h" />
+    <ClInclude Include="BatEnemy.h" />
     <ClInclude Include="EnemyComponent.h" />
     <ClInclude Include="EnemyFactory.h" />
+    <ClInclude Include="EnemyManager.h" />
     <ClInclude Include="GameController.h" />
     <ClInclude Include="JumpingPlayerState.h" />
     <ClInclude Include="PatchManager.h" />
@@ -40,6 +42,7 @@
     <ClInclude Include="RunningPlayerState.h" />
     <ClInclude Include="SplitPatch.h" />
     <ClInclude Include="SplitPatchWaitPlayerState.h" />
+    <ClInclude Include="TarantulaEnemy.h" />
     <ClInclude Include="TurnLeftPlayerState.h" />
     <ClInclude Include="TurnRightPlayerState.h" />
   </ItemGroup>
@@ -49,8 +52,10 @@
     <ClCompile Include="DeadPlayerState.cpp" />
     <ClCompile Include="DemoAnimatorComponent.cpp" />
     <ClCompile Include="DyingPlayerState.cpp" />
+    <ClCompile Include="BatEnemy.cpp" />
     <ClCompile Include="EnemyComponent.cpp" />
     <ClCompile Include="EnemyFactory.cpp" />
+    <ClCompile Include="EnemyManager.cpp" />
     <ClCompile Include="GameController.cpp" />
     <ClCompile Include="JumpingPlayerState.cpp" />
     <ClCompile Include="PatchManager.cpp" />
@@ -62,6 +67,7 @@
     <ClCompile Include="RunnerGame.cpp" />
     <ClCompile Include="RunningPlayerState.cpp" />
     <ClCompile Include="SplitPatchWaitPlayerState.cpp" />
+    <ClCompile Include="TarantulaEnemy.cpp" />
     <ClCompile Include="TurnLeftPlayerState.cpp" />
     <ClCompile Include="TurnRightPlayerState.cpp" />
   </ItemGroup>
