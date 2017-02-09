@@ -49,37 +49,37 @@ PlayerAnimatorComponent::PlayerAnimatorComponent(ComponentInitializer *initializ
 	_clipIds[0] = initializer->arguments.find("running")->second;
 	_clipIds[1] = initializer->arguments.find("jumping")->second;
 	_clipIds[2] = initializer->arguments.find("crouching")->second;
-	_clips[0] = _clips[1] = _clips[2] = nullptr;
-	_initialAnim = nullptr;
+	_clipIds[3] = initializer->arguments.find("death")->second;
+	_clips[0] = _clips[1] = _clips[2] = _clips[3] = nullptr;
 }
 
 int PlayerAnimatorComponent::Load()
 {
-	int ret = AnimatorComponent::Load();
+	int ret{ AnimatorComponent::Load() };
 
 	if (ret != ENGINE_OK)
 		return ret;
 
-	_clips[0] = (AnimationClip*)ResourceManager::GetResourceByName(_clipIds[0].c_str(), ResourceType::RES_ANIMCLIP);
-	_clips[1] = (AnimationClip*)ResourceManager::GetResourceByName(_clipIds[1].c_str(), ResourceType::RES_ANIMCLIP);
-	_clips[2] = (AnimationClip*)ResourceManager::GetResourceByName(_clipIds[2].c_str(), ResourceType::RES_ANIMCLIP);
+	_clips[0] = (AnimationClip *)ResourceManager::GetResourceByName(_clipIds[0].c_str(), ResourceType::RES_ANIMCLIP);
+	_clips[1] = (AnimationClip *)ResourceManager::GetResourceByName(_clipIds[1].c_str(), ResourceType::RES_ANIMCLIP);
+	_clips[2] = (AnimationClip *)ResourceManager::GetResourceByName(_clipIds[2].c_str(), ResourceType::RES_ANIMCLIP);
+	_clips[3] = (AnimationClip *)ResourceManager::GetResourceByName(_clipIds[2].c_str(), ResourceType::RES_ANIMCLIP);
 
-	if (!_clips[0] || !_clips[1] || !_clips[2])
+	if (!_clips[0] || !_clips[1] || !_clips[2] || !_clips[3])
 		return ENGINE_INVALID_RES;
 
-	_initialAnim = _defaultAnim;
-
-	_player = dynamic_cast<Player*> (GetParent());
+	_defaultAnim = _clips[0];
 
 	return ENGINE_OK;
 }
 
 void PlayerAnimatorComponent::Update(double deltaTime) noexcept
 {
-	PlayerState* playerState = _player->GetState();
+	PlayerState *playerState = ((Player *)_parent)->GetState();
 	PlayerStateType playerStateType = playerState->GetStateType ();
 
-	if (_currentPlayerState != playerStateType) {
+	if (_currentPlayerState != playerStateType)
+	{
 		if (playerStateType == PlayerStateType::STATE_RUNNING)
 		{
 			_defaultAnim = _clips[0];
@@ -105,20 +105,13 @@ void PlayerAnimatorComponent::Update(double deltaTime) noexcept
 
 bool PlayerAnimatorComponent::Unload()
 {
-	_defaultAnim = _initialAnim;
-	_initialAnim = nullptr;
-
 	if (!AnimatorComponent::Unload())
 		return false;
 
-	if (_clips[0])
-		ResourceManager::UnloadResource(_clips[0]->GetResourceInfo()->id, ResourceType::RES_ANIMCLIP);
-
-	if (_clips[1])
-		ResourceManager::UnloadResource(_clips[1]->GetResourceInfo()->id, ResourceType::RES_ANIMCLIP);
-
-	if (_clips[2])
-		ResourceManager::UnloadResource(_clips[2]->GetResourceInfo()->id, ResourceType::RES_ANIMCLIP);
+	ResourceManager::UnloadResourceByName(_clipIds[0].c_str(), ResourceType::RES_ANIMCLIP);
+	ResourceManager::UnloadResourceByName(_clipIds[1].c_str(), ResourceType::RES_ANIMCLIP);
+	ResourceManager::UnloadResourceByName(_clipIds[2].c_str(), ResourceType::RES_ANIMCLIP);
+	ResourceManager::UnloadResourceByName(_clipIds[3].c_str(), ResourceType::RES_ANIMCLIP);
 
 	return true;
 }

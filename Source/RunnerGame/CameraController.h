@@ -54,4 +54,5 @@ public:
 	RUNNERGAME_API ~CameraController();
 
 private:
+	class CameraComponent *_cameraComponent;
 };

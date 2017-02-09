@@ -57,14 +57,9 @@ ObjectComponent::ObjectComponent(ComponentInitializer *initializer)
 	ArgumentMapType::iterator it;
 	const char *ptr = nullptr;
 
-	if (((it = initializer->arguments.find("position")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
-		EngineUtils::ReadFloatArray(ptr, 3, &_localPosition.x);
-
-	if (((it = initializer->arguments.find("rotation")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
-		EngineUtils::ReadFloatArray(ptr, 3, &_localRotation.x);
-
-	if (((it = initializer->arguments.find("scale")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
-		EngineUtils::ReadFloatArray(ptr, 3, &_localScale.x);
+	SetLocalPosition(initializer->position);
+	SetLocalRotation(initializer->rotation);
+	SetLocalScale(initializer->scale);
 }
 
 void ObjectComponent::SetLocalPosition(vec3 &position) noexcept

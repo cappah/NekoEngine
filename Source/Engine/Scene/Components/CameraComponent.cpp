@@ -55,7 +55,8 @@ using namespace glm;
 
 ENGINE_REGISTER_COMPONENT_CLASS(CameraComponent);
 
-CameraComponent::CameraComponent(ComponentInitializer *initializer) : ObjectComponent(initializer),
+CameraComponent::CameraComponent(ComponentInitializer *initializer) :
+	ObjectComponent(initializer),
 	_cam(nullptr)
 {
 	vec3 tmp;

@@ -302,8 +302,15 @@ void Scene::_LoadComponent(VFSFile *f, ComponentInitInfo *initInfo)
 
 		// skip tabs
 		while (*ptr == '\t') ptr++;
-
-		initInfo->initializer.arguments.insert(make_pair(ptr, split[1]));
+		
+		if (strstr(ptr, "position"))
+			EngineUtils::ReadFloatArray(split[1], 3, &initInfo->initializer.position.x);
+		else if (strstr(ptr, "rotation"))
+			EngineUtils::ReadFloatArray(split[1], 3, &initInfo->initializer.rotation.x);
+		else if (strstr(ptr, "scale"))
+			EngineUtils::ReadFloatArray(split[1], 3, &initInfo->initializer.scale.x);
+		else
+			initInfo->initializer.arguments.insert({ ptr, split[1] });
 
 		for (char* c : split)
 			free(c);

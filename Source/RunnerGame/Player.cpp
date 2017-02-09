@@ -44,9 +44,11 @@
 
 using namespace glm;
 
+REGISTER_OBJECT_CLASS(Player);
+
 Player::Player(ObjectInitializer *initializer) :
 	Object(initializer),
-	_currentPlayerState (nullptr)
+	_currentPlayerState(nullptr)
 {
 
 }
@@ -88,9 +90,8 @@ void Player::Kill () noexcept
 
 void Player::SetState(PlayerState* playerState)
 {
-	if (_currentPlayerState == nullptr) {
+	if (_currentPlayerState)
 		delete _currentPlayerState;
-	}
 
 	_currentPlayerState = playerState;
 }

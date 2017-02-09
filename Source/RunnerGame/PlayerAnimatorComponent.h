@@ -45,9 +45,6 @@
 
 class PlayerAnimatorComponent : public AnimatorComponent
 {
-private:
-	PlayerStateType _currentPlayerState;
-
 public:
 	RUNNERGAME_API PlayerAnimatorComponent(ComponentInitializer *initializer);
 
@@ -60,8 +57,7 @@ public:
 	RUNNERGAME_API ~PlayerAnimatorComponent() { }
 
 private:
-	std::string _clipIds[3];
-	AnimationClip *_clips[3];
-	AnimationClip *_initialAnim;
-	Player* _player;
+	std::string _clipIds[4];
+	AnimationClip *_clips[4];
+	PlayerStateType _currentPlayerState;
 };

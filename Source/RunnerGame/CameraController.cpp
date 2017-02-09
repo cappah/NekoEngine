@@ -39,10 +39,17 @@
 
 #include "CameraController.h"
 
+#include <Scene/Object.h>
+#include <Scene/Components/CameraComponent.h>
+#include <Engine/CameraManager.h>
+
+using namespace glm;
+
 REGISTER_COMPONENT_CLASS(CameraController);
 
 CameraController::CameraController(ComponentInitializer *initializer) :
-	ObjectComponent(initializer)
+	ObjectComponent(initializer),
+	_cameraComponent(nullptr)
 {
 	ArgumentMapType::iterator it;
 	const char *ptr = nullptr;
@@ -53,6 +60,23 @@ CameraController::CameraController(ComponentInitializer *initializer) :
 
 int CameraController::Load()
 {
+	ComponentInitializer init{};
+	init.parent = _parent;
+	init.position = _localPosition;
+	init.rotation = _localRotation;
+	init.arguments.insert({ "near", "1.0" });
+	init.arguments.insert({ "far", "4000.0" });
+	init.arguments.insert({ "projection", "perspective" });		
+	init.arguments.insert({ "fog_color", "0.207, 0.255, 0.349" });
+	init.arguments.insert({ "view_distance", "1200" });
+	init.arguments.insert({ "fog_distance", "2500" });
+
+	_cameraComponent = (CameraComponent *)Engine::NewComponent("CameraComponent", &init);
+	_cameraComponent->Load();
+	_parent->AddComponent("Camera", _cameraComponent);
+
+	CameraManager::SetActiveCamera(_cameraComponent->GetCamera());
+
 	int ret{ ObjectComponent::Load() };
 	if (ret != ENGINE_OK) return ret;
 
