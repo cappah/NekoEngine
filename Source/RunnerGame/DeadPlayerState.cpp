@@ -1,13 +1,13 @@
 /* NekoEngine
 *
-* PlayerState.h
+* DeadPlayerState.cpp
 * Author: Cristian Lambru
 *
-* PlayerState class definition
+* DeadPlayerState class definition
 *
 * -----------------------------------------------------------------------------
 *
-* Copyright (c) 2015-2017, NekoEngine
+* Copyright (c) 2015-2017, Alexandru Naiman
 *
 * All rights reserved.
 *
@@ -37,37 +37,23 @@
 * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#pragma once
+#include "DeadPlayerState.h"
+#include <Engine/EventManager.h>
+#include "RunnerGameEvents.h"
+#include "Player.h"
 
-#include "RunnerGame.h"
-#include <Scene/Object.h>
-
-enum PlayerStateType
+DeadPlayerState::DeadPlayerState(Player* player) :
+	PlayerState(player)
 {
-	STATE_IDLE = 0,
-	STATE_RUNNING,
-	STATE_JUMPING,
-	STATE_CROUCHING,
-	STATE_TURN_RIGHT,
-	STATE_TURN_LEFT,
-	STATE_DYING,
-	STATE_DEAD
-};
+	_stateType = PlayerStateType::STATE_DEAD;
+}
 
-class Player;
-
-class PlayerState
+DeadPlayerState::~DeadPlayerState()
 {
-protected:
-	Player* _player;
-	PlayerStateType _stateType;
 
-public:
-	PlayerState(Player* player);
-	virtual ~PlayerState();
+}
 
-	virtual void OnHit (Object* other);
-
-	virtual void Update(double deltaTime) = 0;
-	virtual PlayerStateType GetStateType () const;
-};
+void DeadPlayerState::Update(double deltaTime)
+{
+	EventManager::Broadcast(EVENT_PLAYER_DEAD, nullptr);
+}

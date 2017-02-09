@@ -1,9 +1,9 @@
-/* NekoEngine
+/* RunnerGame
 *
-* PlayerState.h
+* JumpingPlayerState.h
 * Author: Cristian Lambru
 *
-* PlayerState class definition
+* JumpingPlayerState class
 *
 * -----------------------------------------------------------------------------
 *
@@ -39,35 +39,14 @@
 
 #pragma once
 
+#include "PlayerState.h"
 #include "RunnerGame.h"
-#include <Scene/Object.h>
 
-enum PlayerStateType
+class JumpingPlayerState : public PlayerState
 {
-	STATE_IDLE = 0,
-	STATE_RUNNING,
-	STATE_JUMPING,
-	STATE_CROUCHING,
-	STATE_TURN_RIGHT,
-	STATE_TURN_LEFT,
-	STATE_DYING,
-	STATE_DEAD
-};
-
-class Player;
-
-class PlayerState
-{
-protected:
-	Player* _player;
-	PlayerStateType _stateType;
-
 public:
-	PlayerState(Player* player);
-	virtual ~PlayerState();
+	JumpingPlayerState(Player* player);
+	virtual ~JumpingPlayerState();
 
-	virtual void OnHit (Object* other);
-
-	virtual void Update(double deltaTime) = 0;
-	virtual PlayerStateType GetStateType () const;
+	virtual void Update(double) override;
 };

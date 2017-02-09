@@ -39,6 +39,8 @@
 
 #include "Player.h"
 #include "RunningPlayerState.h"
+#include "DyingPlayerState.h"
+#include <Engine\EventManager.h>
 
 using namespace glm;
 
@@ -79,8 +81,17 @@ bool Player::Unload() noexcept
 	return true;
 }
 
+void Player::Kill () noexcept
+{
+	SetState(new DyingPlayerState(this));
+}
+
 void Player::SetState(PlayerState* playerState)
 {
+	if (_currentPlayerState == nullptr) {
+		delete _currentPlayerState;
+	}
+
 	_currentPlayerState = playerState;
 }
 

@@ -40,6 +40,11 @@
 #include "RunningPlayerState.h"
 #include "DemoAnimatorComponent.h"
 
+#include "JumpingPlayerState.h"
+#include "CrouchingPlayerState.h"
+
+#include <Engine\Input.h>
+
 RunningPlayerState::RunningPlayerState(Player* player) :
 	PlayerState (player)
 {
@@ -53,5 +58,33 @@ RunningPlayerState::~RunningPlayerState()
 
 void RunningPlayerState::Update(double deltaTime)
 {
-	// Run
+	bool jump = false;
+
+#ifndef NE_DEVICE_MOBILE
+	jump = Input::GetButtonDown(" ");
+#else
+	// ios
+#endif
+
+	if (jump) {
+		_player->SetState(new JumpingPlayerState(_player));
+
+		return;
+	}
+
+	bool crouch = false;
+
+#ifndef NE_DEVICE_MOBILE
+	jump = Input::GetButtonDown("s");
+#else
+	// ios
+#endif
+
+	if (crouch) {
+		_player->SetState(new CrouchingPlayerState(_player));
+
+		return;
+	}
+
+
 }
