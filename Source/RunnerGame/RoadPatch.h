@@ -47,6 +47,10 @@ public:
 	RoadPatch(ObjectInitializer *initializer);
 
 	virtual int Load() override;
+	virtual void OnHit(Object *other, glm::vec3 &position) override;
 
 	~RoadPatch();
+
+private:
+	bool _hit;
 };

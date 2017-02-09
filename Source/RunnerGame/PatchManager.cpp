@@ -74,7 +74,8 @@ void PatchManager::NewPatch()
 {
 	vec3 r{ 0.f, 90.f, 0.f };
 
-	_patches.push(NewRoadPatch(_nextPatchPos, r));
+	_patches.push(Platform::Rand() % 5 < 4 ? NewRoadPatch(_nextPatchPos, r) : NewSplitPatch(_nextPatchPos, r));
+
 	_nextPatchPos.z += 200.f;
 
 	if (_patches.size() > 7)
@@ -84,11 +85,6 @@ void PatchManager::NewPatch()
 	}
 
 	//AddPatchInCurrentLayer(NewRoadPatch(_nextPatchPos, r));
-
-/*	if (Platform::Rand() % 5 < 4)
-		patch = PatchFactory::GetRoadPatch(vec3(0), quat());
-	else
-		patch = PatchFactory::GetSplitPatch(vec3(0), quat());*/
 }
 
 Object *PatchManager::NewRoadPatch(vec3 &position, vec3 &rotation)
@@ -111,9 +107,25 @@ Object *PatchManager::NewSplitPatch(vec3 &position, vec3 &rotation)
 	ObjectInitializer initializer{};
 	initializer.position = position;
 	initializer.rotation = rotation;
+	initializer.scale = vec3(100.f);
 
 	Object *patch{ Engine::NewObject("SplitPatch", &initializer) };
 	if (!patch) { DIE("Out of resources"); }
+	if (patch->Load() != ENGINE_OK) { DIE("Patch load failed"); }
 	patch->AddToScene();
+
+	initializer.position.x += 200.f;
+	initializer.rotation.y -= 90.f;
+	Object *r{ Engine::NewObject("RoadPatch", &initializer) };
+	if (!r) { DIE("Out of resources"); }
+	if (r->Load() != ENGINE_OK) { DIE("Patch load failed"); }
+	r->AddToScene();
+
+	initializer.position.x -= 400.f;
+	r = Engine::NewObject("RoadPatch", &initializer);
+	if (!r) { DIE("Out of resources"); }
+	if (r->Load() != ENGINE_OK) { DIE("Patch load failed"); }
+	r->AddToScene();
+
 	return patch;
 }

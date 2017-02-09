@@ -56,7 +56,7 @@ TurnRightPlayerState::~TurnRightPlayerState()
 
 void TurnRightPlayerState::Update(double deltaTime)
 {
-	vec3 rotation = vec3(0, 0, -90);
+	vec3 rotation = vec3(0.f, -90.f, 0.f);
 
 	vec3 newRotation = rotation + _player->GetRotation();
 

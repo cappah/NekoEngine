@@ -37,34 +37,63 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#pragma once
-
 #include "SplitPatch.h"
 #include "Player.h"
 #include "SplitPatchWaitPlayerState.h"
 
+#include <Scene/Components/StaticMeshComponent.h>
+
+REGISTER_OBJECT_CLASS(SplitPatch);
+
+using namespace glm;
+
+static ComponentInitializer _groundInit(nullptr);
+static ComponentInitializer _colliderInit(nullptr);
+
+static bool _initComp{ true };
+
 SplitPatch::SplitPatch(ObjectInitializer *initializer) :
 	Object(initializer)
 {
-	//
+	if (!_initComp) return;
+
+	_groundInit.arguments.insert({ "mesh", "stm_quad" });
+	_groundInit.arguments.insert({ "material", "mat_split" });
+
+	_colliderInit.position = vec3(0.f, 0.f, -95.f);
+	_colliderInit.arguments.insert({ "type", "box" });
+	_colliderInit.arguments.insert({ "halfextents", ".01f, 50.f, .01f" });
+
+	_initComp = false;
 }
 
 int SplitPatch::Load()
 {
-	ComponentInitializer ci{};
-	int ret{ Object::Load() };
+	int ret{ ENGINE_OK };
+	ObjectComponent *comp{ nullptr };
 
+	_groundInit.parent = this;
+	comp = Engine::NewComponent("StaticMeshComponent", &_groundInit);
+	if (!comp) return ENGINE_OUT_OF_RESOURCES;
+	if ((ret = comp->Load()) != ENGINE_OK) return ret;
+	AddComponent("Mesh", comp);
+
+	_colliderInit.parent = this;
+	comp = Engine::NewComponent("ColliderComponent", &_colliderInit);
+	if (!comp) return ENGINE_OUT_OF_RESOURCES;
+	if ((ret = comp->Load()) != ENGINE_OK) return ret;
+	AddComponent("FrontCollider", comp);
+
+	if ((ret = Object::Load()) != ENGINE_OK) return ret;
 	return ENGINE_OK;
 }
 
 void SplitPatch::OnHit(Object *other, glm::vec3 &position)
 {
-	Player* player = dynamic_cast<Player*>(other);
+	Player *player{ dynamic_cast<Player *>(other) };
+	if (!player) return;
 
-	if (player == nullptr) // the only interest is player
-		return;
-
-	player->SetState (new SplitPatchWaitPlayerState (player));
+	player->SetState (new SplitPatchWaitPlayerState(player));
 }
 
 SplitPatch::~SplitPatch()

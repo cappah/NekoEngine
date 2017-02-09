@@ -39,12 +39,14 @@
 
 #include "RoadPatch.h"
 #include "RunnerGame.h"
+#include "Player.h"
+#include "PatchManager.h"
+#include "EnemyFactory.h"
 
 #include <Scene/Components/StaticMeshComponent.h>
 
 using namespace glm;
 
-static ComponentInitializer _rpCompInit(nullptr);
 static ComponentInitializer _groundInit(nullptr);
 static ComponentInitializer _colliderInit(nullptr);
 
@@ -53,7 +55,8 @@ static bool _initComp{ true };
 REGISTER_OBJECT_CLASS(RoadPatch);
 
 RoadPatch::RoadPatch(ObjectInitializer *initializer) :
-	Object(initializer)
+	Object(initializer),
+	_hit(false)
 {
 	if (!_initComp) return;
 
@@ -72,12 +75,6 @@ int RoadPatch::Load()
 	int ret{ ENGINE_OK };
 	ObjectComponent *comp{ nullptr };
 
-	_rpCompInit.parent = this;
-	comp = Engine::NewComponent("RoadPatchComponent", &_rpCompInit);
-	if (!comp) return ENGINE_OUT_OF_RESOURCES;
-	if ((ret = comp->Load()) != ENGINE_OK) return ret;
-	AddComponent("Patch", comp);
-
 	_groundInit.parent = this;
 	comp = Engine::NewComponent("StaticMeshComponent", &_groundInit);
 	if (!comp) return ENGINE_OUT_OF_RESOURCES;
@@ -92,6 +89,20 @@ int RoadPatch::Load()
 
 	if ((ret = Object::Load()) != ENGINE_OK) return ret;
 	return ENGINE_OK;
+}
+
+void RoadPatch::OnHit(Object *other, glm::vec3 &position)
+{
+	Player *p{ dynamic_cast<Player *>(other) };
+	if (_hit || !p) return;
+	_hit = true;
+
+	PatchManager::NewPatch();
+
+	if (Platform::Rand() % 2 == 0) // 50% chance of an enemy
+		return;
+
+	Object* enemy = EnemyFactory::GetEnemy(_position, _rotation);
 }
 
 RoadPatch::~RoadPatch()
