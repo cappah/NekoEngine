@@ -1,9 +1,9 @@
-/* NekoEngine
+/* RunnerGame
 *
-* RoadPatchComponent.cpp
+* TurnRightPlayerState.h
 * Author: Cristian Lambru
 *
-* RoadPatchComponent class definition
+* TurnRightPlayerState class
 *
 * -----------------------------------------------------------------------------
 *
@@ -37,63 +37,20 @@
 * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <Scene/Object.h>
-#include <Platform/Platform.h>
+#pragma once
 
+#include "RunnerGame.h"
+#include "PlayerState.h"
 #include "Player.h"
-#include "PatchManager.h"
-#include "EnemyFactory.h"
-#include "RoadPatchComponent.h"
+#include <glm/glm.hpp>
 
 using namespace glm;
 
-REGISTER_COMPONENT_CLASS(RoadPatchComponent);
-static uint64_t rpid = 0;
-RoadPatchComponent::RoadPatchComponent(ComponentInitializer *initializer) :
-	ObjectComponent(initializer),
-	_hit(false)
+class TurnRightPlayerState : public PlayerState
 {
-}
+public:
+	TurnRightPlayerState(Player* player);
+	virtual ~TurnRightPlayerState();
 
-int RoadPatchComponent::Load()
-{
-	int ret{ ObjectComponent::Load() };
-	if (ret != ENGINE_OK) return ret;
-
-	return ENGINE_OK;
-}
-
-void RoadPatchComponent::Update(double deltaTime) noexcept
-{
-	ObjectComponent::Update(deltaTime);
-}
-
-bool RoadPatchComponent::Unload()
-{
-	if (!ObjectComponent::Unload())
-		return false;
-
-	return true;
-}
-
-void RoadPatchComponent::OnHit(Object *other, glm::vec3 &position)
-{
-	Player *p{ dynamic_cast<Player *>(other) };
-	if (_hit || !p) return;
-	_hit = true;
-
-	PatchManager::NewPatch();	
-
-	if (Platform::Rand() % 2 == 0) // 50% chance of an enemy
-		return;
-
-	vec3 enemyPosition = _parent->GetPosition();
-	vec3 enemyRotation = _parent->GetRotation();
-
-	Object* enemy = EnemyFactory::GetEnemy(enemyPosition, enemyRotation);
-}
-
-RoadPatchComponent::~RoadPatchComponent()
-{
-	//
-}
+	virtual void Update(double) override;
+};

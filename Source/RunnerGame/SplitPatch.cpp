@@ -40,6 +40,8 @@
 #pragma once
 
 #include "SplitPatch.h"
+#include "Player.h"
+#include "SplitPatchWaitPlayerState.h"
 
 SplitPatch::SplitPatch(ObjectInitializer *initializer) :
 	Object(initializer)
@@ -53,6 +55,16 @@ int SplitPatch::Load()
 	int ret{ Object::Load() };
 
 	return ENGINE_OK;
+}
+
+void SplitPatch::OnHit(Object *other, glm::vec3 &position)
+{
+	Player* player = dynamic_cast<Player*>(other);
+
+	if (player == nullptr) // the only interest is player
+		return;
+
+	player->SetState (new SplitPatchWaitPlayerState (player));
 }
 
 SplitPatch::~SplitPatch()

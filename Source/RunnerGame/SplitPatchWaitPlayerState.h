@@ -1,9 +1,9 @@
-/* NekoEngine
+/* RunnerGame
 *
-* PatchFactory.h
+* SplitPatchWaitPlayerState.h
 * Author: Cristian Lambru
 *
-* RoadPatchComponent class definition
+* SplitPatchWaitPlayerState class
 *
 * -----------------------------------------------------------------------------
 *
@@ -39,13 +39,26 @@
 
 #pragma once
 
-#include <Scene/Object.h>
-
+#include "RunnerGame.h"
+#include "PlayerState.h"
+#include "Player.h"
 #include <glm/glm.hpp>
 
-class PatchFactory
+using namespace glm;
+
+class SplitPatchWaitPlayerState : public PlayerState
 {
+private:
+	float _speed;
+	float _duration;
+	float _durationAvailableForInput;
+
+	float _timeElapsed;
+	int _chosedDirection; // 1 for right, 2 for left, 0 for none
+
 public:
-	static Object *GetRoadPatch(glm::vec3 position, glm::quat rotation);
-	static Object *GetSplitPatch(glm::vec3 position, glm::quat rotation);
+	SplitPatchWaitPlayerState(Player* player);
+	virtual ~SplitPatchWaitPlayerState();
+
+	virtual void Update(double) override;
 };

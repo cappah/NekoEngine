@@ -1,13 +1,13 @@
 /* NekoEngine
 *
-* PatchFactory.h
+* EnemyFactory.cpp
 * Author: Cristian Lambru
 *
-* PatchFactory class definition
+* EnemyFactory class definition
 *
 * -----------------------------------------------------------------------------
 *
-* Copyright (c) 2015-2017, NekoEngine
+* Copyright (c) 2015-2017, Alexandru Naiman
 *
 * All rights reserved.
 *
@@ -37,15 +37,9 @@
 * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "PatchFactory.h"
+#include "EnemyFactory.h"
 
-Object* PatchFactory::GetRoadPatch(glm::vec3 position, glm::quat rotation)
-{
-	// instantiate here
-	return nullptr;
-}
-
-Object* PatchFactory::GetSplitPatch(glm::vec3 position, glm::quat rotation)
+Object* EnemyFactory::GetEnemy(vec3 position, vec3 rotation)
 {
 	// instantiate here
 	return nullptr;

@@ -1,9 +1,9 @@
-/* NekoEngine
+/* RunnerGame
 *
-* RoadPatchComponent.cpp
+* TurnRightPlayerState.cpp
 * Author: Cristian Lambru
 *
-* RoadPatchComponent class definition
+* TurnRightPlayerState class
 *
 * -----------------------------------------------------------------------------
 *
@@ -37,63 +37,30 @@
 * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <Scene/Object.h>
-#include <Platform/Platform.h>
-
-#include "Player.h"
-#include "PatchManager.h"
-#include "EnemyFactory.h"
-#include "RoadPatchComponent.h"
+#include "TurnRightPlayerState.h"
+#include <glm/glm.hpp>
+#include "RunningPlayerState.h"
 
 using namespace glm;
 
-REGISTER_COMPONENT_CLASS(RoadPatchComponent);
-static uint64_t rpid = 0;
-RoadPatchComponent::RoadPatchComponent(ComponentInitializer *initializer) :
-	ObjectComponent(initializer),
-	_hit(false)
+TurnRightPlayerState::TurnRightPlayerState(Player* player) :
+	PlayerState(player)
 {
+	_stateType = PlayerStateType::STATE_TURN_LEFT;
 }
 
-int RoadPatchComponent::Load()
+TurnRightPlayerState::~TurnRightPlayerState()
 {
-	int ret{ ObjectComponent::Load() };
-	if (ret != ENGINE_OK) return ret;
 
-	return ENGINE_OK;
 }
 
-void RoadPatchComponent::Update(double deltaTime) noexcept
+void TurnRightPlayerState::Update(double deltaTime)
 {
-	ObjectComponent::Update(deltaTime);
-}
+	vec3 rotation = vec3(0, 0, -90);
 
-bool RoadPatchComponent::Unload()
-{
-	if (!ObjectComponent::Unload())
-		return false;
+	vec3 newRotation = rotation + _player->GetRotation();
 
-	return true;
-}
+	_player->SetRotation(newRotation);
 
-void RoadPatchComponent::OnHit(Object *other, glm::vec3 &position)
-{
-	Player *p{ dynamic_cast<Player *>(other) };
-	if (_hit || !p) return;
-	_hit = true;
-
-	PatchManager::NewPatch();	
-
-	if (Platform::Rand() % 2 == 0) // 50% chance of an enemy
-		return;
-
-	vec3 enemyPosition = _parent->GetPosition();
-	vec3 enemyRotation = _parent->GetRotation();
-
-	Object* enemy = EnemyFactory::GetEnemy(enemyPosition, enemyRotation);
-}
-
-RoadPatchComponent::~RoadPatchComponent()
-{
-	//
+	_player->SetState(new RunningPlayerState(_player));
 }

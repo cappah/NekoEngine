@@ -25,9 +25,9 @@
     <ClInclude Include="DemoAnimatorComponent.h" />
     <ClInclude Include="DyingPlayerState.h" />
     <ClInclude Include="EnemyComponent.h" />
+    <ClInclude Include="EnemyFactory.h" />
     <ClInclude Include="GameController.h" />
     <ClInclude Include="JumpingPlayerState.h" />
-    <ClInclude Include="PatchFactory.h" />
     <ClInclude Include="PatchManager.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerAnimatorComponent.h" />
@@ -39,6 +39,9 @@
     <ClInclude Include="RunnerGameEvents.h" />
     <ClInclude Include="RunningPlayerState.h" />
     <ClInclude Include="SplitPatch.h" />
+    <ClInclude Include="SplitPatchWaitPlayerState.h" />
+    <ClInclude Include="TurnLeftPlayerState.h" />
+    <ClInclude Include="TurnRightPlayerState.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CameraController.cpp" />
@@ -47,9 +50,9 @@
     <ClCompile Include="DemoAnimatorComponent.cpp" />
     <ClCompile Include="DyingPlayerState.cpp" />
     <ClCompile Include="EnemyComponent.cpp" />
+    <ClCompile Include="EnemyFactory.cpp" />
     <ClCompile Include="GameController.cpp" />
     <ClCompile Include="JumpingPlayerState.cpp" />
-    <ClCompile Include="PatchFactory.cpp" />
     <ClCompile Include="PatchManager.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerAnimatorComponent.cpp" />
@@ -58,6 +61,9 @@
     <ClCompile Include="RoadPatchComponent.cpp" />
     <ClCompile Include="RunnerGame.cpp" />
     <ClCompile Include="RunningPlayerState.cpp" />
+    <ClCompile Include="SplitPatchWaitPlayerState.cpp" />
+    <ClCompile Include="TurnLeftPlayerState.cpp" />
+    <ClCompile Include="TurnRightPlayerState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Engine\Engine.vcxproj">
