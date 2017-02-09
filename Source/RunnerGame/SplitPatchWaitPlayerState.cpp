@@ -50,12 +50,12 @@ SplitPatchWaitPlayerState::SplitPatchWaitPlayerState(Player* player) :
 {
 	_stateType = PlayerStateType::STATE_SPLIT_PATCH_WAITING;
 
-	_speed = 300.0;
-	_duration = 0.75; // seconds
-	_durationAvailableForInput = 0.5; // seconds
+	_speed = 300.f;
+	_duration = .75f; // seconds
+	_durationAvailableForInput = .5f; // seconds
 
 	_timeElapsed = 0;
-	_chosedDirection = 0; // none
+	_chosenDirection = 0; // none
 }
 
 SplitPatchWaitPlayerState::~SplitPatchWaitPlayerState()
@@ -68,26 +68,26 @@ void SplitPatchWaitPlayerState::Update(double deltaTime)
 	bool right = false;
 
 #ifndef NE_DEVICE_MOBILE
-	right = Input::GetButtonDown(NE_KEY_RIGHT);
+	right = Input::GetButtonDown(NE_KEY_D);
 #else
 	// ios
 #endif
 
 	// Only first chose is counted, the others are thrown away
-	if (right && _chosedDirection == 0 && _timeElapsed < _durationAvailableForInput)
-		_chosedDirection = 1;
+	if (right && _chosenDirection == 0 && _timeElapsed < _durationAvailableForInput)
+		_chosenDirection = 1;
 
 	bool left = false;
 
 #ifndef NE_DEVICE_MOBILE
-	left = Input::GetButtonDown(NE_KEY_LEFT);
+	left = Input::GetButtonDown(NE_KEY_A);
 #else
 	// ios
 #endif
 
 	// Only first chose is counted, the others are thrown away
-	if (left && _chosedDirection == 0 && _timeElapsed < _durationAvailableForInput)
-		_chosedDirection = 2;
+	if (left && _chosenDirection == 0 && _timeElapsed < _durationAvailableForInput)
+		_chosenDirection = 2;
 
 	vec3 velocity = _player->GetForwardDirection() * _speed * (float)deltaTime;
 	vec3 newPosition = _player->GetPosition() + velocity;
@@ -96,14 +96,14 @@ void SplitPatchWaitPlayerState::Update(double deltaTime)
 
 	_timeElapsed += deltaTime;
 
-	if (_timeElapsed > _durationAvailableForInput && _chosedDirection != 0) {
-
-		if (_chosedDirection == 1)
-			_player->SetState(new TurnRightPlayerState (_player));
+	if (_timeElapsed > _durationAvailableForInput && _chosenDirection != 0)
+	{
+		if (_chosenDirection == 1)
+			_player->SetState(new TurnRightPlayerState(_player));
 		else
-			_player->SetState (new TurnLeftPlayerState (_player));
+			_player->SetState (new TurnLeftPlayerState(_player));
 	}
 
 	if (_timeElapsed > _duration)
-		_player->Kill ();
+		_player->Kill();
 }

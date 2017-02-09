@@ -82,9 +82,9 @@ void RunningPlayerState::Update(double deltaTime)
 	// ios
 #endif
 
-	if (crouch) {
+	if (crouch)
+	{
 		_player->SetState(new CrouchingPlayerState(_player));
-
 		return;
 	}
 

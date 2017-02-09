@@ -36,7 +36,6 @@
     <ClInclude Include="PlayerState.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="RoadPatch.h" />
-    <ClInclude Include="RoadPatchComponent.h" />
     <ClInclude Include="RunnerGame.h" />
     <ClInclude Include="RunnerGameEvents.h" />
     <ClInclude Include="RunningPlayerState.h" />
@@ -63,7 +62,6 @@
     <ClCompile Include="PlayerAnimatorComponent.cpp" />
     <ClCompile Include="PlayerState.cpp" />
     <ClCompile Include="RoadPatch.cpp" />
-    <ClCompile Include="RoadPatchComponent.cpp" />
     <ClCompile Include="RunnerGame.cpp" />
     <ClCompile Include="RunningPlayerState.cpp" />
     <ClCompile Include="SplitPatchWaitPlayerState.cpp" />
@@ -80,7 +78,7 @@
     <ResourceCompile Include="RunnerGame.rc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="SplitPatch.cpp" />
+    <ClCompile Include="SplitPatch.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{8E393A6F-DC1C-4DB4-8A20-2FB1FCBCA29A}</ProjectGuid>

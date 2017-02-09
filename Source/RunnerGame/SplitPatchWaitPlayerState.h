@@ -54,7 +54,7 @@ private:
 	float _durationAvailableForInput;
 
 	float _timeElapsed;
-	int _chosedDirection; // 1 for right, 2 for left, 0 for none
+	int _chosenDirection; // 1 for right, 2 for left, 0 for none
 
 public:
 	SplitPatchWaitPlayerState(Player* player);
