@@ -38,17 +38,15 @@
  */
 
 #include "Player.h"
+#include "RunningPlayerState.h"
 
 using namespace glm;
 
 Player::Player(ObjectInitializer *initializer) :
-	Object(initializer)
+	Object(initializer),
+	_currentPlayerState (nullptr)
 {
-	ArgumentMapType::iterator it;
-	const char *ptr = nullptr;
 
-	/*if (((it = initializer->arguments.find("bullets")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
-	_bullets = atoi(ptr);*/
 }
 
 int Player::Load()
@@ -56,17 +54,21 @@ int Player::Load()
 	int ret{ Object::Load() };
 	if (ret != ENGINE_OK) return ret;
 
+	_currentPlayerState = new RunningPlayerState (this);
+
 	return ENGINE_OK;
+}
+
+void Player::OnHit(Object *other, glm::vec3 &position)
+{
+	_currentPlayerState->OnHit (other);
 }
 
 void Player::Update(double deltaTime) noexcept
 {
 	Object::Update(deltaTime);
-}
 
-void Player::OnHit(Object *other, vec3 &position)
-{
-	Object::OnHit(other, position);
+	_currentPlayerState->Update(deltaTime);
 }
 
 bool Player::Unload() noexcept
@@ -75,6 +77,16 @@ bool Player::Unload() noexcept
 		return false;
 
 	return true;
+}
+
+void Player::SetState(PlayerState* playerState)
+{
+	_currentPlayerState = playerState;
+}
+
+PlayerState* Player::GetState() const
+{
+	return _currentPlayerState;
 }
 
 Player::~Player()

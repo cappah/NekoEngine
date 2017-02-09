@@ -1,4 +1,4 @@
-/* DungeonGame
+/* RunnerGame
  *
  * Player.h
  * Author: Alexandru Naiman
@@ -40,22 +40,28 @@
 #pragma once
 
 #include <Scene/Object.h>
+#include "PlayerState.h"
 #include <Scene/Components/ColliderComponent.h>
 
 #define PLAYER_SIZE		2.f
 
 class Player : public Object
 {
+private:
+	PlayerState* _currentPlayerState;
 public:
 	Player(ObjectInitializer *initializer);
 
 	virtual int Load() override;
 
+	virtual void  OnHit(Object *other, glm::vec3 &position) override;
+
 	virtual void Update(double deltaTime) noexcept override;
 
-	virtual void OnHit(Object *other, glm::vec3 &position);
-
 	virtual bool Unload() noexcept override;
+
+	virtual void SetState(PlayerState*);
+	virtual PlayerState* GetState () const;
 
 	virtual ~Player();
 

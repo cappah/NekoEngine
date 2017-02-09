@@ -22,16 +22,28 @@
     <ClInclude Include="CameraController.h" />
     <ClInclude Include="DemoAnimatorComponent.h" />
     <ClInclude Include="GameController.h" />
+    <ClInclude Include="PatchFactory.h" />
+    <ClInclude Include="PatchManager.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="PlayerAnimatorComponent.h" />
+    <ClInclude Include="PlayerState.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="RoadPatchComponent.h" />
     <ClInclude Include="RunnerGame.h" />
+    <ClInclude Include="RunningPlayerState.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CameraController.cpp" />
     <ClCompile Include="DemoAnimatorComponent.cpp" />
     <ClCompile Include="GameController.cpp" />
+    <ClCompile Include="PatchFactory.cpp" />
+    <ClCompile Include="PatchManager.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="PlayerAnimatorComponent.cpp" />
+    <ClCompile Include="PlayerState.cpp" />
+    <ClCompile Include="RoadPatchComponent.cpp" />
     <ClCompile Include="RunnerGame.cpp" />
+    <ClCompile Include="RunningPlayerState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Engine\Engine.vcxproj">
