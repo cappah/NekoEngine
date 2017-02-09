@@ -40,6 +40,7 @@
 #include "RoadPatchComponent.h"
 #include "PlayerController.h"
 #include "PatchFactory.h"
+#include "EnemyFactory.h"
 #include <Scene\Object.h>
 #include <Platform\Platform.h>
 
@@ -78,12 +79,34 @@ void RoadPatchComponent::OnHit(Object *other, glm::vec3 &position)
 {
 	PlayerController* playerController = dynamic_cast<PlayerController *>(other->GetComponent("PlayerComponent"));
 
+	if (playerController == nullptr) // only interest is player
+		return;
+
+	SpawnPatch ();
+	SpawnEnemy ();
+}
+
+void RoadPatchComponent::SpawnPatch()
+{
 	Object* patch = nullptr;
 
 	if (Platform::Rand() % 5 < 4)
 		patch = PatchFactory::GetRoadPatch(vec3(0), quat());
 	else
 		patch = PatchFactory::GetSplitPatch(vec3(0), quat());
+}
+
+void RoadPatchComponent::SpawnEnemy()
+{
+	if (Platform::Rand() % 2 == 0) // 50% chance of an enemy
+		return;
+
+	Object* parent = GetParent ();
+
+	vec3 enemyPosition = parent->GetPosition () + vec3 (-5, 0, -5); // patch is 10, 0, 10
+	vec3 enemyRotation = parent->GetRotation ();
+
+	Object* enemy = EnemyFactory::GetEnemy(enemyPosition, enemyRotation);
 }
 
 RoadPatchComponent::~RoadPatchComponent()

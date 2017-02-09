@@ -53,5 +53,7 @@ public:
 	RUNNERGAME_API virtual void OnHit(Object *other, glm::vec3 &position) override;
 
 	RUNNERGAME_API ~RoadPatchComponent();
-
+protected:
+	RUNNERGAME_API void SpawnPatch();
+	RUNNERGAME_API void SpawnEnemy();
 };
