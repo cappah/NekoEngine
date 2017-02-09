@@ -45,6 +45,8 @@ using namespace glm;
 
 static queue<vector<Object *>> _layers{};
 static const size_t _maxLayerCount{ 5 };
+static vec3 _nextPatchPos{ 0.f, 0.f, 1000.f };
+static queue<Object *> _patches;
 
 void PatchManager::CreateNewLayer()
 {
@@ -68,14 +70,39 @@ void PatchManager::DestroyOldestLayer()
 	_layers.pop();
 }
 
+void PatchManager::NewPatch()
+{
+	vec3 r{ 0.f, 90.f, 0.f };
+
+	_patches.push(NewRoadPatch(_nextPatchPos, r));
+	_nextPatchPos.z += 200.f;
+
+	if (_patches.size() > 7)
+	{
+		_patches.front()->Destroy();
+		_patches.pop();
+	}
+
+	//AddPatchInCurrentLayer(NewRoadPatch(_nextPatchPos, r));
+
+/*	if (Platform::Rand() % 5 < 4)
+		patch = PatchFactory::GetRoadPatch(vec3(0), quat());
+	else
+		patch = PatchFactory::GetSplitPatch(vec3(0), quat());*/
+}
+
 Object *PatchManager::NewRoadPatch(vec3 &position, vec3 &rotation)
 {
 	ObjectInitializer initializer{};
 	initializer.position = position;
 	initializer.rotation = rotation;
+	initializer.scale = vec3(100.f);
 
 	Object *patch{ Engine::NewObject("RoadPatch", &initializer) };
 	if (!patch) { DIE("Out of resources"); }
+	if (patch->Load() != ENGINE_OK) { DIE("Patch load failed"); }
+	patch->AddToScene();
+
 	return patch;
 }
 
@@ -87,5 +114,6 @@ Object *PatchManager::NewSplitPatch(vec3 &position, vec3 &rotation)
 
 	Object *patch{ Engine::NewObject("SplitPatch", &initializer) };
 	if (!patch) { DIE("Out of resources"); }
+	patch->AddToScene();
 	return patch;
 }

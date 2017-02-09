@@ -54,4 +54,6 @@ public:
 
 	RUNNERGAME_API ~RoadPatchComponent();
 
+private:
+	bool _hit;
 };

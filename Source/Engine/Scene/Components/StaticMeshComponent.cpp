@@ -131,7 +131,7 @@ int StaticMeshComponent::Load()
 			noMaterial = true; // skip material size check
 		}
 		else
-			_mesh = (StaticMesh*)ResourceManager::GetResourceByName(_meshId.c_str(), ResourceType::RES_STATIC_MESH);
+			_mesh = (StaticMesh *)ResourceManager::GetResourceByName(_meshId.c_str(), ResourceType::RES_STATIC_MESH);
 	}
     
 	if (!_mesh)

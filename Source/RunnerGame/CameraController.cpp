@@ -68,8 +68,8 @@ int CameraController::Load()
 	init.arguments.insert({ "far", "4000.0" });
 	init.arguments.insert({ "projection", "perspective" });		
 	init.arguments.insert({ "fog_color", "0.207, 0.255, 0.349" });
-	init.arguments.insert({ "view_distance", "1200" });
-	init.arguments.insert({ "fog_distance", "2500" });
+	init.arguments.insert({ "view_distance", "300" });
+	init.arguments.insert({ "fog_distance", "800" });
 
 	_cameraComponent = (CameraComponent *)Engine::NewComponent("CameraComponent", &init);
 	_cameraComponent->Load();

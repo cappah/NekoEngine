@@ -38,19 +38,20 @@
 */
 
 #include "RoadPatchComponent.h"
-#include "PlayerController.h"
-#include "PatchFactory.h"
+#include "Player.h"
+#include "PatchManager.h"
+
 #include <Scene\Object.h>
 #include <Platform\Platform.h>
 
 using namespace glm;
 
 REGISTER_COMPONENT_CLASS(RoadPatchComponent);
-
+static uint64_t rpid = 0;
 RoadPatchComponent::RoadPatchComponent(ComponentInitializer *initializer) :
-	ObjectComponent(initializer)
+	ObjectComponent(initializer),
+	_hit(false)
 {
-
 }
 
 int RoadPatchComponent::Load()
@@ -76,14 +77,12 @@ bool RoadPatchComponent::Unload()
 
 void RoadPatchComponent::OnHit(Object *other, glm::vec3 &position)
 {
-	PlayerController* playerController = dynamic_cast<PlayerController *>(other->GetComponent("PlayerComponent"));
+	Player *p{ dynamic_cast<Player *>(other) };
+	if (_hit || !p) return;
 
-	Object* patch = nullptr;
+	PatchManager::NewPatch();
 
-	if (Platform::Rand() % 5 < 4)
-		patch = PatchFactory::GetRoadPatch(vec3(0), quat());
-	else
-		patch = PatchFactory::GetSplitPatch(vec3(0), quat());
+	_hit = true;
 }
 
 RoadPatchComponent::~RoadPatchComponent()

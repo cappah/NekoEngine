@@ -74,51 +74,47 @@ Component=PlayerAnimatorComponent=Animator
 	defaultanim=ac_jihl_run
 	targetmesh=Mesh
 EndComponent
+Component=ColliderComponent=Collider
+	type=capsule
+	radius=10.0
+	height=10.0
+EndComponent
 position=0.0, 0.0, 0.0
 rotation=0.0, 0.0, 0.0
 scale=0.45, 0.45, 0.45
 EndObject
 
-Object
+Object=RoadPatch
 id=4415
-Component=StaticMeshComponent=Mesh
-	mesh=stm_quad
-	material=mat_road
-EndComponent
 position=0.0, 0.0, 0.0
 scale=100.0, 100.0, 100.0
 rotation=0.0, 90.0, 0.0
 EndObject
 
-Object
+Object=RoadPatch
 id=4415
-Component=StaticMeshComponent=Mesh
-	mesh=stm_quad
-	material=mat_road
-EndComponent
 position=0.0, 0.0, 200.0
 scale=100.0, 100.0, 100.0
 rotation=0.0, 90.0, 0.0
 EndObject
 
-Object
+Object=RoadPatch
 id=4415
-Component=StaticMeshComponent=Mesh
-	mesh=stm_quad
-	material=mat_road
-EndComponent
 position=0.0, 0.0, 400.0
 scale=100.0, 100.0, 100.0
 rotation=0.0, 90.0, 0.0
 EndObject
 
-Object
+Object=RoadPatch
 id=4415
-Component=StaticMeshComponent=Mesh
-	mesh=stm_quad
-	material=mat_road
-EndComponent
 position=0.0, 0.0, 600.0
+scale=100.0, 100.0, 100.0
+rotation=0.0, 90.0, 0.0
+EndObject
+
+Object=RoadPatch
+id=4415
+position=0.0, 0.0, 800.0
 scale=100.0, 100.0, 100.0
 rotation=0.0, 90.0, 0.0
 EndObject
@@ -143,6 +139,19 @@ EndComponent
 position=200.0, -25.0, -145.0
 rotation=0.0, 0.0, 0.0
 scale=100.0, 100.0, 100.0
+EndObject
+
+# DUMMY
+
+Object
+id=4415
+Component=StaticMeshComponent=Mesh
+	mesh=stm_quad
+	material=mat_road
+EndComponent
+position=0.0, 100.0, 800.0
+scale=100.0, 100.0, 100.0
+rotation=0.0, 90.0, 0.0
 EndObject
 
 ##########

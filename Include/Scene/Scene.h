@@ -115,6 +115,9 @@ public:
 	ENGINE_API void Update(double deltaTime) noexcept;
 	ENGINE_API void Unload() noexcept;
 
+	ENGINE_API void BindArrayBuffer() { _sceneArrayBuffer->Bind(); }
+	ENGINE_API void UnbindArrayBuffer() { _sceneArrayBuffer->Bind(); }
+
 	ENGINE_API void AddObject(Object *obj) noexcept;
 	ENGINE_API void RemoveObject(Object *obj) noexcept;
 

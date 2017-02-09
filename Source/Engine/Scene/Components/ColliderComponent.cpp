@@ -102,6 +102,8 @@ int ColliderComponent::InitializeComponent()
 	if (ret != ENGINE_OK)
 		return ret;
 
+	UpdatePosition();
+
 	if (_collider)
 		return ENGINE_OK;
 
@@ -120,17 +122,18 @@ int ColliderComponent::InitializeComponent()
 				return ENGINE_OUT_OF_RESOURCES;
 		break;
 	}*/
-	
+
 	return ENGINE_OK;
 }
 
 void ColliderComponent::UpdatePosition() noexcept
 {
+	ObjectComponent::UpdatePosition();
 	if (!_collider) return;
-	_collider->SetPosition(_parent->GetPosition() + _position);
-	quat rot = rotate(quat(), radians(_parent->GetRotation() + _rotation));
+	_collider->SetPosition(_position);
+	quat rot = rotate(quat(), radians(_rotation));
 	_collider->SetRotation(rot);
-	_collider->SetScale(_parent->GetScale() + _scale);
+	_collider->SetScale(_parent->GetScale() * _localScale);
 }
 
 bool ColliderComponent::ColliderComponent::Unload()

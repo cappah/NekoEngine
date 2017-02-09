@@ -37,39 +37,58 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#pragma once
-
 #include "RoadPatch.h"
+#include "RunnerGame.h"
+
+#include <Scene/Components/StaticMeshComponent.h>
 
 using namespace glm;
 
 static ComponentInitializer _rpCompInit(nullptr);
-static ComponentInitializer _groundInit(nullptr, vec3(0.f), vec3(0.f), vec3(10.f, .1f, 10.f));
+static ComponentInitializer _groundInit(nullptr);
+static ComponentInitializer _colliderInit(nullptr);
 
-static bool _initComp{ false };
+static bool _initComp{ true };
+
+REGISTER_OBJECT_CLASS(RoadPatch);
 
 RoadPatch::RoadPatch(ObjectInitializer *initializer) :
 	Object(initializer)
 {
-	if (_initComp) return;
+	if (!_initComp) return;
 
 	_groundInit.arguments.insert({ "mesh", "stm_quad" });
 	_groundInit.arguments.insert({ "material", "mat_road" });
+
+	_colliderInit.position = vec3(0.f, 0.f, -95.f);
+	_colliderInit.arguments.insert({ "type", "box" });
+	_colliderInit.arguments.insert({ "halfextents", ".01f, 50.f, .01f" });
+
+	_initComp = false;
 }
 
 int RoadPatch::Load()
 {
 	int ret{ ENGINE_OK };
 	ObjectComponent *comp{ nullptr };
-	_rpCompInit.parent = this;
 
+	_rpCompInit.parent = this;
 	comp = Engine::NewComponent("RoadPatchComponent", &_rpCompInit);
 	if (!comp) return ENGINE_OUT_OF_RESOURCES;
 	if ((ret = comp->Load()) != ENGINE_OK) return ret;
+	AddComponent("Patch", comp);
 
+	_groundInit.parent = this;
 	comp = Engine::NewComponent("StaticMeshComponent", &_groundInit);
 	if (!comp) return ENGINE_OUT_OF_RESOURCES;
 	if ((ret = comp->Load()) != ENGINE_OK) return ret;
+	AddComponent("Mesh", comp);
+
+	_colliderInit.parent = this;
+	comp = Engine::NewComponent("ColliderComponent", &_colliderInit);
+	if (!comp) return ENGINE_OUT_OF_RESOURCES;
+	if ((ret = comp->Load()) != ENGINE_OK) return ret;
+	AddComponent("FrontCollider", comp);
 
 	if ((ret = Object::Load()) != ENGINE_OK) return ret;
 	return ENGINE_OK;
