@@ -50,7 +50,6 @@ class RunningPlayerState : public PlayerState
 {
 private:
 	float _speed;
-	vec3 _direction;
 
 public:
 	RunningPlayerState(Player* player);

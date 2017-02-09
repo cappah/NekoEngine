@@ -48,5 +48,7 @@ public:
 
 	virtual int Load() override;
 
+	virtual void OnHit(Object *other, glm::vec3 &position);
+
 	~SplitPatch();
 };

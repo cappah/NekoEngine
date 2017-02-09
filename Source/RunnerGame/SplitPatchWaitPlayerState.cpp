@@ -1,9 +1,9 @@
 /* RunnerGame
 *
-* RunningPlayerState.cpp
+* SplitPatchWaitPlayerState.cpp
 * Author: Cristian Lambru
 *
-* RunningPlayerState class
+* SplitPatchWaitPlayerState class
 *
 * -----------------------------------------------------------------------------
 *
@@ -37,59 +37,73 @@
 * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "RunningPlayerState.h"
+#include "SplitPatchWaitPlayerState.h"
 
-#include "JumpingPlayerState.h"
-#include "CrouchingPlayerState.h"
+#include "TurnLeftPlayerState.h"
+#include "TurnRightPlayerState.h"
 
 #include <Engine/Input.h>
 #include <Engine/Keycodes.h>
 
-RunningPlayerState::RunningPlayerState(Player* player) :
-	PlayerState (player)
+SplitPatchWaitPlayerState::SplitPatchWaitPlayerState(Player* player) :
+	PlayerState(player)
 {
-	_stateType = PlayerStateType::STATE_RUNNING;
+	_stateType = PlayerStateType::STATE_SPLIT_PATCH_WAITING;
 
 	_speed = 300.0;
+	_duration = 0.75; // seconds
+	_durationAvailableForInput = 0.5; // seconds
+
+	_timeElapsed = 0;
+	_chosedDirection = 0; // none
 }
 
-RunningPlayerState::~RunningPlayerState()
+SplitPatchWaitPlayerState::~SplitPatchWaitPlayerState()
 {
 
 }
 
-void RunningPlayerState::Update(double deltaTime)
+void SplitPatchWaitPlayerState::Update(double deltaTime)
 {
-	bool jump = false;
+	bool right = false;
 
 #ifndef NE_DEVICE_MOBILE
-	jump = Input::GetButtonDown(NE_KEY_SPACE);
+	right = Input::GetButtonDown(NE_KEY_RIGHT);
 #else
 	// ios
 #endif
 
-	if (jump) {
-		_player->SetState(new JumpingPlayerState(_player));
+	// Only first chose is counted, the others are thrown away
+	if (right && _chosedDirection == 0 && _timeElapsed < _durationAvailableForInput)
+		_chosedDirection = 1;
 
-		return;
-	}
-
-	bool crouch = false;
+	bool left = false;
 
 #ifndef NE_DEVICE_MOBILE
-	crouch = Input::GetButtonDown(NE_KEY_S);
+	left = Input::GetButtonDown(NE_KEY_LEFT);
 #else
 	// ios
 #endif
 
-	if (crouch) {
-		_player->SetState(new CrouchingPlayerState(_player));
+	// Only first chose is counted, the others are thrown away
+	if (left && _chosedDirection == 0 && _timeElapsed < _durationAvailableForInput)
+		_chosedDirection = 2;
 
-		return;
-	}
-
-	vec3 velocity = _player->GetForwardDirection () * _speed * (float)deltaTime;
-	vec3 newPosition = _player->GetPosition () + velocity;
+	vec3 velocity = _player->GetForwardDirection() * _speed * (float)deltaTime;
+	vec3 newPosition = _player->GetPosition() + velocity;
 
 	_player->SetPosition(newPosition);
+
+	_timeElapsed += deltaTime;
+
+	if (_timeElapsed > _durationAvailableForInput && _chosedDirection != 0) {
+
+		if (_chosedDirection == 1)
+			_player->SetState(new TurnRightPlayerState (_player));
+		else
+			_player->SetState (new TurnLeftPlayerState (_player));
+	}
+
+	if (_timeElapsed > _duration)
+		_player->Kill ();
 }

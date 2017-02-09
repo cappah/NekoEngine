@@ -40,6 +40,9 @@
     <ClInclude Include="RunnerGameEvents.h" />
     <ClInclude Include="RunningPlayerState.h" />
     <ClInclude Include="SplitPatch.h" />
+    <ClInclude Include="SplitPatchWaitPlayerState.h" />
+    <ClInclude Include="TurnLeftPlayerState.h" />
+    <ClInclude Include="TurnRightPlayerState.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CameraController.cpp" />
@@ -60,6 +63,9 @@
     <ClCompile Include="RoadPatchComponent.cpp" />
     <ClCompile Include="RunnerGame.cpp" />
     <ClCompile Include="RunningPlayerState.cpp" />
+    <ClCompile Include="SplitPatchWaitPlayerState.cpp" />
+    <ClCompile Include="TurnLeftPlayerState.cpp" />
+    <ClCompile Include="TurnRightPlayerState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Engine\Engine.vcxproj">

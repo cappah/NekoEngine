@@ -1,9 +1,9 @@
 /* RunnerGame
 *
-* RunningPlayerState.cpp
+* TurnLeftPlayerState.cpp
 * Author: Cristian Lambru
 *
-* RunningPlayerState class
+* TurnLeftPlayerState class
 *
 * -----------------------------------------------------------------------------
 *
@@ -37,59 +37,30 @@
 * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#include "TurnLeftPlayerState.h"
+#include <glm/glm.hpp>
 #include "RunningPlayerState.h"
 
-#include "JumpingPlayerState.h"
-#include "CrouchingPlayerState.h"
+using namespace glm;
 
-#include <Engine/Input.h>
-#include <Engine/Keycodes.h>
-
-RunningPlayerState::RunningPlayerState(Player* player) :
-	PlayerState (player)
+TurnLeftPlayerState::TurnLeftPlayerState(Player* player) :
+	PlayerState(player)
 {
-	_stateType = PlayerStateType::STATE_RUNNING;
-
-	_speed = 300.0;
+	_stateType = PlayerStateType::STATE_TURN_LEFT;
 }
 
-RunningPlayerState::~RunningPlayerState()
+TurnLeftPlayerState::~TurnLeftPlayerState()
 {
 
 }
 
-void RunningPlayerState::Update(double deltaTime)
+void TurnLeftPlayerState::Update(double deltaTime)
 {
-	bool jump = false;
+	vec3 rotation = vec3 (0, 0, 90);
 
-#ifndef NE_DEVICE_MOBILE
-	jump = Input::GetButtonDown(NE_KEY_SPACE);
-#else
-	// ios
-#endif
+	vec3 newRotation = rotation + _player->GetRotation ();
 
-	if (jump) {
-		_player->SetState(new JumpingPlayerState(_player));
+	_player->SetRotation(newRotation);
 
-		return;
-	}
-
-	bool crouch = false;
-
-#ifndef NE_DEVICE_MOBILE
-	crouch = Input::GetButtonDown(NE_KEY_S);
-#else
-	// ios
-#endif
-
-	if (crouch) {
-		_player->SetState(new CrouchingPlayerState(_player));
-
-		return;
-	}
-
-	vec3 velocity = _player->GetForwardDirection () * _speed * (float)deltaTime;
-	vec3 newPosition = _player->GetPosition () + velocity;
-
-	_player->SetPosition(newPosition);
+	_player->SetState (new RunningPlayerState (_player));
 }

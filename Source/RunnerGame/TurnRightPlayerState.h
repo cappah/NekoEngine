@@ -1,9 +1,9 @@
 /* RunnerGame
 *
-* RunningPlayerState.cpp
+* TurnRightPlayerState.h
 * Author: Cristian Lambru
 *
-* RunningPlayerState class
+* TurnRightPlayerState class
 *
 * -----------------------------------------------------------------------------
 *
@@ -37,59 +37,20 @@
 * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "RunningPlayerState.h"
+#pragma once
 
-#include "JumpingPlayerState.h"
-#include "CrouchingPlayerState.h"
+#include "RunnerGame.h"
+#include "PlayerState.h"
+#include "Player.h"
+#include <glm/glm.hpp>
 
-#include <Engine/Input.h>
-#include <Engine/Keycodes.h>
+using namespace glm;
 
-RunningPlayerState::RunningPlayerState(Player* player) :
-	PlayerState (player)
+class TurnRightPlayerState : public PlayerState
 {
-	_stateType = PlayerStateType::STATE_RUNNING;
+public:
+	TurnRightPlayerState(Player* player);
+	virtual ~TurnRightPlayerState();
 
-	_speed = 300.0;
-}
-
-RunningPlayerState::~RunningPlayerState()
-{
-
-}
-
-void RunningPlayerState::Update(double deltaTime)
-{
-	bool jump = false;
-
-#ifndef NE_DEVICE_MOBILE
-	jump = Input::GetButtonDown(NE_KEY_SPACE);
-#else
-	// ios
-#endif
-
-	if (jump) {
-		_player->SetState(new JumpingPlayerState(_player));
-
-		return;
-	}
-
-	bool crouch = false;
-
-#ifndef NE_DEVICE_MOBILE
-	crouch = Input::GetButtonDown(NE_KEY_S);
-#else
-	// ios
-#endif
-
-	if (crouch) {
-		_player->SetState(new CrouchingPlayerState(_player));
-
-		return;
-	}
-
-	vec3 velocity = _player->GetForwardDirection () * _speed * (float)deltaTime;
-	vec3 newPosition = _player->GetPosition () + velocity;
-
-	_player->SetPosition(newPosition);
-}
+	virtual void Update(double) override;
+};

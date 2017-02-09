@@ -80,12 +80,7 @@ void PlayerAnimatorComponent::Update(double deltaTime) noexcept
 
 	if (_currentPlayerState != playerStateType)
 	{
-		if (playerStateType == PlayerStateType::STATE_RUNNING)
-		{
-			_defaultAnim = _clips[0];
-			_currentTime = 0.0;
-		}
-		else if (playerStateType == PlayerStateType::STATE_JUMPING)
+		if (playerStateType == PlayerStateType::STATE_JUMPING)
 		{
 			_defaultAnim = _clips[1];
 			_currentTime = 0.0;
@@ -98,6 +93,11 @@ void PlayerAnimatorComponent::Update(double deltaTime) noexcept
 		else if (playerStateType == PlayerStateType::STATE_DYING)
 		{
 			_defaultAnim = _clips[3];
+			_currentTime = 0.0;
+		} 
+		else // any other state use a running animation
+		{
+			_defaultAnim = _clips[0];
 			_currentTime = 0.0;
 		}
 	}
