@@ -1,9 +1,9 @@
-/* NekoEngine
+/* RunnerGame
 *
-* PlayerState.h
+* DyingPlayerState.cpp
 * Author: Cristian Lambru
 *
-* PlayerState class definition
+* DyingPlayerState class
 *
 * -----------------------------------------------------------------------------
 *
@@ -37,37 +37,24 @@
 * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#pragma once
+#include "DyingPlayerState.h"
+#include "DeadPlayerState.h"
+#include "Player.h"
 
-#include "RunnerGame.h"
-#include <Scene\Object.h>
-
-enum PlayerStateType
+DyingPlayerState::DyingPlayerState(Player* player) :
+	PlayerState(player)
 {
-	STATE_IDLE = 0,
-	STATE_RUNNING,
-	STATE_JUMPING,
-	STATE_CROUCHING,
-	STATE_TURN_RIGHT,
-	STATE_TURN_LEFT,
-	STATE_DYING,
-	STATE_DEAD
-};
+	_stateType = PlayerStateType::STATE_DYING;
+}
 
-class Player;
-
-class PlayerState
+DyingPlayerState::~DyingPlayerState()
 {
-protected:
-	Player* _player;
-	PlayerStateType _stateType;
 
-public:
-	PlayerState(Player* player);
-	virtual ~PlayerState();
+}
 
-	virtual void OnHit (Object* other);
+void DyingPlayerState::Update(double deltaTime)
+{
+	// Animation dying
 
-	virtual void Update(double deltaTime) = 0;
-	virtual PlayerStateType GetStateType () const;
-};
+	_player->SetState(new DeadPlayerState(_player));
+}

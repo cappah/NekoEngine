@@ -21,7 +21,10 @@
   <ItemGroup>
     <ClInclude Include="CameraController.h" />
     <ClInclude Include="CrouchingPlayerState.h" />
+    <ClInclude Include="DeadPlayerState.h" />
     <ClInclude Include="DemoAnimatorComponent.h" />
+    <ClInclude Include="DyingPlayerState.h" />
+    <ClInclude Include="EnemyComponent.h" />
     <ClInclude Include="GameController.h" />
     <ClInclude Include="JumpingPlayerState.h" />
     <ClInclude Include="PatchFactory.h" />
@@ -32,12 +35,16 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="RoadPatchComponent.h" />
     <ClInclude Include="RunnerGame.h" />
+    <ClInclude Include="RunnerGameEvents.h" />
     <ClInclude Include="RunningPlayerState.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CameraController.cpp" />
     <ClCompile Include="CrouchingPlayerState.cpp" />
+    <ClCompile Include="DeadPlayerState.cpp" />
     <ClCompile Include="DemoAnimatorComponent.cpp" />
+    <ClCompile Include="DyingPlayerState.cpp" />
+    <ClCompile Include="EnemyComponent.cpp" />
     <ClCompile Include="GameController.cpp" />
     <ClCompile Include="JumpingPlayerState.cpp" />
     <ClCompile Include="PatchFactory.cpp" />

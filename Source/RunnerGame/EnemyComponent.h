@@ -1,13 +1,13 @@
 /* NekoEngine
 *
-* PlayerState.h
+* EnemyComponent.h
 * Author: Cristian Lambru
 *
-* PlayerState class definition
+* EnemyComponent class definition
 *
 * -----------------------------------------------------------------------------
 *
-* Copyright (c) 2015-2017, NekoEngine
+* Copyright (c) 2015-2017, Alexandru Naiman
 *
 * All rights reserved.
 *
@@ -40,34 +40,19 @@
 #pragma once
 
 #include "RunnerGame.h"
-#include <Scene\Object.h>
+#include <Scene/ObjectComponent.h>
 
-enum PlayerStateType
+class EnemyComponent : public ObjectComponent
 {
-	STATE_IDLE = 0,
-	STATE_RUNNING,
-	STATE_JUMPING,
-	STATE_CROUCHING,
-	STATE_TURN_RIGHT,
-	STATE_TURN_LEFT,
-	STATE_DYING,
-	STATE_DEAD
-};
-
-class Player;
-
-class PlayerState
-{
-protected:
-	Player* _player;
-	PlayerStateType _stateType;
-
 public:
-	PlayerState(Player* player);
-	virtual ~PlayerState();
+	RUNNERGAME_API EnemyComponent(ComponentInitializer *initializer);
 
-	virtual void OnHit (Object* other);
+	RUNNERGAME_API virtual int Load() override;
+	RUNNERGAME_API virtual void Update(double deltaTime) noexcept override;
+	RUNNERGAME_API virtual bool Unload() override;
+	RUNNERGAME_API virtual void OnHit(Object* other, glm::vec3 &position) override;
 
-	virtual void Update(double deltaTime) = 0;
-	virtual PlayerStateType GetStateType () const;
+	RUNNERGAME_API ~EnemyComponent();
+
+private:
 };

@@ -54,11 +54,13 @@ public:
 
 	virtual int Load() override;
 
-	virtual void  OnHit(Object *other, glm::vec3 &position) override;
+	virtual void OnHit(Object *other, glm::vec3 &position) override;
 
 	virtual void Update(double deltaTime) noexcept override;
 
 	virtual bool Unload() noexcept override;
+
+	virtual void Kill() noexcept;
 
 	virtual void SetState(PlayerState*);
 	virtual PlayerState* GetState () const;
