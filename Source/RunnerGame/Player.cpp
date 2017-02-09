@@ -81,6 +81,10 @@ bool Player::Unload() noexcept
 
 void Player::SetState(PlayerState* playerState)
 {
+	if (_currentPlayerState == nullptr) {
+		delete _currentPlayerState;
+	}
+
 	_currentPlayerState = playerState;
 }
 

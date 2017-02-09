@@ -1,9 +1,9 @@
 /* RunnerGame
 *
-* RunningPlayerState.cpp
+* CrouchingPlayerState.h
 * Author: Cristian Lambru
 *
-* RunningPlayerState class
+* CrouchingPlayerState class
 *
 * -----------------------------------------------------------------------------
 *
@@ -37,54 +37,15 @@
 * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "RunningPlayerState.h"
-#include "DemoAnimatorComponent.h"
+#pragma once
 
-#include "JumpingPlayerState.h"
-#include "CrouchingPlayerState.h"
+#include "PlayerState.h"
 
-#include <Engine\Input.h>
-
-RunningPlayerState::RunningPlayerState(Player* player) :
-	PlayerState (player)
+class CrouchingPlayerState : public PlayerState
 {
-	_stateType = PlayerStateType::STATE_RUNNING;
-}
+public:
+	CrouchingPlayerState(Player* player);
+	virtual ~CrouchingPlayerState();
 
-RunningPlayerState::~RunningPlayerState()
-{
-
-}
-
-void RunningPlayerState::Update(double deltaTime)
-{
-	bool jump = false;
-
-#ifndef NE_DEVICE_MOBILE
-	jump = Input::GetButtonDown(" ");
-#else
-	// ios
-#endif
-
-	if (jump) {
-		_player->SetState(new JumpingPlayerState(_player));
-
-		return;
-	}
-
-	bool crouch = false;
-
-#ifndef NE_DEVICE_MOBILE
-	jump = Input::GetButtonDown("s");
-#else
-	// ios
-#endif
-
-	if (crouch) {
-		_player->SetState(new CrouchingPlayerState(_player));
-
-		return;
-	}
-
-
-}
+	virtual void Update(double) override;
+};
