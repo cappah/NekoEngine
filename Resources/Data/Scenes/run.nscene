@@ -1,0 +1,166 @@
+NSCENE1 
+SceneInfo
+name=Main
+bgmusic=bg_meat_grinder
+bgmusicvol=1.2
+gamemodule=RunnerGame
+ambcolor=0.02, 0.02, 0.02
+ambintensity=0.2
+EndSceneInfo
+
+# Skybox
+Object=Skybox
+id=1
+Component=StaticMeshComponent=Mesh
+	mesh=stm_skysphere
+	material=mat_skysphere
+EndComponent
+position=0.0, 3200.0, 0.0
+scale=6400.0, 6400.0, 6400.0
+rotation=0.0, 0.0, 0.0
+EndObject
+
+#################
+# Scene objects #
+#################
+
+# Game Controller
+Object=GameController
+id=9000
+position=0.0, 0.0, 0.0
+scale=1.0, 1.0, 1.0
+rotation=0.0, 0.0, 0.0
+EndObject
+
+# Player
+#Object
+#id=9001
+#Component=FPSControllerComponent=Controller
+#EndComponent
+#position=0.0, 0.0, 0.0
+#scale=1.0, 1.0, 1.0
+#rotation=0.0, -90.0, 0.0
+#EndObject
+
+Object=Player
+id=5
+Component=SkeletalMeshComponent=Mesh
+	mesh=skm_jihl
+	material=mat_jihl_body
+	material=mat_jihl_body
+	material=mat_jihl_body
+	material=mat_jihl_body
+	material=mat_jihl_body
+	material=mat_jihl_eye
+	material=mat_jihl_body
+	material=mat_jihl_body
+	material=mat_jihl_body
+	material=mat_jihl_hair
+	material=mat_jihl_hair
+	material=mat_jihl_body
+	material=mat_jihl_hair
+	material=mat_jihl_body
+	animator=Animator
+EndComponent
+Component=CameraController=CameraController
+	position=0.0, 100.0, -150.0
+	rotation=-15.0, 90.0, 0.0
+EndComponent
+Component=PlayerAnimatorComponent=Animator
+	running=ac_jihl_run
+	jumping=ac_jihl_jump
+	crouching=ac_jihl_crouch_run
+	death=ac_jihl_death
+	defaultanim=ac_jihl_run
+	targetmesh=Mesh
+EndComponent
+position=0.0, 0.0, 0.0
+rotation=0.0, 0.0, 0.0
+scale=0.45, 0.45, 0.45
+EndObject
+
+Object
+id=4415
+Component=StaticMeshComponent=Mesh
+	mesh=stm_quad
+	material=mat_road
+EndComponent
+position=0.0, 0.0, 0.0
+scale=100.0, 100.0, 100.0
+rotation=0.0, 90.0, 0.0
+EndObject
+
+Object
+id=4415
+Component=StaticMeshComponent=Mesh
+	mesh=stm_quad
+	material=mat_road
+EndComponent
+position=0.0, 0.0, 200.0
+scale=100.0, 100.0, 100.0
+rotation=0.0, 90.0, 0.0
+EndObject
+
+Object
+id=4415
+Component=StaticMeshComponent=Mesh
+	mesh=stm_quad
+	material=mat_road
+EndComponent
+position=0.0, 0.0, 400.0
+scale=100.0, 100.0, 100.0
+rotation=0.0, 90.0, 0.0
+EndObject
+
+Object
+id=4415
+Component=StaticMeshComponent=Mesh
+	mesh=stm_quad
+	material=mat_road
+EndComponent
+position=0.0, 0.0, 600.0
+scale=100.0, 100.0, 100.0
+rotation=0.0, 90.0, 0.0
+EndObject
+
+Object
+id=12
+Component=StaticMeshComponent=Mesh
+	mesh=stm_tombstone1
+	material=mat_tombstone
+EndComponent
+position=100.0, -25.0, -145.0
+rotation=0.0, 0.0, 0.0
+scale=100.0, 100.0, 100.0
+EndObject
+
+Object
+id=12
+Component=StaticMeshComponent=Mesh
+	mesh=stm_tombstone2
+	material=mat_tombstone
+EndComponent
+position=200.0, -25.0, -145.0
+rotation=0.0, 0.0, 0.0
+scale=100.0, 100.0, 100.0
+EndObject
+
+##########
+# Lights #
+##########
+
+Object=Light
+id=102
+scale=0.1, 0.1, 0.1
+position=0.0, 150.0, 0.0
+rotation=0.0, 0.0, 0.0
+color=1.0, 1.0, 1.0
+type=directional
+direction=-1.0, 1.0, 0.0
+intensity=0.2
+#shadows=true
+EndObject
+
+#############
+# End Scene #
+#############
