@@ -50,7 +50,7 @@ typedef struct HANDLERS
 	std::vector<std::function<void(int32_t, void *)>> handlers;
 } EventHandlers;
 
-class EventManager
+class ENGINE_API EventManager
 {
 public:
 	static int Initialize();
