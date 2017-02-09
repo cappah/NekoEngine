@@ -95,7 +95,7 @@ Object
 id=4415
 Component=StaticMeshComponent=Mesh
 	mesh=stm_quad
-	material=mat_arissa
+	material=mat_road
 EndComponent
 position=0.0, 20.0, 0.0
 scale=100.0, 100.0, 100.0
@@ -116,21 +116,35 @@ EndObject
 #EndObject
 
 # Sophia
-#Object
-#id=5
-#Component=SkeletalMeshComponent=Mesh
-#	mesh=skm_sophia
-#	material=mat_sophia
-#	animator=Animator
-#EndComponent
-#Component=AnimatorComponent=Animator
-#	defaultanim=ac_sophia_idle
-#	targetmesh=Mesh
-#EndComponent
-#position=-127.5, -30.0, -145.0
-#rotation=0.0, 0.0, 0.0
-#scale=0.45, 0.45, 0.45
-#EndObject
+Object
+id=5
+Component=SkeletalMeshComponent=Mesh
+	mesh=skm_jihl
+	material=mat_jihl_body
+	material=mat_jihl_body
+	material=mat_jihl_body
+	material=mat_jihl_body
+	material=mat_jihl_body
+	material=mat_jihl_eye
+	material=mat_jihl_body
+	material=mat_jihl_body
+	material=mat_jihl_body
+	material=mat_jihl_hair
+	material=mat_jihl_hair
+	material=mat_jihl_body
+	material=mat_jihl_hair
+	material=mat_jihl_body
+	animator=Animator
+EndComponent
+Component=AnimatorComponent=Animator
+	defaultanim=ac_jihl_run
+#	defaultanim=ac_jihl_tpose
+	targetmesh=Mesh
+EndComponent
+position=-127.5, -30.0, -145.0
+rotation=0.0, 0.0, 0.0
+scale=0.45, 0.45, 0.45
+EndObject
 
 # Sophia Demo
 #Object

@@ -1,0 +1,6 @@
+NMTL1 
+type=lit
+texture=tex_jihl_hair,linear,linear,clamp,clamp
+kdiffuse=1.0
+kspecular=0.0
+shininess=16.00

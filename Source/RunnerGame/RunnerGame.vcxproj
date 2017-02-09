@@ -28,9 +28,11 @@
     <ClInclude Include="PlayerAnimatorComponent.h" />
     <ClInclude Include="PlayerState.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="RoadPatch.h" />
     <ClInclude Include="RoadPatchComponent.h" />
     <ClInclude Include="RunnerGame.h" />
     <ClInclude Include="RunningPlayerState.h" />
+    <ClInclude Include="SplitPatch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CameraController.cpp" />
@@ -41,6 +43,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerAnimatorComponent.cpp" />
     <ClCompile Include="PlayerState.cpp" />
+    <ClCompile Include="RoadPatch.cpp" />
     <ClCompile Include="RoadPatchComponent.cpp" />
     <ClCompile Include="RunnerGame.cpp" />
     <ClCompile Include="RunningPlayerState.cpp" />
@@ -52,6 +55,9 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="RunnerGame.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SplitPatch.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{8E393A6F-DC1C-4DB4-8A20-2FB1FCBCA29A}</ProjectGuid>

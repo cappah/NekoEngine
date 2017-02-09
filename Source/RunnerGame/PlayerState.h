@@ -40,7 +40,7 @@
 #pragma once
 
 #include "RunnerGame.h"
-#include <Scene\Object.h>
+#include <Scene/Object.h>
 
 enum PlayerStateType
 {

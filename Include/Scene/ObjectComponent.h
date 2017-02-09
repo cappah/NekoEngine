@@ -50,7 +50,24 @@ typedef std::pair<ArgumentMapType::iterator, ArgumentMapType::iterator> Argument
 class ComponentInitializer
 {
 public:
-	Object *parent;
+	ComponentInitializer() :
+		parent(nullptr),
+		position(0.f),
+		rotation(0.f),
+		scale(1.f)
+	{ }
+
+	ComponentInitializer(Object *inParent, glm::vec3 inPosition = glm::vec3(0.f), glm::vec3 inRotation = glm::vec3(0.f), glm::vec3 inScale = glm::vec3(1.f)) :
+		parent(inParent),
+		position(inPosition),
+		rotation(inRotation),
+		scale(inScale)
+	{ }
+
+	class Object *parent;
+	glm::vec3 position;
+	glm::vec3 rotation;
+	glm::vec3 scale;
 	ArgumentMapType arguments;
 };
 

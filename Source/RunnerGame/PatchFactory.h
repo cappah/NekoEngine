@@ -39,13 +39,13 @@
 
 #pragma once
 
-#include <Scene\Object.h>
+#include <Scene/Object.h>
 
-#include <glm\glm.hpp>
+#include <glm/glm.hpp>
 
 class PatchFactory
 {
 public:
-	static Object* GetRoadPatch(glm::vec3 position, glm::quat rotation);
-	static Object* GetSplitPatch(glm::vec3 position, glm::quat rotation);
+	static Object *GetRoadPatch(glm::vec3 position, glm::quat rotation);
+	static Object *GetSplitPatch(glm::vec3 position, glm::quat rotation);
 };
