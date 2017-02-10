@@ -63,7 +63,7 @@ int PlayerAnimatorComponent::Load()
 	_clips[0] = (AnimationClip *)ResourceManager::GetResourceByName(_clipIds[0].c_str(), ResourceType::RES_ANIMCLIP);
 	_clips[1] = (AnimationClip *)ResourceManager::GetResourceByName(_clipIds[1].c_str(), ResourceType::RES_ANIMCLIP);
 	_clips[2] = (AnimationClip *)ResourceManager::GetResourceByName(_clipIds[2].c_str(), ResourceType::RES_ANIMCLIP);
-	_clips[3] = (AnimationClip *)ResourceManager::GetResourceByName(_clipIds[2].c_str(), ResourceType::RES_ANIMCLIP);
+	_clips[3] = (AnimationClip *)ResourceManager::GetResourceByName(_clipIds[3].c_str(), ResourceType::RES_ANIMCLIP);
 
 	if (!_clips[0] || !_clips[1] || !_clips[2] || !_clips[3])
 		return ENGINE_INVALID_RES;

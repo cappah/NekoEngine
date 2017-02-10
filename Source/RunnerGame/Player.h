@@ -44,16 +44,10 @@
 #include <Scene/Components/ColliderComponent.h>
 #include <glm/glm.hpp>
 
-using namespace glm;
-
 #define PLAYER_SIZE		2.f
 
 class Player : public Object
 {
-private:
-	PlayerState* _currentPlayerState;
-	vec3 _moveDirection;
-
 public:
 	Player(ObjectInitializer *initializer);
 
@@ -67,13 +61,15 @@ public:
 
 	virtual void Kill() noexcept;
 
-	virtual vec3 GetForwardDirection () const noexcept;
+	virtual glm::vec3 GetForwardDirection () const noexcept;
 
-	virtual void SetState(PlayerState*);
+	virtual void SetState(PlayerState *state);
 	virtual PlayerState* GetState () const;
 
 	virtual ~Player();
 
 private:
 	ColliderComponent *_collider;
+	PlayerState *_currentPlayerState;
+	glm::vec3 _moveDirection;
 };

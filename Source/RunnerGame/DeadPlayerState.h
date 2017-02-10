@@ -44,7 +44,7 @@
 class DeadPlayerState : public PlayerState
 {
 public:
-	DeadPlayerState(Player* player);
+	DeadPlayerState(Player *player);
 	virtual ~DeadPlayerState();
 
 	virtual void Update(double) override;

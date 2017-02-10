@@ -44,21 +44,19 @@
 #include "Player.h"
 #include <glm/glm.hpp>
 
-using namespace glm;
-
 class SplitPatchWaitPlayerState : public PlayerState
 {
+public:
+	SplitPatchWaitPlayerState(Player *player);
+	virtual ~SplitPatchWaitPlayerState();
+
+	virtual void Update(double) override;
+	
 private:
 	float _speed;
 	float _duration;
 	float _durationAvailableForInput;
-
+	
 	float _timeElapsed;
 	int _chosenDirection; // 1 for right, 2 for left, 0 for none
-
-public:
-	SplitPatchWaitPlayerState(Player* player);
-	virtual ~SplitPatchWaitPlayerState();
-
-	virtual void Update(double) override;
 };

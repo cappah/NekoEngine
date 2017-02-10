@@ -51,6 +51,8 @@ public:
 	static void AddPatchInCurrentLayer(Object* object);
 	static void DestroyOldestLayer();
 
+	static size_t PatchCount();
+	
 	static void NewPatch();
 
 	static Object *NewRoadPatch(glm::vec3 &position, glm::vec3 &rotation);

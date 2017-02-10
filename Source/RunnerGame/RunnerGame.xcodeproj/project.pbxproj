@@ -13,10 +13,56 @@
 		120F83CB1E4B69BD00DA5214 /* Player.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 120F83C91E4B69BD00DA5214 /* Player.cpp */; };
 		120F83CD1E4B69C200DA5214 /* CameraController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 120F83CC1E4B69C200DA5214 /* CameraController.cpp */; };
 		120F83CE1E4B69C200DA5214 /* CameraController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 120F83CC1E4B69C200DA5214 /* CameraController.cpp */; };
-		12615D661CF40C8D006FB6DB /* DemoAnimatorComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 12615D651CF40C8D006FB6DB /* DemoAnimatorComponent.h */; };
-		12615D691CF40C91006FB6DB /* DemoAnimatorComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12615D681CF40C91006FB6DB /* DemoAnimatorComponent.cpp */; };
-		12615D6A1CF40C91006FB6DB /* DemoAnimatorComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12615D681CF40C91006FB6DB /* DemoAnimatorComponent.cpp */; };
+		12220DC51E4DC2F200D0CDD5 /* BatEnemy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12220DC41E4DC2F200D0CDD5 /* BatEnemy.cpp */; };
+		12220DC61E4DC2F200D0CDD5 /* BatEnemy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12220DC41E4DC2F200D0CDD5 /* BatEnemy.cpp */; };
+		12220DCC1E4DC3C000D0CDD5 /* TarantulaEnemy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12220DCB1E4DC3C000D0CDD5 /* TarantulaEnemy.cpp */; };
+		12220DCD1E4DC3C000D0CDD5 /* TarantulaEnemy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12220DCB1E4DC3C000D0CDD5 /* TarantulaEnemy.cpp */; };
+		12220DCF1E4DC3CC00D0CDD5 /* EnemyManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12220DCE1E4DC3CC00D0CDD5 /* EnemyManager.cpp */; };
+		12220DD01E4DC3CC00D0CDD5 /* EnemyManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12220DCE1E4DC3CC00D0CDD5 /* EnemyManager.cpp */; };
 		1270125E1CC31645001840A7 /* libEngine.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1270125B1CC31615001840A7 /* libEngine.dylib */; };
+		12B567C81E4D3642005124FC /* CrouchingPlayerState.h in Headers */ = {isa = PBXBuildFile; fileRef = 12B567B61E4D3642005124FC /* CrouchingPlayerState.h */; };
+		12B567C91E4D3642005124FC /* DeadPlayerState.h in Headers */ = {isa = PBXBuildFile; fileRef = 12B567B71E4D3642005124FC /* DeadPlayerState.h */; };
+		12B567CA1E4D3642005124FC /* DyingPlayerState.h in Headers */ = {isa = PBXBuildFile; fileRef = 12B567B81E4D3642005124FC /* DyingPlayerState.h */; };
+		12B567CC1E4D3642005124FC /* EnemyFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = 12B567BA1E4D3642005124FC /* EnemyFactory.h */; };
+		12B567CD1E4D3642005124FC /* JumpingPlayerState.h in Headers */ = {isa = PBXBuildFile; fileRef = 12B567BB1E4D3642005124FC /* JumpingPlayerState.h */; };
+		12B567CE1E4D3642005124FC /* PatchManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 12B567BC1E4D3642005124FC /* PatchManager.h */; };
+		12B567D01E4D3642005124FC /* PlayerAnimatorComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 12B567BE1E4D3642005124FC /* PlayerAnimatorComponent.h */; };
+		12B567D21E4D3642005124FC /* PlayerState.h in Headers */ = {isa = PBXBuildFile; fileRef = 12B567C01E4D3642005124FC /* PlayerState.h */; };
+		12B567D31E4D3642005124FC /* RoadPatch.h in Headers */ = {isa = PBXBuildFile; fileRef = 12B567C11E4D3642005124FC /* RoadPatch.h */; };
+		12B567D41E4D3642005124FC /* RunnerGameEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = 12B567C21E4D3642005124FC /* RunnerGameEvents.h */; };
+		12B567D51E4D3642005124FC /* RunningPlayerState.h in Headers */ = {isa = PBXBuildFile; fileRef = 12B567C31E4D3642005124FC /* RunningPlayerState.h */; };
+		12B567D61E4D3642005124FC /* SplitPatch.h in Headers */ = {isa = PBXBuildFile; fileRef = 12B567C41E4D3642005124FC /* SplitPatch.h */; };
+		12B567D71E4D3642005124FC /* SplitPatchWaitPlayerState.h in Headers */ = {isa = PBXBuildFile; fileRef = 12B567C51E4D3642005124FC /* SplitPatchWaitPlayerState.h */; };
+		12B567D81E4D3642005124FC /* TurnLeftPlayerState.h in Headers */ = {isa = PBXBuildFile; fileRef = 12B567C61E4D3642005124FC /* TurnLeftPlayerState.h */; };
+		12B567D91E4D3642005124FC /* TurnRightPlayerState.h in Headers */ = {isa = PBXBuildFile; fileRef = 12B567C71E4D3642005124FC /* TurnRightPlayerState.h */; };
+		12B567EC1E4D3660005124FC /* CrouchingPlayerState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12B567DB1E4D3660005124FC /* CrouchingPlayerState.cpp */; };
+		12B567ED1E4D3660005124FC /* CrouchingPlayerState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12B567DB1E4D3660005124FC /* CrouchingPlayerState.cpp */; };
+		12B567EE1E4D3660005124FC /* DeadPlayerState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12B567DC1E4D3660005124FC /* DeadPlayerState.cpp */; };
+		12B567EF1E4D3660005124FC /* DeadPlayerState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12B567DC1E4D3660005124FC /* DeadPlayerState.cpp */; };
+		12B567F01E4D3660005124FC /* DyingPlayerState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12B567DD1E4D3660005124FC /* DyingPlayerState.cpp */; };
+		12B567F11E4D3660005124FC /* DyingPlayerState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12B567DD1E4D3660005124FC /* DyingPlayerState.cpp */; };
+		12B567F41E4D3660005124FC /* EnemyFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12B567DF1E4D3660005124FC /* EnemyFactory.cpp */; };
+		12B567F51E4D3660005124FC /* EnemyFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12B567DF1E4D3660005124FC /* EnemyFactory.cpp */; };
+		12B567F61E4D3660005124FC /* JumpingPlayerState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12B567E01E4D3660005124FC /* JumpingPlayerState.cpp */; };
+		12B567F71E4D3660005124FC /* JumpingPlayerState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12B567E01E4D3660005124FC /* JumpingPlayerState.cpp */; };
+		12B567F81E4D3660005124FC /* PatchManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12B567E11E4D3660005124FC /* PatchManager.cpp */; };
+		12B567F91E4D3660005124FC /* PatchManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12B567E11E4D3660005124FC /* PatchManager.cpp */; };
+		12B567FC1E4D3660005124FC /* PlayerAnimatorComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12B567E31E4D3660005124FC /* PlayerAnimatorComponent.cpp */; };
+		12B567FD1E4D3660005124FC /* PlayerAnimatorComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12B567E31E4D3660005124FC /* PlayerAnimatorComponent.cpp */; };
+		12B568001E4D3660005124FC /* PlayerState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12B567E51E4D3660005124FC /* PlayerState.cpp */; };
+		12B568011E4D3660005124FC /* PlayerState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12B567E51E4D3660005124FC /* PlayerState.cpp */; };
+		12B568021E4D3660005124FC /* RoadPatch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12B567E61E4D3660005124FC /* RoadPatch.cpp */; };
+		12B568031E4D3660005124FC /* RoadPatch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12B567E61E4D3660005124FC /* RoadPatch.cpp */; };
+		12B568041E4D3660005124FC /* RunningPlayerState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12B567E71E4D3660005124FC /* RunningPlayerState.cpp */; };
+		12B568051E4D3660005124FC /* RunningPlayerState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12B567E71E4D3660005124FC /* RunningPlayerState.cpp */; };
+		12B568061E4D3660005124FC /* SplitPatch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12B567E81E4D3660005124FC /* SplitPatch.cpp */; };
+		12B568071E4D3660005124FC /* SplitPatch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12B567E81E4D3660005124FC /* SplitPatch.cpp */; };
+		12B568081E4D3660005124FC /* SplitPatchWaitPlayerState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12B567E91E4D3660005124FC /* SplitPatchWaitPlayerState.cpp */; };
+		12B568091E4D3660005124FC /* SplitPatchWaitPlayerState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12B567E91E4D3660005124FC /* SplitPatchWaitPlayerState.cpp */; };
+		12B5680A1E4D3660005124FC /* TurnLeftPlayerState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12B567EA1E4D3660005124FC /* TurnLeftPlayerState.cpp */; };
+		12B5680B1E4D3660005124FC /* TurnLeftPlayerState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12B567EA1E4D3660005124FC /* TurnLeftPlayerState.cpp */; };
+		12B5680C1E4D3660005124FC /* TurnRightPlayerState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12B567EB1E4D3660005124FC /* TurnRightPlayerState.cpp */; };
+		12B5680D1E4D3660005124FC /* TurnRightPlayerState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12B567EB1E4D3660005124FC /* TurnRightPlayerState.cpp */; };
 		12BE4CD71E1D74DC00BDD467 /* RunnerGame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12BE4CD61E1D74DC00BDD467 /* RunnerGame.cpp */; };
 		12BE4CD81E1D74DC00BDD467 /* RunnerGame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12BE4CD61E1D74DC00BDD467 /* RunnerGame.cpp */; };
 		12BE4CDA1E1D74E800BDD467 /* RunnerGame.h in Headers */ = {isa = PBXBuildFile; fileRef = 12BE4CD91E1D74E800BDD467 /* RunnerGame.h */; };
@@ -66,9 +112,13 @@
 		120F83C71E4B69B700DA5214 /* CameraController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CameraController.h; sourceTree = "<group>"; };
 		120F83C91E4B69BD00DA5214 /* Player.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Player.cpp; sourceTree = "<group>"; };
 		120F83CC1E4B69C200DA5214 /* CameraController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CameraController.cpp; sourceTree = "<group>"; };
+		12220DC41E4DC2F200D0CDD5 /* BatEnemy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BatEnemy.cpp; sourceTree = "<group>"; };
+		12220DC81E4DC2F900D0CDD5 /* BatEnemy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BatEnemy.h; sourceTree = "<group>"; };
+		12220DC91E4DC31000D0CDD5 /* EnemyManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EnemyManager.h; sourceTree = "<group>"; };
+		12220DCA1E4DC31000D0CDD5 /* TarantulaEnemy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TarantulaEnemy.h; sourceTree = "<group>"; };
+		12220DCB1E4DC3C000D0CDD5 /* TarantulaEnemy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TarantulaEnemy.cpp; sourceTree = "<group>"; };
+		12220DCE1E4DC3CC00D0CDD5 /* EnemyManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EnemyManager.cpp; sourceTree = "<group>"; };
 		124A31C41CDC252200472893 /* libRunnerGame_iOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRunnerGame_iOS.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		12615D651CF40C8D006FB6DB /* DemoAnimatorComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoAnimatorComponent.h; sourceTree = "<group>"; };
-		12615D681CF40C91006FB6DB /* DemoAnimatorComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DemoAnimatorComponent.cpp; sourceTree = "<group>"; };
 		127011EF1CC313D7001840A7 /* libRunnerGame.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libRunnerGame.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		1270120B1CC3143F001840A7 /* AudioClip.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioClip.h; sourceTree = "<group>"; };
 		1270120C1CC3143F001840A7 /* AudioSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioSource.h; sourceTree = "<group>"; };
@@ -128,6 +178,35 @@
 		1270124C1CC3143F001840A7 /* VFSArchive.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VFSArchive.h; sourceTree = "<group>"; };
 		1270124D1CC3143F001840A7 /* VFSFile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VFSFile.h; sourceTree = "<group>"; };
 		127012561CC31615001840A7 /* Engine.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Engine.xcodeproj; path = ../Engine/Engine.xcodeproj; sourceTree = "<group>"; };
+		12B567B61E4D3642005124FC /* CrouchingPlayerState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CrouchingPlayerState.h; sourceTree = "<group>"; };
+		12B567B71E4D3642005124FC /* DeadPlayerState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeadPlayerState.h; sourceTree = "<group>"; };
+		12B567B81E4D3642005124FC /* DyingPlayerState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DyingPlayerState.h; sourceTree = "<group>"; };
+		12B567BA1E4D3642005124FC /* EnemyFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EnemyFactory.h; sourceTree = "<group>"; };
+		12B567BB1E4D3642005124FC /* JumpingPlayerState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JumpingPlayerState.h; sourceTree = "<group>"; };
+		12B567BC1E4D3642005124FC /* PatchManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PatchManager.h; sourceTree = "<group>"; };
+		12B567BE1E4D3642005124FC /* PlayerAnimatorComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayerAnimatorComponent.h; sourceTree = "<group>"; };
+		12B567C01E4D3642005124FC /* PlayerState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayerState.h; sourceTree = "<group>"; };
+		12B567C11E4D3642005124FC /* RoadPatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RoadPatch.h; sourceTree = "<group>"; };
+		12B567C21E4D3642005124FC /* RunnerGameEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RunnerGameEvents.h; sourceTree = "<group>"; };
+		12B567C31E4D3642005124FC /* RunningPlayerState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RunningPlayerState.h; sourceTree = "<group>"; };
+		12B567C41E4D3642005124FC /* SplitPatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SplitPatch.h; sourceTree = "<group>"; };
+		12B567C51E4D3642005124FC /* SplitPatchWaitPlayerState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SplitPatchWaitPlayerState.h; sourceTree = "<group>"; };
+		12B567C61E4D3642005124FC /* TurnLeftPlayerState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TurnLeftPlayerState.h; sourceTree = "<group>"; };
+		12B567C71E4D3642005124FC /* TurnRightPlayerState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TurnRightPlayerState.h; sourceTree = "<group>"; };
+		12B567DB1E4D3660005124FC /* CrouchingPlayerState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CrouchingPlayerState.cpp; sourceTree = "<group>"; };
+		12B567DC1E4D3660005124FC /* DeadPlayerState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DeadPlayerState.cpp; sourceTree = "<group>"; };
+		12B567DD1E4D3660005124FC /* DyingPlayerState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DyingPlayerState.cpp; sourceTree = "<group>"; };
+		12B567DF1E4D3660005124FC /* EnemyFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EnemyFactory.cpp; sourceTree = "<group>"; };
+		12B567E01E4D3660005124FC /* JumpingPlayerState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = JumpingPlayerState.cpp; sourceTree = "<group>"; };
+		12B567E11E4D3660005124FC /* PatchManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PatchManager.cpp; sourceTree = "<group>"; };
+		12B567E31E4D3660005124FC /* PlayerAnimatorComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlayerAnimatorComponent.cpp; sourceTree = "<group>"; };
+		12B567E51E4D3660005124FC /* PlayerState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlayerState.cpp; sourceTree = "<group>"; };
+		12B567E61E4D3660005124FC /* RoadPatch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RoadPatch.cpp; sourceTree = "<group>"; };
+		12B567E71E4D3660005124FC /* RunningPlayerState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RunningPlayerState.cpp; sourceTree = "<group>"; };
+		12B567E81E4D3660005124FC /* SplitPatch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SplitPatch.cpp; sourceTree = "<group>"; };
+		12B567E91E4D3660005124FC /* SplitPatchWaitPlayerState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SplitPatchWaitPlayerState.cpp; sourceTree = "<group>"; };
+		12B567EA1E4D3660005124FC /* TurnLeftPlayerState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TurnLeftPlayerState.cpp; sourceTree = "<group>"; };
+		12B567EB1E4D3660005124FC /* TurnRightPlayerState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TurnRightPlayerState.cpp; sourceTree = "<group>"; };
 		12BE4CD61E1D74DC00BDD467 /* RunnerGame.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RunnerGame.cpp; sourceTree = "<group>"; };
 		12BE4CD91E1D74E800BDD467 /* RunnerGame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RunnerGame.h; sourceTree = "<group>"; };
 		12C058971D2AF8FF0042023D /* GameController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameController.h; sourceTree = "<group>"; };
@@ -183,11 +262,27 @@
 		127011FE1CC313F9001840A7 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				12220DCE1E4DC3CC00D0CDD5 /* EnemyManager.cpp */,
+				12220DCB1E4DC3C000D0CDD5 /* TarantulaEnemy.cpp */,
+				12220DC41E4DC2F200D0CDD5 /* BatEnemy.cpp */,
+				12B567DB1E4D3660005124FC /* CrouchingPlayerState.cpp */,
+				12B567DC1E4D3660005124FC /* DeadPlayerState.cpp */,
+				12B567DD1E4D3660005124FC /* DyingPlayerState.cpp */,
+				12B567DF1E4D3660005124FC /* EnemyFactory.cpp */,
+				12B567E01E4D3660005124FC /* JumpingPlayerState.cpp */,
+				12B567E11E4D3660005124FC /* PatchManager.cpp */,
+				12B567E31E4D3660005124FC /* PlayerAnimatorComponent.cpp */,
+				12B567E51E4D3660005124FC /* PlayerState.cpp */,
+				12B567E61E4D3660005124FC /* RoadPatch.cpp */,
+				12B567E71E4D3660005124FC /* RunningPlayerState.cpp */,
+				12B567E81E4D3660005124FC /* SplitPatch.cpp */,
+				12B567E91E4D3660005124FC /* SplitPatchWaitPlayerState.cpp */,
+				12B567EA1E4D3660005124FC /* TurnLeftPlayerState.cpp */,
+				12B567EB1E4D3660005124FC /* TurnRightPlayerState.cpp */,
 				120F83CC1E4B69C200DA5214 /* CameraController.cpp */,
 				120F83C91E4B69BD00DA5214 /* Player.cpp */,
 				12C0589A1D2AF9020042023D /* GameController.cpp */,
 				12BE4CD61E1D74DC00BDD467 /* RunnerGame.cpp */,
-				12615D681CF40C91006FB6DB /* DemoAnimatorComponent.cpp */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -204,11 +299,28 @@
 		127012001CC3140E001840A7 /* Include */ = {
 			isa = PBXGroup;
 			children = (
+				12220DC91E4DC31000D0CDD5 /* EnemyManager.h */,
+				12220DCA1E4DC31000D0CDD5 /* TarantulaEnemy.h */,
+				12220DC81E4DC2F900D0CDD5 /* BatEnemy.h */,
+				12B567B61E4D3642005124FC /* CrouchingPlayerState.h */,
+				12B567B71E4D3642005124FC /* DeadPlayerState.h */,
+				12B567B81E4D3642005124FC /* DyingPlayerState.h */,
+				12B567BA1E4D3642005124FC /* EnemyFactory.h */,
+				12B567BB1E4D3642005124FC /* JumpingPlayerState.h */,
+				12B567BC1E4D3642005124FC /* PatchManager.h */,
+				12B567BE1E4D3642005124FC /* PlayerAnimatorComponent.h */,
+				12B567C01E4D3642005124FC /* PlayerState.h */,
+				12B567C11E4D3642005124FC /* RoadPatch.h */,
+				12B567C21E4D3642005124FC /* RunnerGameEvents.h */,
+				12B567C31E4D3642005124FC /* RunningPlayerState.h */,
+				12B567C41E4D3642005124FC /* SplitPatch.h */,
+				12B567C51E4D3642005124FC /* SplitPatchWaitPlayerState.h */,
+				12B567C61E4D3642005124FC /* TurnLeftPlayerState.h */,
+				12B567C71E4D3642005124FC /* TurnRightPlayerState.h */,
 				120F83C71E4B69B700DA5214 /* CameraController.h */,
 				120F83C51E4B69AD00DA5214 /* Player.h */,
 				12C058971D2AF8FF0042023D /* GameController.h */,
 				12BE4CD91E1D74E800BDD467 /* RunnerGame.h */,
-				12615D651CF40C8D006FB6DB /* DemoAnimatorComponent.h */,
 			);
 			name = Include;
 			sourceTree = "<group>";
@@ -382,11 +494,25 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				12B567D31E4D3642005124FC /* RoadPatch.h in Headers */,
+				12B567D41E4D3642005124FC /* RunnerGameEvents.h in Headers */,
+				12B567D01E4D3642005124FC /* PlayerAnimatorComponent.h in Headers */,
+				12B567D21E4D3642005124FC /* PlayerState.h in Headers */,
+				12B567CC1E4D3642005124FC /* EnemyFactory.h in Headers */,
+				12B567C81E4D3642005124FC /* CrouchingPlayerState.h in Headers */,
+				12B567D81E4D3642005124FC /* TurnLeftPlayerState.h in Headers */,
+				12B567CA1E4D3642005124FC /* DyingPlayerState.h in Headers */,
 				120F83C81E4B69B700DA5214 /* CameraController.h in Headers */,
+				12B567D51E4D3642005124FC /* RunningPlayerState.h in Headers */,
 				12C058981D2AF8FF0042023D /* GameController.h in Headers */,
-				12615D661CF40C8D006FB6DB /* DemoAnimatorComponent.h in Headers */,
+				12B567CD1E4D3642005124FC /* JumpingPlayerState.h in Headers */,
+				12B567CE1E4D3642005124FC /* PatchManager.h in Headers */,
+				12B567D91E4D3642005124FC /* TurnRightPlayerState.h in Headers */,
+				12B567D61E4D3642005124FC /* SplitPatch.h in Headers */,
 				12BE4CDA1E1D74E800BDD467 /* RunnerGame.h in Headers */,
+				12B567C91E4D3642005124FC /* DeadPlayerState.h in Headers */,
 				120F83C61E4B69AD00DA5214 /* Player.h in Headers */,
+				12B567D71E4D3642005124FC /* SplitPatchWaitPlayerState.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -492,11 +618,27 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				12B567F91E4D3660005124FC /* PatchManager.cpp in Sources */,
+				12B568051E4D3660005124FC /* RunningPlayerState.cpp in Sources */,
+				12B568031E4D3660005124FC /* RoadPatch.cpp in Sources */,
+				12220DD01E4DC3CC00D0CDD5 /* EnemyManager.cpp in Sources */,
 				120F83CB1E4B69BD00DA5214 /* Player.cpp in Sources */,
+				12220DCD1E4DC3C000D0CDD5 /* TarantulaEnemy.cpp in Sources */,
+				12B567ED1E4D3660005124FC /* CrouchingPlayerState.cpp in Sources */,
 				12C0589C1D2AF9020042023D /* GameController.cpp in Sources */,
 				120F83CE1E4B69C200DA5214 /* CameraController.cpp in Sources */,
-				12615D6A1CF40C91006FB6DB /* DemoAnimatorComponent.cpp in Sources */,
+				12B5680B1E4D3660005124FC /* TurnLeftPlayerState.cpp in Sources */,
+				12B567FD1E4D3660005124FC /* PlayerAnimatorComponent.cpp in Sources */,
+				12B567EF1E4D3660005124FC /* DeadPlayerState.cpp in Sources */,
+				12B567F51E4D3660005124FC /* EnemyFactory.cpp in Sources */,
+				12B567F71E4D3660005124FC /* JumpingPlayerState.cpp in Sources */,
+				12220DC61E4DC2F200D0CDD5 /* BatEnemy.cpp in Sources */,
+				12B567F11E4D3660005124FC /* DyingPlayerState.cpp in Sources */,
+				12B568011E4D3660005124FC /* PlayerState.cpp in Sources */,
+				12B5680D1E4D3660005124FC /* TurnRightPlayerState.cpp in Sources */,
+				12B568091E4D3660005124FC /* SplitPatchWaitPlayerState.cpp in Sources */,
 				12BE4CD81E1D74DC00BDD467 /* RunnerGame.cpp in Sources */,
+				12B568071E4D3660005124FC /* SplitPatch.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -504,11 +646,27 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				12B567F81E4D3660005124FC /* PatchManager.cpp in Sources */,
+				12B568041E4D3660005124FC /* RunningPlayerState.cpp in Sources */,
+				12B568021E4D3660005124FC /* RoadPatch.cpp in Sources */,
+				12220DCF1E4DC3CC00D0CDD5 /* EnemyManager.cpp in Sources */,
 				120F83CA1E4B69BD00DA5214 /* Player.cpp in Sources */,
+				12220DCC1E4DC3C000D0CDD5 /* TarantulaEnemy.cpp in Sources */,
+				12B567EC1E4D3660005124FC /* CrouchingPlayerState.cpp in Sources */,
 				12C0589B1D2AF9020042023D /* GameController.cpp in Sources */,
 				120F83CD1E4B69C200DA5214 /* CameraController.cpp in Sources */,
-				12615D691CF40C91006FB6DB /* DemoAnimatorComponent.cpp in Sources */,
+				12B5680A1E4D3660005124FC /* TurnLeftPlayerState.cpp in Sources */,
+				12B567FC1E4D3660005124FC /* PlayerAnimatorComponent.cpp in Sources */,
+				12B567EE1E4D3660005124FC /* DeadPlayerState.cpp in Sources */,
+				12B567F41E4D3660005124FC /* EnemyFactory.cpp in Sources */,
+				12B567F61E4D3660005124FC /* JumpingPlayerState.cpp in Sources */,
+				12220DC51E4DC2F200D0CDD5 /* BatEnemy.cpp in Sources */,
+				12B567F01E4D3660005124FC /* DyingPlayerState.cpp in Sources */,
+				12B568001E4D3660005124FC /* PlayerState.cpp in Sources */,
+				12B5680C1E4D3660005124FC /* TurnRightPlayerState.cpp in Sources */,
+				12B568081E4D3660005124FC /* SplitPatchWaitPlayerState.cpp in Sources */,
 				12BE4CD71E1D74DC00BDD467 /* RunnerGame.cpp in Sources */,
+				12B568061E4D3660005124FC /* SplitPatch.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

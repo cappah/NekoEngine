@@ -1,0 +1,25 @@
+NSCENE1 
+SceneInfo
+name=Menu
+#bgmusic=bg_meat_grinder
+#bgmusicvol=0.2
+gamemodule=TestGame
+ambcolor=0.02, 0.02, 0.02
+ambintensity=0.2
+EndSceneInfo
+
+#################
+# Scene objects #
+#################
+
+# Game Controller
+Object=GameController
+id=9000
+position=0.0, 0.0, 0.0
+scale=1.0, 1.0, 1.0
+rotation=0.0, 0.0, 0.0
+EndObject
+
+#############
+# End Scene #
+#############

@@ -9,12 +9,15 @@
 #import "AppDelegate.h"
 
 #include <Engine/Engine.h>
+#include <Engine/EventManager.h>
+#include <Engine/SceneManager.h>
 
 @interface AppDelegate ()
 
 @end
 
 static UIDeviceOrientation _lastOrientation;
+static uint32_t _playerDeadEventId;
 
 @implementation AppDelegate
 
@@ -57,9 +60,15 @@ static UIDeviceOrientation _lastOrientation;
 	_storyboard = [UIStoryboard storyboardWithName:@"Menu" bundle:nil];
 	_mainMenuViewController = [_storyboard instantiateViewControllerWithIdentifier:@"MainMenu"];
 	_inGameMenuViewController = [_storyboard instantiateViewControllerWithIdentifier:@"InGameMenu"];
+	_gameOverViewController = [_storyboard instantiateViewControllerWithIdentifier:@"GameOverMenu"];
 	
 	_engineViewController = [_window rootViewController];
 	[_window setRootViewController:_mainMenuViewController];
+	
+	_playerDeadEventId = EventManager::RegisterHandler(9000, [&](int32_t eventId, void *eventArgs) {
+		Engine::Pause(true);
+		[[[UIApplication sharedApplication] delegate] performSelector:@selector(showGameOver)];
+	});
 	
 	return true;
 }
@@ -130,6 +139,12 @@ static UIDeviceOrientation _lastOrientation;
 - (void)showEngine
 {
 	[_window setRootViewController:_engineViewController];
+}
+
+- (void)showGameOver
+{
+	//SceneManager::LoadScene(1);
+	[_window setRootViewController:_gameOverViewController];
 }
 
 - (void)dealloc

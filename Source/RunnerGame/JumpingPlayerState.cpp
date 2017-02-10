@@ -37,9 +37,11 @@
 * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#include "Player.h"
 #include "JumpingPlayerState.h"
 #include "RunningPlayerState.h"
-#include "Player.h"
+
+using namespace glm;
 
 JumpingPlayerState::JumpingPlayerState(Player* player) :
 	PlayerState (player)

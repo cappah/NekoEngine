@@ -579,7 +579,7 @@ void btConvexConvexAlgorithm ::processCollision (const btCollisionObjectWrapper*
 				btScalar maxDist = threshold;
 				
 				bool foundSepAxis = false;
-				if (0)
+			/*	if (0)
 				{
 					polyhedronB->initializePolyhedralFeatures();
 					 foundSepAxis = btPolyhedralContactClipping::findSeparatingAxis(
@@ -590,7 +590,7 @@ void btConvexConvexAlgorithm ::processCollision (const btCollisionObjectWrapper*
 				//	 printf("sepNormalWorldSpace=%f,%f,%f\n",sepNormalWorldSpace.getX(),sepNormalWorldSpace.getY(),sepNormalWorldSpace.getZ());
 
 				} else
-				{
+				{*/
 #ifdef ZERO_MARGIN
 					gjkPairDetector.setIgnoreMargin(true);
 					gjkPairDetector.getClosestPoints(input,*resultOut,dispatchInfo.m_debugDraw);
@@ -607,7 +607,7 @@ void btConvexConvexAlgorithm ::processCollision (const btCollisionObjectWrapper*
 						minDist = gjkPairDetector.getCachedSeparatingDistance()-min0->getMargin()-min1->getMargin();
 						foundSepAxis = true;
 					}
-				}
+				//}
 
 				
 			if (foundSepAxis)

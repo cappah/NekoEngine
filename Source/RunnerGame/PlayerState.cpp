@@ -41,22 +41,6 @@
 
 PlayerState::PlayerState(Player* player) :
 	_player(player),
-	_stateType (PlayerStateType::STATE_IDLE)
-{
+	_stateType(PlayerStateType::STATE_IDLE) { }
 
-}
-
-PlayerState::~PlayerState()
-{
-
-}
-
-void PlayerState::OnHit (Object* other)
-{
-	// Specialize this on inherited classes
-}
-
-PlayerStateType PlayerState::GetStateType() const
-{
-	return _stateType;
-}
+PlayerState::~PlayerState() { }

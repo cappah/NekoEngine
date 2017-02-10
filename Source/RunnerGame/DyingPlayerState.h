@@ -43,14 +43,13 @@
 
 class DyingPlayerState : public PlayerState
 {
-private:
-	float _duration;
-
-	float _elapsedTime;
-
 public:
-	DyingPlayerState(Player* player);
+	DyingPlayerState(Player *player);
 	virtual ~DyingPlayerState();
 
 	virtual void Update(double) override;
+	
+private:
+	float _duration;
+	float _elapsedTime;
 };

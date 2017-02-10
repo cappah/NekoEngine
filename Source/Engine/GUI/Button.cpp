@@ -78,7 +78,7 @@ void Button::_Draw(GUIDrawInfo *drawInfo)
 	drawInfo->shader->SetTexture(0, _texture->GetRTexture());
 	drawInfo->renderer->DrawElements(PolygonMode::Triangles, 6, ElementType::UnsignedInt, 0);
 
-	int textY = (_controlRect.h - drawInfo->guiFont->GetCharacterHeight()) / 2;
+	//int textY = (_controlRect.h - drawInfo->guiFont->GetCharacterHeight()) / 2;
 	//drawInfo->guiFont->Draw(_text, glm::vec2(_controlRect.x + 10, _controlRect.y + textY), glm::vec3(0.0, 0.0, 0.0));
 
 	_arrayBuffer->Unbind();

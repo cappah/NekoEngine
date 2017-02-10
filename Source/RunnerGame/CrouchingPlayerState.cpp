@@ -41,6 +41,8 @@
 #include "RunningPlayerState.h"
 #include "Player.h"
 
+using namespace glm;
+
 CrouchingPlayerState::CrouchingPlayerState(Player* player) :
 	PlayerState (player)
 {
@@ -52,10 +54,7 @@ CrouchingPlayerState::CrouchingPlayerState(Player* player) :
 	_elapsedTime = _duration;
 }
 
-CrouchingPlayerState::~CrouchingPlayerState()
-{
-
-}
+CrouchingPlayerState::~CrouchingPlayerState() { }
 
 void CrouchingPlayerState::Update(double deltaTime)
 {
@@ -67,5 +66,5 @@ void CrouchingPlayerState::Update(double deltaTime)
 	_duration -= deltaTime;
 
 	if (_duration < 0)
-		_player->SetState (new RunningPlayerState (_player));
+		_player->SetState(new RunningPlayerState (_player));
 }

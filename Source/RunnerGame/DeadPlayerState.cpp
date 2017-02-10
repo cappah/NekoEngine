@@ -55,5 +55,4 @@ DeadPlayerState::~DeadPlayerState()
 
 void DeadPlayerState::Update(double deltaTime)
 {
-	EventManager::Broadcast(EVENT_PLAYER_DEAD, nullptr);
 }

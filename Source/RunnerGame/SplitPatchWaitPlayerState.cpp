@@ -37,13 +37,14 @@
 * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "SplitPatchWaitPlayerState.h"
+#include <Engine/Input.h>
+#include <Engine/Keycodes.h>
 
 #include "TurnLeftPlayerState.h"
 #include "TurnRightPlayerState.h"
+#include "SplitPatchWaitPlayerState.h"
 
-#include <Engine/Input.h>
-#include <Engine/Keycodes.h>
+using namespace glm;
 
 SplitPatchWaitPlayerState::SplitPatchWaitPlayerState(Player* player) :
 	PlayerState(player)
@@ -70,7 +71,7 @@ void SplitPatchWaitPlayerState::Update(double deltaTime)
 #ifndef NE_DEVICE_MOBILE
 	right = Input::GetButtonDown(NE_KEY_D);
 #else
-	// ios
+	right = Input::GetLastSwipeDirection() == SwipeDirection::Right;
 #endif
 
 	// Only first chose is counted, the others are thrown away
@@ -82,7 +83,7 @@ void SplitPatchWaitPlayerState::Update(double deltaTime)
 #ifndef NE_DEVICE_MOBILE
 	left = Input::GetButtonDown(NE_KEY_A);
 #else
-	// ios
+	left = Input::GetLastSwipeDirection() == SwipeDirection::Left;
 #endif
 
 	// Only first chose is counted, the others are thrown away

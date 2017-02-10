@@ -50,7 +50,7 @@ private:
 	float _elapsedTime;
 
 public:
-	CrouchingPlayerState(Player* player);
+	CrouchingPlayerState(Player *player);
 	virtual ~CrouchingPlayerState();
 
 	virtual void Update(double) override;

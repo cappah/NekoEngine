@@ -52,7 +52,7 @@ CameraController::CameraController(ComponentInitializer *initializer) :
 	_cameraComponent(nullptr)
 {
 	ArgumentMapType::iterator it;
-	const char *ptr = nullptr;
+	//const char *ptr = nullptr;
 
 	/*if (((it = initializer->arguments.find("bullets")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
 		_bullets = atoi(ptr);*/

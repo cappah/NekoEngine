@@ -227,6 +227,15 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cOQ-Ak-aPx">
+                                <rect key="frame" x="16" y="390" width="231" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Show Stats"/>
+                            </button>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="zFn-IK-syh">
+                                <rect key="frame" x="255" y="389" width="51" height="31"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </switch>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
@@ -234,7 +243,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tNO-c3-Jpf" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <customObject id="BNf-TS-qQj" customClass="MenuController"/>
             </objects>
-            <point key="canvasLocation" x="249" y="-279"/>
+            <point key="canvasLocation" x="247.5" y="-279.92957746478874"/>
         </scene>
         <!--Credits-->
         <scene sceneID="HHx-sL-hN2">
@@ -320,6 +329,6 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="32W-CU-54q"/>
+        <segue reference="gcQ-Ya-EDG"/>
     </inferredMetricsTieBreakers>
 </document>

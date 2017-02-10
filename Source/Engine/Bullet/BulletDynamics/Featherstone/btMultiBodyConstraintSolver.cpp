@@ -480,7 +480,7 @@ void btMultiBodyConstraintSolver::setupMultiBodyContactConstraint(btMultiBodySol
 
 	///warm starting (or zero if disabled)
 	//disable warmstarting for btMultiBody, it has issues gaining energy (==explosion)
-	if (0)//infoGlobal.m_solverMode & SOLVER_USE_WARMSTARTING)
+	/*if (0)//infoGlobal.m_solverMode & SOLVER_USE_WARMSTARTING)
 	{
 		solverConstraint.m_appliedImpulse = isFriction ? 0 : cp.m_appliedImpulse * infoGlobal.m_warmstartingFactor;
 
@@ -511,9 +511,9 @@ void btMultiBodyConstraintSolver::setupMultiBodyContactConstraint(btMultiBodySol
 			}
 		}
 	} else
-	{
+	{*/
 		solverConstraint.m_appliedImpulse = 0.f;
-	}
+	//}
 
 	solverConstraint.m_appliedPushImpulse = 0.f;
 

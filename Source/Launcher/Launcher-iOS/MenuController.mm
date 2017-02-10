@@ -17,6 +17,7 @@
 {
 	[[[UIApplication sharedApplication] delegate] performSelector:@selector(showEngine)];
 	Engine::Pause(false);
+	SceneManager::LoadScene(0);
 }
 
 - (IBAction)resumeGame:(id)sender
@@ -27,7 +28,7 @@
 
 - (IBAction)endGame:(id)sender
 {
-//	SceneManager::LoadScene(0);
+	SceneManager::LoadScene(1);
 }
 
 - (IBAction)saveSettings:(id)sender

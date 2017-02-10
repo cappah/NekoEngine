@@ -44,7 +44,6 @@ using namespace std;
 using namespace glm;
 
 static queue<vector<Object *>> _layers{};
-static const size_t _maxLayerCount{ 5 };
 static vec3 _nextPatchPos{ 0.f, 0.f, 1000.f };
 static queue<Object *> _patches;
 
@@ -62,9 +61,8 @@ void EnemyManager::AddEnemyInCurrentLayer(Object *patch)
 
 void EnemyManager::DestroyOldestLayer()
 {
-	for (auto item : _layers.front()) {
-		item->Destroy ();
-	}
+	for (auto item : _layers.front())
+		item->Destroy();
 
 	_layers.pop();
 }
@@ -96,11 +94,13 @@ Object *EnemyManager::GetNewBatEnemy(vec3 &position, vec3 &rotation)
 	ObjectInitializer initializer{};
 	initializer.position = position;
 	initializer.rotation = rotation;
-	initializer.scale = vec3(100.f);
+	initializer.scale = vec3(500.f);
 
+	initializer.position.y += 50.f;
+	
 	Object *enemy = Engine::NewObject("BatEnemy", &initializer);
 	if (!enemy) { DIE("Out of resources"); }
-	if (enemy->Load() != ENGINE_OK) { DIE("Patch load failed"); }
+	if (enemy->Load() != ENGINE_OK) { DIE("Enemy load failed"); }
 	enemy->AddToScene();
 
 	return enemy;
@@ -111,9 +111,12 @@ Object *EnemyManager::GetNewTarantulaEnemy(vec3 &position, vec3 &rotation)
 	ObjectInitializer initializer{};
 	initializer.position = position;
 	initializer.rotation = rotation;
+	initializer.scale = vec3(500.f);
 
-	Object *patch{ Engine::NewObject("TarantulaEnemy", &initializer) };
-	if (!patch) { DIE("Out of resources"); }
-	patch->AddToScene();
-	return patch;
+	Object *enemy = Engine::NewObject("TarantulaEnemy", &initializer);
+	if (!enemy) { DIE("Out of resources"); }
+	if (enemy->Load() != ENGINE_OK) { DIE("Enemy load failed"); }
+	enemy->AddToScene();
+
+	return enemy;
 }

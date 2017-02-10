@@ -571,8 +571,8 @@ void btSoftBodyHelpers::ReoptimizeLinkOrder(btSoftBody *psb /* This can be repla
 	
 		// Note which prior link calculations we are dependent upon & build up dependence lists
 		lr = &(psb->m_links[i]);
-		ar = (lr->m_n[0] - node0)/(node1 - node0);
-		br = (lr->m_n[1] - node0)/(node1 - node0);
+		ar = (int)((lr->m_n[0] - node0)/(node1 - node0));
+		br = (int)((lr->m_n[1] - node0)/(node1 - node0));
 		if (nodeWrittenAt[ar] > REOP_NOT_DEPENDENT) {
 			linkDepA[i] = nodeWrittenAt[ar];
 			linkDep = &linkDepFreeList[linkDepFrees++];

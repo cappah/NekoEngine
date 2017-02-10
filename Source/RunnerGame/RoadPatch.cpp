@@ -41,7 +41,7 @@
 #include "RunnerGame.h"
 #include "Player.h"
 #include "PatchManager.h"
-#include "EnemyFactory.h"
+#include "EnemyManager.h"
 
 #include <Scene/Components/StaticMeshComponent.h>
 
@@ -88,6 +88,15 @@ int RoadPatch::Load()
 	AddComponent("FrontCollider", comp);
 
 	if ((ret = Object::Load()) != ENGINE_OK) return ret;
+	
+	if ((PatchManager::PatchCount() < 6) || (Platform::Rand() % 2 == 0)) // 50% chance of an enemy
+		return ENGINE_OK;
+	
+	if (Platform::Rand() % 2 == 1) // 1 for bat
+		EnemyManager::NewBatEnemy(_position, _rotation);
+	else
+		EnemyManager::NewTarantulaEnemy(_position, _rotation);
+	
 	return ENGINE_OK;
 }
 
@@ -98,11 +107,6 @@ void RoadPatch::OnHit(Object *other, glm::vec3 &position)
 	_hit = true;
 
 	PatchManager::NewPatch();
-
-	if (Platform::Rand() % 2 == 0) // 50% chance of an enemy
-		return;
-
-	Object* enemy = EnemyFactory::GetEnemy(_position, _rotation);
 }
 
 RoadPatch::~RoadPatch()

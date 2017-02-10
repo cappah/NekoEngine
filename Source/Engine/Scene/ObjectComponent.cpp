@@ -55,7 +55,7 @@ ObjectComponent::ObjectComponent(ComponentInitializer *initializer)
 	_loaded(false)
 {
 	ArgumentMapType::iterator it;
-	const char *ptr = nullptr;
+	//const char *ptr = nullptr;
 
 	SetLocalPosition(initializer->position);
 	SetLocalRotation(initializer->rotation);

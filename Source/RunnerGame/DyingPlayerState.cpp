@@ -37,9 +37,13 @@
 * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "DyingPlayerState.h"
-#include "DeadPlayerState.h"
+#include <Engine/Engine.h>
+#include <Engine/EventManager.h>
+
 #include "Player.h"
+#include "DeadPlayerState.h"
+#include "DyingPlayerState.h"
+#include "RunnerGameEvents.h"
 
 DyingPlayerState::DyingPlayerState(Player* player) :
 	PlayerState(player)
@@ -58,8 +62,11 @@ DyingPlayerState::~DyingPlayerState()
 
 void DyingPlayerState::Update(double deltaTime)
 {
-	_elapsedTime -= deltaTime;
+	_elapsedTime -= (float)deltaTime;
 
-	if (_elapsedTime < 0)
+	if (_elapsedTime < 0.0)
+	{
+		EventManager::Broadcast(EVENT_PLAYER_DEAD, nullptr);
 		_player->SetState(new DeadPlayerState(_player));
+	}	
 }

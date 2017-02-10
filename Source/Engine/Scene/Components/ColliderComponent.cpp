@@ -131,8 +131,8 @@ void ColliderComponent::UpdatePosition() noexcept
 	ObjectComponent::UpdatePosition();
 	if (!_collider) return;
 	_collider->SetPosition(_position);
-	quat rot = rotate(quat(), radians(_rotation));
-	_collider->SetRotation(rot);
+	//quat rot = rotate(quat(), radians(_rotation));
+	//_collider->SetRotation(rot);
 	_collider->SetScale(_parent->GetScale() * _localScale);
 }
 

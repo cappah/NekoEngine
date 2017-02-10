@@ -119,28 +119,6 @@ scale=100.0, 100.0, 100.0
 rotation=0.0, 90.0, 0.0
 EndObject
 
-Object
-id=12
-Component=StaticMeshComponent=Mesh
-	mesh=stm_tombstone1
-	material=mat_tombstone
-EndComponent
-position=100.0, -25.0, -145.0
-rotation=0.0, 0.0, 0.0
-scale=100.0, 100.0, 100.0
-EndObject
-
-Object
-id=12
-Component=StaticMeshComponent=Mesh
-	mesh=stm_tombstone2
-	material=mat_tombstone
-EndComponent
-position=200.0, -25.0, -145.0
-rotation=0.0, 0.0, 0.0
-scale=100.0, 100.0, 100.0
-EndObject
-
 # DUMMY
 
 Object
@@ -172,8 +150,8 @@ Component=StaticMeshComponent=Mesh
 	material=mat_bat
 	material=mat_bat
 EndComponent
-position=0.0, 0.0, 800.0
-scale=200.0, 200.0, 200.0
+position=0.0, 800.0, 800.0
+scale=1.0, 1.0, 1.0
 rotation=0.0, 90.0, 0.0
 EndObject
 
@@ -181,11 +159,11 @@ Object
 id=4415
 Component=StaticMeshComponent=Mesh
 	mesh=stm_tarantula
-	material=mat_tarantul
+	material=mat_tarantula
 	material=mat_tarantula
 EndComponent
-position=0.0, 0.0, 800.0
-scale=200.0, 200.0, 200.0
+position=0.0, 800.0, 800.0
+scale=1.0, 1.0, 1.0
 rotation=0.0, 90.0, 0.0
 EndObject
 

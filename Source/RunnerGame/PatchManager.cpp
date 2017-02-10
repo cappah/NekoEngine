@@ -44,9 +44,13 @@ using namespace std;
 using namespace glm;
 
 static queue<vector<Object *>> _layers{};
-static const size_t _maxLayerCount{ 5 };
 static vec3 _nextPatchPos{ 0.f, 0.f, 1000.f };
 static queue<Object *> _patches;
+
+size_t PatchManager::PatchCount()
+{
+	return _patches.size();
+}
 
 void PatchManager::CreateNewLayer()
 {
@@ -62,11 +66,6 @@ void PatchManager::AddPatchInCurrentLayer(Object *patch)
 
 void PatchManager::DestroyOldestLayer()
 {
-	for (auto item : _layers.front())
-	{
-		//TODO: Destroy patch in oldest layer
-	}
-
 	_layers.pop();
 }
 
@@ -74,11 +73,11 @@ void PatchManager::NewPatch()
 {
 	vec3 r{ 0.f, 90.f, 0.f };
 
-	_patches.push(Platform::Rand() % 5 < 4 ? NewRoadPatch(_nextPatchPos, r) : NewSplitPatch(_nextPatchPos, r));
+	_patches.push(Platform::Rand() % 5 < 4 ? NewRoadPatch(_nextPatchPos, r) : NewRoadPatch(_nextPatchPos, r));
 
 	_nextPatchPos.z += 200.f;
 
-	if (_patches.size() > 7)
+	if (_patches.size() > 8)
 	{
 		_patches.front()->Destroy();
 		_patches.pop();

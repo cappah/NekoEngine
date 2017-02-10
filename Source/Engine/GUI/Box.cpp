@@ -141,7 +141,7 @@ void Box::_Draw(GUIDrawInfo *drawInfo)
 	drawInfo->shader->SetTexture(0, _texture->GetRTexture());
 	drawInfo->renderer->DrawElements(PolygonMode::Triangles, 6, ElementType::UnsignedInt, 0);
 
-	int textY = (_controlRect.h - drawInfo->guiFont->GetCharacterHeight()) / 2;
+	//int textY = (_controlRect.h - drawInfo->guiFont->GetCharacterHeight()) / 2;
 
 	_arrayBuffer->Unbind();
 

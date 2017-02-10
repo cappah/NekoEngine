@@ -45,6 +45,8 @@
 #include <Engine/Input.h>
 #include <Engine/Keycodes.h>
 
+using namespace glm;
+
 RunningPlayerState::RunningPlayerState(Player* player) :
 	PlayerState (player)
 {
@@ -65,7 +67,7 @@ void RunningPlayerState::Update(double deltaTime)
 #ifndef NE_DEVICE_MOBILE
 	jump = Input::GetButtonDown(NE_KEY_SPACE);
 #else
-	// ios
+	jump = Input::GetLastSwipeDirection() == SwipeDirection::Up;
 #endif
 
 	if (jump) {
@@ -79,7 +81,7 @@ void RunningPlayerState::Update(double deltaTime)
 #ifndef NE_DEVICE_MOBILE
 	crouch = Input::GetButtonDown(NE_KEY_S);
 #else
-	// ios
+	crouch = Input::GetLastSwipeDirection() == SwipeDirection::Down;
 #endif
 
 	if (crouch)

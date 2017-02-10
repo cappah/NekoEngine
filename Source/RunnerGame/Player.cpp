@@ -1,7 +1,7 @@
 /* DungeonGame
  *
  * Player.cpp
- * Author: Alexandru Naiman
+ * Author: Cristian Lambru
  *
  * Player class
  *
@@ -37,12 +37,17 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <Engine/Engine.h>
+#include <Engine/EventManager.h>
+
 #include "Player.h"
+#include "BatEnemy.h"
+#include "TarantulaEnemy.h"
 #include "RunningPlayerState.h"
 #include "DyingPlayerState.h"
-#include <Engine\EventManager.h>
 
 using namespace glm;
+using namespace std;
 
 REGISTER_OBJECT_CLASS(Player);
 
@@ -58,7 +63,7 @@ int Player::Load()
 	int ret{ Object::Load() };
 	if (ret != ENGINE_OK) return ret;
 
-	_currentPlayerState = new RunningPlayerState (this);
+	_currentPlayerState = new RunningPlayerState(this);
 	_moveDirection = vec3(0, 0, 1);
 
 	return ENGINE_OK;
@@ -66,16 +71,33 @@ int Player::Load()
 
 void Player::OnHit(Object *other, glm::vec3 &position)
 {
-	_currentPlayerState->OnHit (other);
+	if ((_currentPlayerState->GetStateType() == PlayerStateType::STATE_DYING) ||
+		(_currentPlayerState->GetStateType() == PlayerStateType::STATE_DEAD))
+		return;
+	
+	_currentPlayerState->OnHit(other);
+	
+	if(dynamic_cast<BatEnemy *>(other))
+	{
+		NSLog(@"bat");
+		if (_currentPlayerState->GetStateType() != PlayerStateType::STATE_CROUCHING)
+			Kill();
+		other->Destroy();
+	}
+	
+	if(dynamic_cast<TarantulaEnemy *>(other))
+	{
+		NSLog(@"tarantula");
+		if (_currentPlayerState->GetStateType() != PlayerStateType::STATE_JUMPING)
+			Kill();
+		other->Destroy();
+	}
 }
 
 void Player::Update(double deltaTime) noexcept
 {
 	Object::Update(deltaTime);
-
 	_currentPlayerState->Update(deltaTime);
-
-	Logger::Log("Runner", 0, std::to_string (_currentPlayerState->GetStateType()));
 }
 
 bool Player::Unload() noexcept
@@ -86,7 +108,7 @@ bool Player::Unload() noexcept
 	return true;
 }
 
-void Player::Kill () noexcept
+void Player::Kill() noexcept
 {
 	SetState(new DyingPlayerState(this));
 }

@@ -92,6 +92,15 @@ typedef struct CTRL_STATE
 } ControllerState;
 #endif
 
+enum class SwipeDirection : uint8_t
+{
+	None,
+	Up,
+	Down,
+	Left,
+	Right
+};
+
 class Input
 {
 public:
@@ -129,6 +138,7 @@ public:
 	ENGINE_API static bool GetAccelerometerAxis(glm::vec3 &axis);
 	ENGINE_API static bool GetGyroscopeAxis(glm::vec3 &axis);
 	ENGINE_API static bool GetLightIntensity(float &intensity);
+	ENGINE_API static SwipeDirection GetLastSwipeDirection();
 
 private:
 	static std::vector<uint8_t> _pressedKeys, _keyDown, _keyUp;

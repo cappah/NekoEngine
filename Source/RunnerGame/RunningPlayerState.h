@@ -44,16 +44,14 @@
 #include "Player.h"
 #include <glm/glm.hpp>
 
-using namespace glm;
-
 class RunningPlayerState : public PlayerState
 {
-private:
-	float _speed;
-
 public:
-	RunningPlayerState(Player* player);
+	RunningPlayerState(Player *player);
 	virtual ~RunningPlayerState();
 
 	virtual void Update(double) override;
+	
+private:
+	float _speed;
 };

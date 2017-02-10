@@ -10,11 +10,7 @@
 		120505361E33B72E00D3EB46 /* libRunnerGame_iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 120505351E33B71500D3EB46 /* libRunnerGame_iOS.a */; };
 		120718C01CCFD0BA001A1EEA /* Engine_Low.ini in Resources */ = {isa = PBXBuildFile; fileRef = 120718BF1CCFD0BA001A1EEA /* Engine_Low.ini */; };
 		121976861D469C7400CCDD12 /* core.nar in CopyFiles */ = {isa = PBXBuildFile; fileRef = 121976851D469C7400CCDD12 /* core.nar */; };
-		1219768B1D469CCC00CCDD12 /* resources.db in CopyFiles */ = {isa = PBXBuildFile; fileRef = 121976881D469CCC00CCDD12 /* resources.db */; };
-		1219768C1D469CCC00CCDD12 /* Shaders in CopyFiles */ = {isa = PBXBuildFile; fileRef = 121976891D469CCC00CCDD12 /* Shaders */; };
-		1219768D1D469CCC00CCDD12 /* Sounds in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1219768A1D469CCC00CCDD12 /* Sounds */; };
 		1219768F1D469D3900CCDD12 /* scenes.cfg in Resources */ = {isa = PBXBuildFile; fileRef = 1219768E1D469D3900CCDD12 /* scenes.cfg */; };
-		121976901D469D4400CCDD12 /* scenes.cfg in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1219768E1D469D3900CCDD12 /* scenes.cfg */; };
 		122A4B201D47450E009F23CE /* Data in Resources */ = {isa = PBXBuildFile; fileRef = 122A4B1F1D47450E009F23CE /* Data */; };
 		124A32081CDC267D00472893 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 124A32071CDC267D00472893 /* libz.tbd */; };
 		124A320A1CDC268100472893 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 124A32091CDC268100472893 /* libsqlite3.tbd */; };
@@ -30,6 +26,7 @@
 		12A15FB61CD4460F00BEDD06 /* libGLRenderer.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 12A15FB31CD445FE00BEDD06 /* libGLRenderer.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		12A9BAAC1D54F037001B363A /* libfreetype.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 12A9BAAB1D54F037001B363A /* libfreetype.a */; };
 		12A9BAB11D54FEDE001B363A /* Engine_iOS.ini in Resources */ = {isa = PBXBuildFile; fileRef = 12A9BAB01D54FEDE001B363A /* Engine_iOS.ini */; };
+		12B568231E4D5F8B005124FC /* Shaders in CopyFiles */ = {isa = PBXBuildFile; fileRef = 121976891D469CCC00CCDD12 /* Shaders */; };
 		12B748301CC6E7C600825D36 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 12B7482F1CC6E7C600825D36 /* Assets.xcassets */; };
 		12B748381CC6E80100825D36 /* launcher.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1270119A1CC31326001840A7 /* launcher.mm */; };
 		12B7483B1CC6E81B00825D36 /* libEngine.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 127012531CC315FD001840A7 /* libEngine.dylib */; };
@@ -119,11 +116,8 @@
 			dstPath = Data;
 			dstSubfolderSpec = 7;
 			files = (
-				1219768B1D469CCC00CCDD12 /* resources.db in CopyFiles */,
-				1219768C1D469CCC00CCDD12 /* Shaders in CopyFiles */,
-				1219768D1D469CCC00CCDD12 /* Sounds in CopyFiles */,
 				121976861D469C7400CCDD12 /* core.nar in CopyFiles */,
-				121976901D469D4400CCDD12 /* scenes.cfg in CopyFiles */,
+				12B568231E4D5F8B005124FC /* Shaders in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -173,6 +167,12 @@
 		12A9BAAB1D54F037001B363A /* libfreetype.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libfreetype.a; path = Frameworks/freetype/libfreetype.a; sourceTree = "<group>"; };
 		12A9BAAD1D54F691001B363A /* Fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Fonts; path = ../../Resources/Data/Fonts; sourceTree = "<group>"; };
 		12A9BAB01D54FEDE001B363A /* Engine_iOS.ini */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Engine_iOS.ini; sourceTree = "<group>"; };
+		12B568141E4D41D2005124FC /* Animations */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Animations; path = ../../Resources/Data/Animations; sourceTree = "<group>"; };
+		12B568171E4D41D8005124FC /* Materials */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Materials; path = ../../Resources/Data/Materials; sourceTree = "<group>"; };
+		12B568181E4D41E6005124FC /* Scenes */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Scenes; path = ../../Resources/Data/Scenes; sourceTree = "<group>"; };
+		12B568191E4D41EE005124FC /* SkeletalMeshes */ = {isa = PBXFileReference; lastKnownFileType = folder; name = SkeletalMeshes; path = ../../Resources/Data/SkeletalMeshes; sourceTree = "<group>"; };
+		12B5681A1E4D41F9005124FC /* StaticMeshes */ = {isa = PBXFileReference; lastKnownFileType = folder; name = StaticMeshes; path = ../../Resources/Data/StaticMeshes; sourceTree = "<group>"; };
+		12B5681B1E4D41FE005124FC /* Textures */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Textures; path = ../../Resources/Data/Textures; sourceTree = "<group>"; };
 		12B748271CC6E7C600825D36 /* Launcher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Launcher.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		12B7482F1CC6E7C600825D36 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		12B748341CC6E7C600825D36 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -222,6 +222,8 @@
 		121976871D469C8900CCDD12 /* iOS Data */ = {
 			isa = PBXGroup;
 			children = (
+				12B568141E4D41D2005124FC /* Animations */,
+				12B568171E4D41D8005124FC /* Materials */,
 				128F68331D72499D005AECA1 /* shadow.nscene */,
 				128F68311D72497D005AECA1 /* terrain_blend_map.tga */,
 				128F682B1D724947005AECA1 /* dirt.tga */,
@@ -229,7 +231,11 @@
 				128F682D1D724947005AECA1 /* rock.tga */,
 				121976881D469CCC00CCDD12 /* resources.db */,
 				12A9BAAD1D54F691001B363A /* Fonts */,
+				12B568191E4D41EE005124FC /* SkeletalMeshes */,
+				12B5681B1E4D41FE005124FC /* Textures */,
+				12B5681A1E4D41F9005124FC /* StaticMeshes */,
 				121976891D469CCC00CCDD12 /* Shaders */,
+				12B568181E4D41E6005124FC /* Scenes */,
 				1219768A1D469CCC00CCDD12 /* Sounds */,
 				121976851D469C7400CCDD12 /* core.nar */,
 			);
@@ -711,7 +717,7 @@
 					"\"$(PROJECT_DIR)/Launcher-iOS/Frameworks/freetype/include\"",
 				);
 				INFOPLIST_FILE = "Launcher-iOS/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -757,7 +763,7 @@
 					"\"$(PROJECT_DIR)/Launcher-iOS/Frameworks/freetype/include\"",
 				);
 				INFOPLIST_FILE = "Launcher-iOS/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",

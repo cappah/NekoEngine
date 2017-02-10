@@ -619,6 +619,10 @@
 		12B0CF601CEB4A9700E5D2FE /* StaticMeshComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12B0CF5C1CEB4A9700E5D2FE /* StaticMeshComponent.cpp */; };
 		12B0CF641CEB4AB400E5D2FE /* SkeletalMeshComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 12B0CF621CEB4AB400E5D2FE /* SkeletalMeshComponent.h */; };
 		12B0CF651CEB4AB400E5D2FE /* StaticMeshComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 12B0CF631CEB4AB400E5D2FE /* StaticMeshComponent.h */; };
+		12B5680F1E4D37F9005124FC /* EventManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12B5680E1E4D37F9005124FC /* EventManager.cpp */; };
+		12B568101E4D37F9005124FC /* EventManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12B5680E1E4D37F9005124FC /* EventManager.cpp */; };
+		12B568121E4D3BFF005124FC /* ColliderComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12B568111E4D3BFF005124FC /* ColliderComponent.cpp */; };
+		12B568131E4D3BFF005124FC /* ColliderComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12B568111E4D3BFF005124FC /* ColliderComponent.cpp */; };
 		12BE4CB71E1D737A00BDD467 /* Box.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12BE4CB01E1D737A00BDD467 /* Box.cpp */; };
 		12BE4CB81E1D737A00BDD467 /* Box.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12BE4CB01E1D737A00BDD467 /* Box.cpp */; };
 		12BE4CB91E1D737A00BDD467 /* Button.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 12BE4CB11E1D737A00BDD467 /* Button.cpp */; };
@@ -1208,6 +1212,8 @@
 		12B0CF5C1CEB4A9700E5D2FE /* StaticMeshComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = StaticMeshComponent.cpp; path = Scene/Components/StaticMeshComponent.cpp; sourceTree = SOURCE_ROOT; };
 		12B0CF621CEB4AB400E5D2FE /* SkeletalMeshComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SkeletalMeshComponent.h; path = Components/SkeletalMeshComponent.h; sourceTree = "<group>"; };
 		12B0CF631CEB4AB400E5D2FE /* StaticMeshComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StaticMeshComponent.h; path = Components/StaticMeshComponent.h; sourceTree = "<group>"; };
+		12B5680E1E4D37F9005124FC /* EventManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EventManager.cpp; path = Core/EventManager.cpp; sourceTree = SOURCE_ROOT; };
+		12B568111E4D3BFF005124FC /* ColliderComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ColliderComponent.cpp; path = Scene/Components/ColliderComponent.cpp; sourceTree = SOURCE_ROOT; };
 		12BE4CB01E1D737A00BDD467 /* Box.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Box.cpp; sourceTree = "<group>"; };
 		12BE4CB11E1D737A00BDD467 /* Button.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Button.cpp; sourceTree = "<group>"; };
 		12BE4CB21E1D737A00BDD467 /* Control.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Control.cpp; sourceTree = "<group>"; };
@@ -1871,6 +1877,7 @@
 		12822B0A1CC1AD9F00EE5D0A /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				12B5680E1E4D37F9005124FC /* EventManager.cpp */,
 				1297E3981D69E93100A00959 /* Console.cpp */,
 				128DBB601D6D7C7F00E7CFFD /* Camera.cpp */,
 				12FABB1B1D3256C400D88639 /* CameraManager.cpp */,
@@ -2199,6 +2206,7 @@
 		12B0CF5A1CEB4A8B00E5D2FE /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				12B568111E4D3BFF005124FC /* ColliderComponent.cpp */,
 				12FABB151D3256B600D88639 /* CameraComponent.cpp */,
 				12FABB161D3256B600D88639 /* FPSControllerComponent.cpp */,
 				12150A1F1CEB875D0066A044 /* AnimatorComponent.cpp */,
@@ -2657,6 +2665,7 @@
 				123998A01E400C6E001F79BF /* btVoronoiSimplexSolver.cpp in Sources */,
 				123997DA1E400C6D001F79BF /* btBvhTriangleMeshShape.cpp in Sources */,
 				123998F61E400C6E001F79BF /* btMultiBodyDynamicsWorld.cpp in Sources */,
+				12B568131E4D3BFF005124FC /* ColliderComponent.cpp in Sources */,
 				12BE4CC21E1D737A00BDD467 /* Slider.cpp in Sources */,
 				1239981B1E400C6E001F79BF /* btScaledBvhTriangleMeshShape.cpp in Sources */,
 				123997E41E400C6D001F79BF /* btCompoundShape.cpp in Sources */,
@@ -2739,6 +2748,7 @@
 				1239993D1E400C6E001F79BF /* btSoftSoftCollisionAlgorithm.cpp in Sources */,
 				1239982A1E400C6E001F79BF /* btTetrahedronShape.cpp in Sources */,
 				12C560AD1CFB57B200E25478 /* PostProcessor.cpp in Sources */,
+				12B568101E4D37F9005124FC /* EventManager.cpp in Sources */,
 				123998121E400C6E001F79BF /* btMultiSphereShape.cpp in Sources */,
 				123998C81E400C6E001F79BF /* btPoint2PointConstraint.cpp in Sources */,
 				123998871E400C6E001F79BF /* btGjkEpaPenetrationDepthSolver.cpp in Sources */,
@@ -2872,6 +2882,7 @@
 				1239989F1E400C6E001F79BF /* btVoronoiSimplexSolver.cpp in Sources */,
 				123997D91E400C6D001F79BF /* btBvhTriangleMeshShape.cpp in Sources */,
 				123998F51E400C6E001F79BF /* btMultiBodyDynamicsWorld.cpp in Sources */,
+				12B568121E4D3BFF005124FC /* ColliderComponent.cpp in Sources */,
 				12BE4CC11E1D737A00BDD467 /* Slider.cpp in Sources */,
 				1239981A1E400C6E001F79BF /* btScaledBvhTriangleMeshShape.cpp in Sources */,
 				123997E31E400C6D001F79BF /* btCompoundShape.cpp in Sources */,
@@ -2954,6 +2965,7 @@
 				1239993C1E400C6E001F79BF /* btSoftSoftCollisionAlgorithm.cpp in Sources */,
 				123998291E400C6E001F79BF /* btTetrahedronShape.cpp in Sources */,
 				12FABB171D3256B600D88639 /* CameraComponent.cpp in Sources */,
+				12B5680F1E4D37F9005124FC /* EventManager.cpp in Sources */,
 				123998111E400C6E001F79BF /* btMultiSphereShape.cpp in Sources */,
 				123998C71E400C6E001F79BF /* btPoint2PointConstraint.cpp in Sources */,
 				123998861E400C6E001F79BF /* btGjkEpaPenetrationDepthSolver.cpp in Sources */,

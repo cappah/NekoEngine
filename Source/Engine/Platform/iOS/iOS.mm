@@ -66,6 +66,7 @@
 static EngineApp *_engineApp;
 static EngineAppDelegate *_engineAppDelegate;
 static EngineInputDelegate *_engineInputDelegate;
+static float _xDelta, _yDelta;
 
 PlatformWindowType Platform::_activeWindow = nullptr;
 CMMotionManager *_motionManager = nullptr;
@@ -137,6 +138,11 @@ bool Platform::SetPointerPosition(long x, long y)
 
 bool Platform::GetTouchMovementDelta(float &x, float &y)
 {
+	_xDelta = _engineInputDelegate.xDelta;
+	_yDelta = _engineInputDelegate.yDelta;
+	
+	//NSLog(@"td %f, %f", _xDelta, _yDelta);
+	
 	x = -_engineInputDelegate.xDelta * .5;
 	y = -_engineInputDelegate.yDelta * .5;
 	
@@ -144,6 +150,28 @@ bool Platform::GetTouchMovementDelta(float &x, float &y)
 	_engineInputDelegate.yDelta = 0;
 	
 	return true;
+}
+
+SwipeDirection Input::GetLastSwipeDirection()
+{
+	if (fabs(_xDelta) > fabs(_yDelta))
+	{
+		if (_xDelta > 1.f)
+			return SwipeDirection::Right;
+		else if (_xDelta < -1.f)
+			return SwipeDirection::Left;
+
+		return SwipeDirection::None;
+	}
+	else
+	{
+		if (_yDelta > 1.f)
+			return SwipeDirection::Down;
+		else if (_yDelta < -1.f)
+			return SwipeDirection::Up;
+		
+		return SwipeDirection::None;
+	}
 }
 
 MessageBoxResult Platform::MessageBox(const char* title, const char* message, MessageBoxButtons buttons, MessageBoxIcon icon)

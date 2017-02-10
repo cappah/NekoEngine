@@ -44,7 +44,6 @@
 
 using namespace glm;
 
-static ComponentInitializer _tarantulaEnemyCompInit(nullptr);
 static ComponentInitializer _tarantulaMeshInit(nullptr);
 static ComponentInitializer _tarantulaColliderInit(nullptr);
 
@@ -57,13 +56,10 @@ TarantulaEnemy::TarantulaEnemy(ObjectInitializer *initializer) :
 {
 	if (!_initComp) return;
 
-	//TODO: Modify this
 	_tarantulaMeshInit.arguments.insert({ "mesh", "stm_tarantula" });
 	_tarantulaMeshInit.arguments.insert({ "material", "mat_tarantula" });
 	_tarantulaMeshInit.arguments.insert({ "material", "mat_tarantula" });
 
-	//TODO: Modify this
-	_tarantulaColliderInit.position = vec3(0.f, 0.f, -95.f);
 	_tarantulaColliderInit.arguments.insert({ "type", "box" });
 	_tarantulaColliderInit.arguments.insert({ "halfextents", ".01f, 50.f, .01f" });
 
@@ -74,12 +70,6 @@ int TarantulaEnemy::Load()
 {
 	int ret{ ENGINE_OK };
 	ObjectComponent *comp{ nullptr };
-
-	_tarantulaEnemyCompInit.parent = this;
-	comp = Engine::NewComponent("EnemyComponent", &_tarantulaEnemyCompInit);
-	if (!comp) return ENGINE_OUT_OF_RESOURCES;
-	if ((ret = comp->Load()) != ENGINE_OK) return ret;
-	AddComponent("Enemy", comp);
 
 	_tarantulaMeshInit.parent = this;
 	comp = Engine::NewComponent("StaticMeshComponent", &_tarantulaMeshInit);

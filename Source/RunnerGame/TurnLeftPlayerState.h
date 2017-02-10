@@ -44,12 +44,10 @@
 #include "Player.h"
 #include <glm/glm.hpp>
 
-using namespace glm;
-
 class TurnLeftPlayerState : public PlayerState
 {
 public:
-	TurnLeftPlayerState(Player* player);
+	TurnLeftPlayerState(Player *player);
 	virtual ~TurnLeftPlayerState();
 
 	virtual void Update(double) override;

@@ -59,16 +59,17 @@ class Player;
 
 class PlayerState
 {
-protected:
-	Player* _player;
-	PlayerStateType _stateType;
-
 public:
-	PlayerState(Player* player);
-	virtual ~PlayerState();
-
-	virtual void OnHit (Object* other);
+	PlayerState(Player *player);
+	
+	virtual void OnHit(Object* other) { (void)other; }
 
 	virtual void Update(double deltaTime) = 0;
-	virtual PlayerStateType GetStateType () const;
+	PlayerStateType GetStateType() const { return _stateType; }
+	
+	virtual ~PlayerState();
+	
+protected:
+	Player *_player;
+	PlayerStateType _stateType;
 };

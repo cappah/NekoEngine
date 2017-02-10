@@ -11,7 +11,7 @@
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 {
 	UIStoryboard *_storyboard;
-	UIViewController *_mainMenuViewController, *_inGameMenuViewController;
+	UIViewController *_mainMenuViewController, *_inGameMenuViewController, *_gameOverViewController;
 	UIViewController *_engineViewController;
 }
 
@@ -19,6 +19,7 @@
 
 - (void)showMenu;
 - (void)showEngine;
+- (void)showGameOver;
 
 @end
 

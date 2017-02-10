@@ -39,4 +39,4 @@
 
 #pragma once
 
-#define EVENT_PLAYER_DEAD 1
+#define EVENT_PLAYER_DEAD	9000
