@@ -44,9 +44,9 @@
 
 using namespace glm;
 
-static ComponentInitializer _enemyCompInit(nullptr);
-static ComponentInitializer _meshInit(nullptr);
-static ComponentInitializer _colliderInit(nullptr);
+static ComponentInitializer _batEnemyCompInit(nullptr);
+static ComponentInitializer _batMeshInit(nullptr);
+static ComponentInitializer _batColliderInit(nullptr);
 
 static bool _initComp{ true };
 
@@ -58,14 +58,14 @@ BatEnemy::BatEnemy(ObjectInitializer *initializer) :
 	if (!_initComp) return;
 
 	//TODO: Modify this
-	_meshInit.arguments.insert({ "mesh", "stm_bat" });
-	_meshInit.arguments.insert({ "material", "mat_bat" });
-	_meshInit.arguments.insert({ "material", "mat_bat" });
+	_batMeshInit.arguments.insert({ "mesh", "stm_bat" });
+	_batMeshInit.arguments.insert({ "material", "mat_bat" });
+	_batMeshInit.arguments.insert({ "material", "mat_bat" });
 
 	//TODO: Modify this
-	_colliderInit.position = vec3(0.f, 0.f, -95.f);
-	_colliderInit.arguments.insert({ "type", "box" });
-	_colliderInit.arguments.insert({ "halfextents", ".01f, 50.f, .01f" });
+	_batColliderInit.position = vec3(0.f, 0.f, -95.f);
+	_batColliderInit.arguments.insert({ "type", "box" });
+	_batColliderInit.arguments.insert({ "halfextents", ".01f, 50.f, .01f" });
 
 	_initComp = false;
 }
@@ -75,20 +75,20 @@ int BatEnemy::Load()
 	int ret{ ENGINE_OK };
 	ObjectComponent *comp{ nullptr };
 
-	_enemyCompInit.parent = this;
-	comp = Engine::NewComponent("EnemyComponent", &_enemyCompInit);
+	_batEnemyCompInit.parent = this;
+	comp = Engine::NewComponent("EnemyComponent", &_batEnemyCompInit);
 	if (!comp) return ENGINE_OUT_OF_RESOURCES;
 	if ((ret = comp->Load()) != ENGINE_OK) return ret;
 	AddComponent("Enemy", comp);
 
-	_meshInit.parent = this;
-	comp = Engine::NewComponent("StaticMeshComponent", &_meshInit);
+	_batMeshInit.parent = this;
+	comp = Engine::NewComponent("StaticMeshComponent", &_batMeshInit);
 	if (!comp) return ENGINE_OUT_OF_RESOURCES;
 	if ((ret = comp->Load()) != ENGINE_OK) return ret;
 	AddComponent("Mesh", comp);
 
-	_colliderInit.parent = this;
-	comp = Engine::NewComponent("ColliderComponent", &_colliderInit);
+	_batColliderInit.parent = this;
+	comp = Engine::NewComponent("ColliderComponent", &_batColliderInit);
 	if (!comp) return ENGINE_OUT_OF_RESOURCES;
 	if ((ret = comp->Load()) != ENGINE_OK) return ret;
 	AddComponent("FrontCollider", comp);

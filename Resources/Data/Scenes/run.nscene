@@ -149,7 +149,7 @@ Component=StaticMeshComponent=Mesh
 	mesh=stm_quad
 	material=mat_road
 EndComponent
-position=0.0, 100.0, 800.0
+position=0.0, 1000.0, 800.0
 scale=100.0, 100.0, 100.0
 rotation=0.0, 90.0, 0.0
 EndObject

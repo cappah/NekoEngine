@@ -45,6 +45,10 @@ DyingPlayerState::DyingPlayerState(Player* player) :
 	PlayerState(player)
 {
 	_stateType = PlayerStateType::STATE_DYING;
+
+	_duration = 2; // seconds
+
+	_elapsedTime = _duration;
 }
 
 DyingPlayerState::~DyingPlayerState()
@@ -54,7 +58,8 @@ DyingPlayerState::~DyingPlayerState()
 
 void DyingPlayerState::Update(double deltaTime)
 {
-	// Animation dying
+	_elapsedTime -= deltaTime;
 
-	_player->SetState(new DeadPlayerState(_player));
+	if (_elapsedTime < 0)
+		_player->SetState(new DeadPlayerState(_player));
 }

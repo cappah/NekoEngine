@@ -74,6 +74,8 @@ void Player::Update(double deltaTime) noexcept
 	Object::Update(deltaTime);
 
 	_currentPlayerState->Update(deltaTime);
+
+	Logger::Log("Runner", 0, std::to_string (_currentPlayerState->GetStateType()));
 }
 
 bool Player::Unload() noexcept
