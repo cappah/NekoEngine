@@ -43,6 +43,7 @@
 #define NE_PLATFORM_WIN64
 #define NE_PLATFORM_WINDOWS
 #define NE_ARCH_X8664
+#define NE_64BIT
 #elif defined(_WIN32)
 #define NE_PLATFORM_WIN32
 #define NE_PLATFORM_WINDOWS
@@ -55,6 +56,7 @@
 #ifdef __LP64__
 #define NE_PLATFORM_LINUX_ARM64
 #define NE_ARCH_ARM64
+#define NE_64BIT
 #else
 #define NE_PLATFORM_LINUX_ARM
 #define NE_ARCH_ARM
@@ -63,6 +65,7 @@
 #ifdef __LP64__
 #define NE_PLATFORM_LINUX_SPARC64
 #define NE_ARCH_SPARC64
+#define NE_64BIT
 #else
 #define NE_PLATFORM_LINUX_SPARC
 #define NE_ARCH_SPARC
@@ -71,6 +74,7 @@
 #ifdef __LP64__
 #define NE_PLATFORM_LINUX_MIPS64
 #define NE_ARCH_MIPS64
+#define NE_64BIT
 #else
 #define NE_PLATFORM_LINUX_MIPS
 #define NE_ARCH_MIPS
@@ -79,6 +83,7 @@
 #ifdef __LP64__
 #define NE_PLATFORM_LINUX_PPC64
 #define NE_ARCH_PPC64
+#define NE_64BIT
 #else
 #define NE_PLATFORM_LINUX_PPC
 #define NE_ARCH_PPC
@@ -87,6 +92,7 @@
 #ifdef __LP64__
 #define NE_PLATFORM_LINUX_X8664
 #define NE_ARCH_X8664
+#define NE_64BIT
 #else
 #define NE_PLATFORM_LINUX_X86
 #define NE_ARCH_X86
@@ -99,11 +105,13 @@
 #define NE_PLATFORM_IOS
 #define NE_PLATFORM_IOS_SIM
 #define NE_ARCH_X8664
+#define NE_64BIT
 #define NE_DEVICE_MOBILE
 #elif TARGET_OS_IPHONE == 1
 #define NE_PLATFORM_IOS
 #ifdef __LP64__
 #define NE_ARCH_ARM64
+#define NE_64BIT
 #else
 #define NE_ARCH_ARM
 #endif
@@ -112,6 +120,7 @@
 #define NE_PLATFORM_MAC
 #ifdef __LP64__
 #define NE_ARCH_X8664
+#define NE_64BIT
 #else
 #define NE_ARCH_X86
 #endif
@@ -123,6 +132,7 @@
 #define NE_PLATFORM_BB10
 #ifdef __LP64__
 #define NE_ARCH_ARM64
+#define NE_64BIT
 #else
 #define NE_ARCH_ARM
 #endif
@@ -130,6 +140,7 @@
 #define NE_PLATFORM_BB10
 #ifdef __LP64__
 #define NE_ARCH_X8664
+#define NE_64BIT
 #else
 #define NE_ARCH_ARM
 #endif
@@ -142,6 +153,7 @@
 #ifdef __LP64__
 #define NE_PLATFORM_FREEBSD_ARM64
 #define NE_ARCH_ARM64
+#define NE_64BIT
 #else
 #define NE_PLATFORM_FREEBSD_ARM
 #define NE_ARCH_ARM
@@ -150,6 +162,7 @@
 #ifdef __LP64__
 #define NE_PLATFORM_FREEBSD_X8664
 #define NE_ARCH_X8664
+#define NE_64BIT
 #else
 #define NE_PLATFORM_FREEBSD_X86
 #define NE_ARCH_X86
@@ -163,6 +176,7 @@
 #ifdef __LP64__
 #define NE_PLATFORM_DRAGONFLY_ARM64
 #define NE_ARCH_ARM64
+#define NE_64BIT
 #else
 #define NE_PLATFORM_DRAGONFLY_ARM
 #define NE_ARCH_ARM
@@ -171,6 +185,7 @@
 #ifdef __LP64__
 #define NE_PLATFORM_DRAGONFLY_X8664
 #define NE_ARCH_X8664
+#define NE_64BIT
 #else
 #define NE_PLATFORM_DRAGONFLY_X86
 #define NE_ARCH_X86
@@ -184,6 +199,7 @@
 #ifdef __LP64__
 #define NE_PLATFORM_NETBSD_ARM64
 #define NE_ARCH_ARM64
+#define NE_64BIT
 #else
 #define NE_PLATFORM_NETBSD_ARM
 #define NE_ARCH_ARM
@@ -192,6 +208,7 @@
 #ifdef __LP64__
 #define NE_PLATFORM_NETBSD_X8664
 #define NE_ARCH_X8664
+#define NE_64BIT
 #else
 #define NE_PLATFORM_NETBSD_X86
 #define NE_ARCH_X86
@@ -205,6 +222,7 @@
 #ifdef __LP64__
 #define NE_PLATFORM_OPENBSD_ARM64
 #define NE_ARCH_ARM64
+#define NE_64BIT
 #else
 #define NE_PLATFORM_OPENBSD_ARM
 #define NE_ARCH_ARM
@@ -213,6 +231,7 @@
 #ifdef __LP64__
 #define NE_PLATFORM_OPENBSD_X8664
 #define NE_ARCH_X8664
+#define NE_64BIT
 #else
 #define NE_PLATFORM_OPENBSD_X86
 #define NE_ARCH_X86
@@ -226,6 +245,7 @@
 #ifdef __LP64__
 #define NE_PLATFORM_SUNOS_SPARC64
 #define NE_ARCH_SPARC64
+#define NE_64BIT
 #else
 #define NE_PLATFORM_SUNOS_SPARC
 #define NE_ARCH_SPARC
@@ -234,6 +254,7 @@
 #ifdef __LP64__
 #define NE_PLATFORM_SUNOS_X8664
 #define NE_ARCH_X8664
+#define NE_64BIT
 #else
 #define NE_PLATFORM_SUNOS_X86
 #define NE_ARCH_X86

@@ -58,6 +58,8 @@ SkeletalMesh::SkeletalMesh(MeshResource *res) noexcept :
 {
 	if(res->meshType != MeshType::Skeletal)
 	{ DIE("Attempt to load static mesh as skeletal !"); }
+
+	_depthPipelineId = PIPE_Anim_Depth;
 }
 
 Skeleton *SkeletalMesh::CreateSkeleton()
@@ -85,8 +87,8 @@ int SkeletalMesh::Load()
 	_vertexCount = (uint32_t)_vertices.size();
 	_triangleCount = _indexCount / 3;
 
-	CreateBounds();
-	
+	CreateBounds();	
+
 	Logger::Log(SK_MESH_MODULE, LOG_DEBUG, "Loaded mesh id %d from %s, %d vertices, %d indices", _resourceInfo->id, *GetResourceInfo()->filePath, _vertexCount, _indexCount);
 	
 	return ENGINE_OK;
@@ -102,6 +104,10 @@ int SkeletalMesh::LoadStatic(std::vector<SkeletalVertex> &vertices, std::vector<
 
 	_vertices = vertices;
 	_indices = indices;
+
+	_indexCount = (uint32_t)_indices.size();
+	_vertexCount = (uint32_t)_vertices.size();
+	_triangleCount = _indexCount / 3;
 
 	if (calculateTangents) _CalculateTangents();
 	if (createBounds) CreateBounds();
@@ -119,6 +125,10 @@ int SkeletalMesh::LoadDynamic(std::vector<SkeletalVertex> &vertices, std::vector
 
 	_vertices = vertices;
 	_indices = indices;
+	
+	_indexCount = (uint32_t)_indices.size();
+	_vertexCount = (uint32_t)_vertices.size();
+	_triangleCount = _indexCount / 3;
 
 	if (calculateTangents) _CalculateTangents();
 	if (createBounds) CreateBounds();

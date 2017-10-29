@@ -38,8 +38,8 @@
  */
 
 #include <GUI/TextBox.h>
-#include <Engine/Input.h>
-#include <Engine/Keycodes.h>
+#include <Input/Input.h>
+#include <Input/Keycodes.h>
 #include <Renderer/VKUtil.h>
 #include <Renderer/DebugMarker.h>
 #include <Renderer/RenderPassManager.h>
@@ -56,8 +56,6 @@ int TextBox::_InitializeControl()
 	if (ret != ENGINE_OK)
 		return ret;
 
-	_vertices[0].color = _vertices[1].color = _vertices[2].color = _vertices[3].color = vec4(.5f, .5f, .5f, 1.f);
-	
 	_onKeyUp = bind(&TextBox::_KeyUp, this, _1);
 	_onKeyDown = bind(&TextBox::_KeyDown, this, _1);
 
@@ -66,6 +64,8 @@ int TextBox::_InitializeControl()
 
 void TextBox::_Update(double deltaTime)
 {
+	const char *text{ *_text };
+
 	Box::_Update(deltaTime);
 
 	if (!_text.Length())
@@ -75,7 +75,9 @@ void TextBox::_Update(double deltaTime)
 	float x = ((float)_controlRect.w - (float)_font->GetTextLength(_text)) / 2.f;
 	vec2 pos = vec2(_controlRect.x + x, _controlRect.y + y);
 
-	_font->Draw(_text, pos, _textColor);
+	while (_font->GetTextLength(text) > (uint32_t)_controlRect.w - 5) ++text;
+	
+	_font->Draw(text, pos, _textColor);
 }
 
 void TextBox::_KeyUp(uint8_t key)

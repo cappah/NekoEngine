@@ -39,12 +39,13 @@
 
 #include <random>
 
-#include <Scene/Object.h>
+
 #include <Renderer/VKUtil.h>
 #include <Renderer/DebugMarker.h>
 #include <Renderer/RenderPassManager.h>
-#include <Engine/CameraManager.h>
 #include <Engine/ResourceManager.h>
+#include <Scene/Object.h>
+#include <Scene/CameraManager.h>
 #include <Scene/Components/GPUParticleSystemComponent.h>
 #include <System/AssetLoader/AssetLoader.h>
 
@@ -148,7 +149,7 @@ GPUParticleSystemComponent::GPUParticleSystemComponent(ComponentInitializer *ini
 	}
 
 	_emitterData.position = _parent->GetPosition() + _position;
-	_emitterData.rotation = _parent->GetRotation() + _rotation;
+	_emitterData.rotation = _parent->GetRotationAngles() + _rotation;
 	_emitterData.scale = _scale;
 }
 
@@ -437,21 +438,30 @@ int GPUParticleSystemComponent::Load()
 		beginInfo.pInheritanceInfo = nullptr;
 
 		vkBeginCommandBuffer(_computeCommandBuffer, &beginInfo);
+		VK_DBG_MARKER_BEGIN(_computeCommandBuffer, "Particle Simulation", vec4(.8f, .8f, .8f, 1.f));
 
 		vkCmdBindDescriptorSets(_computeCommandBuffer, VK_PIPELINE_BIND_POINT_COMPUTE, PipelineManager::GetPipelineLayout(PIPE_LYT_ParticleCompute), 0, 1, &_computeDescriptorSet, 0, nullptr);
 		
-		uint32_t xSize = _emitterData.maxParticles / 256;
-		if (xSize % 256) ++xSize;
-		
+		uint32_t xSize{ 1 };
+		if (_emitterData.maxParticles > 256)
+		{
+			xSize = _emitterData.maxParticles / 256;
+			if (xSize % 256) ++xSize;
+		}
+
+		VK_DBG_MARKER_INSERT(_computeCommandBuffer, "Emit", vec4(.8f, .8f, .8f, 1.f));
 		vkCmdBindPipeline(_computeCommandBuffer, VK_PIPELINE_BIND_POINT_COMPUTE, PipelineManager::GetPipeline(PIPE_ParticleEmit));
 		vkCmdDispatch(_computeCommandBuffer, xSize, 1, 1);
 
+		VK_DBG_MARKER_INSERT(_computeCommandBuffer, "Update", vec4(.8f, .8f, .8f, 1.f));
 		vkCmdBindPipeline(_computeCommandBuffer, VK_PIPELINE_BIND_POINT_COMPUTE, PipelineManager::GetPipeline(PIPE_ParticleUpdate));
 		vkCmdDispatch(_computeCommandBuffer, xSize, 1, 1);
 
+		VK_DBG_MARKER_INSERT(_computeCommandBuffer, "Sort", vec4(.8f, .8f, .8f, 1.f));
 		vkCmdBindPipeline(_computeCommandBuffer, VK_PIPELINE_BIND_POINT_COMPUTE, PipelineManager::GetPipeline(PIPE_ParticleSort));
 		vkCmdDispatch(_computeCommandBuffer, xSize, 1, 1);
 
+		VK_DBG_MARKER_END(_computeCommandBuffer);
 		vkEndCommandBuffer(_computeCommandBuffer);
 	}
 	
@@ -463,10 +473,21 @@ int GPUParticleSystemComponent::Load()
 	return ENGINE_OK;
 }
 
+void GPUParticleSystemComponent::Update(double deltaTime) noexcept
+{
+	ObjectComponent::Update(deltaTime);
+
+	if (!_enabled)
+		return;
+
+	_emitterData.deltaTime = (float)deltaTime;
+	Renderer::GetInstance()->AddComputeCommandBuffer(_computeCommandBuffer);
+}
+
 void GPUParticleSystemComponent::UpdatePosition() noexcept
 {
 	_emitterData.position = _parent->GetPosition() + _position;
-	_emitterData.rotation = _parent->GetRotation() + _rotation;
+	_emitterData.rotation = _parent->GetRotationAngles() + _rotation;
 	_emitterData.scale = _scale;
 }
 

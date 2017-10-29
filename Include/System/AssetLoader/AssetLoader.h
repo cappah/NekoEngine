@@ -56,6 +56,7 @@
 #define NMESH2_FOOTER	"ENDMESH"
 #define NMESH_SKELETAL	"SKELETAL"
 #define NMESH2A_HEADER	"NMESH2A"
+#define NMESH2B_HEADER	"NMESH2B"
 
 #define NANIM1_HEADER	"NANIM1 "
 #define NANIM2_HEADER	"NANIM2 "
@@ -264,9 +265,22 @@ private:
 		glm::dmat4 &globalInverseTransform,
 		bool readVertexGroup);
 
+	static int _LoadStaticMeshV2B(class VFSFile *file,
+		std::vector<Vertex> &vertices,
+		std::vector<uint32_t> &indices,
+		std::vector<struct MeshGroup> &groups);
+
+	static int _LoadSkeletalMeshV2B(VFSFile *file,
+		std::vector<SkeletalVertex> &vertices,
+		std::vector<uint32_t> &indices,
+		std::vector<struct MeshGroup> &groups,
+		std::vector<Bone> &bones,
+		std::vector<TransformNode> &nodes,
+		glm::dmat4 &globalInverseTransform);
+
 	static int _LoadAnimationV2(VFSFile *file,
-							 std::string &name,
-							 double *duration,
-							 double *ticksPerSecond,
-							 std::vector<AnimationNode> &channels);
+		std::string &name,
+		double *duration,
+		double *ticksPerSecond,
+		std::vector<AnimationNode> &channels);
 };

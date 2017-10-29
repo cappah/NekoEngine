@@ -40,7 +40,7 @@
 #pragma once
 
 #include <Engine/Engine.h>
-#include <Engine/Camera.h>
+#include <Scene/Camera.h>
 #include <Scene/ObjectComponent.h>
 
 class ENGINE_API CameraComponent : public ObjectComponent

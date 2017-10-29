@@ -38,6 +38,7 @@
  */
 
 #include <Scene/Object.h>
+#include <System/Logger.h>
 #include <Physics/Physics.h>
 #include <System/AssetLoader/AssetLoader.h>
 #include <Scene/Components/ColliderComponent.h>
@@ -54,36 +55,42 @@ ColliderComponent::ColliderComponent(ComponentInitializer *initializer) :
 	ArgumentMapType::iterator it;
 	const char *ptr = nullptr;
 	vec3 tmp{ vec3(0.f) };
-	double d1, d2;
+	double d1{ 0.0 }, d2{ 0.0 };
 
 	if (((it = initializer->arguments.find("type")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
 	{
 		size_t len = strlen(ptr);
 		if (!strncmp(ptr, "box", len))
 		{
-			if (((it = initializer->arguments.find("halfextents")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
-				AssetLoader::ReadFloatArray(ptr, 3, &tmp.x);
-			if ((_collider = (Collider *)Physics::GetInstance()->CreateBoxCollider(_parent, tmp)) == nullptr)
-			{ DIE("Out of resources"); }
 			_colliderType = ColliderType::Box;
+			if (((it = initializer->arguments.find("halfextents")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
+			{
+				AssetLoader::ReadFloatArray(ptr, 3, &tmp.x);
+				if ((_collider = (Collider *)Physics::GetInstance()->CreateBoxCollider(_parent, tmp)) == nullptr)
+				{ DIE("Out of resources"); }
+			}			
 		}
 		else if (!strncmp(ptr, "sphere", len))
 		{
-			if (((it = initializer->arguments.find("radius")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
-				d1 = atof(ptr);
-			if ((_collider = (Collider *)Physics::GetInstance()->CreateSphereCollider(_parent, d1)) == nullptr)
-			{ DIE("Out of resources"); }
 			_colliderType = ColliderType::Sphere;
+			if (((it = initializer->arguments.find("radius")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
+			{
+				d1 = atof(ptr);
+				if ((_collider = (Collider *)Physics::GetInstance()->CreateSphereCollider(_parent, d1)) == nullptr)
+				{ DIE("Out of resources"); }
+			}			
 		}
 		else if (!strncmp(ptr, "capsule", len))
 		{
-			if (((it = initializer->arguments.find("radius")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
-				d1 = atof(ptr);
-			if (((it = initializer->arguments.find("height")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
-				d2 = atof(ptr);
-			if ((_collider = (Collider *)Physics::GetInstance()->CreateCapsuleCollider(_parent, d1, d2)) == nullptr)
-			{ DIE("Out of resources"); }
 			_colliderType = ColliderType::Capsule;
+			if (((it = initializer->arguments.find("radius")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
+			{
+				d1 = atof(ptr);
+				if (((it = initializer->arguments.find("height")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
+					d2 = atof(ptr);
+				if ((_collider = (Collider *)Physics::GetInstance()->CreateCapsuleCollider(_parent, d1, d2)) == nullptr)
+				{ DIE("Out of resources"); }
+			}
 		}
 		else if (!strncmp(ptr, "mesh", len))
 		{
@@ -98,39 +105,39 @@ int ColliderComponent::InitializeComponent()
 {
 	int ret = ObjectComponent::InitializeComponent();
 
-	if(ret != ENGINE_OK)
+	if (ret != ENGINE_OK)
 		return ret;
 
-	if (_colliderType != ColliderType::Mesh)
+	if (_collider)
 		return ENGINE_OK;
 
-	StaticMeshComponent *smc{ (StaticMeshComponent*)_parent->GetComponent(*_meshComponentName) };;
-	if (!smc)
-		return ENGINE_INVALID_ARGS;
+	switch (_colliderType)
+	{
+		case ColliderType::Box:
+			if ((_collider = Physics::GetInstance()->CreateBoxCollider(_parent, _parent->GetBounds().GetBox().GetHalf())) == nullptr)
+				return ENGINE_OUT_OF_RESOURCES;
+		break;
+		case ColliderType::Sphere:
+			if ((_collider = Physics::GetInstance()->CreateSphereCollider(_parent, _parent->GetBounds().GetSphere().GetRadius())) == nullptr)
+				return ENGINE_OUT_OF_RESOURCES;
+		break;
+		case ColliderType::Capsule:
+			if ((_collider = Physics::GetInstance()->CreateCapsuleCollider(_parent, _parent->GetBounds().GetBox().GetHalf().x * 2.0, _parent->GetBounds().GetBox().GetHalf().y * 2.0)) == nullptr)
+				return ENGINE_OUT_OF_RESOURCES;
+		break;
+		case ColliderType::Mesh:
+		{
+			StaticMeshComponent *smc{ (StaticMeshComponent*)_parent->GetComponent(*_meshComponentName) };;
+			if (!smc)
+				return ENGINE_INVALID_ARGS;
 
-	if ((_collider = (Collider *)Physics::GetInstance()->CreateMeshCollider(_parent, smc->GetMesh())) == nullptr)
-		return ENGINE_INVALID_ARGS;
+			if ((_collider = (Collider *)Physics::GetInstance()->CreateMeshCollider(_parent, smc->GetMesh())) == nullptr)
+				return ENGINE_INVALID_ARGS;
+		}
+		break;
+	}
 
 	return ENGINE_OK;
-}
-
-void ColliderComponent::SetPosition(glm::vec3 &position) noexcept
-{
-	ObjectComponent::SetPosition(position);
-	_collider->SetPosition(_position);
-}
-
-void ColliderComponent::SetRotation(glm::vec3 &rotation) noexcept
-{
-	ObjectComponent::SetRotation(rotation);
-	quat rot = rotate(quat(), radians(rotation));
-	_collider->SetRotation(rot);
-}
-
-void ColliderComponent::SetScale(glm::vec3 &scale) noexcept
-{
-	ObjectComponent::SetScale(scale);
-	_collider->SetScale(scale);
 }
 
 void ColliderComponent::Enable(bool enable)
@@ -138,10 +145,21 @@ void ColliderComponent::Enable(bool enable)
 	ObjectComponent::Enable(enable);
 }
 
+void ColliderComponent::UpdatePosition() noexcept
+{
+	if (!_collider) return;
+	_collider->SetPosition(_parent->GetPosition() + _position);
+	quat rot = rotate(quat(), radians(_parent->GetRotationAngles() + _rotation));
+	_collider->SetRotation(rot);
+	_collider->SetScale(_parent->GetScale() + _scale);
+}
+
 bool ColliderComponent::ColliderComponent::Unload()
 {
 	if (!ObjectComponent::Unload())
 		return false;
+
+	delete _collider;
 
 	return true;
 }

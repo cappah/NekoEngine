@@ -39,10 +39,10 @@
 
 #include <Scene/Components/AnimatorComponent.h>
 #include <Scene/Components/SkeletalMeshComponent.h>
+#include <Scene/SceneManager.h>
 #include <Scene/Object.h>
 #include <Animation/Skeleton.h>
 #include <Renderer/SkeletalMesh.h>
-#include <Engine/SceneManager.h>
 #include <Engine/ResourceManager.h>
 
 ENGINE_REGISTER_COMPONENT_CLASS(AnimatorComponent);
@@ -55,6 +55,10 @@ AnimatorComponent::AnimatorComponent(ComponentInitializer *initializer)
 	_defaultAnimId = initializer->arguments.find("defaultanim")->second;
 	_targetMesh = initializer->arguments.find("targetmesh")->second;
 	_currentTime = 0.0;
+	_loop = false;
+	_oneShot = false;
+	_prevLoop = false;
+	_prevClip = nullptr;
 }
 
 int AnimatorComponent::Load()
@@ -86,15 +90,31 @@ int AnimatorComponent::Load()
 	return ENGINE_OK;
 }
 
-void AnimatorComponent::PlayDefaultAnimation() noexcept
+void AnimatorComponent::PlayDefaultAnimation(bool loop) noexcept
 {
+	if (_skeleton->GetAnimationClip() == _defaultAnim)
+		return;
+
+	_loop = loop;
+	_playing = true;
+	_oneShot = false;
+	_currentTime = 0.0;
+
 	if(_skeleton)
 		_skeleton->SetAnimationClip(_defaultAnim);
 }
 
-void AnimatorComponent::PlayAnimation(AnimationClip *clip) noexcept
+void AnimatorComponent::PlayAnimation(AnimationClip *clip, bool loop) noexcept
 {
-	if(_skeleton)
+	if (_skeleton->GetAnimationClip() == clip)
+		return;
+
+	_loop = loop;
+	_playing = true;
+	_oneShot = false;
+	_currentTime = 0.0;
+
+	if (_skeleton)
 		_skeleton->SetAnimationClip(clip);
 }
 
@@ -105,14 +125,23 @@ void AnimatorComponent::Update(double deltaTime) noexcept
 	if (!SceneManager::IsSceneLoaded())
 		return;
 
-	if (_skeleton)
+	if (_skeleton && _playing)
 	{
 		_currentTime += deltaTime;
 		
-		if (_currentTime > _defaultAnim->GetDuration())
-			_currentTime = 0.0;
+		if (_currentTime > _skeleton->GetAnimationClip()->GetDuration()) {
+			if (_loop) {
+				_currentTime = 0.0;
+			} else if (_oneShot) {
+				_oneShot = false;
+				PlayAnimation(_prevClip, _prevLoop);
+			} else {
+				_playing = false;
+			}
+		}
 
-		_skeleton->TransformBones(_currentTime);
+		if (_playing)
+			_skeleton->TransformBones(_currentTime);
 	}
 }
 

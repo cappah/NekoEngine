@@ -41,7 +41,6 @@
 #extension GL_GOOGLE_include_directive : require
 
 #include "util.glh"
-#include "normal.glh"
 
 layout(location = 0) in vec2 v_uv;
 
@@ -56,7 +55,7 @@ layout(set = 0, binding = 0) uniform SceneDataBlock
 layout(set = 0, binding = 1) uniform SSAODataBlock
 {
 	mat4 inverseView;
-	mat4 inverseViewProjection;
+	mat4 inverseProjection;
 	vec4 frameAndNoise;
 	float kernelSize;
 	float radius;
@@ -65,7 +64,7 @@ layout(set = 0, binding = 1) uniform SSAODataBlock
 	float zNear;
 	float zFar;
 	int numSamples;
-	float p0;
+	float bias;
 	vec4 kernel[128];
 } ssaoData;
 
@@ -75,51 +74,44 @@ layout(set = 0, binding = 4) uniform sampler2D noiseTexture;
 
 vec3 posFromDepth(vec2 uv, ivec2 iuv)
 {
-	float z = ssaoData.zNear / (ssaoData.zFar - textureAverage(depthTexture, iuv, ssaoData.numSamples).r * (ssaoData.zFar - ssaoData.zNear)) * ssaoData.zFar;
-	vec4 pos = vec4(uv * 2.0 - 1.0, z, 1.0);
-	pos = ssaoData.inverseViewProjection * pos;
+	vec4 projPos = vec4(uv.x * 2.0 - 1.0, uv.y * 2.0 - 1.0, textureAverage(depthTexture, iuv, ssaoData.numSamples).r, 1.0);
+	vec4 pos = ssaoData.inverseProjection * projPos;
 	return (pos.xyz / pos.w);
 }
 
 void main()
 {
-	ivec2 iuv = ivec2(int(v_uv.x * ssaoData.frameAndNoise.x), int(v_uv.y * ssaoData.frameAndNoise.y));
-	ivec2 normalIUV = ivec2(gl_FragCoord.xy);
-
+	ivec2 iuv = ivec2(int(v_uv.x * ssaoData.frameAndNoise.x), int(v_uv.y * ssaoData.frameAndNoise.y)); 
 	vec3 fragPos = posFromDepth(v_uv, iuv);
-	vec3 normal = decodeNormal(textureAverage(normalTexture, normalIUV, ssaoData.numSamples).xy);
-	//decodeNormal(textureAverage(wsNormalMap, location, sceneData.numSamples).xy);
 
-	vec3 rand = texture(noiseTexture, v_uv * ssaoData.frameAndNoise.zw).rgb;
-
-	fragPos = (sceneData.view * vec4(fragPos, 1.0)).xyz;
+	iuv = ivec2(gl_FragCoord.xy);
+	vec3 normal = textureAverage(normalTexture, iuv, ssaoData.numSamples).xyz;
 	normal = normalize((vec4(normal, 1.0) * ssaoData.inverseView).xyz);
-	vec3 tgt = normalize(rand - normal * dot(rand, normal));
-	vec3 bitgt = cross(normal, tgt);
-	mat3 tbn = mat3(tgt, bitgt, normal);
+
+	vec3 rand = vec3(texture(noiseTexture, v_uv * ssaoData.frameAndNoise.zw).xy, 0.0);
+	vec3 tangent = normalize(rand - normal * dot(rand, normal));
+	vec3 bitangent = cross(tangent, normal);
+	mat3 tbn = mat3(tangent, bitangent, normal);
 
 	float occlusion = 0.0;
-
-	for(int i = 0; i < int(ssaoData.kernelSize); i++)
+	for(int i = 0; i < int(ssaoData.kernelSize); ++i)
 	{
 		if(dot(ssaoData.kernel[i].xyz, normal) < ssaoData.threshold)
 			continue;
 
 		vec3 samplePos = tbn * ssaoData.kernel[i].xyz;
-		samplePos = fragPos + samplePos * ssaoData.radius;
+		samplePos = fragPos + samplePos * ssaoData.radius; 
 
 		vec4 offset = vec4(samplePos, 1.0);
 		offset = sceneData.projection * offset;
-		offset.xy /= offset.w;
-		offset.xy = offset.xy * 0.5 + 0.5;
+		offset.xyz /= offset.w;
+		offset.xyz = offset.xyz * 0.5 + 0.5;
 
 		iuv = ivec2(int(offset.x * ssaoData.frameAndNoise.x), int(offset.y * ssaoData.frameAndNoise.y));
+		float sampleDepth = posFromDepth(offset.xy, iuv).z;
 
-		vec3 depthPos = posFromDepth(offset.xy, iuv);
-		depthPos = (sceneData.view * vec4(depthPos, 1.0)).xyz;
-
-		float rangeCheck = smoothstep(0.0, 1.0, ssaoData.radius / abs(fragPos.z - depthPos.z));
-		occlusion += (depthPos.z >= samplePos.z ? 0.0 : 1.0) * rangeCheck;
+		float rangeCheck = smoothstep(0.0, 1.0, ssaoData.radius / abs(fragPos.z - sampleDepth));
+		occlusion += (sampleDepth >= samplePos.z + ssaoData.bias ? 1.0 : 0.0) * rangeCheck; 
 	}
 
 	o_FragColor = pow(1.0 - (occlusion / ssaoData.kernelSize), ssaoData.powerExponent);

@@ -60,6 +60,8 @@ AudioSourceComponent::AudioSourceComponent(ComponentInitializer *initializer)
 	_src->SetReferenceDistance((float)atof(initializer->arguments.find("refdistance")->second.c_str()));
 	_src->SetMaxDistance((float)atof(initializer->arguments.find("maxdistance")->second.c_str()));
 
+	_src->SetGain(Engine::GetConfiguration().Audio.MasterVolume * Engine::GetConfiguration().Audio.EffectsVolume);
+
 	_playOnLoad = !initializer->arguments.find("playonload")->second.compare("true") ? true : false;
 }
 
@@ -85,19 +87,22 @@ int AudioSourceComponent::Load()
 
 void AudioSourceComponent::PlayDefaultClip() noexcept
 {
-	//
+	_src->SetClip(_defaultClip);
+	_src->Play();
 }
 
 void AudioSourceComponent::PlayClip(AudioClip *clip) noexcept
 {
-	//
+	_src->SetClip(clip);
+	_src->Play();
 }
 
-void AudioSourceComponent::Update(double deltaTime) noexcept
+void AudioSourceComponent::UpdatePosition() noexcept
 {
-	ObjectComponent::Update(deltaTime);
+	ObjectComponent::UpdatePosition();
+
 	vec3 pos = _parent->GetPosition() + _position;
-	if (_src) _src->SetPosition(pos);
+	_src->SetPosition(pos);
 }
 
 bool AudioSourceComponent::Unload()
@@ -105,7 +110,7 @@ bool AudioSourceComponent::Unload()
 	if (!ObjectComponent::Unload())
 		return false;
 
-	if(_defaultClip)
+	if(_defaultClipId.length())
 		ResourceManager::UnloadResourceByName(_defaultClipId.c_str(), ResourceType::RES_AUDIOCLIP);
 	_defaultClip = nullptr;
 

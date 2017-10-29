@@ -61,9 +61,9 @@ using namespace glm;
 
 REGISTER_OBJECT_CLASS(Sponza);
 
+#if ENABLE_SPONZA
 static inline Texture *_LoadTextureFromFile(const char *file)
 {
-#if ENABLE_SPONZA
 	int texChannels, width, height;
 	stbi_uc *pixels = stbi_load(file, (int *)&width, (int *)&height, &texChannels, STBI_rgb_alpha);
 	VkDeviceSize imageSize = width * height * 4;
@@ -77,10 +77,8 @@ static inline Texture *_LoadTextureFromFile(const char *file)
 	free(pixels);
 
 	return tex;
-#else
-	return nullptr;
-#endif
 }
+#endif
 
 Sponza::Sponza(ObjectInitializer *initializer) noexcept : Object(initializer)
 {

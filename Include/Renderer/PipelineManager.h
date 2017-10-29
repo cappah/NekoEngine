@@ -86,7 +86,7 @@ enum PipelineLayoutId : uint8_t
 	PIPE_LYT_ShadowFilter = 190,
 	PIPE_LYT_ParticleCompute = 200,
 	PIPE_LYT_ParticleDraw = 201,
-	PIPE_LYT_Bounds = 220,
+	PIPE_LYT_Debug = 220,
 };
 
 enum PipelineId : uint8_t
@@ -138,6 +138,7 @@ enum PipelineId : uint8_t
 	PIPE_ParticleSort = 202,
 	PIPE_ParticleDraw = 203,
 	PIPE_Bounds = 220,
+	PIPE_DebugLine = 221
 };
 
 class PipelineManager

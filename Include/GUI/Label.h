@@ -45,7 +45,7 @@
 class Label : public Box
 {
 public:
-	ENGINE_API Label(int x = 0, int y = 0, int width = 75, int height = 24) : Box(x, y, width, height) { }
+	ENGINE_API Label(int x = 0, int y = 0, int width = 75, int height = 24) : Box(x, y, width, height) { _color = glm::vec4(.0f, .0f, .0f, .0f); }
 	ENGINE_API virtual ~Label() { }
 
 protected:

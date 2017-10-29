@@ -41,6 +41,12 @@
 
 #include <functional>
 
+struct Task
+{
+	void(*execute)(void);
+	void *data;
+};
+
 class TaskManager
 {
 public:

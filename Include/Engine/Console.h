@@ -53,10 +53,6 @@ public:
 	ENGINE_API static void RegisterCVar(NString name, std::function<NString()> get, std::function<void(NString &)> set) { _vars.insert(std::make_pair(name, CVarFuncs(get, set))); }
 	ENGINE_API static void UnregisterCVar() { }
 
-	ENGINE_API static void RegisterFunc(NString name, std::function<void()> func) { _voidFuncs.insert(std::make_pair(name, func)); }
-	ENGINE_API static void RegisterFunc(NString name, std::function<void(NArray<NString> &)> func) { _argFuncs.insert(std::make_pair(name, func)); }
-	ENGINE_API static void UnregisterFunc(NString name) { }
-	
 	ENGINE_API static void Print(NString &string);
 	ENGINE_API static void Print(const char *fmt, ...);
 	ENGINE_API static void Clear();
@@ -70,7 +66,7 @@ public:
 	static void HandleKeyDown(uint8_t key);
 	static void HandleKeyUp(uint8_t key);
 
-	ENGINE_API static void ExecuteCommand(NString cmd);
+	ENGINE_API static void ExecuteCommand(NString cmd, bool record = true);
 
 	static void Release();
 
@@ -95,8 +91,6 @@ private:
 	static bool _open;
 	static NArray<NString> _text;
 	static std::map<NString, CVarFuncs> _vars;
-	static std::map<NString, std::function<void()>> _voidFuncs;
-	static std::map<NString, std::function<void(NArray<NString> &)>> _argFuncs;
 
 	Console();
 };

@@ -37,6 +37,7 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <Audio/AudioSystem.h>
 #include <Engine/SoundManager.h>
 #include <Script/Interface/SoundManagerInterface.h>
 
@@ -95,7 +96,8 @@ int SoundManagerInterface::SetListenerPosition(lua_State *state)
 	if (argc != 3)
 		return luaL_error(state, "Invalid arguments");
 
-//	SoundManager::SetListenerPosition((float)lua_tonumber(state, 1), (float)lua_tonumber(state, 2), (float)lua_tonumber(state, 3));
+	glm::vec3 position{ (float)lua_tonumber(state, 1), (float)lua_tonumber(state, 2), (float)lua_tonumber(state, 3) };
+	AudioSystem::GetInstance()->SetListenerPosition(position);
 
 	return 0;
 }
@@ -104,10 +106,12 @@ int SoundManagerInterface::SetListenerOrientation(lua_State *state)
 {
 	int argc{ lua_gettop(state) };
 
-	if (argc != 3)
+	if (argc != 6)
 		return luaL_error(state, "Invalid arguments");
 
-//	SoundManager::SetListenerOrientation((float)lua_tonumber(state, 1), (float)lua_tonumber(state, 2), (float)lua_tonumber(state, 3));
+	glm::vec3 front{ (float)lua_tonumber(state, 1), (float)lua_tonumber(state, 2), (float)lua_tonumber(state, 3) };
+	glm::vec3 up{ (float)lua_tonumber(state, 4), (float)lua_tonumber(state, 5), (float)lua_tonumber(state, 6) };
+	AudioSystem::GetInstance()->SetListenerOrientation(front, up);
 
 	return 0;
 }

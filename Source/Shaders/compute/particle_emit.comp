@@ -124,44 +124,48 @@ vec3 meshPosition()
 
 void main()
 {
-	if (emitterData.enable != 1 || emitterData.currentParticles >= emitterData.maxParticles || emitterData.deltaTime < 0.0)
+	if (emitterData.currentParticles >= emitterData.maxParticles)
 		return;
 
-	if (gl_GlobalInvocationID.x == 0)
+	int index = int(gl_GlobalInvocationID.x);
+	if (index == 0)
+	{
 		emitterData.nextEmitTime -= emitterData.deltaTime;
+		memoryBarrier();
+	}
 
-	memoryBarrier(); barrier();
+	barrier();
 
-	if (emitterData.nextEmitTime > 0.0)
+	if (index >= emitterData.maxParticles || particleBuffer.data[index].positionAndAge.w > 0.0 || emitterData.nextEmitTime > 0.0)
 		return;
 
-	uint particleId = gl_GlobalInvocationID.x;
-	if (particleId > emitterData.maxParticles || particleBuffer.data[particleId].positionAndAge.w > 0.0)
-		return;
+	srand(rand_wanghash(index));
 
-	srand(rand_wanghash(gl_LocalInvocationID.x));
+	barrier();
 
-	particleBuffer.data[particleId].velocityAndWeight.xyz = emitterData.initialVelocityAndRate.xyz;
-	particleBuffer.data[particleId].destinationAndSize.w = emitterData.rotationAndInitialSize.w;
-	particleBuffer.data[particleId].color = emitterData.initialColor;
+	particleBuffer.data[index].velocityAndWeight.xyz = emitterData.initialVelocityAndRate.xyz;
+	particleBuffer.data[index].destinationAndSize.w = emitterData.rotationAndInitialSize.w;
+	particleBuffer.data[index].color = emitterData.initialColor;
 
 	switch(emitterData.emitterType)
 	{
-		case EMITTER_QUAD: particleBuffer.data[particleId].positionAndAge = vec4(quadPosition(), 0.0); break;
-		case EMITTER_CIRCLE: particleBuffer.data[particleId].positionAndAge = vec4(circlePosition(), 0.0); break;
-		case EMITTER_SPHERE: particleBuffer.data[particleId].positionAndAge = vec4(spherePosition(), 0.0); break;
-		case EMITTER_BOX: particleBuffer.data[particleId].positionAndAge = vec4(boxPosition(), 0.0); break;
-		case EMITTER_POINT: particleBuffer.data[particleId].positionAndAge = vec4(emitterData.positionAndLifespan.xyz, 0.0); break;
-		case EMITTER_MESH: particleBuffer.data[particleId].positionAndAge = vec4(meshPosition(), 0.0); break;
+		case EMITTER_QUAD: particleBuffer.data[index].positionAndAge = vec4(quadPosition(), 0.0); break;
+		case EMITTER_CIRCLE: particleBuffer.data[index].positionAndAge = vec4(circlePosition(), 0.0); break;
+		case EMITTER_SPHERE: particleBuffer.data[index].positionAndAge = vec4(spherePosition(), 0.0); break;
+		case EMITTER_BOX: particleBuffer.data[index].positionAndAge = vec4(boxPosition(), 0.0); break;
+		case EMITTER_POINT: particleBuffer.data[index].positionAndAge = vec4(emitterData.positionAndLifespan.xyz, 0.0); break;
+		case EMITTER_MESH: particleBuffer.data[index].positionAndAge = vec4(meshPosition(), 0.0); break;
 	}
 
-	particleBuffer.data[particleId].destinationAndSize.xyz = particleBuffer.data[particleId].positionAndAge.xyz + (particleBuffer.data[particleId].velocityAndWeight.xyz * emitterData.positionAndLifespan.w);
+	particleBuffer.data[index].destinationAndSize.xyz = particleBuffer.data[index].positionAndAge.xyz + (particleBuffer.data[index].velocityAndWeight.xyz * emitterData.positionAndLifespan.w);
 
+	barrier();
 	atomicAdd(emitterData.currentParticles, 1);
-	atomicMax(emitterData.currentParticles, emitterData.maxParticles);
-
 	memoryBarrier(); barrier();
 
-	if (gl_GlobalInvocationID.x == 0)
+	if (index == 0)
+	{
 		emitterData.nextEmitTime = emitterData.initialVelocityAndRate.w;
+		memoryBarrier();
+	}
 }

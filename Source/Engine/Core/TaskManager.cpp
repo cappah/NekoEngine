@@ -40,7 +40,7 @@
 #include <Runtime/Runtime.h>
 #include <Engine/TaskManager.h>
 
-static NThreadPool *_threadPool{ nullptr };
+//static NThreadPool *_threadPool{ nullptr };
 
 int TaskManager::Initialize()
 {

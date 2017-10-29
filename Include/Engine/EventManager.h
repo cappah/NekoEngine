@@ -45,10 +45,17 @@
 #include <Engine/Defs.h>
 #include <Engine/Events.h>
 
+typedef struct HANDLER
+{
+	int id;
+	std::function<void(int32_t, void *)> handler;
+} EventHandler;
+
 typedef struct HANDLERS
 {
 	int id;
-	std::vector<std::function<void(int32_t, void *)>> handlers;
+	int nextHandlerId;
+	std::vector<EventHandler> handlers;
 } EventHandlers;
 
 class EventManager

@@ -40,17 +40,17 @@
 #include <chrono>
 
 #include <GUI/GUI.h>
+#include <Input/Input.h>
 #include <Engine/Debug.h>
-#include <Engine/Input.h>
 #include <Engine/Engine.h>
 #include <Engine/Events.h>
 #include <Engine/Version.h>
 #include <Engine/Console.h>
 #include <Engine/GameModule.h>
 #include <Engine/SoundManager.h>
-#include <Engine/SceneManager.h>
 #include <Engine/EventManager.h>
 #include <Engine/ResourceManager.h>
+#include <Scene/SceneManager.h>
 #include <Audio/AudioSystem.h>
 #include <System/Logger.h>
 #include <System/VFS/VFS.h>
@@ -62,9 +62,10 @@
 #include <Platform/CrashHandler.h>
 
  // 60 Hz logic update
-#define UPDATE_DELTA	.01666
+#define UPDATE_DELTA			.01666
+#define VFS_ARCHIVE_LIST_SIZE	4096
 
-#define ENGINE_MODULE	"Engine"
+#define ENGINE_MODULE			"Engine"
 
 using namespace glm;
 using namespace std;
@@ -88,11 +89,19 @@ vec2 Engine::_scaleFactor{ 1.f,1.f };
 high_resolution_clock::time_point _prevTime;
 PlatformWindowType _engineWindow = 0;
 bool _graphicsDebug = false;
+char *_configFilePath{ nullptr };
+char _gameModuleFile[NE_PATH_SIZE]{ '\0' };
+char _physicsModuleFile[NE_PATH_SIZE]{ '\0' };
+char _audioSystemModuleFile[NE_PATH_SIZE]{ '\0' };
+NString _vfsArchiveList(VFS_ARCHIVE_LIST_SIZE);
+
 static int _fps = 0;
 static double _frameTime = 0.0;
 
 ObjectClassMapType *EngineClassFactory::_objectClassMap = nullptr;
 ComponentClassMapType *EngineClassFactory::_componentClassMap = nullptr;
+
+char *ne_executable_name;
 
 int Engine::Run()
 {
@@ -108,7 +117,7 @@ int Engine::Run()
 
 void Engine::Frame() noexcept
 {
-	static double lastTime = GetTime(), lastFPSTime = GetTime(), nextUpdateTime = 0.0;
+	static double lastTime = GetTime(), lastFPSTime = GetTime(), nextFixedUpdateTime = GetTime();
 	static int nFrames = 0;
 	const double curTime = GetTime();
 	const double deltaTime = curTime - lastTime;
@@ -124,12 +133,14 @@ void Engine::Frame() noexcept
 		nFrames = 0;
 	}
 	
-	//if (curTime > nextUpdateTime)
-	//{
-		_Update(deltaTime);
-		lastTime = curTime;
-	//	nextUpdateTime += UPDATE_DELTA;
-//	}
+	_Update(deltaTime);
+	lastTime = curTime;
+
+	if (curTime > nextFixedUpdateTime)
+	{
+		_FixedUpdate();
+		nextFixedUpdateTime += UPDATE_DELTA;
+	}
 
 	_Draw();
 
@@ -184,6 +195,85 @@ ObjectComponent *Engine::NewComponent(const std::string &className, ComponentIni
 	return nullptr;
 }
 
+bool Engine::SaveConfiguration() noexcept
+{
+	FILE *fp{ fopen(_configFilePath, "w") };
+	if (!fp)
+		return false;
+
+	fprintf(fp, "[Engine]\n");
+	fprintf(fp, "sDataDirectory=%s\n", _config.Engine.DataDirectory);
+	fprintf(fp, "sLogFile=%s\n", _config.Engine.LogFile);
+	fprintf(fp, "sGameModule=%s\n", _gameModuleFile);
+	fprintf(fp, "sPhysicsModule=%s\n", _physicsModuleFile);
+	fprintf(fp, "sAudioSystemModule=%s\n", _audioSystemModuleFile);
+	fprintf(fp, "sArchiveFiles=%s\n", *_vfsArchiveList);
+	fprintf(fp, "iWidth=%d\n", _config.Engine.ScreenWidth);
+	fprintf(fp, "iHeight=%d\n", _config.Engine.ScreenHeight);
+	fprintf(fp, "bFullscreen=%d\n", _config.Engine.Fullscreen ? 1 : 0);
+	fprintf(fp, "bLoadLooseFiles=%d\n", _config.Engine.LoadLooseFiles ? 1 : 0);
+	fprintf(fp, "bEnableConsole=%d\n", _config.Engine.EnableConsole ? 1 : 0);
+
+	fprintf(fp, "[Renderer]\n");
+	fprintf(fp, "bSupersampling=%d\n", _config.Renderer.Supersampling ? 1 : 0);
+	fprintf(fp, "bMultisampling=%d\n", _config.Renderer.Multisampling ? 1 : 0);
+	fprintf(fp, "iSamples=%d\n", _config.Renderer.Samples);
+	fprintf(fp, "bAnisotropic=%d\n", _config.Renderer.Anisotropic ? 1 : 0);
+	fprintf(fp, "iAniso=%d\n", _config.Renderer.Aniso);
+	fprintf(fp, "bVerticalSync=%d\n", _config.Renderer.VerticalSync ? 1 : 0);
+	fprintf(fp, "iTextureQuality=%d\n", _config.Renderer.TextureQuality);
+	fprintf(fp, "iMaxLights=%d\n", _config.Renderer.MaxLights);
+	fprintf(fp, "iShadowMapSize=%d\n", _config.Renderer.ShadowMapSize);
+	fprintf(fp, "iMaxShadowMaps=%d\n", _config.Renderer.MaxShadowMaps);
+	fprintf(fp, "bShadowMultisampling=%d\n", _config.Renderer.ShadowMultisampling ? 1 : 0);
+	fprintf(fp, "iShadowSamples=%d\n", _config.Renderer.ShadowSamples);
+	fprintf(fp, "bEnableAsyncCompute=%d\n", _config.Renderer.EnableAsyncCompute ? 1 : 0);
+	fprintf(fp, "fGamma=%.02f\n", _config.Renderer.Gamma);
+	fprintf(fp, "bUseDeviceGroup=%d\n", _config.Renderer.UseDeviceGroup ? 1 : 0);
+
+	fprintf(fp, "[Renderer.SSAO]\n");
+	fprintf(fp, "bEnable=%d\n", _config.Renderer.SSAO.Enable ? 1 : 0);
+	fprintf(fp, "iKernelSize=%d\n", _config.Renderer.SSAO.KernelSize);
+	fprintf(fp, "fRadius=%.03f\n", _config.Renderer.SSAO.Radius);
+	fprintf(fp, "fPowerExponent=%.03f\n", _config.Renderer.SSAO.PowerExponent);
+	fprintf(fp, "fThreshold=%.03f\n", _config.Renderer.SSAO.Threshold);
+	fprintf(fp, "fBias=%.03f\n", _config.Renderer.SSAO.Bias);
+	fprintf(fp, "bMultisampling=%d\n", _config.Renderer.SSAO.Multisampling ? 1 : 0);
+
+	fprintf(fp, "[PostProcessor]\n");
+	fprintf(fp, "bBloom=%d\n", _config.PostProcessor.Bloom ? 1 : 0);
+	fprintf(fp, "bSupersampling=%d\n", _config.PostProcessor.BloomIntensity);
+	fprintf(fp, "bDepthOfField=%d\n", _config.PostProcessor.DepthOfField ? 1 : 0);
+	fprintf(fp, "bFilmGrain=%d\n", _config.PostProcessor.FilmGrain ? 1 : 0);
+
+	fprintf(fp, "[Audio]\n");
+	fprintf(fp, "fMasterVolume=%.01f\n", _config.Audio.MasterVolume);
+	fprintf(fp, "fEffectsVolume=%.01f\n", _config.Audio.EffectsVolume);
+	fprintf(fp, "fMusicVolume=%.01f\n", _config.Audio.MusicVolume);
+
+	fprintf(fp, "[Input.VirtualAxis]\n");
+	for (uint32_t i = 0; i < Input::GetVirtualAxisList().Count(); ++i) {
+		const VirtualAxis &vAxis = Input::GetVirtualAxisList()[i];
+		fprintf(fp, "v%d=%d,%d\n", i, vAxis.max, vAxis.min);
+	}
+
+	fprintf(fp, "[Input.ButtonMapping]\n");
+	for (const pair<string, uint8_t> &kvp : Input::GetButtonMap())
+		fprintf(fp, "%s=%d\n", kvp.first.c_str(), kvp.second);
+
+	fprintf(fp, "[Input.AxisMapping]\n");
+	for (const pair<string, uint8_t> &kvp : Input::GetAxisMap()) {
+		if (kvp.second > NE_VIRT_AXIS)
+			fprintf(fp, "%s=v%d\n", kvp.first.c_str(), kvp.second - NE_VIRT_AXIS);
+		else
+			fprintf(fp, "%s=%d;%.01f\n", kvp.first.c_str(), kvp.second, Input::GetAxisSensivity(kvp.second));
+	}
+
+	fclose(fp);
+
+	return true;
+}
+
 void Engine::CleanUp() noexcept
 {
 	if (_disposed)
@@ -192,6 +282,7 @@ void Engine::CleanUp() noexcept
 	Logger::Log(ENGINE_MODULE, LOG_INFORMATION, "Shuting down...");
 
 	EventManager::Broadcast(NE_EVT_SHUTDOWN, nullptr);
+	EventManager::Release();
 
 	Renderer::GetInstance()->WaitIdle();
 
@@ -300,10 +391,10 @@ void Engine::_DrawStats()
 
 	GUIManager::DrawString(vec2(0.f, _config.Engine.ScreenHeight - charHeight * 2), color, "NekoEngine");
 #if defined(NE_CONFIG_DEBUG)
-	GUIManager::DrawString(vec2(0.f, _config.Engine.ScreenHeight - charHeight), color, "Version: %s \"%s\" [%s] [Debug]", ENGINE_VERSION_STRING, ENGINE_WORKING_NAME, ENGINE_PLATFORM_STRING);
+	GUIManager::DrawString(vec2(0.f, _config.Engine.ScreenHeight - charHeight), color, "Version: %s [%s] [Debug]", ENGINE_VERSION_STRING, ENGINE_PLATFORM_STRING);
 #elif defined(NE_CONFIG_DEVELOPMENT)
-	GUIManager::DrawString(vec2(0.f, _config.Engine.ScreenHeight - charHeight), color, "Version: %s \"%s\" [%s] [Development]", ENGINE_VERSION_STRING, ENGINE_WORKING_NAME, ENGINE_PLATFORM_STRING);
+	GUIManager::DrawString(vec2(0.f, _config.Engine.ScreenHeight - charHeight), color, "Version: %s [%s] [Development]", ENGINE_VERSION_STRING, ENGINE_PLATFORM_STRING);
 #else
-	GUIManager::DrawString(vec2(0.f, _config.Engine.ScreenHeight - charHeight), color, "Version: %s \"%s\" [%s]", ENGINE_VERSION_STRING, ENGINE_WORKING_NAME, ENGINE_PLATFORM_STRING);
+	GUIManager::DrawString(vec2(0.f, _config.Engine.ScreenHeight - charHeight), color, "Version: %s [%s]", ENGINE_VERSION_STRING, ENGINE_PLATFORM_STRING);
 #endif
 }

@@ -84,7 +84,7 @@ public:
 
 	virtual void Enable(bool enable) override { ObjectComponent::Enable(enable); _emitterData.enable = enable ? 1 : 0; }
 
-	virtual void Update(double deltaTime) noexcept override { ObjectComponent::Update(deltaTime); _emitterData.deltaTime = (float)deltaTime; }
+	virtual void Update(double deltaTime) noexcept override;
 	virtual void UpdatePosition() noexcept override;
 	virtual void UpdateData(VkCommandBuffer commandBuffer) noexcept override;
 

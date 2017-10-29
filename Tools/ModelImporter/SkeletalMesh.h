@@ -56,31 +56,31 @@
 struct AnimatedVertex
 {
 	AnimatedVertex() :
-		position(glm::vec3(0.f)),
+		position(glm::dvec3(0.f)),
 		uv(glm::vec2(0.f)),
-		normal(glm::vec3(0.f)),
-		tangent(glm::vec3(0.f)),
+		normal(glm::dvec3(0.f)),
+		tangent(glm::dvec3(0.f)),
 		boneIndices(glm::ivec4(0)),
-		boneWeights(glm::vec4(0)),
+		boneWeights(glm::dvec4(0)),
 		numBones(0)
 	{ }
 
-	AnimatedVertex(glm::vec3 inPos) :
+	AnimatedVertex(glm::dvec3 inPos) :
 		position(inPos),
 		uv(glm::vec2(0.f)),
-		normal(glm::vec3(0.f)),
-		tangent(glm::vec3(0.f)),
+		normal(glm::dvec3(0.f)),
+		tangent(glm::dvec3(0.f)),
 		boneIndices(glm::ivec4(0)),
-		boneWeights(glm::vec4(0.f)),
+		boneWeights(glm::dvec4(0.f)),
 		numBones(0)
 	{ }
 
-	glm::vec3 position;
+	glm::dvec3 position;
 	glm::vec2 uv;
-	glm::vec3 normal;
-	glm::vec3 tangent;
+	glm::dvec3 normal;
+	glm::dvec3 tangent;
 	glm::ivec4 boneIndices;
-	glm::vec4 boneWeights;
+	glm::dvec4 boneWeights;
 	int numBones;
 };
 
@@ -104,8 +104,8 @@ class SkeletalMesh : public QObject
 public:
 	explicit SkeletalMesh(QObject *parent = 0);
 
-	void AddVertex(AnimatedVertex &v) { _vertices.push_back(v); }
-	void AddIndex(uint32_t index) { _indices.push_back(_startVertex + index); _groupCount++; }
+	void AddVertex(AnimatedVertex &v) { _vertices.push_back(v); ++_groupVertexCount; }
+	void AddIndex(uint32_t index) { _indices.push_back(_startVertex + index); ++_groupCount; }
 	size_t AddBone(Bone &b) { _bones.push_back(b); return _bones.size() - 1; }
 	void AddNode(Node &n) { _nodes.push_back(n); }
 
@@ -117,9 +117,9 @@ public:
 	int GetBoneIndex(std::string name);
 	uint32_t GetGroupStartVertex() { return _startVertex; }
 
-	void BeginGroup() { _startIndex = (uint32_t)_indices.size(); _startVertex = (uint32_t)_vertices.size(); _groupCount = 0; }
+	void BeginGroup() { _startIndex = (uint32_t)_indices.size(); _startVertex = (uint32_t)_vertices.size(); _groupCount = 0; _groupVertexCount = 0; }
 	void SetMaterialID(int32_t index) { _materialId = index; }
-	void EndGroup() { _groups.push_back({ _startIndex, _groupCount, _materialId }); }
+	void EndGroup() { _groups.push_back({ _startVertex, _groupVertexCount, _startIndex, _groupCount, _materialId }); }
 
 	AnimatedVertex &GetVertex(int index) { return _vertices[index]; }
 	std::vector<GroupInfo> &GetGroups() { return _groups; }
@@ -142,6 +142,7 @@ private:
 	uint32_t _startIndex;
 	uint32_t _startVertex;
 	uint32_t _groupCount;
+	uint32_t _groupVertexCount;
 	int32_t _materialId;
 	glm::dmat4 _globalInverseTransform;
 };

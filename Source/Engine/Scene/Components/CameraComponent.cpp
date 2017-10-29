@@ -40,12 +40,12 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
+#include <Input/Input.h>
 #include <Scene/Object.h>
+#include <Scene/CameraManager.h>
 #include <Scene/Components/CameraComponent.h>
 #include <Engine/Engine.h>
 #include <Engine/ResourceManager.h>
-#include <Engine/Input.h>
-#include <Engine/CameraManager.h>
 #include <System/AssetLoader/AssetLoader.h>
 
 using namespace glm;
@@ -113,7 +113,7 @@ void CameraComponent::_UpdateView() noexcept
 	vec3 tmp = _parent->GetPosition();
 	_cam->SetPosition(tmp, false);
 
-	tmp = _parent->GetRotation();
+	tmp = _parent->GetRotationAngles();
 	_cam->SetRotation(tmp, false);
 
 	_cam->UpdateView();

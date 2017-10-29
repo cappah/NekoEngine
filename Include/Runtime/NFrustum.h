@@ -125,8 +125,8 @@ public:
 
 private:
 	NFrustumPlane _frustumPlanes[6];
-	float _ratio, _angle, _near, _far, _tg;
-	float _nHeight, _nWidth, _fHeight, _fWidth;
+	//float _ratio, _angle, _near, _far, _tg;
+	//float _nHeight, _nWidth, _fHeight, _fWidth;
 
 	inline bool _ContainsSphere(const NBoundingSphere &sphere) const
 	{

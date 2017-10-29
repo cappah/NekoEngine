@@ -38,9 +38,10 @@
  */
 
 #include <Scene/Object.h>
+#include <Scene/CameraManager.h>
 #include <Scene/Components/StaticMeshComponent.h>
-#include <Engine/CameraManager.h>
 #include <Engine/ResourceManager.h>
+#include <Renderer/Primitives.h>
 #include <System/Logger.h>
 
 using namespace glm;
@@ -92,8 +93,8 @@ void StaticMeshComponent::SetPosition(vec3 &position) noexcept
 void StaticMeshComponent::SetRotation(vec3 &rotation) noexcept
 {
 	ObjectComponent::SetRotation(rotation);
-	
-	_rotationQuaternion = rotate(quat(), radians(rotation));
+
+	_rotationQuaternion = rotate(quat(), radians(rotation));	
 	_updateModelMatrix = true;
 }
 
@@ -131,7 +132,26 @@ int StaticMeshComponent::Load()
 			_mesh = new StaticMesh(nullptr);
 		else if (_meshId.Contains("pr_"))
 		{
-			// Primitive mesh
+			if (_meshId.Contains("triangle"))
+				_mesh = new StaticMesh(PrimitiveID::Triangle);
+			else if (_meshId.Contains("quad"))
+				_mesh = new StaticMesh(PrimitiveID::Quad);
+			else if (_meshId.Contains("box"))
+				_mesh = new StaticMesh(PrimitiveID::Box);
+			else if (_meshId.Contains("pyramid"))
+				_mesh = new StaticMesh(PrimitiveID::Pyramid);
+			else if (_meshId.Contains("sphere"))
+				_mesh = new StaticMesh(PrimitiveID::Sphere);
+			else if (_meshId.Contains("cone"))
+				_mesh = new StaticMesh(PrimitiveID::Cone);
+
+			if (_mesh->Load() != ENGINE_OK)
+			{
+				Logger::Log(SM_COMPONENT_MODULE, LOG_CRITICAL, "Failed to initialize primitive mesh (%s)", *_meshId);
+				return ENGINE_FAIL;
+			}
+
+			_meshId = SM_GENERATED;
 		}
 		else
 			_mesh = (StaticMesh *)ResourceManager::GetResourceByName(*_meshId, ResourceType::RES_STATIC_MESH);
@@ -186,7 +206,7 @@ void StaticMeshComponent::UpdateData(VkCommandBuffer commandBuffer) noexcept
 		_UpdateModelMatrix();
 
 	Camera *cam = CameraManager::GetActiveCamera();
-	_objectData.modelViewProjection = cam->GetProjectionMatrix() * (cam->GetView() * _objectData.model);
+	_objectData.modelViewProjection = cam->GetProjectionMatrix() * (_attachedToCamera ? _objectData.model : (cam->GetView() * _objectData.model));
 
 	_ubo->UpdateData((uint8_t *)&_objectData, 0, sizeof(_objectData), commandBuffer);
 }
@@ -263,7 +283,13 @@ bool StaticMeshComponent::InitDrawables()
 
 	_SortGroups();
 
-	return _mesh->BuildDrawables(_materials, _descriptorSet, _drawables, buildDepth, true);
+	if (!_mesh->BuildDrawables(_materials, _descriptorSet, _drawables, buildDepth, true))
+		return false;
+
+	for (Drawable &drawable : _drawables)
+		drawable.visible = &_visible;
+
+	return true;
 }
 
 bool StaticMeshComponent::RebuildCommandBuffers()
@@ -320,8 +346,11 @@ void StaticMeshComponent::_SortGroups()
 
 void StaticMeshComponent::_UpdateModelMatrix()
 {
-	_objectData.model = ((_translationMatrix * mat4_cast(_rotationQuaternion)) * _scaleMatrix) * _parent->GetModelMatrix();
+	_objectData.model = _parent->GetModelMatrix() * _translationMatrix * mat4_cast(_rotationQuaternion) * _scaleMatrix;
 	_objectData.normal = transpose(inverse(_objectData.model));
+
+	if (_attachedToCamera)
+		_objectData.model = _translationMatrix * mat4_cast(_rotationQuaternion) * _scaleMatrix;
 
 	for (Drawable &drawable : _drawables)
 		drawable.bounds.Transform(_objectData.model, &drawable.transformedBounds);

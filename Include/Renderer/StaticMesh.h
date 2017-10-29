@@ -46,6 +46,7 @@
 #include <Renderer/Buffer.h>
 #include <Renderer/Material.h>
 #include <Renderer/Drawable.h>
+#include <Renderer/Primitives.h>
 #include <Resource/Resource.h>
 #include <Resource/MeshResource.h>
 
@@ -63,6 +64,7 @@ class StaticMesh : public Resource
 
 public:
 	ENGINE_API StaticMesh(MeshResource *res) noexcept;
+	ENGINE_API StaticMesh(PrimitiveID primitiveId) noexcept;
 
 	ENGINE_API MeshResource* GetResourceInfo() const noexcept { return (MeshResource*)_resourceInfo; }
 	ENGINE_API bool IsResident() const noexcept { return _resident; }
@@ -115,6 +117,7 @@ protected:
 	uint32_t _triangleCount;
 	bool _dynamic, _hasOwnBuffer, _resident;
 	NBounds _bounds;
+	PrimitiveID _primitiveId;
 
 	VkDeviceSize _vertexOffset;
 	VkDeviceSize _indexOffset;

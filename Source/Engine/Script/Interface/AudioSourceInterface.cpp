@@ -160,7 +160,8 @@ int AudioSourceInterface::SetPosition(lua_State *state)
 	if (args != 4)
 		return luaL_error(state, "Invalid arguments");
 
-//	((AudioSource *)lua_touserdata(state, 1))->SetPosition((float)lua_tonumber(state, 2), (float)lua_tonumber(state, 3), (float)lua_tonumber(state, 4));
+	glm::vec3 pos{ (float)lua_tonumber(state, 2), (float)lua_tonumber(state, 3), (float)lua_tonumber(state, 4) };
+	((AudioSource *)lua_touserdata(state, 1))->SetPosition(pos);
 
 	return 0;
 }
@@ -172,7 +173,8 @@ int AudioSourceInterface::SetVelocity(lua_State *state)
 	if (args != 4)
 		return luaL_error(state, "Invalid arguments");
 
-//	((AudioSource *)lua_touserdata(state, 1))->SetVelocity((float)lua_tonumber(state, 2), (float)lua_tonumber(state, 3), (float)lua_tonumber(state, 4));
+	glm::vec3 velocity{ (float)lua_tonumber(state, 2), (float)lua_tonumber(state, 3), (float)lua_tonumber(state, 4) };
+	((AudioSource *)lua_touserdata(state, 1))->SetVelocity(velocity);
 
 	return 0;
 }

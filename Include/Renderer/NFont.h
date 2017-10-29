@@ -63,7 +63,8 @@ public:
 
 	ENGINE_API FontResource* GetResourceInfo() noexcept { return (FontResource*)_resourceInfo; }
 	ENGINE_API uint32_t GetCharacterHeight() { return _texHeight; }
-	ENGINE_API uint32_t GetTextLength(NString &text);
+	ENGINE_API uint32_t GetTextLength(const char *text);
+	ENGINE_API uint32_t GetTextLength(const NString &text);
 
 	ENGINE_API int SetPixelSize(int pixelSize);
 

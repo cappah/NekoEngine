@@ -43,6 +43,8 @@
 
 struct Ray
 {
+	glm::vec3 start;
+	glm::vec3 end;
 	glm::vec3 hitPoint;
 	glm::vec3 hitNormal;
 	class Object *hitObject;

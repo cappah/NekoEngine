@@ -44,8 +44,8 @@
 #include <Renderer/VKUtil.h>
 #include <Renderer/DebugMarker.h>
 #include <Renderer/PostProcessor.h>
-#include <Engine/CameraManager.h>
 #include <Engine/ResourceManager.h>
+#include <Scene/CameraManager.h>
 
 #define SSAO_MODULE		"SSAO"
 
@@ -58,18 +58,18 @@ vec2 _noise[SSAO_MAX_NOISE];
 
 typedef struct SSAO_DATA
 {
-	mat4 InverseView;
-	mat4 InverseViewProjection;
-	vec4 FrameAndNoise;
-	float KernelSize;
-	float Radius;
-	float PowerExponent;
-	float Threshold;
+	mat4 inverseView;
+	mat4 inverseProjection;
+	vec4 frameAndNoise;
+	float kernelSize;
+	float radius;
+	float powerExponent;
+	float threshold;
 	float zNear;
 	float zFar;
 	int32_t numSamples;
-	float p0;
-	vec4 Kernel[SSAO_MAX_SAMPLES];
+	float bias;
+	vec4 kernel[SSAO_MAX_SAMPLES];
 } SSAODataBlock;
 
 SSAODataBlock _dataBlock;
@@ -96,10 +96,11 @@ int SSAO::Initialize()
 
 	NE_SRANDOM((unsigned int)time(NULL));
 
-	_dataBlock.KernelSize = (float)Engine::GetConfiguration().Renderer.SSAO.KernelSize;
-	_dataBlock.Radius = Engine::GetConfiguration().Renderer.SSAO.Radius;
-	_dataBlock.PowerExponent = Engine::GetConfiguration().Renderer.SSAO.PowerExponent;
-	_dataBlock.Threshold = Engine::GetConfiguration().Renderer.SSAO.Threshold;
+	_dataBlock.kernelSize = (float)Engine::GetConfiguration().Renderer.SSAO.KernelSize;
+	_dataBlock.radius = Engine::GetConfiguration().Renderer.SSAO.Radius;
+	_dataBlock.powerExponent = Engine::GetConfiguration().Renderer.SSAO.PowerExponent;
+	_dataBlock.threshold = Engine::GetConfiguration().Renderer.SSAO.Threshold;
+	_dataBlock.bias = Engine::GetConfiguration().Renderer.SSAO.Bias;
 
 	if (Engine::GetConfiguration().Renderer.SSAO.Multisampling)
 		_dataBlock.numSamples = Engine::GetConfiguration().Renderer.Multisampling ? Engine::GetConfiguration().Renderer.Samples : 1;
@@ -108,15 +109,15 @@ int SSAO::Initialize()
 
 	uniform_real_distribution<float> rd(0.0, 1.0);
 	default_random_engine generator;
-	for (uint32_t i = 0; i < _dataBlock.KernelSize; ++i)
+	for (uint32_t i = 0; i < _dataBlock.kernelSize; ++i)
 	{
 		vec3 sample = vec3(rd(generator) * 2.0 - 1.0, rd(generator) * 2.0 - 1.0, rd(generator));
 		sample = normalize(sample);
 		sample *= rd(generator);
-		float scale = float(i) / _dataBlock.KernelSize;
-		scale = .1f + (scale * scale) * (1.f - .1f);
+		float scale = float(i) / _dataBlock.kernelSize;
+		scale = .1f + (scale * scale) * .9f;
 		sample *= scale;
-		_dataBlock.Kernel[i] = vec4(sample, 0.f);
+		_dataBlock.kernel[i] = vec4(sample, 0.f);
 	}
 	
 	for (uint32_t i = 0; i < 16; i++)
@@ -124,7 +125,7 @@ int SSAO::Initialize()
 
 	_CreateTextures();
 
-	_dataBlock.FrameAndNoise = vec4(Engine::GetScreenWidth(), Engine::GetScreenHeight(), Engine::GetScreenWidth() / (_noiseSize / 4), Engine::GetScreenHeight() / (_noiseSize / 4));
+	_dataBlock.frameAndNoise = vec4(Engine::GetScreenWidth(), Engine::GetScreenHeight(), Engine::GetScreenWidth() / (_noiseSize / 4), Engine::GetScreenHeight() / (_noiseSize / 4));
 
 	if ((_dataBuffer = new Buffer(sizeof(SSAODataBlock), VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT, (uint8_t *)&_dataBlock, VK_NULL_HANDLE, 0, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT)) == nullptr)
 	{ DIE("Out of resources"); }
@@ -160,9 +161,9 @@ VkImageView SSAO::GetAOImageView()
 void SSAO::UpdateData(VkCommandBuffer cmdBuffer) noexcept
 {
 	Camera *cam = CameraManager::GetActiveCamera();
-	_dataBlock.InverseView = inverse(cam->GetView());
-	_dataBlock.InverseViewProjection = inverse(cam->GetProjectionMatrix() * cam->GetView());
-	_dataBlock.FrameAndNoise = vec4(Engine::GetScreenWidth(), Engine::GetScreenHeight(), Engine::GetScreenWidth() / (_noiseSize / 4), Engine::GetScreenHeight() / (_noiseSize / 4));
+	_dataBlock.inverseView = inverse(cam->GetView());
+	_dataBlock.inverseProjection = inverse(cam->GetProjectionMatrix());
+	_dataBlock.frameAndNoise = vec4(Engine::GetScreenWidth(), Engine::GetScreenHeight(), Engine::GetScreenWidth() / (_noiseSize / 4), Engine::GetScreenHeight() / (_noiseSize / 4));
 	_dataBlock.zNear = cam->GetNear();
 	_dataBlock.zFar = cam->GetFar();
 	_dataBuffer->UpdateData((uint8_t *)&_dataBlock, 0, sizeof(SSAODataBlock), cmdBuffer);

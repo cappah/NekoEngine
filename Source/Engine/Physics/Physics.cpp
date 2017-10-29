@@ -88,6 +88,8 @@ void Physics::ReleaseInstance()
 	_instance->Release();
 	delete _instance;
 	_instance = nullptr;
+
+	Logger::Log(PHYSICS_MODULE, LOG_INFORMATION, "Released");
 }
 
 RigidBody::RigidBody() { }

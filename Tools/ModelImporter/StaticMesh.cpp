@@ -74,8 +74,10 @@ bool StaticMesh::ExportBinary(const char *file)
 
 	for(GroupInfo &gi : _groups)
 	{
-		gzwrite(fp, &gi.offset, sizeof(uint32_t));
-		gzwrite(fp, &gi.count, sizeof(uint32_t));
+		gzwrite(fp, &gi.vertexOffset, sizeof(uint32_t));
+		gzwrite(fp, &gi.vertexCount, sizeof(uint32_t));
+		gzwrite(fp, &gi.indexOffset, sizeof(uint32_t));
+		gzwrite(fp, &gi.indexCount, sizeof(uint32_t));
 	}
 
 	gzwrite(fp, BIN_FOOTER, 7);

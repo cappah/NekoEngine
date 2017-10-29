@@ -63,6 +63,7 @@ public:
 	ENGINE_API Skeleton(std::vector<Bone> &bones, std::vector<TransformNode> &nodes, glm::dmat4 &globalInverseTransform) noexcept;
 	
 	ENGINE_API Buffer *GetBuffer() { return _buffer; }
+	ENGINE_API AnimationClip *GetAnimationClip() noexcept { return _animationClip; }
 
 	ENGINE_API void SetAnimationClip(AnimationClip *clip) noexcept { _animationClip = clip; };
 	ENGINE_API int Load();

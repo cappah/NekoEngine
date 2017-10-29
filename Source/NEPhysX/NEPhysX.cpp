@@ -114,7 +114,7 @@ int InitScene(BroadphaseType broadphase, double sceneSize, uint32_t maxObjects)
 	return ENGINE_OK;
 }
 
-BoxCollider *NEPhysX::CreateBoxCollider(Object *parent, glm::vec3 &halfExtents)
+BoxCollider *NEPhysX::CreateBoxCollider(Object *parent, const glm::vec3 &halfExtents)
 {
 	return nullptr;
 }
@@ -132,6 +132,16 @@ CapsuleCollider *NEPhysX::CreateCapsuleCollider(Object *parent, double radius, d
 MeshCollider *NEPhysX::CreateMeshCollider(Object *parent, const StaticMesh *mesh)
 {
 	return nullptr;
+}
+
+bool NEPhysX::RayCast(Ray *ray)
+{
+	return false;
+}
+
+bool NEPhysX::ScreenRayCast(Ray *ray, glm::vec2 &screenCoords, float distance)
+{
+	return false;
 }
 
 void NEPhysX::Update(double deltaTime)

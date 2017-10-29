@@ -50,10 +50,12 @@ public:
 
 	ENGINE_API virtual int Load() override;
 	
+	ENGINE_API AudioSource *GetAudioSource() { return _src; }
+
 	ENGINE_API void PlayDefaultClip() noexcept;
 	ENGINE_API void PlayClip(AudioClip *clip) noexcept;
-	
-	ENGINE_API virtual void Update(double deltaTime) noexcept override;
+
+	ENGINE_API virtual void UpdatePosition() noexcept override;
 
 	ENGINE_API virtual bool Unload() override;
 	ENGINE_API virtual bool CanUnload() override { return !_src->IsPlaying(); }

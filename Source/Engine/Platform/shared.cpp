@@ -235,9 +235,19 @@ size_t Platform::GetConfigSection(const char *section, char *out, size_t size, c
 	return offset;
 }
 
-int Platform::Rand()
+uint32_t Platform::Rand()
 {
 	return NE_RANDOM();
+}
+
+uint32_t Platform::RandRange(uint32_t max)
+{
+	return NE_RANDOM() % max;
+}
+
+float Platform::RandRange(float max)
+{
+	return (float)NE_RANDOM() / (float)(RAND_MAX / max);
 }
 
 void Platform::Exit()
@@ -283,9 +293,9 @@ void CrashHandler::SaveCrashDump(void *params)
 	fprintf(fp, "NumberOfProcessors: %d\n\n", Platform::GetNumberOfProcessors());
 
 	fprintf(fp, "Memory --------------------------------\n");
-	fprintf(fp, "TotalSystemMemory: %lu KB\n", Platform::GetTotalSystemMemory());
-	fprintf(fp, "FreeSystemMemory:  %lu KB\n", Platform::GetFreeSystemMemory());
-	fprintf(fp, "ProcessMemory:     %lu KB\n\n", Platform::GetProcessMemory());
+	fprintf(fp, "TotalSystemMemory: %lu KB\n", Platform::GetTotalSystemMemory() /1024);
+	fprintf(fp, "FreeSystemMemory:  %lu KB\n", Platform::GetFreeSystemMemory() / 1024);
+	fprintf(fp, "ProcessMemory:     %lu KB\n\n", Platform::GetProcessMemory() / 1024);
 
 	fprintf(fp, "Graphics Device -----------------------\n");
 	fprintf(fp, "Device: %s\n", Renderer::GetInstance()->GetDeviceName());

@@ -38,7 +38,10 @@
  */
 
 #include <Engine/EventManager.h>
+#include <System/Logger.h>
 #include <Script/Interface/EventManagerInterface.h>
+
+#define EVT_MGR_IFACE_MODULE	"EventManagerInterface"
 
 void EventManagerInterface::Register(lua_State *state)
 {
@@ -63,9 +66,15 @@ int EventManagerInterface::RegisterHandler(lua_State *state)
 
 	lua_pushinteger(state, EventManager::RegisterHandler((int32_t)lua_tointeger(state, 1), [state, funcRef](int32_t event, void *eventArgs) {
 		lua_rawgeti(state, LUA_REGISTRYINDEX, funcRef);
+
 		lua_pushinteger(state, event);
 		lua_pushlightuserdata(state, eventArgs);
-		lua_pcall(state, 2, 0, 0);
+		if (lua_pcall(state, 2, 0, 0) && lua_gettop(state))
+		{
+			Logger::Log(EVT_MGR_IFACE_MODULE, LOG_CRITICAL, "Failed to execute lua handler function for event %d: %s", event, lua_tostring(state, -1));
+			Logger::Log(EVT_MGR_IFACE_MODULE, LOG_DEBUG, "\n%s", *Script::StackDump(state));
+			lua_pop(state, 1);
+		}
 	}));
 
 	return 1;

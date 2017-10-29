@@ -113,44 +113,36 @@ float easeInOut(uint curveId, float val)
 
 void main()
 {
-	if (emitterData.enable != 1 || emitterData.deltaTime < 0.0)
+	if (emitterData.currentParticles == 0)
 		return;
 
-	uint particleId = gl_GlobalInvocationID.x;
+	uint index = uint(gl_GlobalInvocationID.x);
 
-	if (particleId >= emitterData.currentParticles || particleBuffer.data[particleId].positionAndAge.w < 0.0)
+	if (index >= emitterData.maxParticles || particleBuffer.data[index].positionAndAge.w < 0.0)
 		return;
 
-	particleBuffer.data[particleId].positionAndAge.w += emitterData.deltaTime;
-	if (particleBuffer.data[particleId].positionAndAge.w < emitterData.positionAndLifespan.w)
-	{
-		float val = easeInOut(emitterData.velocityCurve, 1.0 * particleBuffer.data[particleId].positionAndAge.w / emitterData.positionAndLifespan.w);
-		particleBuffer.data[particleId].positionAndAge.xyz = mix(particleBuffer.data[particleId].positionAndAge.xyz, particleBuffer.data[particleId].destinationAndSize.xyz, vec3(val));
+	barrier();
+	
+	float val = easeInOut(emitterData.velocityCurve, 1.0 * particleBuffer.data[index].positionAndAge.w / emitterData.positionAndLifespan.w);
+	particleBuffer.data[index].positionAndAge.xyz = mix(particleBuffer.data[index].positionAndAge.xyz, particleBuffer.data[index].destinationAndSize.xyz, vec3(val));
 
-		val = easeInOut(emitterData.sizeCurve, 1.0 * particleBuffer.data[particleId].positionAndAge.w / emitterData.positionAndLifespan.w);
-		particleBuffer.data[particleId].destinationAndSize.w = mix(particleBuffer.data[particleId].destinationAndSize.w, emitterData.scaleAndFinalSize.w, val);
+	val = easeInOut(emitterData.sizeCurve, 1.0 * particleBuffer.data[index].positionAndAge.w / emitterData.positionAndLifespan.w);
+	particleBuffer.data[index].destinationAndSize.w = mix(particleBuffer.data[index].destinationAndSize.w, emitterData.scaleAndFinalSize.w, val);
 
-		val = easeInOut(emitterData.colorCurve, 1.0 * particleBuffer.data[particleId].positionAndAge.w / emitterData.positionAndLifespan.w);
-		particleBuffer.data[particleId].color = mix(particleBuffer.data[particleId].color, emitterData.finalColor, vec4(val));
-	}
-	else
-	{
-		particleBuffer.data[particleId].positionAndAge.w = -1.0;
-		atomicAdd(emitterData.currentParticles, -1);
-		atomicMax(emitterData.currentParticles, 0);
-	}
+	val = easeInOut(emitterData.colorCurve, 1.0 * particleBuffer.data[index].positionAndAge.w / emitterData.positionAndLifespan.w);
+	particleBuffer.data[index].color = mix(particleBuffer.data[index].color, emitterData.finalColor, vec4(val));
+
+	particleBuffer.data[index].positionAndAge.w += emitterData.deltaTime;
 
 	memoryBarrier(); barrier();
 
-	if (gl_GlobalInvocationID.x == 0)
+	if (particleBuffer.data[index].positionAndAge.w > emitterData.positionAndLifespan.w)
 	{
-		// disable updates
-		emitterData.deltaTime = -1.0;
-
-		// build draw command
-		drawIndirect.vertexCount = emitterData.currentParticles;
-		drawIndirect.instanceCount = 1;
-		drawIndirect.firstVertex = 0;
-		drawIndirect.firstInstance = 0;
+		barrier();
+		particleBuffer.data[index].positionAndAge.w = -1.0;
+		atomicAdd(emitterData.currentParticles, -1);
+		memoryBarrier(); barrier();
 	}
+
+	barrier();
 }

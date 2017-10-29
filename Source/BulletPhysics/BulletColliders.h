@@ -47,15 +47,15 @@
 class BulletBoxCollider : public BoxCollider
 {
 public:
-	BulletBoxCollider(Object *parent, glm::vec3 &halfExtents);
+	BulletBoxCollider(Object *parent, const glm::vec3 &halfExtents);
 
 	btCollisionObject *GetCollisionObject() { return _object; }
 
-	virtual void SetHalfExtents(glm::vec3 &halfExtents) override;
+	virtual void SetHalfExtents(const glm::vec3 &halfExtents) override;
 
-	virtual void SetPosition(glm::vec3 &position) override;
-	virtual void SetRotation(glm::quat &rotation) override;
-	virtual void SetScale(glm::vec3 &scale) override;
+	virtual void SetPosition(const glm::vec3 &position) override;
+	virtual void SetRotation(const glm::quat &rotation) override;
+	virtual void SetScale(const glm::vec3 &scale) override;
 
 	virtual ~BulletBoxCollider();
 
@@ -73,9 +73,9 @@ public:
 
 	virtual void SetRadius(double radius) override;
 
-	virtual void SetPosition(glm::vec3 &position) override;
-	virtual void SetRotation(glm::quat &rotation) override;
-	virtual void SetScale(glm::vec3 &scale) override;
+	virtual void SetPosition(const glm::vec3 &position) override;
+	virtual void SetRotation(const glm::quat &rotation) override;
+	virtual void SetScale(const glm::vec3 &scale) override;
 
 	virtual ~BulletSphereCollider();
 
@@ -95,9 +95,9 @@ public:
 	virtual void SetHeight(double height) override;
 	virtual void SetRadiusAndHeight(double radius, double height) override;
 
-	virtual void SetPosition(glm::vec3 &position) override;
-	virtual void SetRotation(glm::quat &rotation) override;
-	virtual void SetScale(glm::vec3 &scale) override;
+	virtual void SetPosition(const glm::vec3 &position) override;
+	virtual void SetRotation(const glm::quat &rotation) override;
+	virtual void SetScale(const glm::vec3 &scale) override;
 
 	virtual ~BulletCapsuleCollider();
 
@@ -115,15 +115,14 @@ public:
 
 	virtual void SetMesh(const StaticMesh *mesh) override;
 
-	virtual void SetPosition(glm::vec3 &position) override;
-	virtual void SetRotation(glm::quat &rotation) override;
-	virtual void SetScale(glm::vec3 &scale) override;
+	virtual void SetPosition(const glm::vec3 &position) override;
+	virtual void SetRotation(const glm::quat &rotation) override;
+	virtual void SetScale(const glm::vec3 &scale) override;
 
 	virtual ~BulletMeshCollider();
 
 private:
 	btTriangleIndexVertexArray *_ivArray;
-	btBvhTriangleMeshShape *_shape;
+	btConvexTriangleMeshShape *_shape;
 	btCollisionObject *_object;	
-	class StaticMeshStrider *_strider;
 };

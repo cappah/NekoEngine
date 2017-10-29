@@ -40,18 +40,18 @@
 #include <chrono>
 
 #include <GUI/GUI.h>
+#include <Input/Input.h>
 #include <Engine/Debug.h>
-#include <Engine/Input.h>
 #include <Engine/Engine.h>
 #include <Engine/Console.h>
 #include <Engine/Version.h>
 #include <Engine/GameModule.h>
 #include <Engine/SoundManager.h>
-#include <Engine/SceneManager.h>
 #include <Engine/ResourceManager.h>
 #include <Renderer/SSAO.h>
 #include <Renderer/Renderer.h>
 #include <Renderer/PostProcessor.h>
+#include <Scene/SceneManager.h>
 #include <Profiler/Profiler.h>
 #include <Platform/Platform.h>
 #include <Platform/CrashHandler.h>
@@ -63,25 +63,26 @@
 using namespace std;
 using namespace std::chrono;
 
-#define INI_BUFF_SZ		4096
+#define INI_BUFF_SZ				4096
 #define VFS_ARCHIVE_LIST_SIZE	4096
 
-#define ENGINE_MODULE	"Engine"
+#define ENGINE_MODULE			"Engine"
 
 extern high_resolution_clock::time_point _prevTime;
 extern PlatformWindowType _engineWindow;
 extern bool _graphicsDebug;
+extern char *_configFilePath;
+extern char _gameModuleFile[NE_PATH_SIZE];
+extern char _physicsModuleFile[NE_PATH_SIZE];
+extern char _audioSystemModuleFile[NE_PATH_SIZE];
+extern NString _vfsArchiveList;
 
-static NString _vfsArchiveList(VFS_ARCHIVE_LIST_SIZE);
 static bool _enableValidation = false;
-static char _gameModuleFile[NE_PATH_SIZE]{ '\0' };
-static char _physicsModuleFile[NE_PATH_SIZE]{ '\0' };
-static char _audioSystemModuleFile[NE_PATH_SIZE]{ '\0' };
 
 int Engine::Initialize(const char *cmdLine, bool editor)
 {
 	int ret = ENGINE_FAIL;
-	
+
 	DBG_SET_THREAD_NAME("Main Thread");
 
 	if (CrashHandler::Initialize() != ENGINE_OK)
@@ -96,8 +97,7 @@ int Engine::Initialize(const char *cmdLine, bool editor)
 	if (!_iniFileLoaded)
 		_ReadINIFile("./Engine.ini");
 
-	if (_config.Renderer.Supersampling)
-	{
+	if (_config.Renderer.Supersampling) {
 		const float numPixels = (_config.Engine.ScreenWidth * _config.Engine.ScreenHeight) * 2.f;
 		const float wRatio = (float)_config.Engine.ScreenWidth / (float)_config.Engine.ScreenHeight;
 		const float hRatio = (float)_config.Engine.ScreenHeight / (float)_config.Engine.ScreenWidth;
@@ -124,6 +124,8 @@ int Engine::Initialize(const char *cmdLine, bool editor)
 	Logger::Log(ENGINE_MODULE, LOG_INFORMATION, "Platform version: %s", Platform::GetVersion());
 	Logger::Log(ENGINE_MODULE, LOG_INFORMATION, "Machine name: %s", Platform::GetMachineName());
 	Logger::Log(ENGINE_MODULE, LOG_INFORMATION, "Architecture: %s", Platform::GetMachineArchitecture());
+	Logger::Log(ENGINE_MODULE, LOG_INFORMATION, "Processor: %s", Platform::GetProcessorName());
+	Logger::Log(ENGINE_MODULE, LOG_INFORMATION, "Memory: %.02f GB", (double)Platform::GetTotalSystemMemory() / 1024.0 / 1024.0 / 1024.0);
 
 	_engineWindow = Platform::CreateWindow(_config.Engine.ScreenWidth, _config.Engine.ScreenHeight, _config.Engine.Fullscreen);
 
@@ -362,18 +364,19 @@ void Engine::_ReadINIFile(const char *file)
 	_config.Renderer.TextureQuality = Platform::GetConfigInt("Renderer", "iTextureQuality", 2, file);
 	_config.Renderer.ShadowMapSize = Platform::GetConfigInt("Renderer", "iShadowMapSize", 1024, file);
 	_config.Renderer.MaxLights = Platform::GetConfigInt("Renderer", "iMaxLights", 1024, file);
-	_config.Renderer.ShadowMapSize = Platform::GetConfigInt("Renderer", "iShadowMapSize", 1024, file);
 	_config.Renderer.MaxShadowMaps = Platform::GetConfigInt("Renderer", "iMaxShadowMaps", 64, file);
 	_config.Renderer.ShadowMultisampling = Platform::GetConfigInt("Renderer", "bShadowMultisampling", 1, file) != 0;
 	_config.Renderer.ShadowSamples = Platform::GetConfigInt("Renderer", "iShadowSamples", 4, file);
 	_config.Renderer.EnableAsyncCompute = Platform::GetConfigInt("Renderer", "bEnableAsyncCompute", 0, file) != 0;
 	_config.Renderer.Gamma = Platform::GetConfigFloat("Renderer", "fGamma", 2.2f, file);
+	_config.Renderer.UseDeviceGroup = Platform::GetConfigInt("Renderer", "bUseDeviceGroup", 0, file) != 0;
 
 	_config.Renderer.SSAO.Enable = Platform::GetConfigInt("Renderer.SSAO", "bEnable", 1, file) != 0;
-	_config.Renderer.SSAO.KernelSize = Platform::GetConfigInt("Renderer", "iKernelSize", 128, file);
-	_config.Renderer.SSAO.Radius = Platform::GetConfigFloat("Renderer", "fRadius", 8.f, file);
-	_config.Renderer.SSAO.PowerExponent = Platform::GetConfigFloat("Renderer", "fPowerExponent", 4.f, file);
-	_config.Renderer.SSAO.Threshold = Platform::GetConfigFloat("Renderer", "fThreshold", .05f, file);
+	_config.Renderer.SSAO.KernelSize = Platform::GetConfigInt("Renderer.SSAO", "iKernelSize", 128, file);
+	_config.Renderer.SSAO.Radius = Platform::GetConfigFloat("Renderer.SSAO", "fRadius", 8.f, file);
+	_config.Renderer.SSAO.PowerExponent = Platform::GetConfigFloat("Renderer.SSAO", "fPowerExponent", 2.f, file);
+	_config.Renderer.SSAO.Threshold = Platform::GetConfigFloat("Renderer.SSAO", "fThreshold", .05f, file);
+	_config.Renderer.SSAO.Bias = Platform::GetConfigFloat("Renderer.SSAO", "fBias", .025f, file);
 	_config.Renderer.SSAO.Multisampling = Platform::GetConfigInt("Renderer.SSAO", "bMultisampling", 0, file) != 0;
 
 	_config.PostProcessor.Bloom = Platform::GetConfigInt("PostProcessor", "bBloom", 1, file) != 0;
@@ -381,10 +384,15 @@ void Engine::_ReadINIFile(const char *file)
 	_config.PostProcessor.DepthOfField = Platform::GetConfigInt("PostProcessor", "bDepthOfField", 1, file) != 0;
 	_config.PostProcessor.FilmGrain = Platform::GetConfigInt("PostProcessor", "bFilmGrain", 1, file) != 0;
 
+	_config.Audio.MasterVolume = Platform::GetConfigFloat("Audio", "fMasterVolume", 1.f, file);
+	_config.Audio.EffectsVolume = Platform::GetConfigFloat("Audio", "fEffectsVolume", 1.f, file);
+	_config.Audio.MusicVolume = Platform::GetConfigFloat("Audio", "fMusicVolume", 1.f, file);
+
 	_ReadInputConfig(file);
 	_ReadRendererConfig(file);
 
 	_iniFileLoaded = true;
+	_configFilePath = strdup(file);
 
 	memset(buff, 0x0, INI_BUFF_SZ);
 }

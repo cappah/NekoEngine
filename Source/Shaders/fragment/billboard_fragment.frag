@@ -45,7 +45,7 @@ layout(location = 0) in vec2 v_uv;
 layout(location = 1) in vec4 v_color;
 
 layout(location = 0) out vec4 o_FragColor;
-layout(location = 1) out vec4 o_NormalBright;
+layout(location = 1) out vec4 o_Brightness;
 
 layout(set = 0, binding = 1) uniform sampler2DArray u_textureArray;
 
@@ -60,5 +60,5 @@ void main()
 {
 	vec3 texCoords = vec3(v_uv, 0.0);
 	o_FragColor = texture(u_textureArray, texCoords) * v_color;
-	o_NormalBright = vec4(0.0);
+	o_Brightness = vec4(0.0);
 }

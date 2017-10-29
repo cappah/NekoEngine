@@ -500,7 +500,7 @@ Texture *Texture::CreateDepthStencilTarget()
 
 Texture::~Texture() noexcept
 {
-	if (_ownMemory)
+	if (_ownMemory && _imageMemory != VK_NULL_HANDLE)
 		vkFreeMemory(VKUtil::GetDevice(), _imageMemory, VKUtil::GetAllocator());
 
 	if (_image != VK_NULL_HANDLE)

@@ -75,16 +75,22 @@ public:
 	virtual NArray<Drawable> *GetDrawables() noexcept { return nullptr; }
 	
 	virtual void SetParent(class Object *obj) { _parent = obj; }
-	virtual void SetPosition(glm::vec3 &position) noexcept { _position = position; }
-	virtual void SetRotation(glm::vec3 &rotation) noexcept { _rotation = rotation; }
-	virtual void SetScale(glm::vec3 &scale) noexcept { _scale = scale; }
+	virtual void SetPosition(glm::vec3 &position) noexcept;
+	virtual void SetRotation(glm::vec3 &rotation) noexcept;
+	virtual void SetScale(glm::vec3 &scale) noexcept;
+
+	virtual bool IsVisible() const noexcept { return _visible; }
+	virtual void SetVisible(bool visible) noexcept { _visible = visible; }
 
 	virtual void Enable(bool enable) { _enabled = enable; }
 	virtual bool IsEnabled() const { return _enabled; }
 
+	virtual void AttachToCamera(bool attach) { _attachedToCamera = attach; }
+	virtual bool IsAttachedToCamera() const { return _attachedToCamera; }
+
 	virtual int Load() { _loaded = true; return ENGINE_OK; }
 	virtual int CreateBuffers() { return ENGINE_OK; }
-	virtual int InitializeComponent() { return ENGINE_OK; }
+	virtual int InitializeComponent();
 	virtual bool Upload(Buffer *buffer) { (void)buffer; return true; }
 	virtual void Update(double deltaTime) noexcept { (void)deltaTime; }
 	virtual void UpdatePosition() noexcept { }
@@ -105,8 +111,8 @@ public:
 
 protected:
 	class Object *_parent;
-	bool _loaded, _enabled;
-	glm::vec3 _position, _rotation, _scale;
+	bool _loaded, _enabled, _visible, _attachedToCamera;
+	glm::vec3 _position, _rotation, _scale, _worldPosition, _worldRotation, _worldScale;
 
 	VkCommandBuffer _cmdBuffer;
 };

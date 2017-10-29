@@ -50,9 +50,22 @@ public:
 	ENGINE_API AnimatorComponent(ComponentInitializer *initializer);
 
 	ENGINE_API virtual int Load() override;
+
+	ENGINE_API bool IsPlaying() { return _playing; }
+	ENGINE_API bool IsOneShot() { return _oneShot; }
 	
-	ENGINE_API void PlayDefaultAnimation() noexcept;
-	ENGINE_API void PlayAnimation(AnimationClip *clip) noexcept;
+	ENGINE_API void PlayDefaultAnimation(bool loop = true) noexcept;
+	ENGINE_API void PlayAnimation(AnimationClip *clip, bool loop = true) noexcept;
+	ENGINE_API void PlayOneShot(AnimationClip *clip) noexcept
+	{
+		if (_skeleton->GetAnimationClip() == clip)
+			return;
+		
+		_prevClip = _skeleton->GetAnimationClip();
+		_prevLoop = _loop;
+		PlayAnimation(clip, false);
+		_oneShot = true;
+	}
 	
 	ENGINE_API virtual void Update(double deltaTime) noexcept override;
 	ENGINE_API void UpdateData(VkCommandBuffer commandBuffer) noexcept override;
@@ -67,7 +80,12 @@ protected:
 	std::string _defaultAnimId;
 	std::string _targetMesh;
 	double _currentTime;
+	bool _playing;
+	bool _loop;
+	bool _prevLoop;
+	bool _oneShot;
 	
 	Skeleton *_skeleton;
 	AnimationClip *_defaultAnim;
+	AnimationClip *_prevClip;
 };

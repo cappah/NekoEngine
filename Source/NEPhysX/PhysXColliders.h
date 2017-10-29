@@ -44,7 +44,7 @@
 #include <Physics/Collider.h>
 #include <Renderer/StaticMesh.h>
 
-class PhysXBoxCollider : public BoxCollider
+/*class PhysXBoxCollider : public BoxCollider
 {
 public:
 	PhysXBoxCollider(Object *parent, glm::vec3 &halfExtents);
@@ -123,4 +123,4 @@ public:
 private:
 	PxShape *_shape;
 //	btCollisionObject *_object;	
-};
+};*/

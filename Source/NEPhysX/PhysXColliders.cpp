@@ -39,7 +39,7 @@
 
 #include "PhysXColliders.h"
 
-PhysXBoxCollider::PhysXBoxCollider(Object *parent, glm::vec3 &halfExtents) :
+/*PhysXBoxCollider::PhysXBoxCollider(Object *parent, glm::vec3 &halfExtents) :
 	BoxCollider(parent, halfExtents)
 {
 	//
@@ -176,4 +176,4 @@ void PhysXMeshCollider::SetScale(glm::vec3 &scale)
 PhysXMeshCollider::~PhysXMeshCollider()
 {
 	//
-}
+}*/

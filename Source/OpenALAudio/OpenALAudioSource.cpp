@@ -104,11 +104,12 @@ void OpenALAudioSource::SetReferenceDistance(float referenceDistance) noexcept
 	alSourcef(_src, AL_REFERENCE_DISTANCE, referenceDistance);
 }
 
-
 int OpenALAudioSource::SetClip(AudioClip *clip) noexcept
 {
 	if (!clip)
 		return ENGINE_INVALID_ARGS;
+
+	alSourceStop(_src);
 
 	_clip = clip;
 

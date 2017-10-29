@@ -38,8 +38,8 @@
  */
 
 #include <Scene/Object.h>
+#include <Scene/CameraManager.h>
 #include <Scene/Components/SkysphereComponent.h>
-#include <Engine/CameraManager.h>
 
 using namespace glm;
 
@@ -53,7 +53,6 @@ SkysphereComponent::SkysphereComponent(ComponentInitializer *initializer) :
 
 void SkysphereComponent::UpdateData(VkCommandBuffer commandBuffer) noexcept
 {
-	//StaticMeshComponent::UpdateData(commandBuffer);
 	Camera *cam = CameraManager::GetActiveCamera();
 
 	_objectData.model = _parent->GetModelMatrix();

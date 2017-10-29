@@ -68,6 +68,8 @@ public:
 	ENGINE_API static int RegisterControl(class Control *ctl);
 	ENGINE_API static void RegisterFont(class NFont *font);
 
+	ENGINE_API static void UnregisterControl(class Control *ctl);
+
 	static void ScreenResized();
 
 	static void Release();

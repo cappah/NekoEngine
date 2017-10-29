@@ -170,6 +170,7 @@ public:
 	void AddComputeCommandBuffer(VkCommandBuffer buffer) { _computeCommandBuffers.Add(buffer); }
 	void RemoveComputeCommandBuffer(VkCommandBuffer buffer) { size_t id = _computeCommandBuffers.Find(buffer); if(id != NArray<VkCommandBuffer>::NotFound) _computeCommandBuffers.Remove(id); }
 
+	void ResetComputeCommandBuffers() { _computeCommandBuffers.Clear(false); _computeCommandBuffers.Add(_cullingCommandBuffer); }
 	void ResetDepthCommandBuffers() { _secondaryDepthCommandBuffers.Clear(false); }
 	void ResetSceneCommandBuffers() { _secondarySceneCommandBuffers.Clear(false); }
 	void ResetGUICommandBuffers() { _secondaryGuiCommandBuffers.Clear(false); }

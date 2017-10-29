@@ -37,13 +37,16 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <errno.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <dlfcn.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/vfs.h>
 #include <sys/signal.h>
 #include <sys/utsname.h>
+#include <System/Logger.h>
 #include <Platform/Platform.h>
 
 #include <string>
@@ -51,6 +54,10 @@
 using namespace std;
 
 static struct utsname uname_data;
+static string _nix_cpuName{};
+extern char *ne_executable_name;
+
+#define NIX_PLATFORM_MODULE	"Unix_Platform"
 
 int Platform::Initialize()
 {
@@ -83,8 +90,35 @@ const char *Platform::GetVersion()
 
 const char *Platform::GetProcessorName()
 {
-	// cat /proc/cpuinfo ?
-	return "CPU";
+	char buff[512]{};
+
+	if (_nix_cpuName.length())
+		return _nix_cpuName.c_str();
+
+	FILE *fp{ fopen("/proc/cpuinfo", "r") };
+	if (!fp)
+	{
+		_nix_cpuName = "Unknown";
+		return "Unkown";
+	}
+
+	while (fgets(buff, 512, fp))
+	{
+		if (strstr(buff, "model name"))
+		{
+			char *ptr{ strchr(buff, ':') };
+			if (!ptr)
+				_nix_cpuName = "Unknown";
+			else
+				_nix_cpuName = (ptr + 2);
+			break;
+		}
+		memset(buff, 0x0, 512);
+	}
+
+	fclose(fp);
+
+	return _nix_cpuName.c_str();
 }
 
 uint32_t Platform::GetProcessorFrequency()
@@ -104,17 +138,24 @@ uint64_t Platform::GetProcessMemory()
 
 uint64_t Platform::GetUsedSystemMemory()
 {
-	return 0;
+	long pages{ sysconf(_SC_PHYS_PAGES) };
+	long avPages{ sysconf(_SC_AVPHYS_PAGES) };
+	long pageSize{ sysconf(_SC_PAGE_SIZE) };
+	return (pages * pageSize) - (avPages * pageSize);
 }
 
 uint64_t Platform::GetFreeSystemMemory()
 {
-	return 0;
+	long pages{ sysconf(_SC_AVPHYS_PAGES) };
+	long pageSize{ sysconf(_SC_PAGE_SIZE) };
+	return pages * pageSize;
 }
 
 uint64_t Platform::GetTotalSystemMemory()
 {
-	return 0;
+	long pages{ sysconf(_SC_PHYS_PAGES) };
+	long pageSize{ sysconf(_SC_PAGE_SIZE) };
+	return pages * pageSize;
 }
 
 PlatformModuleType Platform::LoadModule(const char* module)
@@ -180,7 +221,27 @@ void Platform::USleep(uint32_t microseconds)
 	(void)usleep(microseconds);
 }
 
+void Platform::Restart()
+{
+	pid_t child = fork();
+
+	if (child < 0)
+	{
+		Logger::Log(NIX_PLATFORM_MODULE, LOG_CRITICAL, "fork() failed, errno: %d", errno);
+		Terminate();
+	}
+
+	if (!child) Terminate();
+
+	execl(ne_executable_name, "", NULL);
+
+	// execl never returns
+	// if we are here, an error has occured
+	Logger::Log(NIX_PLATFORM_MODULE, LOG_CRITICAL, "execl() failed, errno: %d", errno);
+	Terminate();
+}
+
 void Platform::Terminate()
 {
-	kill(getpid(), SIGKILL);
+	raise(SIGKILL);
 }

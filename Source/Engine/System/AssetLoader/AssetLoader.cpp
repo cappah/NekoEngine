@@ -150,6 +150,8 @@ int AssetLoader::LoadStaticMesh(NString &file,
 			ret = _LoadStaticMeshV2(f, vertices, indices, groups, false);
 		else if (!strncmp(idBuff, NMESH2A_HEADER, 7))
 			ret = _LoadStaticMeshV2(f, vertices, indices, groups, true);
+		else if (!strncmp(idBuff, NMESH2B_HEADER, 7))
+			ret = _LoadStaticMeshV2B(f, vertices, indices, groups);
 		else
 		{
 			f->Close();
@@ -175,9 +177,28 @@ int AssetLoader::_LoadStaticMeshV2(VFSFile *file,
 	uint32_t num{ 0 };
 	char idBuff[8]{ 0x0 };
 
+	struct Vertex32
+	{
+		vec3 position;
+		vec2 uv;
+		vec3 normal;
+		vec3 tangent;
+	};
+	vector<Vertex32> vertices32{};
+
 	file->Read(&num, sizeof(uint32_t), 1);
-	vertices.resize(num);
-	file->Read(vertices.data(), sizeof(Vertex), num);
+	vertices32.resize(num);
+	file->Read(vertices32.data(), sizeof(Vertex32), num);
+
+	for (Vertex32 &v32 : vertices32)
+	{
+		Vertex v{};
+		v.position = v32.position;
+		v.uv = v32.uv;
+		v.normal = v32.normal;
+		v.tangent = v32.tangent;
+		vertices.push_back(v);
+	}
 
 	file->Read(&num, sizeof(uint32_t), 1);
 	indices.resize(num);
@@ -195,6 +216,45 @@ int AssetLoader::_LoadStaticMeshV2(VFSFile *file,
 			file->Read(&group.vertexCount, sizeof(uint32_t), 1);
 		}
 
+		file->Read(&group.indexOffset, sizeof(uint32_t), 1);
+		file->Read(&group.indexCount, sizeof(uint32_t), 1);
+
+		groups.push_back(group);
+	}
+
+	file->Read(idBuff, sizeof(char), 7);
+	idBuff[7] = 0x0;
+
+	if (strncmp(idBuff, NMESH2_FOOTER, 7))
+		Logger::Log(AL_MODULE, LOG_WARNING, "Extra data in StaticMesh file %s", file->GetHeader().name);
+
+	return ENGINE_OK;
+}
+
+int AssetLoader::_LoadStaticMeshV2B(VFSFile *file,
+	vector<Vertex> &vertices,
+	vector<uint32_t> &indices,
+	vector<MeshGroup> &groups)
+{
+	uint32_t num{ 0 };
+	char idBuff[8]{ 0x0 };
+
+	file->Read(&num, sizeof(uint32_t), 1);
+	vertices.resize(num);
+	file->Read(vertices.data(), sizeof(Vertex), num);
+
+	file->Read(&num, sizeof(uint32_t), 1);
+	indices.resize(num);
+	file->Read(indices.data(), sizeof(uint32_t), num);
+
+	file->Read(&num, sizeof(uint32_t), 1);
+
+	for (uint32_t i = 0; i < num; ++i)
+	{
+		MeshGroup group{};
+
+		file->Read(&group.vertexOffset, sizeof(uint32_t), 1);
+		file->Read(&group.vertexCount, sizeof(uint32_t), 1);
 		file->Read(&group.indexOffset, sizeof(uint32_t), 1);
 		file->Read(&group.indexCount, sizeof(uint32_t), 1);
 
@@ -247,6 +307,8 @@ int AssetLoader::LoadSkeletalMesh(NString &file,
 			ret = _LoadSkeletalMeshV2(f, vertices, indices, groups, bones, nodes, globalInverseTransform, false);
 		else if (!strncmp(idBuff, NMESH2A_HEADER, 7))
 			ret = _LoadSkeletalMeshV2(f, vertices, indices, groups, bones, nodes, globalInverseTransform, true);
+		else if (!strncmp(idBuff, NMESH2B_HEADER, 7))
+			ret = _LoadSkeletalMeshV2B(f, vertices, indices, groups, bones, nodes, globalInverseTransform);
 		else
 		{
 			f->Close();
@@ -275,9 +337,34 @@ int AssetLoader::_LoadSkeletalMeshV2(VFSFile *file,
 	uint32_t num{ 0 };
 	char idBuff[8]{ 0x0 };
 
+	struct SkeletalVertex32
+	{
+		vec3 position;
+		vec2 uv;
+		vec3 normal;
+		vec3 tangent;
+		ivec4 boneIndices;
+		vec4 boneWeights;
+		int32_t numBones;
+	};
+	vector<SkeletalVertex32> vertices32{};
+
 	file->Read(&num, sizeof(uint32_t), 1);
-	vertices.resize(num);
-	file->Read(vertices.data(), sizeof(SkeletalVertex), num);
+	vertices32.resize(num);
+	file->Read(vertices32.data(), sizeof(SkeletalVertex32), num);
+
+	for (SkeletalVertex32 &v32 : vertices32)
+	{
+		SkeletalVertex v{};
+		v.position = v32.position;
+		v.uv = v32.uv;
+		v.normal = v32.normal;
+		v.tangent = v32.tangent;
+		v.boneIndices = v32.boneIndices;
+		v.boneWeights = v32.boneWeights;
+		v.numBones = v32.numBones;
+		vertices.push_back(v);
+	}
 
 	file->Read(&num, sizeof(uint32_t), 1);
 	indices.resize(num);
@@ -332,6 +419,88 @@ int AssetLoader::_LoadSkeletalMeshV2(VFSFile *file,
 		file->Read(&node.parentId, sizeof(uint16_t), 1);
 		file->Read(&node.numChildren, sizeof(uint16_t), 1);
 		
+		for (uint16_t j = 0; j < node.numChildren; ++j)
+		{
+			file->Read(&id, sizeof(uint16_t), 1);
+			node.childrenIds.push_back(id);
+		}
+
+		nodes.push_back(node);
+	}
+
+	file->Read(idBuff, sizeof(char), 7);
+	idBuff[7] = 0x0;
+
+	if (strncmp(idBuff, NMESH2_FOOTER, 7))
+		Logger::Log(AL_MODULE, LOG_WARNING, "Extra data in SkeletalMesh file %s", file->GetHeader().name);
+
+	return ENGINE_OK;
+}
+
+int AssetLoader::_LoadSkeletalMeshV2B(VFSFile *file,
+	vector<SkeletalVertex> &vertices,
+	vector<uint32_t> &indices,
+	vector<MeshGroup> &groups,
+	vector<Bone> &bones,
+	vector<TransformNode> &nodes,
+	dmat4 &globalInverseTransform)
+{
+	uint32_t num{ 0 };
+	char idBuff[8]{ 0x0 };
+
+	file->Read(&num, sizeof(uint32_t), 1);
+	vertices.resize(num);
+	file->Read(vertices.data(), sizeof(SkeletalVertex), num);
+
+	file->Read(&num, sizeof(uint32_t), 1);
+	indices.resize(num);
+	file->Read(indices.data(), sizeof(uint32_t), num);
+
+	file->Read(&num, sizeof(uint32_t), 1);
+
+	for (uint32_t i = 0; i < num; ++i)
+	{
+		MeshGroup group{};
+
+		file->Read(&group.vertexOffset, sizeof(uint32_t), 1);
+		file->Read(&group.vertexCount, sizeof(uint32_t), 1);
+		file->Read(&group.indexOffset, sizeof(uint32_t), 1);
+		file->Read(&group.indexCount, sizeof(uint32_t), 1);
+
+		groups.push_back(group);
+	}
+
+	file->Read(value_ptr(globalInverseTransform), sizeof(dmat4), 1);
+
+	file->Read(&num, sizeof(uint32_t), 1);
+	for (uint32_t i = 0; i < num; ++i)
+	{
+		Bone bone{};
+		uint16_t len{ 0 };
+
+		file->Read(&len, sizeof(uint16_t), 1);
+		bone.name.resize(len);
+		file->Read(&bone.name[0], sizeof(char), len);
+
+		file->Read(value_ptr(bone.offset), sizeof(dmat4), 1);
+
+		bones.push_back(bone);
+	}
+
+	file->Read(&num, sizeof(uint32_t), 1);
+	for (uint32_t i = 0; i < num; ++i)
+	{
+		TransformNode node{};
+		uint16_t id{ 0 };
+
+		file->Read(&id, sizeof(uint16_t), 1);
+		node.name.resize(id);
+		file->Read(&node.name[0], sizeof(char), id);
+
+		file->Read(value_ptr(node.transform), sizeof(dmat4), 1);
+		file->Read(&node.parentId, sizeof(uint16_t), 1);
+		file->Read(&node.numChildren, sizeof(uint16_t), 1);
+
 		for (uint16_t j = 0; j < node.numChildren; ++j)
 		{
 			file->Read(&id, sizeof(uint16_t), 1);

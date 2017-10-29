@@ -37,11 +37,13 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <stack>
+
 #include <GUI/GUI.h>
-#include <Engine/Input.h>
+#include <Input/Input.h>
+#include <Input/Keycodes.h>
 #include <Engine/Engine.h>
 #include <Engine/Console.h>
-#include <Engine/Keycodes.h>
 #include <System/Logger.h>
 #include <Script/Script.h>
 
@@ -54,8 +56,8 @@ using namespace glm;
 bool Console::_open;
 NArray<NString> Console::_text;
 map<NString, Console::CVarFuncs> Console::_vars;
-map<NString, function<void()>> Console::_voidFuncs;
-map<NString, function<void(NArray<NString> &)>> Console::_argFuncs;
+static NArray<NString> _commandHistory;
+static uint64_t _historyId = 0;
 
 static lua_State *_consoleState = nullptr;
 static NString _buff;
@@ -74,18 +76,6 @@ void eng_msgbox(NArray<NString> &args)
 int Console::Initialize()
 {
 	Logger::Log(CON_MODULE, LOG_INFORMATION, "Initializing...");
-
-	_voidFuncs.insert(make_pair("exit", Engine::Exit));
-	//_voidFuncs.insert(make_pair("screenshot", Engine::SaveScreenshot));
-	_voidFuncs.insert(make_pair("showStats", Engine::ToggleStats));
-	_voidFuncs.insert(make_pair("pause", Engine::TogglePause));
-	_voidFuncs.insert(make_pair("clear", Console::Clear));
-
-	_voidFuncs.insert(make_pair("capturePointer", Input::CapturePointer));
-	_voidFuncs.insert(make_pair("releasePointer", Input::ReleasePointer));
-	
-	_argFuncs.insert(make_pair("setres", eng_setres));
-	_argFuncs.insert(make_pair("msgbox", eng_msgbox));
 
 	if (!_buff.Resize(100))
 		return ENGINE_FAIL;
@@ -147,6 +137,28 @@ void Console::HandleKeyDown(uint8_t key)
 		ExecuteCommand(_buff);
 		_buff.Clear();
 	}
+	else if (key == NE_KEY_UP)
+	{
+		if (!_commandHistory.Count())
+			return;
+
+		_buff = _commandHistory[_historyId];
+		if (_historyId > 0) --_historyId;
+	}
+	else if (key == NE_KEY_DOWN)
+	{
+		if (!_commandHistory.Count())
+			return;
+
+		if (_historyId == _commandHistory.Count() - 1)
+		{
+			_buff.Clear();
+			return;
+		}
+
+		_buff = _commandHistory[_historyId];
+		if (_historyId < _commandHistory.Count() - 1) ++_historyId;
+	}
 	else if ((key == NE_KEY_BKSPACE) || (key == NE_KEY_DELETE))
 		_buff.RemoveLast();
 	else if (key == NE_KEY_TILDE)
@@ -163,7 +175,7 @@ void Console::HandleKeyUp(uint8_t key)
 		_shift = false;
 }
 
-void Console::ExecuteCommand(NString cmd)
+void Console::ExecuteCommand(NString cmd, bool record)
 {
 	NArray<NString> cmdSplit = cmd.Split(' ');
 
@@ -177,32 +189,22 @@ void Console::ExecuteCommand(NString cmd)
 		if (_vars[cmdSplit[1]].Get)
 			Print("%s = %s", *cmdSplit[1], *_vars[cmdSplit[2]].Get());
 	}
-	else if (cmdSplit[0] == "luaExec")
+	else if (cmdSplit[0] == "clear")
+		Console::Clear();
+	else
 	{
-		const int err = luaL_dostring(_consoleState, *cmd + 8);
+		const int err = luaL_dostring(_consoleState, *cmd);
 		if (err && lua_gettop(_consoleState))
 		{
 			Print("ERROR: %s", lua_tostring(_consoleState, -1));
 			lua_pop(_consoleState, 1);
 		}
 	}
-	else
-	{
-		if (cmdSplit.Count() < 2)
-		{
-			if (_voidFuncs[cmdSplit[0]])
-				_voidFuncs[cmdSplit[0]]();
-			else
-				Print("%s: undefined function", *cmdSplit[0]);
-		}
-		else
-		{
-			if (_argFuncs[cmdSplit[0]])
-				_argFuncs[cmdSplit[0]](cmdSplit);
-			else
-				Print("%s: undefined function", *cmdSplit[0]);
-		}
-	}
+
+	if (!record) return;
+
+	_commandHistory.Add(cmd);
+	_historyId = _commandHistory.Count() - 1;
 }
 
 void Console::Release()

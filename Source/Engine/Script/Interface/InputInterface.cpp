@@ -37,7 +37,7 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <Engine/Input.h>
+#include <Input/Input.h>
 #include <Script/Interface/InputInterface.h>
 
 void InputInterface::Register(lua_State *state)

@@ -39,11 +39,19 @@
 
 #pragma once
 
+#include <Platform\/PlatformDetect.h>
+
 extern "C"
 {
+#ifdef NE_PLATFORM_WINDOWS
 	#include <luajit-2.0/lua.h>
 	#include <luajit-2.0/lualib.h>
 	#include <luajit-2.0/lauxlib.h>
+#else
+	#include <luajit-2.1/lua.h>
+	#include <luajit-2.1/lualib.h>
+	#include <luajit-2.1/lauxlib.h>
+#endif
 }
 
 #include <Runtime/Runtime.h>
@@ -53,5 +61,6 @@ class Script
 public:
 	static lua_State *NewState();
 	static bool LoadScript(lua_State *state, NString &scriptFile);
+	static bool LoadSource(lua_State *state, const char *src);
 	static NString StackDump(lua_State *state);
 };

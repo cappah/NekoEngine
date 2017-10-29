@@ -38,7 +38,7 @@
  */
 
 #include <Scene/Scene.h>
-#include <Engine/SceneManager.h>
+#include <Scene/SceneManager.h>
 #include <Script/Interface/SceneInterface.h>
 
 void SceneInterface::Register(lua_State *state)

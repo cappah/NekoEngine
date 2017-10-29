@@ -40,7 +40,7 @@
 #include <Scene/Components/SkeletalMeshComponent.h>
 #include <Scene/Components/AnimatorComponent.h>
 #include <Scene/Components/CameraComponent.h>
-#include <Engine/SceneManager.h>
+#include <Scene/SceneManager.h>
 #include <Engine/ResourceManager.h>
 
 #define SK_COMPONENT_MODULE		"SkeletalMeshComponent"
@@ -125,7 +125,7 @@ int SkeletalMeshComponent::InitializeComponent()
 
 bool SkeletalMeshComponent::Upload(Buffer *buffer)
 {
-	if (!StaticMeshComponent::Upload(buffer))
+	if (!ObjectComponent::Upload(buffer))
 		return false;
 
 	return _mesh->Upload(buffer);
@@ -171,7 +171,13 @@ bool SkeletalMeshComponent::InitDrawables()
 		}
 	}
 
-	return _mesh->BuildDrawables(_materials, _descriptorSet, _drawables, true);
+	if (!_mesh->BuildDrawables(_materials, _descriptorSet, _drawables, true))
+		return false;
+
+	for (Drawable &drawable : _drawables)
+		drawable.visible = &_visible;
+
+	return true;
 }
 
 bool SkeletalMeshComponent::RebuildCommandBuffers()

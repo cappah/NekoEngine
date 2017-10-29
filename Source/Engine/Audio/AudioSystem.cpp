@@ -88,4 +88,6 @@ void AudioSystem::ReleaseInstance()
 	_instance->Release();
 	delete _instance;
 	_instance = nullptr;
+
+	Logger::Log(ASYS_MODULE, LOG_INFORMATION, "Released");
 }

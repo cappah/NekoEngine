@@ -53,6 +53,9 @@ void StaticMeshComponentInterface::Register(lua_State *state)
 	lua_register(state, "STMC_AddGroup", AddGroup);
 	lua_register(state, "STMC_ResetGroups", ResetGroups);
 
+	lua_register(state, "STMC_Upload", Upload);
+	lua_register(state, "STMC_CreateBuffer", CreateBuffer);
+
 	/*lua_register(state, "STMC_LoadStatic", LoadStatic);
 	lua_register(state, "STMC_LoadDynamic", LoadDynamic);*/
 }
@@ -136,7 +139,8 @@ int StaticMeshComponentInterface::AddGroup(lua_State *state)
 	if (args != 4)
 		return luaL_error(state, "Invalid arguments");
 
-	//((StaticMeshComponent *)lua_touserdata(state, 1))->AddGroup((uint32_t)lua_tointeger(state, 2), (uint32_t)lua_tointeger(state, 3), (Material *)lua_touserdata(state, 4));
+	MeshGroup *group{ (MeshGroup *)lua_touserdata(state, 1) };
+	((StaticMeshComponent *)lua_touserdata(state, 1))->AddGroup(*group, (Material *)lua_touserdata(state, 4));
 
 	return 0;
 }
@@ -151,4 +155,28 @@ int StaticMeshComponentInterface::ResetGroups(lua_State *state)
 	((StaticMeshComponent *)lua_touserdata(state, 1))->ResetGroups();
 
 	return 0;
+}
+
+int StaticMeshComponentInterface::Upload(lua_State *state)
+{
+	int args{ lua_gettop(state) };
+
+	if (args != 1)
+		return luaL_error(state, "Invalid arguments");
+
+	lua_pushboolean(state, ((StaticMeshComponent *)lua_touserdata(state, 1))->Upload());
+
+	return 1;
+}
+
+int StaticMeshComponentInterface::CreateBuffer(lua_State *state)
+{
+	int args{ lua_gettop(state) };
+
+	if (args != 2)
+		return luaL_error(state, "Invalid arguments");
+
+	lua_pushinteger(state, ((StaticMeshComponent *)lua_touserdata(state, 1))->CreateBuffer(lua_toboolean(state, 2)));
+
+	return 1;
 }

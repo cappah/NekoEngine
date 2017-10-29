@@ -52,7 +52,7 @@ int Button::_InitializeControl()
 	if (ret != ENGINE_OK)
 		return ret;
 
-	_vertices[0].color = _vertices[1].color = _vertices[2].color = _vertices[3].color = vec4(.9f, .9f, .9f, 1.f);
+	_UpdateVertices();
 
 	return ENGINE_OK;
 }

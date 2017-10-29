@@ -38,9 +38,10 @@
  */
 
 #include <math.h>
-#include <Engine/Input.h>
+#include <Input/Input.h>
 #include <Engine/Console.h>
-#include <Engine/SceneManager.h>
+#include <Physics/Physics.h>
+#include <Scene/SceneManager.h>
 
 #include "TestGame.h"
 #include "GameController.h"
@@ -88,14 +89,14 @@ int GameController::Load()
 
 	_exitButton = new Button((Engine::GetScreenWidth() - 80) / 2, top, 80, 24);
 	_exitButton->SetText("Exit");
-	_exitButton->SetClickHandler([]() { Console::ExecuteCommand("luaExec E_Exit()"); });
+	_exitButton->SetClickHandler([]() { Console::ExecuteCommand("E_Exit()", false); });
 	_exitButton->SetVisible(false);
 
 	/*Slider *slider = new Slider(100, 100, 100, 24);
 	slider->SetVisible(true);
-	GUIManager::RegisterControl(slider);
+	GUIManager::RegisterControl(slider);*/
 
-	TextBox *tbx = new TextBox(100, 200, 100);
+	/*TextBox *tbx = new TextBox(100, 200, 100);
 	tbx->SetVisible(true);
 	GUIManager::RegisterControl(tbx);*/
 
@@ -127,13 +128,18 @@ void GameController::Update(double deltaTime) noexcept
 	}
 
 	if (Input::GetButtonDown("show_stats"))
-		Console::ExecuteCommand("luaExec E_ToggleStats()");
+		Console::ExecuteCommand("E_ToggleStats()", false);
 
 	if (Input::GetButtonDown("next_scene"))
 		SceneManager::LoadNextScene();
 
 	if (Input::GetButtonDown("screenshot"))
-		Console::ExecuteCommand("screenshot");
+		Console::ExecuteCommand("screenshot", false);
+
+	Ray r;
+	vec2 coords{ .5f, .5f };
+	if (Physics::GetInstance()->ScreenRayCast(&r, coords, 100.f))
+		Logger::Log("GameController", LOG_INFORMATION, "Hit something");
 }
 
 bool GameController::Unload() noexcept
@@ -157,6 +163,6 @@ void GameController::_ShowMenu(bool show)
 	_exitButton->SetVisible(show);
 }
 
-GameController::~GameController()
+GameController::~GameController() noexcept
 {
 }

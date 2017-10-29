@@ -54,33 +54,47 @@ int EventManager::Initialize()
 
 uint32_t EventManager::RegisterHandler(int32_t id, std::function<void(int32_t, void *)> handler)
 {
+	EventHandler evtHandler;
+	evtHandler.handler = handler;
+
 	for (EventHandlers &eventHandlers : _eventHandlers)
 	{
 		if (eventHandlers.id != id)
 			continue;
 
-		eventHandlers.handlers.push_back(handler);
+		evtHandler.id = eventHandlers.nextHandlerId++;
+		eventHandlers.handlers.push_back(evtHandler);
 
-		return (uint32_t)eventHandlers.handlers.size();
+		return evtHandler.id;
 	}
 
 	EventHandlers handlers{};
 	handlers.id = id;
-	handlers.handlers.push_back(handler);
+	handlers.nextHandlerId = 1;
+	evtHandler.id = 0;
+	handlers.handlers.push_back(evtHandler);
 
 	_eventHandlers.push_back(handlers);
 
-	return (uint32_t)handlers.handlers.size() - 1;
+	return evtHandler.id;
 }
 
 void EventManager::UnregisterHandler(int32_t id, uint32_t handler)
 {
+	Logger::Log(EVT_MGR_MODULE, LOG_DEBUG, "Removing handler %d for event %d", handler, id);
+
 	for (EventHandlers &eventHandlers : _eventHandlers)
 	{
 		if (eventHandlers.id != id)
 			continue;
 
-		eventHandlers.handlers.erase(eventHandlers.handlers.begin() + handler);
+		size_t index;
+
+		for (index = 0; index < eventHandlers.handlers.size(); ++index)
+			if ((uint32_t)eventHandlers.handlers[index].id == handler)
+				break;
+		
+		eventHandlers.handlers.erase(eventHandlers.handlers.begin() + index);
 
 		return;
 	}
@@ -93,8 +107,8 @@ void EventManager::Broadcast(int id, void *eventArgs)
 		if (eventHandlers.id != id)
 			continue;
 
-		for (function<void(int, void *)> &func : eventHandlers.handlers)
-			func(id, eventArgs);
+		for (EventHandler &handler : eventHandlers.handlers)
+			handler.handler(id, eventArgs);
 
 		return;
 	}
@@ -102,5 +116,7 @@ void EventManager::Broadcast(int id, void *eventArgs)
 
 void EventManager::Release()
 {
+	for (EventHandlers &eventHandlers : _eventHandlers)
+		eventHandlers.handlers.clear();
 	_eventHandlers.clear();
 }

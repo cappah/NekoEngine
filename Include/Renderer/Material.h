@@ -94,6 +94,10 @@ public:
 	ENGINE_API bool CreateDescriptorSet();
 
 	ENGINE_API void SetType(MaterialType type) { _data.Type = (int32_t)type; }
+
+	ENGINE_API const glm::vec4 &GetDiffuseColor() const { return _data.Diffuse; }
+	ENGINE_API void SetDiffuseColor(glm::vec4 &color) { _data.Diffuse = color; }
+
 	ENGINE_API Texture *SetDiffuseTexture(Texture *tex) { Texture *ret = _diffuseTexture; _diffuseTexture = tex; return ret; }
 	ENGINE_API Texture *SetNormalTexture(Texture *tex) { Texture *ret = _normalTexture; _normalTexture = tex; return ret; }
 	ENGINE_API Texture *SetSpecularTexture(Texture *tex) { Texture *ret = _specularTexture; _specularTexture = tex; return ret; }

@@ -38,7 +38,7 @@
  */
 
 #include <Engine/Engine.h>
-#include <Engine/Input.h>
+#include <Input/Input.h>
 #include <Platform/Platform.h>
 
 #include <X11/X.h>

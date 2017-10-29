@@ -6,7 +6,7 @@
     <OutDir>$(SolutionDir)Bin64\</OutDir>
     <IntDir>$(SolutionDir)Build64\$(ProjectName)\$(Configuration)\</IntDir>
     <IncludePath>$(SolutionDir)3rdparty\include;$(SolutionDir)Include;$(VK_SDK_PATH)\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)3rdparty\lib;$(VK_SDK_PATH)\Bin;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)3rdparty\lib;$(VK_SDK_PATH)\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>

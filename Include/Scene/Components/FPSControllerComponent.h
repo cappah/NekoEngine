@@ -61,6 +61,8 @@ public:
 
 	ENGINE_API virtual void Update(double deltaTime) noexcept override;
 
+	ENGINE_API virtual void OnHit(Object *other, glm::vec3 &position) override;
+
 	ENGINE_API virtual ~FPSControllerComponent() { Unload(); }
 
 protected:
@@ -69,4 +71,5 @@ protected:
 	float _rotateSpeed;
 	float _verticalSensivity;
 	float _horizontalSensivity;
+	glm::vec3 _allowedMovement;
 };

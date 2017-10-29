@@ -19,17 +19,13 @@
     <ClCompile Include="Animation\Skeleton.cpp" />
     <ClCompile Include="Audio\AudioClip.cpp" />
     <ClCompile Include="Audio\AudioSystem.cpp" />
-    <ClCompile Include="Core\Camera.cpp" />
-    <ClCompile Include="Core\CameraManager.cpp" />
     <ClCompile Include="Core\Console.cpp" />
     <ClCompile Include="Core\Debug.cpp" />
     <ClCompile Include="Core\Engine.cpp" />
     <ClCompile Include="Core\EventManager.cpp" />
     <ClCompile Include="Core\Init.cpp" />
-    <ClCompile Include="Core\Input.cpp" />
     <ClCompile Include="Core\ResourceDatabase.cpp" />
     <ClCompile Include="Core\ResourceManager.cpp" />
-    <ClCompile Include="Core\SceneManager.cpp" />
     <ClCompile Include="Core\SoundManager.cpp" />
     <ClCompile Include="Core\TaskManager.cpp" />
     <ClCompile Include="GUI\Button.cpp" />
@@ -39,6 +35,7 @@
     <ClCompile Include="GUI\Box.cpp" />
     <ClCompile Include="GUI\Slider.cpp" />
     <ClCompile Include="GUI\TextBox.cpp" />
+    <ClCompile Include="Input\Input.cpp" />
     <ClCompile Include="Physics\Physics.cpp" />
     <ClCompile Include="Platform\Compat\reallocarray.cpp" />
     <ClCompile Include="Platform\Shared.cpp" />
@@ -63,7 +60,10 @@
     <ClCompile Include="Renderer\Swapchain.cpp" />
     <ClCompile Include="Renderer\Texture.cpp" />
     <ClCompile Include="Runtime\Runtime.cpp" />
+    <ClCompile Include="Scene\Camera.cpp" />
+    <ClCompile Include="Scene\CameraManager.cpp" />
     <ClCompile Include="Scene\Components\AnimatorComponent.cpp" />
+    <ClCompile Include="Scene\Components\AudioListenerComponent.cpp" />
     <ClCompile Include="Scene\Components\AudioSourceComponent.cpp" />
     <ClCompile Include="Scene\Components\CameraComponent.cpp" />
     <ClCompile Include="Scene\Components\ColliderComponent.cpp" />
@@ -80,7 +80,13 @@
     <ClCompile Include="Scene\Object.cpp" />
     <ClCompile Include="Scene\ObjectComponent.cpp" />
     <ClCompile Include="Scene\OcTree.cpp" />
+    <ClCompile Include="Scene\Particles\Easing.cpp" />
+    <ClCompile Include="Scene\Particles\Emitter.cpp" />
+    <ClCompile Include="Scene\Particles\MeshParticle.cpp" />
+    <ClCompile Include="Scene\Particles\Particle.cpp" />
     <ClCompile Include="Scene\Scene.cpp" />
+    <ClCompile Include="Scene\SceneManager.cpp" />
+    <ClCompile Include="Scene\ScriptHost.cpp" />
     <ClCompile Include="Script\Interface\AnimationClipInterface.cpp" />
     <ClCompile Include="Script\Interface\AnimatorComponentInterface.cpp" />
     <ClCompile Include="Script\Interface\AudioSourceComponentInterface.cpp" />
@@ -103,9 +109,11 @@
     <ClCompile Include="Script\Interface\PlatformInterface.cpp" />
     <ClCompile Include="Script\Interface\ResourceManagerInterface.cpp" />
     <ClCompile Include="Script\Interface\SceneInterface.cpp" />
+    <ClCompile Include="Script\Interface\ScriptComponentInterface.cpp" />
     <ClCompile Include="Script\Interface\SkeletalMeshComponentInterface.cpp" />
     <ClCompile Include="Script\Interface\SoundManagerInterface.cpp" />
     <ClCompile Include="Script\Interface\StaticMeshComponentInterface.cpp" />
+    <ClCompile Include="Script\Interface\SystemInterface.cpp" />
     <ClCompile Include="Script\Interface\VFSInterface.cpp" />
     <ClCompile Include="Script\Script.cpp" />
     <ClCompile Include="System\AssetLoader\AssetLoader.cpp" />
@@ -131,8 +139,6 @@
     <ClInclude Include="..\..\Include\Audio\AudioClip.h" />
     <ClInclude Include="..\..\Include\Audio\AudioSource.h" />
     <ClInclude Include="..\..\Include\Audio\AudioSystem.h" />
-    <ClInclude Include="..\..\Include\Engine\Camera.h" />
-    <ClInclude Include="..\..\Include\Engine\CameraManager.h" />
     <ClInclude Include="..\..\Include\Engine\Console.h" />
     <ClInclude Include="..\..\Include\Engine\Debug.h" />
     <ClInclude Include="..\..\Include\Engine\Defs.h" />
@@ -141,11 +147,8 @@
     <ClInclude Include="..\..\Include\Engine\EventManager.h" />
     <ClInclude Include="..\..\Include\Engine\Events.h" />
     <ClInclude Include="..\..\Include\Engine\GameModule.h" />
-    <ClInclude Include="..\..\Include\Engine\Input.h" />
-    <ClInclude Include="..\..\Include\Engine\Keycodes.h" />
     <ClInclude Include="..\..\Include\Engine\ResourceDatabase.h" />
     <ClInclude Include="..\..\Include\Engine\ResourceManager.h" />
-    <ClInclude Include="..\..\Include\Engine\SceneManager.h" />
     <ClInclude Include="..\..\Include\Engine\SoundManager.h" />
     <ClInclude Include="..\..\Include\Engine\TaskManager.h" />
     <ClInclude Include="..\..\Include\Engine\Version.h" />
@@ -159,6 +162,8 @@
     <ClInclude Include="..\..\Include\GUI\Label.h" />
     <ClInclude Include="..\..\Include\GUI\Slider.h" />
     <ClInclude Include="..\..\Include\GUI\TextBox.h" />
+    <ClInclude Include="..\..\Include\Input\Input.h" />
+    <ClInclude Include="..\..\Include\Input\Keycodes.h" />
     <ClInclude Include="..\..\Include\Physics\Collider.h" />
     <ClInclude Include="..\..\Include\Physics\Physics.h" />
     <ClInclude Include="..\..\Include\Physics\Ray.h" />
@@ -200,7 +205,10 @@
     <ClInclude Include="..\..\Include\Runtime\NString.h" />
     <ClInclude Include="..\..\Include\Runtime\NThreadPool.h" />
     <ClInclude Include="..\..\Include\Runtime\Runtime.h" />
+    <ClInclude Include="..\..\Include\Scene\Camera.h" />
+    <ClInclude Include="..\..\Include\Scene\CameraManager.h" />
     <ClInclude Include="..\..\Include\Scene\Components\AnimatorComponent.h" />
+    <ClInclude Include="..\..\Include\Scene\Components\AudioListenerComponent.h" />
     <ClInclude Include="..\..\Include\Scene\Components\AudioSourceComponent.h" />
     <ClInclude Include="..\..\Include\Scene\Components\CameraComponent.h" />
     <ClInclude Include="..\..\Include\Scene\Components\ColliderComponent.h" />
@@ -217,7 +225,13 @@
     <ClInclude Include="..\..\Include\Scene\Object.h" />
     <ClInclude Include="..\..\Include\Scene\ObjectComponent.h" />
     <ClInclude Include="..\..\Include\Scene\OcTree.h" />
+    <ClInclude Include="..\..\Include\Scene\Particles\Easing.h" />
+    <ClInclude Include="..\..\Include\Scene\Particles\Emitter.h" />
+    <ClInclude Include="..\..\Include\Scene\Particles\MeshParticle.h" />
+    <ClInclude Include="..\..\Include\Scene\Particles\Particle.h" />
     <ClInclude Include="..\..\Include\Scene\Scene.h" />
+    <ClInclude Include="..\..\Include\Scene\SceneManager.h" />
+    <ClInclude Include="..\..\Include\Scene\ScriptHost.h" />
     <ClInclude Include="..\..\Include\System\AssetLoader\AssetLoader.h" />
     <ClInclude Include="..\..\Include\System\Logger.h" />
     <ClInclude Include="..\..\Include\System\VFS\BZip2File.h" />
@@ -251,10 +265,12 @@
     <ClInclude Include="..\Include\Script\Interface\PlatformInterface.h" />
     <ClInclude Include="..\Include\Script\Interface\ResourceManagerInterface.h" />
     <ClInclude Include="..\Include\Script\Interface\SceneInterface.h" />
+    <ClInclude Include="..\Include\Script\Interface\ScriptComponentInterface.h" />
     <ClInclude Include="..\Include\Script\Interface\SkeletalMeshComponentInterface.h" />
     <ClInclude Include="..\Include\Script\Interface\MaterialInterface.h" />
     <ClInclude Include="..\Include\Script\Interface\SoundManagerInterface.h" />
     <ClInclude Include="..\Include\Script\Interface\StaticMeshComponentInterface.h" />
+    <ClInclude Include="..\Include\Script\Interface\SystemInterface.h" />
     <ClInclude Include="..\Include\Script\Interface\VFSInterface.h" />
     <ClInclude Include="..\Include\Script\Script.h" />
     <ClInclude Include="..\Shaders\vertex\bounds_vertex.vert" />
@@ -287,7 +303,6 @@
     <None Include="..\Shaders\include\lightbuffers.glh" />
     <None Include="..\Shaders\include\math.glh" />
     <None Include="..\Shaders\include\matrixblock.glh" />
-    <None Include="..\Shaders\include\normal.glh" />
     <None Include="..\Shaders\include\particle_bindings.glh" />
     <None Include="..\Shaders\include\penner.glh" />
     <None Include="..\Shaders\include\random.glh" />
@@ -314,6 +329,7 @@
     <None Include="..\Shaders\vertex\shadow_terrain_vertex.vert" />
     <None Include="..\Shaders\vertex\shadow_vertex.vert" />
     <None Include="..\Shaders\vertex\skysphere_vertex.vert" />
+    <None Include="..\Shaders\vertex\ssao_vertex.vert" />
     <None Include="..\Shaders\vertex\terrain_vertex.vert" />
     <None Include="..\Shaders\vertex\vertex.vert" />
   </ItemGroup>
@@ -391,6 +407,8 @@
       <DisableSpecificWarnings>4251;4800</DisableSpecificWarnings>
       <OpenMPSupport>true</OpenMPSupport>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Fast</FloatingPointModel>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -420,7 +438,7 @@ compile.cmd</Command>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>PSAPI_VERSION=1;NE_CONFIG_RELEASE;NOMINMAX;ENGINE_INTERNAL;_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
       <FloatingPointModel>Fast</FloatingPointModel>
       <OmitFramePointers>true</OmitFramePointers>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -461,7 +479,7 @@ compile.cmd</Command>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>PSAPI_VERSION=1;NE_CONFIG_DEVELOPMENT;NOMINMAX;ENGINE_INTERNAL;_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
       <FloatingPointModel>Fast</FloatingPointModel>
       <OmitFramePointers>false</OmitFramePointers>
       <DisableSpecificWarnings>4251;4800;4091;4996</DisableSpecificWarnings>

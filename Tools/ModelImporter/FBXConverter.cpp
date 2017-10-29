@@ -155,7 +155,7 @@ void FBXConverter::_ProcessStaticMesh(FbxMesh *mesh)
 			int index = mesh->GetPolygonVertex(i, j);
 			ControlPoint &controlPoint = _controlPoints[index];
 
-			_GetNormal(mesh, index, vertexCounter, v.normal);
+//			_GetNormal(mesh, index, vertexCounter, v.normal);
 			// uv
 
 

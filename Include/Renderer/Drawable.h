@@ -50,6 +50,7 @@ struct Drawable
 	VkCommandBuffer sceneCommandBuffer;
 	VkCommandBuffer depthCommandBuffer;
 	bool transparent;
+	bool *visible;
 };
 
 #if defined(_MSC_VER)

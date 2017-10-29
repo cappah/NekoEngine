@@ -39,8 +39,8 @@
 
 #define VK_USE_PLATFORM_WIN32_KHR
 
+#include <Input/Input.h>
 #include <Engine/Engine.h>
-#include <Engine/Input.h>
 #include <System/Logger.h>
 #include <Platform/Platform.h>
 
@@ -78,6 +78,8 @@ static uint32_t _win32_processorFrequency{ 0 };
 static uint64_t _win32_totalSystemMemory{ 0 };
 static IWbemLocator *_win32_wbemLocator{ nullptr };
 static IWbemServices *_win32_wbemServices{ nullptr };
+
+__declspec(dllexport) char *_win32_cmdLine{ nullptr };
 
 static inline WPARAM _win32MapKeys(WPARAM vk, LPARAM lParam)
 {
@@ -131,11 +133,11 @@ static inline uint64_t _win32_GetMemoryStatus(int type)
 	GlobalMemoryStatusEx(&memStatus);
 
 	if (type == _WIN32_TOTAL_MEMORY)
-		return memStatus.ullTotalPhys / 1024;
+		return memStatus.ullTotalPhys;
 	else if (type == _WIN32_FREE_MEMORY)
-		return memStatus.ullAvailPhys / 1024;
+		return memStatus.ullAvailPhys;
 	else if (type == _WIN32_USED_MEMORY)
-		return (memStatus.ullTotalPhys - memStatus.ullAvailPhys) / 1024;
+		return (memStatus.ullTotalPhys - memStatus.ullAvailPhys);
 
 	return 0;
 }
@@ -253,18 +255,13 @@ int Platform::Initialize()
 {
 	HRESULT hr{ 0 };
 
-	hr = CoInitializeEx(0, COINIT_MULTITHREADED);
-	if (FAILED(hr))
-	{
-		Logger::Log(WIN32_PLATFORM_MODULE, LOG_CRITICAL, "Failed to initialize the COM library: 0x%x", hr);
-		return ENGINE_FAIL;
-	}
+	CoInitializeEx(0, COINIT_MULTITHREADED);
 
 	hr = CoInitializeSecurity(NULL, -1, NULL, NULL,
 							  RPC_C_AUTHN_LEVEL_DEFAULT,
 							  RPC_C_IMP_LEVEL_IMPERSONATE,
 							  NULL, EOAC_NONE, NULL);
-	if (FAILED(hr))
+	if (FAILED(hr) && hr != RPC_E_TOO_LATE)
 	{
 		Logger::Log(WIN32_PLATFORM_MODULE, LOG_CRITICAL, "Failed to initialize COM security: 0x%x", hr);
 		return ENGINE_FAIL;
@@ -579,7 +576,10 @@ bool Platform::EnterFullscreen(int width, int height)
 	dmScreenSettings.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
 
 	if (ChangeDisplaySettings(&dmScreenSettings, CDS_FULLSCREEN) != DISP_CHANGE_SUCCESSFUL)
+	{
+		Logger::Log(WIN32_PLATFORM_MODULE, LOG_WARNING, "Failed to enter full screen");
 		return false;
+	}
 
 	return true;
 }
@@ -731,6 +731,14 @@ void Platform::Sleep(uint32_t seconds)
 void Platform::USleep(uint32_t microseconds)
 {
 	::Sleep(microseconds / 1000);
+}
+
+void Platform::Restart()
+{
+	char exeFile[MAX_PATH]{};
+	GetModuleFileName(GetModuleHandle(NULL), exeFile, MAX_PATH);
+	ShellExecute(GetDesktopWindow(), "OPEN", exeFile, _win32_cmdLine, NULL, SW_SHOW);
+	Terminate();
 }
 
 void Platform::Terminate()

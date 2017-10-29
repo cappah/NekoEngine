@@ -40,6 +40,7 @@
 #include <Script/Script.h>
 #include <System/Logger.h>
 #include <System/VFS/VFS.h>
+#include <Platform/PlatformDetect.h>
 #include <Scene/Components/ScriptComponent.h>
 
 #define SC_COMP_MODULE	"ScriptComponent"
@@ -53,9 +54,19 @@ ScriptComponent::ScriptComponent(ComponentInitializer *initializer)
 	const char *ptr{ nullptr };
 
 	_enabled = false;
+	_scriptSource = nullptr;
 
 	if (((it = initializer->arguments.find("script")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
 		_scriptFile = ptr;
+
+	if (((it = initializer->arguments.find("scriptptr")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr)) {
+#if defined(NE_64BIT)
+		unsigned long srcPtr{ strtoul(ptr, NULL, 10) };
+#else
+		unsigned int srcPtr{ (unsigned int)strtoul(ptr, NULL, 10) };
+#endif
+		_scriptSource = (const char *)srcPtr;
+	}
 
 	_state = Script::NewState();
 
@@ -69,8 +80,13 @@ int ScriptComponent::Load()
 	if (ret != ENGINE_OK)
 		return ret;
 
-	if (!Script::LoadScript(_state, _scriptFile))
-		return ENGINE_FAIL;
+	if (_scriptSource) {
+		if (!Script::LoadSource(_state, _scriptSource))
+			return ENGINE_FAIL;
+	} else {
+		if (!Script::LoadScript(_state, _scriptFile))
+			return ENGINE_FAIL;
+	}
 
 	_enabled = true;
 
@@ -220,6 +236,32 @@ bool ScriptComponent::CanUnload()
 	lua_pop(_state, 1);
 
 	return ret;
+}
+
+bool ScriptComponent::Invoke(const char *name)
+{
+	lua_getglobal(_state, name);
+	if (!lua_isfunction(_state, lua_gettop(_state)))
+	{
+		lua_pop(_state, 1);
+		return false;
+	}
+
+	if (lua_pcall(_state, 0, 1, 0) && lua_gettop(_state))
+	{
+		Logger::Log(SC_COMP_MODULE, LOG_CRITICAL, "Failed to execute %s() function of script %s: %s", name, *_scriptFile, lua_tostring(_state, -1));
+		Logger::Log(SC_COMP_MODULE, LOG_DEBUG, "\n%s", *Script::StackDump(_state));
+		lua_pop(_state, 1);
+		return false;
+	}
+
+	return true;
+}
+
+void ScriptComponent::SetGlobalInteger(const char *name, int value)
+{
+	lua_pushinteger(_state, value);
+	lua_setglobal(_state, name);
 }
 
 ScriptComponent::~ScriptComponent() noexcept

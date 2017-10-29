@@ -52,10 +52,13 @@
 using namespace std;
 
 NString __win32_launcher_error_msg{};
+__declspec(dllimport) extern char *_win32_cmdLine;
 
 void CleanUp()
 {
 	Engine::CleanUp();
+
+	free(_win32_cmdLine);
 
 #ifdef _DEBUG
 	if (!IsDebuggerPresent())
@@ -74,6 +77,8 @@ int __win32_launcher_crash(struct _EXCEPTION_POINTERS *ep)
 int __win32_launcher_run(LPSTR lpCmdLine)
 {
 	atexit(CleanUp);
+
+	_win32_cmdLine = strdup(lpCmdLine);
 
 	string str(lpCmdLine);
 

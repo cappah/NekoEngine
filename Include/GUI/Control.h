@@ -65,6 +65,7 @@ public:
 	ENGINE_API virtual void SetPosition(Point pt) { _controlRect.x = pt.x; _controlRect.y = pt.y; }
 	ENGINE_API virtual void SetSize(int width, int height) { _controlRect.w = width; _controlRect.h = height; }
 	ENGINE_API virtual void SetSize(Point pt) { _controlRect.w = pt.x; _controlRect.h = pt.y; }
+	ENGINE_API virtual void SetColor(glm::vec4 &color) { _color = color; }
 	ENGINE_API virtual void SetText(std::string text) { _text = text; }
 	ENGINE_API virtual void SetTextColor(glm::vec3 &color) { _textColor = color; }
 	ENGINE_API virtual void SetEnabled(bool enable) { _enabled = enable; }
@@ -93,6 +94,7 @@ protected:
 	bool _enabled, _hovered, _visible;
 	NString _text;
 	glm::vec3 _textColor, _hoveredTextColor;
+	glm::vec4 _color;
 	NFont *_font;
 	Buffer *_buffer;
 	bool _focused;

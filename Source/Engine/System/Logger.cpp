@@ -83,14 +83,17 @@ void _WriteMessage(LogMessage &msg)
 	#if !defined(NE_CONFIG_DEBUG) && !defined(NE_CONFIG_DEVELOPMENT) 
 	if (msg.severity < _logSeverity)
 		return;
-	#else
+
 	if (msg.severity == LOG_CRITICAL)
+	#else
+	{
 		fprintf(stderr, "[%s][%s]: %s", *msg.module, _SeverityStr[msg.severity], *msg.message);
 
-	char buff[2048];
-	if (snprintf(buff, 2048, "[%s][%s]: %s", *msg.module, _SeverityStr[msg.severity], *msg.message) >= 1024)
-		Platform::LogDebugMessage("MESSAGE TRUNCATED");
-	Platform::LogDebugMessage(buff);
+		char buff[2048];
+		if (snprintf(buff, 2048, "[%s][%s]: %s", *msg.module, _SeverityStr[msg.severity], *msg.message) >= 1024)
+			Platform::LogDebugMessage("MESSAGE TRUNCATED");
+		Platform::LogDebugMessage(buff);
+	}
 	#endif
 
 	if (msg.severity > LOG_ALL)

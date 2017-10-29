@@ -48,10 +48,12 @@ class Slider : public Control
 public:
 	ENGINE_API Slider(int x = 0, int y = 0, int width = 75, int height = 24, bool vertical = false) :
 		Control(x, y, width, height),
-		_vertical(vertical), _dragging(false),
-		_value(0.f),
+		_tex(nullptr),
 		_barBox(new Box(x, y - 5 + height / 2, width, 5)),
-		_sliderBox(new Box(x + 5, y, height / 2, height))
+		_sliderBox(new Box(x + 5, y, height / 2, height)),
+		_value(0.f),
+		_vertical(vertical), _dragging(false),
+		_sliderMin(0), _sliderMax(100)		
 	{
 		GUIManager::RegisterControl(_barBox);
 		GUIManager::RegisterControl(_sliderBox);

@@ -348,6 +348,7 @@ public:
 
 	char &operator [](size_t i) { return _str[i]; }
 	char *operator *() { return _str; }
+	const char &operator [](size_t i) const { return _str[i]; }
 	const char *operator *() const { return _str; }
 
 	inline bool operator < (const NString &other) const

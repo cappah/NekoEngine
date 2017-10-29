@@ -41,7 +41,7 @@
 
 #include <stdint.h>
 
-enum PrimitiveID : uint8_t
+enum class PrimitiveID : uint8_t
 {
 	Triangle = 0,
 	Quad,
@@ -56,6 +56,8 @@ class Primitives
 {
 public:
 	static int Initialize();
+
+	static const NBounds &GetPrimitiveBounds(PrimitiveID primitive);
 
 	static void DrawPrimitive(PrimitiveID primitive, VkCommandBuffer commandBuffer);
 

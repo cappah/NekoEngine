@@ -60,12 +60,13 @@ public:
 
 	virtual int InitScene(BroadphaseType broadphase, double sceneSize, uint32_t maxObjects) = 0;
 
-	virtual BoxCollider *CreateBoxCollider(Object *parent, glm::vec3 &halfExtents) = 0;
+	virtual BoxCollider *CreateBoxCollider(Object *parent, const glm::vec3 &halfExtents) = 0;
 	virtual SphereCollider *CreateSphereCollider(Object *parent, double radius) = 0;
 	virtual CapsuleCollider *CreateCapsuleCollider(Object *parent, double radius, double height) = 0;
 	virtual MeshCollider *CreateMeshCollider(Object *parent, const StaticMesh *mesh) = 0;
 	
-	virtual bool RayCast(Ray *ray, glm::vec3 &start, glm::vec3 &end) = 0;
+	virtual bool RayCast(Ray *ray) = 0;
+	virtual bool ScreenRayCast(Ray *ray, glm::vec2 &screenCoords, float distance) = 0;
 
 	virtual void Update(double deltaTime) = 0;
 

@@ -57,4 +57,7 @@ public:
 
 	static int AddGroup(lua_State *state);
 	static int ResetGroups(lua_State *state);
+
+	static int Upload(lua_State *state);
+	static int CreateBuffer(lua_State *state);
 };

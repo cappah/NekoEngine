@@ -50,9 +50,15 @@ public:
 
 	Light *GetLight() noexcept { return _light; }
 
+	float GetIntensity() const { return _intensity; }
+
+	void SetColor(glm::vec3 &color) { _light->color.x = color.x; _light->color.x = color.y; _light->color.x = color.z; }
+	void SetDirection(glm::vec3 &direction) { _light->direction.x = direction.x; _light->direction.y = direction.y; _light->direction.z = direction.z; }
+	void SetIntensity(float intensity) { _intensity = intensity; if (_enabled) _light->color.a = intensity; }
+
 	virtual void Enable(bool enable) override { ObjectComponent::Enable(enable); _light->color.a = enable ? _intensity : 0.f; }
 
-	virtual void Update(double deltaTime) noexcept;
+	virtual void Update(double deltaTime) noexcept override;
 	virtual void UpdatePosition() noexcept override;
 
 	virtual bool Unload() override;

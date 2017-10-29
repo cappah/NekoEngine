@@ -38,7 +38,7 @@
  */
 
 #include <GUI/Slider.h>
-#include <Engine/Keycodes.h>
+#include <Input/Keycodes.h>
 #include <Renderer/VKUtil.h>
 #include <Renderer/DebugMarker.h>
 #include <Renderer/RenderPassManager.h>
@@ -95,6 +95,9 @@ void Slider::_MouseMoved(const Point &mousePos, const Point &lastMousePos)
 
 	offset.x = -offset.x;
 	offset.y = -offset.y;
+
+	if (offset.x == 0 && offset.y == 0)
+		return;
 
 	if (_vertical)
 	{

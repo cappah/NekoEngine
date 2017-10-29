@@ -185,7 +185,9 @@ int Material::Load()
 
 	if (_diffuseTextureId.Length())
 	{
-		if ((_diffuseTexture = (Texture *)ResourceManager::GetResourceByName(*_diffuseTextureId, ResourceType::RES_TEXTURE)) == nullptr)
+		if (_diffuseTextureId == "tex_blank")
+			_diffuseTexture = Renderer::GetInstance()->GetBlankTexture();
+		else if ((_diffuseTexture = (Texture *)ResourceManager::GetResourceByName(*_diffuseTextureId, ResourceType::RES_TEXTURE)) == nullptr)
 		{
 			Unload();
 			Logger::Log(MAT_MODULE, LOG_CRITICAL, "Failed to load texture %s for material %s", *_diffuseTextureId, _resourceInfo->name.c_str());
@@ -195,7 +197,9 @@ int Material::Load()
 
 	if (_normalTextureId.Length())
 	{
-		if ((_normalTexture = (Texture *)ResourceManager::GetResourceByName(*_normalTextureId, ResourceType::RES_TEXTURE)) == nullptr)
+		if (_normalTextureId == "tex_blank")
+			_normalTexture = Renderer::GetInstance()->GetBlankTexture();
+		else if ((_normalTexture = (Texture *)ResourceManager::GetResourceByName(*_normalTextureId, ResourceType::RES_TEXTURE)) == nullptr)
 		{
 			Unload();
 			Logger::Log(MAT_MODULE, LOG_CRITICAL, "Failed to load texture %s for material %s", *_normalTextureId, _resourceInfo->name.c_str());
@@ -205,7 +209,9 @@ int Material::Load()
 
 	if (_specularTextureId.Length())
 	{
-		if ((_specularTexture = (Texture *)ResourceManager::GetResourceByName(*_specularTextureId, ResourceType::RES_TEXTURE)) == nullptr)
+		if (_specularTextureId == "tex_blank")
+			_specularTexture = Renderer::GetInstance()->GetBlankTexture();
+		else if ((_specularTexture = (Texture *)ResourceManager::GetResourceByName(*_specularTextureId, ResourceType::RES_TEXTURE)) == nullptr)
 		{
 			Unload();
 			Logger::Log(MAT_MODULE, LOG_CRITICAL, "Failed to load texture %s for material %s", *_specularTextureId, _resourceInfo->name.c_str());
@@ -215,7 +221,9 @@ int Material::Load()
 
 	if (_emissionTextureId.Length())
 	{
-		if ((_emissionTexture = (Texture *)ResourceManager::GetResourceByName(*_emissionTextureId, ResourceType::RES_TEXTURE)) == nullptr)
+		if (_emissionTextureId == "tex_blank")
+			_emissionTexture = Renderer::GetInstance()->GetBlankTexture();
+		else if ((_emissionTexture = (Texture *)ResourceManager::GetResourceByName(*_emissionTextureId, ResourceType::RES_TEXTURE)) == nullptr)
 		{
 			Unload();
 			Logger::Log(MAT_MODULE, LOG_CRITICAL, "Failed to load texture %s for material %s", *_emissionTextureId, _resourceInfo->name.c_str());
@@ -401,6 +409,11 @@ void Material::Unload()
 
 	if (_descriptorPool != VK_NULL_HANDLE)
 		vkDestroyDescriptorPool(VKUtil::GetDevice(), _descriptorPool, VKUtil::GetAllocator());
+
+	/*if (_diffuseTextureId.Length() && _diffuseTextureId != "tex_blank") ResourceManager::UnloadResourceByName(*_diffuseTextureId, ResourceType::RES_TEXTURE);
+	if (_normalTextureId.Length() && _normalTextureId != "tex_blank") ResourceManager::UnloadResourceByName(*_normalTextureId, ResourceType::RES_TEXTURE);
+	if (_specularTextureId.Length() && _specularTextureId != "tex_blank") ResourceManager::UnloadResourceByName(*_specularTextureId, ResourceType::RES_TEXTURE);
+	if (_emissionTextureId.Length() && _emissionTextureId != "tex_blank") ResourceManager::UnloadResourceByName(*_emissionTextureId, ResourceType::RES_TEXTURE);*/
 }
 
 void Material::_LoadInfo()

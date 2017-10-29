@@ -43,14 +43,21 @@
 
 using namespace std;
 
+extern char *ne_executable_name;
+
 void CleanUp()
 {
 	Engine::CleanUp();
+	free(ne_executable_name);
 }
 
 int main(int argc, char *argv[])
 {
 	atexit(CleanUp);
+
+	size_t len = strlen(argv[0]) + 1;
+	ne_executable_name = (char *)calloc(1, len);
+	snprintf(ne_executable_name, len, "%s", argv[0]);
 
 	std::string args("");
 

@@ -42,28 +42,8 @@
 #include <Engine/Engine.h>
 #include <Renderer/Renderer.h>
 #include <Scene/ObjectComponent.h>
-
-struct CPUEmitter
-{
-	glm::vec3 position;
-	float lifespan;
-	float rate;
-	glm::vec3 rotation;
-	float initialSize;
-	glm::vec3 scale;
-	float finalSize;
-	glm::vec4 initialColor;
-	glm::vec4 finalColor;
-	float enableGravity;
-	int32_t maxEmit;
-	uint32_t maxParticles;
-	uint32_t emitterType;
-	uint32_t particleType;
-	uint32_t velocityCurve;
-	uint32_t sizeCurve;
-	uint32_t colorCurve;
-	uint32_t enable;
-};
+#include <Scene/Particles/Emitter.h>
+#include <Scene/Particles/Particle.h>
 
 struct ParticleTexture
 {
@@ -87,14 +67,9 @@ public:
 	~CPUParticleSystemComponent() noexcept { }
 
 protected:
-	Buffer *_particleBuffer;
-	VkCommandBuffer _drawCommandBuffer, _computeCommandBuffer;
-	VkDescriptorPool _descriptorPool;
-	VkDescriptorSet _drawDescriptorSet, _computeDescriptorSet;
-	VkDeviceSize _vertexBufferSize;
-	NArray<ParticleTexture> _particleTextures;
-	NArray<uint32_t> _textureIds;
-	Texture *_texture, *_noiseTexture;
+	Emitter *_emitter;
+	NArray<Particle *> _particles;
+	NArrayTS<uint32_t> _deadList;
 };
 
 #if defined(_MSC_VER)

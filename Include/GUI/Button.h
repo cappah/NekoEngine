@@ -45,7 +45,7 @@
 class Button : public Box
 {
 public:
-	ENGINE_API Button(int x = 0, int y = 0, int width = 75, int height = 24) : Box(x, y, width, height) { }
+	ENGINE_API Button(int x = 0, int y = 0, int width = 75, int height = 24) : Box(x, y, width, height) { _color = glm::vec4(.9f, .9f, .9f, 1.f); }
 	ENGINE_API virtual ~Button() { }
 
 protected:

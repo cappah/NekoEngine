@@ -48,13 +48,6 @@
 #define SH_FRAG_PHONG_SPEC_NM		5
 #define SH_FRAG_PHONG_SPEC_EM_NM	6
 
-#define MASK_POS_0					0xFC000000
-#define MASK_POS_1					0x03F00000
-#define MASK_POS_2					0x000FC000
-#define MASK_POS_3					0x00003F00
-#define MASK_POS_4					0x000000FC
-#define MASK_POS_5					0xFFFF0000
-
 // Output
 layout(location = 0) out vec4 o_FragColor;
 layout(location = 1) out vec4 o_Brightness;
@@ -62,7 +55,6 @@ layout(location = 1) out vec4 o_Brightness;
 #define SHADOW_MATRICES_BINDING		4
 
 #include "util.glh"
-#include "normal.glh"
 #include "fs_data.glh"
 #include "scenedata.glh"
 #include "matrixblock.glh"
@@ -89,7 +81,7 @@ layout(constant_id = 11) const int numTextures = 5;
 
 layout(set = 2, binding = 0) uniform sampler2D textures[numTextures];
 
-const uvec2 mask_pos[6] = { { 0xFC000000, 26 }, { 0x03F00000, 20 }, { 0x000FC000, 14 }, { 0x00003F00, 8 }, { 0x000000FC, 2 }, { 0xFFFF0000, 16 } };
+const uvec2 mask_pos[5] = { { 0xFC000000, 26 }, { 0x03F00000, 20 }, { 0x000FC000, 14 }, { 0x00003F00, 8 }, { 0x000000FC, 2 } };
 
 #define diffuseMap textures[0]
 #define normalMap textures[1]
@@ -109,15 +101,35 @@ float linstep(float low, float high, float val)
 	return clamp((val - low) / (high - low), 0.0, 1.0);
 }
 
-float getShadowMapId(uint mapId, float v1, float v2)
+float getShadowMapId(uint mapId, float v)
 {
-	uint ret = uint(mapId == 5 ? v2 : v1) & mask_pos[mapId].x;
+	uint ret = uint(v) & mask_pos[mapId].x;
 	return float(ret >> mask_pos[mapId].y);
 }
 
 float calculateShadow(uint lightIndex)
 {
-	float shadowMapId = getShadowMapId(0, lightBuffer.data[lightIndex].direction.w, lightBuffer.data[lightIndex].position.w);
+	float shadowMapId = getShadowMapId(0, lightBuffer.data[lightIndex].direction.w);
+
+	vec4 lightSpacePos = shadowMatrices.data[int(shadowMapId)] * vec4(v_pos, 1.0);
+	vec3 shadowCoords = (lightSpacePos.xyz / lightSpacePos.w);
+
+	vec2 moments = texture(shadowMap, vec3(shadowCoords.xy, shadowMapId)).rg;
+	
+	float p = step(shadowCoords.z, moments.x);
+	float var = max(moments.y - moments.x * moments.x, 0.000002);
+
+	float d = shadowCoords.z - moments.x;
+	//float pMax = linstep(0.2, 1.0, var / (var + d * d));
+	float pMax = smoothstep(0.2, 1.0, var / (var + d * d));
+
+	return min(max(p, pMax), 1.0);	
+}
+
+float calculateDirectionalShadow(uint lightIndex)
+{
+	// TODO: Cascaded
+	float shadowMapId = getShadowMapId(0, lightBuffer.data[lightIndex].direction.w);
 
 	vec4 lightSpacePos = shadowMatrices.data[int(shadowMapId)] * vec4(v_pos, 1.0);
 	vec3 shadowCoords = (lightSpacePos.xyz / lightSpacePos.w);
@@ -157,7 +169,7 @@ void main()
 	uint index = tile.y * int(sceneData.numberOfTilesX) + tile.x;
 
 	vec3 specularColor;
-	vec3 normal = decodeNormal(textureAverage(wsNormalMap, location, sceneData.numSamples).xy);
+	vec3 normal = textureAverage(wsNormalMap, location, sceneData.numSamples).xyz;
 
 	if (shaderType == SH_FRAG_PHONG_SPEC || shaderType == SH_FRAG_PHONG_SPEC_EM || shaderType == SH_FRAG_PHONG_SPEC_NM || shaderType == SH_FRAG_PHONG_SPEC_EM_NM)
 		specularColor = texture(textures[1], v_uv).rgb;
@@ -180,9 +192,13 @@ void main()
 		vec3 light = lightBuffer.data[lightIndex].color.rgb * lightBuffer.data[lightIndex].color.a;
 		float attenuation = 1.0, spotAttenuation = 1.0, shadow = 1.0;
 
-		uint lightType = getLightType(lightBuffer.data[lightIndex].position.w);
+		uint lightType = uint(lightBuffer.data[lightIndex].position.w);
 		if (lightType == LT_DIRECTIONAL)
+		{
 			lightDirection = normalize(-lightBuffer.data[lightIndex].direction.xyz);
+			if (lightBuffer.data[lightIndex].direction.w > -1.0)
+				shadow = calculateDirectionalShadow(lightIndex);
+		}
 		else if (lightType == LT_POINT)
 		{
 			lightDirection = lightBuffer.data[lightIndex].position.xyz - v_pos;
@@ -190,6 +206,9 @@ void main()
 			attenuation = smoothstep(lightBuffer.data[lightIndex].data.y, lightBuffer.data[lightIndex].data.x, d);
 
 			lightDirection = normalize(lightDirection);
+
+			if (lightBuffer.data[lightIndex].direction.w > -1.0)
+				shadow = calculateShadow(lightIndex);
 		}
 		else if (lightType == LT_SPOT)
 		{
@@ -207,10 +226,10 @@ void main()
 
 			if (theta < lightBuffer.data[lightIndex].data.w)
 				continue;
-		}
 
-		if (lightBuffer.data[lightIndex].direction.w > -1.0)
-			shadow = calculateShadow(lightIndex);
+			if (lightBuffer.data[lightIndex].direction.w > -1.0)
+				shadow = calculateShadow(lightIndex);
+		}		
 
 		float diffuseCoef = max(dot(normal, lightDirection), 0.0);
 
@@ -227,8 +246,8 @@ void main()
 		lightColor += shadow * (diffuse + specular) * attenuation * spotAttenuation;
 	}
 
-	o_FragColor = vec4(0.3 * ambient * vec3(texture(aoMap, (gl_FragCoord.xy / vec2(sceneData.screenSize))).r) + lightColor + emissionColor, color.a);
+	o_FragColor = vec4(vec3(ambient + lightColor + emissionColor) * vec3(texture(aoMap, (gl_FragCoord.xy / vec2(sceneData.screenSize))).r), color.a);
 
 	float brightness = dot(o_FragColor.rgb, vec3(0.2126, 0.7152, 0.0722)) * pushConstants.bloom;
-    if(brightness > 1.5) o_Brightness = vec4(o_FragColor.rgb, 1.0);
+    if(brightness > 1.3) o_Brightness = vec4(o_FragColor.rgb, 1.0);
 }

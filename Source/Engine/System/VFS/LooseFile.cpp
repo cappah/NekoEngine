@@ -185,7 +185,7 @@ void LooseFile::Close()
 	if (_references)
 		return;
 
-	fclose(_fp);
+	if (_fp) fclose(_fp);
 	_fp = nullptr;
 }
 
@@ -193,8 +193,9 @@ LooseFile::~LooseFile()
 {
 	if (!_references)
 		return;
-	
+
 	_references = 0;
-	fclose(_fp);
+
+	if (_fp) fclose(_fp);
 	_fp = nullptr;
 }

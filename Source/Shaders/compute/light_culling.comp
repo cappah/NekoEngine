@@ -130,7 +130,7 @@ void main()
 		if (lightIndex >= sceneData.lightCount || lightBuffer.data[lightIndex].color.a < 0.02)
 			break;
 
-		if (getLightType(lightBuffer.data[lightIndex].position.w) != LT_DIRECTIONAL)
+		if (uint(lightBuffer.data[lightIndex].position.w) != LT_DIRECTIONAL)
 		{
 			float distance = dot(vec4(lightBuffer.data[lightIndex].position.xyz, 1.0), frustumPlanes[0]) + lightBuffer.data[lightIndex].data.y;
 			if (distance <= 0.0) continue;

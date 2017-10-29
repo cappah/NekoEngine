@@ -213,7 +213,7 @@ bool RenderPassManager::_CreateDepthRenderPass()
 	depthAttachment.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL;
 	
 	VkAttachmentDescription normalAttachment{};
-	normalAttachment.format = VK_FORMAT_R8G8_UNORM;
+	normalAttachment.format = VK_FORMAT_R16G16B16A16_SFLOAT;
 	normalAttachment.samples = samples;
 	normalAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
 	normalAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;

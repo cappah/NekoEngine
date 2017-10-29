@@ -129,6 +129,8 @@ public:
 		for (uint8_t i = 0; i < 8; ++i)
 			if (_children[i].HasObjects())
 				return true;
+
+		return false;
 	}
 
 	virtual ~OcTreeNode()
@@ -192,5 +194,5 @@ public:
 private:
 	OcTreeNode *_rootNode;
 	size_t _count;
-	float _initialSize, _looseness, _minNodeSize;
+	float /*_initialSize,*/ _looseness, _minNodeSize;
 };

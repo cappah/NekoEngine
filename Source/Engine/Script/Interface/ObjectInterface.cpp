@@ -79,7 +79,7 @@ int ObjectInterface::GetRotation(lua_State *state)
 	if (argc != 1)
 		return luaL_error(state, "Invalid arguments");
 
-	lua_pushlightuserdata(state, value_ptr(((Object *)lua_touserdata(state, 1))->GetRotation()));
+	lua_pushlightuserdata(state, value_ptr(((Object *)lua_touserdata(state, 1))->GetRotationAngles()));
 
 	return 1;
 }

@@ -75,13 +75,27 @@ NFont::NFont(FontResource *res)
 	_buffer = _stagingBuffer = nullptr;
 }
 
-uint32_t NFont::GetTextLength(NString &text)
+uint32_t NFont::GetTextLength(const char *text)
 {
-	uint32_t len = 0;
+	uint32_t len{ 0 };
+	size_t textLen{ strlen(text) };
+
+	for (unsigned int i = 0; i < textLen; ++i)
+	{
+		CharacterInfo &info{ _characterInfo[(int)text[i]] };
+		len += info.bearing.x + info.size.x;
+	}
+
+	return len;
+}
+
+uint32_t NFont::GetTextLength(const NString &text)
+{
+	uint32_t len{ 0 };
 
 	for (unsigned int i = 0; i < text.Length(); ++i)
 	{
-		CharacterInfo &info = _characterInfo[(int)text[i]];
+		CharacterInfo &info{ _characterInfo[(int)text[i]] };
 		len += info.bearing.x + info.size.x;
 	}
 
@@ -110,7 +124,7 @@ int NFont::Load()
 {
 	FT_Init_FreeType(&_ft);
 
-	int ret = _BuildAtlas();
+	int ret{ _BuildAtlas() };
 
 	FT_Done_FreeType(_ft);
 
@@ -130,7 +144,7 @@ int NFont::Load()
 
 void NFont::UpdateData(VkCommandBuffer cmdBuffer)
 {
-	uint8_t *data = _stagingBuffer->Map(0, _bufferSize);
+	uint8_t *data{ _stagingBuffer->Map(0, _bufferSize) };
 	if(!data)
 	{ DIE("Failed to map staging buffer"); }
 
@@ -154,19 +168,19 @@ void NFont::UpdateData(VkCommandBuffer cmdBuffer)
 
 void NFont::Draw(NString text, glm::vec2 &pos, glm::vec3 &color) noexcept
 {
-	unsigned int vertexCount = (unsigned int)_vertices.Count();
-	uint32_t offset = Engine::GetConfiguration().Engine.ScreenHeight - _texHeight + 4;
+	unsigned int vertexCount{ (unsigned int)_vertices.Count() };
+	uint32_t offset{ Engine::GetConfiguration().Engine.ScreenHeight - _texHeight + 4 };
 
 	for (unsigned int i = 0; i < text.Length(); i++)
 	{
-		CharacterInfo &info = _characterInfo[(int)text[i]];
+		CharacterInfo &info{ _characterInfo[(int)text[i]] };
 
-		float x = pos.x + info.bearing.x;
-		float y = (offset - pos.y) - (info.size.y - info.bearing.y);
-		float w = (float)info.size.x;
-		float h = (float)info.size.y;
+		float x{ pos.x + info.bearing.x };
+		float y{ (offset - pos.y) - (info.size.y - info.bearing.y) };
+		float w{ (float)info.size.x };
+		float h{ (float)info.size.y };
 
-		GUIVertex v;
+		GUIVertex v{};
 		v.color = vec4(color, 1.0);
 
 		v.posAndUV = vec4(x, y, info.offset, (float)info.size.y / (float)_texHeight);
@@ -181,7 +195,7 @@ void NFont::Draw(NString text, glm::vec2 &pos, glm::vec3 &color) noexcept
 		v.posAndUV = vec4(x + w, y, info.offset + ((float)info.size.x / (float)_texWidth), (float)info.size.y / (float)_texHeight);
 		_vertices.Add(v);
 
-		unsigned int indexOffset = (4 * i) + vertexCount;
+		unsigned int indexOffset{ (4 * i) + vertexCount };
 		_indices.Add(indexOffset);
 		_indices.Add(1 + indexOffset);
 		_indices.Add(2 + indexOffset);
@@ -202,13 +216,13 @@ int NFont::_BuildAtlas()
 {
 	FT_Face face{};
 	FT_GlyphSlot glyph{};
-	VFSFile *file = nullptr;
-	size_t size = 0;
-	uint8_t *mem = nullptr;
-	uint32_t x = 0, vboSize = 0, iboSize = 0, maxChars = 0;
+	VFSFile *file{ nullptr };
+	size_t size{ 0 };
+	uint8_t *mem{ nullptr };
+	uint32_t x{ 0 }, vboSize{ 0 }, iboSize{ 0 }, maxChars{ 0 };
 
-	VkBuffer stagingBuffer = VK_NULL_HANDLE;
-	VkDeviceMemory stagingBufferMemory = VK_NULL_HANDLE;
+	VkBuffer stagingBuffer{ VK_NULL_HANDLE };
+	VkDeviceMemory stagingBufferMemory{ VK_NULL_HANDLE };
 
 	if ((file = VFS::Open(GetResourceInfo()->filePath)) == nullptr)
 	{
@@ -262,12 +276,12 @@ int NFont::_BuildAtlas()
 		_texHeight = std::max(_texHeight, (uint32_t)glyph->bitmap.rows);
 	}
 
-	VkDeviceSize buffSize = _texWidth * _texHeight;
+	VkDeviceSize buffSize{ _texWidth * _texHeight };
 
 	VKUtil::CreateBuffer(stagingBuffer, stagingBufferMemory, buffSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
 		VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
 
-	uint8_t *data;
+	uint8_t *data{ nullptr };
 	vkMapMemory(VKUtil::GetDevice(), stagingBufferMemory, 0, buffSize, 0, (void **)&data);
 
 	for (int i = 0; i < FONT_NUM_CHARS; ++i)
@@ -276,9 +290,9 @@ int NFont::_BuildAtlas()
 
 		for (uint32_t j = 0; j < glyph->bitmap.rows; ++j)
 		{
-			uint32_t offset = x + _texWidth * j;
-			uint32_t size = glyph->bitmap.width;
-			uint32_t dataOffset = size * j;
+			uint32_t offset{ x + _texWidth * j };
+			uint32_t size{ glyph->bitmap.width };
+			uint32_t dataOffset{ size * j };
 
 			memcpy(data + offset, glyph->bitmap.buffer + dataOffset, size);
 		}
@@ -353,11 +367,11 @@ int NFont::_BuildAtlas()
 
 int NFont::_CreateDescriptorSet()
 {
-	VkDescriptorPoolSize poolSize = {};
+	VkDescriptorPoolSize poolSize{};
 	poolSize.type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
 	poolSize.descriptorCount = 1;
 
-	VkDescriptorPoolCreateInfo poolInfo = {};
+	VkDescriptorPoolCreateInfo poolInfo{};
 	poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
 	poolInfo.poolSizeCount = 1;
 	poolInfo.pPoolSizes = &poolSize;
@@ -369,9 +383,9 @@ int NFont::_CreateDescriptorSet()
 		return ENGINE_DESCRIPTOR_POOL_CREATE_FAIL;
 	}
 
-	VkDescriptorSetLayout layout = PipelineManager::GetDescriptorSetLayout(DESC_LYT_OneSampler);
+	VkDescriptorSetLayout layout{ PipelineManager::GetDescriptorSetLayout(DESC_LYT_OneSampler) };
 
-	VkDescriptorSetAllocateInfo allocInfo = {};
+	VkDescriptorSetAllocateInfo allocInfo{};
 	allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
 	allocInfo.descriptorPool = _descriptorPool;
 	allocInfo.descriptorSetCount = 1;
@@ -390,7 +404,7 @@ int NFont::_CreateDescriptorSet()
 
 void NFont::_UpdateDescriptorSet()
 {
-	VkDescriptorImageInfo imageInfo = {};
+	VkDescriptorImageInfo imageInfo{};
 	imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 	imageInfo.imageView = _view;
 	imageInfo.sampler = GUIManager::GetSampler();
@@ -411,14 +425,14 @@ int NFont::_BuildCommandBuffer()
 	if ((_cmdBuffer = VKUtil::CreateCommandBuffer(VK_COMMAND_BUFFER_LEVEL_SECONDARY)) == VK_NULL_HANDLE)
 		return ENGINE_CMDBUFFER_CREATE_FAIL;
 
-	VkCommandBufferInheritanceInfo inheritanceInfo = {};
+	VkCommandBufferInheritanceInfo inheritanceInfo{};
 	inheritanceInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO;
 	inheritanceInfo.occlusionQueryEnable = VK_FALSE;
 	inheritanceInfo.renderPass = RenderPassManager::GetRenderPass(RP_GUI);
 	inheritanceInfo.subpass = 0;
 	inheritanceInfo.framebuffer = Renderer::GetInstance()->GetGUIFramebuffer();
 
-	VkCommandBufferBeginInfo beginInfo = {};
+	VkCommandBufferBeginInfo beginInfo{};
 	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 	beginInfo.flags = VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT | VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT;
 	beginInfo.pInheritanceInfo = &inheritanceInfo;
@@ -431,7 +445,7 @@ int NFont::_BuildCommandBuffer()
 
 	VK_DBG_MARKER_INSERT(_cmdBuffer, "Font", vec4(1.0, 0.5, 1.0, 1.0));
 
-	VkDeviceSize offset = _vboOffset;
+	VkDeviceSize offset{ _vboOffset };
 	vkCmdBindVertexBuffers(_cmdBuffer, 0, 1, &_buffer->GetHandle(), &offset);
 	vkCmdBindIndexBuffer(_cmdBuffer, _buffer->GetHandle(), _iboOffset, VK_INDEX_TYPE_UINT32);
 

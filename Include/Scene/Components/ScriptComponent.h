@@ -56,7 +56,10 @@ public:
 	virtual bool Unload() override;
 	virtual bool CanUnload() override;
 
-	void Enable(bool enable) { _enabled = enable; }
+	void Enable(bool enable) override { _enabled = enable; }
+
+	bool Invoke(const char *name);
+	void SetGlobalInteger(const char *name, int value);
 
 	~ScriptComponent() noexcept;
 
@@ -64,4 +67,5 @@ protected:
 	struct lua_State *_state;
 	bool _enabled;
 	NString _scriptFile;
+	const char *_scriptSource;
 };

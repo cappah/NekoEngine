@@ -67,8 +67,7 @@ public:
 		_loadingScreenTexture(LS_DEFAULT_TEXTURE),
 		_sceneBuffer(nullptr),
 		_sceneUbo(nullptr),
-		_threadPool(new NThreadPool(Platform::GetNumberOfProcessors() - 2)),
-		_ocTree(new OcTree())
+		_ocTree(nullptr)
 	{ };
 
 	ENGINE_API Scene(int id, std::string file, const char* ls_texture) noexcept :
@@ -81,8 +80,7 @@ public:
 		_loadingScreenTexture(ls_texture),
 		_sceneBuffer(nullptr),
 		_sceneUbo(nullptr),
-		_threadPool(new NThreadPool(Platform::GetNumberOfProcessors() - 2)),
-		_ocTree(new OcTree())
+		_ocTree(nullptr)
 	{ };
 
 	ENGINE_API int GetId() noexcept { return _id; }
@@ -134,7 +132,6 @@ private:
 	float _bgMusicVolume;
 	NString _loadingScreenTexture;
 	Buffer *_sceneBuffer, *_sceneUbo;
-	NThreadPool *_threadPool;
 	OcTree *_ocTree;
 
 #ifdef ENGINE_INTERNAL

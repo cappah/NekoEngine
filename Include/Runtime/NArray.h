@@ -39,6 +39,7 @@
 
 #pragma once
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
 
@@ -109,8 +110,10 @@ public:
 
 	void Remove(size_t index)
 	{
-		if (index == --_count)
+		if (index == _count - 1)
 			return;
+
+		--_count;
 
 		((T*)_data)[index].~T();
 
@@ -120,6 +123,11 @@ public:
 
 	size_t Find(T item, std::function<bool(T, T)> cmpfunc = [](T a, T b) -> bool { return a == b; }) const
 	{
+		if (!_data)
+		{
+		fprintf(stderr, "WHAT THE ACTUAL FUCKING FUCK");	
+		}
+
 		for (size_t i = 0; i <= _count; ++i)
 			if (cmpfunc(item, ((T*)_data)[i]))
 				return i;

@@ -51,9 +51,9 @@ public:
 
 	Object *GetParent() { return _parent; }
 
-	virtual void SetPosition(glm::vec3 &position) { (void)position; }
-	virtual void SetRotation(glm::quat &rotation) { (void)rotation; }
-	virtual void SetScale(glm::vec3 &scale) { (void)scale; }
+	virtual void SetPosition(const glm::vec3 &position) { (void)position; }
+	virtual void SetRotation(const glm::quat &rotation) { (void)rotation; }
+	virtual void SetScale(const glm::vec3 &scale) { (void)scale; }
 
 	virtual ~Collider() { }
 
@@ -64,10 +64,10 @@ protected:
 class BoxCollider : public Collider
 {
 public:
-	BoxCollider(class Object *parent, glm::vec3 &halfExtents) : Collider(parent) { _halfExtents = halfExtents; }
+	BoxCollider(class Object *parent, const glm::vec3 &halfExtents) : Collider(parent) { _halfExtents = halfExtents; }
 
-	glm::vec3 &GetHalfExtents() { return _halfExtents; }
-	virtual void SetHalfExtents(glm::vec3 &halfExtents) { _halfExtents = halfExtents; }
+	const glm::vec3 &GetHalfExtents() { return _halfExtents; }
+	virtual void SetHalfExtents(const glm::vec3 &halfExtents) { _halfExtents = halfExtents; }
 
 	virtual ~BoxCollider() { }
 

@@ -47,7 +47,7 @@ class SkysphereComponent : public StaticMeshComponent
 public:
 	ENGINE_API SkysphereComponent(ComponentInitializer *initializer);
 
-	ENGINE_API virtual void UpdateData(VkCommandBuffer commandBuffer) noexcept;
+	ENGINE_API virtual void UpdateData(VkCommandBuffer commandBuffer) noexcept override;
 	virtual void DrawShadow(VkCommandBuffer commandBuffer, uint32_t shadowId) const noexcept override { (void)commandBuffer; (void)shadowId; }
 
 	ENGINE_API virtual ~SkysphereComponent() { };

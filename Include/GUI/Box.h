@@ -45,11 +45,13 @@
 class Box : public Control
 {
 public:
-	ENGINE_API Box(int x = 0, int y = 0, int width = 75, int height = 24) : Control(x, y, width, height) { }
-	ENGINE_API virtual void SetPosition(int x, int y) { Control::SetPosition(x, y); _UpdateVertices(); }
-	ENGINE_API virtual void SetPosition(Point pt) { Control::SetPosition(pt); _UpdateVertices(); }
-	ENGINE_API virtual void SetSize(int width, int height) { Control::SetSize(width, height); _UpdateVertices(); }
-	ENGINE_API virtual void SetSize(Point pt) { Control::SetSize(pt); _UpdateVertices(); }
+	ENGINE_API Box(int x = 0, int y = 0, int width = 75, int height = 24) : Control(x, y, width, height) { memset(_vertices, 0x0, sizeof(GUIVertex) * 4); _tex = nullptr; _color = glm::vec4(.3f, .3f, .3f, 1.f); }
+	ENGINE_API virtual void SetPosition(int x, int y) override { Control::SetPosition(x, y); _UpdateVertices(); }
+	ENGINE_API virtual void SetPosition(Point pt) override { Control::SetPosition(pt); _UpdateVertices(); }
+	ENGINE_API virtual void SetSize(int width, int height) override { Control::SetSize(width, height); _UpdateVertices(); }
+	ENGINE_API virtual void SetSize(Point pt) override { Control::SetSize(pt); _UpdateVertices(); }
+	ENGINE_API virtual void SetColor(glm::vec4 &color) override { Control::SetColor(color); _UpdateVertices(); }
+	ENGINE_API virtual void SetTexture(Texture *texture);
 	ENGINE_API virtual ~Box();
 
 protected:

@@ -47,6 +47,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtx/quaternion.hpp>
+#include <glm/gtx/euler_angles.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
 #ifdef NE_PLATFORM_WINDOWS
@@ -100,5 +101,6 @@
 #define ENGINE_MEM_FAIL							-15
 #define ENGINE_LOAD_GS_FAIL						-16
 #define ENGINE_OUT_OF_RESOURCES					-17
+#define ENGINE_DB_INIT_FAIL						-18
 
 #define ENGINE_INVALID_HEADER					-3000

@@ -64,25 +64,54 @@ StaticMesh::StaticMesh(MeshResource *res) noexcept :
 {
 	_resourceInfo = res;
 
+	_primitiveId = PrimitiveID::EndEnum;
+
+	_depthPipelineId = PIPE_Depth;
+	_depthPipelineLayoutId = PIPE_LYT_Depth;
+}
+
+StaticMesh::StaticMesh(PrimitiveID primitiveId) noexcept :
+	_buffer(nullptr),
+	_indexCount(0),
+	_vertexCount(0),
+	_triangleCount(0),
+	_dynamic(false),
+	_hasOwnBuffer(false),
+	_resident(false),
+	_vertexOffset(0),
+	_indexOffset(0)
+{
+	_resourceInfo = nullptr;
+
+	_primitiveId = primitiveId;
+
 	_depthPipelineId = PIPE_Depth;
 	_depthPipelineLayoutId = PIPE_LYT_Depth;
 }
 
 int StaticMesh::Load()
-{
-	if (AssetLoader::LoadStaticMesh(GetResourceInfo()->filePath, _vertices, _indices, _groups) != ENGINE_OK)
+{	
+	if (_primitiveId != PrimitiveID::EndEnum)
 	{
-		Logger::Log(SM_MESH_MODULE, LOG_CRITICAL, "Failed to load mesh id=%s", _resourceInfo->name.c_str());
-		return ENGINE_FAIL;
+		MeshGroup group{ 0, 0, 0, 0 };
+		_groups.push_back(group);
+	}
+	else
+	{
+		if (AssetLoader::LoadStaticMesh(GetResourceInfo()->filePath, _vertices, _indices, _groups) != ENGINE_OK)
+		{
+			Logger::Log(SM_MESH_MODULE, LOG_CRITICAL, "Failed to load mesh id=%s", _resourceInfo->name.c_str());
+			return ENGINE_FAIL;
+		}
+
+		_indexCount = (uint32_t)_indices.size();
+		_vertexCount = (uint32_t)_vertices.size();
+		_triangleCount = _indexCount / 3;
+
+		Logger::Log(SM_MESH_MODULE, LOG_DEBUG, "Loaded mesh id %d from %s, %d vertices, %d indices", _resourceInfo->id, *GetResourceInfo()->filePath, _vertexCount, _indexCount);
 	}
 
-	_indexCount = (uint32_t)_indices.size();
-	_vertexCount = (uint32_t)_vertices.size();
-	_triangleCount = _indexCount / 3;
-
 	CreateBounds();
-
-	Logger::Log(SM_MESH_MODULE, LOG_DEBUG, "Loaded mesh id %d from %s, %d vertices, %d indices", _resourceInfo->id, *GetResourceInfo()->filePath, _vertexCount, _indexCount);
 
 	return ENGINE_OK;
 }
@@ -97,6 +126,10 @@ int StaticMesh::LoadStatic(std::vector<Vertex> &vertices, std::vector<uint32_t> 
 
 	_vertices = vertices;
 	_indices = indices;
+
+	_indexCount = (uint32_t)_indices.size();
+	_vertexCount = (uint32_t)_vertices.size();
+	_triangleCount = _indexCount / 3;
 
 	if (calculateTangents) _CalculateTangents();
 	if (createBounds) CreateBounds();
@@ -115,6 +148,10 @@ int StaticMesh::LoadDynamic(std::vector<Vertex> &vertices, std::vector<uint32_t>
 	_vertices = vertices;
 	_indices = indices;
 
+	_indexCount = (uint32_t)_indices.size();
+	_vertexCount = (uint32_t)_vertices.size();
+	_triangleCount = _indexCount / 3;
+
 	if (calculateTangents) _CalculateTangents();
 	if (createBounds) CreateBounds();
 
@@ -125,6 +162,9 @@ int StaticMesh::LoadDynamic(std::vector<Vertex> &vertices, std::vector<uint32_t>
 
 int StaticMesh::CreateBuffer(bool dynamic)
 {
+	if (_resident && _primitiveId != PrimitiveID::EndEnum)
+		return ENGINE_OK;
+
 	delete _buffer;
 
 	if ((_buffer = new Buffer(GetRequiredMemorySize(),
@@ -143,6 +183,12 @@ void StaticMesh::CreateBounds()
 	vec3 boxMin{ 0.f };
 	vec3 center{ 0.f };
 	float radius2{ 0.f };
+
+	if (_primitiveId != PrimitiveID::EndEnum)
+	{
+		_bounds = Primitives::GetPrimitiveBounds(_primitiveId);
+		return;
+	}
 
 	for (Vertex &v : _vertices)
 	{
@@ -186,6 +232,9 @@ StaticMesh::~StaticMesh() noexcept
 
 VkDeviceSize StaticMesh::GetRequiredMemorySize()
 {
+	if (_primitiveId != PrimitiveID::EndEnum)
+		return 0;
+
 	VkDeviceSize size{ sizeof(Vertex) * _vertices.size() + sizeof(uint32_t) * _indices.size() };
 	if (size % 256)
 	{
@@ -197,6 +246,9 @@ VkDeviceSize StaticMesh::GetRequiredMemorySize()
 
 bool StaticMesh::Upload(Buffer *buffer)
 {
+	if (_resident && _primitiveId != PrimitiveID::EndEnum)
+		return ENGINE_OK;
+
 	if (buffer == nullptr)
 	{
 		if (_buffer == nullptr)
@@ -282,8 +334,10 @@ bool StaticMesh::BuildDrawables(NArray<Material *> &materials, VkDescriptorSet d
 		drawable.transparent = materials[i]->IsTransparent();
 
 		if (buildBounds)
-			_BuildBounds((uint32_t)i, drawable.bounds);
-
+		{
+			if (_primitiveId == PrimitiveID::EndEnum) _BuildBounds((uint32_t)i, drawable.bounds);
+			else drawable.bounds = Primitives::GetPrimitiveBounds(_primitiveId);
+		}
 		if (buildDepth)
 		{
 			drawable.depthCommandBuffer = Renderer::GetInstance()->CreateMeshCommandBuffer();
@@ -305,9 +359,6 @@ bool StaticMesh::BuildDrawables(NArray<Material *> &materials, VkDescriptorSet d
 
 			VK_DBG_MARKER_INSERT(drawable.depthCommandBuffer, _resourceInfo ? _resourceInfo->name.c_str() : "generated mesh", vec4(0.0, 0.5, 1.0, 1.0));
 
-			vkCmdBindVertexBuffers(drawable.depthCommandBuffer, 0, 1, &_buffer->GetHandle(), &_vertexOffset);
-			vkCmdBindIndexBuffer(drawable.depthCommandBuffer, _buffer->GetHandle(), _indexOffset, VK_INDEX_TYPE_UINT32);
-
 			PipelineId id{ _depthPipelineId };
 			if (materials[i]->HasNormalMap())
 				id = (PipelineId)(_depthPipelineId + 1);
@@ -318,7 +369,14 @@ bool StaticMesh::BuildDrawables(NArray<Material *> &materials, VkDescriptorSet d
 			
 			materials[i]->BindNormal(drawable.depthCommandBuffer);
 
-			vkCmdDrawIndexed(drawable.depthCommandBuffer, _groups[i].indexCount, 1, _groups[i].indexOffset, 0, 0);
+			if (_primitiveId == PrimitiveID::EndEnum)
+			{
+				vkCmdBindVertexBuffers(drawable.depthCommandBuffer, 0, 1, &_buffer->GetHandle(), &_vertexOffset);
+				vkCmdBindIndexBuffer(drawable.depthCommandBuffer, _buffer->GetHandle(), _indexOffset, VK_INDEX_TYPE_UINT32);
+				vkCmdDrawIndexed(drawable.depthCommandBuffer, _groups[i].indexCount, 1, _groups[i].indexOffset, 0, 0);
+			}
+			else
+				Primitives::DrawPrimitive(_primitiveId, drawable.depthCommandBuffer);
 
 			if (vkEndCommandBuffer(drawable.depthCommandBuffer) != VK_SUCCESS)
 			{
@@ -344,15 +402,19 @@ bool StaticMesh::BuildDrawables(NArray<Material *> &materials, VkDescriptorSet d
 
 		VK_DBG_MARKER_INSERT(drawable.sceneCommandBuffer, _resourceInfo ? _resourceInfo->name.c_str() : "generated mesh", vec4(1.0, 0.5, 0.0, 1.0));
 
-		vkCmdBindVertexBuffers(drawable.sceneCommandBuffer, 0, 1, &_buffer->GetHandle(), &_vertexOffset);
-		vkCmdBindIndexBuffer(drawable.sceneCommandBuffer, _buffer->GetHandle(), _indexOffset, VK_INDEX_TYPE_UINT32);
-
 		materials[i]->Enable(drawable.sceneCommandBuffer);
 
 		vkCmdBindDescriptorSets(drawable.sceneCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, materials[i]->GetPipelineLayout(), 0, 1, &sceneDescriptorSet, 0, nullptr);
 		vkCmdBindDescriptorSets(drawable.sceneCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, materials[i]->GetPipelineLayout(), 1, 1, &descriptorSet, 0, nullptr);
 
-		vkCmdDrawIndexed(drawable.sceneCommandBuffer, _groups[i].indexCount, 1, _groups[i].indexOffset, 0, 0);
+		if (_primitiveId == PrimitiveID::EndEnum)
+		{
+			vkCmdBindVertexBuffers(drawable.sceneCommandBuffer, 0, 1, &_buffer->GetHandle(), &_vertexOffset);
+			vkCmdBindIndexBuffer(drawable.sceneCommandBuffer, _buffer->GetHandle(), _indexOffset, VK_INDEX_TYPE_UINT32);
+			vkCmdDrawIndexed(drawable.sceneCommandBuffer, _groups[i].indexCount, 1, _groups[i].indexOffset, 0, 0);
+		}
+		else
+			Primitives::DrawPrimitive(_primitiveId, drawable.sceneCommandBuffer);
 
 		if (vkEndCommandBuffer(drawable.sceneCommandBuffer) != VK_SUCCESS)
 		{
@@ -370,9 +432,6 @@ void StaticMesh::DrawShadow(VkCommandBuffer commandBuffer, uint32_t shadowId, Vk
 {
 	VK_DBG_MARKER_INSERT(commandBuffer, _resourceInfo ? _resourceInfo->name.c_str() : "generated mesh", vec4(0.0, 0.5, 1.0, 1.0));
 
-	vkCmdBindVertexBuffers(commandBuffer, 0, 1, &_buffer->GetHandle(), &_vertexOffset);
-	vkCmdBindIndexBuffer(commandBuffer, _buffer->GetHandle(), _indexOffset, VK_INDEX_TYPE_UINT32);
-
 	vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, PipelineManager::GetPipeline(PIPE_Shadow));
 
 	VkDescriptorSet matricesDS = ShadowRenderer::GetMatricesDescriptorSet();
@@ -381,12 +440,23 @@ void StaticMesh::DrawShadow(VkCommandBuffer commandBuffer, uint32_t shadowId, Vk
 
 	vkCmdPushConstants(commandBuffer, PipelineManager::GetPipelineLayout(PIPE_LYT_Shadow), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(uint32_t), &shadowId);
 
-	for (size_t i = 0; i < _groups.size(); ++i)
-		vkCmdDrawIndexed(commandBuffer, _groups[i].indexCount, 1, _groups[i].indexOffset, 0, 0);
+	if (_primitiveId == PrimitiveID::EndEnum)
+	{
+		vkCmdBindVertexBuffers(commandBuffer, 0, 1, &_buffer->GetHandle(), &_vertexOffset);
+		vkCmdBindIndexBuffer(commandBuffer, _buffer->GetHandle(), _indexOffset, VK_INDEX_TYPE_UINT32);
+
+		for (size_t i = 0; i < _groups.size(); ++i)
+			vkCmdDrawIndexed(commandBuffer, _groups[i].indexCount, 1, _groups[i].indexOffset, 0, 0);
+	}
+	else
+		Primitives::DrawPrimitive(_primitiveId, commandBuffer);
 }
 
 void StaticMesh::_CalculateTangents()
 {
+	if (!_vertices.size())
+		return;
+
 	for (size_t i = 0; i < _indices.size(); i += 3)
 	{
 		Vertex &v0 = _vertices[_indices[i]];

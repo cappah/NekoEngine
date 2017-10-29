@@ -39,8 +39,8 @@
 
 #include <algorithm>
 
+#include <Input/Input.h>
 #include <Engine/Engine.h>
-#include <Engine/Input.h>
 #include <Platform/Platform.h>
 
 #include <Xinput.h>

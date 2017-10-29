@@ -38,10 +38,11 @@
  */
 
 #include <Scene/Object.h>
+#include <Scene/CameraManager.h>
 #include <Scene/Components/LightComponent.h>
+#include <System/Logger.h>
 #include <System/AssetLoader/AssetLoader.h>
 #include <Renderer/ShadowRenderer.h>
-#include <Engine/CameraManager.h>
 
 #define MASK_HI_16			0x0000FFFF
 #define MASK_LO_16			0xFFFF0000
@@ -126,9 +127,9 @@ LightComponent::LightComponent(ComponentInitializer *initializer) :
 	if (((it = initializer->arguments.find("angle")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
 	{
 		AssetLoader::ReadFloatArray(ptr, 2, &_light->data.z);
-		
-		_light->data.z = cos(radians(_light->data.z));
-		_light->data.w = cos(radians(_light->data.w));
+
+		_light->data.z = cos(radians(_light->data.z / 2.f));
+		_light->data.w = cos(radians(_light->data.w / 2.f));
 	}
 
 	if (((it = initializer->arguments.find("type")) != initializer->arguments.end()) && ((ptr = it->second.c_str()) != nullptr))
@@ -145,29 +146,27 @@ LightComponent::LightComponent(ComponentInitializer *initializer) :
 
 	if ((it = initializer->arguments.find("castshadows")) != initializer->arguments.end())
 	{
-		uint32_t v1{ 0 }, v2{ (uint32_t)_light->position.w };
+		uint32_t v{ 0 };
 
 		if (ShadowRenderer::RegisterShadowCaster(_lightId, _light->position.w == LT_Point ? 6 : 1, _shadowMapIds, _shadowCasterId) != ENGINE_OK)
 		{ DIE("Out of resources"); }
 
-		v1 |= SHIFT_POS_0(_shadowMapIds[0]);
+		v |= SHIFT_POS_0(_shadowMapIds[0]);
 
 		if (_light->position.w == LT_Point)
 		{
-			v1 |= SHIFT_POS_1(_shadowMapIds[1]);
-			v1 |= SHIFT_POS_2(_shadowMapIds[2]);
-			v1 |= SHIFT_POS_3(_shadowMapIds[3]);
-			v1 |= SHIFT_POS_4(_shadowMapIds[4]);
-			v2 |= SHIFT_POS_5(_shadowMapIds[5]);
+			v |= SHIFT_POS_1(_shadowMapIds[1]);
+			v |= SHIFT_POS_2(_shadowMapIds[2]);
+			v |= SHIFT_POS_3(_shadowMapIds[3]);
+			v |= SHIFT_POS_4(_shadowMapIds[4]);
 		}
 
-		_light->direction.w = (float)v1;
-		_light->position.w = (float)v2;
+		_light->direction.w = (float)v;
 
 		ShadowRenderer::GetMatrices(_shadowCasterId, _lightMatrices, _biasedLightMatrices);
 	}
-
-	_light->position = vec4(_parent->GetPosition(), _light->position.w);
+	
+	_light->position = vec4(_parent->GetPosition() + _position, _light->position.w);
 }
 
 void LightComponent::Update(double deltaTime) noexcept
@@ -182,11 +181,11 @@ void LightComponent::UpdatePosition() noexcept
 {
 	ObjectComponent::UpdatePosition();
 
+//	Camera *cam{ CameraManager::GetActiveCamera() };
+	_light->position = vec4(_parent->GetPosition() + _position, _light->position.w);
+
 	if (!_lightMatrices[0])
 		return;
-
-	Camera *cam{ CameraManager::GetActiveCamera() };
-	_light->position = vec4(_parent->GetPosition(), _light->position.w);
 
 	mat4 projection{};
 	mat4 view{};
@@ -210,8 +209,8 @@ void LightComponent::UpdatePosition() noexcept
 	}
 	else if (_light->position.w == LT_Spot)
 	{
-		projection = perspective(radians(45.f), 1.0f, 1.0f, cam->GetFar());
-		view = lookAt(vec3(_light->position), vec3(_light->position) * vec3(_light->direction), vec3(0.f, 1.f, 0.f));
+		projection = perspective(radians(_light->data.w / 2.f), 1.0f, 0.1f, _light->data.y);
+		view = lookAt(vec3(_light->position), vec3(_light->direction) * _light->data.y, vec3(0.f, 1.f, 0.f));
 	}
 	
 	projection[1][1] *= -1;

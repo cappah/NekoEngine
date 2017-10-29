@@ -69,7 +69,7 @@ static VkDescriptorSet _ds[2]{ VK_NULL_HANDLE, VK_NULL_HANDLE };
 static VkDescriptorSet _ppDS[2]{ VK_NULL_HANDLE, VK_NULL_HANDLE };
 static VkDescriptorSet _brightDS{ VK_NULL_HANDLE };
 static VkDescriptorSet _dofDS{ VK_NULL_HANDLE };
-static VkDescriptorSet _fgDS{ VK_NULL_HANDLE };
+//static VkDescriptorSet _fgDS{ VK_NULL_HANDLE };
 static VkDescriptorPool _pool = VK_NULL_HANDLE;
 static VkPipeline _pipeline = VK_NULL_HANDLE, _blurPipeline = VK_NULL_HANDLE, _dofPipeline = VK_NULL_HANDLE, _fgPipeline = VK_NULL_HANDLE;
 static int _bloomBlurPasses = BLOOM_HIGH;

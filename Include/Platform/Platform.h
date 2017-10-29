@@ -183,8 +183,11 @@ public:
 	ENGINE_API static float GetConfigFloat(const char *section, const char *entry, float def, const char *file);
 	ENGINE_API static double GetConfigDouble(const char *section, const char *entry, double def, const char *file);
 	ENGINE_API static size_t GetConfigSection(const char *section, char *out, size_t size, const char *file);
-	ENGINE_API static int Rand();
+	ENGINE_API static uint32_t Rand();
+	ENGINE_API static uint32_t RandRange(uint32_t max);
+	ENGINE_API static float RandRange(float max);
 	ENGINE_API static void Exit();
+	ENGINE_API static void Restart();
 
 #ifdef ENGINE_INTERNAL // Platform specific private functions
 	static int Initialize();

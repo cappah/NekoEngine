@@ -39,7 +39,7 @@
 
 #include "DemoAnimatorComponent.h"
 #include <Engine/ResourceManager.h>
-#include <Engine/Input.h>
+#include <Input/Input.h>
 
 REGISTER_COMPONENT_CLASS(DemoAnimatorComponent);
 

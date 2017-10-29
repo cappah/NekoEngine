@@ -42,6 +42,7 @@
 #include "BulletColliders.h"
 
 #include <System/Logger.h>
+#include <Scene/CameraManager.h>
 
 #define BLT_MODULE	"BulletPhysics"
 
@@ -75,7 +76,7 @@ int BulletPhysics::InitScene(BroadphaseType broadphase, double sceneSize, uint32
 	return ENGINE_OK;
 }
 
-BoxCollider *BulletPhysics::CreateBoxCollider(Object *parent, glm::vec3 &halfExtents)
+BoxCollider *BulletPhysics::CreateBoxCollider(Object *parent, const vec3 &halfExtents)
 {
 	BulletBoxCollider *collider{ new BulletBoxCollider(parent, halfExtents) };
 	_world->addCollisionObject(collider->GetCollisionObject());
@@ -103,10 +104,10 @@ MeshCollider *BulletPhysics::CreateMeshCollider(Object *parent, const StaticMesh
 	return (MeshCollider *)collider;
 }
 
-bool BulletPhysics::RayCast(Ray *ray, glm::vec3 &start, glm::vec3 &end)
+bool BulletPhysics::RayCast(Ray *ray)
 {
-	btVector3 rayStart{ start.x, start.y, start.z };
-	btVector3 rayEnd{ end.x, end.y, end.z };
+	btVector3 rayStart{ ray->start.x, ray->start.y, ray->start.z };
+	btVector3 rayEnd{ ray->end.x, ray->end.y, ray->end.z };
 
 	btCollisionWorld::ClosestRayResultCallback callback(rayStart, rayEnd);
 
@@ -120,6 +121,17 @@ bool BulletPhysics::RayCast(Ray *ray, glm::vec3 &start, glm::vec3 &end)
 	ray->hitObject = (Object *)callback.m_collisionObject->getUserPointer();
 
 	return true;
+}
+
+bool BulletPhysics::ScreenRayCast(Ray *ray, vec2 &screenCoords, float distance)
+{
+	vec3 coords = vec3(screenCoords, 0.f);
+	vec4 viewport = vec4(0.f, 0.f, Engine::GetScreenWidth(), Engine::GetScreenHeight());
+
+	ray->start = unProject(coords, CameraManager::GetActiveCamera()->GetView(), CameraManager::GetActiveCamera()->GetProjectionMatrix(), viewport);
+	ray->end = ray->start + distance * CameraManager::GetActiveCamera()->GetForward();
+	
+	return RayCast(ray);
 }
 
 void BulletPhysics::Update(double deltaTime)
@@ -146,6 +158,11 @@ void BulletPhysics::Update(double deltaTime)
 			((Object *)b->getUserPointer())->OnHit((Object *)a->getUserPointer(), hitPos);
 		}
 	}
+}
+
+void BulletPhysics::RemoveCollisionObject(btCollisionObject *object)
+{
+	_world->removeCollisionObject(object);
 }
 
 void BulletPhysics::Release()

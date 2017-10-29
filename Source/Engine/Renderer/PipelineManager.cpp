@@ -694,7 +694,7 @@ int PipelineManager::_CreatePipelines()
 		pipelineInfo.pDepthStencilState = &depthStencil;
 	}
 
-	// Wireframe (Debug)
+	// Debug
 	{
 		const VkPipelineMultisampleStateCreateInfo *oldMSCI{ pipelineInfo.pMultisampleState };
 		pipelineInfo.pMultisampleState = &noMultisampling;
@@ -723,7 +723,7 @@ int PipelineManager::_CreatePipelines()
 		pipelineInfo.pColorBlendState = &wfColorBlending;
 		pipelineInfo.pDepthStencilState = &wfDepthStencil;
 		pipelineInfo.pRasterizationState = &wfRasterizationState;
-		pipelineInfo.layout = _pipelineLayouts[PIPE_LYT_Bounds];		
+		pipelineInfo.layout = _pipelineLayouts[PIPE_LYT_Debug];		
 		pipelineInfo.renderPass = RenderPassManager::GetRenderPass(RP_GUI);
 
 		if (vkCreateGraphicsPipelines(VKUtil::GetDevice(), VK_NULL_HANDLE, 1, &pipelineInfo, VKUtil::GetAllocator(), &pipeline) != VK_SUCCESS)
@@ -734,6 +734,25 @@ int PipelineManager::_CreatePipelines()
 		VK_DBG_SET_OBJECT_NAME((uint64_t)pipeline, VK_DEBUG_REPORT_OBJECT_TYPE_PIPELINE_EXT, "Bounds (DEBUG)");
 		_pipelines.insert(make_pair(PIPE_Bounds, pipeline));
 
+		/*VkPipelineVertexInputStateCreateInfo empty{};
+		VKUtil::InitVertexInput(&empty);
+
+		VkPipelineInputAssemblyStateCreateInfo debugIA{};
+		VKUtil::InitInputAssembly(&debugIA, VK_PRIMITIVE_TOPOLOGY_POINT_LIST);
+
+		pipelineInfo.pVertexInputState = &empty;
+		pipelineInfo.pInputAssemblyState = &debugIA;
+
+		if (vkCreateGraphicsPipelines(VKUtil::GetDevice(), VK_NULL_HANDLE, 1, &pipelineInfo, VKUtil::GetAllocator(), &pipeline) != VK_SUCCESS)
+		{
+			Logger::Log(PLMGR_MODULE, LOG_CRITICAL, "Failed to create bounds pipeline");
+			return ENGINE_FAIL;
+		}
+		VK_DBG_SET_OBJECT_NAME((uint64_t)pipeline, VK_DEBUG_REPORT_OBJECT_TYPE_PIPELINE_EXT, "Bounds (DEBUG)");
+		_pipelines.insert(make_pair(PIPE_DebugLine, pipeline));*/
+
+		pipelineInfo.pVertexInputState = &vertexInputInfo;
+		pipelineInfo.pInputAssemblyState = &inputAssembly;
 		pipelineInfo.pRasterizationState = &rasterizer;
 		pipelineInfo.renderPass = RenderPassManager::GetRenderPass(RP_Graphics);
 		pipelineInfo.pMultisampleState = oldMSCI;
@@ -1332,7 +1351,10 @@ int PipelineManager::_CreatePipelines()
 		pipelineInfo.pVertexInputState = &psVertexInputInfo;
 		pipelineInfo.pInputAssemblyState = &psInputAssemblyInfo;
 		pipelineInfo.pDepthStencilState = &depthStencil;
+
 		rasterizer.cullMode = VK_CULL_MODE_NONE;
+		depthStencil.depthCompareOp = VK_COMPARE_OP_LESS;
+		depthStencil.depthWriteEnable = VK_TRUE;
 
 		if (vkCreateGraphicsPipelines(VKUtil::GetDevice(), VK_NULL_HANDLE, 1, &pipelineInfo, VKUtil::GetAllocator(), &pipeline) != VK_SUCCESS)
 		{
@@ -1341,6 +1363,10 @@ int PipelineManager::_CreatePipelines()
 		}
 		VK_DBG_SET_OBJECT_NAME((uint64_t)pipeline, VK_DEBUG_REPORT_OBJECT_TYPE_PIPELINE_EXT, "particle system draw");
 		_pipelines.insert(make_pair(PIPE_ParticleDraw, pipeline));
+
+		depthStencil.depthWriteEnable = VK_FALSE;
+		depthStencil.depthCompareOp = VK_COMPARE_OP_EQUAL;
+		rasterizer.cullMode = VK_CULL_MODE_BACK_BIT;
 	}
 
 	return ENGINE_OK;
@@ -1491,7 +1517,7 @@ int PipelineManager::_CreatePipelineLayouts()
 		return ENGINE_PIPELINE_LYT_CREATE_FAIL;
 	}
 	VK_DBG_SET_OBJECT_NAME((uint64_t)layout, VK_DEBUG_REPORT_OBJECT_TYPE_PIPELINE_LAYOUT_EXT, "bounds");
-	_pipelineLayouts.insert(make_pair(PIPE_LYT_Bounds, layout));
+	_pipelineLayouts.insert(make_pair(PIPE_LYT_Debug, layout));
 
 	//***************
 	//* GUI pipeline

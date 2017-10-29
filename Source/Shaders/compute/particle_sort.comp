@@ -46,6 +46,9 @@ layout(local_size_x = 256) in;
 
 void main()
 {
+	/*if (emitterData.enable == 0)
+		return;*/
+
 	uint particleId = gl_GlobalInvocationID.x;
 	if (particleId >= emitterData.currentParticles)
 		return;
@@ -53,5 +56,11 @@ void main()
 	particleBuffer.data[emitterData.maxParticles + particleId] = particleBuffer.data[particleId];
 
 	if (gl_GlobalInvocationID.x == 0)
+	{
+		// build draw command
 		drawIndirect.vertexCount = emitterData.currentParticles;
+		drawIndirect.instanceCount = 1;
+		drawIndirect.firstVertex = 0;
+		drawIndirect.firstInstance = 0;
+	}
 }

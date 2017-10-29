@@ -195,7 +195,7 @@ void OcTreeNode::GetVisible(const NFrustum &frustum, NArray<const Object *> &vis
 
 	for (const Object *obj : _objects)
 	{
-		if (obj->GetNoCull() || !frustum.ContainsBounds(obj->GetTransformedBounds()))
+		if (obj->GetNoCull() || !obj->IsVisible() || !frustum.ContainsBounds(obj->GetTransformedBounds()))
 			continue;
 
 		visibleObjects.Add(obj);
@@ -227,7 +227,7 @@ void OcTreeNode::GetColliding(const NBounds &bounds, NArray<const Object *> &col
 OcTree::OcTree(vec3 center, float initialSize, float looseness, float minNodeSize) :
 	_rootNode(new OcTreeNode(center, initialSize, minNodeSize, looseness, OCT_MAXOBJECTS)),
 	_count(0),
-	_initialSize(initialSize),
+	//_initialSize(initialSize),
 	_looseness(looseness),
 	_minNodeSize(minNodeSize)
 {

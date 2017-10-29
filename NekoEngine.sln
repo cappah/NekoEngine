@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26014.0
+VisualStudioVersion = 15.0.26020.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Launcher", "Source\Launcher\Launcher.vcxproj", "{F7B09F30-B1B3-4DEE-9243-F41CB574D9C2}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -48,6 +48,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NullPhysics", "Source\NullP
 	ProjectSection(ProjectDependencies) = postProject
 		{53D8CF9F-41AA-4329-A236-AA7F841E88F1} = {53D8CF9F-41AA-4329-A236-AA7F841E88F1}
 	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FMODAudio", "Source\FMODAudio\FMODAudio.vcxproj", "{08915664-FA24-4CFD-8AA8-AEAD087C2C19}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -98,6 +100,11 @@ Global
 		{294A213E-CAEF-4527-9857-365DE2AA38CC}.Development|x64.Build.0 = Development|x64
 		{294A213E-CAEF-4527-9857-365DE2AA38CC}.Release|x64.ActiveCfg = Release|x64
 		{294A213E-CAEF-4527-9857-365DE2AA38CC}.Release|x64.Build.0 = Release|x64
+		{08915664-FA24-4CFD-8AA8-AEAD087C2C19}.Debug|x64.ActiveCfg = Debug|x64
+		{08915664-FA24-4CFD-8AA8-AEAD087C2C19}.Debug|x64.Build.0 = Debug|x64
+		{08915664-FA24-4CFD-8AA8-AEAD087C2C19}.Development|x64.ActiveCfg = Development|x64
+		{08915664-FA24-4CFD-8AA8-AEAD087C2C19}.Release|x64.ActiveCfg = Release|x64
+		{08915664-FA24-4CFD-8AA8-AEAD087C2C19}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -111,5 +118,6 @@ Global
 		{24680173-8297-403F-8902-0E0FBB759E5D} = {1B6008D9-A5F5-468A-A10A-F3FBBF8DD0C1}
 		{1BC43351-D09E-4A02-B0EE-2AA4815F4634} = {1B6008D9-A5F5-468A-A10A-F3FBBF8DD0C1}
 		{294A213E-CAEF-4527-9857-365DE2AA38CC} = {4274C621-8B97-47DD-94F2-E690C6A91970}
+		{08915664-FA24-4CFD-8AA8-AEAD087C2C19} = {1B6008D9-A5F5-468A-A10A-F3FBBF8DD0C1}
 	EndGlobalSection
 EndGlobal

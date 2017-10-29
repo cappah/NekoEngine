@@ -49,35 +49,37 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#define BIN_HEADER	"NMESH2 "
+#define BIN_HEADER	"NMESH2B"
 #define BIN_FOOTER	"ENDMESH"
 
 struct Vertex
 {
 	Vertex() :
-		position(glm::vec3(0.f)),
+		position(glm::dvec3(0.f)),
 		uv(glm::vec2(0.f)),
-		normal(glm::vec3(0.f)),
-		tangent(glm::vec3(0.f))
+		normal(glm::dvec3(0.f)),
+		tangent(glm::dvec3(0.f))
 	{ }
 
-	Vertex(glm::vec3 inPos) :
+	Vertex(glm::dvec3 inPos) :
 		position(inPos),
 		uv(glm::vec2(0.f)),
-		normal(glm::vec3(0.f)),
-		tangent(glm::vec3(0.f))
+		normal(glm::dvec3(0.f)),
+		tangent(glm::dvec3(0.f))
 	{ }
 
-	glm::vec3 position;
+	glm::dvec3 position;
 	glm::vec2 uv;
-	glm::vec3 normal;
-	glm::vec3 tangent;
+	glm::dvec3 normal;
+	glm::dvec3 tangent;
 };
 
 struct GroupInfo
 {
-	uint32_t offset;
-	uint32_t count;
+	uint32_t vertexOffset;
+	uint32_t vertexCount;
+	uint32_t indexOffset;
+	uint32_t indexCount;
 	int32_t materialId;
 };
 
@@ -87,15 +89,15 @@ class StaticMesh : public QObject
 public:
 	explicit StaticMesh(QObject *parent = 0);
 
-	void AddVertex(Vertex &v) { _vertices.push_back(v); }
-	void AddIndex(uint32_t index) { _indices.push_back(_startVertex + index); _groupCount++; }
+	void AddVertex(Vertex &v) { _vertices.push_back(v); ++_groupVertexCount; }
+	void AddIndex(uint32_t index) { _indices.push_back(_startVertex + index); ++_groupCount; }
 
 	size_t VertexCount() { _vertices.size(); }
 	size_t IndexCount() { _indices.size(); }
 
-	void BeginGroup() { _startIndex = (uint32_t)_indices.size(); _startVertex = (uint32_t)_vertices.size(); _groupCount = 0; }
+	void BeginGroup() { _startIndex = (uint32_t)_indices.size(); _startVertex = (uint32_t)_vertices.size(); _groupCount = 0; _groupVertexCount = 0; }
 	void SetMaterialID(int32_t index) { _materialId = index; }
-	void EndGroup() { _groups.push_back({ _startIndex, _groupCount, _materialId }); }
+	void EndGroup() { _groups.push_back({ _startVertex, _groupVertexCount, _startIndex, _groupCount, _materialId }); }
 
 	std::vector<GroupInfo> &GetGroups() { return _groups; }
 
@@ -114,6 +116,7 @@ private:
 	uint32_t _startIndex;
 	uint32_t _startVertex;
 	uint32_t _groupCount;
+	uint32_t _groupVertexCount;
 	int32_t _materialId;
 };
 

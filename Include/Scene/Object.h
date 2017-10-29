@@ -80,7 +80,7 @@ class Object
 public:
 	ENGINE_API Object() noexcept;
 	ENGINE_API Object(ObjectInitializer *initializer) noexcept;
-	 
+
 	ENGINE_API uint32_t GetId() const noexcept { return _id; }
 	ENGINE_API NString &GetName() noexcept { return _name; }
 	ENGINE_API bool GetNoCull() const { return _noCull; }
@@ -108,11 +108,17 @@ public:
 	ENGINE_API size_t GetVertexCount() noexcept;
 	ENGINE_API size_t GetTriangleCount() noexcept;
 	ENGINE_API glm::vec3 &GetPosition() noexcept { return _position; }
-	ENGINE_API glm::vec3 &GetRotation() noexcept { return _rotation; }
+	ENGINE_API glm::quat &GetRotation() noexcept { return _rotationQuaternion; }
+	ENGINE_API glm::vec3 &GetRotationAngles() noexcept { return _rotation; }
 	ENGINE_API glm::vec3 &GetScale() noexcept { return _scale; }
 	ENGINE_API glm::mat4 &GetModelMatrix() noexcept { return _modelMatrix; }
 	ENGINE_API const NBounds &GetBounds() const noexcept { return _bounds; }
 	ENGINE_API const NBounds &GetTransformedBounds() const noexcept { return _transformedBounds; }
+
+	ENGINE_API bool IsEnabled() const noexcept { return _enabled; }
+	ENGINE_API void SetEnabled(bool enable) noexcept { _enabled = enable; for (std::pair<std::string, ObjectComponent *> kvp : _components) kvp.second->Enable(enable); }
+	ENGINE_API bool IsVisible() const noexcept { return _visible; }
+	ENGINE_API void SetVisible(bool visible) noexcept { _visible = visible; for (std::pair<std::string, ObjectComponent *> kvp : _components) kvp.second->SetVisible(visible); }
 
 	ENGINE_API virtual int Load();
 	ENGINE_API virtual int CreateBuffers();
@@ -168,10 +174,10 @@ protected:
 	glm::vec3 _center, _forward, _right;
 	glm::quat _rotationQuaternion;
 	ForwardDirection _objectForward;
-	bool _loaded;
+	bool _loaded, _visible;
 	std::map<std::string, ObjectComponent*> _components;
 	glm::mat4 _translationMatrix, _scaleMatrix, _modelMatrix;
-	bool _updateWhilePaused, _noCull, _updateModelMatrix, _haveMesh;
+	bool _updateWhilePaused, _noCull, _updateModelMatrix, _haveMesh, _enabled;
 	Buffer *_buffer;
 	NBounds _bounds, _transformedBounds;
 

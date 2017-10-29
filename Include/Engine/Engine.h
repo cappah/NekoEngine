@@ -92,6 +92,8 @@ struct RendererConfig
 
 	float Gamma;
 
+	bool UseDeviceGroup;
+
 	struct
 	{
 		bool Enable;
@@ -99,6 +101,7 @@ struct RendererConfig
 		float Radius;
 		float PowerExponent;
 		float Threshold;
+		float Bias;
 		bool Multisampling;
 	} SSAO;
 };
@@ -115,6 +118,16 @@ struct PostProcessorConfig
 };
 
 /**
+ * Audio system configuration information
+ */
+struct AudioConfig
+{
+	float MasterVolume;
+	float EffectsVolume;
+	float MusicVolume;
+};
+
+/**
  * Configuration information
  */
 struct Configuration
@@ -122,6 +135,7 @@ struct Configuration
 	EngineConfig Engine;
 	RendererConfig Renderer;
 	PostProcessorConfig PostProcessor;
+	AudioConfig Audio;
 };
 
 /**
@@ -160,13 +174,15 @@ public:
 	static void CleanUp() noexcept;
 
 	static void Exit() { Platform::Exit(); }
+	static void Restart() { Platform::Restart(); }
+
+	/**
+	* Get the engine configuration information
+	*/
+	static Configuration &GetConfiguration() noexcept { return _config; }
+	static bool SaveConfiguration() noexcept;
 
 #ifdef ENGINE_INTERNAL
-	/**
-	 * Get the engine configuration information
-	 */
-	static Configuration &GetConfiguration() noexcept { return _config; }
-
 	/**
 	 * Get the engine debug variables
 	 */
@@ -174,7 +190,7 @@ public:
 
 	static GameModule *GetGameModule() noexcept { return _gameModule; }
 #endif
-	
+
 private:
 	static Configuration _config;
 	static DebugVariables _debugVariables;

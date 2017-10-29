@@ -89,7 +89,7 @@ public:
 			if ((filter & (1 << i)) && ((memProperties.memoryTypes[i].propertyFlags & properties) == properties))
 				return i;
 
-		// warn
+		Logger::Log("VKUtil", LOG_CRITICAL, "Failed to get memory type for: %d, %d", filter, properties);
 
 		return 0;
 	}

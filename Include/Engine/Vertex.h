@@ -74,19 +74,6 @@ struct Vertex
 		tangent(glm::vec3(0.f))
 	{ }
 
-	/*Vertex(const Vertex& vert) :
-		pos(vert.pos),
-		color(vert.color),
-		norm(vert.norm),
-		binorm(vert.binorm),
-		tgt(vert.tgt),
-		uv(vert.uv),
-		terrainUv(vert.terrainUv),
-		boneIndices(),
-		boneWeights(),
-		numBones(vert.numBones)
-	{ }*/
-
 	glm::vec3 position;
 	glm::vec2 uv;
 	glm::vec3 normal;

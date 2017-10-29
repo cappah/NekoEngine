@@ -9,6 +9,7 @@ endif(NOT CMAKE_BUILD_TYPE)
 
 option(NullAudio "NullAudio" ON)
 option(OpenALAudio "OpenALAudio" ON)
+option(FMODAudio "FMODAudio" OFF)
 option(NullPhysics "NullPhysics" ON)
 option(BulletPhysics "BulletPhysics" OFF)
 option(NEPhysX "NEPhysX" OFF)
@@ -17,9 +18,11 @@ file(GLOB EngineSourceFiles "Source/Engine/*.cpp"
 	"Source/Engine/Animation/*.cpp"
 	"Source/Engine/Audio/*.cpp"
 	"Source/Engine/Core/*.cpp"
+	"Source/Engine/Input/*.cpp"
 	"Source/Engine/PostEffects/*.cpp"
 	"Source/Engine/Scene/*.cpp"
 	"Source/Engine/Scene/Components/*.cpp"
+	"Source/Engine/Scene/Particles/*.cpp"
 	"Source/Engine/System/*.cpp"
 	"Source/Engine/System/AssetLoader/*.cpp"
 	"Source/Engine/System/VFS/*.cpp"
@@ -51,6 +54,7 @@ include_directories(${PROJECT_SOURCE_DIR}/Source/Include)
 include_directories(${PROJECT_SOURCE_DIR}/3rdparty/include_all)
 include_directories(/usr/include/freetype2)
 include_directories(/usr/local/include/freetype2)
+include_directories(/usr/include/bullet)
 link_directories(/usr/local/lib)
 
 if(NOT MSVC)
@@ -195,5 +199,5 @@ add_library(TestGame SHARED ${TestGameSourceFiles})
 target_compile_options(TestGame PRIVATE -std=c++1z)
 target_compile_options(TestGame PRIVATE -fPIC)
 target_compile_options(TestGame PRIVATE -frtti)
-target_compile_options(Engine PRIVATE -DTESTGAME_INTERNAL)
+target_compile_options(TestGame PRIVATE -DTESTGAME_INTERNAL)
 target_link_libraries(TestGame Engine)

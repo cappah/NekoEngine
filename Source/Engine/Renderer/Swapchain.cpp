@@ -60,11 +60,16 @@ Swapchain::Swapchain(SwapchainInfo &info)
 bool Swapchain::_Create()
 {
 	VkSurfaceFormatKHR surfaceFormat{ VK_FORMAT_B8G8R8A8_UNORM, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR };
-	VkPresentModeKHR presentMode{ VK_PRESENT_MODE_FIFO_KHR };
+	VkPresentModeKHR presentMode{ VK_PRESENT_MODE_IMMEDIATE_KHR };
 
-	for (VkPresentModeKHR &mode : _info.presentModes)
-		if (mode == VK_PRESENT_MODE_MAILBOX_KHR)
-			presentMode = VK_PRESENT_MODE_MAILBOX_KHR;
+	if (Engine::GetConfiguration().Renderer.VerticalSync)
+	{
+		presentMode = VK_PRESENT_MODE_FIFO_KHR;
+
+		for (VkPresentModeKHR &mode : _info.presentModes)
+			if (mode == VK_PRESENT_MODE_MAILBOX_KHR)
+				presentMode = VK_PRESENT_MODE_MAILBOX_KHR;
+	}
 
 	_extent = { Engine::GetConfiguration().Engine.ScreenWidth, Engine::GetConfiguration().Engine.ScreenHeight };
 	_extent.width = std::max(_info.capabilities.minImageExtent.width, std::min(_info.capabilities.maxImageExtent.width, _extent.width));

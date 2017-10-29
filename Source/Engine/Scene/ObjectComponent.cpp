@@ -37,15 +37,21 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <vector>
+
 #include <Scene/Object.h>
 #include <Scene/ObjectComponent.h>
+#include <Scene/Components/CameraComponent.h>
 
+using namespace std;
 using namespace glm;
 
 ObjectComponent::ObjectComponent(ComponentInitializer *initializer)
 	: _parent(initializer->parent),
 	_loaded(false),
 	_enabled(true),
+	_visible(true),
+	_attachedToCamera(false),
 	_cmdBuffer(VK_NULL_HANDLE)
 {
 	SetPosition(initializer->position);
@@ -53,10 +59,39 @@ ObjectComponent::ObjectComponent(ComponentInitializer *initializer)
 	SetScale(initializer->scale);
 }
 
+void ObjectComponent::SetPosition(vec3 &position) noexcept
+{
+	_position = position;
+
+	/*quat invRot = _parent->GetRotation();
+	invRot = inverse(invRot);*/
+
+//	_worldPosition rotate()
+}
+
+void ObjectComponent::SetRotation(vec3 &rotation) noexcept
+{
+	_rotation = rotation;
+}
+
+void ObjectComponent::SetScale(vec3 &newScale) noexcept
+{
+	_scale = newScale;
+}
+
+int ObjectComponent::InitializeComponent()
+{
+	if (_parent->GetComponentsOfType<CameraComponent>().size()) {
+		_parent->SetNoCull(true);
+		_attachedToCamera = true;
+	}
+
+	return ENGINE_OK;
+}
+
 bool ObjectComponent::Unload()
 {
-	if (_loaded)
-	{
+	if (_loaded) {
 		_loaded = false;
 		return true;
 	}

@@ -2,7 +2,7 @@
 
 set OUTPUT_DIRECTORY=..\..\Resources\Data\Shaders
 set SHC="%VK_SDK_PATH%\Bin\glslc.exe"
-set SHCFLAGS=--target-env=vulkan -Os -Iinclude
+set SHCFLAGS=--target-env=vulkan -Iinclude
 mkdir %OUTPUT_DIRECTORY%
 
 echo.

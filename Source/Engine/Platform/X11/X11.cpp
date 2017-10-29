@@ -46,7 +46,7 @@
 #include <X11/Xatom.h>
 #include <X11/Xutil.h>
 #include <X11/keysymdef.h>
-#include <Engine/Input.h>
+#include <Input/Input.h>
 #include <Engine/Engine.h>
 #include <System/Logger.h>
 #include <Platform/Platform.h>
@@ -71,7 +71,7 @@ bool UserInterrupt()
 
 		if (xev.type == KeyPress)
 			Input::Key(XLookupKeysym(&xev.xkey, 0), 1);
-		else if(xev.type == KeyRelease)
+		else if (xev.type == KeyRelease)
 		{
 			if(XEventsQueued(x_display, QueuedAfterReading))
 			{
@@ -84,7 +84,22 @@ bool UserInterrupt()
 			
 			Input::Key(XLookupKeysym(&xev.xkey, 0), 0);
 		}
-		else if(xev.type == ConfigureNotify)
+		else if (xev.type == ButtonPress || xev.type == ButtonRelease)
+		{
+			int keyCode{ 0 };
+
+			switch (xev.xbutton.button)
+			{
+				case Button1: keyCode = NE_MOUSE_LMB; break;
+				case Button2: keyCode = NE_MOUSE_RMB; break;
+				case Button3: keyCode = NE_MOUSE_MMB; break;
+				case Button4: keyCode = NE_MOUSE_BTN4; break;
+				case Button5: keyCode = NE_MOUSE_BTN5; break;
+			}
+
+			Input::Key(keyCode, xev.type == ButtonPress);
+		}
+		else if (xev.type == ConfigureNotify)
 		{
 			XConfigureEvent xce = xev.xconfigure;
 
@@ -117,7 +132,7 @@ PlatformWindowType Platform::CreateWindow(int width, int height, bool fullscreen
 
 	root = DefaultRootWindow(x_display);
 
-	swa.event_mask  =  ExposureMask | PointerMotionMask | KeyPressMask | KeyReleaseMask | StructureNotifyMask;
+	swa.event_mask  =  ExposureMask | PointerMotionMask | KeyPressMask | KeyReleaseMask | StructureNotifyMask | ButtonPressMask | ButtonReleaseMask;
 
 	win = XCreateWindow(
 		x_display, root,
@@ -279,7 +294,45 @@ bool Platform::CreateSurface(VkInstance instance, VkSurfaceKHR &surface, Platfor
 
 int Platform::GetSpecialDirectoryPath(SpecialDirectory directory, char *buff, uint32_t buffLen)
 {
-	return ENGINE_FAIL;
+	if (directory == SpecialDirectory::Temp)
+	{
+		const char *tmp{ getenv("TMPDIR") };
+		if (!tmp) tmp = "/tmp";
+		snprintf(buff, buffLen, "%s", tmp);
+		return ENGINE_OK;
+	}
+
+	const char *home{ getenv("HOME") };
+	snprintf(buff, buffLen, "%s", home);
+
+	uint32_t newLen{ (uint32_t)strlen(buff) };
+	buff += newLen;
+	newLen = buffLen - newLen;
+
+	switch (directory)
+	{
+		case SpecialDirectory::ApplicationData:
+			snprintf(buff, newLen, "/.NekoEngine");
+		break;
+		case SpecialDirectory::Documents:
+			snprintf(buff, newLen, "/Documents");
+		break;
+		case SpecialDirectory::Pictures:
+			snprintf(buff, newLen, "/Pictures");
+		break;
+		case SpecialDirectory::Desktop:
+			snprintf(buff, newLen, "/Desktop");
+		break;
+		case SpecialDirectory::Music:
+			snprintf(buff, newLen, "/Music");
+		break;
+		case SpecialDirectory::Temp:
+		case SpecialDirectory::Home:
+		default:
+		break;
+	}
+
+	return ENGINE_OK;
 }
 
 void Platform::CleanUp()

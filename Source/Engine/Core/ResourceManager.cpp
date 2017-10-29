@@ -41,6 +41,7 @@
 #include <Engine/ResourceManager.h>
 #include <Engine/ResourceDatabase.h>
 #include <System/Logger.h>
+#include <System/VFS/VFS.h>
 
 #include <algorithm>
 
@@ -78,16 +79,32 @@ int ResourceManager::Initialize()
 
 int ResourceManager::_LoadResources()
 {
-	string databaseFile = "/resources.db";
+	NString databaseFile = "/core.db";
 
-	_db = new ResourceDatabase();
+	if ((_db = new ResourceDatabase()) == nullptr)
+		return ENGINE_OUT_OF_RESOURCES;
+	
+	int ret{ _db->Initialize() };
+	if (ret != ENGINE_OK) return ret;
 
-	if (!_db->Open(databaseFile.c_str()))
+	if (!_db->Load(*databaseFile))
 	{
-		Logger::Log(RM_MODULE, LOG_CRITICAL, "Failed to open resource database");
+		Logger::Log(RM_MODULE, LOG_CRITICAL, "Failed to open core resource database");
 		delete _db;
 		_db = nullptr;
 		return ENGINE_FAIL;
+	}
+
+	databaseFile = "/game.db";
+	if (VFS::Exists(databaseFile))
+	{
+		if (!_db->Load(*databaseFile))
+		{
+			Logger::Log(RM_MODULE, LOG_CRITICAL, "Failed to open game resource database");
+			delete _db;
+			_db = nullptr;
+			return ENGINE_FAIL;
+		}
 	}
 
 	return _db->GetResources(_resourceInfo) ? ENGINE_OK : ENGINE_FAIL;

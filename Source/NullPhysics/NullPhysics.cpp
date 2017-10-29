@@ -41,11 +41,12 @@
 
 int NullPhysics::Initialize() { return ENGINE_OK; }
 int NullPhysics::InitScene(BroadphaseType broadphase, double sceneSize, uint32_t maxObjects) { return ENGINE_OK; }
-BoxCollider *NullPhysics::CreateBoxCollider(Object *parent, glm::vec3 &halfExtents) { return new BoxCollider(parent, halfExtents); }
+BoxCollider *NullPhysics::CreateBoxCollider(Object *parent, const glm::vec3 &halfExtents) { return new BoxCollider(parent, halfExtents); }
 SphereCollider *NullPhysics::CreateSphereCollider(Object *parent, double radius) { return new SphereCollider(parent, radius); }
 CapsuleCollider *NullPhysics::CreateCapsuleCollider(Object *parent, double radius, double height) { return new CapsuleCollider(parent, radius, height); }
 MeshCollider *NullPhysics::CreateMeshCollider(Object *parent, const StaticMesh *mesh) { return new MeshCollider(parent, mesh); }
-bool NullPhysics::RayCast(Ray *ray, glm::vec3 &start, glm::vec3 &end) { (void)ray; (void)start; (void)end; return false; }
+bool NullPhysics::RayCast(Ray *ray) { (void)ray; return false; }
+bool NullPhysics::ScreenRayCast(Ray *ray, glm::vec2 &screenCoords, float distance) { (void)ray; (void)screenCoords; (void)distance; return false; }
 void NullPhysics::Update(double deltaTime) { (void)deltaTime; }
 void NullPhysics::Release() { }
 NullPhysics::~NullPhysics() { }

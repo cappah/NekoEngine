@@ -44,8 +44,8 @@
 #include <Renderer/ShadowRenderer.h>
 #include <Renderer/PipelineManager.h>
 #include <Renderer/RenderPassManager.h>
-#include <Engine/CameraManager.h>
-#include <Engine/SceneManager.h>
+#include <Scene/CameraManager.h>
+#include <Scene/SceneManager.h>
 
 #define SHADOW_RENDERER_MODULE	"ShadowRenderer"
 
@@ -379,7 +379,7 @@ void ShadowRenderer::BuildCommandBuffer(VkCommandBuffer commandBuffer)
 	renderPassInfo.renderArea.extent = { (uint32_t)Engine::GetConfiguration().Renderer.ShadowMapSize, (uint32_t)Engine::GetConfiguration().Renderer.ShadowMapSize };
 	renderPassInfo.clearValueCount = 2;
 	renderPassInfo.pClearValues = clearValues;
-
+	
 	VK_DBG_MARKER_BEGIN(commandBuffer, "Shadow Pass", vec4(0.85, 0.85, 0.85, 1.0));
 
 	VkViewport viewport{};
@@ -406,7 +406,7 @@ void ShadowRenderer::BuildCommandBuffer(VkCommandBuffer commandBuffer)
 			targetRange.levelCount = 1;
 
 			VKUtil::TransitionImageLayout(_shadowTarget->GetImage(), VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, targetRange, commandBuffer);
-			VkClearColorValue clearColor{ 1.f, 1.f, 1.f, 1.f };
+			VkClearColorValue clearColor{ { 1.f, 1.f, 1.f, 1.f } };
 			vkCmdClearColorImage(commandBuffer, _shadowTarget->GetImage(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, &clearColor, 1, &targetRange);
 			VKUtil::TransitionImageLayout(_shadowTarget->GetImage(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, targetRange, commandBuffer);
 			

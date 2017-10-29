@@ -43,8 +43,8 @@
 #include <Renderer/PipelineManager.h>
 #include <Engine/ResourceManager.h>
 #include <Engine/EventManager.h>
-#include <Engine/Keycodes.h>
-#include <Engine/Input.h>
+#include <Input/Keycodes.h>
+#include <Input/Input.h>
 
 #define GUI_MODULE	"GUIManager"
 
@@ -97,7 +97,7 @@ int GUIManager::Initialize()
 	if ((_indexBuffer = new Buffer(sizeof(uint16_t) * 6, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT, (uint8_t *)indices, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT)) == nullptr)
 	{ DIE("Out of resources"); }
 
-	EventManager::RegisterHandler(NE_EVT_SCN_UNLOADED, [&](int32_t eventId, void *eventData) {
+	_sceneUnloadedEventHandler = EventManager::RegisterHandler(NE_EVT_SCN_UNLOADED, [&](int32_t eventId, void *eventData) {
 		GUIManager::_controls.clear();
 		_focusedControl = nullptr;
 	});
@@ -138,9 +138,9 @@ void GUIManager::SetFocus(Control *ctl)
 
 void GUIManager::Update(double deltaTime)
 {
-	static Point lastMousePos = Point();
-	Point mousePos = Point();
-	long x = 0, y = 0;
+	static Point lastMousePos{ Point() };
+	Point mousePos{ Point() };
+	long x{ 0 }, y{ 0 };
 
 	bool lmbDown = Input::GetButtonDown(NE_MOUSE_LMB);
 	bool rmbDown = Input::GetButtonDown(NE_MOUSE_RMB);
@@ -156,16 +156,12 @@ void GUIManager::Update(double deltaTime)
 	if (_focusedControl)
 	{
 		if (_focusedControl->_onKeyUp)
-		{
 			for (uint8_t key : Input::GetKeyUpList())
 				_focusedControl->_onKeyUp(key);
-		}
 
 		if (_focusedControl->_onKeyDown)
-		{
 			for (uint8_t key : Input::GetKeyDownList())
 				_focusedControl->_onKeyDown(key);
-		}
 	}
 
 	for (Control *ctl : _controls)
@@ -279,6 +275,11 @@ void GUIManager::RegisterFont(class NFont *font)
 	_fonts.push_back(font);
 }
 
+void GUIManager::UnregisterControl(class Control *ctl)
+{
+	_controls.erase(remove(_controls.begin(), _controls.end(), ctl), _controls.end());
+}
+
 void GUIManager::ScreenResized()
 {
 	_guiData.ScreenSize = ivec2(Engine::GetScreenWidth(), Engine::GetScreenHeight());
@@ -353,6 +354,8 @@ void GUIManager::Release()
 {
 	delete _buffer;
 	delete _indexBuffer;
+
+	EventManager::UnregisterHandler(NE_EVT_SCN_UNLOADED, _sceneUnloadedEventHandler);
 
 	if (_sampler != VK_NULL_HANDLE)
 		vkDestroySampler(VKUtil::GetDevice(), _sampler, VKUtil::GetAllocator());

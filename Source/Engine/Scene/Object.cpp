@@ -43,11 +43,11 @@
 
 #include <Engine/Engine.h>
 #include <Engine/EventManager.h>
-#include <Engine/CameraManager.h>
 #include <Engine/ResourceManager.h>
 #include <Engine/EventManager.h>
-#include <Engine/SceneManager.h>
 #include <Scene/Object.h>
+#include <Scene/SceneManager.h>
+#include <Scene/CameraManager.h>
 #include <System/Logger.h>
 
 #define OBJ_MODULE	"Object"
@@ -62,11 +62,13 @@ ENGINE_REGISTER_OBJECT_CLASS(Object)
 
 ObjectInitializer::ObjectInitializer() :
 	id(_nextObjectId),
-	name("unnamed_" + _nextObjectId++),
+	name("unnamed"),
 	position(0.f),
 	rotation(0.f),
 	scale(1.f)
-{ }
+{
+	name = *NString::StringWithFormat(20, "unnamed_%d", _nextObjectId++);
+}
 
 Object::Object(ObjectInitializer *initializer) noexcept
 {
@@ -88,6 +90,7 @@ Object::Object(ObjectInitializer *initializer) noexcept
 	_buffer = nullptr;
 	_updateModelMatrix = false;
 	_haveMesh = false;
+	_visible = true;
 
 	SetForwardDirection(ForwardDirection::PositiveZ);
 	SetPosition(initializer->position);
@@ -133,7 +136,7 @@ void Object::SetRotation(vec3 &rotation) noexcept
 {
 	_rotation = rotation;
 	_rotationQuaternion = rotate(quat(), radians(rotation));
-	
+
 	SetForwardDirection(_objectForward);
 
 	_updateModelMatrix = true;
@@ -201,7 +204,7 @@ void Object::LookAt(const vec3 &point) noexcept
 	float angle = 0.f;
 	vec3 axis;
 
-	if (abs(dotFwd - (-1.f)) < 0.000001f)
+/*	if (abs(dotFwd - (-1.f)) < 0.000001f)
 	{
 		axis = vec3(0.f, 1.f, 0.f);
 		angle = (float)M_PI;
@@ -212,13 +215,14 @@ void Object::LookAt(const vec3 &point) noexcept
 		angle = 0.f;
 	}
 	else
-	{
+	{*/
 		angle = acosf(dotFwd);
 		axis = normalize(cross(dirFwd, fwd));
-	}
-
-	vec3 rotation = vec3(radians(angle * axis.x), radians(angle * axis.y), radians(angle * axis.z));
-	SetRotation(rotation);
+//	}
+	
+	vec3 rotation{ vec3(radians(axis.x * angle), axis.y * angle, radians(axis.y * angle)) };
+	vec3 degRotation{ degrees(rotation) };
+	SetRotation(degRotation);
 }
 
 void Object::MoveForward(float distance) noexcept

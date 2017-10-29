@@ -53,9 +53,9 @@
 #include <Renderer/RenderPassManager.h>
 #include <Engine/Engine.h>
 #include <Engine/Version.h>
-#include <Engine/SceneManager.h>
-#include <Engine/CameraManager.h>
 #include <Profiler/Profiler.h>
+#include <Scene/SceneManager.h>
+#include <Scene/CameraManager.h>
 
 #define RENDERER_MODULE "VulkanRenderer"
 
@@ -80,6 +80,7 @@ static uint _wkGroupsX{ 0 }, _wkGroupsY{ 0 }, _numTiles{ 0 };
 static Light *_lights{ nullptr };
 static Renderer *_rendererInstance{ nullptr };
 static VkImageView _depthImageView{ VK_NULL_HANDLE }, _stencilImageView{ VK_NULL_HANDLE };
+static bool _multiDevice{ false };
 char _deviceName[VK_MAX_PHYSICAL_DEVICE_NAME_SIZE];
 
 Renderer *Renderer::GetInstance()
@@ -288,8 +289,6 @@ int Renderer::Initialize(PlatformWindowType window, bool enableValidation, bool 
 
 	for (uint32_t i = 0; i < _swapchain->GetImageCount(); ++i)
 		VKUtil::TransitionImageLayout(_swapchain->GetImage(i), VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR);
-
-	_computeCommandBuffers.Add(_cullingCommandBuffer);
 
 	Logger::Log(RENDERER_MODULE, LOG_INFORMATION, "Initialized");
 
@@ -609,6 +608,8 @@ void Renderer::Draw()
 	for (Buffer *b : _allocatedBuffers[_currentBufferIndex])
 		delete b;
 	_allocatedBuffers[_currentBufferIndex].Clear(false);
+
+	ResetComputeCommandBuffers();
 }
 
 void Renderer::_Submit(uint32_t imageIndex)
@@ -894,6 +895,9 @@ bool Renderer::_CreateInstance(bool debug)
 
 	vector<const char*> extensions{ Platform::GetRequiredExtensions(debug) };
 
+	if (Engine::GetConfiguration().Renderer.UseDeviceGroup)
+		extensions.push_back(VK_KHX_DEVICE_GROUP_CREATION_EXTENSION_NAME);
+
 	instInfo.enabledExtensionCount = (uint32_t)extensions.size();
 	instInfo.ppEnabledExtensionNames = extensions.data();
 
@@ -1108,6 +1112,9 @@ bool Renderer::_CreateDevice(bool enableValidation, bool debug)
 	for (const char *ext : _DeviceExtensions)
 		extensions.push_back(ext);
 
+	if (Engine::GetConfiguration().Renderer.UseDeviceGroup)
+		extensions.push_back(VK_KHX_DEVICE_GROUP_EXTENSION_NAME);
+
 	if (debug && _CheckDeviceExtension(VK_EXT_DEBUG_MARKER_EXTENSION_NAME))
 		extensions.push_back(VK_EXT_DEBUG_MARKER_EXTENSION_NAME);
 
@@ -1122,13 +1129,56 @@ bool Renderer::_CreateDevice(bool enableValidation, bool debug)
 	else
 		createInfo.enabledLayerCount = 0;
 
-	Logger::Log(RENDERER_MODULE, LOG_INFORMATION, "Device: %s", _deviceName);
+	uint32_t deviceGroupCount{ 0 };
+	VkPhysicalDeviceGroupPropertiesKHX *groupProps{ nullptr };
+	VkDeviceGroupDeviceCreateInfoKHX groupCreateInfo{};
 
+	PFN_vkEnumeratePhysicalDeviceGroupsKHX EnumeratePhysicalDeviceGroupsKHX{ (PFN_vkEnumeratePhysicalDeviceGroupsKHX)vkGetInstanceProcAddr(_instance, "vkEnumeratePhysicalDeviceGroupsKHX") };
+
+	if (Engine::GetConfiguration().Renderer.UseDeviceGroup && EnumeratePhysicalDeviceGroupsKHX)
+	{
+		VkResult ret{ EnumeratePhysicalDeviceGroupsKHX(_instance, &deviceGroupCount, nullptr) };
+
+		if (ret == VK_SUCCESS && deviceGroupCount)
+		{
+			groupProps = (VkPhysicalDeviceGroupPropertiesKHX *)calloc(deviceGroupCount, sizeof(VkPhysicalDeviceGroupPropertiesKHX));
+			if (!groupProps) { DIE("Out of memory"); }
+			for (uint32_t i = 0; i < deviceGroupCount; ++i)
+			{
+				groupProps[i].sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_GROUP_PROPERTIES_KHX;
+				groupProps[i].pNext = nullptr;
+			}
+
+			ret = EnumeratePhysicalDeviceGroupsKHX(_instance, &deviceGroupCount, groupProps);
+			if (ret == VK_SUCCESS)
+			{
+				groupCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_GROUP_DEVICE_CREATE_INFO_KHX;
+
+				if (groupProps[0].physicalDeviceCount > 1)
+				{
+					_physicalDevice = groupProps[0].physicalDevices[0];
+					groupCreateInfo.physicalDeviceCount = groupProps[0].physicalDeviceCount;
+					groupCreateInfo.pPhysicalDevices = groupProps[0].physicalDevices;
+					createInfo.pNext = &groupCreateInfo;
+					_multiDevice = true;
+				}
+			}
+		}
+	}
+
+	if (_multiDevice)
+		Logger::Log(RENDERER_MODULE, LOG_INFORMATION, "Device: %s (x%d)", _deviceName, groupProps[0].physicalDeviceCount);
+	else
+		Logger::Log(RENDERER_MODULE, LOG_INFORMATION, "Device: %s", _deviceName);
+	
 	if (vkCreateDevice(_physicalDevice, &createInfo, _allocator, &_device) != VK_SUCCESS)
 	{
 		Logger::Log(RENDERER_MODULE, LOG_CRITICAL, "vkCreateDevice call failed");
+		free(groupProps);
 		return false;
 	}
+
+	free(groupProps);
 
 	vkGetDeviceQueue(_device, _queueIndices.graphicsFamily, 0, &_graphicsQueue);
 	vkGetDeviceQueue(_device, _queueIndices.presentFamily, 0, &_presentQueue);
@@ -1189,7 +1239,7 @@ bool Renderer::_CreateFramebuffers()
 	VK_DBG_SET_OBJECT_NAME((uint64_t)_colorTarget->GetImageView(), VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_VIEW_EXT, "Color render target image view");
 	VKUtil::TransitionImageLayout(_colorTarget->GetImage(), VK_IMAGE_LAYOUT_PREINITIALIZED, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, VK_IMAGE_ASPECT_COLOR_BIT);
 
-	_normalTarget = new Texture(VK_FORMAT_R8G8_UNORM, VK_IMAGE_TYPE_2D, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_SAMPLED_BIT,
+	_normalTarget = new Texture(VK_FORMAT_R16G16B16A16_SFLOAT, VK_IMAGE_TYPE_2D, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_SAMPLED_BIT,
 		VK_IMAGE_TILING_OPTIMAL, Engine::GetScreenWidth(), Engine::GetScreenHeight(), 1, true, VK_NULL_HANDLE, VK_SAMPLE_COUNT_1_BIT);
 	VK_DBG_SET_OBJECT_NAME((uint64_t)_normalTarget->GetImage(), VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_EXT, "Normal render target image");
 	_normalTarget->CreateView(VK_IMAGE_ASPECT_COLOR_BIT);
@@ -1233,7 +1283,7 @@ bool Renderer::_CreateFramebuffers()
 		VK_DBG_SET_OBJECT_NAME((uint64_t)_depthTarget->GetImageView(), VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_VIEW_EXT, "Depth target image view");
 		VKUtil::TransitionImageLayout(_depthTarget->GetImage(), VK_IMAGE_LAYOUT_PREINITIALIZED, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT);
 
-		_msaaNormalTarget = new Texture(VK_FORMAT_R8G8_UNORM, VK_IMAGE_TYPE_2D, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_IMAGE_TILING_OPTIMAL,
+		_msaaNormalTarget = new Texture(VK_FORMAT_R16G16B16A16_SFLOAT, VK_IMAGE_TYPE_2D, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_IMAGE_TILING_OPTIMAL,
 			Engine::GetScreenWidth(), Engine::GetScreenHeight(), 1, true, VK_NULL_HANDLE, samples);
 		VK_DBG_SET_OBJECT_NAME((uint64_t)_msaaNormalTarget->GetImage(), VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_EXT, "MSAA normal render target image");
 		_msaaNormalTarget->CreateView(VK_IMAGE_ASPECT_COLOR_BIT);
@@ -1677,7 +1727,7 @@ bool Renderer::_BuildSceneCommandBuffer()
 	}
 	else
 	{
-		VkClearColorValue clearColor{ 0.f, 0.f, 0.f, 0.f };
+		VkClearColorValue clearColor{ { 0.f, 0.f, 0.f, 0.f } };
 		VkImageSubresourceRange range{};
 		range.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
 		range.baseArrayLayer = 0;
@@ -1790,14 +1840,14 @@ bool Renderer::_BuildBoundsDrawCommandBuffer()
 			/*else if (bounds->HaveSphere())
 			{
 				scaleMatrix = scale(mat4(), vec3(bounds->GetSphere().GetRadius(), bounds->GetSphere().GetRadius(), bounds->GetSphere().GetRadius()));
-				/*primitiveId = PrimitiveID::Sphere;
-				scaleMatrix = scale(mat4(), vec3(bounds->GetSphere().GetRadius() * 2.f));*
+				primitiveId = PrimitiveID::Sphere;
+				scaleMatrix = scale(mat4(), vec3(bounds->GetSphere().GetRadius() * 2.f));
 			}*/
 
 			Camera *cam{ CameraManager::GetActiveCamera() };
 
 			mvp = cam->GetProjectionMatrix() * cam->GetView() * ((translationMatrix * mat4_cast(rotation)) * scaleMatrix);
-			vkCmdPushConstants(_drawBoundsCommandBuffers[_currentBufferIndex], PipelineManager::GetPipelineLayout(PIPE_LYT_Bounds), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(mat4), value_ptr(mvp));
+			vkCmdPushConstants(_drawBoundsCommandBuffers[_currentBufferIndex], PipelineManager::GetPipelineLayout(PIPE_LYT_Debug), VK_SHADER_STAGE_VERTEX_BIT, 0, sizeof(mat4), value_ptr(mvp));
 			Primitives::DrawPrimitive(primitiveId, _drawBoundsCommandBuffers[_currentBufferIndex]);
 		}
 		

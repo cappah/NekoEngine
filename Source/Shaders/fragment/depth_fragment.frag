@@ -43,12 +43,11 @@
 #define SH_DFRAG				0
 #define SH_DFRAG_NM				1
 
-#include "normal.glh"
 #include "depth_fs_data.glh"
 
 layout(set = 2, binding = 0) uniform sampler2D normalMap;
 
-layout(location = 0) out vec2 o_Normals;
+layout(location = 0) out vec3 o_Normals;
 layout(constant_id = 10) const int shaderType = 0;
 
 vec3 calculateMappedNormal()
@@ -61,7 +60,7 @@ vec3 calculateMappedNormal()
 void main()
 {
 	if (shaderType == SH_DFRAG)
-		o_Normals = encodeNormal(normalize(v_normal));
+		o_Normals = normalize(v_normal);
 	else
-		o_Normals = encodeNormal(calculateMappedNormal());
+		o_Normals = calculateMappedNormal();
 }

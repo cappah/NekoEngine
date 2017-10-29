@@ -148,6 +148,18 @@
     <Filter Include="Source Files\Physics">
       <UniqueIdentifier>{8f540e08-5ffa-4116-b90c-56ff690264e7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Input">
+      <UniqueIdentifier>{8797873a-45c4-4fd9-a489-dad94b2355b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Public Headers\Input">
+      <UniqueIdentifier>{17dd1426-8655-4311-a392-740ca68fdd7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Scene\Particles">
+      <UniqueIdentifier>{95cccbdd-6e84-439d-ae34-069e3408d883}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Public Headers\Scene\Particles">
+      <UniqueIdentifier>{211eaceb-6b9c-4fbd-88af-72725cb7d49a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="System\Logger.cpp">
@@ -161,9 +173,6 @@
     </ClCompile>
     <ClCompile Include="Platform\Windows\Windows.cpp">
       <Filter>Source Files\Platform\Windows</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Input.cpp">
-      <Filter>Source Files\Core</Filter>
     </ClCompile>
     <ClCompile Include="Renderer\Material.cpp">
       <Filter>Source Files\Renderer</Filter>
@@ -216,12 +225,6 @@
     <ClCompile Include="Renderer\StaticMesh.cpp">
       <Filter>Source Files\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Camera.cpp">
-      <Filter>Source Files\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\CameraManager.cpp">
-      <Filter>Source Files\Core</Filter>
-    </ClCompile>
     <ClCompile Include="Scene\Object.cpp">
       <Filter>Source Files\Scene</Filter>
     </ClCompile>
@@ -266,9 +269,6 @@
     </ClCompile>
     <ClCompile Include="Scene\LoadingScreen.cpp">
       <Filter>Source Files\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\SceneManager.cpp">
-      <Filter>Source Files\Core</Filter>
     </ClCompile>
     <ClCompile Include="Core\Console.cpp">
       <Filter>Source Files\Core</Filter>
@@ -465,6 +465,42 @@
     <ClCompile Include="Scene\Components\ColliderComponent.cpp">
       <Filter>Source Files\Scene\Components</Filter>
     </ClCompile>
+    <ClCompile Include="Scene\CameraManager.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Camera.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\SceneManager.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Input\Input.cpp">
+      <Filter>Source Files\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Components\AudioListenerComponent.cpp">
+      <Filter>Source Files\Scene\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Particles\Particle.cpp">
+      <Filter>Source Files\Scene\Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Particles\Emitter.cpp">
+      <Filter>Source Files\Scene\Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Particles\Easing.cpp">
+      <Filter>Source Files\Scene\Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Particles\MeshParticle.cpp">
+      <Filter>Source Files\Scene\Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\ScriptHost.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Script\Interface\ScriptComponentInterface.cpp">
+      <Filter>Source Files\Script\Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="Script\Interface\SystemInterface.cpp">
+      <Filter>Source Files\Script\Interface</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\Engine\Defs.h">
@@ -476,13 +512,7 @@
     <ClInclude Include="..\..\Include\Engine\Engine.h">
       <Filter>Public Headers\Engine</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\Engine\Keycodes.h">
-      <Filter>Public Headers\Engine</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\Engine\Version.h">
-      <Filter>Public Headers\Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\Engine\Input.h">
       <Filter>Public Headers\Engine</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\Platform\Platform.h">
@@ -578,12 +608,6 @@
     <ClInclude Include="..\..\Include\Renderer\StaticMesh.h">
       <Filter>Public Headers\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\Engine\Camera.h">
-      <Filter>Public Headers\Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\Engine\CameraManager.h">
-      <Filter>Public Headers\Engine</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\Scene\Object.h">
       <Filter>Public Headers\Scene</Filter>
     </ClInclude>
@@ -643,9 +667,6 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\Scene\LoadingScreen.h">
       <Filter>Public Headers\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\Engine\SceneManager.h">
-      <Filter>Public Headers\Engine</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\Engine\GameModule.h">
       <Filter>Public Headers\Engine</Filter>
@@ -878,6 +899,45 @@
     <ClInclude Include="..\..\Include\Physics\RigidBody.h">
       <Filter>Public Headers\Physics</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Include\Scene\CameraManager.h">
+      <Filter>Public Headers\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Scene\Camera.h">
+      <Filter>Public Headers\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Scene\SceneManager.h">
+      <Filter>Public Headers\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Input\Keycodes.h">
+      <Filter>Public Headers\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Input\Input.h">
+      <Filter>Public Headers\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Scene\Components\AudioListenerComponent.h">
+      <Filter>Public Headers\Scene\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Scene\Particles\Emitter.h">
+      <Filter>Public Headers\Scene\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Scene\Particles\Particle.h">
+      <Filter>Public Headers\Scene\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Scene\Particles\Easing.h">
+      <Filter>Public Headers\Scene\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Scene\Particles\MeshParticle.h">
+      <Filter>Public Headers\Scene\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\Scene\ScriptHost.h">
+      <Filter>Public Headers\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Script\Interface\ScriptComponentInterface.h">
+      <Filter>Private Headers\Script\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Script\Interface\SystemInterface.h">
+      <Filter>Private Headers\Script\Interface</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Config\Engine.ini">
@@ -896,9 +956,6 @@
       <Filter>Shaders\Fragment</Filter>
     </None>
     <None Include="..\Shaders\fragment\shadow_fragment.frag">
-      <Filter>Shaders\Fragment</Filter>
-    </None>
-    <None Include="..\Shaders\fragment\ssao.frag">
       <Filter>Shaders\Fragment</Filter>
     </None>
     <None Include="..\Shaders\fragment\ssao_blur.frag">
@@ -1033,10 +1090,13 @@
     <None Include="..\Shaders\include\util.glh">
       <Filter>Shaders\Include</Filter>
     </None>
-    <None Include="..\Shaders\include\normal.glh">
-      <Filter>Shaders\Include</Filter>
-    </None>
     <None Include="..\Shaders\fragment\bounds_fragment.frag">
+      <Filter>Shaders\Fragment</Filter>
+    </None>
+    <None Include="..\Shaders\vertex\ssao_vertex.vert">
+      <Filter>Shaders\Vertex</Filter>
+    </None>
+    <None Include="..\Shaders\fragment\ssao.frag">
       <Filter>Shaders\Fragment</Filter>
     </None>
   </ItemGroup>

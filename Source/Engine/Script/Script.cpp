@@ -45,11 +45,13 @@
 #include <Script/Interface/GUIInterface.h>
 #include <Script/Interface/MathInterface.h>
 #include <Script/Interface/InputInterface.h>
+#include <Script/Interface/DebugInterface.h>
 #include <Script/Interface/SceneInterface.h>
 #include <Script/Interface/ObjectInterface.h>
 #include <Script/Interface/EngineInterface.h>
 #include <Script/Interface/LoggerInterface.h>
 #include <Script/Interface/CameraInterface.h>
+#include <Script/Interface/SystemInterface.h>
 #include <Script/Interface/ConsoleInterface.h>
 #include <Script/Interface/PlatformInterface.h>
 #include <Script/Interface/MaterialInterface.h>
@@ -62,6 +64,7 @@
 #include <Script/Interface/ObjectComponentInterface.h>
 #include <Script/Interface/ResourceManagerInterface.h>
 #include <Script/Interface/CameraComponentInterface.h>
+#include <Script/Interface/ScriptComponentInterface.h>
 #include <Script/Interface/AnimatorComponentInterface.h>
 #include <Script/Interface/StaticMeshComponentInterface.h>
 #include <Script/Interface/AudioSourceComponentInterface.h>
@@ -99,6 +102,12 @@ lua_State *Script::NewState()
 	MaterialInterface::Register(state);
 	VFSInterface::Register(state);
 	LightComponentInterface::Register(state);
+	ScriptComponentInterface::Register(state);
+	SystemInterface::Register(state);
+
+	#if defined(NE_CONFIG_DEBUG) || defined(NE_CONFIG_DEVELOPMENT)
+		DebugInterface::Register(state);
+	#endif
 
 	return state;
 }
@@ -113,10 +122,25 @@ bool Script::LoadScript(lua_State *state, NString &scriptFile)
 		return false;
 	}
 
+	char *scriptData = (char *)file->ReadAll(sz, true);
+
+	bool ret = LoadSource(state, scriptData);
+	free(scriptData);
+
+	file->Close();
+
+	if (!ret)
+		Logger::Log(SCRIPT_MODULE, LOG_CRITICAL, "Failed to load script %s", *scriptFile);
+	
+	return ret;
+}
+
+bool Script::LoadSource(lua_State *state, const char *src)
+{
 	// Data types
 	NString script =
-	"local ffi = require('ffi')		\n\
-	ffi.cdef([[						\n\
+		"local ffi = require('ffi')	\n\
+		ffi.cdef([[					\n\
 		typedef struct				\n\
 		{							\n\
 			float x, y;				\n\
@@ -148,17 +172,20 @@ bool Script::LoadScript(lua_State *state, NString &scriptFile)
 			mat4 color;				\n\
 			mat4 data;				\n\
 		} Light;					\n\
+		typedef struct				\n\
+		{							\n\
+			int vertexOffset;		\n\
+			int vertexCount;		\n\
+			int indexOffset;		\n\
+			int indexCount;			\n\
+		} MeshGroup;				\n\
 	]])\n\n";
 
-	char *scriptData = (char *)file->ReadAll(sz, true);
-
-	file->Close();
-	script.Append(scriptData);
-	free(scriptData);
+	script.Append(src);
 
 	if (luaL_dostring(state, *script) && lua_gettop(state))
 	{
-		Logger::Log(SCRIPT_MODULE, LOG_CRITICAL, "Failed to load script %s: %s", *scriptFile, lua_tostring(state, -1));
+		Logger::Log(SCRIPT_MODULE, LOG_CRITICAL, "Script load error: %s", lua_tostring(state, -1));
 		lua_pop(state, 1);
 		return false;
 	}

@@ -44,6 +44,7 @@
 #include <vector>
 #include <stdio.h>
 #include <string.h>
+#include <sqlite3.h>
 
 #include <Resource/MeshResource.h>
 #include <Resource/TextureResource.h>
@@ -53,8 +54,38 @@
 #include <Resource/MaterialResource.h>
 #include <Resource/AnimationClipResource.h>
 
-#define RD_MODULE		"ResourceDatabase"
-#define SQLITE3_VFS_NAME	"NekoEngineVFS"
+#define RD_MODULE				"ResourceDatabase"
+#define SQLITE3_VFS_NAME		"NekoEngineVFS"
+
+#define DB_CR_ANIMCLIPS			"CREATE TABLE `animclips` ( `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, `file` TEXT NOT NULL UNIQUE, `comment` TEXT, `name` TEXT NOT NULL UNIQUE );"
+#define DB_CR_AUDIOCLIPS		"CREATE TABLE `audioclips` ( `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, `file` TEXT NOT NULL UNIQUE, `comment` TEXT, `name` TEXT NOT NULL UNIQUE );"
+#define DB_CR_FONTS				"CREATE TABLE `fonts` ( `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, `name` TEXT NOT NULL UNIQUE, `file` TEXT NOT NULL UNIQUE, `comment` TEXT NOT NULL );"
+#define DB_CR_MATERIALS			"CREATE TABLE `materials` ( `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, `file` TEXT NOT NULL UNIQUE, `comment` TEXT, `name` TEXT NOT NULL UNIQUE );"
+#define DB_CR_SHADERMODULES		"CREATE TABLE `shadermodules` ( `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, `path` TEXT NOT NULL, `comment` TEXT, `name` TEXT NOT NULL UNIQUE );"
+#define DB_CR_SKMESHES			"CREATE TABLE `skmeshes` ( `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, `file` TEXT NOT NULL, `comment` TEXT, `name` TEXT NOT NULL UNIQUE );"
+#define DB_CR_STMESHES			"CREATE TABLE `stmeshes` ( `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, `file` TEXT NOT NULL UNIQUE, `comment` TEXT, `name` TEXT NOT NULL UNIQUE );"
+#define DB_CR_TEXTURES			"CREATE TABLE `textures` ( `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, `file` TEXT NOT NULL UNIQUE, `type` INTEGER NOT NULL, `comment` TEXT, `name` TEXT NOT NULL UNIQUE );"
+
+#define DB_MC_ANIMCLIPS			"CREATE TABLE memDB.animclips ( `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, `file` TEXT NOT NULL UNIQUE, `comment` TEXT, `name` TEXT NOT NULL UNIQUE );"
+#define DB_MC_AUDIOCLIPS		"CREATE TABLE memDB.audioclips ( `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, `file` TEXT NOT NULL UNIQUE, `comment` TEXT, `name` TEXT NOT NULL UNIQUE );"
+#define DB_MC_FONTS				"CREATE TABLE memDB.fonts ( `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, `name` TEXT NOT NULL UNIQUE, `file` TEXT NOT NULL UNIQUE, `comment` TEXT NOT NULL );"
+#define DB_MC_MATERIALS			"CREATE TABLE memDB.materials ( `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, `file` TEXT NOT NULL UNIQUE, `comment` TEXT, `name` TEXT NOT NULL UNIQUE );"
+#define DB_MC_SHADERMODULES		"CREATE TABLE memDB.shadermodules ( `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, `path` TEXT NOT NULL, `comment` TEXT, `name` TEXT NOT NULL UNIQUE );"
+#define DB_MC_SKMESHES			"CREATE TABLE memDB.skmeshes ( `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, `file` TEXT NOT NULL, `comment` TEXT, `name` TEXT NOT NULL UNIQUE );"
+#define DB_MC_STMESHES			"CREATE TABLE memDB.stmeshes ( `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, `file` TEXT NOT NULL UNIQUE, `comment` TEXT, `name` TEXT NOT NULL UNIQUE );"
+#define DB_MC_TEXTURES			"CREATE TABLE memDB.textures ( `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, `file` TEXT NOT NULL UNIQUE, `type` INTEGER NOT NULL, `comment` TEXT, `name` TEXT NOT NULL UNIQUE );"
+
+#define DB_RB_ANIMCLIPS			"UPDATE memDB.animclips SET id = id + ?;"
+#define DB_RB_AUDIOCLIPS		"UPDATE memDB.audioclips SET id = id + ?;"
+#define DB_RB_FONTS				"UPDATE memDB.fonts SET id = id + ?;"
+#define DB_RB_MATERIALS			"UPDATE memDB.materials SET id = id + ?;"
+#define DB_RB_SHADERMODULES		"UPDATE memDB.shadermodules SET id = id + ?;"
+#define DB_RB_SKMESHES			"UPDATE memDB.skmeshes SET id = id + ?;"
+#define DB_RB_STMESHES			"UPDATE memDB.stmeshes SET id = id + ?;"
+#define DB_RB_TEXTURES			"UPDATE memDB.textures SET id = id + ?;"
+
+#define DB_MODULE_BASE_INC		0x01000000
+#define DB_NUM_TABLES			8
 
 using namespace std;
 
@@ -64,7 +95,7 @@ typedef struct sqlite3_vfs_file
 	VFSFile *file;
 } sqlite3_vfs_file;
 
-char resource_to_table_map[10][40] =
+static char _rdb_resourceToTableMap[10][40]
 {
 	{ 's', 't', 'm', 'e', 's', 'h', 'e', 's', 0x0 },
 	{ 's', 'k', 'm', 'e', 's', 'h', 'e', 's', 0x0 },
@@ -74,6 +105,38 @@ char resource_to_table_map[10][40] =
 	{ 'f', 'o', 'n', 't', 's', 0x0 },
 	{ 'm', 'a', 't', 'e', 'r', 'i', 'a', 'l', 's', 0x0 },
 	{ 'a', 'n', 'i', 'm', 'c', 'l', 'i', 'p', 's', 0x0 }
+};
+
+static const char *_rdb_createSQL[DB_NUM_TABLES * 2]
+{
+	DB_CR_ANIMCLIPS,
+	DB_CR_AUDIOCLIPS,
+	DB_CR_FONTS,
+	DB_CR_MATERIALS,
+	DB_CR_SHADERMODULES,
+	DB_CR_SKMESHES,
+	DB_CR_STMESHES,
+	DB_CR_TEXTURES,
+	DB_MC_ANIMCLIPS,
+	DB_MC_AUDIOCLIPS,
+	DB_MC_FONTS,
+	DB_MC_MATERIALS,
+	DB_MC_SHADERMODULES,
+	DB_MC_SKMESHES,
+	DB_MC_STMESHES,
+	DB_MC_TEXTURES
+};
+
+static const char *_rdb_rebaseSQL[DB_NUM_TABLES]
+{
+	DB_RB_ANIMCLIPS,
+	DB_RB_AUDIOCLIPS,
+	DB_RB_FONTS,
+	DB_RB_MATERIALS,
+	DB_RB_SHADERMODULES,
+	DB_RB_SKMESHES,
+	DB_RB_STMESHES,
+	DB_RB_TEXTURES
 };
 
 /* SQLite VFS info:
@@ -206,59 +269,214 @@ static void _sq3_vfs_xDlError(sqlite3_vfs *vfs, int nByte, char *zErrMsg) { (voi
 static void (*(_sq3_vfs_xDlSym(sqlite3_vfs *vfs, void *dl, const char *zSymbol)))(void) { (void)vfs; (void)dl; (void)zSymbol; return nullptr; }
 static void _sq3_vfs_xDlClose(sqlite3_vfs *vfs, void *dl) { (void)vfs; (void)dl; }
 
-ResourceDatabase::ResourceDatabase() noexcept : _db(nullptr) { }
-
-bool ResourceDatabase::Open(const char *file) noexcept
+static inline bool _rdb_InitDB(sqlite3 *db, bool mem) noexcept
 {
-	if (!sqlite3_vfs_find(SQLITE3_VFS_NAME))
+	char *err{ nullptr };
+
+	for (uint8_t i = 0; i < DB_NUM_TABLES; ++i)
 	{
-		memset(&_vfs, 0x0, sizeof(sqlite3_vfs));
-		memset(&_methods, 0x0, sizeof(sqlite3_io_methods));
-		
-		_vfs.iVersion = 1;
-		_vfs.szOsFile = sizeof(sqlite3_vfs_file);
-		_vfs.mxPathname = VFS_MAX_FILE_NAME;
-		_vfs.pNext = nullptr;
-		_vfs.zName = SQLITE3_VFS_NAME;
-		_vfs.pAppData = nullptr;
-		_vfs.xOpen = _sq3_vfs_xOpen;
-		_vfs.xDelete = _sq3_vfs_xDelete;
-		_vfs.xAccess = _sq3_vfs_xAccess;
-		_vfs.xFullPathname = _sq3_vfs_xFullPathname;
-		_vfs.xDlOpen = _sq3_vfs_xDlOpen;
-		_vfs.xDlError = _sq3_vfs_xDlError;
-		_vfs.xDlSym = _sq3_vfs_xDlSym;
-		_vfs.xDlClose = _sq3_vfs_xDlClose;
-		_vfs.xRandomness = _sq3_vfs_xRandomness;
-		_vfs.xSleep = _sq3_vfs_xSleep;
-		_vfs.xCurrentTime = _sq3_vfs_xCurrentTime;
-		_vfs.xGetLastError = _sq3_vfs_xGetLastError;
-		
-		_methods.iVersion = 1;
-		_methods.xClose = _sq3_vfs_xClose;
-		_methods.xRead = _sq3_vfs_xRead;
-		_methods.xWrite = _sq3_vfs_xWrite;
-		_methods.xTruncate = _sq3_vfs_xTruncate;
-		_methods.xSync = _sq3_vfs_xSync;
-		_methods.xFileSize = _sq3_vfs_xFileSize;
-		_methods.xLock = _sq3_vfs_xLock;
-		_methods.xUnlock = _sq3_vfs_xUnlock;
-		_methods.xCheckReservedLock = _sq3_vfs_xCheckReservedLock;
-		_methods.xFileControl = _sq3_vfs_xFileControl;
-		_methods.xSectorSize = _sq3_vfs_xSectorSize;
-		_methods.xDeviceCharacteristics = _sq3_vfs_xDeviceCharacteristics;
-		
-		if (sqlite3_vfs_register(&_vfs, true) != SQLITE_OK)
+		if (sqlite3_exec(db, _rdb_createSQL[mem ? DB_NUM_TABLES + i : i], NULL, 0, &err) != SQLITE_OK)
 		{
-			Logger::Log(RD_MODULE, LOG_CRITICAL, "Failed to register the SQLite VFS module");
+			Logger::Log(RD_MODULE, LOG_CRITICAL, "Failed to create table: %s", err);
 			return false;
 		}
 	}
-	
-	if (sqlite3_open_v2(file, &_db, SQLITE_OPEN_READONLY, nullptr) != SQLITE_OK)
+
+	return true;
+}
+
+static inline bool _rdb_TableExists(sqlite3 *db, const char *table) noexcept
+{
+	if (table == nullptr)
 		return false;
 
-	return _CheckDatabase();
+	sqlite3_stmt *stmt{ nullptr };
+
+	if (sqlite3_prepare(db, "SELECT COUNT(*) FROM sqlite_master WHERE type = 'table' AND name = ?;", -1, &stmt, nullptr) != SQLITE_OK)
+		return false;
+
+	if (sqlite3_bind_text(stmt, 1, table, (int)strlen(table), SQLITE_STATIC) != SQLITE_OK)
+		return false;
+
+	if (sqlite3_step(stmt) != SQLITE_ROW)
+	{
+		sqlite3_finalize(stmt);
+		return false;
+	}
+
+	if (sqlite3_column_int(stmt, 0) != 1)
+	{
+		sqlite3_finalize(stmt);
+		return false;
+	}
+
+	sqlite3_finalize(stmt);
+
+	return true;
+}
+
+static inline bool _rdb_CheckDB(sqlite3 *db) noexcept
+{
+	for (uint8_t i = 0; i < DB_NUM_TABLES; ++i)
+		if (!_rdb_TableExists(db, _rdb_resourceToTableMap[i]))
+			return false;
+	
+	return true;
+}
+
+static inline bool _rdb_RebaseDB(sqlite3 *db, uint32_t newBaseId) noexcept
+{
+	int err{ 0 };
+	for (uint8_t i = 0; i < DB_NUM_TABLES; ++i)
+	{
+		sqlite3_stmt *stmt{ nullptr };
+
+		if ((err = sqlite3_prepare(db, _rdb_rebaseSQL[i], -1, &stmt, nullptr)) != SQLITE_OK)
+		{
+			Logger::Log(RD_MODULE, LOG_CRITICAL, "sqlite3_prepare() failed code = %d, msg = %s", err, sqlite3_errmsg(db));
+			return false;
+		}
+
+		if ((err = sqlite3_bind_int(stmt, 1, newBaseId)) != SQLITE_OK)
+		{
+			Logger::Log(RD_MODULE, LOG_CRITICAL, "sqlite3_bind_int() failed code = %d, msg = %s", err, sqlite3_errmsg(db));
+			return false;
+		}
+
+		if ((err = sqlite3_step(stmt)) != SQLITE_DONE)
+		{
+			sqlite3_finalize(stmt);
+			Logger::Log(RD_MODULE, LOG_CRITICAL, "sqlite3_step() failed code = %d, msg = %s", err, sqlite3_errmsg(db));
+			return false;
+		}
+
+		sqlite3_finalize(stmt);
+	}
+
+	return true;
+}
+
+ResourceDatabase::ResourceDatabase() noexcept : _db(nullptr), _nextModuleBaseId(0) {}
+
+int ResourceDatabase::Initialize() noexcept
+{
+	memset(&_vfs, 0x0, sizeof(sqlite3_vfs));
+	memset(&_methods, 0x0, sizeof(sqlite3_io_methods));
+
+	_vfs.iVersion = 1;
+	_vfs.szOsFile = sizeof(sqlite3_vfs_file);
+	_vfs.mxPathname = VFS_MAX_FILE_NAME;
+	_vfs.pNext = nullptr;
+	_vfs.zName = SQLITE3_VFS_NAME;
+	_vfs.pAppData = nullptr;
+	_vfs.xOpen = _sq3_vfs_xOpen;
+	_vfs.xDelete = _sq3_vfs_xDelete;
+	_vfs.xAccess = _sq3_vfs_xAccess;
+	_vfs.xFullPathname = _sq3_vfs_xFullPathname;
+	_vfs.xDlOpen = _sq3_vfs_xDlOpen;
+	_vfs.xDlError = _sq3_vfs_xDlError;
+	_vfs.xDlSym = _sq3_vfs_xDlSym;
+	_vfs.xDlClose = _sq3_vfs_xDlClose;
+	_vfs.xRandomness = _sq3_vfs_xRandomness;
+	_vfs.xSleep = _sq3_vfs_xSleep;
+	_vfs.xCurrentTime = _sq3_vfs_xCurrentTime;
+	_vfs.xGetLastError = _sq3_vfs_xGetLastError;
+
+	_methods.iVersion = 1;
+	_methods.xClose = _sq3_vfs_xClose;
+	_methods.xRead = _sq3_vfs_xRead;
+	_methods.xWrite = _sq3_vfs_xWrite;
+	_methods.xTruncate = _sq3_vfs_xTruncate;
+	_methods.xSync = _sq3_vfs_xSync;
+	_methods.xFileSize = _sq3_vfs_xFileSize;
+	_methods.xLock = _sq3_vfs_xLock;
+	_methods.xUnlock = _sq3_vfs_xUnlock;
+	_methods.xCheckReservedLock = _sq3_vfs_xCheckReservedLock;
+	_methods.xFileControl = _sq3_vfs_xFileControl;
+	_methods.xSectorSize = _sq3_vfs_xSectorSize;
+	_methods.xDeviceCharacteristics = _sq3_vfs_xDeviceCharacteristics;
+
+	if (sqlite3_vfs_register(&_vfs, true) != SQLITE_OK)
+	{
+		Logger::Log(RD_MODULE, LOG_CRITICAL, "Failed to register the SQLite VFS module");
+		return ENGINE_FAIL;
+	}
+
+	sqlite3_open(":memory:", &_db);
+	
+	if (!_rdb_InitDB(_db, false))
+		return ENGINE_DB_INIT_FAIL;
+
+	return ENGINE_OK;
+}
+
+bool ResourceDatabase::Load(const char *file) noexcept
+{
+	char sql[4096]{};
+	sqlite3 *filedb{ nullptr };
+	char *err{ nullptr };
+
+	if (!sqlite3_vfs_find(SQLITE3_VFS_NAME))
+	{
+		Logger::Log(RD_MODULE, LOG_CRITICAL, "SQLite3 VFS module not found. Is the database initialized ?");
+		return false;
+	}
+
+	if (sqlite3_open_v2(file, &filedb, SQLITE_OPEN_READONLY, nullptr) != SQLITE_OK)
+	{
+		Logger::Log(RD_MODULE, LOG_CRITICAL, "Failed to open file %s", file);
+		return false;
+	}
+
+	if (!_rdb_CheckDB(filedb))
+	{
+		Logger::Log(RD_MODULE, LOG_CRITICAL, "%s is not a valid database", file);
+		return false;
+	}
+
+	snprintf(sql, 4096, "attach ':memory:' as memDB;");
+	if (sqlite3_exec(_db, sql, NULL, 0, &err) != SQLITE_OK)
+	{
+		Logger::Log(RD_MODULE, LOG_CRITICAL, "Failed to create temporary database: %s", err);
+		return false;
+	}
+
+	if (!_rdb_InitDB(_db, true))
+		return false;
+
+	memset(sql, 0x0, 4096);
+	snprintf(sql, 4096, "attach '%s' as mergeDB;", file);
+	if (sqlite3_exec(_db, sql, NULL, 0, &err) != SQLITE_OK)
+	{
+		Logger::Log(RD_MODULE, LOG_CRITICAL, "Failed to attach database: %s", err);
+		return false;
+	}
+
+	memset(sql, 0x0, 4096);
+	snprintf(sql, 4096, "BEGIN;\ninsert into memDB.stmeshes select * from mergeDB.stmeshes;\ninsert into memDB.skmeshes select * from mergeDB.skmeshes;\ninsert into memDB.textures select * from mergeDB.textures;\ninsert into memDB.shadermodules select * from mergeDB.shadermodules;\ninsert into memDB.audioclips select * from mergeDB.audioclips;\ninsert into memDB.fonts select * from mergeDB.fonts;\ninsert into memDB.materials select * from mergeDB.materials;\ninsert into memDB.animclips select * from mergeDB.animclips;\nCOMMIT;\ndetach mergeDB;");
+	if (sqlite3_exec(_db, sql, NULL, 0, &err) != SQLITE_OK)
+	{
+		Logger::Log(RD_MODULE, LOG_CRITICAL, "Failed to clone %s database: %s", file, err);
+		return false;
+	}
+
+	if (!_rdb_RebaseDB(_db, _nextModuleBaseId))
+	{
+		Logger::Log(RD_MODULE, LOG_CRITICAL, "Failed to rebase %s database", file);
+		return false;
+	}
+
+	_nextModuleBaseId += DB_MODULE_BASE_INC;
+
+	memset(sql, 0x0, 4096);
+	snprintf(sql, 4096, "BEGIN;\ninsert into stmeshes select * from memDB.stmeshes;\ninsert into skmeshes select * from memDB.skmeshes;\ninsert into textures select * from memDB.textures;\ninsert into shadermodules select * from memDB.shadermodules;\ninsert into audioclips select * from memDB.audioclips;\ninsert into fonts select * from memDB.fonts;\ninsert into materials select * from memDB.materials;\ninsert into animclips select * from memDB.animclips;\nCOMMIT;\ndetach memDB;");
+	if (sqlite3_exec(_db, sql, NULL, 0, &err) != SQLITE_OK)
+	{
+		Logger::Log(RD_MODULE, LOG_CRITICAL, "Failed to merge %s database: %s", file, err);
+		return false;
+	}
+	sqlite3_close(filedb);
+	return true;
 }
 
 bool ResourceDatabase::GetResources(vector<ResourceInfo *> &vec)
@@ -270,7 +488,7 @@ bool ResourceDatabase::GetResources(vector<ResourceInfo *> &vec)
 	for (unsigned int i = 0; i < (unsigned int)ResourceType::RES_END; i++)
 	{
 		// SQLite3 does not allow passing the table name as a parameter
-		if (snprintf(buff, 80, "SELECT * FROM %s", resource_to_table_map[i]) >= 80)
+		if (snprintf(buff, 80, "SELECT * FROM %s", _rdb_resourceToTableMap[i]) >= 80)
 			return false;
 
 		if (sqlite3_prepare(_db, buff, -1, &stmt, nullptr) != SQLITE_OK)
@@ -429,64 +647,6 @@ bool ResourceDatabase::GetResources(vector<ResourceInfo *> &vec)
 		sqlite3_finalize(stmt);
 	}
 	
-	return true;
-}
-
-bool ResourceDatabase::_CheckDatabase() noexcept
-{
-	if (!_TableExists("stmeshes"))
-		return false;
-	
-	if (!_TableExists("skmeshes"))
-		return false;
-
-	if (!_TableExists("textures"))
-		return false;
-
-	if (!_TableExists("shadermodules"))
-		return false;
-
-	if (!_TableExists("audioclips"))
-		return false;
-
-	if (!_TableExists("fonts"))
-		return false;
-
-	if (!_TableExists("materials"))
-		return false;
-
-	if (!_TableExists("animclips"))
-		return false;
-	
-	return true;
-}
-
-bool ResourceDatabase::_TableExists(const char *table) noexcept
-{
-	if (table == nullptr)
-		return false;
-
-	sqlite3_stmt *stmt;
-
-	if (sqlite3_prepare(_db, "SELECT COUNT(*) FROM sqlite_master WHERE type = 'table' AND name = ?;", -1, &stmt, nullptr) != SQLITE_OK)
-		return false;
-
-	if (sqlite3_bind_text(stmt, 1, table, (int)strlen(table), SQLITE_STATIC) != SQLITE_OK)
-		return false;
-
-	if (sqlite3_step(stmt) != SQLITE_ROW)
-	{
-		sqlite3_finalize(stmt);
-		return false;
-	}
-
-	if (sqlite3_column_int(stmt, 0) != 1)
-	{
-		sqlite3_finalize(stmt);
-		return false;
-	}
-
-	sqlite3_finalize(stmt);
 	return true;
 }
 

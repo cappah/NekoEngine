@@ -57,14 +57,17 @@ public:
 
 	virtual int InitScene(BroadphaseType broadphase, double sceneSize, uint32_t maxObjects) override;
 
-	virtual BoxCollider *CreateBoxCollider(Object *parent, glm::vec3 &halfExtents) override;
+	virtual BoxCollider *CreateBoxCollider(Object *parent, const glm::vec3 &halfExtents) override;
 	virtual SphereCollider *CreateSphereCollider(Object *parent, double radius) override;
 	virtual CapsuleCollider *CreateCapsuleCollider(Object *parent, double radius, double height) override;
 	virtual MeshCollider *CreateMeshCollider(Object *parent, const StaticMesh *mesh) override;
 
-	virtual bool RayCast(Ray *ray, glm::vec3 &start, glm::vec3 &end) override;
+	virtual bool RayCast(Ray *ray) override;
+	virtual bool ScreenRayCast(Ray *ray, glm::vec2 &screenCoords, float distance) override;
 
 	virtual void Update(double deltaTime) override;
+
+	void RemoveCollisionObject(btCollisionObject *object);
 
 	virtual void Release() override;
 

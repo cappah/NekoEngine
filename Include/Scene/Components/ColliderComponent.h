@@ -61,11 +61,9 @@ public:
 
 	virtual int InitializeComponent() override;
 
-	virtual void SetPosition(glm::vec3 &position) noexcept override;
-	virtual void SetRotation(glm::vec3 &rotation) noexcept override;
-	virtual void SetScale(glm::vec3 &scale) noexcept override;
-
 	virtual void Enable(bool enable) override;
+
+	virtual void UpdatePosition() noexcept override;
 
 	virtual bool Unload() override;
 

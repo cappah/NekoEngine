@@ -56,8 +56,8 @@ class OpenALAudio : public AudioSystem
 public:
 	virtual int Initialize() override;
 
-	virtual const char *GetName() { return "OpenAL"; }
-	virtual const char *GetVersion();
+	virtual const char *GetName() override { return "OpenAL"; }
+	virtual const char *GetVersion() override;
 
 	virtual AudioBuffer *CreateBuffer(size_t size) override;
 	virtual AudioSource *CreateSource() override;

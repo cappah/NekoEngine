@@ -37,7 +37,7 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <Engine/CameraManager.h>
+#include <Scene/CameraManager.h>
 #include <Script/Interface/CameraManagerInterface.h>
 
 void CameraManagerInterface::Register(lua_State *state)

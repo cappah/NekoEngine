@@ -46,24 +46,52 @@
 
 using namespace glm;
 
+void Box::SetTexture(Texture *texture)
+{
+	_tex = texture;
+
+	if (_descriptorSet == VK_NULL_HANDLE)
+		return;
+
+	VkDescriptorImageInfo imageInfo{};
+	imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+	imageInfo.imageView = _tex->GetImageView();
+	imageInfo.sampler = GUIManager::GetSampler();
+
+	VkWriteDescriptorSet textureDescriptorWrite{};
+	textureDescriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+	textureDescriptorWrite.dstSet = _descriptorSet;
+	textureDescriptorWrite.dstBinding = 0;
+	textureDescriptorWrite.dstArrayElement = 0;
+	textureDescriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+	textureDescriptorWrite.descriptorCount = 1;
+	textureDescriptorWrite.pBufferInfo = nullptr;
+	textureDescriptorWrite.pImageInfo = &imageInfo;
+	textureDescriptorWrite.pTexelBufferView = nullptr;
+
+	vkUpdateDescriptorSets(VKUtil::GetDevice(), 1, &textureDescriptorWrite, 0, nullptr);
+
+	_BuildCommandBuffer();
+}
+
 void Box::_UpdateVertices()
 {
-	float y = (float)Engine::GetScreenHeight() - _controlRect.y - _controlRect.h;
+	float y{ (float)Engine::GetScreenHeight() - _controlRect.y - _controlRect.h };
 
 	_vertices[0].posAndUV = vec4((float)_controlRect.x, (float)(y + _controlRect.h), 0, 0);
 	_vertices[1].posAndUV = vec4((float)_controlRect.x, y, 0, 1);
 	_vertices[2].posAndUV = vec4((float)(_controlRect.x + _controlRect.w), y, 1, 1);
 	_vertices[3].posAndUV = vec4((float)(_controlRect.x + _controlRect.w), (float)(y + _controlRect.h), 1, 0);
+	_vertices[0].color = _vertices[1].color = _vertices[2].color = _vertices[3].color = _color;
 }
 
 int Box::_InitializeControl()
 {
 	_UpdateVertices();
-	_vertices[0].color = _vertices[1].color = _vertices[2].color = _vertices[3].color = vec4(.3f, .3f, .3f, 1.f);
 
 	_buffer = GUIManager::CreateVertexBuffer(sizeof(GUIVertex) * 4, (uint8_t *)_vertices);
 
-	_tex = Renderer::GetInstance()->GetBlankTexture();
+	if (!_tex) _tex = Renderer::GetInstance()->GetBlankTexture();
 
 	return ENGINE_OK;
 }
@@ -173,7 +201,7 @@ void Box::_Update(double deltaTime)
 
 void Box::_UpdateData(void *commandBuffer)
 {
- 	VkCommandBuffer updateBuffer = (VkCommandBuffer)*(VkCommandBuffer *)commandBuffer;
+	VkCommandBuffer updateBuffer{ (VkCommandBuffer)*(VkCommandBuffer *)commandBuffer };
 	_buffer->UpdateData((uint8_t *)_vertices, 0, sizeof(GUIVertex) * 4, updateBuffer);
 }
 

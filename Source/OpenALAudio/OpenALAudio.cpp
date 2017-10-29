@@ -61,7 +61,7 @@ int OpenALAudio::Initialize()
 {
 	if ((_device = alcOpenDevice(NULL)) == nullptr)
 	{
-		Logger::Log(OAL_MODULE, LOG_WARNING, "Failed to open device.");
+		Logger::Log(OAL_MODULE, LOG_CRITICAL, "Failed to open device.");
 		return ENGINE_FAIL;
 	}
 

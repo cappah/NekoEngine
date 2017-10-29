@@ -96,7 +96,7 @@ public:
 	virtual void SetListenerVelocity(glm::vec3 &velocity) override;
 	virtual void SetListenerOrientation(glm::vec3 &front, glm::vec3 &up) override;
 	virtual void Update(double deltaTime) override;
-	virtual void Release();
+	virtual void Release() override;
 	virtual ~NullAudio();
 };
 

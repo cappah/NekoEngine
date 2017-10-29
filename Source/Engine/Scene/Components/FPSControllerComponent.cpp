@@ -37,12 +37,12 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <Engine/Input.h>
+#include <Input/Input.h>
 
 #include <Scene/Components/FPSControllerComponent.h>
 #include <Scene/Components/CameraComponent.h>
 #include <Engine/ResourceManager.h>
-#include <Engine/CameraManager.h>
+#include <Scene/CameraManager.h>
 #include <Scene/Object.h>
 
 using namespace glm;
@@ -107,7 +107,7 @@ void FPSControllerComponent::Update(double deltaTime) noexcept
 	float hAngle = _horizontalSensivity * Input::GetAxis("horizontal");
 
 	vec3 pos = _parent->GetPosition();
-	vec3 rot = _parent->GetRotation();
+	vec3 rot = _parent->GetRotationAngles();
 
 	rot.x += radians(vAngle);
 	rot.y += radians(hAngle);
@@ -141,6 +141,23 @@ void FPSControllerComponent::Update(double deltaTime) noexcept
 
 	rot.x = glm::clamp(rot.x, -60.f, 85.f);
 
+	pos *= _allowedMovement;
+
 	_parent->SetPosition(pos);
 	_parent->SetRotation(rot);
+
+	_allowedMovement = vec3(1.f);
+}
+
+void FPSControllerComponent::OnHit(Object *other, glm::vec3 &position)
+{
+	vec3 localHitPos = _parent->GetPosition() - position;
+	
+	float x{ abs(localHitPos.x) };
+	float z{ abs(localHitPos.z) };
+
+	if (x > z)
+		_allowedMovement = vec3(0.f, 1.f, 1.f);
+	else
+		_allowedMovement = vec3(1.f, 1.f, 0.f);
 }

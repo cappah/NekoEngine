@@ -52,8 +52,6 @@ int Label::_InitializeControl()
 	if (ret != ENGINE_OK)
 		return ret;
 
-	_vertices[0].color = _vertices[1].color = _vertices[2].color = _vertices[3].color = vec4(.0f, .0f, .0f, .0f);
-
 	return ENGINE_OK;
 }
 

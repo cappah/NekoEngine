@@ -44,9 +44,10 @@
 using namespace glm;
 
 static Buffer *_primitiveBuffer{ nullptr };
-static uint32_t _numIndices[PrimitiveID::EndEnum];
-static uint32_t _indexOffsets[PrimitiveID::EndEnum];
+static uint32_t _numIndices[(uint8_t)PrimitiveID::EndEnum];
+static uint32_t _indexOffsets[(uint8_t)PrimitiveID::EndEnum];
 static uint32_t _indexBufferOffset{ 0 };
+static NBounds _bounds[(uint8_t)PrimitiveID::EndEnum];
 
 int Primitives::Initialize()
 {
@@ -54,7 +55,7 @@ int Primitives::Initialize()
 	NArray<uint16_t> indices;
 	Vertex v{};
 	uint32_t firstVertex{ 0 }, firstIndex{ 0 };
-	VkDeviceSize bufferSizes[PrimitiveID::EndEnum], totalBufferSize{ 0 };
+	VkDeviceSize bufferSizes[(uint8_t)PrimitiveID::EndEnum], totalBufferSize{ 0 };
 
 	v.position.z = 0;
 
@@ -77,14 +78,16 @@ int Primitives::Initialize()
 		indices.Add(firstVertex + 1);
 		indices.Add(firstVertex + 2);
 
-		bufferSizes[PrimitiveID::Triangle] = sizeof(Vertex) * 3 + sizeof(uint16_t) * 3;
-		totalBufferSize += bufferSizes[PrimitiveID::Triangle];
+		bufferSizes[(uint8_t)PrimitiveID::Triangle] = sizeof(Vertex) * 3 + sizeof(uint16_t) * 3;
+		totalBufferSize += bufferSizes[(uint8_t)PrimitiveID::Triangle];
 
-		_numIndices[PrimitiveID::Triangle] = 3;
-		_indexOffsets[PrimitiveID::Triangle] = firstIndex;
-		firstIndex += _numIndices[PrimitiveID::Triangle];
+		_numIndices[(uint8_t)PrimitiveID::Triangle] = 3;
+		_indexOffsets[(uint8_t)PrimitiveID::Triangle] = firstIndex;
+		firstIndex += _numIndices[(uint8_t)PrimitiveID::Triangle];
 
 		firstVertex += 3;
+
+		_bounds[(uint8_t)PrimitiveID::Triangle].Init(vec3(0.f), vec3(-1.f, -1.f, -.1f), vec3(1.f, 1.f, .1f), 2.f);
 	}
 
 	{ // Quad
@@ -113,14 +116,16 @@ int Primitives::Initialize()
 		indices.Add(firstVertex + 2);
 		indices.Add(firstVertex + 3);
 
-		bufferSizes[PrimitiveID::Quad] = sizeof(Vertex) * 4 + sizeof(uint16_t) * 6;
-		totalBufferSize += bufferSizes[PrimitiveID::Quad];
+		bufferSizes[(uint8_t)PrimitiveID::Quad] = sizeof(Vertex) * 4 + sizeof(uint16_t) * 6;
+		totalBufferSize += bufferSizes[(uint8_t)PrimitiveID::Quad];
 
-		_numIndices[PrimitiveID::Quad] = 6;
-		_indexOffsets[PrimitiveID::Quad] = firstIndex;
-		firstIndex += _numIndices[PrimitiveID::Quad];
+		_numIndices[(uint8_t)PrimitiveID::Quad] = 6;
+		_indexOffsets[(uint8_t)PrimitiveID::Quad] = firstIndex;
+		firstIndex += _numIndices[(uint8_t)PrimitiveID::Quad];
 
 		firstVertex += 4;
+
+		_bounds[(uint8_t)PrimitiveID::Quad].Init(vec3(0.f), vec3(-1.f, -1.f, -.1f), vec3(1.f, 1.f, .1f), 2.f);
 	}
 
 	{ // Box
@@ -281,14 +286,16 @@ int Primitives::Initialize()
 		indices.Add(firstVertex + 22);
 		indices.Add(firstVertex + 23);
 
-		bufferSizes[PrimitiveID::Box] = sizeof(Vertex) * 24 + sizeof(uint16_t) * 36;
-		totalBufferSize += bufferSizes[PrimitiveID::Box];
+		bufferSizes[(uint8_t)PrimitiveID::Box] = sizeof(Vertex) * 24 + sizeof(uint16_t) * 36;
+		totalBufferSize += bufferSizes[(uint8_t)PrimitiveID::Box];
 
-		_numIndices[PrimitiveID::Box] = 36;
-		_indexOffsets[PrimitiveID::Box] = firstIndex;
-		firstIndex += _numIndices[PrimitiveID::Box];
+		_numIndices[(uint8_t)PrimitiveID::Box] = 36;
+		_indexOffsets[(uint8_t)PrimitiveID::Box] = firstIndex;
+		firstIndex += _numIndices[(uint8_t)PrimitiveID::Box];
 
 		firstVertex += 24;
+
+		_bounds[(uint8_t)PrimitiveID::Box].Init(vec3(0.f), vec3(-1.f), vec3(1.f), 2.f);
 	}
 
 	{ // Pyramid
@@ -332,22 +339,24 @@ int Primitives::Initialize()
 		indices.Add(firstVertex + 0);
 		indices.Add(firstVertex + 3);
 
-		bufferSizes[PrimitiveID::Pyramid] = sizeof(Vertex) * 5 + sizeof(uint16_t) * 12;
-		totalBufferSize += bufferSizes[PrimitiveID::Pyramid];
+		bufferSizes[(uint8_t)PrimitiveID::Pyramid] = sizeof(Vertex) * 5 + sizeof(uint16_t) * 12;
+		totalBufferSize += bufferSizes[(uint8_t)PrimitiveID::Pyramid];
 
-		_numIndices[PrimitiveID::Pyramid] = 12;
-		_indexOffsets[PrimitiveID::Pyramid] = firstIndex;
-		firstIndex += _numIndices[PrimitiveID::Pyramid];
+		_numIndices[(uint8_t)PrimitiveID::Pyramid] = 12;
+		_indexOffsets[(uint8_t)PrimitiveID::Pyramid] = firstIndex;
+		firstIndex += _numIndices[(uint8_t)PrimitiveID::Pyramid];
 
 		firstVertex += 5;
+
+		_bounds[(uint8_t)PrimitiveID::Pyramid].Init(vec3(0.f), vec3(-1.f), vec3(1.f), 2.f);
 	}
 
 	{ // Sphere
-
+		_bounds[(uint8_t)PrimitiveID::Sphere].Init(vec3(0.f), vec3(-1.f), vec3(1.f), 2.f);
 	}
 
 	{ // Cone
-
+		_bounds[(uint8_t)PrimitiveID::Cone].Init(vec3(0.f), vec3(-1.f), vec3(1.f), 2.f);
 	}
 
 	_primitiveBuffer = new Buffer(totalBufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, nullptr, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
@@ -368,13 +377,18 @@ int Primitives::Initialize()
 	return ENGINE_OK;
 }
 
+const NBounds &Primitives::GetPrimitiveBounds(PrimitiveID primitive)
+{
+	return _bounds[(uint8_t)primitive];
+}
+
 void Primitives::DrawPrimitive(PrimitiveID primitive, VkCommandBuffer commandBuffer)
 {
 	VkBuffer buffers[]{ _primitiveBuffer->GetHandle() };
 	VkDeviceSize offsets[]{ 0 };
 	vkCmdBindVertexBuffers(commandBuffer, 0, 1, buffers, offsets);
 	vkCmdBindIndexBuffer(commandBuffer, buffers[0], _indexBufferOffset, VK_INDEX_TYPE_UINT16);
-	vkCmdDrawIndexed(commandBuffer, _numIndices[primitive], 1, _indexOffsets[primitive], 0, 0);
+	vkCmdDrawIndexed(commandBuffer, _numIndices[(uint8_t)primitive], 1, _indexOffsets[(uint8_t)primitive], 0, 0);
 }
 
 void Primitives::Release()

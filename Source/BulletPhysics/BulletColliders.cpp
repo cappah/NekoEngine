@@ -1,9 +1,9 @@
 /* NekoEngine
  *
- * SphereCollider.h
+ * Colliders.cpp
  * Author: Alexandru Naiman
  *
- * Bullet physics Module
+ * Bullet physics Module colliders
  *
  * -----------------------------------------------------------------------------
  *
@@ -37,13 +37,18 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include "BulletPhysics.h"
 #include "BulletColliders.h"
+
+#include <System/Logger.h>
+
+#define BLT_MODULE	"BulletPhysics"
 
 /*********************
  * Box Collider
  *********************/
 
-BulletBoxCollider::BulletBoxCollider(Object *parent, glm::vec3 &halfExtents) :
+BulletBoxCollider::BulletBoxCollider(Object *parent, const glm::vec3 &halfExtents) :
 	BoxCollider(parent, halfExtents),
 	_shape(nullptr),
 	_object(nullptr)
@@ -54,7 +59,7 @@ BulletBoxCollider::BulletBoxCollider(Object *parent, glm::vec3 &halfExtents) :
 	SetHalfExtents(halfExtents);
 }
 
-void BulletBoxCollider::SetHalfExtents(glm::vec3 &halfExtents)
+void BulletBoxCollider::SetHalfExtents(const glm::vec3 &halfExtents)
 {
 	BoxCollider::SetHalfExtents(halfExtents);
 	btVector3 vec{ halfExtents.x, halfExtents.y, halfExtents.z };
@@ -63,19 +68,19 @@ void BulletBoxCollider::SetHalfExtents(glm::vec3 &halfExtents)
 	_object->setCollisionShape(_shape);
 }
 
-void BulletBoxCollider::SetPosition(glm::vec3 &position)
+void BulletBoxCollider::SetPosition(const glm::vec3 &position)
 {
 	btVector3 vec(position.x, position.y, position.z);
 	_object->getWorldTransform().setOrigin(vec);
 }
 
-void BulletBoxCollider::SetRotation(glm::quat &rotation)
+void BulletBoxCollider::SetRotation(const glm::quat &rotation)
 {
 	btQuaternion quat(rotation.x, rotation.y, rotation.z, rotation.w);
 	_object->getWorldTransform().setRotation(quat);
 }
 
-void BulletBoxCollider::SetScale(glm::vec3 &scale)
+void BulletBoxCollider::SetScale(const glm::vec3 &scale)
 {
 	btVector3 vec(scale.x, scale.y, scale.z);
 	_shape->setLocalScaling(vec);
@@ -83,6 +88,8 @@ void BulletBoxCollider::SetScale(glm::vec3 &scale)
 
 BulletBoxCollider::~BulletBoxCollider()
 {
+	((BulletPhysics *)Physics::GetInstance())->RemoveCollisionObject(_object);
+
 	delete _shape;
 	delete _object;
 }
@@ -110,19 +117,19 @@ void BulletSphereCollider::SetRadius(double radius)
 	_object->setCollisionShape(_shape);
 }
 
-void BulletSphereCollider::SetPosition(glm::vec3 &position)
+void BulletSphereCollider::SetPosition(const glm::vec3 &position)
 {
 	btVector3 vec(position.x, position.y, position.z);
 	_object->getWorldTransform().setOrigin(vec);
 }
 
-void BulletSphereCollider::SetRotation(glm::quat &rotation)
+void BulletSphereCollider::SetRotation(const glm::quat &rotation)
 {
 	btQuaternion quat(rotation.x, rotation.y, rotation.z, rotation.w);
 	_object->getWorldTransform().setRotation(quat);
 }
 
-void BulletSphereCollider::SetScale(glm::vec3 &scale)
+void BulletSphereCollider::SetScale(const glm::vec3 &scale)
 {
 	btVector3 vec(scale.x, scale.y, scale.z);
 	_shape->setLocalScaling(vec);
@@ -130,6 +137,8 @@ void BulletSphereCollider::SetScale(glm::vec3 &scale)
 
 BulletSphereCollider::~BulletSphereCollider()
 {
+	((BulletPhysics *)Physics::GetInstance())->RemoveCollisionObject(_object);
+
 	delete _shape;
 	delete _object;
 }
@@ -173,19 +182,19 @@ void BulletCapsuleCollider::SetRadiusAndHeight(double radius, double height)
 	_object->setCollisionShape(_shape);
 }
 
-void BulletCapsuleCollider::SetPosition(glm::vec3 &position)
+void BulletCapsuleCollider::SetPosition(const glm::vec3 &position)
 {
 	btVector3 vec(position.x, position.y, position.z);
 	_object->getWorldTransform().setOrigin(vec);
 }
 
-void BulletCapsuleCollider::SetRotation(glm::quat &rotation)
+void BulletCapsuleCollider::SetRotation(const glm::quat &rotation)
 {
 	btQuaternion quat(rotation.x, rotation.y, rotation.z, rotation.w);
 	_object->getWorldTransform().setRotation(quat);
 }
 
-void BulletCapsuleCollider::SetScale(glm::vec3 &scale)
+void BulletCapsuleCollider::SetScale(const glm::vec3 &scale)
 {
 	btVector3 vec(scale.x, scale.y, scale.z);
 	_shape->setLocalScaling(vec);
@@ -193,6 +202,8 @@ void BulletCapsuleCollider::SetScale(glm::vec3 &scale)
 
 BulletCapsuleCollider::~BulletCapsuleCollider()
 {
+	((BulletPhysics *)Physics::GetInstance())->RemoveCollisionObject(_object);
+
 	delete _shape;
 	delete _object;
 }
@@ -213,7 +224,7 @@ public:
 	{
 		//
 	}
-	virtual void getLockedReadOnlyVertexIndexBase(const unsigned char **vertexbase, int &numverts, PHY_ScalarType &type, int &stride, const unsigned char **indexbase, int &indexstride, int &numfaces, PHY_ScalarType &indicestype, int subpart = 0) const
+	virtual void getLockedReadOnlyVertexIndexBase(const unsigned char **vertexbase, int &numverts, PHY_ScalarType &type, int &stride, const unsigned char **indexbase, int &indexstride, int &numfaces, PHY_ScalarType &indicestype, int subpart = 0) const override
 	{
 		type = PHY_FLOAT;
 		indicestype = PHY_INTEGER;
@@ -242,8 +253,7 @@ BulletMeshCollider::BulletMeshCollider(Object *parent, const StaticMesh *mesh) :
 	MeshCollider(parent, mesh),
 	_ivArray(nullptr),
 	_shape(nullptr),
-	_object(nullptr),
-	_strider(nullptr)
+	_object(nullptr)
 {
 	_object = new btCollisionObject();	
 	_object->setUserPointer(_parent);
@@ -253,13 +263,12 @@ BulletMeshCollider::BulletMeshCollider(Object *parent, const StaticMesh *mesh) :
 
 void BulletMeshCollider::SetMesh(const StaticMesh *mesh)
 {
-	BulletMeshCollider::SetMesh(mesh);
+	MeshCollider::SetMesh(mesh);
 
 	delete _ivArray;
 	delete _shape;
 
 	btIndexedMesh indexedMesh{};
-	indexedMesh.m_indexType = PHY_INTEGER;
 	indexedMesh.m_numTriangles = mesh->GetTriangleCount();
 	indexedMesh.m_numVertices = mesh->GetVertexCount();
 	indexedMesh.m_triangleIndexStride = sizeof(uint32_t) * 3;
@@ -271,23 +280,23 @@ void BulletMeshCollider::SetMesh(const StaticMesh *mesh)
 	_ivArray = new btTriangleIndexVertexArray();
 	_ivArray->addIndexedMesh(indexedMesh);
 
-	_shape = new btBvhTriangleMeshShape(_ivArray, true);
+	_shape = new btConvexTriangleMeshShape(_ivArray, true);
 	_object->setCollisionShape(_shape);
 }
 
-void BulletMeshCollider::SetPosition(glm::vec3 &position)
+void BulletMeshCollider::SetPosition(const glm::vec3 &position)
 {
 	btVector3 vec(position.x, position.y, position.z);
 	_object->getWorldTransform().setOrigin(vec);
 }
 
-void BulletMeshCollider::SetRotation(glm::quat &rotation)
+void BulletMeshCollider::SetRotation(const glm::quat &rotation)
 {
 	btQuaternion quat(rotation.x, rotation.y, rotation.z, rotation.w);
 	_object->getWorldTransform().setRotation(quat);
 }
 
-void BulletMeshCollider::SetScale(glm::vec3 &scale)
+void BulletMeshCollider::SetScale(const glm::vec3 &scale)
 {
 	btVector3 vec(scale.x, scale.y, scale.z);
 	_shape->setLocalScaling(vec);
@@ -295,6 +304,8 @@ void BulletMeshCollider::SetScale(glm::vec3 &scale)
 
 BulletMeshCollider::~BulletMeshCollider()
 {
+	((BulletPhysics *)Physics::GetInstance())->RemoveCollisionObject(_object);
+
 	delete _shape;
 	delete _object;
 }

@@ -47,4 +47,6 @@
 // Controls
 #include <GUI/Box.h>
 #include <GUI/Label.h>
+#include <GUI/Slider.h>
 #include <GUI/Button.h>
+#include <GUI/TextBox.h>

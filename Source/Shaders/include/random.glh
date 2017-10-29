@@ -97,3 +97,8 @@ uint rand_range(uint rand, uint max)
 {
 	return uint(float(rand) * (float(max) / 4294967296.0));
 }
+
+vec4 randomWithSeed()
+{
+	return vec4(1.0);
+}

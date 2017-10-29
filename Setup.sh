@@ -37,7 +37,7 @@ InstallDepsAptGet()
 {
 	echo "Attempting to install dependencies using apt-get"
 	
-	PACKAGES="build-essential cmake libsqlite3-dev libx11-dev libvorbis-dev libopenal-dev libvorbis-dev libvulkan-dev libbsd-dev libfreetype6-dev libluajit-5.1-dev libbz2-dev libbullet-dev"
+	PACKAGES="build-essential cmake libsqlite3-dev libx11-dev libvorbis-dev libopenal-dev libvorbis-dev libvulkan-dev libbsd-dev libfreetype6-dev libluajit-5.1-dev libbz2-dev libbullet-dev libbullet-extras-dev"
 
 	if ! type sudo 2> /dev/null; then
 		su -c "apt-get -y install $PACKAGES"		

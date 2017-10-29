@@ -136,7 +136,8 @@ int SkeletalMeshComponentInterface::AddGroup(lua_State *state)
 	if (args != 4)
 		return luaL_error(state, "Invalid arguments");
 
-//	((SkeletalMeshComponent *)lua_touserdata(state, 1))->AddGroup((uint32_t)lua_tointeger(state, 2), (uint32_t)lua_tointeger(state, 3), (Material *)lua_touserdata(state, 4));
+	MeshGroup *group{ (MeshGroup *)lua_touserdata(state, 1) };
+	((SkeletalMeshComponent *)lua_touserdata(state, 1))->AddGroup(*group, (Material *)lua_touserdata(state, 4));
 
 	return 0;
 }

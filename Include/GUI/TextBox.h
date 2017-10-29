@@ -48,7 +48,7 @@ public:
 	ENGINE_API TextBox(int x = 0, int y = 0, int width = 75, int height = 24) : 
 		Box(x, y, width, height),
 		_shift(false)
-	{ }
+	{ _color = glm::vec4(.5f, .5f, .5f, 1.f); }
 
 	ENGINE_API virtual ~TextBox() { }
 

@@ -37,8 +37,8 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <Scene/Camera.h>
 #include <Engine/Engine.h>
-#include <Engine/Camera.h>
 #include <Script/Interface/CameraInterface.h>
 
 using namespace glm;

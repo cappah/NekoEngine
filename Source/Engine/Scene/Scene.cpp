@@ -47,16 +47,16 @@
 #include <Engine/SoundManager.h>
 #include <Engine/EventManager.h>
 #include <Engine/GameModule.h>
-#include <Engine/CameraManager.h>
 #include <Runtime/Runtime.h>
-#include <Scene/Scene.h>
-#include <Scene/Object.h>
 #include <Physics/Physics.h>
 #include <Profiler/Profiler.h>
 #include <Renderer/Renderer.h>
 #include <Renderer/DebugMarker.h>
 #include <System/VFS/VFS.h>
 #include <System/AssetLoader/AssetLoader.h>
+#include <Scene/Scene.h>
+#include <Scene/Object.h>
+#include <Scene/CameraManager.h>
 #include <Scene/Components/TerrainComponent.h>
 #include <Scene/Components/SkysphereComponent.h>
 #include <Scene/Components/StaticMeshComponent.h>
@@ -263,7 +263,7 @@ void Scene::_LoadSceneInfo(VFSFile *f)
 				Logger::Log(SCENE_MODULE, LOG_CRITICAL, "Failed to load background music for scene id %d. Audioclip \"%s\" not found.", _id, *split[1]);
 		}
 		else if (split[0] == "bgmusicvol")
-			_bgMusicVolume = (float)split[1];
+			_bgMusicVolume = (float)split[1] * Engine::GetConfiguration().Audio.MasterVolume * Engine::GetConfiguration().Audio.MusicVolume;
 		else if (split[0] == "ambcolor")
 			AssetLoader::ReadFloatArray(*split[1], 3, &ambient.x);
 		else if (split[0] == "ambintensity")
@@ -285,6 +285,7 @@ void Scene::_LoadSceneInfo(VFSFile *f)
 	}
 
 	Renderer::GetInstance()->SetAmbientColor(ambient.r, ambient.g, ambient.b, ambient.w);
+	Physics::GetInstance()->InitScene(BroadphaseType::SAP, 4000.f, 15000000u);
 }
 
 void Scene::_LoadComponent(VFSFile *f, ComponentInitInfo *initInfo)
@@ -380,6 +381,8 @@ int Scene::Load()
 		Logger::Log(SCENE_MODULE, LOG_CRITICAL, "Invalid scene file header");
 		return ENGINE_INVALID_RES;
 	}
+
+	_ocTree = new OcTree();
 
 	while (!f->EoF())
 	{
@@ -532,8 +535,6 @@ int Scene::Load()
 
 	EventManager::Broadcast(NE_EVT_SCN_LOADED, this);
 
-	Physics::GetInstance()->InitScene(BroadphaseType::SAP, 1000.f, 15000000u);
-
 	Logger::Log(SCENE_MODULE, LOG_INFORMATION, "Scene %s, id=%d loaded with %d %s and %d %s", *_name, _id, _objects.size(), _objects.size() > 1 ? "objects" : "object", CameraManager::Count(), CameraManager::Count() > 1 ? "cameras" : "camera");
 
 	return ENGINE_OK;
@@ -550,7 +551,7 @@ void Scene::Update(double deltaTime) noexcept
 
 	for (Object *obj : _newObjects)
 	{
-		if (!obj->GetUpdateWhilePaused() && Engine::IsPaused())
+		if (!obj->IsEnabled() || (!obj->GetUpdateWhilePaused() && Engine::IsPaused()))
 			continue;
 		obj->Update(deltaTime);
 	}
@@ -617,7 +618,10 @@ void Scene::PrepareCommandBuffers()
 
 		for (Drawable &drawable : *drawables)
 		{
-			if (!cam->GetFrustum().ContainsBounds(drawable.transformedBounds))
+			if (!*drawable.visible)
+				continue;
+
+			if (!obj->GetNoCull() && !cam->GetFrustum().ContainsBounds(drawable.transformedBounds))
 				continue;
 
 			if (drawable.transparent)
@@ -683,9 +687,6 @@ void Scene::Unload() noexcept
 	if (!_loaded)
 		return;
 
-	_threadPool->Stop();
-	_threadPool->Join();
-
 	for (Object *obj : _objects)
 	{
 		obj->Unload();
@@ -701,7 +702,6 @@ void Scene::Unload() noexcept
 
 	delete _sceneUbo; _sceneUbo = nullptr;
 	delete _sceneBuffer; _sceneBuffer = nullptr;
-	delete _threadPool; _threadPool = nullptr;
 	delete _ocTree; _ocTree = nullptr;
 	
 	_loaded = false;
@@ -730,6 +730,4 @@ void Scene::RemoveObject(Object *obj) noexcept
 Scene::~Scene() noexcept
 {
 	Unload();
-
-	delete _threadPool;
 }
